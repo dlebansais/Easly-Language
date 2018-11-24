@@ -1,0 +1,16 @@
+language: csharp
+solution: Easly-language.sln
+
+script:
+- msbuild /p:Configuration=Travis Easly-language.sln
+
+deploy:
+  provider: pages
+  skip_cleanup: true
+  github_token: $GITHUB_TOKEN
+  local_dir: ./Easly-language/bin/x64/Travis
+  target_branch: gh-pages
+  email: "github-pages-deploy@travis-ci.org"
+  on:
+    branch: master
+
