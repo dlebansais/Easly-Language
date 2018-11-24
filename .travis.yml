@@ -1,14 +1,14 @@
 language: csharp
-solution: Easly-language.sln
+solution: Easly-Language.sln
 
 script:
-- msbuild /p:Configuration=Travis Easly-language.sln
+- msbuild Easly-Language.sln /p:Configuration=Travis
 
 deploy:
   provider: pages
   skip_cleanup: true
   github_token: $GITHUB_TOKEN
-  local_dir: ./Easly-language/bin/x64/Travis
+  local_dir: ./Easly-Language/bin/x64/Travis
   target_branch: gh-pages
   email: "github-pages-deploy@travis-ci.org"
   on:
