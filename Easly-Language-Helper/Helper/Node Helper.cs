@@ -322,31 +322,28 @@ namespace BaseNodeHelper
 
         public static INode CreateDefault(Type objectType)
         {
-            switch (objectType)
-            {
-                case IArgument AsArgument:
-                    return CreateDefaultArgument();
-                case IBody AsBody:
-                    return CreateDefaultBody();
-                case IExpression AsExpression:
-                    return CreateDefaultExpression();
-                case IInstruction AsInstruction:
-                    return CreateDefaultInstruction();
-                case IObjectType AsObjectType:
-                    return CreateDefaultType();
-                case IName AsName:
-                    return CreateEmptyName();
-                case IIdentifier AsIdentifier:
-                    return CreateEmptyIdentifier();
-                case IQualifiedName AsQualifiedName:
-                    return CreateEmptyQualifiedName();
-                case IScope AsScope:
-                    return CreateEmptyScope();
-                case IImport AsImport:
-                    return CreateSimpleImport("", "", ImportType.Latest);
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(objectType));
-            }
+            if (objectType == typeof(IArgument))
+                return CreateDefaultArgument();
+            else if (objectType == typeof(IBody))
+                return CreateDefaultBody();
+            else if (objectType == typeof(IExpression))
+                return CreateDefaultExpression();
+            else if (objectType == typeof(IInstruction))
+                return CreateDefaultInstruction();
+            else if (objectType == typeof(IObjectType))
+                return CreateDefaultType();
+            else if (objectType == typeof(IName))
+                return CreateEmptyName();
+            else if (objectType == typeof(IIdentifier))
+                return CreateEmptyIdentifier();
+            else if (objectType == typeof(IQualifiedName))
+                return CreateEmptyQualifiedName();
+            else if (objectType == typeof(IScope))
+                return CreateEmptyScope();
+            else if (objectType == typeof(IImport))
+                return CreateSimpleImport("", "", ImportType.Latest);
+            else
+                throw new ArgumentOutOfRangeException(nameof(objectType));
         }
         #endregion
 
@@ -1369,7 +1366,7 @@ namespace BaseNodeHelper
 
             IList<IIdentifier> Path;
 
-            switch (optional.AnyItem.GetType())
+            switch (optional.AnyItem)
             {
                 case IName AsName:
                     return AsName.Text.Length == 0;
