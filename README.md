@@ -8,5 +8,5 @@ This assembly contains definitions for all nodes of the [Easly](https://www.easl
 
 TODO:
 
-[ ] Make all nodes with a "Text" property inherit from a ITextNode interface.
+- [ ] Make all nodes with a "Text" property inherit from a ITextNode interface.
 
