@@ -13,60 +13,60 @@ namespace BaseNodeHelper
             return CreateBlockList(new List<IN>());
         }
 
-        public static IBlockList<IN, N> CreateSimpleBlockList(IN Node)
+        public static IBlockList<IN, N> CreateSimpleBlockList(IN node)
         {
             List<IN> NodeList = new List<IN>();
-            NodeList.Add(Node);
+            NodeList.Add(node);
 
             return CreateBlockList(NodeList);
         }
 
-        public static IBlockList<IN, N> CreateBlockList(IList<IN> NodeList)
+        public static IBlockList<IN, N> CreateBlockList(IList<IN> nodeList)
         {
             BlockList<IN, N> Blocks = new BlockList<IN, N>();
             Blocks.Documentation = NodeHelper.CreateEmptyDocumentation();
             Blocks.NodeBlockList = new List<IBlock<IN, N>>();
 
-            if (NodeList.Count > 0)
+            if (nodeList.Count > 0)
             {
-                IBlock<IN, N> Block = CreateBlock(NodeList);
+                IBlock<IN, N> Block = CreateBlock(nodeList);
                 Blocks.NodeBlockList.Add(Block);
             }
 
             return Blocks;
         }
 
-        public static IBlockList<IN, N> CreateBlockList(IList<IBlock<IN, N>> NodeBlockList)
+        public static IBlockList<IN, N> CreateBlockList(IList<IBlock<IN, N>> nodeBlockList)
         {
-            Debug.Assert(NodeBlockList.Count > 0);
+            Debug.Assert(nodeBlockList.Count > 0);
 
-            foreach (IBlock<IN, N> Block in NodeBlockList)
+            foreach (IBlock<IN, N> Block in nodeBlockList)
                 Debug.Assert(Block.NodeList.Count > 0);
 
             BlockList<IN, N> Blocks = new BlockList<IN, N>();
             Blocks.Documentation = NodeHelper.CreateEmptyDocumentation();
-            Blocks.NodeBlockList = NodeBlockList;
+            Blocks.NodeBlockList = nodeBlockList;
 
             return Blocks;
         }
 
-        public static IBlock<IN, N> CreateBlock(IList<IN> NodeList)
+        public static IBlock<IN, N> CreateBlock(IList<IN> nodeList)
         {
-            Debug.Assert(NodeList.Count > 0);
+            Debug.Assert(nodeList.Count > 0);
 
-            return CreateBlock(NodeList, ReplicationStatus.Normal, NodeHelper.CreateEmptyPattern(), NodeHelper.CreateEmptyIdentifier());
+            return CreateBlock(nodeList, ReplicationStatus.Normal, NodeHelper.CreateEmptyPattern(), NodeHelper.CreateEmptyIdentifier());
         }
 
-        public static IBlock<IN, N> CreateBlock(IList<IN> NodeList, ReplicationStatus Replication, IPattern ReplicationPattern, IIdentifier SourceIdentifier)
+        public static IBlock<IN, N> CreateBlock(IList<IN> nodeList, ReplicationStatus replication, IPattern replicationPattern, IIdentifier sourceIdentifier)
         {
-            Debug.Assert(NodeList.Count > 0);
+            Debug.Assert(nodeList.Count > 0);
 
             Block<IN, N> Block = new Block<IN, N>();
             Block.Documentation = NodeHelper.CreateEmptyDocumentation();
-            Block.NodeList = NodeList;
-            Block.Replication = Replication;
-            Block.ReplicationPattern = ReplicationPattern;
-            Block.SourceIdentifier = SourceIdentifier;
+            Block.NodeList = nodeList;
+            Block.Replication = replication;
+            Block.ReplicationPattern = replicationPattern;
+            Block.SourceIdentifier = sourceIdentifier;
 
             return Block;
         }

@@ -31,12 +31,12 @@ namespace Easly
             _IsSealed = true;
         }
 
-        public new void Add(TItem Item)
+        public new void Add(TItem item)
         {
             if (_IsSealed)
                 throw new InvalidOperationException();
 
-            base.Add(Item);
+            base.Add(item);
         }
 
         public ListTableEx<TItem> CloneUnsealed()
@@ -49,12 +49,12 @@ namespace Easly
             return CloneTable;
         }
 
-        public void AddRange(ListTableEx<TItem> OtherTable)
+        public void AddRange(ListTableEx<TItem> otherTable)
         {
             if (_IsSealed)
                 throw new InvalidOperationException();
 
-            base.AddRange(OtherTable);
+            base.AddRange(otherTable);
         }
     }
 }

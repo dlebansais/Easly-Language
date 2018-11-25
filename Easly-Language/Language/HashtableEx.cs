@@ -14,7 +14,7 @@ namespace Easly
     {
         bool ContainsKey(TKey key);
         ICollection<TKey> Indexes { get; }
-        void ChangeKey(TKey OldKey, TKey NewKey);
+        void ChangeKey(TKey oldKey, TKey newKey);
     }
 
     [Serializable]
@@ -76,28 +76,28 @@ namespace Easly
             }
         }
 
-        public void ChangeKey(TKey OldKey, TKey NewKey)
+        public void ChangeKey(TKey oldKey, TKey newKey)
         {
-            TValue EntryValue = this[OldKey];
-            Remove(OldKey);
-            Add(NewKey, EntryValue);
+            TValue EntryValue = this[oldKey];
+            Remove(oldKey);
+            Add(newKey, EntryValue);
         }
 
-        public void Merge(HashtableEx<TKey, TValue> OtherTable)
+        public void Merge(HashtableEx<TKey, TValue> otherTable)
         {
             if (IsSealed)
                 throw new InvalidOperationException();
 
-            foreach (KeyValuePair<TKey, TValue> Item in OtherTable)
+            foreach (KeyValuePair<TKey, TValue> Item in otherTable)
                 base.Add(Item.Key, Item.Value);
         }
 
-        public void MergeWithConflicts(HashtableEx<TKey, TValue> OtherTable)
+        public void MergeWithConflicts(HashtableEx<TKey, TValue> otherTable)
         {
             if (IsSealed)
                 throw new InvalidOperationException();
 
-            foreach (KeyValuePair<TKey, TValue> Item in OtherTable)
+            foreach (KeyValuePair<TKey, TValue> Item in otherTable)
                 if (!base.ContainsKey(Item.Key))
                     base.Add(Item.Key, Item.Value);
         }

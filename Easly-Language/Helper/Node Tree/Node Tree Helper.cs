@@ -10,16 +10,13 @@ namespace BaseNodeHelper
 {
     public static class NodeTreeHelper
     {
-        public static readonly string ReplicationPatternPropertyName = "ReplicationPattern";
-        public static readonly string SourceIdentifierPropertyName = "SourceIdentifier";
-
-        public static bool IsChildNodeProperty(INode ParentNode, string PropertyName)
+        public static bool IsChildNodeProperty(INode parentNode, string propertyName)
         {
-            Debug.Assert(ParentNode != null);
-            Debug.Assert(PropertyName != null);
+            Debug.Assert(parentNode != null);
+            Debug.Assert(propertyName != null);
 
-            Type NodeType = ParentNode.GetType();
-            PropertyInfo Property = NodeType.GetProperty(PropertyName);
+            Type NodeType = parentNode.GetType();
+            PropertyInfo Property = NodeType.GetProperty(propertyName);
 
             Debug.Assert(Property != null);
 
@@ -30,14 +27,14 @@ namespace BaseNodeHelper
             return true;
         }
 
-        public static bool IsChildNode(INode ParentNode, string PropertyName, INode Node)
+        public static bool IsChildNode(INode parentNode, string propertyName, INode node)
         {
-            Debug.Assert(ParentNode != null);
-            Debug.Assert(PropertyName != null);
-            Debug.Assert(Node != null);
+            Debug.Assert(parentNode != null);
+            Debug.Assert(propertyName != null);
+            Debug.Assert(node != null);
 
-            Type ParentNodeType = ParentNode.GetType();
-            PropertyInfo Property = ParentNodeType.GetProperty(PropertyName);
+            Type ParentNodeType = parentNode.GetType();
+            PropertyInfo Property = ParentNodeType.GetProperty(propertyName);
             if (Property == null)
                 return false;
 
@@ -45,37 +42,37 @@ namespace BaseNodeHelper
             if (PropertyType.GetInterface(typeof(INode).Name) == null)
                 return false;
 
-            if (Property.GetValue(ParentNode) != Node)
+            if (Property.GetValue(parentNode) != node)
                 return false;
 
             return true;
         }
 
-        public static bool IsChildNode(IBlock ChildBlock, int Index, INode ChildNode)
+        public static bool IsChildNode(IBlock childBlock, int index, INode childNode)
         {
-            Debug.Assert(ChildBlock != null);
-            Debug.Assert(ChildNode != null);
+            Debug.Assert(childBlock != null);
+            Debug.Assert(childNode != null);
 
-            IList NodeList = (IList)ChildBlock.GetType().GetProperty("NodeList").GetValue(ChildBlock);
+            IList NodeList = (IList)childBlock.GetType().GetProperty(nameof(IBlock<INode, Node>.NodeList)).GetValue(childBlock);
             if (NodeList == null)
                 return false;
 
-            if (Index < 0 || Index >= NodeList.Count)
+            if (index < 0 || index >= NodeList.Count)
                 return false;
 
-            if (NodeList[Index] != ChildNode)
+            if (NodeList[index] != childNode)
                 return false;
 
             return true;
         }
 
-        public static bool IsOptionalChildNodeProperty(INode ParentNode, string PropertyName)
+        public static bool IsOptionalChildNodeProperty(INode parentNode, string propertyName)
         {
-            Debug.Assert(ParentNode != null);
-            Debug.Assert(PropertyName != null);
+            Debug.Assert(parentNode != null);
+            Debug.Assert(propertyName != null);
 
-            Type NodeType = ParentNode.GetType();
-            PropertyInfo Property = NodeType.GetProperty(PropertyName);
+            Type NodeType = parentNode.GetType();
+            PropertyInfo Property = NodeType.GetProperty(propertyName);
             if (Property == null)
                 return false;
 
@@ -89,14 +86,14 @@ namespace BaseNodeHelper
             return true;
         }
 
-        public static bool IsOptionalChildNode(INode ParentNode, string PropertyName, INode Node)
+        public static bool IsOptionalChildNode(INode parentNode, string propertyName, INode node)
         {
-            Debug.Assert(ParentNode != null);
-            Debug.Assert(PropertyName != null);
-            Debug.Assert(Node != null);
+            Debug.Assert(parentNode != null);
+            Debug.Assert(propertyName != null);
+            Debug.Assert(node != null);
 
-            Type NodeType = ParentNode.GetType();
-            PropertyInfo Property = NodeType.GetProperty(PropertyName);
+            Type NodeType = parentNode.GetType();
+            PropertyInfo Property = NodeType.GetProperty(propertyName);
             if (Property == null)
                 return false;
 
@@ -107,28 +104,25 @@ namespace BaseNodeHelper
             if (PropertyType.GetGenericTypeDefinition() != typeof(OptionalReference<>))
                 return false;
 
-            IOptionalReference Optional = Property.GetValue(ParentNode) as IOptionalReference;
+            IOptionalReference Optional = Property.GetValue(parentNode) as IOptionalReference;
             if (Optional == null)
                 return false;
 
             INode NodeItem = Optional.AnyItem as INode;
-            if (NodeItem != Node)
+            if (NodeItem != node)
                 return false;
 
             return true;
         }
 
-        public static void GetChildNode(INode Node, string PropertyName, out bool IsAssigned, out INode ChildNode)
+        public static void GetChildNode(INode node, string propertyName, out bool isAssigned, out INode childNode)
         {
-            Debug.Assert(Node != null);
-            Debug.Assert(PropertyName != null);
+            Debug.Assert(node != null);
+            Debug.Assert(propertyName != null);
 
-            Type NodeType = Node.GetType();
-            PropertyInfo Property = NodeType.GetProperty(PropertyName);
+            Type NodeType = node.GetType();
+            PropertyInfo Property = NodeType.GetProperty(propertyName);
 
-            if (Property == null)
-            {
-            }
             Debug.Assert(Property != null);
 
             Type PropertyType = Property.PropertyType;
@@ -137,16 +131,16 @@ namespace BaseNodeHelper
             {
                 Debug.Assert(PropertyType.GetGenericTypeDefinition() == typeof(OptionalReference<>));
 
-                IOptionalReference Optional = Property.GetValue(Node) as IOptionalReference;
+                IOptionalReference Optional = Property.GetValue(node) as IOptionalReference;
 
                 Debug.Assert(Optional != null);
 
-                IsAssigned = Optional.IsAssigned;
+                isAssigned = Optional.IsAssigned;
 
-                if (IsAssigned)
+                if (isAssigned)
                 {
-                    ChildNode = Optional.AnyItem as INode;
-                    Debug.Assert(ChildNode != null);
+                    childNode = Optional.AnyItem as INode;
+                    Debug.Assert(childNode != null);
                 }
                 else
                 {
@@ -155,125 +149,125 @@ namespace BaseNodeHelper
                     Type GenericArgument = GenericArguments[0];
                     Debug.Assert(GenericArgument != null);
 
-                    ChildNode = NodeHelper.CreateDefault(GenericArgument);
-                    Optional.Hack(ChildNode);
+                    childNode = NodeHelper.CreateDefault(GenericArgument);
+                    Optional.Hack(childNode);
                     Optional.Unassign();
                 }
             }
             else
             {
-                IsAssigned = true;
-                ChildNode = Property.GetValue(Node) as INode;
-                Debug.Assert(ChildNode != null);
+                isAssigned = true;
+                childNode = Property.GetValue(node) as INode;
+                Debug.Assert(childNode != null);
             }
         }
 
-        public static void GetChildNode(IBlock Block, string PropertyName, out INode ChildNode)
+        public static void GetChildNode(IBlock block, string propertyName, out INode childNode)
         {
-            Debug.Assert(Block != null);
-            Debug.Assert(PropertyName != null);
+            Debug.Assert(block != null);
+            Debug.Assert(propertyName != null);
 
-            Type NodeType = Block.GetType();
-            PropertyInfo Property = NodeType.GetProperty(PropertyName);
+            Type NodeType = block.GetType();
+            PropertyInfo Property = NodeType.GetProperty(propertyName);
 
             Debug.Assert(Property != null);
 
-            ChildNode = Property.GetValue(Block) as INode;
-            Debug.Assert(ChildNode != null);
+            childNode = Property.GetValue(block) as INode;
+            Debug.Assert(childNode != null);
         }
 
-        public static void SetOptionalChildNode(INode Node, string PropertyName, INode ChildNode)
+        public static void SetOptionalChildNode(INode node, string propertyName, INode childNode)
         {
-            Debug.Assert(Node != null);
-            Debug.Assert(PropertyName != null);
-            Debug.Assert(ChildNode != null);
+            Debug.Assert(node != null);
+            Debug.Assert(propertyName != null);
+            Debug.Assert(childNode != null);
 
-            Type NodeType = Node.GetType();
-            PropertyInfo Property = NodeType.GetProperty(PropertyName);
+            Type NodeType = node.GetType();
+            PropertyInfo Property = NodeType.GetProperty(propertyName);
 
             Debug.Assert(Property != null);
             Debug.Assert(Property.PropertyType.IsGenericType);
             Debug.Assert(Property.PropertyType.GetGenericTypeDefinition() == typeof(OptionalReference<>));
 
-            IOptionalReference Optional = Property.GetValue(Node) as IOptionalReference;
+            IOptionalReference Optional = Property.GetValue(node) as IOptionalReference;
 
             Debug.Assert(Optional != null);
 
-            PropertyInfo ItemProperty = Optional.GetType().GetProperty("Item");
-            ItemProperty.SetValue(Optional, ChildNode);
+            PropertyInfo ItemProperty = Optional.GetType().GetProperty(nameof(IOptionalReference<Node>.Item));
+            ItemProperty.SetValue(Optional, childNode);
             Optional.Assign();
         }
 
-        public static bool IsChildNodeAssigned(INode Node, string PropertyName)
+        public static bool IsChildNodeAssigned(INode node, string propertyName)
         {
             IOptionalReference Optional;
-            GetOptionalChildNode(Node, PropertyName, out Optional);
+            GetOptionalChildNode(node, propertyName, out Optional);
 
             return Optional.IsAssigned;
         }
 
-        public static void AssignChildNode(INode Node, string PropertyName)
+        public static void AssignChildNode(INode node, string propertyName)
         {
             IOptionalReference Optional;
-            GetOptionalChildNode(Node, PropertyName, out Optional);
+            GetOptionalChildNode(node, propertyName, out Optional);
             
             Optional.Assign();
         }
 
-        public static void UnassignChildNode(INode Node, string PropertyName)
+        public static void UnassignChildNode(INode node, string propertyName)
         {
             IOptionalReference Optional;
-            GetOptionalChildNode(Node, PropertyName, out Optional);
+            GetOptionalChildNode(node, propertyName, out Optional);
 
             Optional.Unassign();
         }
 
-        private static void GetOptionalChildNode(INode Node, string PropertyName, out IOptionalReference Optional)
+        private static void GetOptionalChildNode(INode node, string propertyName, out IOptionalReference optional)
         {
-            Debug.Assert(Node != null);
-            Debug.Assert(PropertyName != null);
+            Debug.Assert(node != null);
+            Debug.Assert(propertyName != null);
 
-            Type NodeType = Node.GetType();
-            PropertyInfo Property = NodeType.GetProperty(PropertyName);
+            Type NodeType = node.GetType();
+            PropertyInfo Property = NodeType.GetProperty(propertyName);
 
             Debug.Assert(Property != null);
             Debug.Assert(Property.PropertyType.IsGenericType);
             Debug.Assert(Property.PropertyType.GetGenericTypeDefinition() == typeof(OptionalReference<>));
 
-            Optional = Property.GetValue(Node) as IOptionalReference;
+            optional = Property.GetValue(node) as IOptionalReference;
 
-            Debug.Assert(Optional != null);
+            Debug.Assert(optional != null);
 
-            PropertyInfo ItemProperty = Optional.GetType().GetProperty("Item");
-            INode ChildNode = (INode)ItemProperty.GetValue(Optional);
+            PropertyInfo ItemProperty = optional.GetType().GetProperty(nameof(IOptionalReference<Node>.Item));
+            INode ChildNode = (INode)ItemProperty.GetValue(optional);
 
             Debug.Assert(ChildNode != null);
         }
 
-        public static void ReplaceChildNode(INode Node, string PropertyName, INode ChildNode)
+        public static void ReplaceChildNode(INode node, string propertyName, INode childNode)
         {
-            Debug.Assert(Node != null);
-            Debug.Assert(PropertyName != null);
-            Debug.Assert(ChildNode != null);
+            Debug.Assert(node != null);
+            Debug.Assert(propertyName != null);
+            Debug.Assert(childNode != null);
 
-            Type NodeType = Node.GetType();
-            PropertyInfo Property = NodeType.GetProperty(PropertyName);
+            Type NodeType = node.GetType();
+            PropertyInfo Property = NodeType.GetProperty(propertyName);
 
             Debug.Assert(Property != null);
 
-            Type ChildNodeType = ChildNode.GetType();
+            Type ChildNodeType = childNode.GetType();
             Debug.Assert(ChildNodeType.GetInterface(Property.PropertyType.FullName) != null);
 
-            Property.SetValue(Node, ChildNode);
+            Property.SetValue(node, childNode);
         }
 
-        public static bool IsChildNodeList(INode Node, string PropertyName, out Type ChildNodeType)
+        public static bool IsChildNodeList(INode node, string propertyName, out Type childNodeType)
         {
-            Debug.Assert(Node != null);
-            Debug.Assert(PropertyName != null);
+            Debug.Assert(node != null);
+            Debug.Assert(propertyName != null);
 
-            Type NodeType = Node.GetType();
-            PropertyInfo Property = NodeType.GetProperty(PropertyName);
+            Type NodeType = node.GetType();
+            PropertyInfo Property = NodeType.GetProperty(propertyName);
 
             Debug.Assert(Property != null);
 
@@ -289,22 +283,22 @@ namespace BaseNodeHelper
 
                     Debug.Assert(Generics.Length == 1);
 
-                    ChildNodeType = Generics[0];
+                    childNodeType = Generics[0];
                     return true;
                 }
             }
 
-            ChildNodeType = null;
+            childNodeType = null;
             return false;
         }
 
-        public static bool GetChildNodeList(INode Node, string PropertyName, out IReadOnlyList<INode> ChildNodeList)
+        public static bool GetChildNodeList(INode node, string propertyName, out IReadOnlyList<INode> childNodeList)
         {
-            Debug.Assert(Node != null);
-            Debug.Assert(PropertyName != null);
+            Debug.Assert(node != null);
+            Debug.Assert(propertyName != null);
 
-            Type NodeType = Node.GetType();
-            PropertyInfo Property = NodeType.GetProperty(PropertyName);
+            Type NodeType = node.GetType();
+            PropertyInfo Property = NodeType.GetProperty(propertyName);
 
             Debug.Assert(Property != null);
 
@@ -316,12 +310,11 @@ namespace BaseNodeHelper
 
             Debug.Assert(ListType == typeof(IList<>) || ListType == typeof(IBlockList<,>));
 
-            object Child = Property.GetValue(Node);
+            object Child = Property.GetValue(node);
 
             Debug.Assert(Child != null);
 
-            IList AsList;
-            if ((AsList = Child as IList) != null)
+            if (Child is IList AsList)
             {
                 List<INode> NodeList = new List<INode>();
 
@@ -334,22 +327,22 @@ namespace BaseNodeHelper
                     NodeList.Add(ChildNode);
                 }
 
-                ChildNodeList = NodeList.AsReadOnly();
+                childNodeList = NodeList.AsReadOnly();
                 return true;
             }
 
-            ChildNodeList = null;
+            childNodeList = null;
             return false;
         }
 
-        public static bool IsListChildNode(INode ParentNode, string PropertyName, int Index, INode ChildNode)
+        public static bool IsListChildNode(INode parentNode, string propertyName, int index, INode childNode)
         {
-            Debug.Assert(ParentNode != null);
-            Debug.Assert(PropertyName != null);
-            Debug.Assert(ChildNode != null);
+            Debug.Assert(parentNode != null);
+            Debug.Assert(propertyName != null);
+            Debug.Assert(childNode != null);
 
-            Type NodeType = ParentNode.GetType();
-            PropertyInfo Property = NodeType.GetProperty(PropertyName);
+            Type NodeType = parentNode.GetType();
+            PropertyInfo Property = NodeType.GetProperty(propertyName);
             if (Property == null)
                 return false;
 
@@ -362,26 +355,26 @@ namespace BaseNodeHelper
             if (ListType != typeof(IList<>))
                 return false;
 
-            IList AsList = (IList)Property.GetValue(ParentNode);
+            IList AsList = (IList)Property.GetValue(parentNode);
             if (AsList == null)
                 return false;
 
-            if (Index < 0 || Index >= AsList.Count)
+            if (index < 0 || index >= AsList.Count)
                 return false;
 
-            if (AsList[Index] != ChildNode)
+            if (AsList[index] != childNode)
                 return false;
 
             return true;
         }
 
-        public static bool IsChildBlockList(INode Node, string PropertyName, out Type ChildInterfaceType, out Type ChildNodeType)
+        public static bool IsChildBlockList(INode node, string propertyName, out Type childInterfaceType, out Type childNodeType)
         {
-            Debug.Assert(Node != null);
-            Debug.Assert(PropertyName != null);
+            Debug.Assert(node != null);
+            Debug.Assert(propertyName != null);
 
-            Type NodeType = Node.GetType();
-            PropertyInfo Property = NodeType.GetProperty(PropertyName);
+            Type NodeType = node.GetType();
+            PropertyInfo Property = NodeType.GetProperty(propertyName);
 
             Debug.Assert(Property != null);
 
@@ -397,24 +390,24 @@ namespace BaseNodeHelper
 
                     Debug.Assert(Generics.Length == 2);
 
-                    ChildInterfaceType = Generics[0];
-                    ChildNodeType = Generics[1];
+                    childInterfaceType = Generics[0];
+                    childNodeType = Generics[1];
                     return true;
                 }
             }
 
-            ChildInterfaceType = null;
-            ChildNodeType = null;
+            childInterfaceType = null;
+            childNodeType = null;
             return false;
         }
 
-        public static bool GetChildBlockList(INode Node, string PropertyName, out IReadOnlyList<INodeTreeBlock> ChildBlockList)
+        public static bool GetChildBlockList(INode node, string propertyName, out IReadOnlyList<INodeTreeBlock> childBlockList)
         {
-            Debug.Assert(Node != null);
-            Debug.Assert(PropertyName != null);
+            Debug.Assert(node != null);
+            Debug.Assert(propertyName != null);
 
-            Type NodeType = Node.GetType();
-            PropertyInfo Property = NodeType.GetProperty(PropertyName);
+            Type NodeType = node.GetType();
+            PropertyInfo Property = NodeType.GetProperty(propertyName);
 
             Debug.Assert(Property.PropertyType.IsGenericType);
 
@@ -422,14 +415,13 @@ namespace BaseNodeHelper
 
             Debug.Assert(ListType == typeof(IList<>) || ListType == typeof(IBlockList<,>));
 
-            object Child = Property.GetValue(Node);
+            object Child = Property.GetValue(node);
 
             Debug.Assert(Child != null);
 
-            IBlockList AsBlockList;
-            if ((AsBlockList = Child as IBlockList) != null)
+            if (Child is IBlockList AsBlockList)
             {
-                IList NodeBlockList = AsBlockList.GetType().GetProperty("NodeBlockList").GetValue(AsBlockList) as IList;
+                IList NodeBlockList = AsBlockList.GetType().GetProperty(nameof(IBlockList<INode, Node>.NodeBlockList)).GetValue(AsBlockList) as IList;
 
                 Debug.Assert(NodeBlockList != null);
 
@@ -440,9 +432,9 @@ namespace BaseNodeHelper
                 {
                     List<INode> ChildNodeList = new List<INode>();
 
-                    IPattern ReplicationPattern = (IPattern)ChildBlock.GetType().GetProperty("ReplicationPattern").GetValue(ChildBlock, null);
-                    IIdentifier SourceIdentifier = (IIdentifier)ChildBlock.GetType().GetProperty("SourceIdentifier").GetValue(ChildBlock, null);
-                    IList NodeList = (IList)ChildBlock.GetType().GetProperty("NodeList").GetValue(ChildBlock);
+                    IPattern ReplicationPattern = (IPattern)ChildBlock.GetType().GetProperty(nameof(IBlock<INode, Node>.ReplicationPattern)).GetValue(ChildBlock, null);
+                    IIdentifier SourceIdentifier = (IIdentifier)ChildBlock.GetType().GetProperty(nameof(IBlock<INode, Node>.SourceIdentifier)).GetValue(ChildBlock, null);
+                    IList NodeList = (IList)ChildBlock.GetType().GetProperty(nameof(IBlock<INode, Node>.NodeList)).GetValue(ChildBlock);
 
                     Debug.Assert(ReplicationPattern != null);
                     Debug.Assert(SourceIdentifier != null);
@@ -464,75 +456,75 @@ namespace BaseNodeHelper
                 foreach (IBlock ChildBlock in ToRemove)
                     NodeBlockList.Remove(ChildBlock);
 
-                ChildBlockList = BlockList.AsReadOnly();
+                childBlockList = BlockList.AsReadOnly();
                 return true;
             }
 
-            ChildBlockList = null;
+            childBlockList = null;
             return false;
         }
 
-        public static bool IsTextNode(INode Node)
+        public static bool IsTextNode(INode node)
         {
-            Debug.Assert(Node != null);
+            Debug.Assert(node != null);
 
-            Type NodeType = Node.GetType();
-            PropertyInfo Property = NodeType.GetProperty("Text");
+            Type NodeType = node.GetType();
+            PropertyInfo Property = NodeType.GetProperty(nameof(IIdentifier.Text));
 
             return (Property != null);
         }
 
-        public static string GetText(INode Node)
+        public static string GetText(INode node)
         {
-            Debug.Assert(Node != null);
+            Debug.Assert(node != null);
 
-            Type NodeType = Node.GetType();
-            PropertyInfo Property = NodeType.GetProperty("Text");
+            Type NodeType = node.GetType();
+            PropertyInfo Property = NodeType.GetProperty(nameof(IIdentifier.Text));
 
             Debug.Assert(Property != null);
 
-            string Text = Property.GetValue(Node) as string;
+            string Text = Property.GetValue(node) as string;
 
             Debug.Assert(Text != null);
 
             return Text;
         }
 
-        public static void SetText(INode Node, string Text)
+        public static void SetText(INode node, string text)
         {
-            Debug.Assert(Node != null);
-            Debug.Assert(Text != null);
+            Debug.Assert(node != null);
+            Debug.Assert(text != null);
 
-            Type NodeType = Node.GetType();
-            PropertyInfo Property = NodeType.GetProperty("Text");
+            Type NodeType = node.GetType();
+            PropertyInfo Property = NodeType.GetProperty(nameof(IIdentifier.Text));
 
             Debug.Assert(Property != null);
             Debug.Assert(Property.PropertyType == typeof(string));
 
-            Property.SetValue(Node, Text);
+            Property.SetValue(node, text);
         }
 
-        private static void GetEnumMinMax(PropertyInfo Property, out int Min, out int Max)
+        private static void GetEnumMinMax(PropertyInfo property, out int min, out int max)
         {
-            Array Values = Property.PropertyType.GetEnumValues();
+            Array Values = property.PropertyType.GetEnumValues();
 
-            Max = int.MinValue;
-            Min = int.MaxValue;
+            max = int.MinValue;
+            min = int.MaxValue;
             foreach (int Value in Values)
             {
-                if (Max < Value)
-                    Max = Value;
-                if (Min > Value)
-                    Min = Value;
+                if (max < Value)
+                    max = Value;
+                if (min > Value)
+                    min = Value;
             }
         }
 
-        public static int GetEnumValue(INode Node, string PropertyName)
+        public static int GetEnumValue(INode node, string propertyName)
         {
-            Debug.Assert(Node != null);
+            Debug.Assert(node != null);
 
-            Type NodeType = Node.GetType();
-            PropertyInfo Property = NodeType.GetProperty(PropertyName);
+            Type NodeType = node.GetType();
+            PropertyInfo Property = NodeType.GetProperty(propertyName);
 
             Debug.Assert(Property != null);
 
@@ -546,13 +538,13 @@ namespace BaseNodeHelper
             if (PropertyType.IsEnum)
             {
                 GetEnumMinMax(Property, out Min, out Max);
-                Result = (int)Property.GetValue(Node);
+                Result = (int)Property.GetValue(node);
             }
             else
             {
                 Min = 0;
                 Max = 1;
-                bool BoolValue = (bool)Property.GetValue(Node);
+                bool BoolValue = (bool)Property.GetValue(node);
                 Result = BoolValue ? 1 : 0;
             }
 
@@ -561,12 +553,12 @@ namespace BaseNodeHelper
             return Result;
         }
 
-        public static void SetEnumValue(INode Node, string PropertyName, int Value)
+        public static void SetEnumValue(INode node, string propertyName, int value)
         {
-            Debug.Assert(Node != null);
+            Debug.Assert(node != null);
 
-            Type NodeType = Node.GetType();
-            PropertyInfo Property = NodeType.GetProperty(PropertyName);
+            Type NodeType = node.GetType();
+            PropertyInfo Property = NodeType.GetProperty(propertyName);
 
             Debug.Assert(Property != null);
 
@@ -580,87 +572,87 @@ namespace BaseNodeHelper
             {
                 GetEnumMinMax(Property, out Min, out Max);
 
-                Debug.Assert(Min <= Value && Value <= Max);
+                Debug.Assert(Min <= value && value <= Max);
 
-                Property.SetValue(Node, Value);
+                Property.SetValue(node, value);
             }
             else
             {
-                Debug.Assert(Value == 0 || Value == 1);
+                Debug.Assert(value == 0 || value == 1);
 
-                Property.SetValue(Node, Value == 1 ? true : false);
+                Property.SetValue(node, value == 1 ? true : false);
             }
         }
 
-        public static string GetCommentText(INode Node)
+        public static string GetCommentText(INode node)
         {
-            Debug.Assert(Node != null);
+            Debug.Assert(node != null);
 
-            string Text = Node.Documentation.Comment;
+            string Text = node.Documentation.Comment;
 
             Debug.Assert(Text != null);
 
             return Text;
         }
 
-        public static void SetCommentText(INode Node, string Text)
+        public static void SetCommentText(INode node, string text)
         {
-            Debug.Assert(Node != null);
-            Debug.Assert(Text != null);
+            Debug.Assert(node != null);
+            Debug.Assert(text != null);
 
-            Node.Documentation.Comment = Text;
+            node.Documentation.Comment = text;
         }
 
-        public static void InsertIntoList(INode Node, string PropertyName, int Index, INode ChildNode)
+        public static void InsertIntoList(INode node, string propertyName, int index, INode childNode)
         {
-            Debug.Assert(Node != null);
-            Debug.Assert(PropertyName != null);
-            Debug.Assert(ChildNode != null);
+            Debug.Assert(node != null);
+            Debug.Assert(propertyName != null);
+            Debug.Assert(childNode != null);
 
-            Type NodeType = Node.GetType();
-            PropertyInfo Property = NodeType.GetProperty(PropertyName);
+            Type NodeType = node.GetType();
+            PropertyInfo Property = NodeType.GetProperty(propertyName);
 
             Debug.Assert(Property.PropertyType.IsGenericType);
 
             Type GenericType = Property.PropertyType.GetGenericTypeDefinition();
             Debug.Assert(GenericType == typeof(IList<>));
 
-            IList NodeList = Property.GetValue(Node) as IList;
+            IList NodeList = Property.GetValue(node) as IList;
 
             Debug.Assert(NodeList != null);
-            Debug.Assert(Index >= 0 && Index <= NodeList.Count);
+            Debug.Assert(index >= 0 && index <= NodeList.Count);
 
-            NodeList.Insert(Index, ChildNode);
+            NodeList.Insert(index, childNode);
         }
 
-        public static void RemoveFromList(INode Node, string PropertyName, int Index)
+        public static void RemoveFromList(INode node, string propertyName, int index)
         {
-            Debug.Assert(Node != null);
-            Debug.Assert(PropertyName != null);
+            Debug.Assert(node != null);
+            Debug.Assert(propertyName != null);
 
-            Type NodeType = Node.GetType();
-            PropertyInfo Property = NodeType.GetProperty(PropertyName);
+            Type NodeType = node.GetType();
+            PropertyInfo Property = NodeType.GetProperty(propertyName);
 
             Debug.Assert(Property.PropertyType.IsGenericType);
 
             Type GenericType = Property.PropertyType.GetGenericTypeDefinition();
             Debug.Assert(GenericType == typeof(IList<>));
 
-            IList NodeList = Property.GetValue(Node) as IList;
+            IList NodeList = Property.GetValue(node) as IList;
 
             Debug.Assert(NodeList != null);
-            Debug.Assert(Index >= 0 && Index < NodeList.Count);
+            Debug.Assert(index >= 0 && index < NodeList.Count);
 
-            NodeList.RemoveAt(Index);
+            NodeList.RemoveAt(index);
         }
 
-        public static Type ChildInterfaceType(INode Node, string PropertyName)
+        public static Type ChildInterfaceType(INode node, string propertyName)
         {
-            Debug.Assert(Node != null);
-            Debug.Assert(PropertyName != null);
+            Debug.Assert(node != null);
+            Debug.Assert(propertyName != null);
 
-            Type NodeType = Node.GetType();
-            PropertyInfo Property = NodeType.GetProperty(PropertyName);
+            Type NodeType = node.GetType();
+            PropertyInfo Property = NodeType.GetProperty(propertyName);
             Debug.Assert(Property != null);
 
             Type InterfaceType = Property.PropertyType;
@@ -670,13 +662,13 @@ namespace BaseNodeHelper
             return InterfaceType;
         }
 
-        public static Type OptionalChildInterfaceType(INode Node, string PropertyName)
+        public static Type OptionalChildInterfaceType(INode node, string propertyName)
         {
-            Debug.Assert(Node != null);
-            Debug.Assert(PropertyName != null);
+            Debug.Assert(node != null);
+            Debug.Assert(propertyName != null);
 
-            Type NodeType = Node.GetType();
-            PropertyInfo Property = NodeType.GetProperty(PropertyName);
+            Type NodeType = node.GetType();
+            PropertyInfo Property = NodeType.GetProperty(propertyName);
             Debug.Assert(Property != null);
 
             Type PropertyType = Property.PropertyType;
@@ -693,23 +685,23 @@ namespace BaseNodeHelper
             return InterfaceType;
         }
 
-        public static Type BlockListInterfaceType(INode Node, string PropertyName)
+        public static Type BlockListInterfaceType(INode node, string propertyName)
         {
-            Debug.Assert(Node != null);
-            Debug.Assert(PropertyName != null);
+            Debug.Assert(node != null);
+            Debug.Assert(propertyName != null);
 
-            Type NodeType = Node.GetType();
-            PropertyInfo Property = NodeType.GetProperty(PropertyName);
+            Type NodeType = node.GetType();
+            PropertyInfo Property = NodeType.GetProperty(propertyName);
             Debug.Assert(Property != null);
 
             Type PropertyType = Property.PropertyType;
             Debug.Assert(PropertyType.IsGenericType);
             Debug.Assert(PropertyType.GetInterface(typeof(IBlockList).FullName) != null);
 
-            IBlockList ItemBlockList = Property.GetValue(Node) as IBlockList;
+            IBlockList ItemBlockList = Property.GetValue(node) as IBlockList;
             Debug.Assert(ItemBlockList != null);
 
-            IList NodeBlockList = (IList)ItemBlockList.GetType().GetProperty("NodeBlockList").GetValue(ItemBlockList);
+            IList NodeBlockList = (IList)ItemBlockList.GetType().GetProperty(nameof(IBlockList<INode, Node>.NodeBlockList)).GetValue(ItemBlockList);
             Debug.Assert(NodeBlockList != null);
 
             Type BlockListType = NodeBlockList.GetType();
@@ -733,13 +725,13 @@ namespace BaseNodeHelper
             return InterfaceType;
         }
 
-        public static Type ListInterfaceType(INode Node, string PropertyName)
+        public static Type ListInterfaceType(INode node, string propertyName)
         {
-            Debug.Assert(Node != null);
-            Debug.Assert(PropertyName != null);
+            Debug.Assert(node != null);
+            Debug.Assert(propertyName != null);
 
-            Type NodeType = Node.GetType();
-            PropertyInfo Property = NodeType.GetProperty(PropertyName);
+            Type NodeType = node.GetType();
+            PropertyInfo Property = NodeType.GetProperty(propertyName);
             Debug.Assert(Property != null);
 
             Type PropertyType = Property.PropertyType;
@@ -759,14 +751,14 @@ namespace BaseNodeHelper
             return InterfaceType;
         }
 
-        public static bool IsBlockChildNode(INode ParentNode, string PropertyName, int BlockIndex, int Index, INode ChildNode)
+        public static bool IsBlockChildNode(INode parentNode, string propertyName, int blockIndex, int index, INode childNode)
         {
-            Debug.Assert(ParentNode != null);
-            Debug.Assert(PropertyName != null);
-            Debug.Assert(ChildNode != null);
+            Debug.Assert(parentNode != null);
+            Debug.Assert(propertyName != null);
+            Debug.Assert(childNode != null);
 
-            Type NodeType = ParentNode.GetType();
-            PropertyInfo Property = NodeType.GetProperty(PropertyName);
+            Type NodeType = parentNode.GetType();
+            PropertyInfo Property = NodeType.GetProperty(propertyName);
 
             if (Property == null)
                 return false;
@@ -777,54 +769,54 @@ namespace BaseNodeHelper
             if (PropertyType.GetInterface(typeof(IBlockList).FullName) == null)
                 return false;
 
-            IBlockList ItemBlockList = Property.GetValue(ParentNode) as IBlockList;
+            IBlockList ItemBlockList = Property.GetValue(parentNode) as IBlockList;
             if (ItemBlockList == null)
                 return false;
 
-            IList NodeBlockList = (IList)ItemBlockList.GetType().GetProperty("NodeBlockList").GetValue(ItemBlockList);
+            IList NodeBlockList = (IList)ItemBlockList.GetType().GetProperty(nameof(IBlockList<INode, Node>.NodeBlockList)).GetValue(ItemBlockList);
             if (NodeBlockList == null)
                 return false;
 
-            if (BlockIndex < 0 || BlockIndex >= NodeBlockList.Count)
+            if (blockIndex < 0 || blockIndex >= NodeBlockList.Count)
                 return false;
 
-            IBlock ChildBlock = (IBlock)NodeBlockList[BlockIndex];
+            IBlock ChildBlock = (IBlock)NodeBlockList[blockIndex];
             if (ChildBlock == null)
                 return false;
 
-            return IsChildNode(ChildBlock, Index, ChildNode);
+            return IsChildNode(ChildBlock, index, childNode);
         }
 
-        public static void GetChildBlock(INode Node, string PropertyName, int BlockIndex, out IBlock ChildBlock)
+        public static void GetChildBlock(INode node, string propertyName, int blockIndex, out IBlock childBlock)
         {
-            Debug.Assert(Node != null);
-            Debug.Assert(PropertyName != null);
+            Debug.Assert(node != null);
+            Debug.Assert(propertyName != null);
 
-            Type NodeType = Node.GetType();
-            PropertyInfo Property = NodeType.GetProperty(PropertyName);
+            Type NodeType = node.GetType();
+            PropertyInfo Property = NodeType.GetProperty(propertyName);
 
             Debug.Assert(Property.PropertyType.IsGenericType);
             Debug.Assert(Property.PropertyType.GetInterface(typeof(IBlockList).FullName) != null);
 
-            IBlockList ItemBlockList = Property.GetValue(Node) as IBlockList;
+            IBlockList ItemBlockList = Property.GetValue(node) as IBlockList;
 
             Debug.Assert(ItemBlockList != null);
 
-            IList NodeBlockList = (IList)ItemBlockList.GetType().GetProperty("NodeBlockList").GetValue(ItemBlockList);
+            IList NodeBlockList = (IList)ItemBlockList.GetType().GetProperty(nameof(IBlockList<INode, Node>.NodeBlockList)).GetValue(ItemBlockList);
 
-            Debug.Assert(BlockIndex >= 0 && BlockIndex < NodeBlockList.Count);
+            Debug.Assert(blockIndex >= 0 && blockIndex < NodeBlockList.Count);
 
-            ChildBlock = (IBlock)NodeBlockList[BlockIndex];
+            childBlock = (IBlock)NodeBlockList[blockIndex];
         }
 
-        public static bool IsBlockPatternNode(INode ParentNode, string PropertyName, int BlockIndex, IPattern ReplicationPattern)
+        public static bool IsBlockPatternNode(INode parentNode, string propertyName, int blockIndex, IPattern replicationPattern)
         {
-            Debug.Assert(ParentNode != null);
-            Debug.Assert(PropertyName != null);
-            Debug.Assert(ReplicationPattern != null);
+            Debug.Assert(parentNode != null);
+            Debug.Assert(propertyName != null);
+            Debug.Assert(replicationPattern != null);
 
-            Type NodeType = ParentNode.GetType();
-            PropertyInfo Property = NodeType.GetProperty(PropertyName);
+            Type NodeType = parentNode.GetType();
+            PropertyInfo Property = NodeType.GetProperty(propertyName);
 
             if (Property == null)
                 return false;
@@ -835,77 +827,77 @@ namespace BaseNodeHelper
             if (PropertyType.GetInterface(typeof(IBlockList).FullName) == null)
                 return false;
 
-            IBlockList ItemBlockList = Property.GetValue(ParentNode) as IBlockList;
+            IBlockList ItemBlockList = Property.GetValue(parentNode) as IBlockList;
             if (ItemBlockList == null)
                 return false;
 
-            IList NodeBlockList = (IList)ItemBlockList.GetType().GetProperty("NodeBlockList").GetValue(ItemBlockList);
+            IList NodeBlockList = (IList)ItemBlockList.GetType().GetProperty(nameof(IBlockList<INode, Node>.NodeBlockList)).GetValue(ItemBlockList);
             if (NodeBlockList == null)
                 return false;
 
-            if (BlockIndex < 0 || BlockIndex >= NodeBlockList.Count)
+            if (blockIndex < 0 || blockIndex >= NodeBlockList.Count)
                 return false;
 
-            IBlock ChildBlock = (IBlock)NodeBlockList[BlockIndex];
+            IBlock ChildBlock = (IBlock)NodeBlockList[blockIndex];
             if (ChildBlock == null)
                 return false;
 
-            return IsPatternNode(ChildBlock, ReplicationPattern);
+            return IsPatternNode(ChildBlock, replicationPattern);
         }
 
-        public static bool IsPatternNode(IBlock Block, IPattern ReplicationPattern)
+        public static bool IsPatternNode(IBlock block, IPattern replicationPattern)
         {
-            Debug.Assert(Block != null);
-            Debug.Assert(ReplicationPattern != null);
+            Debug.Assert(block != null);
+            Debug.Assert(replicationPattern != null);
 
-            Type BlockType = Block.GetType();
-            PropertyInfo Property = BlockType.GetProperty("ReplicationPattern");
+            Type BlockType = block.GetType();
+            PropertyInfo Property = BlockType.GetProperty(nameof(IBlock<INode, Node>.ReplicationPattern));
 
             Debug.Assert(Property != null);
-            return ReplicationPattern == Property.GetValue(Block) as IPattern;
+            return replicationPattern == Property.GetValue(block) as IPattern;
         }
 
-        public static string GetPattern(IBlock Block)
+        public static string GetPattern(IBlock block)
         {
-            Debug.Assert(Block != null);
+            Debug.Assert(block != null);
 
-            Type BlockType = Block.GetType();
-            PropertyInfo Property = BlockType.GetProperty("ReplicationPattern");
+            Type BlockType = block.GetType();
+            PropertyInfo Property = BlockType.GetProperty(nameof(IBlock<INode, Node>.ReplicationPattern));
 
             Debug.Assert(Property != null);
 
-            IPattern ReplicationPattern = Property.GetValue(Block) as IPattern;
+            IPattern ReplicationPattern = Property.GetValue(block) as IPattern;
 
             Debug.Assert(ReplicationPattern != null);
 
             return GetText(ReplicationPattern);
         }
 
-        public static void SetPattern(IBlock Block, string Text)
+        public static void SetPattern(IBlock block, string text)
         {
-            Debug.Assert(Block != null);
-            Debug.Assert(Text != null);
+            Debug.Assert(block != null);
+            Debug.Assert(text != null);
 
-            Type BlockType = Block.GetType();
-            PropertyInfo Property = BlockType.GetProperty("ReplicationPattern");
+            Type BlockType = block.GetType();
+            PropertyInfo Property = BlockType.GetProperty(nameof(IBlock<INode, Node>.ReplicationPattern));
 
             Debug.Assert(Property != null);
 
-            IPattern ReplicationPattern = Property.GetValue(Block) as IPattern;
+            IPattern ReplicationPattern = Property.GetValue(block) as IPattern;
 
             Debug.Assert(ReplicationPattern != null);
 
-            SetText(ReplicationPattern, Text);
+            SetText(ReplicationPattern, text);
         }
 
-        public static bool IsBlockSourceNode(INode ParentNode, string PropertyName, int BlockIndex, IIdentifier SourceIdentifier)
+        public static bool IsBlockSourceNode(INode parentNode, string propertyName, int blockIndex, IIdentifier sourceIdentifier)
         {
-            Debug.Assert(ParentNode != null);
-            Debug.Assert(PropertyName != null);
-            Debug.Assert(SourceIdentifier != null);
+            Debug.Assert(parentNode != null);
+            Debug.Assert(propertyName != null);
+            Debug.Assert(sourceIdentifier != null);
 
-            Type NodeType = ParentNode.GetType();
-            PropertyInfo Property = NodeType.GetProperty(PropertyName);
+            Type NodeType = parentNode.GetType();
+            PropertyInfo Property = NodeType.GetProperty(propertyName);
 
             if (Property == null)
                 return false;
@@ -916,180 +908,180 @@ namespace BaseNodeHelper
             if (PropertyType.GetInterface(typeof(IBlockList).FullName) == null)
                 return false;
 
-            IBlockList ItemBlockList = Property.GetValue(ParentNode) as IBlockList;
+            IBlockList ItemBlockList = Property.GetValue(parentNode) as IBlockList;
             if (ItemBlockList == null)
                 return false;
 
-            IList NodeBlockList = (IList)ItemBlockList.GetType().GetProperty("NodeBlockList").GetValue(ItemBlockList);
+            IList NodeBlockList = (IList)ItemBlockList.GetType().GetProperty(nameof(IBlockList<INode, Node>.NodeBlockList)).GetValue(ItemBlockList);
             if (NodeBlockList == null)
                 return false;
 
-            if (BlockIndex < 0 || BlockIndex >= NodeBlockList.Count)
+            if (blockIndex < 0 || blockIndex >= NodeBlockList.Count)
                 return false;
 
-            IBlock ChildBlock = (IBlock)NodeBlockList[BlockIndex];
+            IBlock ChildBlock = (IBlock)NodeBlockList[blockIndex];
             if (ChildBlock == null)
                 return false;
 
-            return IsSourceNode(ChildBlock, SourceIdentifier);
+            return IsSourceNode(ChildBlock, sourceIdentifier);
         }
 
-        public static bool IsSourceNode(IBlock Block, IIdentifier SourceIdentifier)
+        public static bool IsSourceNode(IBlock block, IIdentifier sourceIdentifier)
         {
-            Debug.Assert(Block != null);
-            Debug.Assert(SourceIdentifier != null);
+            Debug.Assert(block != null);
+            Debug.Assert(sourceIdentifier != null);
 
-            Type BlockType = Block.GetType();
-            PropertyInfo Property = BlockType.GetProperty("SourceIdentifier");
+            Type BlockType = block.GetType();
+            PropertyInfo Property = BlockType.GetProperty(nameof(IBlock<INode, Node>.SourceIdentifier));
 
             Debug.Assert(Property != null);
-            return SourceIdentifier == Property.GetValue(Block) as IIdentifier;
+            return sourceIdentifier == Property.GetValue(block) as IIdentifier;
         }
 
-        public static string GetSource(IBlock Block)
+        public static string GetSource(IBlock block)
         {
-            Debug.Assert(Block != null);
+            Debug.Assert(block != null);
 
-            Type BlockType = Block.GetType();
-            PropertyInfo Property = BlockType.GetProperty("SourceIdentifier");
+            Type BlockType = block.GetType();
+            PropertyInfo Property = BlockType.GetProperty(nameof(IBlock<INode, Node>.SourceIdentifier));
 
             Debug.Assert(Property != null);
 
-            IIdentifier SourceIdentifier = Property.GetValue(Block) as IIdentifier;
+            IIdentifier SourceIdentifier = Property.GetValue(block) as IIdentifier;
 
             Debug.Assert(SourceIdentifier != null);
 
             return GetText(SourceIdentifier);
         }
 
-        public static void SetSource(IBlock Block, string Text)
+        public static void SetSource(IBlock block, string text)
         {
-            Debug.Assert(Block != null);
-            Debug.Assert(Text != null);
+            Debug.Assert(block != null);
+            Debug.Assert(text != null);
 
-            Type BlockType = Block.GetType();
-            PropertyInfo Property = BlockType.GetProperty("SourceIdentifier");
+            Type BlockType = block.GetType();
+            PropertyInfo Property = BlockType.GetProperty(nameof(IBlock<INode, Node>.SourceIdentifier));
 
             Debug.Assert(Property != null);
 
-            IIdentifier SourceIdentifier = Property.GetValue(Block) as IIdentifier;
+            IIdentifier SourceIdentifier = Property.GetValue(block) as IIdentifier;
 
             Debug.Assert(SourceIdentifier != null);
 
-            SetText(SourceIdentifier, Text);
+            SetText(SourceIdentifier, text);
         }
 
-        public static void SetReplication(IBlock Block, ReplicationStatus Replication)
+        public static void SetReplication(IBlock block, ReplicationStatus replication)
         {
-            Block.GetType().GetProperty("Replication").SetValue(Block, Replication);
+            block.GetType().GetProperty(nameof(IBlock<INode, Node>.Replication)).SetValue(block, replication);
         }
 
-        public static void InsertIntoBlock(INode Node, string PropertyName, int BlockIndex, int Index, INode ChildNode)
+        public static void InsertIntoBlock(INode node, string propertyName, int blockIndex, int index, INode childNode)
         {
-            Debug.Assert(Node != null);
-            Debug.Assert(PropertyName != null);
-            Debug.Assert(ChildNode != null);
+            Debug.Assert(node != null);
+            Debug.Assert(propertyName != null);
+            Debug.Assert(childNode != null);
 
-            Type NodeType = Node.GetType();
-            PropertyInfo Property = NodeType.GetProperty(PropertyName);
+            Type NodeType = node.GetType();
+            PropertyInfo Property = NodeType.GetProperty(propertyName);
 
             Debug.Assert(Property.PropertyType.IsGenericType);
             Debug.Assert(Property.PropertyType.GetInterface(typeof(IBlockList).FullName) != null);
 
-            IBlockList ItemBlockList = Property.GetValue(Node) as IBlockList;
+            IBlockList ItemBlockList = Property.GetValue(node) as IBlockList;
 
             Debug.Assert(ItemBlockList != null);
 
-            IList NodeBlockList = (IList)ItemBlockList.GetType().GetProperty("NodeBlockList").GetValue(ItemBlockList);
+            IList NodeBlockList = (IList)ItemBlockList.GetType().GetProperty(nameof(IBlockList<INode, Node>.NodeBlockList)).GetValue(ItemBlockList);
 
-            Debug.Assert(BlockIndex >= 0 && BlockIndex < NodeBlockList.Count);
+            Debug.Assert(blockIndex >= 0 && blockIndex < NodeBlockList.Count);
 
-            IBlock ChildBlock = (IBlock)NodeBlockList[BlockIndex];
-            IList NodeList = (IList)ChildBlock.GetType().GetProperty("NodeList").GetValue(ChildBlock);
+            IBlock ChildBlock = (IBlock)NodeBlockList[blockIndex];
+            IList NodeList = (IList)ChildBlock.GetType().GetProperty(nameof(IBlock<INode, Node>.NodeList)).GetValue(ChildBlock);
 
-            Debug.Assert(Index >= 0 && Index <= NodeList.Count);
+            Debug.Assert(index >= 0 && index <= NodeList.Count);
 
-            NodeList.Insert(Index, ChildNode);
+            NodeList.Insert(index, childNode);
         }
 
-        public static void RemoveFromBlock(INode Node, string PropertyName, int BlockIndex, int Index, out bool IsBlockRemoved)
+        public static void RemoveFromBlock(INode node, string propertyName, int blockIndex, int index, out bool isBlockRemoved)
         {
-            Debug.Assert(Node != null);
-            Debug.Assert(PropertyName != null);
+            Debug.Assert(node != null);
+            Debug.Assert(propertyName != null);
 
-            Type NodeType = Node.GetType();
-            PropertyInfo Property = NodeType.GetProperty(PropertyName);
+            Type NodeType = node.GetType();
+            PropertyInfo Property = NodeType.GetProperty(propertyName);
 
             Debug.Assert(Property.PropertyType.IsGenericType);
             Debug.Assert(Property.PropertyType.GetInterface(typeof(IBlockList).FullName) != null);
 
-            IBlockList ItemBlockList = Property.GetValue(Node) as IBlockList;
+            IBlockList ItemBlockList = Property.GetValue(node) as IBlockList;
 
             Debug.Assert(ItemBlockList != null);
 
-            IList NodeBlockList = (IList)ItemBlockList.GetType().GetProperty("NodeBlockList").GetValue(ItemBlockList);
+            IList NodeBlockList = (IList)ItemBlockList.GetType().GetProperty(nameof(IBlockList<INode, Node>.NodeBlockList)).GetValue(ItemBlockList);
 
-            Debug.Assert(BlockIndex >= 0 && BlockIndex < NodeBlockList.Count);
+            Debug.Assert(blockIndex >= 0 && blockIndex < NodeBlockList.Count);
 
-            IBlock ChildBlock = (IBlock)NodeBlockList[BlockIndex];
-            IList NodeList = (IList)ChildBlock.GetType().GetProperty("NodeList").GetValue(ChildBlock);
+            IBlock ChildBlock = (IBlock)NodeBlockList[blockIndex];
+            IList NodeList = (IList)ChildBlock.GetType().GetProperty(nameof(IBlock<INode, Node>.NodeList)).GetValue(ChildBlock);
 
-            Debug.Assert(Index >= 0 && Index < NodeList.Count);
+            Debug.Assert(index >= 0 && index < NodeList.Count);
 
-            NodeList.RemoveAt(Index);
+            NodeList.RemoveAt(index);
 
             if (NodeList.Count == 0)
             {
-                NodeBlockList.RemoveAt(BlockIndex);
-                IsBlockRemoved = true;
+                NodeBlockList.RemoveAt(blockIndex);
+                isBlockRemoved = true;
             }
             else
-                IsBlockRemoved = false;
+                isBlockRemoved = false;
         }
 
-        public static void ReplaceInBlock(INode Node, string PropertyName, int BlockIndex, int Index, INode NewChildNode)
+        public static void ReplaceInBlock(INode node, string propertyName, int blockIndex, int index, INode newChildNode)
         {
-            Debug.Assert(Node != null);
-            Debug.Assert(PropertyName != null);
+            Debug.Assert(node != null);
+            Debug.Assert(propertyName != null);
 
-            Type NodeType = Node.GetType();
-            PropertyInfo Property = NodeType.GetProperty(PropertyName);
+            Type NodeType = node.GetType();
+            PropertyInfo Property = NodeType.GetProperty(propertyName);
 
             Debug.Assert(Property.PropertyType.IsGenericType);
             Debug.Assert(Property.PropertyType.GetInterface(typeof(IBlockList).FullName) != null);
 
-            IBlockList ItemBlockList = Property.GetValue(Node) as IBlockList;
+            IBlockList ItemBlockList = Property.GetValue(node) as IBlockList;
 
             Debug.Assert(ItemBlockList != null);
 
-            IList NodeBlockList = (IList)ItemBlockList.GetType().GetProperty("NodeBlockList").GetValue(ItemBlockList);
+            IList NodeBlockList = (IList)ItemBlockList.GetType().GetProperty(nameof(IBlockList<INode, Node>.NodeBlockList)).GetValue(ItemBlockList);
 
-            Debug.Assert(BlockIndex >= 0 && BlockIndex < NodeBlockList.Count);
+            Debug.Assert(blockIndex >= 0 && blockIndex < NodeBlockList.Count);
 
-            IBlock ChildBlock = (IBlock)NodeBlockList[BlockIndex];
-            IList NodeList = (IList)ChildBlock.GetType().GetProperty("NodeList").GetValue(ChildBlock);
+            IBlock ChildBlock = (IBlock)NodeBlockList[blockIndex];
+            IList NodeList = (IList)ChildBlock.GetType().GetProperty(nameof(IBlock<INode, Node>.NodeList)).GetValue(ChildBlock);
 
-            Debug.Assert(Index >= 0 && Index < NodeList.Count);
+            Debug.Assert(index >= 0 && index < NodeList.Count);
 
-            NodeList[Index] = NewChildNode;
+            NodeList[index] = newChildNode;
         }
 
-        public static bool IsBlockListEmpty(IBlockList BlockList)
+        public static bool IsBlockListEmpty(IBlockList blockList)
         {
-            Debug.Assert(BlockList != null);
+            Debug.Assert(blockList != null);
 
-            IList NodeBlockList = (IList)BlockList.GetType().GetProperty("NodeBlockList").GetValue(BlockList);
+            IList NodeBlockList = (IList)blockList.GetType().GetProperty(nameof(IBlockList<INode, Node>.NodeBlockList)).GetValue(blockList);
 
             Debug.Assert(NodeBlockList != null);
 
             return (NodeBlockList.Count == 0);
         }
 
-        public static bool IsBlockListSingle(IBlockList BlockList)
+        public static bool IsBlockListSingle(IBlockList blockList)
         {
-            Debug.Assert(BlockList != null);
+            Debug.Assert(blockList != null);
 
-            IList NodeBlockList = (IList)BlockList.GetType().GetProperty("NodeBlockList").GetValue(BlockList);
+            IList NodeBlockList = (IList)blockList.GetType().GetProperty(nameof(IBlockList<INode, Node>.NodeBlockList)).GetValue(blockList);
 
             Debug.Assert(NodeBlockList != null);
 
@@ -1097,112 +1089,112 @@ namespace BaseNodeHelper
                 return false;
 
             IBlock ChildBlock = (IBlock)NodeBlockList[0];
-            IList NodeList = (IList)ChildBlock.GetType().GetProperty("NodeList").GetValue(ChildBlock);
+            IList NodeList = (IList)ChildBlock.GetType().GetProperty(nameof(IBlock<INode, Node>.NodeList)).GetValue(ChildBlock);
 
             Debug.Assert(NodeList.Count > 0);
 
             return NodeList.Count == 1;
         }
 
-        public static void InsertIntoBlockList(INode Node, string PropertyName, int BlockIndex, ReplicationStatus Replication, IPattern ReplicationPattern, IIdentifier SourceIdentifier, out IBlock ChildBlock)
+        public static void InsertIntoBlockList(INode node, string propertyName, int blockIndex, ReplicationStatus replication, IPattern replicationPattern, IIdentifier sourceIdentifier, out IBlock childBlock)
         {
-            Debug.Assert(Node != null);
-            Debug.Assert(PropertyName != null);
-            Debug.Assert(ReplicationPattern != null);
-            Debug.Assert(SourceIdentifier != null);
+            Debug.Assert(node != null);
+            Debug.Assert(propertyName != null);
+            Debug.Assert(replicationPattern != null);
+            Debug.Assert(sourceIdentifier != null);
 
-            Type NodeType = Node.GetType();
-            PropertyInfo Property = NodeType.GetProperty(PropertyName);
+            Type NodeType = node.GetType();
+            PropertyInfo Property = NodeType.GetProperty(propertyName);
 
             Debug.Assert(Property.PropertyType.IsGenericType);
             Debug.Assert(Property.PropertyType.GetInterface(typeof(IBlockList).FullName) != null);
 
-            IBlockList ItemBlockList = Property.GetValue(Node) as IBlockList;
+            IBlockList ItemBlockList = Property.GetValue(node) as IBlockList;
 
             Debug.Assert(ItemBlockList != null);
 
-            IList NodeBlockList = (IList)ItemBlockList.GetType().GetProperty("NodeBlockList").GetValue(ItemBlockList);
+            IList NodeBlockList = (IList)ItemBlockList.GetType().GetProperty(nameof(IBlockList<INode, Node>.NodeBlockList)).GetValue(ItemBlockList);
 
-            Debug.Assert(BlockIndex >= 0 && BlockIndex <= NodeBlockList.Count);
+            Debug.Assert(blockIndex >= 0 && blockIndex <= NodeBlockList.Count);
 
-            ChildBlock = CreateBlock(Property.PropertyType, Replication, ReplicationPattern, SourceIdentifier);
-            NodeBlockList.Insert(BlockIndex, ChildBlock);
+            childBlock = CreateBlock(Property.PropertyType, replication, replicationPattern, sourceIdentifier);
+            NodeBlockList.Insert(blockIndex, childBlock);
         }
 
-        private static IBlock CreateBlock(Type PropertyType, ReplicationStatus Replication, IPattern ReplicationPattern, IIdentifier SourceIdentifier)
+        private static IBlock CreateBlock(Type propertyType, ReplicationStatus replication, IPattern replicationPattern, IIdentifier sourceIdentifier)
         {
-            Type[] TypeArguments = PropertyType.GetGenericArguments();
+            Type[] TypeArguments = propertyType.GetGenericArguments();
 
             Type BlockType = typeof(Block<,>).MakeGenericType(TypeArguments);
             IBlock NewBlock = (IBlock)BlockType.Assembly.CreateInstance(BlockType.FullName);
 
             Document EmptyComment = new Document();
             EmptyComment.Comment = "";
-            NewBlock.GetType().GetProperty("Documentation").SetValue(NewBlock, EmptyComment);
+            NewBlock.GetType().GetProperty(nameof(INode.Documentation)).SetValue(NewBlock, EmptyComment);
 
             Type NodeListType = typeof(List<>).MakeGenericType(new Type[] { TypeArguments[0] });
             IList NewNodeList = (IList)NodeListType.Assembly.CreateInstance(NodeListType.FullName);
-            NewBlock.GetType().GetProperty("NodeList").SetValue(NewBlock, NewNodeList);
+            NewBlock.GetType().GetProperty(nameof(IBlock<INode, Node>.NodeList)).SetValue(NewBlock, NewNodeList);
 
-            NewBlock.GetType().GetProperty("Replication").SetValue(NewBlock, Replication);
-            NewBlock.GetType().GetProperty("ReplicationPattern").SetValue(NewBlock, ReplicationPattern);
-            NewBlock.GetType().GetProperty("SourceIdentifier").SetValue(NewBlock, SourceIdentifier);
+            NewBlock.GetType().GetProperty(nameof(IBlock<INode, Node>.Replication)).SetValue(NewBlock, replication);
+            NewBlock.GetType().GetProperty(nameof(IBlock<INode, Node>.ReplicationPattern)).SetValue(NewBlock, replicationPattern);
+            NewBlock.GetType().GetProperty(nameof(IBlock<INode, Node>.SourceIdentifier)).SetValue(NewBlock, sourceIdentifier);
 
             return NewBlock;
         }
 
-        public static void RemoveFromBlockList(INode Node, string PropertyName, int BlockIndex)
+        public static void RemoveFromBlockList(INode node, string propertyName, int blockIndex)
         {
-            Debug.Assert(Node != null);
-            Debug.Assert(PropertyName != null);
+            Debug.Assert(node != null);
+            Debug.Assert(propertyName != null);
 
-            Type NodeType = Node.GetType();
-            PropertyInfo Property = NodeType.GetProperty(PropertyName);
+            Type NodeType = node.GetType();
+            PropertyInfo Property = NodeType.GetProperty(propertyName);
 
             Debug.Assert(Property.PropertyType.IsGenericType);
             Debug.Assert(Property.PropertyType.GetInterface(typeof(IBlockList).FullName) != null);
 
-            IBlockList ItemBlockList = Property.GetValue(Node) as IBlockList;
+            IBlockList ItemBlockList = Property.GetValue(node) as IBlockList;
 
             Debug.Assert(ItemBlockList != null);
 
-            IList NodeBlockList = (IList)ItemBlockList.GetType().GetProperty("NodeBlockList").GetValue(ItemBlockList);
+            IList NodeBlockList = (IList)ItemBlockList.GetType().GetProperty(nameof(IBlockList<INode, Node>.NodeBlockList)).GetValue(ItemBlockList);
 
-            Debug.Assert(BlockIndex >= 0 && BlockIndex < NodeBlockList.Count);
+            Debug.Assert(blockIndex >= 0 && blockIndex < NodeBlockList.Count);
 
-            NodeBlockList.RemoveAt(BlockIndex);
+            NodeBlockList.RemoveAt(blockIndex);
         }
 
-        public static void SplitBlock(INode Node, string PropertyName, int BlockIndex, int Index, ReplicationStatus Replication, IPattern ReplicationPattern, IIdentifier SourceIdentifier)
+        public static void SplitBlock(INode node, string propertyName, int blockIndex, int index, ReplicationStatus replication, IPattern replicationPattern, IIdentifier sourceIdentifier)
         {
-            Debug.Assert(Node != null);
-            Debug.Assert(PropertyName != null);
+            Debug.Assert(node != null);
+            Debug.Assert(propertyName != null);
 
-            Type NodeType = Node.GetType();
-            PropertyInfo Property = NodeType.GetProperty(PropertyName);
+            Type NodeType = node.GetType();
+            PropertyInfo Property = NodeType.GetProperty(propertyName);
 
             Debug.Assert(Property.PropertyType.IsGenericType);
             Debug.Assert(Property.PropertyType.GetInterface(typeof(IBlockList).FullName) != null);
 
-            IBlockList ItemBlockList = Property.GetValue(Node) as IBlockList;
+            IBlockList ItemBlockList = Property.GetValue(node) as IBlockList;
 
             Debug.Assert(ItemBlockList != null);
 
-            IList NodeBlockList = (IList)ItemBlockList.GetType().GetProperty("NodeBlockList").GetValue(ItemBlockList);
+            IList NodeBlockList = (IList)ItemBlockList.GetType().GetProperty(nameof(IBlockList<INode, Node>.NodeBlockList)).GetValue(ItemBlockList);
 
-            Debug.Assert(BlockIndex >= 0 && BlockIndex < NodeBlockList.Count);
+            Debug.Assert(blockIndex >= 0 && blockIndex < NodeBlockList.Count);
 
-            IBlock CurrentBlock = (IBlock)NodeBlockList[BlockIndex];
-            IList CurrentNodeList = (IList)CurrentBlock.GetType().GetProperty("NodeList").GetValue(CurrentBlock);
+            IBlock CurrentBlock = (IBlock)NodeBlockList[blockIndex];
+            IList CurrentNodeList = (IList)CurrentBlock.GetType().GetProperty(nameof(IBlock<INode, Node>.NodeList)).GetValue(CurrentBlock);
 
-            IBlock NewChildBlock = CreateBlock(Property.PropertyType, Replication, ReplicationPattern, SourceIdentifier);
-            IList NewNodeList = (IList)NewChildBlock.GetType().GetProperty("NodeList").GetValue(NewChildBlock);
-            NodeBlockList.Insert(BlockIndex, NewChildBlock);
+            IBlock NewChildBlock = CreateBlock(Property.PropertyType, replication, replicationPattern, sourceIdentifier);
+            IList NewNodeList = (IList)NewChildBlock.GetType().GetProperty(nameof(IBlock<INode, Node>.NodeList)).GetValue(NewChildBlock);
+            NodeBlockList.Insert(blockIndex, NewChildBlock);
 
             Debug.Assert(CurrentNodeList.Count > 1);
-            Debug.Assert(Index > 0 && Index < CurrentNodeList.Count);
+            Debug.Assert(index > 0 && index < CurrentNodeList.Count);
 
-            for (int i = 0; i < Index; i++)
+            for (int i = 0; i < index; i++)
             {
                 INode ChildNode = (INode)CurrentNodeList[0];
 
@@ -1214,29 +1206,29 @@ namespace BaseNodeHelper
             Debug.Assert(NewNodeList.Count > 0);
         }
 
-        public static void JoinBlocks(INode Node, string PropertyName, int BlockIndex)
+        public static void JoinBlocks(INode node, string propertyName, int blockIndex)
         {
-            Debug.Assert(Node != null);
-            Debug.Assert(PropertyName != null);
+            Debug.Assert(node != null);
+            Debug.Assert(propertyName != null);
 
-            Type NodeType = Node.GetType();
-            PropertyInfo Property = NodeType.GetProperty(PropertyName);
+            Type NodeType = node.GetType();
+            PropertyInfo Property = NodeType.GetProperty(propertyName);
 
             Debug.Assert(Property.PropertyType.IsGenericType);
             Debug.Assert(Property.PropertyType.GetInterface(typeof(IBlockList).FullName) != null);
 
-            IBlockList ItemBlockList = Property.GetValue(Node) as IBlockList;
+            IBlockList ItemBlockList = Property.GetValue(node) as IBlockList;
 
             Debug.Assert(ItemBlockList != null);
 
-            IList NodeBlockList = (IList)ItemBlockList.GetType().GetProperty("NodeBlockList").GetValue(ItemBlockList);
+            IList NodeBlockList = (IList)ItemBlockList.GetType().GetProperty(nameof(IBlockList<INode, Node>.NodeBlockList)).GetValue(ItemBlockList);
 
-            Debug.Assert(BlockIndex > 0 && BlockIndex < NodeBlockList.Count);
+            Debug.Assert(blockIndex > 0 && blockIndex < NodeBlockList.Count);
 
-            IBlock MergedBlock = (IBlock)NodeBlockList[BlockIndex - 1];
-            IBlock CurrentBlock = (IBlock)NodeBlockList[BlockIndex];
-            IList MergedNodeList = (IList)MergedBlock.GetType().GetProperty("NodeList").GetValue(MergedBlock);
-            IList CurrentNodeList = (IList)CurrentBlock.GetType().GetProperty("NodeList").GetValue(CurrentBlock);
+            IBlock MergedBlock = (IBlock)NodeBlockList[blockIndex - 1];
+            IBlock CurrentBlock = (IBlock)NodeBlockList[blockIndex];
+            IList MergedNodeList = (IList)MergedBlock.GetType().GetProperty(nameof(IBlock<INode, Node>.NodeList)).GetValue(MergedBlock);
+            IList CurrentNodeList = (IList)CurrentBlock.GetType().GetProperty(nameof(IBlock<INode, Node>.NodeList)).GetValue(CurrentBlock);
 
             for (int i = 0; i < MergedNodeList.Count; i++)
             {
@@ -1244,16 +1236,16 @@ namespace BaseNodeHelper
                 CurrentNodeList.Insert(i, ChildNode);
             }
 
-            NodeBlockList.RemoveAt(BlockIndex - 1);
+            NodeBlockList.RemoveAt(blockIndex - 1);
         }
 
-        public static void GetOptionalNodes(INode Node, out Dictionary<string, IOptionalReference> OptionalNodesTable)
+        public static void GetOptionalNodes(INode node, out Dictionary<string, IOptionalReference> optionalNodesTable)
         {
-            Debug.Assert(Node != null);
+            Debug.Assert(node != null);
 
-            OptionalNodesTable = new Dictionary<string, IOptionalReference>();
+            optionalNodesTable = new Dictionary<string, IOptionalReference>();
 
-            Type NodeType = Node.GetType();
+            Type NodeType = node.GetType();
             PropertyInfo[] Properties = NodeType.GetProperties();
 
             foreach (PropertyInfo Property in Properties)
@@ -1263,22 +1255,22 @@ namespace BaseNodeHelper
 
                 if (PropertyType.IsGenericType && PropertyType.GetGenericTypeDefinition() == typeof(OptionalReference<>))
                 {
-                    IOptionalReference Optional = Property.GetValue(Node) as IOptionalReference;
+                    IOptionalReference Optional = Property.GetValue(node) as IOptionalReference;
 
                     Debug.Assert(Optional != null);
 
-                    OptionalNodesTable.Add(PropertyName, Optional);
+                    optionalNodesTable.Add(PropertyName, Optional);
                 }
             }
         }
 
-        public static void GetArgumentBlocks(INode Node, out Dictionary<string, IBlockList<IArgument, Argument>> ArgumentBlocksTable)
+        public static void GetArgumentBlocks(INode node, out Dictionary<string, IBlockList<IArgument, Argument>> argumentBlocksTable)
         {
-            Debug.Assert(Node != null);
+            Debug.Assert(node != null);
 
-            ArgumentBlocksTable = new Dictionary<string, IBlockList<IArgument, Argument>>();
+            argumentBlocksTable = new Dictionary<string, IBlockList<IArgument, Argument>>();
 
-            Type NodeType = Node.GetType();
+            Type NodeType = node.GetType();
             PropertyInfo[] Properties = NodeType.GetProperties();
 
             foreach (PropertyInfo Property in Properties)
@@ -1292,31 +1284,31 @@ namespace BaseNodeHelper
 
                     if (GenericArguments.Length > 1 && GenericArguments[0] == typeof(IArgument))
                     {
-                        IBlockList<IArgument, Argument> ArgumentBlocks = Property.GetValue(Node) as IBlockList<IArgument, Argument>;
+                        IBlockList<IArgument, Argument> ArgumentBlocks = Property.GetValue(node) as IBlockList<IArgument, Argument>;
 
                         Debug.Assert(ArgumentBlocks != null);
 
-                        ArgumentBlocksTable.Add(PropertyName, ArgumentBlocks);
+                        argumentBlocksTable.Add(PropertyName, ArgumentBlocks);
                     }
                 }
             }
         }
 
-        public static void MoveNode(IBlock Block, int Index, int Direction)
+        public static void MoveNode(IBlock block, int index, int direction)
         {
-            Debug.Assert(Block != null);
+            Debug.Assert(block != null);
 
-            IList NodeList = (IList)Block.GetType().GetProperty("NodeList").GetValue(Block);
+            IList NodeList = (IList)block.GetType().GetProperty(nameof(IBlock<INode, Node>.NodeList)).GetValue(block);
             Debug.Assert(NodeList != null);
 
-            Debug.Assert(Index >= 0 && Index < NodeList.Count);
-            Debug.Assert(Index + Direction >= 0 && Index + Direction < NodeList.Count);
+            Debug.Assert(index >= 0 && index < NodeList.Count);
+            Debug.Assert(index + direction >= 0 && index + direction < NodeList.Count);
 
-            INode Node1 = (INode)NodeList[Index];
-            INode Node2 = (INode)NodeList[Index + Direction];
+            INode Node1 = (INode)NodeList[index];
+            INode Node2 = (INode)NodeList[index + direction];
 
-            NodeList[Index] = Node2;
-            NodeList[Index + Direction] = Node1;
+            NodeList[index] = Node2;
+            NodeList[index + direction] = Node1;
         }
     }
 }

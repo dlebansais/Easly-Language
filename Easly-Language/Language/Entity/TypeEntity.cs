@@ -12,9 +12,9 @@ namespace Easly
     public abstract class TypeEntity : Entity, ITypeEntity
     {
         #region Init
-        public TypeEntity(Type TypeInfo)
+        public TypeEntity(Type typeInfo)
         {
-            this.TypeInfo = TypeInfo;
+            TypeInfo = typeInfo;
 
             HashtableEx<string, MethodInfo> FlattenedMethodList = new HashtableEx<string, MethodInfo>();
             RecursiveGetMethods(TypeInfo, FlattenedMethodList);
@@ -65,44 +65,44 @@ namespace Easly
             }
         }
 
-        private void RecursiveGetMethods(Type TypeInfo, HashtableEx<string, MethodInfo> Result)
+        private static void RecursiveGetMethods(Type typeInfo, HashtableEx<string, MethodInfo> result)
         {
-            foreach (MethodInfo Item in TypeInfo.GetMethods())
-                if (!Result.ContainsKey(Item.Name))
-                    Result.Add(Item.Name, Item);
+            foreach (MethodInfo Item in typeInfo.GetMethods())
+                if (!result.ContainsKey(Item.Name))
+                    result.Add(Item.Name, Item);
 
-            if (TypeInfo.BaseType != null)
-                RecursiveGetMethods(TypeInfo.BaseType, Result);
+            if (typeInfo.BaseType != null)
+                RecursiveGetMethods(typeInfo.BaseType, result);
 
-            foreach (Type Item in TypeInfo.GetInterfaces())
-                RecursiveGetMethods(Item, Result);
+            foreach (Type Item in typeInfo.GetInterfaces())
+                RecursiveGetMethods(Item, result);
         }
 
-        private void RecursiveGetProperties(Type TypeInfo, HashtableEx<string, PropertyInfo> Result)
+        private static void RecursiveGetProperties(Type typeInfo, HashtableEx<string, PropertyInfo> result)
         {
-            foreach (PropertyInfo Item in TypeInfo.GetProperties())
-                if (!Result.ContainsKey(Item.Name))
-                    Result.Add(Item.Name, Item);
+            foreach (PropertyInfo Item in typeInfo.GetProperties())
+                if (!result.ContainsKey(Item.Name))
+                    result.Add(Item.Name, Item);
 
-            if (TypeInfo.BaseType != null)
-                RecursiveGetProperties(TypeInfo.BaseType, Result);
+            if (typeInfo.BaseType != null)
+                RecursiveGetProperties(typeInfo.BaseType, result);
 
-            foreach (Type Item in TypeInfo.GetInterfaces())
-                RecursiveGetProperties(Item, Result);
+            foreach (Type Item in typeInfo.GetInterfaces())
+                RecursiveGetProperties(Item, result);
         }
 
-        private string OverloadedName(IHashtableIndex<string> Table, string Name)
+        private static string OverloadedName(IHashtableIndex<string> table, string name)
         {
-            if (Table.ContainsKey(Name))
+            if (table.ContainsKey(name))
             {
                 int i = 1;
-                while (Table.ContainsKey(Name + i.ToString()))
+                while (table.ContainsKey(name + i.ToString()))
                     i++;
 
-                return Name + i.ToString();
+                return name + i.ToString();
             }
             else
-                return Name;
+                return name;
         }
 
         public static TypeEntity BuiltTypeEntity(Type t)
@@ -113,7 +113,7 @@ namespace Easly
             {
                 Type[] GenericArguments = new Type[] { t };
                 Type BoundType = typeof(SpecializedTypeEntity<>).MakeGenericType(GenericArguments);
-                PropertyInfo p = BoundType.GetProperty("Singleton");
+                PropertyInfo p = BoundType.GetProperty(nameof(SpecializedTypeEntity<object>.Singleton));
                 Result = (TypeEntity)p.GetValue(null);
             }
             else
@@ -141,19 +141,19 @@ namespace Easly
         #endregion
 
         #region Client Interface
-        public ProcedureEntity Procedure(string Name)
+        public ProcedureEntity Procedure(string name)
         {
-            return Procedures[Name];
+            return Procedures[name];
         }
 
-        public FunctionEntity Function(string Name)
+        public FunctionEntity Function(string name)
         {
-            return Functions[Name];
+            return Functions[name];
         }
 
-        public PropertyEntity Property(string Name)
+        public PropertyEntity Property(string name)
         {
-            return Properties[Name];
+            return Properties[name];
         }
 
         public object CreateInstance()

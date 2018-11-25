@@ -6,4 +6,7 @@ Easly language AST description and helpers.
 
 This assembly contains definitions for all nodes of the [Easly](https://www.easly.org) language, as well as helper classes to create these nodes.
 
+TODO:
+
+[ ] Make all nodes with a "Text" property inherit from a ITextNode interface.
 

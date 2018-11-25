@@ -10,8 +10,8 @@ namespace Easly
     public class NamedFeatureEntity : FeatureEntity, INamedFeatureEntity
     {
         #region Init
-        public NamedFeatureEntity(MemberInfo FeatureInfo)
-            : base(FeatureInfo)
+        public NamedFeatureEntity(MemberInfo featureInfo)
+            : base(featureInfo)
         {
         }
         #endregion

@@ -29,11 +29,11 @@ namespace BaseNodeHelper
             return EmptyPattern;
         }
 
-        public static IPattern CreateSimplePattern(string PatternText)
+        public static IPattern CreateSimplePattern(string patternText)
         {
             Pattern SimplePattern = new Pattern();
             SimplePattern.Documentation = CreateEmptyDocumentation();
-            SimplePattern.Text = PatternText;
+            SimplePattern.Text = patternText;
 
             return SimplePattern;
         }
@@ -47,11 +47,11 @@ namespace BaseNodeHelper
             return EmptyIdentifier;
         }
 
-        public static IIdentifier CreateSimpleIdentifier(string IdentifierText)
+        public static IIdentifier CreateSimpleIdentifier(string identifierText)
         {
             Identifier SimpleIdentifier = new Identifier();
             SimpleIdentifier.Documentation = CreateEmptyDocumentation();
-            SimpleIdentifier.Text = IdentifierText;
+            SimpleIdentifier.Text = identifierText;
 
             return SimpleIdentifier;
         }
@@ -65,11 +65,11 @@ namespace BaseNodeHelper
             return EmptyName;
         }
 
-        public static IName CreateSimpleName(string NameText)
+        public static IName CreateSimpleName(string nameText)
         {
             Name SimpleName = new Name();
             SimpleName.Documentation = CreateEmptyDocumentation();
-            SimpleName.Text = NameText;
+            SimpleName.Text = nameText;
 
             return SimpleName;
         }
@@ -81,20 +81,20 @@ namespace BaseNodeHelper
             return CreateQualifiedName(Path);
         }
 
-        public static IQualifiedName CreateSimpleQualifiedName(string IdentifierText)
+        public static IQualifiedName CreateSimpleQualifiedName(string identifierText)
         {
             List<IIdentifier> Path = new List<IIdentifier>();
-            Path.Add(CreateSimpleIdentifier(IdentifierText));
+            Path.Add(CreateSimpleIdentifier(identifierText));
             return CreateQualifiedName(Path);
         }
 
-        public static IQualifiedName CreateQualifiedName(List<IIdentifier> Path)
+        public static IQualifiedName CreateQualifiedName(IList<IIdentifier> path)
         {
-            Debug.Assert(Path.Count > 0);
+            Debug.Assert(path.Count > 0);
 
             QualifiedName DefaultQualifiedName = new QualifiedName();
             DefaultQualifiedName.Documentation = CreateEmptyDocumentation();
-            DefaultQualifiedName.Path = Path;
+            DefaultQualifiedName.Path = path;
 
             return DefaultQualifiedName;
         }
@@ -109,11 +109,11 @@ namespace BaseNodeHelper
             return EmptyQueryExpression;
         }
 
-        public static IExpression CreateSimpleQueryExpression(string QueryText)
+        public static IExpression CreateSimpleQueryExpression(string queryText)
         {
             QueryExpression SimpleQueryExpression = new QueryExpression();
             SimpleQueryExpression.Documentation = CreateEmptyDocumentation();
-            SimpleQueryExpression.Query = CreateSimpleQualifiedName(QueryText);
+            SimpleQueryExpression.Query = CreateSimpleQualifiedName(queryText);
             SimpleQueryExpression.ArgumentBlocks = BlockListHelper<IArgument, Argument>.CreateEmptyBlockList();
 
             return SimpleQueryExpression;
@@ -129,11 +129,11 @@ namespace BaseNodeHelper
             return EmptyCommandInstruction;
         }
 
-        public static IInstruction CreateSimpleCommandInstruction(string CommandText)
+        public static IInstruction CreateSimpleCommandInstruction(string commandText)
         {
             CommandInstruction SimpleCommandInstruction = new CommandInstruction();
             SimpleCommandInstruction.Documentation = CreateEmptyDocumentation();
-            SimpleCommandInstruction.Command = CreateSimpleQualifiedName(CommandText);
+            SimpleCommandInstruction.Command = CreateSimpleQualifiedName(commandText);
             SimpleCommandInstruction.ArgumentBlocks = BlockListHelper<IArgument, Argument>.CreateEmptyBlockList();
 
             return SimpleCommandInstruction;
@@ -148,11 +148,11 @@ namespace BaseNodeHelper
             return EmptyPositionalArgument;
         }
 
-        public static IPositionalArgument CreateSimplePositionalArgument(string QueryText)
+        public static IPositionalArgument CreateSimplePositionalArgument(string queryText)
         {
             PositionalArgument SimplePositionalArgument = new PositionalArgument();
             SimplePositionalArgument.Documentation = CreateEmptyDocumentation();
-            SimplePositionalArgument.Source = CreateSimpleQueryExpression(QueryText);
+            SimplePositionalArgument.Source = CreateSimpleQueryExpression(queryText);
 
             return SimplePositionalArgument;
         }
@@ -169,23 +169,23 @@ namespace BaseNodeHelper
             return EmptyAssignmentArgument;
         }
 
-        public static IAssignmentArgument CreateSimpleAssignmentArgument(string IdentifierText, string QueryText)
+        public static IAssignmentArgument CreateSimpleAssignmentArgument(string identifierText, string queryText)
         {
-            IIdentifier Parameter = CreateSimpleIdentifier(IdentifierText);
+            IIdentifier Parameter = CreateSimpleIdentifier(identifierText);
 
             AssignmentArgument SimpleAssignmentArgument = new AssignmentArgument();
             SimpleAssignmentArgument.Documentation = CreateEmptyDocumentation();
             SimpleAssignmentArgument.ParameterBlocks = BlockListHelper<IIdentifier, Identifier>.CreateSimpleBlockList(Parameter);
-            SimpleAssignmentArgument.Source = CreateSimpleQueryExpression(QueryText);
+            SimpleAssignmentArgument.Source = CreateSimpleQueryExpression(queryText);
 
             return SimpleAssignmentArgument;
         }
 
-        public static IPositionalTypeArgument CreateSimplePositionalTypeArgument(string TypeText)
+        public static IPositionalTypeArgument CreateSimplePositionalTypeArgument(string typeText)
         {
             PositionalTypeArgument SimplePositionalTypeArgument = new PositionalTypeArgument();
             SimplePositionalTypeArgument.Documentation = CreateEmptyDocumentation();
-            SimplePositionalTypeArgument.Source = CreateSimpleSimpleType(TypeText);
+            SimplePositionalTypeArgument.Source = CreateSimpleSimpleType(typeText);
 
             return SimplePositionalTypeArgument;
         }
@@ -199,11 +199,11 @@ namespace BaseNodeHelper
             return EmptySimpleType;
         }
 
-        public static ISimpleType CreateSimpleSimpleType(string IdentifierText)
+        public static ISimpleType CreateSimpleSimpleType(string identifierText)
         {
             SimpleType SimpleSimpleType = new SimpleType();
             SimpleSimpleType.Documentation = CreateEmptyDocumentation();
-            SimpleSimpleType.ClassIdentifier = CreateSimpleIdentifier(IdentifierText);
+            SimpleSimpleType.ClassIdentifier = CreateSimpleIdentifier(identifierText);
 
             return SimpleSimpleType;
         }
@@ -320,52 +320,55 @@ namespace BaseNodeHelper
             return CreateEmptySimpleType();
         }
 
-        public static INode CreateDefault(Type ObjectType)
+        public static INode CreateDefault(Type objectType)
         {
-            if (ObjectType == typeof(IArgument))
-                return CreateDefaultArgument();
-            else if (ObjectType == typeof(IBody))
-                return CreateDefaultBody();
-            else if (ObjectType == typeof(IExpression))
-                return CreateDefaultExpression();
-            else if (ObjectType == typeof(IInstruction))
-                return CreateDefaultInstruction();
-            else if (ObjectType == typeof(IObjectType))
-                return CreateDefaultType();
-            else if (ObjectType == typeof(IName))
-                return CreateEmptyName();
-            else if (ObjectType == typeof(IIdentifier))
-                return CreateEmptyIdentifier();
-            else if (ObjectType == typeof(IQualifiedName))
-                return CreateEmptyQualifiedName();
-            else if (ObjectType == typeof(IScope))
-                return CreateEmptyScope();
-            else if (ObjectType == typeof(IImport))
-                return CreateSimpleImport("", "", ImportType.Latest);
-            else
-                throw new InvalidOperationException();
+            switch (objectType)
+            {
+                case IArgument AsArgument:
+                    return CreateDefaultArgument();
+                case IBody AsBody:
+                    return CreateDefaultBody();
+                case IExpression AsExpression:
+                    return CreateDefaultExpression();
+                case IInstruction AsInstruction:
+                    return CreateDefaultInstruction();
+                case IObjectType AsObjectType:
+                    return CreateDefaultType();
+                case IName AsName:
+                    return CreateEmptyName();
+                case IIdentifier AsIdentifier:
+                    return CreateEmptyIdentifier();
+                case IQualifiedName AsQualifiedName:
+                    return CreateEmptyQualifiedName();
+                case IScope AsScope:
+                    return CreateEmptyScope();
+                case IImport AsImport:
+                    return CreateSimpleImport("", "", ImportType.Latest);
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(objectType));
+            }
         }
         #endregion
 
         #region Specific Objects
         #region Argument
-        public static IAssignmentArgument CreateAssignmentArgument(List<IIdentifier> ParameterList, IExpression Source)
+        public static IAssignmentArgument CreateAssignmentArgument(List<IIdentifier> parameterList, IExpression source)
         {
-            Debug.Assert(ParameterList.Count > 0);
+            Debug.Assert(parameterList.Count > 0);
 
             AssignmentArgument Result = new AssignmentArgument();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.ParameterBlocks = BlockListHelper<IIdentifier, Identifier>.CreateBlockList(ParameterList);
-            Result.Source = Source;
+            Result.ParameterBlocks = BlockListHelper<IIdentifier, Identifier>.CreateBlockList(parameterList);
+            Result.Source = source;
 
             return Result;
         }
 
-        public static IPositionalArgument CreatePositionalArgument(IExpression Source)
+        public static IPositionalArgument CreatePositionalArgument(IExpression source)
         {
             PositionalArgument Result = new PositionalArgument();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.Source = Source;
+            Result.Source = source;
 
             return Result;
         }
@@ -420,124 +423,124 @@ namespace BaseNodeHelper
         }
         #endregion
         #region Expression
-        public static IAgentExpression CreateAgentExpression(IIdentifier Delegated)
+        public static IAgentExpression CreateAgentExpression(IIdentifier delegated)
         {
             AgentExpression Result = new AgentExpression();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.Delegated = Delegated;
+            Result.Delegated = delegated;
             Result.BaseType = OptionalReferenceHelper<IObjectType>.CreateReference(CreateDefaultType());
 
             return Result;
         }
 
-        public static IAssertionTagExpression CreateAssertionTagExpression(IIdentifier TagIdentifier)
+        public static IAssertionTagExpression CreateAssertionTagExpression(IIdentifier tagIdentifier)
         {
             AssertionTagExpression Result = new AssertionTagExpression();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.TagIdentifier = TagIdentifier;
+            Result.TagIdentifier = tagIdentifier;
 
             return Result;
         }
 
-        public static IBinaryConditionalExpression CreateBinaryConditionalExpression(IExpression LeftExpression, ConditionalTypes Conditional, IExpression RightExpression)
+        public static IBinaryConditionalExpression CreateBinaryConditionalExpression(IExpression leftExpression, ConditionalTypes conditional, IExpression rightExpression)
         {
             BinaryConditionalExpression Result = new BinaryConditionalExpression();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.LeftExpression = LeftExpression;
-            Result.Conditional = Conditional;
-            Result.RightExpression = RightExpression;
+            Result.LeftExpression = leftExpression;
+            Result.Conditional = conditional;
+            Result.RightExpression = rightExpression;
 
             return Result;
         }
 
-        public static IBinaryOperatorExpression CreateBinaryOperatorExpression(IExpression LeftExpression, IIdentifier Operator, IExpression RightExpression)
+        public static IBinaryOperatorExpression CreateBinaryOperatorExpression(IExpression leftExpression, IIdentifier operatorName, IExpression rightExpression)
         {
             BinaryOperatorExpression Result = new BinaryOperatorExpression();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.LeftExpression = LeftExpression;
-            Result.Operator = Operator;
-            Result.RightExpression = RightExpression;
+            Result.LeftExpression = leftExpression;
+            Result.Operator = operatorName;
+            Result.RightExpression = rightExpression;
 
             return Result;
         }
 
-        public static IClassConstantExpression CreateClassConstantExpression(IIdentifier ClassIdentifier, IIdentifier ConstantIdentifier)
+        public static IClassConstantExpression CreateClassConstantExpression(IIdentifier classIdentifier, IIdentifier constantIdentifier)
         {
             ClassConstantExpression Result = new ClassConstantExpression();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.ClassIdentifier = ClassIdentifier;
-            Result.ConstantIdentifier = ConstantIdentifier;
+            Result.ClassIdentifier = classIdentifier;
+            Result.ConstantIdentifier = constantIdentifier;
 
             return Result;
         }
 
-        public static ICloneOfExpression CreateCloneOfExpression(IExpression Source)
+        public static ICloneOfExpression CreateCloneOfExpression(IExpression source)
         {
             CloneOfExpression Result = new CloneOfExpression();
             Result.Documentation = CreateEmptyDocumentation();
             Result.Type = CloneType.Shallow;
-            Result.Source = Source;
+            Result.Source = source;
 
             return Result;
         }
 
-        public static IEntityExpression CreateEntityExpression(IQualifiedName Query)
+        public static IEntityExpression CreateEntityExpression(IQualifiedName query)
         {
             EntityExpression Result = new EntityExpression();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.Query = Query;
+            Result.Query = query;
 
             return Result;
         }
 
-        public static IEqualityExpression CreateEqualityExpression(IExpression LeftExpression, ComparisonType Comparison, IExpression RightExpression)
+        public static IEqualityExpression CreateEqualityExpression(IExpression leftExpression, ComparisonType comparison, IExpression rightExpression)
         {
             EqualityExpression Result = new EqualityExpression();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.LeftExpression = LeftExpression;
-            Result.Comparison = Comparison;
+            Result.LeftExpression = leftExpression;
+            Result.Comparison = comparison;
             Result.Equality = EqualityType.Physical;
-            Result.RightExpression = RightExpression;
+            Result.RightExpression = rightExpression;
 
             return Result;
         }
 
-        public static IIndexQueryExpression CreateIndexQueryExpression(IExpression IndexedExpression, List<IArgument> ArgumentList)
+        public static IIndexQueryExpression CreateIndexQueryExpression(IExpression indexedExpression, List<IArgument> argumentList)
         {
-            Debug.Assert(ArgumentList.Count > 0);
+            Debug.Assert(argumentList.Count > 0);
 
             IndexQueryExpression Result = new IndexQueryExpression();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.IndexedExpression = IndexedExpression;
-            Result.ArgumentBlocks = BlockListHelper<IArgument, Argument>.CreateBlockList(ArgumentList);
+            Result.IndexedExpression = indexedExpression;
+            Result.ArgumentBlocks = BlockListHelper<IArgument, Argument>.CreateBlockList(argumentList);
 
             return Result;
         }
 
-        public static IInitializedObjectExpression CreateInitializedObjectExpression(IIdentifier ClassIdentifier, List<IAssignmentArgument> AssignmentArgumentList)
+        public static IInitializedObjectExpression CreateInitializedObjectExpression(IIdentifier classIdentifier, List<IAssignmentArgument> assignmentArgumentList)
         {
             InitializedObjectExpression Result = new InitializedObjectExpression();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.ClassIdentifier = ClassIdentifier;
-            Result.AssignmentBlocks = BlockListHelper<IAssignmentArgument, AssignmentArgument>.CreateBlockList(AssignmentArgumentList);
+            Result.ClassIdentifier = classIdentifier;
+            Result.AssignmentBlocks = BlockListHelper<IAssignmentArgument, AssignmentArgument>.CreateBlockList(assignmentArgumentList);
 
             return Result;
         }
 
-        public static IKeywordExpression CreateKeywordExpression(Keyword Value)
+        public static IKeywordExpression CreateKeywordExpression(Keyword value)
         {
             KeywordExpression Result = new KeywordExpression();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.Value = Value;
+            Result.Value = value;
 
             return Result;
         }
 
-        public static IManifestCharacterExpression CreateManifestCharacterExpression(string Text)
+        public static IManifestCharacterExpression CreateManifestCharacterExpression(string text)
         {
             ManifestCharacterExpression Result = new ManifestCharacterExpression();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.Text = Text;
+            Result.Text = text;
 
             return Result;
         }
@@ -551,117 +554,117 @@ namespace BaseNodeHelper
             return Result;
         }
 
-        public static IManifestNumberExpression CreateSimpleManifestNumberExpression(string NumberText)
+        public static IManifestNumberExpression CreateSimpleManifestNumberExpression(string numberText)
         {
             ManifestNumberExpression Result = new ManifestNumberExpression();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.Text = NumberText;
+            Result.Text = numberText;
 
             return Result;
         }
 
-        public static IManifestStringExpression CreateManifestStringExpression(string Text)
+        public static IManifestStringExpression CreateManifestStringExpression(string text)
         {
             ManifestStringExpression Result = new ManifestStringExpression();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.Text = Text;
+            Result.Text = text;
 
             return Result;
         }
 
-        public static INewExpression CreateNewExpression(IQualifiedName Object)
+        public static INewExpression CreateNewExpression(IQualifiedName objectName)
         {
             NewExpression Result = new NewExpression();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.Object = Object;
+            Result.Object = objectName;
 
             return Result;
         }
 
-        public static IOldExpression CreateOldExpression(IQualifiedName Query)
+        public static IOldExpression CreateOldExpression(IQualifiedName query)
         {
             OldExpression Result = new OldExpression();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.Query = Query;
+            Result.Query = query;
 
             return Result;
         }
 
-        public static IPrecursorExpression CreatePrecursorExpression(List<IArgument> ArgumentList)
+        public static IPrecursorExpression CreatePrecursorExpression(List<IArgument> argumentList)
         {
             PrecursorExpression Result = new PrecursorExpression();
             Result.Documentation = CreateEmptyDocumentation();
             Result.AncestorType = OptionalReferenceHelper<IObjectType>.CreateReference(CreateDefaultType());
-            Result.ArgumentBlocks = BlockListHelper<IArgument, Argument>.CreateBlockList(ArgumentList);
+            Result.ArgumentBlocks = BlockListHelper<IArgument, Argument>.CreateBlockList(argumentList);
 
             return Result;
         }
 
-        public static IPrecursorIndexExpression CreatePrecursorIndexExpression(List<IArgument> ArgumentList)
+        public static IPrecursorIndexExpression CreatePrecursorIndexExpression(List<IArgument> argumentList)
         {
-            Debug.Assert(ArgumentList.Count > 0);
+            Debug.Assert(argumentList.Count > 0);
 
             PrecursorIndexExpression Result = new PrecursorIndexExpression();
             Result.Documentation = CreateEmptyDocumentation();
             Result.AncestorType = OptionalReferenceHelper<IObjectType>.CreateReference(CreateDefaultType());
-            Result.ArgumentBlocks = BlockListHelper<IArgument, Argument>.CreateBlockList(ArgumentList);
+            Result.ArgumentBlocks = BlockListHelper<IArgument, Argument>.CreateBlockList(argumentList);
 
             return Result;
         }
 
-        public static IPreprocessorExpression CreatePreprocessorExpression(PreprocessorMacro Value)
+        public static IPreprocessorExpression CreatePreprocessorExpression(PreprocessorMacro value)
         {
             PreprocessorExpression Result = new PreprocessorExpression();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.Value = Value;
+            Result.Value = value;
 
             return Result;
         }
 
-        public static IQueryExpression CreateQueryExpression(IQualifiedName Query, List<IArgument> ArgumentList)
+        public static IQueryExpression CreateQueryExpression(IQualifiedName query, List<IArgument> argumentList)
         {
             QueryExpression SimpleQueryExpression = new QueryExpression();
             SimpleQueryExpression.Documentation = CreateEmptyDocumentation();
-            SimpleQueryExpression.Query = Query;
-            SimpleQueryExpression.ArgumentBlocks = BlockListHelper<IArgument, Argument>.CreateBlockList(ArgumentList);
+            SimpleQueryExpression.Query = query;
+            SimpleQueryExpression.ArgumentBlocks = BlockListHelper<IArgument, Argument>.CreateBlockList(argumentList);
 
             return SimpleQueryExpression;
         }
 
-        public static IQueryExpression CreateQueryExpression(IQualifiedName Query, IBlockList<IArgument, Argument> ArgumentBlocks)
+        public static IQueryExpression CreateQueryExpression(IQualifiedName query, IBlockList<IArgument, Argument> argumentBlocks)
         {
             QueryExpression SimpleQueryExpression = new QueryExpression();
             SimpleQueryExpression.Documentation = CreateEmptyDocumentation();
-            SimpleQueryExpression.Query = Query;
-            SimpleQueryExpression.ArgumentBlocks = ArgumentBlocks;
+            SimpleQueryExpression.Query = query;
+            SimpleQueryExpression.ArgumentBlocks = argumentBlocks;
 
             return SimpleQueryExpression;
         }
 
-        public static IResultOfExpression CreateResultOfExpression(IExpression Source)
+        public static IResultOfExpression CreateResultOfExpression(IExpression source)
         {
             ResultOfExpression Result = new ResultOfExpression();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.Source = Source;
+            Result.Source = source;
 
             return Result;
         }
 
-        public static IUnaryNotExpression CreateUnaryNotExpression(IExpression RightExpression)
+        public static IUnaryNotExpression CreateUnaryNotExpression(IExpression rightExpression)
         {
             UnaryNotExpression Result = new UnaryNotExpression();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.RightExpression = RightExpression;
+            Result.RightExpression = rightExpression;
 
             return Result;
         }
 
-        public static IUnaryOperatorExpression CreateUnaryOperatorExpression(IIdentifier Operator, IExpression RightExpression)
+        public static IUnaryOperatorExpression CreateUnaryOperatorExpression(IIdentifier operatorName, IExpression rightExpression)
         {
             UnaryOperatorExpression Result = new UnaryOperatorExpression();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.Operator = Operator;
-            Result.RightExpression = RightExpression;
+            Result.Operator = operatorName;
+            Result.RightExpression = rightExpression;
 
             return Result;
         }
@@ -772,70 +775,70 @@ namespace BaseNodeHelper
         }
         #endregion
         #region Instruction
-        public static IAsLongAsInstruction CreateAsLongAsInstruction(IExpression ContinueCondition)
+        public static IAsLongAsInstruction CreateAsLongAsInstruction(IExpression continueCondition)
         {
             AsLongAsInstruction Result = new AsLongAsInstruction();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.ContinueCondition = ContinueCondition;
+            Result.ContinueCondition = continueCondition;
             Result.ContinuationBlocks = BlockListHelper<IContinuation, Continuation>.CreateEmptyBlockList();
             Result.ElseInstructions = OptionalReferenceHelper<IScope>.CreateReference(CreateEmptyScope());
 
             return Result;
         }
 
-        public static IAssignmentInstruction CreateAssignmentInstruction(List<IQualifiedName> AssignmentList, IExpression Source)
+        public static IAssignmentInstruction CreateAssignmentInstruction(List<IQualifiedName> assignmentList, IExpression source)
         {
-            Debug.Assert(AssignmentList.Count > 0);
+            Debug.Assert(assignmentList.Count > 0);
 
             AssignmentInstruction Result = new AssignmentInstruction();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.DestinationBlocks = BlockListHelper<IQualifiedName, QualifiedName>.CreateBlockList(AssignmentList);
-            Result.Source = Source;
+            Result.DestinationBlocks = BlockListHelper<IQualifiedName, QualifiedName>.CreateBlockList(assignmentList);
+            Result.Source = source;
 
             return Result;
         }
 
-        public static IAttachmentInstruction CreateAttachmentInstruction(IExpression Source, List<IName> NameList)
+        public static IAttachmentInstruction CreateAttachmentInstruction(IExpression source, List<IName> nameList)
         {
             IObjectType AttachType = CreateDefaultType();
             IAttachment FirstAttachment = CreateAttachment(AttachType);
 
             AttachmentInstruction Result = new AttachmentInstruction();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.Source = Source;
-            Result.EntityNameBlocks = BlockListHelper<IName, Name>.CreateBlockList(NameList);
+            Result.Source = source;
+            Result.EntityNameBlocks = BlockListHelper<IName, Name>.CreateBlockList(nameList);
             Result.AttachmentBlocks = BlockListHelper<IAttachment, Attachment>.CreateSimpleBlockList(FirstAttachment);
             Result.ElseInstructions = OptionalReferenceHelper<IScope>.CreateReference(CreateEmptyScope());
 
             return Result;
         }
 
-        public static ICheckInstruction CreateCheckInstruction(IExpression BooleanExpression)
+        public static ICheckInstruction CreateCheckInstruction(IExpression booleanExpression)
         {
             CheckInstruction Result = new CheckInstruction();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.BooleanExpression = BooleanExpression;
+            Result.BooleanExpression = booleanExpression;
 
             return Result;
         }
 
-        public static ICommandInstruction CreateCommandInstruction(IQualifiedName Command, List<IArgument> ArgumentList)
+        public static ICommandInstruction CreateCommandInstruction(IQualifiedName command, List<IArgument> argumentList)
         {
             CommandInstruction Result = new CommandInstruction();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.Command = Command;
-            Result.ArgumentBlocks = BlockListHelper<IArgument, Argument>.CreateBlockList(ArgumentList);
+            Result.Command = command;
+            Result.ArgumentBlocks = BlockListHelper<IArgument, Argument>.CreateBlockList(argumentList);
 
             return Result;
         }
 
-        public static ICreateInstruction CreateCreateInstruction(IIdentifier EntityIdentifier, IIdentifier CreationRoutineIdentifier, List<IArgument> ArgumentList)
+        public static ICreateInstruction CreateCreateInstruction(IIdentifier entityIdentifier, IIdentifier creationRoutineIdentifier, List<IArgument> argumentList)
         {
             CreateInstruction Result = new CreateInstruction();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.EntityIdentifier = EntityIdentifier;
-            Result.CreationRoutineIdentifier = CreationRoutineIdentifier;
-            Result.ArgumentBlocks = BlockListHelper<IArgument, Argument>.CreateBlockList(ArgumentList);
+            Result.EntityIdentifier = entityIdentifier;
+            Result.CreationRoutineIdentifier = creationRoutineIdentifier;
+            Result.ArgumentBlocks = BlockListHelper<IArgument, Argument>.CreateBlockList(argumentList);
             Result.Processor = OptionalReferenceHelper<IQualifiedName>.CreateReference(CreateEmptyQualifiedName());
 
             return Result;
@@ -850,13 +853,13 @@ namespace BaseNodeHelper
             return Result;
         }
 
-        public static IForLoopInstruction CreateForLoopInstruction(IExpression WhileCondition)
+        public static IForLoopInstruction CreateForLoopInstruction(IExpression whileCondition)
         {
             ForLoopInstruction Result = new ForLoopInstruction();
             Result.Documentation = CreateEmptyDocumentation();
             Result.EntityDeclarationBlocks = BlockListHelper<IEntityDeclaration, EntityDeclaration>.CreateEmptyBlockList();
             Result.InitInstructionBlocks = BlockListHelper<IInstruction, Instruction>.CreateEmptyBlockList();
-            Result.WhileCondition = WhileCondition;
+            Result.WhileCondition = whileCondition;
             Result.LoopInstructionBlocks = BlockListHelper<IInstruction, Instruction>.CreateEmptyBlockList();
             Result.IterationInstructionBlocks = BlockListHelper<IInstruction, Instruction>.CreateEmptyBlockList();
             Result.InvariantBlocks = BlockListHelper<IAssertion, Assertion>.CreateEmptyBlockList();
@@ -865,61 +868,61 @@ namespace BaseNodeHelper
             return Result;
         }
 
-        public static IIfThenElseInstruction CreateIfThenElseInstruction(IConditional FirstConditional)
+        public static IIfThenElseInstruction CreateIfThenElseInstruction(IConditional firstConditional)
         {
             IfThenElseInstruction Result = new IfThenElseInstruction();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.ConditionalBlocks = BlockListHelper<IConditional, Conditional>.CreateSimpleBlockList(FirstConditional);
+            Result.ConditionalBlocks = BlockListHelper<IConditional, Conditional>.CreateSimpleBlockList(firstConditional);
             Result.ElseInstructions = OptionalReferenceHelper<IScope>.CreateReference(CreateEmptyScope());
 
             return Result;
         }
 
-        public static IIndexAssignmentInstruction CreateIndexAssignmentInstruction(IQualifiedName Destination, List<IArgument> ArgumentList, IExpression Source)
+        public static IIndexAssignmentInstruction CreateIndexAssignmentInstruction(IQualifiedName destination, List<IArgument> argumentList, IExpression source)
         {
-            Debug.Assert(ArgumentList.Count > 0);
+            Debug.Assert(argumentList.Count > 0);
 
             IndexAssignmentInstruction Result = new IndexAssignmentInstruction();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.Destination = Destination;
-            Result.ArgumentBlocks = BlockListHelper<IArgument, Argument>.CreateBlockList(ArgumentList);
-            Result.Source = Source;
+            Result.Destination = destination;
+            Result.ArgumentBlocks = BlockListHelper<IArgument, Argument>.CreateBlockList(argumentList);
+            Result.Source = source;
 
             return Result;
         }
 
-        public static IInspectInstruction CreateInspectInstruction(IExpression Source)
+        public static IInspectInstruction CreateInspectInstruction(IExpression source)
         {
             IExpression FirstExpression = CreateDefaultManifestNumberExpression();
             IWith FirstWith = CreateWith(FirstExpression);
 
             InspectInstruction Result = new InspectInstruction();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.Source = Source;
+            Result.Source = source;
             Result.WithBlocks = BlockListHelper<IWith, With>.CreateSimpleBlockList(FirstWith);
             Result.ElseInstructions = OptionalReferenceHelper<IScope>.CreateReference(CreateEmptyScope());
 
             return Result;
         }
 
-        public static IKeywordAssignmentInstruction CreateKeywordAssignmentInstruction(Keyword Destination, IExpression Source)
+        public static IKeywordAssignmentInstruction CreateKeywordAssignmentInstruction(Keyword destination, IExpression source)
         {
             KeywordAssignmentInstruction Result = new KeywordAssignmentInstruction();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.Destination = Destination;
-            Result.Source = Source;
+            Result.Destination = destination;
+            Result.Source = source;
 
             return Result;
         }
 
-        public static IOverLoopInstruction CreateOverLoopInstruction(IExpression OverList, List<IName> NameList)
+        public static IOverLoopInstruction CreateOverLoopInstruction(IExpression overList, List<IName> nameList)
         {
-            Debug.Assert(NameList.Count > 0);
+            Debug.Assert(nameList.Count > 0);
 
             OverLoopInstruction Result = new OverLoopInstruction();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.OverList = OverList;
-            Result.IndexerBlocks = BlockListHelper<IName, Name>.CreateBlockList(NameList);
+            Result.OverList = overList;
+            Result.IndexerBlocks = BlockListHelper<IName, Name>.CreateBlockList(nameList);
             Result.Iteration =  IterationType.Single;
             Result.LoopInstructions = CreateEmptyScope();
             Result.ExitEntityName = OptionalReferenceHelper<IIdentifier>.CreateReference(CreateEmptyIdentifier());
@@ -928,100 +931,100 @@ namespace BaseNodeHelper
             return Result;
         }
 
-        public static IPrecursorIndexAssignmentInstruction CreatePrecursorIndexAssignmentInstruction(List<IArgument> ArgumentList, IExpression Source)
+        public static IPrecursorIndexAssignmentInstruction CreatePrecursorIndexAssignmentInstruction(List<IArgument> argumentList, IExpression source)
         {
-            Debug.Assert(ArgumentList.Count > 0);
+            Debug.Assert(argumentList.Count > 0);
 
             PrecursorIndexAssignmentInstruction Result = new PrecursorIndexAssignmentInstruction();
             Result.Documentation = CreateEmptyDocumentation();
             Result.AncestorType = OptionalReferenceHelper<IObjectType>.CreateReference(CreateDefaultType());
-            Result.ArgumentBlocks = BlockListHelper<IArgument, Argument>.CreateBlockList(ArgumentList);
-            Result.Source = Source;
+            Result.ArgumentBlocks = BlockListHelper<IArgument, Argument>.CreateBlockList(argumentList);
+            Result.Source = source;
 
             return Result;
         }
 
-        public static IPrecursorInstruction CreatePrecursorInstruction(List<IArgument> ArgumentList)
+        public static IPrecursorInstruction CreatePrecursorInstruction(List<IArgument> argumentList)
         {
             PrecursorInstruction Result = new PrecursorInstruction();
             Result.Documentation = CreateEmptyDocumentation();
             Result.AncestorType = OptionalReferenceHelper<IObjectType>.CreateReference(CreateDefaultType());
-            Result.ArgumentBlocks = BlockListHelper<IArgument, Argument>.CreateBlockList(ArgumentList);
+            Result.ArgumentBlocks = BlockListHelper<IArgument, Argument>.CreateBlockList(argumentList);
 
             return Result;
         }
 
-        public static IRaiseEventInstruction CreateRaiseEventInstruction(IIdentifier QueryIdentifier)
+        public static IRaiseEventInstruction CreateRaiseEventInstruction(IIdentifier queryIdentifier)
         {
             RaiseEventInstruction Result = new RaiseEventInstruction();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.QueryIdentifier = QueryIdentifier;
+            Result.QueryIdentifier = queryIdentifier;
             Result.Event = EventType.Single;
 
             return Result;
         }
 
-        public static IReleaseInstruction CreateReleaseInstruction(IQualifiedName EntityName)
+        public static IReleaseInstruction CreateReleaseInstruction(IQualifiedName entityName)
         {
             ReleaseInstruction Result = new ReleaseInstruction();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.EntityName = EntityName;
+            Result.EntityName = entityName;
 
             return Result;
         }
 
-        public static IThrowInstruction CreateThrowInstruction(IObjectType ExceptionType, IIdentifier CreationRoutineIdentifier, List<IArgument> ArgumentList)
+        public static IThrowInstruction CreateThrowInstruction(IObjectType exceptionType, IIdentifier creationRoutineIdentifier, List<IArgument> argumentList)
         {
             ThrowInstruction Result = new ThrowInstruction();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.ExceptionType = ExceptionType;
-            Result.CreationRoutine = CreationRoutineIdentifier;
-            Result.ArgumentBlocks = BlockListHelper<IArgument, Argument>.CreateBlockList(ArgumentList);
+            Result.ExceptionType = exceptionType;
+            Result.CreationRoutine = creationRoutineIdentifier;
+            Result.ArgumentBlocks = BlockListHelper<IArgument, Argument>.CreateBlockList(argumentList);
 
             return Result;
         }
         #endregion
         #region Type
-        public static IAnchoredType CreateAnchoredType(IQualifiedName AnchoredName)
+        public static IAnchoredType CreateAnchoredType(IQualifiedName anchoredName)
         {
             AnchoredType Result = new AnchoredType();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.AnchoredName = AnchoredName;
+            Result.AnchoredName = anchoredName;
             Result.AnchorKind = AnchorKinds.Declaration;
 
             return Result;
         }
 
-        public static IFunctionType CreateFunctionType(IObjectType BaseType)
+        public static IFunctionType CreateFunctionType(IObjectType baseType)
         {
             IQueryOverloadType FirstOverload = CreateEmptyQueryOverloadType();
 
             FunctionType Result = new FunctionType();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.BaseType = BaseType;
+            Result.BaseType = baseType;
             Result.OverloadBlocks = BlockListHelper<IQueryOverloadType, QueryOverloadType>.CreateSimpleBlockList(FirstOverload);
 
             return Result;
         }
 
-        public static IGenericType CreateGenericType(IIdentifier ClassIdentifier, List<ITypeArgument> TypeArgumentList)
+        public static IGenericType CreateGenericType(IIdentifier classIdentifier, List<ITypeArgument> typeArgumentList)
         {
-            Debug.Assert(TypeArgumentList.Count > 0);
+            Debug.Assert(typeArgumentList.Count > 0);
 
             GenericType Result = new GenericType();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.ClassIdentifier = ClassIdentifier;
-            Result.TypeArgumentBlocks = BlockListHelper<ITypeArgument, TypeArgument>.CreateBlockList(TypeArgumentList);
+            Result.ClassIdentifier = classIdentifier;
+            Result.TypeArgumentBlocks = BlockListHelper<ITypeArgument, TypeArgument>.CreateBlockList(typeArgumentList);
 
             return Result;
         }
 
-        public static IIndexerType CreateIndexerType(IObjectType BaseType, IObjectType EntityType)
+        public static IIndexerType CreateIndexerType(IObjectType baseType, IObjectType entityType)
         {
             IndexerType Result = new IndexerType();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.BaseType = BaseType;
-            Result.EntityType = EntityType;
+            Result.BaseType = baseType;
+            Result.EntityType = entityType;
             Result.IndexParameterBlocks = BlockListHelper<IEntityDeclaration, EntityDeclaration>.CreateEmptyBlockList();
             Result.ParameterEnd = ParameterEndStatus.Closed;
             Result.IndexerKind = UtilityType.ReadWrite;
@@ -1035,33 +1038,33 @@ namespace BaseNodeHelper
             return Result;
         }
 
-        public static IKeywordAnchoredType CreateKeywordAnchoredType(Keyword Anchor)
+        public static IKeywordAnchoredType CreateKeywordAnchoredType(Keyword anchor)
         {
             KeywordAnchoredType Result = new KeywordAnchoredType();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.Anchor = Anchor;
+            Result.Anchor = anchor;
 
             return Result;
         }
 
-        public static IProcedureType CreateProcedureType(IObjectType BaseType)
+        public static IProcedureType CreateProcedureType(IObjectType baseType)
         {
             ICommandOverloadType FirstOverload = CreateEmptyCommandOverloadType();
 
             ProcedureType Result = new ProcedureType();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.BaseType = BaseType;
+            Result.BaseType = baseType;
             Result.OverloadBlocks = BlockListHelper<ICommandOverloadType, CommandOverloadType>.CreateSimpleBlockList(FirstOverload);
 
             return Result;
         }
 
-        public static IPropertyType CreatePropertyType(IObjectType BaseType, IObjectType EntityType)
+        public static IPropertyType CreatePropertyType(IObjectType baseType, IObjectType entityType)
         {
             PropertyType Result = new PropertyType();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.BaseType = BaseType;
-            Result.EntityType = EntityType;
+            Result.BaseType = baseType;
+            Result.EntityType = entityType;
             Result.PropertyKind = UtilityType.ReadWrite;
             Result.GetEnsureBlocks = BlockListHelper<IAssertion, Assertion>.CreateEmptyBlockList();
             Result.GetExceptionIdentifierBlocks = BlockListHelper<IIdentifier, Identifier>.CreateEmptyBlockList();
@@ -1071,68 +1074,68 @@ namespace BaseNodeHelper
             return Result;
         }
 
-        public static ISimpleType CreateSimpleType(IIdentifier ClassIdentifier)
+        public static ISimpleType CreateSimpleType(IIdentifier classIdentifier)
         {
             SimpleType SimpleSimpleType = new SimpleType();
             SimpleSimpleType.Documentation = CreateEmptyDocumentation();
-            SimpleSimpleType.ClassIdentifier = ClassIdentifier;
+            SimpleSimpleType.ClassIdentifier = classIdentifier;
 
             return SimpleSimpleType;
         }
 
-        public static ITupleType CreateTupleType(IEntityDeclaration FirstEntityDeclaration)
+        public static ITupleType CreateTupleType(IEntityDeclaration firstEntityDeclaration)
         {
             TupleType Result = new TupleType();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.EntityDeclarationBlocks = BlockListHelper<IEntityDeclaration, EntityDeclaration>.CreateSimpleBlockList(FirstEntityDeclaration);
+            Result.EntityDeclarationBlocks = BlockListHelper<IEntityDeclaration, EntityDeclaration>.CreateSimpleBlockList(firstEntityDeclaration);
 
             return Result;
         }
         #endregion
         #region Type Argument
-        public static IAssignmentTypeArgument CreateAssignmentTypeArgument(IIdentifier ParameterIdentifier, IObjectType Source)
+        public static IAssignmentTypeArgument CreateAssignmentTypeArgument(IIdentifier parameterIdentifier, IObjectType source)
         {
             AssignmentTypeArgument Result = new AssignmentTypeArgument();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.ParameterIdentifier = ParameterIdentifier;
-            Result.Source = Source;
+            Result.ParameterIdentifier = parameterIdentifier;
+            Result.Source = source;
 
             return Result;
         }
 
-        public static IPositionalTypeArgument CreatePositionalTypeArgument(IObjectType Source)
+        public static IPositionalTypeArgument CreatePositionalTypeArgument(IObjectType source)
         {
             PositionalTypeArgument Result = new PositionalTypeArgument();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.Source = Source;
+            Result.Source = source;
 
             return Result;
         }
         #endregion
         #region Other
-        public static IAttachment CreateAttachment(IObjectType AttachType)
+        public static IAttachment CreateAttachment(IObjectType attachType)
         {
             Attachment Result = new Attachment();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.AttachTypeBlocks = BlockListHelper<IObjectType, ObjectType>.CreateSimpleBlockList(AttachType);
+            Result.AttachTypeBlocks = BlockListHelper<IObjectType, ObjectType>.CreateSimpleBlockList(attachType);
             Result.Instructions = CreateEmptyScope();
 
             return Result;
         }
 
-        public static IConditional CreateConditional(IExpression BooleanExpression)
+        public static IConditional CreateConditional(IExpression booleanExpression)
         {
             Conditional SimpleConditional = new Conditional();
             SimpleConditional.Documentation = CreateEmptyDocumentation();
-            SimpleConditional.BooleanExpression = BooleanExpression;
+            SimpleConditional.BooleanExpression = booleanExpression;
             SimpleConditional.Instructions = CreateEmptyScope();
 
             return SimpleConditional;
         }
 
-        public static IWith CreateWith(IExpression FirstExpression)
+        public static IWith CreateWith(IExpression firstExpression)
         {
-            IRange FirstRange = CreateRange(FirstExpression);
+            IRange FirstRange = CreateRange(firstExpression);
 
             With Result = new With();
             Result.Documentation = CreateEmptyDocumentation();
@@ -1142,22 +1145,22 @@ namespace BaseNodeHelper
             return Result;
         }
 
-        public static IRange CreateRange(IExpression LeftExpression)
+        public static IRange CreateRange(IExpression leftExpression)
         {
             Range Result = new Range();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.LeftExpression = LeftExpression;
+            Result.LeftExpression = leftExpression;
             Result.RightExpression = OptionalReferenceHelper<IExpression>.CreateReference(CreateDefaultExpression());
 
             return Result;
         }
 
-        public static IEntityDeclaration CreateEntityDeclaration(IName EntityName, IObjectType EntityType)
+        public static IEntityDeclaration CreateEntityDeclaration(IName entityName, IObjectType entityType)
         {
             EntityDeclaration SimpleEntityDeclaration = new EntityDeclaration();
             SimpleEntityDeclaration.Documentation = CreateEmptyDocumentation();
-            SimpleEntityDeclaration.EntityName = EntityName;
-            SimpleEntityDeclaration.EntityType = EntityType;
+            SimpleEntityDeclaration.EntityName = entityName;
+            SimpleEntityDeclaration.EntityType = entityType;
             SimpleEntityDeclaration.DefaultValue = OptionalReferenceHelper<IExpression>.CreateReference(CreateDefaultExpression());
 
             return SimpleEntityDeclaration;
@@ -1168,24 +1171,23 @@ namespace BaseNodeHelper
             return CreateSimpleIdentifier("All");
         }
 
-        public static IExport CreateSimpleExport(string NameText)
+        public static IExport CreateSimpleExport(string nameText)
         {
             Export SimpleExport = new Export();
             SimpleExport.Documentation = CreateEmptyDocumentation();
-            SimpleExport.EntityName = CreateSimpleName(NameText);
+            SimpleExport.EntityName = CreateSimpleName(nameText);
             SimpleExport.ClassIdentifierBlocks = BlockListHelper<IIdentifier, Identifier>.CreateEmptyBlockList();
 
             return SimpleExport;
         }
 
-        public static IClass CreateSimpleClass(string NameText)
+        public static IClass CreateSimpleClass(string nameText)
         {
-            Guid guid = Guid.NewGuid();
-            string ClassGuid = guid.ToString("N");
+            Guid ClassGuid = Guid.NewGuid();
 
             Class SimpleClass = new Class();
             SimpleClass.Documentation = CreateEmptyDocumentation();
-            SimpleClass.EntityName = CreateSimpleName(NameText);
+            SimpleClass.EntityName = CreateSimpleName(nameText);
             SimpleClass.FromIdentifier = OptionalReferenceHelper<IIdentifier>.CreateReference(CreateEmptyIdentifier());
             SimpleClass.CopySpecification = CopySemantic.Reference;
             SimpleClass.Cloneable = CloneableStatus.Cloneable;
@@ -1201,18 +1203,17 @@ namespace BaseNodeHelper
             SimpleClass.FeatureBlocks = BlockListHelper<IFeature, Feature>.CreateEmptyBlockList();
             SimpleClass.ConversionBlocks = BlockListHelper<IIdentifier, Identifier>.CreateEmptyBlockList();
             SimpleClass.InvariantBlocks = BlockListHelper<IAssertion, Assertion>.CreateEmptyBlockList();
-//            SimpleClass.ClassGuid = ClassGuid;
-            SimpleClass.ClassGuid = guid;
+            SimpleClass.ClassGuid = ClassGuid;
             SimpleClass.ClassPath = "";
 
             return SimpleClass;
         }
 
-        public static ILibrary CreateSimpleLibrary(string NameText)
+        public static ILibrary CreateSimpleLibrary(string nameText)
         {
             Library SimpleLibrary = new Library();
             SimpleLibrary.Documentation = CreateEmptyDocumentation();
-            SimpleLibrary.EntityName = CreateSimpleName(NameText);
+            SimpleLibrary.EntityName = CreateSimpleName(nameText);
             SimpleLibrary.FromIdentifier = OptionalReferenceHelper<IIdentifier>.CreateReference(CreateEmptyIdentifier());
             SimpleLibrary.ImportBlocks = BlockListHelper<IImport, Import>.CreateEmptyBlockList();
             SimpleLibrary.ClassIdentifierBlocks = BlockListHelper<IIdentifier, Identifier>.CreateEmptyBlockList();
@@ -1220,11 +1221,11 @@ namespace BaseNodeHelper
             return SimpleLibrary;
         }
 
-        public static IGlobalReplicate CreateSimpleGlobalReplicate(string NameText)
+        public static IGlobalReplicate CreateSimpleGlobalReplicate(string nameText)
         {
             GlobalReplicate SimpleGlobalReplicate = new GlobalReplicate();
             SimpleGlobalReplicate.Documentation = CreateEmptyDocumentation();
-            SimpleGlobalReplicate.ReplicateName = CreateSimpleName(NameText);
+            SimpleGlobalReplicate.ReplicateName = CreateSimpleName(nameText);
             SimpleGlobalReplicate.Patterns = new List<IPattern>();
 
             IPattern FirstPattern = CreateEmptyPattern();
@@ -1233,25 +1234,25 @@ namespace BaseNodeHelper
             return SimpleGlobalReplicate;
         }
 
-        public static IImport CreateSimpleImport(string IdentifierText, string FromText, ImportType Type)
+        public static IImport CreateSimpleImport(string identifierText, string fromText, ImportType type)
         {
             Import SimpleImport = new Import();
             SimpleImport.Documentation = CreateEmptyDocumentation();
-            SimpleImport.LibraryIdentifier = CreateSimpleIdentifier(IdentifierText);
-            SimpleImport.FromIdentifier = OptionalReferenceHelper<IIdentifier>.CreateReference(CreateSimpleIdentifier(FromText));
-            SimpleImport.Type = Type;
+            SimpleImport.LibraryIdentifier = CreateSimpleIdentifier(identifierText);
+            SimpleImport.FromIdentifier = OptionalReferenceHelper<IIdentifier>.CreateReference(CreateSimpleIdentifier(fromText));
+            SimpleImport.Type = type;
             SimpleImport.RenameBlocks = BlockListHelper<IRename, Rename>.CreateEmptyBlockList();
 
             return SimpleImport;
         }
 
-        public static IRoot CreateRoot(IList<IClass> ClassList, IList<ILibrary> LibraryList, IList<IGlobalReplicate> GlobalReplicateList)
+        public static IRoot CreateRoot(IList<IClass> classList, IList<ILibrary> libraryList, IList<IGlobalReplicate> globalReplicateList)
         {
             Root EmptyRoot = new Root();
             EmptyRoot.Documentation = CreateEmptyDocumentation();
-            EmptyRoot.ClassBlocks = BlockListHelper<IClass, Class>.CreateBlockList(ClassList);
-            EmptyRoot.LibraryBlocks = BlockListHelper<ILibrary, Library>.CreateBlockList(LibraryList);
-            EmptyRoot.Replicates = GlobalReplicateList;
+            EmptyRoot.ClassBlocks = BlockListHelper<IClass, Class>.CreateBlockList(classList);
+            EmptyRoot.LibraryBlocks = BlockListHelper<ILibrary, Library>.CreateBlockList(libraryList);
+            EmptyRoot.Replicates = globalReplicateList;
 
             return EmptyRoot;
         }
@@ -1259,200 +1260,176 @@ namespace BaseNodeHelper
         #endregion
 
         #region Initialization
-        public static void InitializeDocumentation(INode Node)
+        public static void InitializeDocumentation(INode node)
         {
             IDocument EmptyDocumentation = CreateEmptyDocumentation();
-            ((Node)Node).Documentation = EmptyDocumentation;
+            ((Node)node).Documentation = EmptyDocumentation;
         }
 
-        public static void InitializeChildNode(INode Node, string PropertyName, INode ChildNode)
+        public static void InitializeChildNode(INode node, string propertyName, INode childNode)
         {
-            PropertyInfo ItemProperty = Node.GetType().GetProperty(PropertyName);
-            ItemProperty.SetValue(Node, ChildNode);
+            PropertyInfo ItemProperty = node.GetType().GetProperty(propertyName);
+            ItemProperty.SetValue(node, childNode);
         }
 
-        public static void InitializeOptionalChildNode(INode Node, string PropertyName, INode ChildNode)
+        public static void InitializeOptionalChildNode(INode node, string propertyName, INode childNode)
         {
-            PropertyInfo ItemProperty = Node.GetType().GetProperty(PropertyName);
+            PropertyInfo ItemProperty = node.GetType().GetProperty(propertyName);
             Type ItemType = ItemProperty.PropertyType;
             Type[] Generics = ItemType.GetGenericArguments();
 
             Type ReferenceType = typeof(OptionalReference<>).MakeGenericType(Generics);
             IOptionalReference EmptyReference = (IOptionalReference)ReferenceType.Assembly.CreateInstance(ReferenceType.FullName);
-            ReferenceType.GetProperty("Item").SetValue(EmptyReference, ChildNode);
+            ReferenceType.GetProperty(nameof(IOptionalReference<Node>.Item)).SetValue(EmptyReference, childNode);
             EmptyReference.Unassign();
 
-            ItemProperty.SetValue(Node, EmptyReference);
+            ItemProperty.SetValue(node, EmptyReference);
         }
 
-        public static void InitializeEmptyNodeList(INode Node, string PropertyName, Type ChildNodeType)
+        public static void InitializeEmptyNodeList(INode node, string propertyName, Type childNodeType)
         {
-            Type[] Generics = new Type[] { ChildNodeType };
+            Type[] Generics = new Type[] { childNodeType };
             Type ListType = typeof(List<>).MakeGenericType(Generics);
             IList EmptyList = (IList)ListType.Assembly.CreateInstance(ListType.FullName);
 
-            Node.GetType().GetProperty(PropertyName).SetValue(Node, EmptyList);
+            node.GetType().GetProperty(propertyName).SetValue(node, EmptyList);
         }
 
-        public static void InitializeSimpleNodeList(INode Node, string PropertyName, Type ChildNodeType, INode FirstNode)
+        public static void InitializeSimpleNodeList(INode node, string propertyName, Type childNodeType, INode firstNode)
         {
-            InitializeEmptyNodeList(Node, PropertyName, ChildNodeType);
+            InitializeEmptyNodeList(node, propertyName, childNodeType);
 
-            IList NodeList = (IList)Node.GetType().GetProperty(PropertyName).GetValue(Node);
-            NodeList.Add(FirstNode);
+            IList NodeList = (IList)node.GetType().GetProperty(propertyName).GetValue(node);
+            NodeList.Add(firstNode);
         }
 
-        public static void InitializeEmptyBlockList(INode Node, string PropertyName, Type ChildInterfaceType, Type ChildNodeType)
+        public static void InitializeEmptyBlockList(INode node, string propertyName, Type childInterfaceType, Type childNodeType)
         {
-            Type[] Generics = new Type[] { ChildInterfaceType, ChildNodeType };
+            Type[] Generics = new Type[] { childInterfaceType, childNodeType };
             Type BlockListType = typeof(BlockList<,>).MakeGenericType(Generics);
             Type BlockType = typeof(Block<,>).MakeGenericType(Generics);
 
             IBlockList EmptyBlockList = (IBlockList)BlockListType.Assembly.CreateInstance(BlockListType.FullName);
 
             IDocument EmptyEmptyDocumentation = CreateEmptyDocumentation();
-            EmptyBlockList.GetType().GetProperty("Documentation").SetValue(EmptyBlockList, EmptyEmptyDocumentation);
+            EmptyBlockList.GetType().GetProperty(nameof(INode.Documentation)).SetValue(EmptyBlockList, EmptyEmptyDocumentation);
 
             Type ListOfBlockType = typeof(List<>).MakeGenericType(new Type[] { typeof(IBlock<,>).MakeGenericType(Generics) });
             IList EmptyListOfBlock = (IList)ListOfBlockType.Assembly.CreateInstance(ListOfBlockType.FullName);
-            EmptyBlockList.GetType().GetProperty("NodeBlockList").SetValue(EmptyBlockList, EmptyListOfBlock);
+            EmptyBlockList.GetType().GetProperty(nameof(IBlockList<INode, Node>.NodeBlockList)).SetValue(EmptyBlockList, EmptyListOfBlock);
 
-            Node.GetType().GetProperty(PropertyName).SetValue(Node, EmptyBlockList);
+            node.GetType().GetProperty(propertyName).SetValue(node, EmptyBlockList);
         }
 
-        public static void InitializeSimpleBlockList(INode Node, string PropertyName, Type ChildInterfaceType, Type ChildNodeType, INode FirstNode)
+        public static void InitializeSimpleBlockList(INode node, string propertyName, Type childInterfaceType, Type childNodeType, INode firstNode)
         {
-            InitializeEmptyBlockList(Node, PropertyName, ChildInterfaceType, ChildNodeType);
+            InitializeEmptyBlockList(node, propertyName, childInterfaceType, childNodeType);
 
-            Type[] Generics = new Type[] { ChildInterfaceType, ChildNodeType };
+            Type[] Generics = new Type[] { childInterfaceType, childNodeType };
             Type BlockType = typeof(Block<,>).MakeGenericType(Generics);
             IBlock EmptyBlock = (IBlock)BlockType.Assembly.CreateInstance(BlockType.FullName);
 
             IDocument EmptyEmptyDocumentation = CreateEmptyDocumentation();
-            EmptyBlock.GetType().GetProperty("Documentation").SetValue(EmptyBlock, EmptyEmptyDocumentation);
+            EmptyBlock.GetType().GetProperty(nameof(INode.Documentation)).SetValue(EmptyBlock, EmptyEmptyDocumentation);
 
-            EmptyBlock.GetType().GetProperty("Replication").SetValue(EmptyBlock, ReplicationStatus.Normal);
+            EmptyBlock.GetType().GetProperty(nameof(IBlock.Replication)).SetValue(EmptyBlock, ReplicationStatus.Normal);
 
             IPattern ReplicationPattern = CreateEmptyPattern();
-            EmptyBlock.GetType().GetProperty("ReplicationPattern").SetValue(EmptyBlock, ReplicationPattern);
+            EmptyBlock.GetType().GetProperty(nameof(IBlock.ReplicationPattern)).SetValue(EmptyBlock, ReplicationPattern);
 
             IIdentifier SourceIdentifier = CreateEmptyIdentifier();
-            EmptyBlock.GetType().GetProperty("SourceIdentifier").SetValue(EmptyBlock, SourceIdentifier);
+            EmptyBlock.GetType().GetProperty(nameof(IBlock.SourceIdentifier)).SetValue(EmptyBlock, SourceIdentifier);
 
             Type NodeListType = typeof(List<>).MakeGenericType(new Type[] { Generics[0] });
             IList NodeList = (IList)NodeListType.Assembly.CreateInstance(NodeListType.FullName);
-            EmptyBlock.GetType().GetProperty("NodeList").SetValue(EmptyBlock, NodeList);
+            EmptyBlock.GetType().GetProperty(nameof(IBlock<INode, Node>.NodeList)).SetValue(EmptyBlock, NodeList);
 
-            NodeList.Add(FirstNode);
+            NodeList.Add(firstNode);
 
-            IBlockList BlockList = (IBlockList)Node.GetType().GetProperty(PropertyName).GetValue(Node);
+            IBlockList BlockList = (IBlockList)node.GetType().GetProperty(propertyName).GetValue(node);
 
-            IList NodeBlockList = (IList)BlockList.GetType().GetProperty("NodeBlockList").GetValue(BlockList, null);
+            IList NodeBlockList = (IList)BlockList.GetType().GetProperty(nameof(IBlockList<INode, Node>.NodeBlockList)).GetValue(BlockList, null);
             NodeBlockList.Add(EmptyBlock);
         }
         #endregion
 
         #region Tools
-        public static Type NodeType(string TypeName)
+        public static Type NodeType(string typeName)
         {
             string RootName = typeof(Root).FullName;
             int Index = RootName.LastIndexOf('.');
-            string FullTypeName = RootName.Substring(0, Index + 1) + TypeName;
+            string FullTypeName = RootName.Substring(0, Index + 1) + typeName;
             return typeof(Root).Assembly.GetType(FullTypeName);
         }
 
-        public static bool IsOptionalAssignedToDefault(IOptionalReference Optional)
+        public static bool IsOptionalAssignedToDefault(IOptionalReference optional)
         {
-            if (!Optional.IsAssigned || Optional.AnyItem == null)
+            if (!optional.IsAssigned || optional.AnyItem == null)
                 return false;
 
-            IName AsName;
-            IIdentifier AsIdentifier;
-            IScope AsScope;
-            IQualifiedName AsQualifiedName;
-            IObjectType AsObjectType;
-            IExpression AsExpression;
-            IBody AsBody;
+            IList<IIdentifier> Path;
 
-            if ((AsName = Optional.AnyItem as IName) != null)
-                return (AsName.Text.Length == 0);
-
-            else if ((AsIdentifier = Optional.AnyItem as IIdentifier) != null)
-                return (AsIdentifier.Text.Length == 0);
-
-            else if ((AsScope = Optional.AnyItem as IScope) != null)
-                return (AsScope.EntityDeclarationBlocks.NodeBlockList.Count == 0 && AsScope.InstructionBlocks.NodeBlockList.Count == 0);
-
-            else if ((AsQualifiedName = Optional.AnyItem as IQualifiedName) != null)
+            switch (optional.AnyItem.GetType())
             {
-                IList<IIdentifier> Path = AsQualifiedName.Path;
-                Debug.Assert(Path.Count > 0);
+                case IName AsName:
+                    return AsName.Text.Length == 0;
 
-                return (Path.Count == 1 && Path[0].Text.Length == 0);
-            }
+                case IIdentifier AsIdentifier:
+                    return AsIdentifier.Text.Length == 0;
 
-            else if ((AsObjectType = Optional.AnyItem as IObjectType) != null)
-            {
-                ISimpleType AsSimpleType;
-                if ((AsSimpleType = AsObjectType as ISimpleType) != null)
-                    return (AsSimpleType.Sharing == SharingType.NotShared && AsSimpleType.ClassIdentifier.Text.Length == 0);
-                else
-                    return false;
-            }
+                case IScope AsScope:
+                    return AsScope.EntityDeclarationBlocks.NodeBlockList.Count == 0 && AsScope.InstructionBlocks.NodeBlockList.Count == 0;
 
-            else if ((AsExpression = Optional.AnyItem as IExpression) != null)
-            {
-                IQueryExpression AsQueryExpression;
-                IManifestCharacterExpression AsManifestCharacterExpression;
-                IManifestNumberExpression AsManifestNumberExpression;
-                IManifestStringExpression AsManifestStringExpression;
-
-                if ((AsQueryExpression = AsExpression as IQueryExpression) != null)
-                {
-                    IList<IIdentifier> Path = AsQueryExpression.Query.Path;
+                case IQualifiedName AsQualifiedName:
+                    Path = AsQualifiedName.Path;
                     Debug.Assert(Path.Count > 0);
 
-                    return (AsQueryExpression.ArgumentBlocks.NodeBlockList.Count == 0 && Path.Count == 1 && Path[0].Text.Length == 0);
-                }
+                    return Path.Count == 1 && Path[0].Text.Length == 0;
 
-                else if ((AsManifestCharacterExpression = AsExpression as IManifestCharacterExpression) != null)
+                case ISimpleType AsSimpleType:
+                    return AsSimpleType.Sharing == SharingType.NotShared && AsSimpleType.ClassIdentifier.Text.Length == 0;
+
+                case IObjectType AsObjectType: // Fallback for other IObjectType.
+                    return false;
+
+                case IQueryExpression AsQueryExpression:
+                    Path = AsQueryExpression.Query.Path;
+                    Debug.Assert(Path.Count > 0);
+
+                    return AsQueryExpression.ArgumentBlocks.NodeBlockList.Count == 0 && Path.Count == 1 && Path[0].Text.Length == 0;
+
+                case IManifestCharacterExpression AsManifestCharacterExpression:
                     return AsManifestCharacterExpression.Text.Length == 0;
 
-                else if ((AsManifestNumberExpression = AsExpression as IManifestNumberExpression) != null)
+                case IManifestNumberExpression AsManifestNumberExpression:
                     return AsManifestNumberExpression.Text.Length == 0;
 
-                else if ((AsManifestStringExpression = AsExpression as IManifestStringExpression) != null)
+                case IManifestStringExpression AsManifestStringExpression:
                     return AsManifestStringExpression.Text.Length == 0;
 
-                else
+                case IExpression AsExpression: // Fallback for other IExpression.
                     return false;
-            }
 
-            else if ((AsBody = Optional.AnyItem as IBody) != null)
-            {
-                IEffectiveBody AsEffectiveBody;
-                if ((AsEffectiveBody = AsBody as IEffectiveBody) != null)
-                    return (AsEffectiveBody.RequireBlocks.NodeBlockList.Count == 0 && 
-                            AsEffectiveBody.EnsureBlocks.NodeBlockList.Count == 0 && 
-                            AsEffectiveBody.ExceptionIdentifierBlocks.NodeBlockList.Count == 0 && 
-                            AsEffectiveBody.EntityDeclarationBlocks.NodeBlockList.Count == 0 && 
-                            AsEffectiveBody.BodyInstructionBlocks.NodeBlockList.Count == 0 && 
-                            AsEffectiveBody.ExceptionHandlerBlocks.NodeBlockList.Count == 0);
-                else
+                case IEffectiveBody AsEffectiveBody:
+                    return AsEffectiveBody.RequireBlocks.NodeBlockList.Count == 0 &&
+                           AsEffectiveBody.EnsureBlocks.NodeBlockList.Count == 0 &&
+                           AsEffectiveBody.ExceptionIdentifierBlocks.NodeBlockList.Count == 0 &&
+                           AsEffectiveBody.EntityDeclarationBlocks.NodeBlockList.Count == 0 &&
+                           AsEffectiveBody.BodyInstructionBlocks.NodeBlockList.Count == 0 &&
+                           AsEffectiveBody.ExceptionHandlerBlocks.NodeBlockList.Count == 0;
+
+                case IBody AsBody: // Fallback for other IBody.
                     return false;
-            }
 
-            else
-                throw new InvalidCastException("Invalid Node Type");
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(optional));
+            }
         }
 
-        public static bool IsDefaultArgument(INode Node)
+        public static bool IsDefaultArgument(INode node)
         {
-            IPositionalArgument AsPositional;
-            if ((AsPositional = Node as IPositionalArgument) != null)
-            {
-                IQueryExpression AsQueryExpression;
-                if ((AsQueryExpression = AsPositional.Source as IQueryExpression) != null)
+            if (node is IPositionalArgument AsPositional)
+                if (AsPositional.Source is IQueryExpression AsQueryExpression)
                 {
                     IList<IIdentifier> Path = AsQueryExpression.Query.Path;
                     if (Path.Count == 1 && Path[0].Text.Length == 0)
@@ -1462,7 +1439,6 @@ namespace BaseNodeHelper
                             return true;
                     }
                 }
-            }
 
             return false;
         }

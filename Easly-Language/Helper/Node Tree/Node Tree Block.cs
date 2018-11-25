@@ -14,13 +14,13 @@ namespace BaseNodeHelper
     public class NodeTreeBlock : INodeTreeBlock
     {
         #region Init
-        public NodeTreeBlock(IPattern ReplicationPattern, IIdentifier SourceIdentifier, List<INode> NodeList)
+        public NodeTreeBlock(IPattern replicationPattern, IIdentifier sourceIdentifier, List<INode> nodeList)
         {
-            Debug.Assert(NodeList.Count > 0);
+            Debug.Assert(nodeList.Count > 0);
 
-            this.ReplicationPattern = ReplicationPattern;
-            this.SourceIdentifier = SourceIdentifier;
-            this.NodeList = NodeList.AsReadOnly();
+            ReplicationPattern = replicationPattern;
+            SourceIdentifier = sourceIdentifier;
+            NodeList = nodeList.AsReadOnly();
         }
         #endregion
 

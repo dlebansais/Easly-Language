@@ -5,8 +5,8 @@ namespace Easly
     public class IndexerEntity : FeatureEntity
     {
         #region Init
-        public IndexerEntity(MemberInfo FeatureInfo)
-            : base(FeatureInfo)
+        public IndexerEntity(MemberInfo featureInfo)
+            : base(featureInfo)
         {
         }
         #endregion

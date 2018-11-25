@@ -5,8 +5,8 @@ namespace Easly
     public class PropertyEntity : NamedFeatureEntity
     {
         #region Init
-        public PropertyEntity(MemberInfo FeatureInfo)
-            : base(FeatureInfo)
+        public PropertyEntity(MemberInfo featureInfo)
+            : base(featureInfo)
         {
         }
         #endregion
@@ -27,10 +27,10 @@ namespace Easly
             return AsPropertyInfo.GetValue(o);
         }
 
-        public void SetValue(object o, object Value)
+        public void SetValue(object o, object value)
         {
             PropertyInfo AsPropertyInfo = FeatureInfo as PropertyInfo;
-            AsPropertyInfo.SetValue(o, Value);
+            AsPropertyInfo.SetValue(o, value);
         }
         #endregion
     }

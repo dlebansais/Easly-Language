@@ -5,8 +5,8 @@ namespace Easly
     public class ProcedureEntity : NamedFeatureEntity
     {
         #region Init
-        public ProcedureEntity(MemberInfo FeatureInfo)
-            : base(FeatureInfo)
+        public ProcedureEntity(MemberInfo featureInfo)
+            : base(featureInfo)
         {
         }
         #endregion

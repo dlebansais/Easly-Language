@@ -8,7 +8,7 @@ namespace Easly
         object AnyItem { get; }
         void Assign();
         void Unassign();
-        void Hack(object Item); //TODO: remove
+        void Hack(object item); //TODO: remove
     }
 
     public interface IOptionalReference<T> : IOptionalReference
@@ -20,9 +20,9 @@ namespace Easly
     [PolySerializer.Serializable]
     public class OptionalReference<T> : IOptionalReference, IOptionalReference<T> where T : class
     {
-        public void Hack(object Item) //TODO: remove
+        public void Hack(object item) //TODO: remove
         {
-            this.Item = Item as T;
+            Item = item as T;
         }
 
         #region Init
@@ -31,9 +31,9 @@ namespace Easly
             _Item = null;
         }
 
-        public OptionalReference(T InitialValue)
+        public OptionalReference(T initialValue)
         {
-            _Item = InitialValue;
+            _Item = initialValue;
         }
         #endregion
 
@@ -45,7 +45,7 @@ namespace Easly
             get { return Item; }
         }
 
-        [PolySerializer.Serializable(Condition ="IsAssigned")]
+        [PolySerializer.Serializable(Condition = nameof(IsAssigned))]
         public T Item
         {
             get

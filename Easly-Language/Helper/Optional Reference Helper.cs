@@ -6,10 +6,10 @@ namespace BaseNodeHelper
     public class OptionalReferenceHelper<IN>
         where IN : class, INode
     {
-        public static OptionalReference<IN> CreateReference(IN Item)
+        public static OptionalReference<IN> CreateReference(IN item)
         {
             OptionalReference<IN> Result = new OptionalReference<IN>();
-            Result.Item = Item;
+            Result.Item = item;
             Result.Unassign();
 
             return Result;
