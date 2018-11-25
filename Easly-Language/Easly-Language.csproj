@@ -64,11 +64,6 @@
     <Compile Include="Enums\ReplicationStatus.cs" />
     <Compile Include="Enums\SharingType.cs" />
     <Compile Include="Enums\UtilityType.cs" />
-    <Compile Include="Helper\Block List Helper.cs" />
-    <Compile Include="Helper\Node Helper.cs" />
-    <Compile Include="Helper\Node Tree\Node Tree Block.cs" />
-    <Compile Include="Helper\Node Tree\Node Tree Helper.cs" />
-    <Compile Include="Helper\Optional Reference Helper.cs" />
     <Compile Include="Language\DetachableReference.cs" />
     <Compile Include="Language\Entity\Entity.cs" />
     <Compile Include="Language\Entity\FeatureEntity\FeatureEntity.cs" />
@@ -198,11 +193,9 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
-    <PreBuildEvent>call "$(SolutionDir)updateversion.bat" "$(SolutionDir)" "$(SolutionPath)"</PreBuildEvent>
     <PostBuildEvent>call "$(SolutionDir)updatecommit.bat" "$(SolutionDir)" "$(TargetPath)"</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
-    <PreBuildEvent>call "$(SolutionDir)updateversion.bat" "$(SolutionDir)" "$(SolutionPath)"</PreBuildEvent>
     <PostBuildEvent>call "$(SolutionDir)updatecommit.bat" "$(SolutionDir)" "$(TargetPath)"
 if exist "$(SolutionDir)signfile.bat" call "$(SolutionDir)signfile.bat" "$(SolutionDir)" "$(Configuration)-$(Platform)" "$(TargetPath)"</PostBuildEvent>
   </PropertyGroup>
