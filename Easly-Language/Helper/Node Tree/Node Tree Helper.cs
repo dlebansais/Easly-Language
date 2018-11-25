@@ -200,24 +200,21 @@ namespace BaseNodeHelper
 
         public static bool IsChildNodeAssigned(INode node, string propertyName)
         {
-            IOptionalReference Optional;
-            GetOptionalChildNode(node, propertyName, out Optional);
+            GetOptionalChildNode(node, propertyName, out IOptionalReference Optional);
 
             return Optional.IsAssigned;
         }
 
         public static void AssignChildNode(INode node, string propertyName)
         {
-            IOptionalReference Optional;
-            GetOptionalChildNode(node, propertyName, out Optional);
+            GetOptionalChildNode(node, propertyName, out IOptionalReference Optional);
             
             Optional.Assign();
         }
 
         public static void UnassignChildNode(INode node, string propertyName)
         {
-            IOptionalReference Optional;
-            GetOptionalChildNode(node, propertyName, out Optional);
+            GetOptionalChildNode(node, propertyName, out IOptionalReference Optional);
 
             Optional.Unassign();
         }
@@ -566,11 +563,9 @@ namespace BaseNodeHelper
 
             Debug.Assert(PropertyType.IsEnum || PropertyType == typeof(bool));
 
-            int Min, Max;
-
             if (PropertyType.IsEnum)
             {
-                GetEnumMinMax(Property, out Min, out Max);
+                GetEnumMinMax(Property, out int Min, out int Max);
 
                 Debug.Assert(Min <= value && value <= Max);
 
