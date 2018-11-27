@@ -10,6 +10,23 @@ namespace BaseNodeHelper
 {
     public static class NodeTreeHelper
     {
+        public static IList<string> EnumChildNodeProperties(INode parentNode)
+        {
+            Debug.Assert(parentNode != null);
+
+            Type NodeType = parentNode.GetType();
+
+            PropertyInfo[] Properties = NodeType.GetProperties();
+
+            Debug.Assert(Properties != null);
+
+            List<string> Result = new List<string>();
+            foreach (PropertyInfo Property in Properties)
+                Result.Add(Property.Name);
+
+            return Result;
+        }
+
         public static bool IsChildNodeProperty(INode parentNode, string propertyName)
         {
             Debug.Assert(parentNode != null);
