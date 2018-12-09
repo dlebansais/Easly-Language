@@ -478,6 +478,40 @@ namespace BaseNodeHelper
             return false;
         }
 
+        public static bool IsListType(Type nodeType, string propertyName)
+        {
+            Debug.Assert(nodeType != null);
+            Debug.Assert(propertyName != null);
+
+            PropertyInfo BlockProperty = nodeType.GetProperty(propertyName);
+            if (BlockProperty == null)
+                return false;
+
+            Type CollectionType = BlockProperty.PropertyType;
+            Type BlockType = CollectionType.GetGenericTypeDefinition();
+            Type[] Generics = CollectionType.GetGenericArguments();
+
+            if (Generics == null)
+                return false;
+
+            if (Generics.Length == 1)
+            {
+                if (!Generics[0].IsInterface || BlockType != typeof(IList<>))
+                    return false;
+            }
+
+            else if (Generics.Length == 2)
+            {
+                if (Generics[1].IsInterface || BlockType != typeof(IBlockList<,>))
+                    return false;
+            }
+
+            else
+                return false;
+
+            return true;
+        }
+
         public static bool IsTextNode(INode node)
         {
             Debug.Assert(node != null);
