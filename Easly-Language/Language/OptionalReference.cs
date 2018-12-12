@@ -9,6 +9,7 @@ namespace Easly
         void Assign();
         void Unassign();
         void Hack(object item); //TODO: remove
+        object GetHack(); //TODO: remove
     }
 
     public interface IOptionalReference<T> : IOptionalReference
@@ -23,6 +24,10 @@ namespace Easly
         public void Hack(object item) //TODO: remove
         {
             Item = item as T;
+        }
+        public object GetHack() //TODO: remove
+        {
+            return _Item as T;
         }
 
         #region Init

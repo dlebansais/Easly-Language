@@ -1361,12 +1361,26 @@ namespace BaseNodeHelper
 
         public static bool IsOptionalAssignedToDefault(IOptionalReference optional)
         {
-            if (!optional.IsAssigned || optional.AnyItem == null)
+            if (!optional.IsAssigned)
+                return false;
+
+            return IsOptionalDefault(optional);
+        }
+
+        public static bool IsOptionalDefault(IOptionalReference optional)
+        {
+            INode Node;
+            if (optional.IsAssigned)
+                Node = optional.AnyItem as INode;
+            else
+                Node = optional.GetHack() as INode;
+
+            if (Node == null)
                 return false;
 
             IList<IIdentifier> Path;
 
-            switch (optional.AnyItem)
+            switch (Node)
             {
                 case IName AsName:
                     return AsName.Text.Length == 0;

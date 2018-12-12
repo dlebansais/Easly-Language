@@ -155,10 +155,7 @@ namespace BaseNodeHelper
                 isAssigned = Optional.IsAssigned;
 
                 if (isAssigned)
-                {
                     childNode = Optional.AnyItem as INode;
-                    Debug.Assert(childNode != null);
-                }
                 else
                 {
                     Type[] GenericArguments = PropertyType.GetGenericArguments();
@@ -166,10 +163,17 @@ namespace BaseNodeHelper
                     Type GenericArgument = GenericArguments[0];
                     Debug.Assert(GenericArgument != null);
 
-                    childNode = NodeHelper.CreateDefault(GenericArgument);
-                    Optional.Hack(childNode);
-                    Optional.Unassign();
+                    if (NodeHelper.IsOptionalDefault(Optional))
+                        childNode = Optional.GetHack() as INode;
+                    else
+                    {
+                        childNode = NodeHelper.CreateDefault(GenericArgument);
+                        Optional.Hack(childNode);
+                        Optional.Unassign();
+                    }
                 }
+
+                Debug.Assert(childNode != null);
             }
             else
             {
