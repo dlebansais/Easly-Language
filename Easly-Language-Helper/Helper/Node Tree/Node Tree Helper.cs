@@ -27,7 +27,7 @@ namespace BaseNodeHelper
             return Result;
         }
 
-        public static bool IsChildNodeProperty(INode parentNode, string propertyName)
+        public static bool IsChildNodeProperty(INode parentNode, string propertyName, out Type childNodeType)
         {
             Debug.Assert(parentNode != null);
             Debug.Assert(propertyName != null);
@@ -37,8 +37,8 @@ namespace BaseNodeHelper
 
             Debug.Assert(Property != null);
 
-            Type PropertyType = Property.PropertyType;
-            if (PropertyType.GetInterface(typeof(INode).Name) == null)
+            childNodeType = Property.PropertyType;
+            if (childNodeType.GetInterface(typeof(INode).Name) == null)
                 return false;
 
             return true;
@@ -83,21 +83,35 @@ namespace BaseNodeHelper
             return true;
         }
 
-        public static bool IsOptionalChildNodeProperty(INode parentNode, string propertyName)
+        public static bool IsOptionalChildNodeProperty(INode parentNode, string propertyName, out Type childNodeType)
         {
             Debug.Assert(parentNode != null);
             Debug.Assert(propertyName != null);
 
             Type NodeType = parentNode.GetType();
             PropertyInfo Property = NodeType.GetProperty(propertyName);
-            if (Property == null)
-                return false;
+
+            Debug.Assert(Property != null);
 
             Type PropertyType = Property.PropertyType;
             if (!PropertyType.IsGenericType)
+            {
+                childNodeType = null;
                 return false;
+            }
 
             if (PropertyType.GetGenericTypeDefinition() != typeof(OptionalReference<>))
+            {
+                childNodeType = null;
+                return false;
+            }
+
+            Type[] GenericArguments = PropertyType.GetGenericArguments();
+            Debug.Assert(GenericArguments != null);
+            Debug.Assert(GenericArguments.Length == 1);
+
+            childNodeType = GenericArguments[0];
+            if (childNodeType.GetInterface(typeof(INode).Name) == null)
                 return false;
 
             return true;
@@ -417,6 +431,26 @@ namespace BaseNodeHelper
             childInterfaceType = null;
             childNodeType = null;
             return false;
+        }
+
+        public static IBlockList GetBlockList(INode node, string propertyName)
+        {
+            Debug.Assert(node != null);
+            Debug.Assert(propertyName != null);
+
+            Type NodeType = node.GetType();
+            PropertyInfo Property = NodeType.GetProperty(propertyName);
+
+            Debug.Assert(Property.PropertyType.IsGenericType);
+
+            Type ListType = Property.PropertyType.GetGenericTypeDefinition();
+
+            Debug.Assert(ListType == typeof(IBlockList<,>));
+
+            IBlockList BlockList = Property.GetValue(node) as IBlockList;
+            Debug.Assert(BlockList != null);
+
+            return BlockList;
         }
 
         public static bool GetChildBlockList(INode node, string propertyName, out IReadOnlyList<INodeTreeBlock> childBlockList)
@@ -1054,6 +1088,16 @@ namespace BaseNodeHelper
             NodeList.Insert(index, childNode);
         }
 
+        public static void InsertIntoBlock(IBlock block, int index, INode childNode)
+        {
+            Debug.Assert(block != null);
+            IList NodeList = (IList)block.GetType().GetProperty(nameof(IBlock<INode, Node>.NodeList)).GetValue(block);
+
+            Debug.Assert(index >= 0 && index <= NodeList.Count);
+
+            NodeList.Insert(index, childNode);
+        }
+
         public static void RemoveFromBlock(INode node, string propertyName, int blockIndex, int index, out bool isBlockRemoved)
         {
             Debug.Assert(node != null);
@@ -1359,6 +1403,243 @@ namespace BaseNodeHelper
 
             NodeList[index] = Node2;
             NodeList[index + direction] = Node1;
+        }
+
+        public static bool IsDocumentProperty(INode parentNode, string propertyName)
+        {
+            Debug.Assert(parentNode != null);
+            Debug.Assert(propertyName != null);
+
+            Type NodeType = parentNode.GetType();
+            PropertyInfo Property = NodeType.GetProperty(propertyName);
+
+            Debug.Assert(Property != null);
+
+            Type PropertyType = Property.PropertyType;
+            return PropertyType == typeof(IDocument);
+        }
+
+        public static void SetDocumentation(INode parentNode, IDocument document)
+        {
+            Debug.Assert(parentNode != null);
+
+            Type NodeType = parentNode.GetType();
+            PropertyInfo Property = NodeType.GetProperty(nameof(INode.Documentation));
+
+            Debug.Assert(Property != null);
+
+            Type PropertyType = Property.PropertyType;
+            Debug.Assert(PropertyType == typeof(IDocument));
+
+            Property.SetValue(parentNode, document);
+        }
+
+        public static void CopyDocumentation(INode sourceNode, INode destinationNode)
+        {
+            Debug.Assert(sourceNode != null);
+            Debug.Assert(destinationNode != null);
+
+            Type SourceNodeType = sourceNode.GetType();
+            Type DestinationNodeType = sourceNode.GetType();
+            Debug.Assert(SourceNodeType == DestinationNodeType);
+
+            PropertyInfo Property = SourceNodeType.GetProperty(nameof(INode.Documentation));
+
+            Debug.Assert(Property != null);
+
+            Type PropertyType = Property.PropertyType;
+            Debug.Assert(PropertyType == typeof(IDocument));
+
+            IDocument DocumentCopy = NodeHelper.CreateSimpleDocumentation(sourceNode.Documentation.Comment, sourceNode.Documentation.Uuid);
+            Property.SetValue(destinationNode, DocumentCopy);
+        }
+
+        public static void CopyDocumentation(IBlock sourceBlock, IBlock destinationBlock)
+        {
+            Debug.Assert(sourceBlock != null);
+            Debug.Assert(destinationBlock != null);
+
+            Type SourceBlockType = sourceBlock.GetType();
+            Type DestinationBlockType = sourceBlock.GetType();
+            Debug.Assert(SourceBlockType == DestinationBlockType);
+
+            PropertyInfo Property = SourceBlockType.GetProperty(nameof(IBlock.Documentation));
+
+            Debug.Assert(Property != null);
+
+            Type PropertyType = Property.PropertyType;
+            Debug.Assert(PropertyType == typeof(IDocument));
+
+            IDocument DocumentCopy = NodeHelper.CreateSimpleDocumentation(sourceBlock.Documentation.Comment, sourceBlock.Documentation.Uuid);
+            Property.SetValue(destinationBlock, DocumentCopy);
+        }
+
+        public static void CopyDocumentation(IBlockList sourceBlockList, IBlockList destinationBlockList)
+        {
+            Debug.Assert(sourceBlockList != null);
+            Debug.Assert(destinationBlockList != null);
+
+            Type SourceBlockType = sourceBlockList.GetType();
+            Type DestinationBlockType = sourceBlockList.GetType();
+            Debug.Assert(SourceBlockType == DestinationBlockType);
+
+            PropertyInfo Property = SourceBlockType.GetProperty(nameof(IBlock.Documentation));
+
+            Debug.Assert(Property != null);
+
+            Type PropertyType = Property.PropertyType;
+            Debug.Assert(PropertyType == typeof(IDocument));
+
+            IDocument DocumentCopy = NodeHelper.CreateSimpleDocumentation(sourceBlockList.Documentation.Comment, sourceBlockList.Documentation.Uuid);
+            Property.SetValue(destinationBlockList, DocumentCopy);
+        }
+
+        public static bool IsBooleanProperty(INode parentNode, string propertyName)
+        {
+            return IsValueProperty(parentNode, propertyName, typeof(bool));
+        }
+
+        public static void SetBooleanProperty(INode parentNode, string propertyName, bool value)
+        {
+            SetValueProperty(parentNode, propertyName, value);
+        }
+
+        public static void CopyBooleanProperty(INode sourceNode, INode destinationNode, string propertyName)
+        {
+            CopyValueProperty<bool>(sourceNode, destinationNode, propertyName);
+        }
+
+        public static bool IsStringProperty(INode parentNode, string propertyName)
+        {
+            return IsValueProperty(parentNode, propertyName, typeof(string));
+        }
+
+        public static void SetStringProperty(INode parentNode, string propertyName, string value)
+        {
+            SetValueProperty(parentNode, propertyName, value);
+        }
+
+        public static void CopyStringProperty(INode sourceNode, INode destinationNode, string propertyName)
+        {
+            CopyValueProperty<string>(sourceNode, destinationNode, propertyName);
+        }
+
+        public static bool IsGuidProperty(INode parentNode, string propertyName)
+        {
+            return IsValueProperty(parentNode, propertyName, typeof(Guid));
+        }
+
+        public static void SetGuidProperty(INode parentNode, string propertyName, Guid value)
+        {
+            SetValueProperty(parentNode, propertyName, value);
+        }
+
+        public static void CopyGuidProperty(INode sourceNode, INode destinationNode, string propertyName)
+        {
+            CopyValueProperty<Guid>(sourceNode, destinationNode, propertyName);
+        }
+
+        private static bool IsValueProperty(INode parentNode, string propertyName, Type type)
+        {
+            Debug.Assert(parentNode != null);
+            Debug.Assert(propertyName != null);
+
+            Type NodeType = parentNode.GetType();
+            PropertyInfo Property = NodeType.GetProperty(propertyName);
+
+            Debug.Assert(Property != null);
+
+            Type PropertyType = Property.PropertyType;
+            if (PropertyType != type)
+                return false;
+
+            return true;
+        }
+
+        private static void SetValueProperty<T>(INode parentNode, string propertyName, T value)
+        {
+            Debug.Assert(parentNode != null);
+            Debug.Assert(propertyName != null);
+
+            Type NodeType = parentNode.GetType();
+            PropertyInfo Property = NodeType.GetProperty(propertyName);
+
+            Debug.Assert(Property != null);
+
+            Type PropertyType = Property.PropertyType;
+            Debug.Assert(PropertyType == typeof(T));
+
+            Property.SetValue(parentNode, value);
+        }
+
+        private static void CopyValueProperty<T>(INode sourceNode, INode destinationNode, string propertyName)
+        {
+            Debug.Assert(sourceNode != null);
+            Debug.Assert(destinationNode != null);
+            Debug.Assert(propertyName != null);
+
+            Type SourceNodeType = sourceNode.GetType();
+            Type DestinationNodeType = sourceNode.GetType();
+            Debug.Assert(SourceNodeType == DestinationNodeType);
+
+            PropertyInfo Property = SourceNodeType.GetProperty(propertyName);
+
+            Debug.Assert(Property != null);
+
+            Type PropertyType = Property.PropertyType;
+            Debug.Assert(PropertyType == typeof(T));
+
+            Property.SetValue(destinationNode, Property.GetValue(sourceNode));
+        }
+
+        public static bool IsEnumProperty(INode parentNode, string propertyName)
+        {
+            Debug.Assert(parentNode != null);
+            Debug.Assert(propertyName != null);
+
+            Type NodeType = parentNode.GetType();
+            PropertyInfo Property = NodeType.GetProperty(propertyName);
+
+            Debug.Assert(Property != null);
+
+            Type PropertyType = Property.PropertyType;
+            return PropertyType.IsEnum;
+        }
+
+        public static void SetEnumProperty(INode parentNode, string propertyName, object value)
+        {
+            Debug.Assert(parentNode != null);
+            Debug.Assert(propertyName != null);
+
+            Type NodeType = parentNode.GetType();
+            PropertyInfo Property = NodeType.GetProperty(propertyName);
+
+            Debug.Assert(Property != null);
+
+            Type PropertyType = Property.PropertyType;
+            Debug.Assert(PropertyType.IsEnum);
+
+            Property.SetValue(parentNode, value);
+        }
+
+        public static void CopyEnumProperty(INode sourceNode, INode destinationNode, string propertyName)
+        {
+            Debug.Assert(sourceNode != null);
+            Debug.Assert(destinationNode != null);
+            Debug.Assert(propertyName != null);
+
+            Type SourceNodeType = sourceNode.GetType();
+            Type DestinationNodeType = sourceNode.GetType();
+            Debug.Assert(SourceNodeType == DestinationNodeType);
+
+            PropertyInfo Property = SourceNodeType.GetProperty(propertyName);
+
+            Debug.Assert(Property != null);
+
+            Type PropertyType = Property.PropertyType;
+            Debug.Assert(PropertyType.IsEnum);
+
+            Property.SetValue(destinationNode, Property.GetValue(sourceNode));
         }
     }
 }

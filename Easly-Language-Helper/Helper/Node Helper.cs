@@ -20,6 +20,15 @@ namespace BaseNodeHelper
             return Documentation;
         }
 
+        public static IDocument CreateSimpleDocumentation(string comment, Guid guid)
+        {
+            Document Documentation = new Document();
+            Documentation.Comment = comment;
+            Documentation.Uuid = guid;
+
+            return Documentation;
+        }
+
         public static IPattern CreateEmptyPattern()
         {
             Pattern EmptyPattern = new Pattern();
@@ -344,6 +353,51 @@ namespace BaseNodeHelper
                 return CreateSimpleImport("", "", ImportType.Latest);
             else
                 throw new ArgumentOutOfRangeException(nameof(objectType));
+        }
+
+        public static bool IsNodeType(Type type)
+        {
+            while (type != null && type != typeof(Node))
+                type = type.BaseType;
+
+            return type != null;
+        }
+
+        public static INode CreateEmptyNode(Type objectType)
+        {
+            Debug.Assert(IsNodeType(objectType));
+
+            INode Node = Activator.CreateInstance(objectType) as INode;
+            Debug.Assert(Node != null);
+
+            PropertyInfo[] Properties = objectType.GetProperties();
+            Type ChildNodeType;
+
+            foreach (PropertyInfo Property in Properties)
+            {
+                if (NodeTreeHelper.IsChildNodeProperty(Node, Property.Name, out ChildNodeType))
+                    { }
+
+                else if (NodeTreeHelper.IsOptionalChildNodeProperty(Node, Property.Name, out ChildNodeType))
+                    InitializeUnassignedOptionalChildNode(Node, Property.Name);
+
+                else if (NodeTreeHelper.IsChildNodeList(Node, Property.Name, out ChildNodeType))
+                    InitializeEmptyNodeList(Node, Property.Name, ChildNodeType);
+
+                else if (NodeTreeHelper.IsChildBlockList(Node, Property.Name, out Type ChildInterfaceType, out ChildNodeType))
+                    InitializeEmptyBlockList(Node, Property.Name, ChildInterfaceType, ChildNodeType);
+
+                else if (NodeTreeHelper.IsDocumentProperty(Node, Property.Name))
+                    InitializeDocumentation(Node);
+
+                else if (Property.PropertyType.IsValueType || Property.PropertyType == typeof(string))
+                    { }
+
+                else
+                    { }
+            }
+
+            return Node;
         }
         #endregion
 
@@ -1267,6 +1321,18 @@ namespace BaseNodeHelper
         {
             PropertyInfo ItemProperty = node.GetType().GetProperty(propertyName);
             ItemProperty.SetValue(node, childNode);
+        }
+
+        public static void InitializeUnassignedOptionalChildNode(INode node, string propertyName)
+        {
+            PropertyInfo ItemProperty = node.GetType().GetProperty(propertyName);
+            Type ItemType = ItemProperty.PropertyType;
+            Type[] Generics = ItemType.GetGenericArguments();
+
+            Type ReferenceType = typeof(OptionalReference<>).MakeGenericType(Generics);
+            IOptionalReference EmptyReference = (IOptionalReference)ReferenceType.Assembly.CreateInstance(ReferenceType.FullName);
+
+            ItemProperty.SetValue(node, EmptyReference);
         }
 
         public static void InitializeOptionalChildNode(INode node, string propertyName, INode childNode)
