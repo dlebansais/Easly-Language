@@ -169,7 +169,13 @@ namespace BaseNodeHelper
                 isAssigned = Optional.IsAssigned;
 
                 if (isAssigned)
+                {
                     childNode = Optional.AnyItem as INode;
+                    Debug.Assert(childNode != null);
+                }
+                else
+                    childNode = null;
+                /*
                 else
                 {
                     Type[] GenericArguments = PropertyType.GetGenericArguments();
@@ -185,9 +191,7 @@ namespace BaseNodeHelper
                         Optional.Hack(childNode);
                         Optional.Unassign();
                     }
-                }
-
-                Debug.Assert(childNode != null);
+                }*/
             }
             else
             {
@@ -270,10 +274,11 @@ namespace BaseNodeHelper
 
             Debug.Assert(optional != null);
 
+            /*
             PropertyInfo ItemProperty = optional.GetType().GetProperty(nameof(IOptionalReference<Node>.Item));
             INode ChildNode = (INode)ItemProperty.GetValue(optional);
 
-            Debug.Assert(ChildNode != null);
+            Debug.Assert(ChildNode != null);*/
         }
 
         public static void ReplaceChildNode(INode node, string propertyName, INode childNode)
@@ -807,6 +812,46 @@ namespace BaseNodeHelper
             Debug.Assert(InterfaceType.IsInterface);
 
             return InterfaceType;
+        }
+
+        public static Type BlockListItemType(INode node, string propertyName)
+        {
+            Debug.Assert(node != null);
+            Debug.Assert(propertyName != null);
+
+            Type NodeType = node.GetType();
+            PropertyInfo Property = NodeType.GetProperty(propertyName);
+            Debug.Assert(Property != null);
+
+            Type PropertyType = Property.PropertyType;
+            Debug.Assert(PropertyType.IsGenericType);
+            Debug.Assert(PropertyType.GetInterface(typeof(IBlockList).FullName) != null);
+
+            IBlockList ItemBlockList = Property.GetValue(node) as IBlockList;
+            Debug.Assert(ItemBlockList != null);
+
+            IList NodeBlockList = (IList)ItemBlockList.GetType().GetProperty(nameof(IBlockList<INode, Node>.NodeBlockList)).GetValue(ItemBlockList);
+            Debug.Assert(NodeBlockList != null);
+
+            Type BlockListType = NodeBlockList.GetType();
+            Debug.Assert(BlockListType.IsGenericType);
+
+            Type[] BlockListGenericArguments = BlockListType.GetGenericArguments();
+            Debug.Assert(BlockListGenericArguments != null);
+            Debug.Assert(BlockListGenericArguments.Length == 1);
+
+            Type BlockGenericArgument = BlockListGenericArguments[0];
+            Debug.Assert(BlockGenericArgument.IsGenericType);
+
+            Type[] GenericArguments = BlockGenericArgument.GetGenericArguments();
+            Debug.Assert(GenericArguments != null);
+            Debug.Assert(GenericArguments.Length == 2);
+
+            Type ItemType = GenericArguments[1];
+            Debug.Assert(ItemType != null);
+            Debug.Assert(!ItemType.IsInterface);
+
+            return ItemType;
         }
 
         public static Type ListInterfaceType(INode node, string propertyName)

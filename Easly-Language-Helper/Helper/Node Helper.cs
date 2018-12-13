@@ -367,37 +367,10 @@ namespace BaseNodeHelper
         {
             Debug.Assert(IsNodeType(objectType));
 
-            INode Node = Activator.CreateInstance(objectType) as INode;
-            Debug.Assert(Node != null);
+            INode EmptyNode = objectType.Assembly.CreateInstance(objectType.FullName) as INode;
+            Debug.Assert(EmptyNode != null);
 
-            PropertyInfo[] Properties = objectType.GetProperties();
-            Type ChildNodeType;
-
-            foreach (PropertyInfo Property in Properties)
-            {
-                if (NodeTreeHelper.IsChildNodeProperty(Node, Property.Name, out ChildNodeType))
-                    { }
-
-                else if (NodeTreeHelper.IsOptionalChildNodeProperty(Node, Property.Name, out ChildNodeType))
-                    InitializeUnassignedOptionalChildNode(Node, Property.Name);
-
-                else if (NodeTreeHelper.IsChildNodeList(Node, Property.Name, out ChildNodeType))
-                    InitializeEmptyNodeList(Node, Property.Name, ChildNodeType);
-
-                else if (NodeTreeHelper.IsChildBlockList(Node, Property.Name, out Type ChildInterfaceType, out ChildNodeType))
-                    InitializeEmptyBlockList(Node, Property.Name, ChildInterfaceType, ChildNodeType);
-
-                else if (NodeTreeHelper.IsDocumentProperty(Node, Property.Name))
-                    InitializeDocumentation(Node);
-
-                else if (Property.PropertyType.IsValueType || Property.PropertyType == typeof(string))
-                    { }
-
-                else
-                    { }
-            }
-
-            return Node;
+            return EmptyNode;
         }
         #endregion
 
@@ -1425,6 +1398,7 @@ namespace BaseNodeHelper
             return typeof(Root).Assembly.GetType(FullTypeName);
         }
 
+        /*
         public static bool IsOptionalAssignedToDefault(IOptionalReference optional)
         {
             if (!optional.IsAssigned)
@@ -1502,6 +1476,7 @@ namespace BaseNodeHelper
                     throw new ArgumentOutOfRangeException(nameof(optional));
             }
         }
+        */
 
         public static bool IsDefaultArgument(INode node)
         {
