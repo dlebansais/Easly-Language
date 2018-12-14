@@ -152,8 +152,8 @@ For arrows, the name of the node it must point to. If it can point to several no
 
 Name | Kind | Optional | Requirement
 ------------ | ------------- | ------------- | -------------
-Delegated | Arrow | No | Identifier
-Base Type | Arrow | Yes | Any Object Types
+Delegated | Arrow | No | *Identifier*
+Base Type | Arrow | Yes | Any *Object Types*
 
 ***
 
@@ -161,7 +161,7 @@ Base Type | Arrow | Yes | Any Object Types
 
 Name | Kind | Optional | Requirement
 ------------ | ------------- | ------------- | -------------
-Anchored Name | Arrow | No | Qualified Name
+Anchored Name | Arrow | No | *Qualified Name*
 Anchor Kind | Discrete | N/A | Declaration, Creation
 
 
