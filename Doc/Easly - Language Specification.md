@@ -146,12 +146,16 @@ Tables are organized as follow:
 For strings, requirements on allowed characters. Some nodes have requirements that are too complex to describe here, and a reference to a specific sections is provided instead.
 For arrows, the name of the node it must point to. If it can point to several nodes, the requirement is expressed as “Any” followed by the name of the group that specifies these node names. The name of the node, or group of nodes, appears in italic characters to avoid confusion. To further help distinguish them, node names are singular while group names are plural.
 
+***
+
 *Agent Expression*, member of: *Expressions*
 
 Name | Kind | Optional | Requirement
 ------------ | ------------- | ------------- | -------------
 Delegated | Arrow | No | Identifier
 Base Type | Arrow | Yes | Any Object Types
+
+***
 
 *Anchored Type*, member of: *Object Types*
 
