@@ -239,26 +239,26 @@ namespace BaseNodeHelper
 
         public static bool IsChildNodeAssigned(INode node, string propertyName)
         {
-            GetOptionalChildNode(node, propertyName, out IOptionalReference Optional);
+            IOptionalReference Optional = GetOptionalChildNode(node, propertyName);
 
             return Optional.IsAssigned;
         }
 
         public static void AssignChildNode(INode node, string propertyName)
         {
-            GetOptionalChildNode(node, propertyName, out IOptionalReference Optional);
+            IOptionalReference Optional = GetOptionalChildNode(node, propertyName);
             
             Optional.Assign();
         }
 
         public static void UnassignChildNode(INode node, string propertyName)
         {
-            GetOptionalChildNode(node, propertyName, out IOptionalReference Optional);
+            IOptionalReference Optional = GetOptionalChildNode(node, propertyName);
 
             Optional.Unassign();
         }
 
-        private static void GetOptionalChildNode(INode node, string propertyName, out IOptionalReference optional)
+        public static IOptionalReference GetOptionalChildNode(INode node, string propertyName)
         {
             Debug.Assert(node != null);
             Debug.Assert(propertyName != null);
@@ -270,15 +270,17 @@ namespace BaseNodeHelper
             Debug.Assert(Property.PropertyType.IsGenericType);
             Debug.Assert(Property.PropertyType.GetGenericTypeDefinition() == typeof(OptionalReference<>));
 
-            optional = Property.GetValue(node) as IOptionalReference;
+            IOptionalReference Optional = Property.GetValue(node) as IOptionalReference;
 
-            Debug.Assert(optional != null);
+            Debug.Assert(Optional != null);
 
             /*
             PropertyInfo ItemProperty = optional.GetType().GetProperty(nameof(IOptionalReference<Node>.Item));
             INode ChildNode = (INode)ItemProperty.GetValue(optional);
 
             Debug.Assert(ChildNode != null);*/
+
+            return Optional;
         }
 
         public static void ReplaceChildNode(INode node, string propertyName, INode childNode)
