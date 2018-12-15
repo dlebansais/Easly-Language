@@ -192,332 +192,6 @@ Anchor Kind | Discrete | N/A | Declaration, Creation
 
 ***
 
-*Assertion*
-
-Name | Kind | Optional | Requirement
------------- | ------------- | ------------- | -------------
-Tag | Arrow | Yes | *Name*
-Boolean Expression | Arrow | No | Any *Expressions*
-
-***
-
-*Attachment*
-
-Name | Kind | Optional | Requirement
------------- | ------------- | ------------- | -------------
-Attach Type Blocks | Block list | N/A | Any *Object Types*
-Instructions | Arrow | No | *Scope*
-
-***
-
-*Class*
-
-Name | Kind | Optional | Requirement
------------- | ------------- | ------------- | -------------
-Entity Name | Arrow | No | *Name*
-From Identifier | Arrow | Yes | *Identifier*
-Copy Specification | Discrete | N/A | Any, Reference, Value
-Cloneable | Discrete | N/A | Cloneable, Single
-Comparable | Discrete | N/A | Comparable, Uncomparable
-Is Abstract | Discrete | N/A | False, True
-Import Blocks | Block List | N/A | *Import*
-Generic Blocks | Block List | N/A | *Generic*
-Export Blocks | Block List | N/A | *Export*
-Typedef Blocks | Block List | N/A | *Typedef*
-Inheritance Blocks | Block List | N/A | *Inheritance*
-Discrete Blocks | Block List | N/A | *Discrete*
-Class Replicate Blocks | Block List | N/A | *Class Replicate*
-Feature Blocks | Block List | N/A | Any *Features*
-Conversion Blocks | Block List | N/A | *Conversion*
-Invariant Blocks | Block List | N/A | *Assertion*
-Class Guid | Uuid | N/A |
-Class Path | String | N/A |
-
-***
-
-*Class Replicate*
-
-Name | Kind | Optional | Requirement
------------- | ------------- | ------------- | -------------
-Replicate Name | Arrow | No | *Name*
-Pattern Blocks | Block list | N/A | *Pattern*
-
-***
-
-*Command Overload*
-
-Name | Kind | Optional | Requirement
------------- | ------------- | ------------- | -------------
-Parameter Blocks | Block list | N/A | *Entity Declaration*
-Parameter End | Discrete | N/A | Closed, Open
-Command Body | Arrow | No | Any *Bodies*
-
-***
-
-*Command Overload Type*
-
-Name | Kind | Optional | Requirement
------------- | ------------- | ------------- | -------------
-Parameter Blocks | Block list | N/A | *Entity Declaration*
-Parameter End | Discrete | N/A | Closed, Open
-Require Blocks | Block list | N/A | *Assertion*
-Ensure Blocks | Block list | N/A | *Assertion*
-Exception Identifier Blocks | Block list | N/A | *Identifier*
-
-***
-
-*Conditional*
-
-Name | Kind | Optional | Requirement
------------- | ------------- | ------------- | -------------
-Boolean Expression | Arrow | No | Any *Expressions*
-Instructions | Arrow | No | *Scope*
-
-***
-
-*Constraint*
-
-Name | Kind | Optional | Requirement
------------- | ------------- | ------------- | -------------
-Parent Type | Arrow | No | Any *Object Types*
-Rename Blocks | Block list | N/A | *Rename*
-
-***
-
-*Continuation*
-
-Name | Kind | Optional | Requirement
------------- | ------------- | ------------- | -------------
-Instructions | Arrow | No | *Scope*
-Cleanup Blocks | Block list | N/A | Any *Instructions*
-
-***
-
-*Discrete*
-
-Name | Kind | Optional | Requirement
------------- | ------------- | ------------- | -------------
-Entity Name | Arrow | No | *Name*
-Numeric Value | Arrow | Yes | Any *Expressions*
-
-***
-
-*Document*
-
-Name | Kind | Optional | Requirement
------------- | ------------- | ------------- | -------------
-Comment | String | N/A | 
-Uuid | Uuid | N/A | 
-
-***
-
-*Entity Declaration*
-
-Name | Kind | Optional | Requirement
------------- | ------------- | ------------- | -------------
-Entity Name | Arrow | No | *Name*
-Entity Type | Arrow | No | Any *Object Types*
-Default Value | Arrow | Yes | Any *Expressions*
-
-***
-
-*Exception Handler*
-
-Name | Kind | Optional | Requirement
------------- | ------------- | ------------- | -------------
-Exception Identifier | Arrow | No | *Identifier*
-Instructions | Arrow | No | *Scope*
-
-***
-
-*Export*
-
-Name | Kind | Optional | Requirement
------------- | ------------- | ------------- | -------------
-Entity Name | Arrow | No | *Name*
-Class Identifier Blocks | Block list | N/A | *Identifier*
-
-***
-
-*Export Change*
-
-Name | Kind | Optional | Requirement
------------- | ------------- | ------------- | -------------
-Export Identifier | Arrow | No | *Identifier*
-Identifier Blocks | Block list | N/A | *Identifier*
-
-***
-
-*Generic*
-
-Name | Kind | Optional | Requirement
------------- | ------------- | ------------- | -------------
-Entity Name | Arrow | No | *Name*
-Default Value | Arrow | Yes | Any *Object Types*
-Constraint Blocks | Block list | N/A | *Constraint*
-
-***
-
-*Global Replicate*
-
-Name | Kind | Optional | Requirement
------------- | ------------- | ------------- | -------------
-Replicate Name | Arrow | No | *Name*
-Patterns | List of arrows | N/A | *Pattern*
-
-***
-
-*Identifier*
-
-Name | Kind | Optional | Requirement
------------- | ------------- | ------------- | -------------
-Text | String | N/A |
-
-***
-
-*Import*
-
-Name | Kind | Optional | Requirement
------------- | ------------- | ------------- | -------------
-Library Identifier | Arrow | No | *Identifier*
-From Identifier | Arrow | Yes | *Identifier*
-Type | Discrete | N/A | Latest, Strict, Stable 
-Rename Blocks | Block list | N/A | *Rename*
-
-***
-
-**
-
-Name | Kind | Optional | Requirement
------------- | ------------- | ------------- | -------------
-Parent Type | Arrow | No | Any *Object Types*
-Conformance | Discrete | N/A | Conformant, NonConformant 
-Rename Blocks | Block list | N/A | *Rename*
-Forget Indexer | Discrete | N/A | False, True 
-Forget Blocks | Block list | N/A | *Identifier*
-Keep Indexer | Discrete | N/A | 
-Keep Blocks | Block list | N/A | *Identifier*
-Discontinue Indexer Indexer | Discrete | N/A | 
-Discontinue Blocks | Block list | N/A | *Identifier*
-Export Change Blocks | Block list | N/A | *Export Change*
-
-***
-
-*Library*
-
-Name | Kind | Optional | Requirement
------------- | ------------- | ------------- | -------------
-Entity Name | Arrow | No | *Name*
-From Identifier | Arrow | Yes | *Identifier*
-Import Blocks | Block list | N/A | *Import*
-Class Identifier Blocks | Block list | N/A | *Identifier*
-
-***
-
-*Name*
-
-Name | Kind | Optional | Requirement
------------- | ------------- | ------------- | -------------
-Text | String | N/A | 
-
-***
-
-*Pattern*
-
-Name | Kind | Optional | Requirement
------------- | ------------- | ------------- | -------------
-Text | String | N/A | 
-
-***
-
-*Query Overload*
-
-Name | Kind | Optional | Requirement
------------- | ------------- | ------------- | -------------
-Parameter Blocks | Block list | N/A | *Entity Declaration*
-Parameter End | Discrete | N/A | Closed, Open 
-Result Blocks | Block list | N/A | *Entity Declaration*
-Modified Query Blocks | Block list | N/A | *Identifier*
-Variant | Arrow | Yes | Any *Expressions*
-Query Body | Arrow | No | Any *Bodies*
-
-***
-
-*Range*
-
-Name | Kind | Optional | Requirement
------------- | ------------- | ------------- | -------------
-Left Expression | Arrow | No | Any *Expressions*
-Right Expression | Arrow | Yes | Any *Expressions*
-
-***
-
-*Rename*
-
-Name | Kind | Optional | Requirement
------------- | ------------- | ------------- | -------------
- | Block list | N/A | **
- | Discrete | N/A | 
-Source Identifier | Arrow | No | *Identifier*
-Destination Identifier | Arrow | No | *Identifier*
-
-***
-
-*Root*
-
-Name | Kind | Optional | Requirement
------------- | ------------- | ------------- | -------------
-Class Blocks | Block list | N/A | *Class*
-Library Blocks | Block list | N/A | *Library*
-Replicates | List of arrows | N/A | *GlobalReplicate*
-
-***
-
-*Scope*
-
-Name | Kind | Optional | Requirement
------------- | ------------- | ------------- | -------------
-Entity Declaration Blocks | Block list | N/A | *Entity Declaration*
-Instruction Blocks | Block list | N/A | Any *Instructions*
-
-***
-
-*Typedef*
-
-Name | Kind | Optional | Requirement
------------- | ------------- | ------------- | -------------
-Entity Name | Arrow | No | *Name*
-Defined Type | Arrow | No | Any *Object Types*
-
-***
-
-*With*
-
-Name | Kind | Optional | Requirement
------------- | ------------- | ------------- | -------------
-Range Blocks | Block list | N/A | *Range*
-Instructions | Arrow | No | *Scope*
-
-***
-
-*Agent Expression*, member of: *Expressions*
-
-Name | Kind | Optional | Requirement
------------- | ------------- | ------------- | -------------
-Delegated | Arrow | No | *Identifier*
-Base Type | Arrow | No | Any *Object Types*
-
-***
-
-*Anchored Type*, member of: *Object Types*
-
-Name | Kind | Optional | Requirement
------------- | ------------- | ------------- | -------------
-Anchored Name | Arrow | No | *Qualified Name*
-AnchorKind | Discrete | N/A | Declaration, Creation 
-
-***
-
 *As Long As Instruction*, member of: *Instructions*
 
 Name | Kind | Optional | Requirement
@@ -525,6 +199,15 @@ Name | Kind | Optional | Requirement
 Continue Condition | Arrow | No | Any *Expressions*
 Continuation Blocks | Block list | N/A | *Continuation*
 Else Instructions | Arrow | Yes | *Scope*
+
+***
+
+*Assertion*
+
+Name | Kind | Optional | Requirement
+------------ | ------------- | ------------- | -------------
+Tag | Arrow | Yes | *Name*
+Boolean Expression | Arrow | No | Any *Expressions*
 
 ***
 
@@ -560,6 +243,15 @@ Name | Kind | Optional | Requirement
 ------------ | ------------- | ------------- | -------------
 Parameter Identifier | Arrow | No | *Identifier*
 Source | Arrow | No | Any *Object Types*
+
+***
+
+*Attachment*
+
+Name | Kind | Optional | Requirement
+------------ | ------------- | ------------- | -------------
+Attach Type Blocks | Block list | N/A | Any *Object Types*
+Instructions | Arrow | No | *Scope*
 
 ***
 
@@ -614,12 +306,46 @@ Boolean Expression | Arrow | No | Any *Expressions*
 
 ***
 
+*Class*
+
+Name | Kind | Optional | Requirement
+------------ | ------------- | ------------- | -------------
+Entity Name | Arrow | No | *Name*
+From Identifier | Arrow | Yes | *Identifier*
+Copy Specification | Discrete | N/A | Any, Reference, Value
+Cloneable | Discrete | N/A | Cloneable, Single
+Comparable | Discrete | N/A | Comparable, Uncomparable
+Is Abstract | Discrete | N/A | False, True
+Import Blocks | Block List | N/A | *Import*
+Generic Blocks | Block List | N/A | *Generic*
+Export Blocks | Block List | N/A | *Export*
+Typedef Blocks | Block List | N/A | *Typedef*
+Inheritance Blocks | Block List | N/A | *Inheritance*
+Discrete Blocks | Block List | N/A | *Discrete*
+Class Replicate Blocks | Block List | N/A | *Class Replicate*
+Feature Blocks | Block List | N/A | Any *Features*
+Conversion Blocks | Block List | N/A | *Conversion*
+Invariant Blocks | Block List | N/A | *Assertion*
+Class Guid | Uuid | N/A |
+Class Path | String | N/A |
+
+***
+
 *Class Constant Expression*, member of: *Expressions*
 
 Name | Kind | Optional | Requirement
 ------------ | ------------- | ------------- | -------------
 Class Identifier | Arrow | No | *Identifier*
 Constant Identifier | Arrow | No | *Identifier*
+
+***
+
+*Class Replicate*
+
+Name | Kind | Optional | Requirement
+------------ | ------------- | ------------- | -------------
+Replicate Name | Arrow | No | *Name*
+Pattern Blocks | Block list | N/A | *Pattern*
 
 ***
 
@@ -641,6 +367,37 @@ Argument Blocks | Block list | N/A | Any *Arguments*
 
 ***
 
+*Command Overload*
+
+Name | Kind | Optional | Requirement
+------------ | ------------- | ------------- | -------------
+Parameter Blocks | Block list | N/A | *Entity Declaration*
+Parameter End | Discrete | N/A | Closed, Open
+Command Body | Arrow | No | Any *Bodies*
+
+***
+
+*Command Overload Type*
+
+Name | Kind | Optional | Requirement
+------------ | ------------- | ------------- | -------------
+Parameter Blocks | Block list | N/A | *Entity Declaration*
+Parameter End | Discrete | N/A | Closed, Open
+Require Blocks | Block list | N/A | *Assertion*
+Ensure Blocks | Block list | N/A | *Assertion*
+Exception Identifier Blocks | Block list | N/A | *Identifier*
+
+***
+
+*Conditional*
+
+Name | Kind | Optional | Requirement
+------------ | ------------- | ------------- | -------------
+Boolean Expression | Arrow | No | Any *Expressions*
+Instructions | Arrow | No | *Scope*
+
+***
+
 *Constant Feature*, member of: *Features*
 
 Name | Kind | Optional | Requirement
@@ -650,6 +407,24 @@ Export | Discrete | N/A | Exported, Private
 Entity Name | Arrow | No | *Name*
 Entity Type | Arrow | No | Any *Object Types*
 Constant Value | Arrow | No | Any *Expressions*
+
+***
+
+*Constraint*
+
+Name | Kind | Optional | Requirement
+------------ | ------------- | ------------- | -------------
+Parent Type | Arrow | No | Any *Object Types*
+Rename Blocks | Block list | N/A | *Rename*
+
+***
+
+*Continuation*
+
+Name | Kind | Optional | Requirement
+------------ | ------------- | ------------- | -------------
+Instructions | Arrow | No | *Scope*
+Cleanup Blocks | Block list | N/A | Any *Instructions*
 
 ***
 
@@ -693,6 +468,24 @@ Exception Identifier Blocks | Block list | N/A | *Identifier*
 
 ***
 
+*Discrete*
+
+Name | Kind | Optional | Requirement
+------------ | ------------- | ------------- | -------------
+Entity Name | Arrow | No | *Name*
+Numeric Value | Arrow | Yes | Any *Expressions*
+
+***
+
+*Document*
+
+Name | Kind | Optional | Requirement
+------------ | ------------- | ------------- | -------------
+Comment | String | N/A | 
+Uuid | Uuid | N/A | 
+
+***
+
 *Effective Body*, member of: *Bodies*
 
 Name | Kind | Optional | Requirement
@@ -703,6 +496,16 @@ Exception Identifier Blocks | Block list | N/A | *Identifier*
 Entity Declaration Blocks | Block list | N/A | *Entity Declaration*
 Body Instruction Blocks | Block list | N/A | Any *Instructions*
 Exception Handler Blocks | Block list | N/A | *ExceptionHandler*
+
+***
+
+*Entity Declaration*
+
+Name | Kind | Optional | Requirement
+------------ | ------------- | ------------- | -------------
+Entity Name | Arrow | No | *Name*
+Entity Type | Arrow | No | Any *Object Types*
+Default Value | Arrow | Yes | Any *Expressions*
 
 ***
 
@@ -722,6 +525,33 @@ Left Expression | Arrow | No | Any *Expressions*
 Comparison | Discrete | N/A | Equal, Different 
 Equality | Discrete | N/A | Physical, Deep 
 Right Expression | Arrow | No | Any *Expressions*
+
+***
+
+*Exception Handler*
+
+Name | Kind | Optional | Requirement
+------------ | ------------- | ------------- | -------------
+Exception Identifier | Arrow | No | *Identifier*
+Instructions | Arrow | No | *Scope*
+
+***
+
+*Export*
+
+Name | Kind | Optional | Requirement
+------------ | ------------- | ------------- | -------------
+Entity Name | Arrow | No | *Name*
+Class Identifier Blocks | Block list | N/A | *Identifier*
+
+***
+
+*Export Change*
+
+Name | Kind | Optional | Requirement
+------------ | ------------- | ------------- | -------------
+Export Identifier | Arrow | No | *Identifier*
+Identifier Blocks | Block list | N/A | *Identifier*
 
 ***
 
@@ -770,6 +600,16 @@ Overload Blocks | Block list | N/A | *Query Overload Type*
 
 ***
 
+*Generic*
+
+Name | Kind | Optional | Requirement
+------------ | ------------- | ------------- | -------------
+Entity Name | Arrow | No | *Name*
+Default Value | Arrow | Yes | Any *Object Types*
+Constraint Blocks | Block list | N/A | *Constraint*
+
+***
+
 *Generic Type*, member of: *Object Types*
 
 Name | Kind | Optional | Requirement
@@ -780,12 +620,40 @@ Type Argument Blocks | Block list | N/A | *Type Argument*
 
 ***
 
+*Global Replicate*
+
+Name | Kind | Optional | Requirement
+------------ | ------------- | ------------- | -------------
+Replicate Name | Arrow | No | *Name*
+Patterns | List of arrows | N/A | *Pattern*
+
+***
+
+*Identifier*
+
+Name | Kind | Optional | Requirement
+------------ | ------------- | ------------- | -------------
+Text | String | N/A |
+
+***
+
 *If Then Else Instruction*, member of: *Instructions*
 
 Name | Kind | Optional | Requirement
 ------------ | ------------- | ------------- | -------------
 Conditional Blocks | Block list | N/A | *Conditional*
 Else Instructions | Arrow | Yes | *Scope*
+
+***
+
+*Import*
+
+Name | Kind | Optional | Requirement
+------------ | ------------- | ------------- | -------------
+Library Identifier | Arrow | No | *Identifier*
+From Identifier | Arrow | Yes | *Identifier*
+Type | Discrete | N/A | Latest, Strict, Stable 
+Rename Blocks | Block list | N/A | *Rename*
 
 ***
 
@@ -841,6 +709,23 @@ Argument Blocks | Block list | N/A | Any *Arguments*
 
 ***
 
+*Inheritance*
+
+Name | Kind | Optional | Requirement
+------------ | ------------- | ------------- | -------------
+Parent Type | Arrow | No | Any *Object Types*
+Conformance | Discrete | N/A | Conformant, NonConformant 
+Rename Blocks | Block list | N/A | *Rename*
+Forget Indexer | Discrete | N/A | False, True 
+Forget Blocks | Block list | N/A | *Identifier*
+Keep Indexer | Discrete | N/A | 
+Keep Blocks | Block list | N/A | *Identifier*
+Discontinue Indexer Indexer | Discrete | N/A | 
+Discontinue Blocks | Block list | N/A | *Identifier*
+Export Change Blocks | Block list | N/A | *Export Change*
+
+***
+
 *Initialized Object Expression*, member of: *Expressions*
 
 Name | Kind | Optional | Requirement
@@ -885,6 +770,17 @@ Value | Discrete | N/A | True, False, Current, Value, Result, Retry, Exception
 
 ***
 
+*Library*
+
+Name | Kind | Optional | Requirement
+------------ | ------------- | ------------- | -------------
+Entity Name | Arrow | No | *Name*
+From Identifier | Arrow | Yes | *Identifier*
+Import Blocks | Block list | N/A | *Import*
+Class Identifier Blocks | Block list | N/A | *Identifier*
+
+***
+
 *Manifest Character Expression*, member of: *Expressions*
 
 Name | Kind | Optional | Requirement
@@ -902,6 +798,14 @@ Text | String | N/A |
 ***
 
 *Manifest String Expression*, member of: *Expressions*
+
+Name | Kind | Optional | Requirement
+------------ | ------------- | ------------- | -------------
+Text | String | N/A | 
+
+***
+
+*Name*
 
 Name | Kind | Optional | Requirement
 ------------ | ------------- | ------------- | -------------
@@ -935,6 +839,14 @@ Iteration | Discrete | N/A | Single, Nested
 Loop Instructions | Arrow | No | *Scope*
 Exit Entity Name | Arrow | Yes | *Identifier*
 Invariant Blocks | Block list | N/A | *Assertion*
+
+***
+
+*Pattern*
+
+Name | Kind | Optional | Requirement
+------------ | ------------- | ------------- | -------------
+Text | String | N/A | 
 
 ***
 
@@ -1068,6 +980,28 @@ Argument Blocks | Block list | N/A | Any *Arguments*
 
 ***
 
+*Query Overload*
+
+Name | Kind | Optional | Requirement
+------------ | ------------- | ------------- | -------------
+Parameter Blocks | Block list | N/A | *Entity Declaration*
+Parameter End | Discrete | N/A | Closed, Open 
+Result Blocks | Block list | N/A | *Entity Declaration*
+Modified Query Blocks | Block list | N/A | *Identifier*
+Variant | Arrow | Yes | Any *Expressions*
+Query Body | Arrow | No | Any *Bodies*
+
+***
+
+*Range*
+
+Name | Kind | Optional | Requirement
+------------ | ------------- | ------------- | -------------
+Left Expression | Arrow | No | Any *Expressions*
+Right Expression | Arrow | Yes | Any *Expressions*
+
+***
+
 *Raise Event Instruction*, member of: *Instructions*
 
 Name | Kind | Optional | Requirement
@@ -1085,11 +1019,30 @@ Entity Name | Arrow | No | *Qualified Name*
 
 ***
 
+*Rename*
+
+Name | Kind | Optional | Requirement
+------------ | ------------- | ------------- | -------------
+Source Identifier | Arrow | No | *Identifier*
+Destination Identifier | Arrow | No | *Identifier*
+
+***
+
 *Result Of Expression*, member of: *Expressions*
 
 Name | Kind | Optional | Requirement
 ------------ | ------------- | ------------- | -------------
 Source | Arrow | No | Any *Expressions*
+
+***
+
+*Root*
+
+Name | Kind | Optional | Requirement
+------------ | ------------- | ------------- | -------------
+Class Blocks | Block list | N/A | *Class*
+Library Blocks | Block list | N/A | *Library*
+Replicates | List of arrows | N/A | *GlobalReplicate*
 
 ***
 
@@ -1099,6 +1052,15 @@ Name | Kind | Optional | Requirement
 ------------ | ------------- | ------------- | -------------
 Sharing | Discrete | N/A | NotShared, ReadWrite, ReadOnly, WriteOnly 
 Class Identifier | Arrow | No | *Identifier*
+
+***
+
+*Scope*
+
+Name | Kind | Optional | Requirement
+------------ | ------------- | ------------- | -------------
+Entity Declaration Blocks | Block list | N/A | *Entity Declaration*
+Instruction Blocks | Block list | N/A | Any *Instructions*
 
 ***
 
@@ -1121,6 +1083,15 @@ Entity Declaration Blocks | Block list | N/A | *Entity Declaration*
 
 ***
 
+*Typedef*
+
+Name | Kind | Optional | Requirement
+------------ | ------------- | ------------- | -------------
+Entity Name | Arrow | No | *Name*
+Defined Type | Arrow | No | Any *Object Types*
+
+***
+
 *Unary Not Expression*, member of: *Expressions*
 
 Name | Kind | Optional | Requirement
@@ -1135,3 +1106,12 @@ Name | Kind | Optional | Requirement
 ------------ | ------------- | ------------- | -------------
 Operator | Arrow | No | *Identifier*
 Right Expression  | Arrow | No | Any *Expressions*
+
+***
+
+*With*
+
+Name | Kind | Optional | Requirement
+------------ | ------------- | ------------- | -------------
+Range Blocks | Block list | N/A | *Range*
+Instructions | Arrow | No | *Scope*
