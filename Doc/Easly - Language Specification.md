@@ -133,10 +133,6 @@ For some arrow node components, the arrow may point to several different nodes, 
 After individual nodes are listed in the next section, all groups are listed with the names of nodes they contain.
 
 Note that a node can belong to several groups. These groups are just shortcut in the documentation, not really a concept of the language.
-
-### Block List
-
-Easly supports a feature similar to C macroes and called replication. This feature uses lists of blocks that are themselves list of arrows. The format is the same for all block list, only the type of the destination node is different. Also note that in a block list nothing is optional.
     
 ### Node list
 
@@ -151,9 +147,11 @@ Tables are organized as follow:
 For strings, requirements on allowed characters. Some nodes have requirements that are too complex to describe here, and a reference to a specific sections is provided instead.
 For block list and arrows, the name of the node it must point to. If it can point to several nodes, the requirement is expressed as “Any” followed by the name of the group that specifies these node names. The name of the node, or group of nodes, appears in italic characters to avoid confusion. To further help distinguish them, node names are singular while group names are plural.
 
-The first two tables define the structure of a block list.
+### Block List
 
-***
+Easly supports a feature similar to C macroes and called replication. This feature uses lists of blocks that are themselves list of arrows. The format is the same for all block list, only the type of the destination node is different. Also note that in a block list nothing is optional.
+
+The two following tables define the structure of a block list.
 
 *Block List*
 
@@ -172,7 +170,20 @@ Replication Pattern | Arrow | No | *Pattern*
 Source Identifier | Arrow | No | *Identifier*
 Node List | List of Arrows | N/A | Any node
 
-***
+### Documentation
+
+While not stricly necessary for a compiler, comments in the source code must of course be expected. To make this specification simpler, all nodes, including the Block List and Block nodes, are expected to contain a reference to a document node. This reference is ignored by the compiler if found.
+ 
+The following table defines the structure of a document node.
+
+*Document*
+
+Name | Kind | Optional | Requirement
+------------ | ------------- | ------------- | -------------
+Comment | String | N/A | 
+Uuid | Uuid | N/A | 
+
+### Other nodes
 
 *Agent Expression*, member of: *Expressions*
 
@@ -474,15 +485,6 @@ Name | Kind | Optional | Requirement
 ------------ | ------------- | ------------- | -------------
 Entity Name | Arrow | No | *Name*
 Numeric Value | Arrow | Yes | Any *Expressions*
-
-***
-
-*Document*
-
-Name | Kind | Optional | Requirement
------------- | ------------- | ------------- | -------------
-Comment | String | N/A | 
-Uuid | Uuid | N/A | 
 
 ***
 
@@ -1046,21 +1048,21 @@ Replicates | List of arrows | N/A | *GlobalReplicate*
 
 ***
 
-*Simple Type*, member of: *Object Types*
-
-Name | Kind | Optional | Requirement
------------- | ------------- | ------------- | -------------
-Sharing | Discrete | N/A | NotShared, ReadWrite, ReadOnly, WriteOnly 
-Class Identifier | Arrow | No | *Identifier*
-
-***
-
 *Scope*
 
 Name | Kind | Optional | Requirement
 ------------ | ------------- | ------------- | -------------
 Entity Declaration Blocks | Block list | N/A | *Entity Declaration*
 Instruction Blocks | Block list | N/A | Any *Instructions*
+
+***
+
+*Simple Type*, member of: *Object Types*
+
+Name | Kind | Optional | Requirement
+------------ | ------------- | ------------- | -------------
+Sharing | Discrete | N/A | NotShared, ReadWrite, ReadOnly, WriteOnly 
+Class Identifier | Arrow | No | *Identifier*
 
 ***
 
