@@ -144,10 +144,10 @@ Tables are organized as follow:
 - The second column indicates the kind of the component: either discrete, string, Uuid, block list (see below), list of references, or reference.
 - The third column indicates, for references only, if the component is optional or required (block list, and list of references, are never optional, just empty if allowed).
 - The fourth column lists additional requirements.
-⋅⋅⋅For discrete values, it's the list of choices, separated with commas. Refer to a dedicated section for the semantic associated to these choices.
-⋅⋅⋅For strings, the requirement is on allowed characters.
-⋅⋅⋅Some nodes have requirements that are too complex to describe in the column, and a reference to a specific sections is provided instead.
-⋅⋅⋅For block list and references, the name of the node it must point to. If it can point to several nodes, the requirement is expressed as “Any” followed by the name of the group that specifies these node names. The name of the node, or group of nodes, appears in italic characters to avoid confusion. To further help distinguish them, node names are singular while group names are plural.
+  * For discrete values, it's the list of choices, separated with commas. Refer to a dedicated section for the semantic associated to these choices.
+  * For strings, the requirement is on allowed characters.
+  * Some nodes have requirements that are too complex to describe in the column, and a reference to a specific sections is provided instead.
+  * For block list and references, the name of the node it must point to. If it can point to several nodes, the requirement is expressed as “Any” followed by the name of the group that specifies these node names. The name of the node, or group of nodes, appears in italic characters to avoid confusion. To further help distinguish them, node names are singular while group names are plural.
 
 ### Block List
 
