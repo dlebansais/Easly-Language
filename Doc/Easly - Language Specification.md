@@ -789,7 +789,7 @@ Class Identifier Blocks | Block list | N/A | *Identifier*
 
 Name | Kind | Optional | Requirement
 ------------ | ------------- | ------------- | -------------
-Text | String | N/A |
+Text | String | N/A | Exactly one character
 
 ***
 
@@ -797,7 +797,7 @@ Text | String | N/A |
 
 Name | Kind | Optional | Requirement
 ------------ | ------------- | ------------- | -------------
-Text | String | N/A | 
+Text | String | N/A | See below
 
 ***
 
