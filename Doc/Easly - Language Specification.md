@@ -98,7 +98,7 @@ However, a few nodes have additional requirements on strings and allow only some
 
 ### Valid identifiers and names
 
-When the description of a node specifies that a string must be a valid identifier or name, it means the string must fulfill the following requirements:
+When the description of a node specifies that a string must be a valid identifier or a valid name, it means the string must fulfill the following requirements:
 
 1. It must contain printable characters or white spaces only. Annex A defines which characters are valid printable characters, and which are valid white spaces.
 2. It must contain at least one printable character, meaning it cannot be empty or made only of a sequence of white spaces.
@@ -110,7 +110,8 @@ After a string has been verified to be a valid identifier or name, a few operati
 
 - The string is normalized to form NFD, as per the Unicode standard version 6.1.0.
 - All sequences of contiguous white spaces are replaced by a single space character, code point U+0020 (commonly called space).
-- The purpose of this operation is to make sure that strings that visually look identical are indeed the same for the compiler. Editors are encouraged, but not required, to create and manipulate source code that already uses only normalized strings.
+
+The purpose of this operation is to make sure that strings that visually look identical are indeed the same for the compiler. Editors are encouraged, but not required, to create and manipulate source code that already uses only normalized strings.
 
 ### Unique identifiers
 
@@ -143,10 +144,10 @@ Tables are organized as follow:
 - The second column indicates the kind of the component: either discrete, string, Uuid, block list (see below), list of references, or reference.
 - The third column indicates, for references only, if the component is optional or required (block list, and list of references, are never optional, just empty if allowed).
 - The fourth column lists additional requirements.
- + For discrete values, it's the list of choices, separated with commas. Refer to a dedicated section for the semantic associated to these choices.
- + For strings, the requirement is on allowed characters.
- + Some nodes have requirements that are too complex to describe in the column, and a reference to a specific sections is provided instead.
- + For block list and references, the name of the node it must point to. If it can point to several nodes, the requirement is expressed as “Any” followed by the name of the group that specifies these node names. The name of the node, or group of nodes, appears in italic characters to avoid confusion. To further help distinguish them, node names are singular while group names are plural.
+⋅⋅⋅For discrete values, it's the list of choices, separated with commas. Refer to a dedicated section for the semantic associated to these choices.
+⋅⋅⋅For strings, the requirement is on allowed characters.
+⋅⋅⋅Some nodes have requirements that are too complex to describe in the column, and a reference to a specific sections is provided instead.
+⋅⋅⋅For block list and references, the name of the node it must point to. If it can point to several nodes, the requirement is expressed as “Any” followed by the name of the group that specifies these node names. The name of the node, or group of nodes, appears in italic characters to avoid confusion. To further help distinguish them, node names are singular while group names are plural.
 
 ### Block List
 
@@ -636,7 +637,7 @@ Patterns | List of references | N/A | *Pattern*
 
 Name | Kind | Optional | Requirement
 ------------ | ------------- | ------------- | -------------
-Text | String | N/A |
+Text | String | N/A | Valid identifier
 
 ***
 
@@ -788,7 +789,7 @@ Class Identifier Blocks | Block list | N/A | *Identifier*
 
 Name | Kind | Optional | Requirement
 ------------ | ------------- | ------------- | -------------
-Text | String | N/A | 
+Text | String | N/A |
 
 ***
 
@@ -812,7 +813,7 @@ Text | String | N/A |
 
 Name | Kind | Optional | Requirement
 ------------ | ------------- | ------------- | -------------
-Text | String | N/A | 
+Text | String | N/A | Valid name
 
 ***
 
@@ -849,7 +850,7 @@ Invariant Blocks | Block list | N/A | *Assertion*
 
 Name | Kind | Optional | Requirement
 ------------ | ------------- | ------------- | -------------
-Text | String | N/A | 
+Text | String | N/A | Valid identifier
 
 ***
 
@@ -1118,3 +1119,52 @@ Name | Kind | Optional | Requirement
 ------------ | ------------- | ------------- | -------------
 Range Blocks | Block list | N/A | *Range*
 Instructions | Reference | No | *Scope*
+
+### Node groups membership
+
+This section is informative only. All node groups are listed with their members.
+
+Group Name | Member
+------------ | -------------
+Arguments | Assignment Argument, Positional Argument 
+Bodies | Deferred Body, Effective Body, Extern Body, Precursor Body 
+Expressions | Agent Expression, Assertion Tag Expression, Binary Conditional Expression, Binary Operator Expression, Class Constant Expression, Clone Of Expression, Entity Expression, Equality Expression, Index Query Expression, Initialized Object Expression, Keyword Expression, Manifest Character Expression, Manifest Number Expression, Manifest Numeric Expression, Manifest String Expression, New Expression, Old Expression, Precursor Expression, Precursor Index Expression, Preprocessor Expression, Query Expression, Result Of Expression, Unary Not Expression, Unary Operator Expression 
+Features | Attribute Feature, Constant Feature, Creation Feature, Function Feature, Indexer Feature, Procedure Feature, Property Feature 
+Instructions | As Long As Instruction, Assignment Instruction, Attachment Instruction, Check Instruction, Command Instruction, Create Instruction, Debug Instruction, For Loop Instruction, If Then Else Instruction, Index Assignment Instruction, Inspect Instruction, Keyword Assignment Instruction, Over Loop Instruction, Precursor Index Assignment Instruction, Precursor Instruction, Raise Event Instruction, Release Instruction, Throw Instruction 
+Object Types | Anchored Type, Function Type, Generic Type, Indexer Type, Keyword Anchored Type, Procedure Type, Property Type, Simple Type, Tuple Type 
+Type Arguments | Assignment Type Argument, Positional Type Argument 
+
+## Annex A
+
+The definition of printable characters and whitespace characters goes as follow:
+
+### Printable characters:
+
+All characters in range U+0021 to U+007F
+All characters in range U+00A1 to U+00AD
+All characters in range U+00AE to U+034F
+All characters in range U+0350 to U+0378
+All characters in range U+037A to U+037F
+All characters in range U+0384 to U+0E01EF
+  
+### Whitespace charracters:
+
+U+0009
+U+0020
+U+00A0
+U+1680
+U+2000
+U+2001
+U+2002
+U+2003
+U+2004
+U+2005
+U+2006
+U+2007
+U+2008
+U+2009
+U+200A
+U+202F
+U+205F
+U+3000
+
