@@ -1141,30 +1141,18 @@ The definition of printable characters and whitespace characters goes as follow:
 ### Printable characters:
 
 All characters in range U+0021 to U+007F
+
 All characters in range U+00A1 to U+00AD
+
 All characters in range U+00AE to U+034F
+
 All characters in range U+0350 to U+0378
+
 All characters in range U+037A to U+037F
+
 All characters in range U+0384 to U+0E01EF
   
 ### Whitespace charracters:
 
-U+0009
-U+0020
-U+00A0
-U+1680
-U+2000
-U+2001
-U+2002
-U+2003
-U+2004
-U+2005
-U+2006
-U+2007
-U+2008
-U+2009
-U+200A
-U+202F
-U+205F
-U+3000
+U+0009, U+0020, U+00A0, U+1680, U+2000, U+2001, U+2002, U+2003, U+2004, U+2005, U+2006, U+2007, U+2008, U+2009, U+200A, U+202F, U+205F, U+3000.
 
