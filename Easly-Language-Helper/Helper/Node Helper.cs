@@ -1494,6 +1494,111 @@ namespace BaseNodeHelper
 
             return false;
         }
+
+        public static ulong NodeHash(INode node)
+        {
+            IList<string> PropertyNames = NodeTreeHelper.EnumChildNodeProperties(node);
+            Type ChildNodeType;
+            ulong Hash = 0;
+
+            foreach (string PropertyName in PropertyNames)
+            {
+                if (NodeTreeHelper.IsChildNodeProperty(node, PropertyName, out ChildNodeType))
+                {
+                    NodeTreeHelper.GetChildNode(node, PropertyName, out bool IsAssigned, out INode ChildNode);
+                    MergeHash(ref Hash, NodeHash(ChildNode));
+                }
+
+                else if (NodeTreeHelper.IsOptionalChildNodeProperty(node, PropertyName, out ChildNodeType))
+                {
+                    NodeTreeHelper.GetChildNode(node, PropertyName, out bool IsAssigned, out INode ChildNode);
+                    MergeHash(ref Hash, IsAssigned ? 1UL : 0);
+                    if (IsAssigned)
+                        MergeHash(ref Hash, NodeHash(ChildNode));
+                }
+
+                else if (NodeTreeHelper.IsChildNodeList(node, PropertyName, out ChildNodeType))
+                {
+                    NodeTreeHelper.GetChildNodeList(node, PropertyName, out IReadOnlyList<INode> ChildNodeList);
+                    foreach (INode ChildNode in ChildNodeList)
+                        MergeHash(ref Hash, NodeHash(ChildNode));
+                }
+
+                else if (NodeTreeHelper.IsChildBlockList(node, PropertyName, out Type ChildInterfaceType, out ChildNodeType))
+                {
+                    NodeTreeHelper.GetChildBlockList(node, PropertyName, out IReadOnlyList<INodeTreeBlock> ChildBlockList);
+                    for (int i = 0; i < ChildBlockList.Count; i++)
+                    {
+                        NodeTreeHelper.GetChildBlock(node, PropertyName, i, out IBlock ChildBlock);
+                        IReadOnlyList<INode> NodeList = ChildBlockList[i].NodeList;
+
+                        MergeHash(ref Hash, ValueHash(ChildBlock.Documentation.Comment));
+                        MergeHash(ref Hash, ValueHash(ChildBlock.Documentation.Uuid));
+                        MergeHash(ref Hash, ValueHash((int)ChildBlock.Replication));
+                        MergeHash(ref Hash, NodeHash(ChildBlock.ReplicationPattern));
+                        MergeHash(ref Hash, NodeHash(ChildBlock.SourceIdentifier));
+
+                        foreach (INode ChildNode in NodeList)
+                            MergeHash(ref Hash, NodeHash(ChildNode));
+                    }
+                }
+
+                else
+                {
+                    Type NodeType = node.GetType();
+                    PropertyInfo Info = NodeType.GetProperty(PropertyName);
+
+                    if (Info.PropertyType == typeof(IDocument))
+                    {
+                        IDocument Documentation = Info.GetValue(node) as IDocument;
+                        MergeHash(ref Hash, ValueHash(Documentation.Comment));
+                        MergeHash(ref Hash, ValueHash(Documentation.Uuid));
+                    }
+
+                    else if (Info.PropertyType == typeof(bool))
+                        MergeHash(ref Hash, ValueHash((bool)Info.GetValue(node)));
+
+                    else if (Info.PropertyType.IsEnum)
+                        MergeHash(ref Hash, ValueHash((int)Info.GetValue(node)));
+
+                    else if (Info.PropertyType == typeof(string))
+                        MergeHash(ref Hash, ValueHash((string)Info.GetValue(node)));
+
+                    else if (Info.PropertyType == typeof(Guid))
+                        MergeHash(ref Hash, ValueHash((Guid)Info.GetValue(node)));
+
+                    else
+                        throw new ArgumentOutOfRangeException(nameof(NodeType));
+                }
+            }
+
+            return Hash;
+        }
+
+        private static ulong ValueHash(bool value)
+        {
+            return (ulong)value.GetHashCode();
+        }
+
+        private static ulong ValueHash(int value)
+        {
+            return (ulong)value.GetHashCode();
+        }
+
+        private static ulong ValueHash(string value)
+        {
+            return (ulong)value.GetHashCode();
+        }
+
+        private static ulong ValueHash(Guid value)
+        {
+            return (ulong)value.GetHashCode();
+        }
+
+        private static void MergeHash(ref ulong hash1, ulong hash2)
+        {
+            hash1 ^= hash2;
+        }
         #endregion
     }
 }
