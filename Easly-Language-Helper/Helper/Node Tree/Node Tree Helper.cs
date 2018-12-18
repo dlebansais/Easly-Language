@@ -882,6 +882,79 @@ namespace BaseNodeHelper
             return InterfaceType;
         }
 
+        public static bool GetLastBlockIndex(INode parentNode, string propertyName, out int blockIndex)
+        {
+            Debug.Assert(parentNode != null);
+            Debug.Assert(propertyName != null);
+
+            blockIndex = -1;
+
+            Type NodeType = parentNode.GetType();
+            PropertyInfo Property = NodeType.GetProperty(propertyName);
+
+            if (Property == null)
+                return false;
+
+            Type PropertyType = Property.PropertyType;
+            if (!PropertyType.IsGenericType)
+                return false;
+            if (PropertyType.GetInterface(typeof(IBlockList).FullName) == null)
+                return false;
+
+            IBlockList ItemBlockList = Property.GetValue(parentNode) as IBlockList;
+            if (ItemBlockList == null)
+                return false;
+
+            IList NodeBlockList = (IList)ItemBlockList.GetType().GetProperty(nameof(IBlockList<INode, Node>.NodeBlockList)).GetValue(ItemBlockList);
+            if (NodeBlockList == null)
+                return false;
+
+            blockIndex = NodeBlockList.Count;
+            return true;
+        }
+
+        public static bool GetLastBlockChildIndex(INode parentNode, string propertyName, int blockIndex, out int index)
+        {
+            Debug.Assert(parentNode != null);
+            Debug.Assert(propertyName != null);
+
+            index = -1;
+
+            Type NodeType = parentNode.GetType();
+            PropertyInfo Property = NodeType.GetProperty(propertyName);
+
+            if (Property == null)
+                return false;
+
+            Type PropertyType = Property.PropertyType;
+            if (!PropertyType.IsGenericType)
+                return false;
+            if (PropertyType.GetInterface(typeof(IBlockList).FullName) == null)
+                return false;
+
+            IBlockList ItemBlockList = Property.GetValue(parentNode) as IBlockList;
+            if (ItemBlockList == null)
+                return false;
+
+            IList NodeBlockList = (IList)ItemBlockList.GetType().GetProperty(nameof(IBlockList<INode, Node>.NodeBlockList)).GetValue(ItemBlockList);
+            if (NodeBlockList == null)
+                return false;
+
+            if (blockIndex < 0 || blockIndex >= NodeBlockList.Count)
+                return false;
+
+            IBlock ChildBlock = (IBlock)NodeBlockList[blockIndex];
+            if (ChildBlock == null)
+                return false;
+
+            IList NodeList = (IList)ChildBlock.GetType().GetProperty(nameof(IBlock<INode, Node>.NodeList)).GetValue(ChildBlock);
+            if (NodeList == null)
+                return false;
+
+            index = NodeList.Count;
+            return true;
+        }
+
         public static bool IsBlockChildNode(INode parentNode, string propertyName, int blockIndex, int index, INode childNode)
         {
             Debug.Assert(parentNode != null);
