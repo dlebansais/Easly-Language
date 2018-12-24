@@ -407,6 +407,35 @@ namespace BaseNodeHelper
             return true;
         }
 
+        public static bool GetLastListIndex(INode parentNode, string propertyName, out int lastIndex)
+        {
+            Debug.Assert(parentNode != null);
+            Debug.Assert(propertyName != null);
+
+            lastIndex = -1;
+
+            Type NodeType = parentNode.GetType();
+            PropertyInfo Property = NodeType.GetProperty(propertyName);
+            if (Property == null)
+                return false;
+
+            Type PropertyType = Property.PropertyType;
+
+            if (!PropertyType.IsGenericType)
+                return false;
+
+            Type ListType = PropertyType.GetGenericTypeDefinition();
+            if (ListType != typeof(IList<>))
+                return false;
+
+            IList AsList = (IList)Property.GetValue(parentNode);
+            if (AsList == null)
+                return false;
+
+            lastIndex = AsList.Count;
+            return true;
+        }
+
         public static bool IsChildBlockList(INode node, string propertyName, out Type childInterfaceType, out Type childNodeType)
         {
             Debug.Assert(node != null);
@@ -1740,6 +1769,57 @@ namespace BaseNodeHelper
             Debug.Assert(PropertyType.IsEnum);
 
             Property.SetValue(parentNode, value);
+        }
+
+        public static bool IsAssignable(INode parentNode, string propertyName, INode node)
+        {
+            Debug.Assert(parentNode != null);
+            Debug.Assert(propertyName != null);
+            Debug.Assert(node != null);
+
+            Type ParentNodeType = parentNode.GetType();
+            PropertyInfo Property = ParentNodeType.GetProperty(propertyName);
+            Debug.Assert(Property != null);
+
+            Type NodeType = node.GetType();
+            Type PropertyType = Property.PropertyType;
+
+            Type AssignedType = null;
+
+            if (PropertyType.GetInterface(typeof(INode).Name) != null)
+                AssignedType = PropertyType;
+
+            else if (PropertyType.IsGenericType)
+            {
+                Type GenericTypeDefinition = PropertyType.GetGenericTypeDefinition();
+                Type[] GenericArguments = PropertyType.GetGenericArguments();
+
+                if (GenericTypeDefinition == typeof(OptionalReference<>))
+                {
+                    Debug.Assert(GenericArguments.Length == 1);
+                    AssignedType = GenericArguments[0];
+                }
+
+                else if (GenericTypeDefinition == typeof(IList<>))
+                {
+                    Debug.Assert(GenericArguments.Length == 1);
+                    AssignedType = GenericArguments[0];
+                }
+
+                else if (GenericTypeDefinition == typeof(IBlockList<,>))
+                {
+                    Debug.Assert(GenericArguments.Length == 2);
+                    AssignedType = GenericArguments[0];
+                }
+            }
+
+            if (AssignedType == null)
+                return false;
+
+            if (!AssignedType.IsAssignableFrom(NodeType))
+                return false;
+
+            return true;
         }
 
         public static void CopyEnumProperty(INode sourceNode, INode destinationNode, string propertyName)
