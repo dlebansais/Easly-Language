@@ -1487,7 +1487,7 @@ namespace BaseNodeHelper
                     if (Path.Count == 1 && Path[0].Text.Length == 0)
                     {
                         IBlockList<IArgument, Argument> ArgumentBlocks = AsQueryExpression.ArgumentBlocks;
-                        if (NodeTreeHelper.IsBlockListEmpty(ArgumentBlocks))
+                        if (NodeTreeHelperBlockList.IsBlockListEmpty(ArgumentBlocks))
                             return true;
                     }
                 }
@@ -1503,33 +1503,33 @@ namespace BaseNodeHelper
 
             foreach (string PropertyName in PropertyNames)
             {
-                if (NodeTreeHelper.IsChildNodeProperty(node, PropertyName, out ChildNodeType))
+                if (NodeTreeHelperChild.IsChildNodeProperty(node, PropertyName, out ChildNodeType))
                 {
-                    NodeTreeHelper.GetChildNode(node, PropertyName, out bool IsAssigned, out INode ChildNode);
+                    NodeTreeHelperChild.GetChildNode(node, PropertyName, out INode ChildNode);
                     MergeHash(ref Hash, NodeHash(ChildNode));
                 }
 
-                else if (NodeTreeHelper.IsOptionalChildNodeProperty(node, PropertyName, out ChildNodeType))
+                else if (NodeTreeHelperOptional.IsOptionalChildNodeProperty(node, PropertyName, out ChildNodeType))
                 {
-                    NodeTreeHelper.GetChildNode(node, PropertyName, out bool IsAssigned, out INode ChildNode);
+                    NodeTreeHelperOptional.GetChildNode(node, PropertyName, out bool IsAssigned, out INode ChildNode);
                     MergeHash(ref Hash, IsAssigned ? 1UL : 0);
                     if (IsAssigned)
                         MergeHash(ref Hash, NodeHash(ChildNode));
                 }
 
-                else if (NodeTreeHelper.IsChildNodeList(node, PropertyName, out ChildNodeType))
+                else if (NodeTreeHelperList.IsChildNodeList(node, PropertyName, out ChildNodeType))
                 {
-                    NodeTreeHelper.GetChildNodeList(node, PropertyName, out IReadOnlyList<INode> ChildNodeList);
+                    NodeTreeHelperList.GetChildNodeList(node, PropertyName, out IReadOnlyList<INode> ChildNodeList);
                     foreach (INode ChildNode in ChildNodeList)
                         MergeHash(ref Hash, NodeHash(ChildNode));
                 }
 
-                else if (NodeTreeHelper.IsChildBlockList(node, PropertyName, out Type ChildInterfaceType, out ChildNodeType))
+                else if (NodeTreeHelperBlockList.IsChildBlockList(node, PropertyName, out Type ChildInterfaceType, out ChildNodeType))
                 {
-                    NodeTreeHelper.GetChildBlockList(node, PropertyName, out IReadOnlyList<INodeTreeBlock> ChildBlockList);
+                    NodeTreeHelperBlockList.GetChildBlockList(node, PropertyName, out IReadOnlyList<INodeTreeBlock> ChildBlockList);
                     for (int i = 0; i < ChildBlockList.Count; i++)
                     {
-                        NodeTreeHelper.GetChildBlock(node, PropertyName, i, out IBlock ChildBlock);
+                        NodeTreeHelperBlockList.GetChildBlock(node, PropertyName, i, out IBlock ChildBlock);
                         IReadOnlyList<INode> NodeList = ChildBlockList[i].NodeList;
 
                         MergeHash(ref Hash, ValueHash(ChildBlock.Documentation.Comment));
