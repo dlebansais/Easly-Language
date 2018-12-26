@@ -151,8 +151,10 @@ namespace BaseNodeHelper
             IOptionalReference Optional = Property.GetValue(parentNode) as IOptionalReference;
             if (Optional == null)
                 return false;
+            if (!Optional.IsAssigned)
+                return false;
 
-            INode NodeItem = Optional.AnyItem as INode;
+            INode NodeItem = Optional.Item as INode;
             if (NodeItem != node)
                 return false;
 
@@ -183,7 +185,7 @@ namespace BaseNodeHelper
             isAssigned = Optional.IsAssigned;
 
             if (Optional.HasItem)
-                childNode = Optional.AnyItem as INode;
+                childNode = Optional.Item as INode;
             else
                 childNode = null;
 
