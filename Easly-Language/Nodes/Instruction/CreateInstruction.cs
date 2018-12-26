@@ -7,7 +7,7 @@ namespace BaseNode
         IIdentifier EntityIdentifier { get; }
         IIdentifier CreationRoutineIdentifier { get; }
         IBlockList<IArgument, Argument> ArgumentBlocks { get; }
-        OptionalReference<IQualifiedName> Processor { get; }
+        IOptionalReference<IQualifiedName> Processor { get; }
     }
 
     [System.Serializable]
@@ -16,6 +16,6 @@ namespace BaseNode
         public virtual IIdentifier EntityIdentifier { get; set; }
         public virtual IIdentifier CreationRoutineIdentifier { get; set; }
         public virtual IBlockList<IArgument, Argument> ArgumentBlocks { get; set; }
-        public virtual OptionalReference<IQualifiedName> Processor { get; set; }
+        public virtual IOptionalReference<IQualifiedName> Processor { get; set; }
     }
 }

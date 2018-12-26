@@ -8,7 +8,7 @@ namespace BaseNode
         ParameterEndStatus ParameterEnd { get; }
         IBlockList<IEntityDeclaration, EntityDeclaration> ResultBlocks { get; }
         IBlockList<IIdentifier, Identifier> ModifiedQueryBlocks { get; }
-        OptionalReference<IExpression> Variant { get; }
+        IOptionalReference<IExpression> Variant { get; }
         IBody QueryBody { get; }
     }
 
@@ -19,7 +19,7 @@ namespace BaseNode
         public virtual ParameterEndStatus ParameterEnd { get; set; }
         public virtual IBlockList<IEntityDeclaration, EntityDeclaration> ResultBlocks { get; set; }
         public virtual IBlockList<IIdentifier, Identifier> ModifiedQueryBlocks { get; set; }
-        public virtual OptionalReference<IExpression> Variant { get; set; }
+        public virtual IOptionalReference<IExpression> Variant { get; set; }
         public virtual IBody QueryBody { get; set; }
     }
 }

@@ -6,7 +6,7 @@ namespace BaseNode
     {
         IName EntityName { get; }
         IObjectType EntityType { get; }
-        OptionalReference<IExpression> DefaultValue { get; }
+        IOptionalReference<IExpression> DefaultValue { get; }
     }
 
     [System.Serializable]
@@ -14,6 +14,6 @@ namespace BaseNode
     {
         public virtual IName EntityName { get; set; }
         public virtual IObjectType EntityType { get; set; }
-        public virtual OptionalReference<IExpression> DefaultValue { get; set; }
+        public virtual IOptionalReference<IExpression> DefaultValue { get; set; }
     }
 }

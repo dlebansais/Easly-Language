@@ -5,7 +5,7 @@ namespace BaseNode
     public interface IClass : INode
     {
         IName EntityName { get; }
-        OptionalReference<IIdentifier> FromIdentifier { get; }
+        IOptionalReference<IIdentifier> FromIdentifier { get; }
         CopySemantic CopySpecification { get; }
         CloneableStatus Cloneable { get; }
         ComparableStatus Comparable { get; }
@@ -28,7 +28,7 @@ namespace BaseNode
     public class Class : Node, IClass
     {
         public virtual IName EntityName { get; set; }
-        public virtual OptionalReference<IIdentifier> FromIdentifier { get; set; }
+        public virtual IOptionalReference<IIdentifier> FromIdentifier { get; set; }
         public virtual CopySemantic CopySpecification { get; set; }
         public virtual CloneableStatus Cloneable { get; set; }
         public virtual ComparableStatus Comparable { get; set; }

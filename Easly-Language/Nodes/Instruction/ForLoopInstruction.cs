@@ -10,7 +10,7 @@ namespace BaseNode
         IBlockList<IInstruction, Instruction> LoopInstructionBlocks { get; }
         IBlockList<IInstruction, Instruction> IterationInstructionBlocks { get; }
         IBlockList<IAssertion, Assertion> InvariantBlocks { get; }
-        OptionalReference<IExpression> Variant { get; }
+        IOptionalReference<IExpression> Variant { get; }
     }
 
     [System.Serializable]
@@ -22,6 +22,6 @@ namespace BaseNode
         public virtual IBlockList<IInstruction, Instruction> LoopInstructionBlocks { get; set; }
         public virtual IBlockList<IInstruction, Instruction> IterationInstructionBlocks { get; set; }
         public virtual IBlockList<IAssertion, Assertion> InvariantBlocks { get; set; }
-        public virtual OptionalReference<IExpression> Variant { get; set; }
+        public virtual IOptionalReference<IExpression> Variant { get; set; }
     }
 }

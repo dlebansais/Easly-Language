@@ -7,8 +7,8 @@ namespace BaseNode
         IObjectType EntityType { get; }
         UtilityType PropertyKind { get; }
         IBlockList<IIdentifier, Identifier> ModifiedQueryBlocks { get; }
-        OptionalReference<IBody> GetterBody { get; }
-        OptionalReference<IBody> SetterBody { get; }
+        IOptionalReference<IBody> GetterBody { get; }
+        IOptionalReference<IBody> SetterBody { get; }
     }
 
     [System.Serializable]
@@ -17,7 +17,7 @@ namespace BaseNode
         public virtual IObjectType EntityType { get; set; }
         public virtual UtilityType PropertyKind { get; set; }
         public virtual IBlockList<IIdentifier, Identifier> ModifiedQueryBlocks { get; set; }
-        public virtual OptionalReference<IBody> GetterBody { get; set; }
-        public virtual OptionalReference<IBody> SetterBody { get; set; }
+        public virtual IOptionalReference<IBody> GetterBody { get; set; }
+        public virtual IOptionalReference<IBody> SetterBody { get; set; }
     }
 }

@@ -6,7 +6,7 @@ namespace BaseNodeHelper
     public class OptionalReferenceHelper<IN>
         where IN : class, INode
     {
-        public static OptionalReference<IN> CreateReference(IN item)
+        public static IOptionalReference<IN> CreateReference(IN item)
         {
             OptionalReference<IN> Result = new OptionalReference<IN>();
             Result.Item = item;

@@ -16,7 +16,7 @@ namespace Easly
     {
         bool IsAssigned { get; }
         bool HasItem { get; }
-        T Item { get; }
+        T Item { get; set; }
         void Assign();
         void Unassign();
     }

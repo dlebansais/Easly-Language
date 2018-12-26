@@ -1332,7 +1332,7 @@ namespace BaseNodeHelper
             Type ItemType = ItemProperty.PropertyType;
             Type[] Generics = ItemType.GetGenericArguments();
 
-            Type ReferenceType = typeof(OptionalReference<>).MakeGenericType(Generics);
+            Type ReferenceType = typeof(IOptionalReference<>).MakeGenericType(Generics);
             IOptionalReference EmptyReference = (IOptionalReference)ReferenceType.Assembly.CreateInstance(ReferenceType.FullName);
             ReferenceType.GetProperty(nameof(IOptionalReference<Node>.Item)).SetValue(EmptyReference, childNode);
             EmptyReference.Unassign();
@@ -1632,7 +1632,7 @@ namespace BaseNodeHelper
                     NodeTreeHelperChild.GetChildNode(root, PropertyName, out INode ChildNode);
 
                     INode ClonedChildNode = DeepCloneNode(ChildNode);
-                    NodeTreeHelperChild.ReplaceChildNode(ClonedRoot, PropertyName, ClonedChildNode);
+                    NodeTreeHelperChild.SetChildNode(ClonedRoot, PropertyName, ClonedChildNode);
                 }
 
                 else if (NodeTreeHelperOptional.IsOptionalChildNodeProperty(root, PropertyName, out ChildNodeType))

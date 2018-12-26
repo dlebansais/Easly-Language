@@ -10,39 +10,42 @@ namespace BaseNodeHelper
 {
     public static class NodeTreeHelperChild
     {
-        public static bool IsChildNodeProperty(INode parentNode, string propertyName, out Type childNodeType)
+        public static bool IsChildNodeProperty(INode node, string propertyName, out Type childNodeType)
         {
-            Debug.Assert(parentNode != null);
-            Debug.Assert(propertyName != null);
+            if (node == null) throw new ArgumentNullException(nameof(node));
+            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
 
-            Type NodeType = parentNode.GetType();
+            childNodeType = null;
+
+            Type NodeType = node.GetType();
             PropertyInfo Property = NodeType.GetProperty(propertyName);
-
-            Debug.Assert(Property != null);
-
-            childNodeType = Property.PropertyType;
-            if (childNodeType.GetInterface(typeof(INode).Name) == null)
+            if (Property == null)
                 return false;
 
+            Type PropertyType = Property.PropertyType;
+            if (!NodeTreeHelper.IsNodeInterfaceType(PropertyType))
+                return false;
+
+            childNodeType = PropertyType;
             return true;
         }
 
-        public static bool IsChildNode(INode parentNode, string propertyName, INode node)
+        public static bool IsChildNode(INode node, string propertyName, INode childNode)
         {
-            Debug.Assert(parentNode != null);
-            Debug.Assert(propertyName != null);
-            Debug.Assert(node != null);
+            if (node == null) throw new ArgumentNullException(nameof(node));
+            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
+            if (childNode == null) throw new ArgumentNullException(nameof(childNode));
 
-            Type ParentNodeType = parentNode.GetType();
+            Type ParentNodeType = node.GetType();
             PropertyInfo Property = ParentNodeType.GetProperty(propertyName);
             if (Property == null)
                 return false;
 
             Type PropertyType = Property.PropertyType;
-            if (PropertyType.GetInterface(typeof(INode).Name) == null)
+            if (!NodeTreeHelper.IsNodeInterfaceType(PropertyType))
                 return false;
 
-            if (Property.GetValue(parentNode) != node)
+            if (Property.GetValue(node) != childNode)
                 return false;
 
             return true;
@@ -50,15 +53,14 @@ namespace BaseNodeHelper
 
         public static void GetChildNode(INode node, string propertyName, out INode childNode)
         {
-            Debug.Assert(node != null);
-            Debug.Assert(propertyName != null);
+            if (node == null) throw new ArgumentNullException(nameof(node));
+            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
 
             Type NodeType = node.GetType();
             PropertyInfo Property = NodeType.GetProperty(propertyName);
 
             Debug.Assert(Property != null);
-            Debug.Assert(Property.PropertyType != null);
-            Debug.Assert(Property.PropertyType.GetInterface(typeof(INode).Name) != null);
+            Debug.Assert(NodeTreeHelper.IsNodeInterfaceType(Property.PropertyType));
 
             childNode = Property.GetValue(node) as INode;
             Debug.Assert(childNode != null);
@@ -66,96 +68,88 @@ namespace BaseNodeHelper
 
         public static Type ChildInterfaceType(INode node, string propertyName)
         {
-            Debug.Assert(node != null);
-            Debug.Assert(propertyName != null);
+            if (node == null) throw new ArgumentNullException(nameof(node));
+            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
 
             Type NodeType = node.GetType();
             PropertyInfo Property = NodeType.GetProperty(propertyName);
             Debug.Assert(Property != null);
 
             Type InterfaceType = Property.PropertyType;
-            Debug.Assert(!InterfaceType.IsGenericType);
-            Debug.Assert(InterfaceType.IsInterface);
+            Debug.Assert(NodeTreeHelper.IsNodeInterfaceType(InterfaceType));
 
             return InterfaceType;
         }
 
-        public static void ReplaceChildNode(INode node, string propertyName, INode childNode)
+        public static void SetChildNode(INode node, string propertyName, INode newChildNode)
         {
-            Debug.Assert(node != null);
-            Debug.Assert(propertyName != null);
-            Debug.Assert(childNode != null);
+            if (node == null) throw new ArgumentNullException(nameof(node));
+            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
+            if (newChildNode == null) throw new ArgumentNullException(nameof(newChildNode));
 
             Type NodeType = node.GetType();
             PropertyInfo Property = NodeType.GetProperty(propertyName);
-
             Debug.Assert(Property != null);
+            Debug.Assert(NodeTreeHelper.IsNodeInterfaceType(Property.PropertyType));
 
-            Type ChildNodeType = childNode.GetType();
+            Type ChildNodeType = newChildNode.GetType();
             Debug.Assert(ChildNodeType.GetInterface(Property.PropertyType.FullName) != null);
 
-            Property.SetValue(node, childNode);
+            Property.SetValue(node, newChildNode);
         }
     }
 
     public static class NodeTreeHelperOptional
     {
-        public static bool IsOptionalChildNodeProperty(INode parentNode, string propertyName, out Type childNodeType)
+        public static bool IsOptionalChildNodeProperty(INode node, string propertyName, out Type childNodeType)
         {
-            Debug.Assert(parentNode != null);
-            Debug.Assert(propertyName != null);
+            if (node == null) throw new ArgumentNullException(nameof(node));
+            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
 
             childNodeType = null;
 
-            Type NodeType = parentNode.GetType();
-            PropertyInfo Property = NodeType.GetProperty(propertyName);
-
-            Debug.Assert(Property != null);
-
-            Type PropertyType = Property.PropertyType;
-            if (!PropertyType.IsGenericType)
-                return false;
-
-            if (PropertyType.GetGenericTypeDefinition() != typeof(OptionalReference<>))
-                return false;
-
-            Type[] GenericArguments = PropertyType.GetGenericArguments();
-            Debug.Assert(GenericArguments != null);
-            Debug.Assert(GenericArguments.Length == 1);
-
-            childNodeType = GenericArguments[0];
-            if (childNodeType.GetInterface(typeof(INode).Name) == null)
-                return false;
-
-            return true;
-        }
-
-        public static bool IsOptionalChildNode(INode parentNode, string propertyName, INode node)
-        {
-            Debug.Assert(parentNode != null);
-            Debug.Assert(propertyName != null);
-            Debug.Assert(node != null);
-
-            Type NodeType = parentNode.GetType();
+            Type NodeType = node.GetType();
             PropertyInfo Property = NodeType.GetProperty(propertyName);
             if (Property == null)
                 return false;
 
             Type PropertyType = Property.PropertyType;
-            if (!PropertyType.IsGenericType)
+            if (!NodeTreeHelper.IsOptionalReferenceType(PropertyType))
                 return false;
 
-            if (PropertyType.GetGenericTypeDefinition() != typeof(OptionalReference<>))
+            Debug.Assert(PropertyType.IsGenericType);
+            Type[] GenericArguments = PropertyType.GetGenericArguments();
+            Debug.Assert(GenericArguments != null);
+            Debug.Assert(GenericArguments.Length == 1);
+            childNodeType = GenericArguments[0];
+
+            return NodeTreeHelper.IsNodeInterfaceType(childNodeType);
+        }
+
+        public static bool IsOptionalChildNode(INode node, string propertyName, INode childNode)
+        {
+            if (node == null) throw new ArgumentNullException(nameof(node));
+            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
+            if (childNode == null) throw new ArgumentNullException(nameof(childNode));
+
+            Type NodeType = node.GetType();
+            PropertyInfo Property = NodeType.GetProperty(propertyName);
+            if (Property == null)
                 return false;
 
-            IOptionalReference Optional = Property.GetValue(parentNode) as IOptionalReference;
-            if (Optional == null)
+            Type PropertyType = Property.PropertyType;
+            if (!NodeTreeHelper.IsOptionalReferenceType(PropertyType))
                 return false;
+
+            IOptionalReference Optional = Property.GetValue(node) as IOptionalReference;
+            Debug.Assert(Optional != null);
             if (!Optional.IsAssigned)
                 return false;
 
             INode NodeItem = Optional.Item as INode;
-            if (NodeItem != node)
+            Debug.Assert(NodeItem != null);
+
+            if (NodeItem != childNode)
                 return false;
 
             return true;
@@ -163,23 +157,20 @@ namespace BaseNodeHelper
 
         public static void GetChildNode(INode node, string propertyName, out bool isAssigned, out INode childNode)
         {
-            Debug.Assert(node != null);
-            Debug.Assert(propertyName != null);
+            if (node == null) throw new ArgumentNullException(nameof(node));
+            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
 
             isAssigned = false;
             childNode = null;
 
             Type NodeType = node.GetType();
             PropertyInfo Property = NodeType.GetProperty(propertyName);
-
             Debug.Assert(Property != null);
 
             Type PropertyType = Property.PropertyType;
-            Debug.Assert(PropertyType.IsGenericType);
-            Debug.Assert(PropertyType.GetGenericTypeDefinition() == typeof(OptionalReference<>));
+            Debug.Assert(NodeTreeHelper.IsOptionalReferenceType(PropertyType));
 
             IOptionalReference Optional = Property.GetValue(node) as IOptionalReference;
-
             Debug.Assert(Optional != null);
 
             isAssigned = Optional.IsAssigned;
@@ -194,37 +185,36 @@ namespace BaseNodeHelper
 
         public static Type OptionalChildInterfaceType(INode node, string propertyName)
         {
-            Debug.Assert(node != null);
-            Debug.Assert(propertyName != null);
+            if (node == null) throw new ArgumentNullException(nameof(node));
+            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
 
             Type NodeType = node.GetType();
             PropertyInfo Property = NodeType.GetProperty(propertyName);
             Debug.Assert(Property != null);
 
             Type PropertyType = Property.PropertyType;
+            Debug.Assert(NodeTreeHelper.IsOptionalReferenceType(PropertyType));
+
             Debug.Assert(PropertyType.IsGenericType);
-            Debug.Assert(PropertyType.GetGenericTypeDefinition() == typeof(OptionalReference<>));
+            Type[] GenericArguments = PropertyType.GetGenericArguments();
+            Debug.Assert(GenericArguments != null);
+            Debug.Assert(GenericArguments.Length == 1);
 
-            Type[] OptionalGenericArguments = PropertyType.GetGenericArguments();
-            Debug.Assert(OptionalGenericArguments != null);
-            Debug.Assert(OptionalGenericArguments.Length == 1);
-
-            Type InterfaceType = OptionalGenericArguments[0];
-            Debug.Assert(InterfaceType.IsInterface);
+            Type InterfaceType = GenericArguments[0];
+            Debug.Assert(NodeTreeHelper.IsNodeInterfaceType(InterfaceType));
 
             return InterfaceType;
         }
 
-        public static IOptionalReference GetOptionalChildNode(INode node, string propertyName)
+        public static IOptionalReference GetOptionalReference(INode node, string propertyName)
         {
-            Debug.Assert(node != null);
-            Debug.Assert(propertyName != null);
+            if (node == null) throw new ArgumentNullException(nameof(node));
+            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
 
             Type NodeType = node.GetType();
             PropertyInfo Property = NodeType.GetProperty(propertyName);
             Debug.Assert(Property != null);
-            Debug.Assert(Property.PropertyType.IsGenericType);
-            Debug.Assert(Property.PropertyType.GetGenericTypeDefinition() == typeof(OptionalReference<>));
+            Debug.Assert(NodeTreeHelper.IsOptionalReferenceType(Property.PropertyType));
 
             IOptionalReference Optional = Property.GetValue(node) as IOptionalReference;
             Debug.Assert(Optional != null);
@@ -232,46 +222,54 @@ namespace BaseNodeHelper
             return Optional;
         }
 
-        public static void SetOptionalChildNode(INode node, string propertyName, INode childNode)
+        public static void SetOptionalChildNode(INode node, string propertyName, INode newChildNode)
         {
-            Debug.Assert(node != null);
-            Debug.Assert(propertyName != null);
-            Debug.Assert(childNode != null);
+            if (node == null) throw new ArgumentNullException(nameof(node));
+            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
+            if (newChildNode == null) throw new ArgumentNullException(nameof(newChildNode));
+
+            Type ChildNodeType = newChildNode.GetType();
 
             Type NodeType = node.GetType();
             PropertyInfo Property = NodeType.GetProperty(propertyName);
-
             Debug.Assert(Property != null);
+
             Type PropertyType = Property.PropertyType;
+            Debug.Assert(NodeTreeHelper.IsOptionalReferenceType(PropertyType));
+
             Debug.Assert(PropertyType.IsGenericType);
-            Debug.Assert(PropertyType.GetGenericTypeDefinition() == typeof(OptionalReference<>));
+            Type[] GenericArguments = PropertyType.GetGenericArguments();
+            Debug.Assert(GenericArguments != null);
+            Debug.Assert(GenericArguments.Length == 1);
+
+            Type InterfaceType = GenericArguments[0];
+            Debug.Assert(ChildNodeType.GetInterface(InterfaceType.FullName) != null);
 
             IOptionalReference Optional = Property.GetValue(node) as IOptionalReference;
-
             Debug.Assert(Optional != null);
 
-            PropertyInfo ItemProperty = Optional.GetType().GetProperty(nameof(IOptionalReference<Node>.Item));
-            ItemProperty.SetValue(Optional, childNode);
+            PropertyInfo ItemProperty = Optional.GetType().GetProperty(nameof(IOptionalReference<INode>.Item));
+            ItemProperty.SetValue(Optional, newChildNode);
             Optional.Assign();
         }
 
         public static bool IsChildNodeAssigned(INode node, string propertyName)
         {
-            IOptionalReference Optional = GetOptionalChildNode(node, propertyName);
+            IOptionalReference Optional = GetOptionalReference(node, propertyName);
 
             return Optional.IsAssigned;
         }
 
         public static void AssignChildNode(INode node, string propertyName)
         {
-            IOptionalReference Optional = GetOptionalChildNode(node, propertyName);
+            IOptionalReference Optional = GetOptionalReference(node, propertyName);
 
             Optional.Assign();
         }
 
         public static void UnassignChildNode(INode node, string propertyName)
         {
-            IOptionalReference Optional = GetOptionalChildNode(node, propertyName);
+            IOptionalReference Optional = GetOptionalReference(node, propertyName);
 
             Optional.Unassign();
         }
@@ -281,207 +279,174 @@ namespace BaseNodeHelper
     {
         public static bool IsChildNodeList(INode node, string propertyName, out Type childNodeType)
         {
-            Debug.Assert(node != null);
-            Debug.Assert(propertyName != null);
-
-            Type NodeType = node.GetType();
-            PropertyInfo Property = NodeType.GetProperty(propertyName);
-
-            Debug.Assert(Property != null);
-
-            Type PropertyType = Property.PropertyType;
-
-            if (PropertyType.IsGenericType)
-            {
-                Type CollectionType = PropertyType.GetGenericTypeDefinition();
-
-                if (CollectionType == typeof(IList<>))
-                {
-                    Type[] Generics = PropertyType.GetGenericArguments();
-
-                    Debug.Assert(Generics.Length == 1);
-
-                    childNodeType = Generics[0];
-                    return true;
-                }
-            }
+            if (node == null) throw new ArgumentNullException(nameof(node));
+            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
 
             childNodeType = null;
-            return false;
-        }
-
-        public static bool GetChildNodeList(INode node, string propertyName, out IReadOnlyList<INode> childNodeList)
-        {
-            Debug.Assert(node != null);
-            Debug.Assert(propertyName != null);
 
             Type NodeType = node.GetType();
-            PropertyInfo Property = NodeType.GetProperty(propertyName);
-
-            Debug.Assert(Property != null);
-
-            Type PropertyType = Property.PropertyType;
-
-            Debug.Assert(PropertyType.IsGenericType);
-
-            Type ListType = PropertyType.GetGenericTypeDefinition();
-
-            Debug.Assert(ListType == typeof(IList<>) || ListType == typeof(IBlockList<,>));
-
-            object Child = Property.GetValue(node);
-
-            Debug.Assert(Child != null);
-
-            if (Child is IList AsList)
-            {
-                List<INode> NodeList = new List<INode>();
-
-                foreach (object Item in AsList)
-                {
-                    INode ChildNode = Item as INode;
-
-                    Debug.Assert(ChildNode != null);
-
-                    NodeList.Add(ChildNode);
-                }
-
-                childNodeList = NodeList.AsReadOnly();
-                return true;
-            }
-
-            childNodeList = null;
-            return false;
-        }
-
-        public static bool IsListChildNode(INode parentNode, string propertyName, int index, INode childNode)
-        {
-            Debug.Assert(parentNode != null);
-            Debug.Assert(propertyName != null);
-            Debug.Assert(childNode != null);
-
-            Type NodeType = parentNode.GetType();
             PropertyInfo Property = NodeType.GetProperty(propertyName);
             if (Property == null)
                 return false;
 
             Type PropertyType = Property.PropertyType;
-
-            if (!PropertyType.IsGenericType)
+            if (!NodeTreeHelper.IsNodeListType(PropertyType))
                 return false;
 
-            Type ListType = PropertyType.GetGenericTypeDefinition();
-            if (ListType != typeof(IList<>))
+            IList Collection = Property.GetValue(node) as IList;
+            if (Collection == null && Property.GetValue(node) != null)
                 return false;
 
-            IList AsList = (IList)Property.GetValue(parentNode);
-            if (AsList == null)
-                return false;
+            Debug.Assert(PropertyType.IsGenericType);
+            Type[] GenericArguments = PropertyType.GetGenericArguments();
+            Debug.Assert(GenericArguments != null);
+            Debug.Assert(GenericArguments.Length == 1);
+            childNodeType = GenericArguments[0];
 
-            if (index < 0 || index >= AsList.Count)
-                return false;
-
-            if (AsList[index] != childNode)
-                return false;
-
-            return true;
+            return NodeTreeHelper.IsNodeInterfaceType(childNodeType);
         }
 
-        public static Type ListInterfaceType(INode node, string propertyName)
+        public static bool GetChildNodeList(INode node, string propertyName, out IReadOnlyList<INode> childNodeList)
         {
-            Debug.Assert(node != null);
-            Debug.Assert(propertyName != null);
+            if (node == null) throw new ArgumentNullException(nameof(node));
+            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
 
             Type NodeType = node.GetType();
             PropertyInfo Property = NodeType.GetProperty(propertyName);
             Debug.Assert(Property != null);
 
             Type PropertyType = Property.PropertyType;
+            Debug.Assert(NodeTreeHelper.IsNodeListType(PropertyType));
+
+            IList Collection = Property.GetValue(node) as IList;
+            Debug.Assert(Collection != null);
+
+            List<INode> NodeList = new List<INode>();
+
+            foreach (object Item in Collection)
+            {
+                INode NodeItem = Item as INode;
+                Debug.Assert(NodeItem != null);
+
+                NodeList.Add(NodeItem);
+            }
+
+            childNodeList = NodeList.AsReadOnly();
+            return true;
+        }
+
+        public static bool IsListChildNode(INode node, string propertyName, int index, INode childNode)
+        {
+            if (node == null) throw new ArgumentNullException(nameof(node));
+            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
+            if (index < 0) throw new ArgumentOutOfRangeException(nameof(index));
+            if (childNode == null) throw new ArgumentNullException(nameof(childNode));
+
+            Type NodeType = node.GetType();
+            PropertyInfo Property = NodeType.GetProperty(propertyName);
+            Debug.Assert(Property != null);
+
+            Type PropertyType = Property.PropertyType;
+            Debug.Assert(NodeTreeHelper.IsNodeListType(PropertyType));
+
+            IList Collection = Property.GetValue(node) as IList;
+            Debug.Assert(Collection != null);
+
+            if (index >= Collection.Count) throw new ArgumentOutOfRangeException(nameof(index));
+
+            INode NodeItem = Collection[index] as INode;
+            Debug.Assert(NodeItem != null);
+
+            return NodeItem == childNode;
+        }
+
+        public static Type ListInterfaceType(INode node, string propertyName)
+        {
+            if (node == null) throw new ArgumentNullException(nameof(node));
+            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
+
+            Type NodeType = node.GetType();
+            PropertyInfo Property = NodeType.GetProperty(propertyName);
+            Debug.Assert(Property != null);
+
+            Type PropertyType = Property.PropertyType;
+            Debug.Assert(NodeTreeHelper.IsNodeListType(PropertyType));
+
+            IList Collection = Property.GetValue(node) as IList;
+            Debug.Assert(Collection != null);
+
             Debug.Assert(PropertyType.IsGenericType);
-
-            Type GenericType = Property.PropertyType.GetGenericTypeDefinition();
-            Debug.Assert(GenericType == typeof(IList<>));
-
             Type[] GenericArguments = Property.PropertyType.GetGenericArguments();
             Debug.Assert(GenericArguments != null);
             Debug.Assert(GenericArguments.Length == 1);
 
             Type InterfaceType = GenericArguments[0];
-            Debug.Assert(InterfaceType != null);
-            Debug.Assert(InterfaceType.IsInterface);
+            Debug.Assert(NodeTreeHelper.IsNodeInterfaceType(InterfaceType));
 
             return InterfaceType;
         }
 
-        public static bool GetLastListIndex(INode parentNode, string propertyName, out int lastIndex)
+        public static bool GetLastListIndex(INode node, string propertyName, out int lastIndex)
         {
-            Debug.Assert(parentNode != null);
-            Debug.Assert(propertyName != null);
+            if (node == null) throw new ArgumentNullException(nameof(node));
+            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
 
             lastIndex = -1;
 
-            Type NodeType = parentNode.GetType();
+            Type NodeType = node.GetType();
             PropertyInfo Property = NodeType.GetProperty(propertyName);
-            if (Property == null)
-                return false;
+            Debug.Assert(Property != null);
 
             Type PropertyType = Property.PropertyType;
+            Debug.Assert(NodeTreeHelper.IsNodeListType(PropertyType));
 
-            if (!PropertyType.IsGenericType)
-                return false;
+            IList Collection = Property.GetValue(node) as IList;
+            Debug.Assert(Collection != null);
 
-            Type ListType = PropertyType.GetGenericTypeDefinition();
-            if (ListType != typeof(IList<>))
-                return false;
-
-            IList AsList = (IList)Property.GetValue(parentNode);
-            if (AsList == null)
-                return false;
-
-            lastIndex = AsList.Count;
+            lastIndex = Collection.Count;
             return true;
         }
 
         public static void InsertIntoList(INode node, string propertyName, int index, INode childNode)
         {
-            Debug.Assert(node != null);
-            Debug.Assert(propertyName != null);
-            Debug.Assert(childNode != null);
+            if (node == null) throw new ArgumentNullException(nameof(node));
+            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
+            if (index < 0) throw new ArgumentOutOfRangeException(nameof(index));
+            if (childNode == null) throw new ArgumentNullException(nameof(childNode));
 
             Type NodeType = node.GetType();
             PropertyInfo Property = NodeType.GetProperty(propertyName);
+            Debug.Assert(Property != null);
 
-            Debug.Assert(Property.PropertyType.IsGenericType);
+            Type PropertyType = Property.PropertyType;
+            Debug.Assert(NodeTreeHelper.IsNodeListType(PropertyType));
 
-            Type GenericType = Property.PropertyType.GetGenericTypeDefinition();
-            Debug.Assert(GenericType == typeof(IList<>));
+            IList Collection = Property.GetValue(node) as IList;
+            Debug.Assert(Collection != null);
 
-            IList NodeList = Property.GetValue(node) as IList;
+            if (index > Collection.Count) throw new ArgumentOutOfRangeException(nameof(index));
 
-            Debug.Assert(NodeList != null);
-            Debug.Assert(index >= 0 && index <= NodeList.Count);
-
-            NodeList.Insert(index, childNode);
+            Collection.Insert(index, childNode);
         }
 
         public static void RemoveFromList(INode node, string propertyName, int index)
         {
-            Debug.Assert(node != null);
-            Debug.Assert(propertyName != null);
+            if (node == null) throw new ArgumentNullException(nameof(node));
+            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
 
             Type NodeType = node.GetType();
             PropertyInfo Property = NodeType.GetProperty(propertyName);
+            Debug.Assert(Property != null);
 
-            Debug.Assert(Property.PropertyType.IsGenericType);
+            Type PropertyType = Property.PropertyType;
+            Debug.Assert(NodeTreeHelper.IsNodeListType(PropertyType));
 
-            Type GenericType = Property.PropertyType.GetGenericTypeDefinition();
-            Debug.Assert(GenericType == typeof(IList<>));
+            IList Collection = Property.GetValue(node) as IList;
+            Debug.Assert(Collection != null);
 
-            IList NodeList = Property.GetValue(node) as IList;
+            if (index >= Collection.Count) throw new ArgumentOutOfRangeException(nameof(index));
 
-            Debug.Assert(NodeList != null);
-            Debug.Assert(index >= 0 && index < NodeList.Count);
-
-            NodeList.RemoveAt(index);
+            Collection.RemoveAt(index);
         }
     }
 
@@ -1323,6 +1288,41 @@ namespace BaseNodeHelper
             return Result;
         }
 
+        public static bool IsNodeInterfaceType(Type type)
+        {
+            if (type == null) throw new ArgumentNullException(nameof(type));
+
+            return type.IsInterface && type.GetInterface(typeof(INode).Name) != null;
+        }
+
+        public static bool IsOptionalReferenceType(Type type)
+        {
+            if (type == null) throw new ArgumentNullException(nameof(type));
+
+            if (!type.IsInterface || !type.IsGenericType || type.GetGenericTypeDefinition() != typeof(IOptionalReference<>))
+                return false;
+
+            Type[] GenericArguments = type.GetGenericArguments();
+            Debug.Assert(GenericArguments != null);
+            Debug.Assert(GenericArguments.Length == 1);
+
+            return IsNodeInterfaceType(GenericArguments[0]);
+        }
+
+        public static bool IsNodeListType(Type type)
+        {
+            if (type == null) throw new ArgumentNullException(nameof(type));
+
+            if (!type.IsInterface || !type.IsGenericType || type.GetGenericTypeDefinition() != typeof(IList<>))
+                return false;
+
+            Type[] GenericArguments = type.GetGenericArguments();
+            Debug.Assert(GenericArguments != null);
+            Debug.Assert(GenericArguments.Length == 1);
+
+            return IsNodeInterfaceType(GenericArguments[0]);
+        }
+
         public static bool IsListType(Type nodeType, string propertyName)
         {
             Debug.Assert(nodeType != null);
@@ -1508,7 +1508,7 @@ namespace BaseNodeHelper
                 Type PropertyType = Property.PropertyType;
                 string PropertyName = Property.Name;
 
-                if (PropertyType.IsGenericType && PropertyType.GetGenericTypeDefinition() == typeof(OptionalReference<>))
+                if (PropertyType.IsGenericType && PropertyType.GetGenericTypeDefinition() == typeof(IOptionalReference<>))
                 {
                     IOptionalReference Optional = Property.GetValue(node) as IOptionalReference;
 
@@ -1781,7 +1781,7 @@ namespace BaseNodeHelper
 
             Type AssignedType = null;
 
-            if (PropertyType.GetInterface(typeof(INode).Name) != null)
+            if (NodeTreeHelper.IsNodeInterfaceType(PropertyType))
                 AssignedType = PropertyType;
 
             else if (PropertyType.IsGenericType)
@@ -1789,7 +1789,7 @@ namespace BaseNodeHelper
                 Type GenericTypeDefinition = PropertyType.GetGenericTypeDefinition();
                 Type[] GenericArguments = PropertyType.GetGenericArguments();
 
-                if (GenericTypeDefinition == typeof(OptionalReference<>))
+                if (GenericTypeDefinition == typeof(IOptionalReference<>))
                 {
                     Debug.Assert(GenericArguments.Length == 1);
                     AssignedType = GenericArguments[0];

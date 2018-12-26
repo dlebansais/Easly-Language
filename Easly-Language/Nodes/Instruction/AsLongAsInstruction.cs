@@ -6,7 +6,7 @@ namespace BaseNode
     {
         IExpression ContinueCondition { get; }
         IBlockList<IContinuation, Continuation> ContinuationBlocks { get; }
-        OptionalReference<IScope> ElseInstructions { get; }
+        IOptionalReference<IScope> ElseInstructions { get; }
     }
 
     [System.Serializable]
@@ -14,6 +14,6 @@ namespace BaseNode
     {
         public virtual IExpression ContinueCondition { get; set; }
         public virtual IBlockList<IContinuation, Continuation> ContinuationBlocks { get; set; }
-        public virtual OptionalReference<IScope> ElseInstructions { get; set; }
+        public virtual IOptionalReference<IScope> ElseInstructions { get; set; }
     }
 }
