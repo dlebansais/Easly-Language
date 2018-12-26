@@ -370,6 +370,24 @@ namespace BaseNodeHelper
             INode EmptyNode = objectType.Assembly.CreateInstance(objectType.FullName) as INode;
             Debug.Assert(EmptyNode != null);
 
+            IList<string> PropertyNames = NodeTreeHelper.EnumChildNodeProperties(EmptyNode);
+
+            foreach (string PropertyName in PropertyNames)
+            {
+                Type ChildInterfaceType, ChildNodeType;
+
+                if (NodeTreeHelperOptional.IsOptionalChildNodeProperty(EmptyNode, PropertyName, out ChildNodeType))
+                    InitializeUnassignedOptionalChildNode(EmptyNode, PropertyName);
+
+                else if (NodeTreeHelperList.IsChildNodeList(EmptyNode, PropertyName, out ChildNodeType))
+                    InitializeEmptyNodeList(EmptyNode, PropertyName, ChildNodeType);
+
+                else if (NodeTreeHelperBlockList.IsChildBlockList(EmptyNode, PropertyName, out ChildInterfaceType, out ChildNodeType))
+                    InitializeEmptyBlockList(EmptyNode, PropertyName, ChildInterfaceType, ChildNodeType);
+            }
+
+            InitializeDocumentation(EmptyNode);
+
             return EmptyNode;
         }
         #endregion
@@ -1284,19 +1302,19 @@ namespace BaseNodeHelper
         #endregion
 
         #region Initialization
-        public static void InitializeDocumentation(INode node)
+        private static void InitializeDocumentation(INode node)
         {
             IDocument EmptyDocumentation = CreateEmptyDocumentation();
             ((Node)node).Documentation = EmptyDocumentation;
         }
 
-        public static void InitializeChildNode(INode node, string propertyName, INode childNode)
+        private static void InitializeChildNode(INode node, string propertyName, INode childNode)
         {
             PropertyInfo ItemProperty = node.GetType().GetProperty(propertyName);
             ItemProperty.SetValue(node, childNode);
         }
 
-        public static void InitializeUnassignedOptionalChildNode(INode node, string propertyName)
+        private static void InitializeUnassignedOptionalChildNode(INode node, string propertyName)
         {
             PropertyInfo ItemProperty = node.GetType().GetProperty(propertyName);
             Type ItemType = ItemProperty.PropertyType;
@@ -1308,7 +1326,7 @@ namespace BaseNodeHelper
             ItemProperty.SetValue(node, EmptyReference);
         }
 
-        public static void InitializeOptionalChildNode(INode node, string propertyName, INode childNode)
+        private static void InitializeOptionalChildNode(INode node, string propertyName, INode childNode)
         {
             PropertyInfo ItemProperty = node.GetType().GetProperty(propertyName);
             Type ItemType = ItemProperty.PropertyType;
@@ -1322,7 +1340,7 @@ namespace BaseNodeHelper
             ItemProperty.SetValue(node, EmptyReference);
         }
 
-        public static void InitializeEmptyNodeList(INode node, string propertyName, Type childNodeType)
+        private static void InitializeEmptyNodeList(INode node, string propertyName, Type childNodeType)
         {
             Type[] Generics = new Type[] { childNodeType };
             Type ListType = typeof(List<>).MakeGenericType(Generics);
@@ -1331,7 +1349,7 @@ namespace BaseNodeHelper
             node.GetType().GetProperty(propertyName).SetValue(node, EmptyList);
         }
 
-        public static void InitializeSimpleNodeList(INode node, string propertyName, Type childNodeType, INode firstNode)
+        private static void InitializeSimpleNodeList(INode node, string propertyName, Type childNodeType, INode firstNode)
         {
             InitializeEmptyNodeList(node, propertyName, childNodeType);
 
@@ -1339,7 +1357,7 @@ namespace BaseNodeHelper
             NodeList.Add(firstNode);
         }
 
-        public static void InitializeEmptyBlockList(INode node, string propertyName, Type childInterfaceType, Type childNodeType)
+        private static void InitializeEmptyBlockList(INode node, string propertyName, Type childInterfaceType, Type childNodeType)
         {
             Type[] Generics = new Type[] { childInterfaceType, childNodeType };
             Type BlockListType = typeof(BlockList<,>).MakeGenericType(Generics);
@@ -1357,7 +1375,7 @@ namespace BaseNodeHelper
             node.GetType().GetProperty(propertyName).SetValue(node, EmptyBlockList);
         }
 
-        public static void InitializeSimpleBlockList(INode node, string propertyName, Type childInterfaceType, Type childNodeType, INode firstNode)
+        private static void InitializeSimpleBlockList(INode node, string propertyName, Type childInterfaceType, Type childNodeType, INode firstNode)
         {
             InitializeEmptyBlockList(node, propertyName, childInterfaceType, childNodeType);
 
@@ -1598,6 +1616,101 @@ namespace BaseNodeHelper
         private static void MergeHash(ref ulong hash1, ulong hash2)
         {
             hash1 ^= hash2;
+        }
+
+        public static INode DeepCloneNode(INode root)
+        {
+            IList<string> PropertyNames = NodeTreeHelper.EnumChildNodeProperties(root);
+            INode ClonedRoot = CreateEmptyNode(root.GetType());
+
+            foreach (string PropertyName in PropertyNames)
+            {
+                Type ChildInterfaceType, ChildNodeType;
+
+                if (NodeTreeHelperChild.IsChildNodeProperty(root, PropertyName, out ChildNodeType))
+                {
+                    NodeTreeHelperChild.GetChildNode(root, PropertyName, out INode ChildNode);
+
+                    INode ClonedChildNode = DeepCloneNode(ChildNode);
+                    NodeTreeHelperChild.ReplaceChildNode(ClonedRoot, PropertyName, ClonedChildNode);
+                }
+
+                else if (NodeTreeHelperOptional.IsOptionalChildNodeProperty(root, PropertyName, out ChildNodeType))
+                {
+                    NodeTreeHelperOptional.GetChildNode(root, PropertyName, out bool IsAssigned, out INode ChildNode);
+
+                    if (ChildNode != null)
+                    {
+                        INode ClonedChildNode = DeepCloneNode(ChildNode);
+                        NodeTreeHelperOptional.SetOptionalChildNode(ClonedRoot, PropertyName, ClonedChildNode);
+                        if (!IsAssigned)
+                            NodeTreeHelperOptional.UnassignChildNode(ClonedRoot, PropertyName);
+                    }
+                }
+
+                else if (NodeTreeHelperList.IsChildNodeList(root, PropertyName, out ChildNodeType))
+                {
+                    NodeTreeHelperList.GetChildNodeList(root, PropertyName, out IReadOnlyList<INode> ChildNodeList);
+
+                    for (int Index = 0; Index < ChildNodeList.Count; Index++)
+                    {
+                        INode ChildNode = ChildNodeList[Index];
+                        INode ClonedChildNode = DeepCloneNode(ChildNode);
+
+                        NodeTreeHelperList.InsertIntoList(ClonedRoot, PropertyName, Index, ClonedChildNode);
+                    }
+                }
+
+                else if (NodeTreeHelperBlockList.IsChildBlockList(root, PropertyName, out ChildInterfaceType, out ChildNodeType))
+                {
+                    NodeTreeHelperBlockList.GetChildBlockList(root, PropertyName, out IReadOnlyList<INodeTreeBlock> ChildBlockList);
+
+                    for (int BlockIndex = 0; BlockIndex < ChildBlockList.Count; BlockIndex++)
+                    {
+                        INodeTreeBlock NodeTreeBlock = ChildBlockList[BlockIndex];
+                        NodeTreeHelperBlockList.GetChildBlock(root, PropertyName, BlockIndex, out IBlock Block);
+                        Type InterfaceType = NodeTreeHelperBlockList.BlockListInterfaceType(root, PropertyName);
+
+                        IPattern ClonedPattern = (IPattern)DeepCloneNode(NodeTreeBlock.ReplicationPattern);
+                        IIdentifier ClonedSource = (IIdentifier)DeepCloneNode(NodeTreeBlock.SourceIdentifier);
+                        NodeTreeHelperBlockList.InsertIntoBlockList(ClonedRoot, PropertyName, BlockIndex, Block.Replication, ClonedPattern, ClonedSource, out IBlock ClonedBlock);
+
+                        for (int Index = 0; Index < NodeTreeBlock.NodeList.Count; Index++)
+                        {
+                            INode ChildNode = NodeTreeBlock.NodeList[Index];
+                            INode ClonedChildNode = DeepCloneNode(ChildNode);
+
+                            NodeTreeHelperBlockList.InsertIntoBlock(ClonedBlock, Index, ClonedChildNode);
+                        }
+
+                        NodeTreeHelper.CopyDocumentation(Block, ClonedBlock);
+                    }
+
+                    IBlockList BlockList = NodeTreeHelperBlockList.GetBlockList(root, PropertyName);
+                    IBlockList ClonedBlockList = NodeTreeHelperBlockList.GetBlockList(ClonedRoot, PropertyName);
+                    NodeTreeHelper.CopyDocumentation(BlockList, ClonedBlockList);
+                }
+
+                else if (NodeTreeHelper.IsBooleanProperty(root, PropertyName))
+                    NodeTreeHelper.CopyBooleanProperty(root, ClonedRoot, PropertyName);
+
+                else if (NodeTreeHelper.IsEnumProperty(root, PropertyName))
+                    NodeTreeHelper.CopyEnumProperty(root, ClonedRoot, PropertyName);
+
+                else if (NodeTreeHelper.IsStringProperty(root, PropertyName))
+                    NodeTreeHelper.CopyStringProperty(root, ClonedRoot, PropertyName);
+
+                else if (NodeTreeHelper.IsGuidProperty(root, PropertyName))
+                    NodeTreeHelper.CopyGuidProperty(root, ClonedRoot, PropertyName);
+
+                else if (NodeTreeHelper.IsDocumentProperty(root, PropertyName))
+                    NodeTreeHelper.CopyDocumentation(root, ClonedRoot);
+
+                else
+                    throw new ArgumentOutOfRangeException(nameof(PropertyName));
+            }
+
+            return ClonedRoot;
         }
         #endregion
     }

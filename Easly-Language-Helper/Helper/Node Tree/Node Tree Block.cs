@@ -25,9 +25,9 @@ namespace BaseNodeHelper
         #endregion
 
         #region Properties
-        public IPattern ReplicationPattern { get; private set; }
-        public IIdentifier SourceIdentifier { get; private set; }
-        public IReadOnlyList<INode> NodeList { get; private set; }
+        public IPattern ReplicationPattern { get; }
+        public IIdentifier SourceIdentifier { get; }
+        public IReadOnlyList<INode> NodeList { get; }
         #endregion
     }
 }

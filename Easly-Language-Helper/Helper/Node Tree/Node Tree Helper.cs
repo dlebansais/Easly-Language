@@ -182,13 +182,12 @@ namespace BaseNodeHelper
 
             isAssigned = Optional.IsAssigned;
 
-            if (isAssigned)
-            {
+            if (Optional.HasItem)
                 childNode = Optional.AnyItem as INode;
-                Debug.Assert(childNode != null);
-            }
             else
                 childNode = null;
+
+            Debug.Assert(!isAssigned || childNode != null);
         }
 
         public static Type OptionalChildInterfaceType(INode node, string propertyName)

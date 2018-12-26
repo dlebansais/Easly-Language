@@ -5,11 +5,10 @@ namespace Easly
     public interface IOptionalReference
     {
         bool IsAssigned { get; }
+        bool HasItem { get; }
         object AnyItem { get; }
         void Assign();
         void Unassign();
-        //void Hack(object item); //TODO: remove
-        //object GetHack(); //TODO: remove
     }
 
     public interface IOptionalReference<T> : IOptionalReference
@@ -21,16 +20,6 @@ namespace Easly
     [PolySerializer.Serializable]
     public class OptionalReference<T> : IOptionalReference, IOptionalReference<T> where T : class
     {
-        /*
-        public void Hack(object item) //TODO: remove
-        {
-            Item = item as T;
-        }
-        public object GetHack() //TODO: remove
-        {
-            return _Item as T;
-        }*/
-
         #region Init
         public OptionalReference()
         {
@@ -45,6 +34,7 @@ namespace Easly
 
         #region Properties
         public bool IsAssigned { get; private set; } = false;
+        public bool HasItem { get { return _Item != null; } }
 
         public object AnyItem
         {
