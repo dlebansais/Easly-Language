@@ -1504,7 +1504,9 @@ namespace BaseNodeHelper
                     IList<IIdentifier> Path = AsQueryExpression.Query.Path;
                     if (Path.Count == 1 && Path[0].Text.Length == 0)
                     {
-                        IBlockList<IArgument, Argument> ArgumentBlocks = AsQueryExpression.ArgumentBlocks;
+                        IBlockList ArgumentBlocks = AsQueryExpression.ArgumentBlocks as IBlockList;
+                        Debug.Assert(ArgumentBlocks != null);
+
                         if (NodeTreeHelperBlockList.IsBlockListEmpty(ArgumentBlocks))
                             return true;
                     }
