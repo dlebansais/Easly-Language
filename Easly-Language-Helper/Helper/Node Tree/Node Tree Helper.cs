@@ -222,6 +222,20 @@ namespace BaseNodeHelper
             return Optional;
         }
 
+        public static void SetOptionalReference(INode node, string propertyName, IOptionalReference optional)
+        {
+            if (node == null) throw new ArgumentNullException(nameof(node));
+            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
+            if (optional == null) throw new ArgumentNullException(nameof(optional));
+
+            Type NodeType = node.GetType();
+            PropertyInfo Property = NodeType.GetProperty(propertyName);
+            Debug.Assert(Property != null);
+            Debug.Assert(NodeTreeHelper.IsOptionalReferenceType(Property.PropertyType));
+
+            Property.SetValue(node, optional);
+        }
+
         public static void SetOptionalChildNode(INode node, string propertyName, INode newChildNode)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
@@ -446,6 +460,28 @@ namespace BaseNodeHelper
             if (index >= Collection.Count) throw new ArgumentOutOfRangeException(nameof(index));
 
             Collection.RemoveAt(index);
+        }
+
+        public static void ReplaceNode(INode node, string propertyName, int index, INode childNode)
+        {
+            if (node == null) throw new ArgumentNullException(nameof(node));
+            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
+            if (index < 0) throw new ArgumentOutOfRangeException(nameof(index));
+            if (childNode == null) throw new ArgumentNullException(nameof(childNode));
+
+            Type NodeType = node.GetType();
+            PropertyInfo Property = NodeType.GetProperty(propertyName);
+            Debug.Assert(Property != null);
+
+            Type PropertyType = Property.PropertyType;
+            Debug.Assert(NodeTreeHelper.IsNodeListType(PropertyType));
+
+            IList Collection = Property.GetValue(node) as IList;
+            Debug.Assert(Collection != null);
+
+            if (index >= Collection.Count) throw new ArgumentOutOfRangeException(nameof(index));
+
+            Collection[index] = childNode;
         }
     }
 
@@ -946,7 +982,7 @@ namespace BaseNodeHelper
                 isBlockRemoved = false;
         }
 
-        public static void ReplaceInBlock(INode node, string propertyName, int blockIndex, int index, INode newChildNode)
+        public static void ReplaceNode(INode node, string propertyName, int blockIndex, int index, INode newChildNode)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
@@ -973,6 +1009,20 @@ namespace BaseNodeHelper
             Debug.Assert(Block != null);
 
             IList NodeList = Block.NodeList;
+            Debug.Assert(NodeList != null);
+
+            if (index >= NodeList.Count) throw new ArgumentOutOfRangeException(nameof(index));
+
+            NodeList[index] = newChildNode;
+        }
+
+        public static void ReplaceInBlock(IBlock block, int index, INode newChildNode)
+        {
+            if (block == null) throw new ArgumentNullException(nameof(block));
+            if (index < 0) throw new ArgumentOutOfRangeException(nameof(index));
+            if (newChildNode == null) throw new ArgumentNullException(nameof(newChildNode));
+
+            IList NodeList = block.NodeList;
             Debug.Assert(NodeList != null);
 
             if (index >= NodeList.Count) throw new ArgumentOutOfRangeException(nameof(index));
