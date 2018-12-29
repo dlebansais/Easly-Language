@@ -575,21 +575,6 @@ namespace BaseNodeHelper
             childBlockList = Result.AsReadOnly();
         }
 
-        /*
-        public static void GetChildNode(IBlock block, string propertyName, out INode childNode)
-        {
-            Debug.Assert(block != null);
-            Debug.Assert(propertyName != null);
-
-            Type NodeType = block.GetType();
-            PropertyInfo Property = NodeType.GetProperty(propertyName);
-
-            Debug.Assert(Property != null);
-
-            childNode = Property.GetValue(block) as INode;
-            Debug.Assert(childNode != null);
-        }*/
-
         public static Type BlockListInterfaceType(INode node, string propertyName)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
@@ -770,6 +755,42 @@ namespace BaseNodeHelper
 
             childBlock = NodeBlockList[blockIndex] as IBlock;
             Debug.Assert(childBlock != null);
+        }
+
+        public static void GetChildNode(INode node, string propertyName, int blockIndex, int index, out INode childNode)
+        {
+            if (node == null) throw new ArgumentNullException(nameof(node));
+            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
+            if (blockIndex < 0) throw new ArgumentOutOfRangeException(nameof(blockIndex));
+            if (index < 0) throw new ArgumentOutOfRangeException(nameof(index));
+
+            Type NodeType = node.GetType();
+            PropertyInfo Property = NodeType.GetProperty(propertyName);
+            Debug.Assert(Property != null);
+
+            Type PropertyType = Property.PropertyType;
+            Debug.Assert(NodeTreeHelper.IsBlockListType(Property.PropertyType));
+
+            IBlockList BlockList = Property.GetValue(node) as IBlockList;
+            Debug.Assert(BlockList != null);
+
+            IList NodeBlockList = BlockList.NodeBlockList;
+            Debug.Assert(NodeBlockList != null);
+
+            if (blockIndex >= NodeBlockList.Count) throw new ArgumentOutOfRangeException(nameof(blockIndex));
+
+            IBlock Block = NodeBlockList[blockIndex] as IBlock;
+            Debug.Assert(Block != null);
+
+            IList NodeList = Block.NodeList;
+            Debug.Assert(NodeList != null);
+
+            if (index >= NodeList.Count) throw new ArgumentOutOfRangeException(nameof(index));
+
+            INode NodeItem = NodeList[index] as INode;
+            Debug.Assert(NodeItem != null);
+
+            childNode = NodeItem;
         }
 
         public static bool IsBlockPatternNode(INode node, string propertyName, int blockIndex, IPattern replicationPattern)
