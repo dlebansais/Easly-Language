@@ -793,6 +793,22 @@ namespace BaseNodeHelper
             childNode = NodeItem;
         }
 
+        public static void GetChildNode(IBlock block, int index, out INode childNode)
+        {
+            if (block == null) throw new ArgumentNullException(nameof(block));
+            if (index < 0) throw new ArgumentOutOfRangeException(nameof(index));
+
+            IList NodeList = block.NodeList;
+            Debug.Assert(NodeList != null);
+
+            if (index >= NodeList.Count) throw new ArgumentOutOfRangeException(nameof(index));
+
+            INode NodeItem = NodeList[index] as INode;
+            Debug.Assert(NodeItem != null);
+
+            childNode = NodeItem;
+        }
+
         public static bool IsBlockPatternNode(INode node, string propertyName, int blockIndex, IPattern replicationPattern)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
@@ -1155,12 +1171,12 @@ namespace BaseNodeHelper
             NodeBlockList.RemoveAt(blockIndex);
         }
 
-        public static void SplitBlock(INode node, string propertyName, int blockIndex, int index, ReplicationStatus replication, IPattern replicationPattern, IIdentifier sourceIdentifier)
+        public static void SplitBlock(INode node, string propertyName, int blockIndex, int index, ReplicationStatus replication, IPattern replicationPattern, IIdentifier sourceIdentifier, out IBlock newChildBlock)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
             if (blockIndex < 0) throw new ArgumentOutOfRangeException(nameof(blockIndex));
-            if (index < 0) throw new ArgumentOutOfRangeException(nameof(index));
+            if (index <= 0) throw new ArgumentOutOfRangeException(nameof(index));
             if (replicationPattern == null) throw new ArgumentNullException(nameof(replicationPattern));
             if (sourceIdentifier == null) throw new ArgumentNullException(nameof(sourceIdentifier));
 
@@ -1188,13 +1204,13 @@ namespace BaseNodeHelper
 
             if (index >= CurrentNodeList.Count) throw new ArgumentOutOfRangeException(nameof(index));
 
-            IBlock NewChildBlock = CreateBlock(Property.PropertyType, replication, replicationPattern, sourceIdentifier);
-            Debug.Assert(NewChildBlock != null);
+            newChildBlock = CreateBlock(Property.PropertyType, replication, replicationPattern, sourceIdentifier);
+            Debug.Assert(newChildBlock != null);
 
-            IList NewNodeList = NewChildBlock.NodeList;
+            IList NewNodeList = newChildBlock.NodeList;
             Debug.Assert(NewNodeList != null);
 
-            NodeBlockList.Insert(blockIndex, NewChildBlock);
+            NodeBlockList.Insert(blockIndex, newChildBlock);
 
             for (int i = 0; i < index; i++)
             {
@@ -1209,7 +1225,7 @@ namespace BaseNodeHelper
             Debug.Assert(NewNodeList.Count > 0);
         }
 
-        public static void JoinBlocks(INode node, string propertyName, int blockIndex)
+        public static void MergeBlocks(INode node, string propertyName, int blockIndex)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
