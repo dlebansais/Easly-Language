@@ -483,6 +483,33 @@ namespace BaseNodeHelper
 
             Collection[index] = childNode;
         }
+
+        public static void MoveNode(INode node, string propertyName, int index, int direction)
+        {
+            if (node == null) throw new ArgumentNullException(nameof(node));
+            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
+            if (index < 0) throw new ArgumentOutOfRangeException(nameof(index));
+            if (index + direction < 0) throw new ArgumentOutOfRangeException(nameof(direction));
+
+            Type NodeType = node.GetType();
+            PropertyInfo Property = NodeType.GetProperty(propertyName);
+            Debug.Assert(Property != null);
+
+            Type PropertyType = Property.PropertyType;
+            Debug.Assert(NodeTreeHelper.IsNodeListType(PropertyType));
+
+            IList Collection = Property.GetValue(node) as IList;
+            Debug.Assert(Collection != null);
+
+            if (index >= Collection.Count) throw new ArgumentOutOfRangeException(nameof(index));
+            if (index + direction >= Collection.Count) throw new ArgumentOutOfRangeException(nameof(direction));
+
+            INode ChildNode = Collection[index] as INode;
+            Debug.Assert(ChildNode != null);
+
+            Collection.RemoveAt(index);
+            Collection.Insert(index + direction, ChildNode);
+        }
     }
 
     public static class NodeTreeHelperBlockList
@@ -1273,20 +1300,49 @@ namespace BaseNodeHelper
         {
             if (block == null) throw new ArgumentNullException(nameof(block));
             if (index < 0) throw new ArgumentOutOfRangeException(nameof(index));
+            if (index + direction < 0) throw new ArgumentOutOfRangeException(nameof(direction));
 
             IList NodeList = block.NodeList;
             Debug.Assert(NodeList != null);
 
             if (index >= NodeList.Count) throw new ArgumentOutOfRangeException(nameof(index));
-            if (index + direction < 0 || index + direction >= NodeList.Count) throw new ArgumentException(nameof(index));
+            if (index + direction >= NodeList.Count) throw new ArgumentException(nameof(direction));
 
-            INode Node1 = NodeList[index] as INode;
-            Debug.Assert(Node1 != null);
-            INode Node2 = NodeList[index + direction] as INode;
-            Debug.Assert(Node2 != null);
+            INode ChildNode = NodeList[index] as INode;
+            Debug.Assert(ChildNode != null);
 
-            NodeList[index] = Node2;
-            NodeList[index + direction] = Node1;
+            NodeList.RemoveAt(index);
+            NodeList.Insert(index + direction, ChildNode);
+        }
+
+        public static void MoveBlock(INode node, string propertyName, int blockIndex, int direction)
+        {
+            if (node == null) throw new ArgumentNullException(nameof(node));
+            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
+            if (blockIndex < 0) throw new ArgumentOutOfRangeException(nameof(blockIndex));
+            if (blockIndex + direction < 0) throw new ArgumentOutOfRangeException(nameof(direction));
+
+            Type NodeType = node.GetType();
+            PropertyInfo Property = NodeType.GetProperty(propertyName);
+            Debug.Assert(Property != null);
+
+            Type PropertyType = Property.PropertyType;
+            Debug.Assert(NodeTreeHelper.IsBlockListType(Property.PropertyType));
+
+            IBlockList BlockList = Property.GetValue(node) as IBlockList;
+            Debug.Assert(BlockList != null);
+
+            IList NodeBlockList = BlockList.NodeBlockList;
+            Debug.Assert(NodeBlockList != null);
+
+            if (blockIndex >= NodeBlockList.Count) throw new ArgumentOutOfRangeException(nameof(blockIndex));
+            if (blockIndex + direction >= NodeBlockList.Count) throw new ArgumentOutOfRangeException(nameof(direction));
+
+            IBlock MovedBlock = NodeBlockList[blockIndex] as IBlock;
+            Debug.Assert(MovedBlock != null);
+
+            NodeBlockList.RemoveAt(blockIndex);
+            NodeBlockList.Insert(blockIndex + direction, MovedBlock);
         }
     }
 
