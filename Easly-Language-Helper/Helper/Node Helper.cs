@@ -1453,29 +1453,22 @@ namespace BaseNodeHelper
             return typeof(Root).Assembly.GetType(FullTypeName);
         }
 
-        /*
         public static bool IsOptionalAssignedToDefault(IOptionalReference optional)
         {
             if (!optional.IsAssigned)
                 return false;
 
-            return IsOptionalDefault(optional);
+            INode Node = optional.Item as INode;
+            Debug.Assert(Node != null);
+
+            return IsDefaultNode(Node);
         }
 
-        public static bool IsOptionalDefault(IOptionalReference optional)
+        public static bool IsDefaultNode(INode node)
         {
-            INode Node;
-            if (optional.IsAssigned)
-                Node = optional.AnyItem as INode;
-            else
-                Node = optional.GetHack() as INode;
-
-            if (Node == null)
-                return false;
-
             IList<IIdentifier> Path;
 
-            switch (Node)
+            switch (node)
             {
                 case IName AsName:
                     return AsName.Text.Length == 0;
@@ -1528,10 +1521,9 @@ namespace BaseNodeHelper
                     return false;
 
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(optional));
+                    return false;
             }
         }
-        */
 
         public static bool IsDefaultArgument(INode node)
         {
