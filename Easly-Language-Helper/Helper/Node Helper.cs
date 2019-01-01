@@ -1743,6 +1743,21 @@ namespace BaseNodeHelper
 
             return ClonedRoot;
         }
+
+        public static IDictionary<Type, TValue> CreateNodeDictionary<TValue>()
+        {
+            IDictionary<Type, TValue> Result = new Dictionary<Type, TValue>();
+            Assembly LanguageAssembly = typeof(IRoot).Assembly;
+            Type[] LanguageTypes = LanguageAssembly.GetTypes();
+
+            foreach (Type Item in LanguageTypes)
+            {
+                if (!Item.IsInterface && !Item.IsAbstract && Item.GetInterface(typeof(INode).Name) != null)
+                    Result.Add(Item, default(TValue));
+            }
+
+            return Result;
+        }
         #endregion
     }
 }
