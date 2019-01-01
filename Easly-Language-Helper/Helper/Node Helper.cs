@@ -329,30 +329,61 @@ namespace BaseNodeHelper
             return CreateEmptySimpleType();
         }
 
-        public static INode CreateDefault(Type objectType)
+        public static INode CreateDefault(Type interfaceType)
         {
-            if (objectType == typeof(IArgument))
+            INode Result = CreateDefaultNoCheck(interfaceType);
+
+            if (Result != null)
+                return Result;
+            else
+                throw new ArgumentOutOfRangeException(nameof(interfaceType));
+        }
+
+        private static INode CreateDefaultNoCheck(Type interfaceType)
+        {
+            if (interfaceType == typeof(IArgument))
                 return CreateDefaultArgument();
-            else if (objectType == typeof(IBody))
+            else if (interfaceType == typeof(IBody))
                 return CreateDefaultBody();
-            else if (objectType == typeof(IExpression))
+            else if (interfaceType == typeof(IExpression))
                 return CreateDefaultExpression();
-            else if (objectType == typeof(IInstruction))
+            else if (interfaceType == typeof(IInstruction))
                 return CreateDefaultInstruction();
-            else if (objectType == typeof(IObjectType))
+            else if (interfaceType == typeof(IObjectType))
                 return CreateDefaultType();
-            else if (objectType == typeof(IName))
+            else if (interfaceType == typeof(IName))
                 return CreateEmptyName();
-            else if (objectType == typeof(IIdentifier))
+            else if (interfaceType == typeof(IIdentifier))
                 return CreateEmptyIdentifier();
-            else if (objectType == typeof(IQualifiedName))
+            else if (interfaceType == typeof(IQualifiedName))
                 return CreateEmptyQualifiedName();
-            else if (objectType == typeof(IScope))
+            else if (interfaceType == typeof(IScope))
                 return CreateEmptyScope();
-            else if (objectType == typeof(IImport))
+            else if (interfaceType == typeof(IImport))
                 return CreateSimpleImport("", "", ImportType.Latest);
             else
-                throw new ArgumentOutOfRangeException(nameof(objectType));
+                return null;
+        }
+
+        public static INode CreateDefaultFromInterface(Type interfaceType)
+        {
+            INode Result = CreateDefaultNoCheck(interfaceType);
+
+            if (Result != null)
+                return Result;
+
+            string NamePrefix = typeof(IClass).AssemblyQualifiedName;
+            NamePrefix = NamePrefix.Substring(0, NamePrefix.IndexOf('.') + 1);
+
+            string NodeTypeName = interfaceType.AssemblyQualifiedName;
+            NodeTypeName = NodeTypeName.Replace(NamePrefix + "I", NamePrefix);
+
+            Type NodeType = Type.GetType(NodeTypeName);
+
+            Result = CreateEmptyNode(NodeType);
+            Debug.Assert(Result != null);
+
+            return Result;
         }
 
         public static bool IsNodeType(Type type)
@@ -376,7 +407,10 @@ namespace BaseNodeHelper
             {
                 Type ChildInterfaceType, ChildNodeType;
 
-                if (NodeTreeHelperOptional.IsOptionalChildNodeProperty(EmptyNode, PropertyName, out ChildNodeType))
+                if (NodeTreeHelperChild.IsChildNodeProperty(EmptyNode, PropertyName, out ChildNodeType))
+                    InitializeChildNode(EmptyNode, PropertyName, CreateDefaultFromInterface(ChildNodeType));
+
+                else if (NodeTreeHelperOptional.IsOptionalChildNodeProperty(EmptyNode, PropertyName, out ChildNodeType))
                     InitializeUnassignedOptionalChildNode(EmptyNode, PropertyName);
 
                 else if (NodeTreeHelperList.IsChildNodeList(EmptyNode, PropertyName, out ChildNodeType))
@@ -384,6 +418,9 @@ namespace BaseNodeHelper
 
                 else if (NodeTreeHelperBlockList.IsChildBlockList(EmptyNode, PropertyName, out ChildInterfaceType, out ChildNodeType))
                     InitializeEmptyBlockList(EmptyNode, PropertyName, ChildInterfaceType, ChildNodeType);
+
+                else if (NodeTreeHelper.IsStringProperty(EmptyNode, PropertyName))
+                    NodeTreeHelper.SetStringProperty(EmptyNode, PropertyName, "");
             }
 
             InitializeDocumentation(EmptyNode);
