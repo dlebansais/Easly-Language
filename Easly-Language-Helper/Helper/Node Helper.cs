@@ -1481,7 +1481,7 @@ namespace BaseNodeHelper
 
                 case IQualifiedName AsQualifiedName:
                     Path = AsQualifiedName.Path;
-                    Debug.Assert(Path.Count > 0);
+                    //Debug.Assert(Path.Count > 0);
 
                     return Path.Count == 1 && Path[0].Text.Length == 0;
 
@@ -1493,7 +1493,7 @@ namespace BaseNodeHelper
 
                 case IQueryExpression AsQueryExpression:
                     Path = AsQueryExpression.Query.Path;
-                    Debug.Assert(Path.Count > 0);
+                    //Debug.Assert(Path.Count > 0);
 
                     return AsQueryExpression.ArgumentBlocks.NodeBlockList.Count == 0 && Path.Count == 1 && Path[0].Text.Length == 0;
 
