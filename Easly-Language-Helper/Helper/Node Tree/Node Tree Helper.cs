@@ -15,10 +15,17 @@ namespace BaseNodeHelper
             if (node == null) throw new ArgumentNullException(nameof(node));
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
 
+            return IsChildNodeProperty(node.GetType(), propertyName, out childNodeType);
+        }
+
+        public static bool IsChildNodeProperty(Type nodeType, string propertyName, out Type childNodeType)
+        {
+            if (nodeType == null) throw new ArgumentNullException(nameof(nodeType));
+            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
+
             childNodeType = null;
 
-            Type NodeType = node.GetType();
-            PropertyInfo Property = NodeType.GetProperty(propertyName);
+            PropertyInfo Property = nodeType.GetProperty(propertyName);
             if (Property == null)
                 return false;
 
@@ -106,10 +113,17 @@ namespace BaseNodeHelper
             if (node == null) throw new ArgumentNullException(nameof(node));
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
 
+            return IsOptionalChildNodeProperty(node.GetType(), propertyName, out childNodeType);
+        }
+
+        public static bool IsOptionalChildNodeProperty(Type nodeType, string propertyName, out Type childNodeType)
+        {
+            if (nodeType == null) throw new ArgumentNullException(nameof(nodeType));
+            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
+
             childNodeType = null;
 
-            Type NodeType = node.GetType();
-            PropertyInfo Property = NodeType.GetProperty(propertyName);
+            PropertyInfo Property = nodeType.GetProperty(propertyName);
             if (Property == null)
                 return false;
 
@@ -291,24 +305,38 @@ namespace BaseNodeHelper
 
     public static class NodeTreeHelperList
     {
-        public static bool IsChildNodeList(INode node, string propertyName, out Type childNodeType)
+        public static bool IsNodeListProperty(INode node, string propertyName, out Type childNodeType)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
 
+            Type NodeType = node.GetType();
+
+            if (!IsNodeListProperty(NodeType, propertyName, out childNodeType))
+                return false;
+
+            PropertyInfo Property = NodeType.GetProperty(propertyName);
+            Debug.Assert(Property != null);
+
+            object Collection = Property.GetValue(node);
+            Debug.Assert(Collection == null || Collection is IList);
+
+            return true;
+        }
+
+        public static bool IsNodeListProperty(Type nodeType, string propertyName, out Type childNodeType)
+        {
+            if (nodeType == null) throw new ArgumentNullException(nameof(nodeType));
+            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
+
             childNodeType = null;
 
-            Type NodeType = node.GetType();
-            PropertyInfo Property = NodeType.GetProperty(propertyName);
+            PropertyInfo Property = nodeType.GetProperty(propertyName);
             if (Property == null)
                 return false;
 
             Type PropertyType = Property.PropertyType;
             if (!NodeTreeHelper.IsNodeListType(PropertyType))
-                return false;
-
-            IList Collection = Property.GetValue(node) as IList;
-            if (Collection == null && Property.GetValue(node) != null)
                 return false;
 
             Debug.Assert(PropertyType.IsGenericType);
@@ -514,25 +542,38 @@ namespace BaseNodeHelper
 
     public static class NodeTreeHelperBlockList
     {
-        public static bool IsChildBlockList(INode node, string propertyName, out Type childInterfaceType, out Type childNodeType)
+        public static bool IsBlockListProperty(INode node, string propertyName, out Type childInterfaceType, out Type childNodeType)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
+            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
+
+            Type NodeType = node.GetType();
+            if (!IsBlockListProperty(NodeType, propertyName, out childInterfaceType, out childNodeType))
+                return false;
+
+            PropertyInfo Property = NodeType.GetProperty(propertyName);
+            Debug.Assert(Property != null);
+
+            object Collection = Property.GetValue(node);
+            Debug.Assert(Collection == null || Collection as IBlockList != null);
+
+            return true;
+        }
+
+        public static bool IsBlockListProperty(Type nodeType, string propertyName, out Type childInterfaceType, out Type childNodeType)
+        {
+            if (nodeType == null) throw new ArgumentNullException(nameof(nodeType));
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
 
             childInterfaceType = null;
             childNodeType = null;
 
-            Type NodeType = node.GetType();
-            PropertyInfo Property = NodeType.GetProperty(propertyName);
+            PropertyInfo Property = nodeType.GetProperty(propertyName);
             if (Property == null)
                 return false;
 
             Type PropertyType = Property.PropertyType;
             if (!NodeTreeHelper.IsBlockListType(PropertyType))
-                return false;
-
-            IBlockList BlockList = Property.GetValue(node) as IBlockList;
-            if (BlockList == null && Property.GetValue(node) != null)
                 return false;
 
             Debug.Assert(PropertyType.IsGenericType);

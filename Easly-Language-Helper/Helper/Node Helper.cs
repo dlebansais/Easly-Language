@@ -413,10 +413,10 @@ namespace BaseNodeHelper
                 else if (NodeTreeHelperOptional.IsOptionalChildNodeProperty(EmptyNode, PropertyName, out ChildNodeType))
                     InitializeUnassignedOptionalChildNode(EmptyNode, PropertyName);
 
-                else if (NodeTreeHelperList.IsChildNodeList(EmptyNode, PropertyName, out ChildNodeType))
+                else if (NodeTreeHelperList.IsNodeListProperty(EmptyNode, PropertyName, out ChildNodeType))
                     InitializeEmptyNodeList(EmptyNode, PropertyName, ChildNodeType);
 
-                else if (NodeTreeHelperBlockList.IsChildBlockList(EmptyNode, PropertyName, out ChildInterfaceType, out ChildNodeType))
+                else if (NodeTreeHelperBlockList.IsBlockListProperty(EmptyNode, PropertyName, out ChildInterfaceType, out ChildNodeType))
                     InitializeEmptyBlockList(EmptyNode, PropertyName, ChildInterfaceType, ChildNodeType);
 
                 else if (NodeTreeHelper.IsStringProperty(EmptyNode, PropertyName))
@@ -1566,14 +1566,14 @@ namespace BaseNodeHelper
                         MergeHash(ref Hash, NodeHash(ChildNode));
                 }
 
-                else if (NodeTreeHelperList.IsChildNodeList(node, PropertyName, out ChildNodeType))
+                else if (NodeTreeHelperList.IsNodeListProperty(node, PropertyName, out ChildNodeType))
                 {
                     NodeTreeHelperList.GetChildNodeList(node, PropertyName, out IReadOnlyList<INode> ChildNodeList);
                     foreach (INode ChildNode in ChildNodeList)
                         MergeHash(ref Hash, NodeHash(ChildNode));
                 }
 
-                else if (NodeTreeHelperBlockList.IsChildBlockList(node, PropertyName, out Type ChildInterfaceType, out ChildNodeType))
+                else if (NodeTreeHelperBlockList.IsBlockListProperty(node, PropertyName, out Type ChildInterfaceType, out ChildNodeType))
                 {
                     NodeTreeHelperBlockList.GetChildBlockList(node, PropertyName, out IReadOnlyList<INodeTreeBlock> ChildBlockList);
                     for (int i = 0; i < ChildBlockList.Count; i++)
@@ -1679,7 +1679,7 @@ namespace BaseNodeHelper
                     }
                 }
 
-                else if (NodeTreeHelperList.IsChildNodeList(root, PropertyName, out ChildNodeType))
+                else if (NodeTreeHelperList.IsNodeListProperty(root, PropertyName, out ChildNodeType))
                 {
                     NodeTreeHelperList.GetChildNodeList(root, PropertyName, out IReadOnlyList<INode> ChildNodeList);
 
@@ -1692,7 +1692,7 @@ namespace BaseNodeHelper
                     }
                 }
 
-                else if (NodeTreeHelperBlockList.IsChildBlockList(root, PropertyName, out ChildInterfaceType, out ChildNodeType))
+                else if (NodeTreeHelperBlockList.IsBlockListProperty(root, PropertyName, out ChildInterfaceType, out ChildNodeType))
                 {
                     NodeTreeHelperBlockList.GetChildBlockList(root, PropertyName, out IReadOnlyList<INodeTreeBlock> ChildBlockList);
 
