@@ -1514,6 +1514,20 @@ namespace BaseNodeHelper
             return IsNodeInterfaceType(GenericArguments[0]);
         }
 
+        public static bool IsBlockType(Type type)
+        {
+            if (type == null) throw new ArgumentNullException(nameof(type));
+
+            if (!type.IsInterface || !type.IsGenericType || type.GetGenericTypeDefinition() != typeof(IBlock<,>))
+                return false;
+
+            Type[] GenericArguments = type.GetGenericArguments();
+            Debug.Assert(GenericArguments != null);
+            Debug.Assert(GenericArguments.Length == 2);
+
+            return IsNodeInterfaceType(GenericArguments[0]);
+        }
+
         public static bool IsTextNode(INode node)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
