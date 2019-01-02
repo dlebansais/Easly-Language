@@ -649,7 +649,15 @@ namespace BaseNodeHelper
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
 
             Type NodeType = node.GetType();
-            PropertyInfo Property = NodeType.GetProperty(propertyName);
+            return BlockListInterfaceType(NodeType, propertyName);
+        }
+
+        public static Type BlockListInterfaceType(Type nodeType, string propertyName)
+        {
+            if (nodeType == null) throw new ArgumentNullException(nameof(nodeType));
+            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
+
+            PropertyInfo Property = nodeType.GetProperty(propertyName);
             Debug.Assert(Property != null);
 
             Type PropertyType = Property.PropertyType;
@@ -673,7 +681,15 @@ namespace BaseNodeHelper
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
 
             Type NodeType = node.GetType();
-            PropertyInfo Property = NodeType.GetProperty(propertyName);
+            return BlockListItemType(NodeType, propertyName);
+        }
+
+        public static Type BlockListItemType(Type nodeType, string propertyName)
+        {
+            if (nodeType == null) throw new ArgumentNullException(nameof(nodeType));
+            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
+
+            PropertyInfo Property = nodeType.GetProperty(propertyName);
             Debug.Assert(Property != null);
 
             Type PropertyType = Property.PropertyType;
@@ -689,6 +705,43 @@ namespace BaseNodeHelper
             Debug.Assert(!ItemType.IsInterface);
 
             return ItemType;
+        }
+
+        public static Type BlockListBlockType(INode node, string propertyName)
+        {
+            if (node == null) throw new ArgumentNullException(nameof(node));
+            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
+
+            Type NodeType = node.GetType();
+            return BlockListBlockType(NodeType, propertyName);
+        }
+
+        public static Type BlockListBlockType(Type nodeType, string propertyName)
+        {
+            if (nodeType == null) throw new ArgumentNullException(nameof(nodeType));
+            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
+
+            PropertyInfo Property = nodeType.GetProperty(propertyName);
+            Debug.Assert(Property != null);
+
+            Type PropertyType = Property.PropertyType;
+            Debug.Assert(NodeTreeHelper.IsBlockListType(Property.PropertyType));
+
+            PropertyInfo NodeListProperty = PropertyType.GetProperty(nameof(IBlockList<INode, Node>.NodeBlockList));
+            Debug.Assert(NodeListProperty != null);
+
+            Type NodeListType = NodeListProperty.PropertyType;
+            Debug.Assert(NodeListType.IsGenericType);
+
+            Type[] GenericArguments = NodeListType.GetGenericArguments();
+            Debug.Assert(GenericArguments != null);
+            Debug.Assert(GenericArguments.Length == 1);
+
+            Type BlockType = GenericArguments[0];
+            Debug.Assert(BlockType != null);
+            Debug.Assert(BlockType.IsInterface);
+
+            return BlockType;
         }
 
         public static bool GetLastBlockIndex(INode node, string propertyName, out int blockIndex)
