@@ -1753,7 +1753,15 @@ namespace BaseNodeHelper
             foreach (Type Item in LanguageTypes)
             {
                 if (!Item.IsInterface && !Item.IsAbstract && Item.GetInterface(typeof(INode).Name) != null)
-                    Result.Add(Item, default(TValue));
+                {
+                    Type[] Interfaces = Item.GetInterfaces();
+                    foreach (Type InterfaceType in Interfaces)
+                        if (InterfaceType.Name == $"I{Item.Name}")
+                        {
+                            Result.Add(InterfaceType, default(TValue));
+                            break;
+                        }
+                }
             }
 
             return Result;

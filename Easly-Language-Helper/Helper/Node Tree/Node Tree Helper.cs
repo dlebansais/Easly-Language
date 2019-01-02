@@ -1455,7 +1455,7 @@ namespace BaseNodeHelper
             if (nodeType == null) throw new ArgumentNullException(nameof(nodeType));
             if (nodeType.GetInterface(typeof(INode).Name) == null) throw new ArgumentException(nameof(nodeType));
 
-            PropertyInfo[] Properties = nodeType.GetProperties();
+            IList<PropertyInfo> Properties = GetTypeProperties(nodeType);
             Debug.Assert(Properties != null);
 
             List<string> Result = new List<string>();
@@ -1465,11 +1465,69 @@ namespace BaseNodeHelper
             return Result;
         }
 
+        // Exotic calls to get properties for interfaces? WTF Mikeysoft...
+        private static IList<PropertyInfo> GetTypeProperties(Type type)
+        {
+            PropertyInfo[] Properties = type.GetProperties();
+            List<PropertyInfo> Result = new List<PropertyInfo>(Properties);
+
+            foreach (Type Interface in type.GetInterfaces())
+            {
+                PropertyInfo[] InterfaceProperties = Interface.GetProperties();
+
+                foreach (PropertyInfo NewProperty in InterfaceProperties)
+                {
+                    bool AlreadyListed = false;
+                    foreach (PropertyInfo ExistingProperty in Result)
+                        if (NewProperty.Name == ExistingProperty.Name)
+                        {
+                            AlreadyListed = true;
+                            break;
+                        }
+
+                    if (!AlreadyListed)
+                        Result.Add(NewProperty);
+                }
+            }
+
+            return Result;
+        }
+
+        // Exotic calls to get a property for interfaces? WTF Mikeysoft...
+        public static PropertyInfo GetPropertyOf(Type type, string propertyName)
+        {
+            PropertyInfo Property = type.GetProperty(propertyName);
+            if (Property != null)
+                return Property;
+
+            foreach (Type Interface in type.GetInterfaces())
+            {
+                PropertyInfo InterfaceProperty = Interface.GetProperty(propertyName);
+                if (InterfaceProperty != null)
+                    return InterfaceProperty;
+            }
+
+            return null;
+        }
+
         public static bool IsNodeInterfaceType(Type type)
         {
             if (type == null) throw new ArgumentNullException(nameof(type));
 
             return type.IsInterface && type.GetInterface(typeof(INode).Name) != null;
+        }
+
+        public static Type NodeTypeToInterfaceType(Type type)
+        {
+            if (type == null) throw new ArgumentNullException(nameof(type));
+            if (type.IsInterface || type.IsAbstract) throw new ArgumentException(nameof(type));
+
+            Type[] Interfaces = type.GetInterfaces();
+            foreach (Type InterfaceType in Interfaces)
+                if (InterfaceType.Name == $"I{type.Name}")
+                    return InterfaceType;
+
+            return null;
         }
 
         public static bool IsOptionalReferenceType(Type type)
@@ -1669,7 +1727,7 @@ namespace BaseNodeHelper
             optionalNodesTable = new Dictionary<string, IOptionalReference>();
 
             Type NodeType = node.GetType();
-            PropertyInfo[] Properties = NodeType.GetProperties();
+            IList<PropertyInfo> Properties = GetTypeProperties(NodeType);
             Debug.Assert(Properties != null);
 
             foreach (PropertyInfo Property in Properties)
@@ -1694,7 +1752,7 @@ namespace BaseNodeHelper
             argumentBlocksTable = new Dictionary<string, IBlockList<IArgument, Argument>>();
 
             Type NodeType = node.GetType();
-            PropertyInfo[] Properties = NodeType.GetProperties();
+            IList<PropertyInfo> Properties = GetTypeProperties(NodeType);
             Debug.Assert(Properties != null);
 
             foreach (PropertyInfo Property in Properties)
@@ -1734,7 +1792,7 @@ namespace BaseNodeHelper
             if (nodeType == null) throw new ArgumentNullException(nameof(nodeType));
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
 
-            PropertyInfo Property = nodeType.GetProperty(propertyName);
+            PropertyInfo Property = GetPropertyOf(nodeType, propertyName);
             if (Property == null)
                 return false;
 
