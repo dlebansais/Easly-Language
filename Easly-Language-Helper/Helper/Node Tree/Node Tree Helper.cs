@@ -1460,41 +1460,7 @@ namespace BaseNodeHelper
 
             return IsNodeInterfaceType(GenericArguments[0]);
         }
-/*
-        public static bool IsListType(Type nodeType, string propertyName)
-        {
-            Debug.Assert(nodeType != null);
-            Debug.Assert(propertyName != null);
 
-            PropertyInfo BlockProperty = nodeType.GetProperty(propertyName);
-            if (BlockProperty == null)
-                return false;
-
-            Type CollectionType = BlockProperty.PropertyType;
-            Type BlockType = CollectionType.GetGenericTypeDefinition();
-            Type[] Generics = CollectionType.GetGenericArguments();
-
-            if (Generics == null)
-                return false;
-
-            if (Generics.Length == 1)
-            {
-                if (!Generics[0].IsInterface || BlockType != typeof(IList<>))
-                    return false;
-            }
-
-            else if (Generics.Length == 2)
-            {
-                if (Generics[1].IsInterface || BlockType != typeof(IBlockList<,>))
-                    return false;
-            }
-
-            else
-                return false;
-
-            return true;
-        }
-*/
         public static bool IsTextNode(INode node)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
@@ -1693,8 +1659,17 @@ namespace BaseNodeHelper
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
 
             Type NodeType = node.GetType();
-            PropertyInfo Property = NodeType.GetProperty(propertyName);
-            Debug.Assert(Property != null);
+            return IsDocumentProperty(NodeType, propertyName);
+        }
+
+        public static bool IsDocumentProperty(Type nodeType, string propertyName)
+        {
+            if (nodeType == null) throw new ArgumentNullException(nameof(nodeType));
+            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
+
+            PropertyInfo Property = nodeType.GetProperty(propertyName);
+            if (Property == null)
+                return false;
 
             Type PropertyType = Property.PropertyType;
             return PropertyType == typeof(IDocument);
