@@ -1394,7 +1394,15 @@ namespace BaseNodeHelper
             if (node == null) throw new ArgumentNullException(nameof(node));
 
             Type NodeType = node.GetType();
-            PropertyInfo[] Properties = NodeType.GetProperties();
+            return EnumChildNodeProperties(NodeType);
+        }
+
+        public static IList<string> EnumChildNodeProperties(Type nodeType)
+        {
+            if (nodeType == null) throw new ArgumentNullException(nameof(nodeType));
+            if (nodeType.GetInterface(typeof(INode).Name) == null) throw new ArgumentException(nameof(nodeType));
+
+            PropertyInfo[] Properties = nodeType.GetProperties();
             Debug.Assert(Properties != null);
 
             List<string> Result = new List<string>();
