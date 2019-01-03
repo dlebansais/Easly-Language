@@ -25,7 +25,7 @@ namespace BaseNodeHelper
 
             childNodeType = null;
 
-            PropertyInfo Property = nodeType.GetProperty(propertyName);
+            PropertyInfo Property = NodeTreeHelper.GetPropertyOf(nodeType, propertyName);
             if (Property == null)
                 return false;
 
@@ -123,7 +123,7 @@ namespace BaseNodeHelper
 
             childNodeType = null;
 
-            PropertyInfo Property = nodeType.GetProperty(propertyName);
+            PropertyInfo Property = NodeTreeHelper.GetPropertyOf(nodeType, propertyName);
             if (Property == null)
                 return false;
 
@@ -211,6 +211,23 @@ namespace BaseNodeHelper
 
             Debug.Assert(PropertyType.IsGenericType);
             Type[] GenericArguments = PropertyType.GetGenericArguments();
+            Debug.Assert(GenericArguments != null);
+            Debug.Assert(GenericArguments.Length == 1);
+
+            Type InterfaceType = GenericArguments[0];
+            Debug.Assert(NodeTreeHelper.IsNodeInterfaceType(InterfaceType));
+
+            return InterfaceType;
+        }
+
+        public static Type OptionalChildInterfaceType(IOptionalReference optional)
+        {
+            if (optional == null) throw new ArgumentNullException(nameof(optional));
+
+            Type OptionalType = optional.GetType();
+
+            Debug.Assert(OptionalType.IsGenericType);
+            Type[] GenericArguments = OptionalType.GetGenericArguments();
             Debug.Assert(GenericArguments != null);
             Debug.Assert(GenericArguments.Length == 1);
 
@@ -331,7 +348,7 @@ namespace BaseNodeHelper
 
             childNodeType = null;
 
-            PropertyInfo Property = nodeType.GetProperty(propertyName);
+            PropertyInfo Property = NodeTreeHelper.GetPropertyOf(nodeType, propertyName);
             if (Property == null)
                 return false;
 
@@ -568,7 +585,7 @@ namespace BaseNodeHelper
             childInterfaceType = null;
             childNodeType = null;
 
-            PropertyInfo Property = nodeType.GetProperty(propertyName);
+            PropertyInfo Property = NodeTreeHelper.GetPropertyOf(nodeType, propertyName);
             if (Property == null)
                 return false;
 
@@ -657,7 +674,7 @@ namespace BaseNodeHelper
             if (nodeType == null) throw new ArgumentNullException(nameof(nodeType));
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
 
-            PropertyInfo Property = nodeType.GetProperty(propertyName);
+            PropertyInfo Property = NodeTreeHelper.GetPropertyOf(nodeType, propertyName);
             Debug.Assert(Property != null);
 
             Type PropertyType = Property.PropertyType;
@@ -689,7 +706,7 @@ namespace BaseNodeHelper
             if (nodeType == null) throw new ArgumentNullException(nameof(nodeType));
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
 
-            PropertyInfo Property = nodeType.GetProperty(propertyName);
+            PropertyInfo Property = NodeTreeHelper.GetPropertyOf(nodeType, propertyName);
             Debug.Assert(Property != null);
 
             Type PropertyType = Property.PropertyType;
@@ -721,7 +738,7 @@ namespace BaseNodeHelper
             if (nodeType == null) throw new ArgumentNullException(nameof(nodeType));
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
 
-            PropertyInfo Property = nodeType.GetProperty(propertyName);
+            PropertyInfo Property = NodeTreeHelper.GetPropertyOf(nodeType, propertyName);
             Debug.Assert(Property != null);
 
             Type PropertyType = Property.PropertyType;
