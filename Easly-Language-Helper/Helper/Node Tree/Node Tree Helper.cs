@@ -197,6 +197,23 @@ namespace BaseNodeHelper
             Debug.Assert(!isAssigned || childNode != null);
         }
 
+        public static void GetChildNode(IOptionalReference optional, out bool isAssigned, out INode childNode)
+        {
+            if (optional == null) throw new ArgumentNullException(nameof(optional));
+
+            isAssigned = false;
+            childNode = null;
+
+            isAssigned = optional.IsAssigned;
+
+            if (optional.HasItem)
+                childNode = optional.Item as INode;
+            else
+                childNode = null;
+
+            Debug.Assert(!isAssigned || childNode != null);
+        }
+
         public static Type OptionalChildInterfaceType(INode node, string propertyName)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
