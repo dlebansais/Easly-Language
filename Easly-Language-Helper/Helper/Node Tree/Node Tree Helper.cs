@@ -1666,8 +1666,8 @@ namespace BaseNodeHelper
 
             if (PropertyType == typeof(bool))
             {
-                max = 0;
-                min = 1;
+                max = 1;
+                min = 0;
             }
             else
             {
@@ -1732,6 +1732,20 @@ namespace BaseNodeHelper
                 Property.SetValue(node, value == 1 ? true : false);
             else
                 Property.SetValue(node, value);
+        }
+
+        public static void GetEnumRange(Type nodeType, string propertyName, out int min, out int max)
+        {
+            if (nodeType == null) throw new ArgumentNullException(nameof(nodeType));
+            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
+
+            PropertyInfo Property = GetPropertyOf(nodeType, propertyName);
+            Debug.Assert(Property != null);
+
+            Type PropertyType = Property.PropertyType;
+            Debug.Assert(PropertyType.IsEnum || PropertyType == typeof(bool));
+
+            GetEnumMinMax(Property, out min, out max);
         }
 
         public static string GetCommentText(INode node)
@@ -1912,6 +1926,11 @@ namespace BaseNodeHelper
             return IsValueProperty(parentNode, propertyName, typeof(bool));
         }
 
+        public static bool IsBooleanProperty(Type nodeType, string propertyName)
+        {
+            return IsValueProperty(nodeType, propertyName, typeof(bool));
+        }
+
         public static void SetBooleanProperty(INode parentNode, string propertyName, bool value)
         {
             SetValueProperty(parentNode, propertyName, value);
@@ -1927,6 +1946,11 @@ namespace BaseNodeHelper
             return IsValueProperty(parentNode, propertyName, typeof(string));
         }
 
+        public static bool IsStringProperty(Type nodeType, string propertyName)
+        {
+            return IsValueProperty(nodeType, propertyName, typeof(string));
+        }
+
         public static void SetStringProperty(INode parentNode, string propertyName, string value)
         {
             SetValueProperty(parentNode, propertyName, value);
@@ -1940,6 +1964,11 @@ namespace BaseNodeHelper
         public static bool IsGuidProperty(INode parentNode, string propertyName)
         {
             return IsValueProperty(parentNode, propertyName, typeof(Guid));
+        }
+
+        public static bool IsGuidProperty(Type nodeType, string propertyName)
+        {
+            return IsValueProperty(nodeType, propertyName, typeof(Guid));
         }
 
         public static void SetGuidProperty(INode parentNode, string propertyName, Guid value)
@@ -1959,7 +1988,16 @@ namespace BaseNodeHelper
             if (type == null) throw new ArgumentNullException(nameof(type));
 
             Type NodeType = node.GetType();
-            PropertyInfo Property = NodeType.GetProperty(propertyName);
+            return IsValueProperty(NodeType, propertyName, type);
+        }
+
+        private static bool IsValueProperty(Type nodeType, string propertyName, Type type)
+        {
+            if (nodeType == null) throw new ArgumentNullException(nameof(nodeType));
+            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
+            if (type == null) throw new ArgumentNullException(nameof(type));
+
+            PropertyInfo Property = GetPropertyOf(nodeType, propertyName);
             Debug.Assert(Property != null);
 
             Type PropertyType = Property.PropertyType;
@@ -2010,7 +2048,15 @@ namespace BaseNodeHelper
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
 
             Type NodeType = node.GetType();
-            PropertyInfo Property = NodeType.GetProperty(propertyName);
+            return IsEnumProperty(NodeType, propertyName);
+        }
+
+        public static bool IsEnumProperty(Type nodeType, string propertyName)
+        {
+            if (nodeType == null) throw new ArgumentNullException(nameof(nodeType));
+            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
+
+            PropertyInfo Property = GetPropertyOf(nodeType, propertyName);
             Debug.Assert(Property != null);
 
             Type PropertyType = Property.PropertyType;
