@@ -118,7 +118,6 @@
     <Compile Include="Nodes\Expression\KeywordExpression.cs" />
     <Compile Include="Nodes\Expression\ManifestCharacterExpression.cs" />
     <Compile Include="Nodes\Expression\ManifestNumberExpression.cs" />
-    <Compile Include="Nodes\Expression\ManifestNumericExpression.cs" />
     <Compile Include="Nodes\Expression\ManifestStringExpression.cs" />
     <Compile Include="Nodes\Expression\NewExpression.cs" />
     <Compile Include="Nodes\Expression\OldExpression.cs" />
