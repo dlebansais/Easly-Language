@@ -427,6 +427,7 @@ namespace BaseNodeHelper
             IList Collection = Property.GetValue(node) as IList;
             Debug.Assert(Collection != null);
 
+            Debug.Assert(index < Collection.Count);
             if (index >= Collection.Count) throw new ArgumentOutOfRangeException(nameof(index));
 
             INode NodeItem = Collection[index] as INode;
@@ -499,6 +500,7 @@ namespace BaseNodeHelper
             IList Collection = Property.GetValue(node) as IList;
             Debug.Assert(Collection != null);
 
+            Debug.Assert(index <= Collection.Count);
             if (index > Collection.Count) throw new ArgumentOutOfRangeException(nameof(index));
 
             Collection.Insert(index, childNode);
@@ -519,6 +521,7 @@ namespace BaseNodeHelper
             IList Collection = Property.GetValue(node) as IList;
             Debug.Assert(Collection != null);
 
+            Debug.Assert(index < Collection.Count);
             if (index >= Collection.Count) throw new ArgumentOutOfRangeException(nameof(index));
 
             Collection.RemoveAt(index);
@@ -563,7 +566,9 @@ namespace BaseNodeHelper
             IList Collection = Property.GetValue(node) as IList;
             Debug.Assert(Collection != null);
 
+            Debug.Assert(index < Collection.Count);
             if (index >= Collection.Count) throw new ArgumentOutOfRangeException(nameof(index));
+            Debug.Assert(index + direction < Collection.Count);
             if (index + direction >= Collection.Count) throw new ArgumentOutOfRangeException(nameof(direction));
 
             INode ChildNode = Collection[index] as INode;
@@ -825,6 +830,7 @@ namespace BaseNodeHelper
             IList NodeBlockList = BlockList.NodeBlockList;
             Debug.Assert(NodeBlockList != null);
 
+            Debug.Assert(blockIndex < NodeBlockList.Count);
             if (blockIndex >= NodeBlockList.Count) throw new ArgumentOutOfRangeException(nameof(blockIndex));
 
             IBlock Block = NodeBlockList[blockIndex] as IBlock;
@@ -859,6 +865,7 @@ namespace BaseNodeHelper
             IList NodeBlockList = BlockList.NodeBlockList;
             Debug.Assert(NodeBlockList != null);
 
+            Debug.Assert(blockIndex < NodeBlockList.Count);
             if (blockIndex >= NodeBlockList.Count) throw new ArgumentOutOfRangeException(nameof(blockIndex));
 
             IBlock Block = NodeBlockList[blockIndex] as IBlock;
@@ -876,6 +883,7 @@ namespace BaseNodeHelper
             IList NodeList = block.NodeList;
             Debug.Assert(NodeList != null);
 
+            Debug.Assert(index < NodeList.Count);
             if (index >= NodeList.Count) throw new ArgumentOutOfRangeException(nameof(index));
 
             INode NodeItem = NodeList[index] as INode;
@@ -906,6 +914,7 @@ namespace BaseNodeHelper
             IList NodeBlockList = BlockList.NodeBlockList;
             Debug.Assert(NodeBlockList != null);
 
+            Debug.Assert(blockIndex < NodeBlockList.Count);
             if (blockIndex >= NodeBlockList.Count) throw new ArgumentOutOfRangeException(nameof(blockIndex));
 
             childBlock = NodeBlockList[blockIndex] as IBlock;
@@ -932,6 +941,7 @@ namespace BaseNodeHelper
             IList NodeBlockList = BlockList.NodeBlockList;
             Debug.Assert(NodeBlockList != null);
 
+            Debug.Assert(blockIndex < NodeBlockList.Count);
             if (blockIndex >= NodeBlockList.Count) throw new ArgumentOutOfRangeException(nameof(blockIndex));
 
             IBlock Block = NodeBlockList[blockIndex] as IBlock;
@@ -940,6 +950,7 @@ namespace BaseNodeHelper
             IList NodeList = Block.NodeList;
             Debug.Assert(NodeList != null);
 
+            Debug.Assert(index < NodeList.Count);
             if (index >= NodeList.Count) throw new ArgumentOutOfRangeException(nameof(index));
 
             INode NodeItem = NodeList[index] as INode;
@@ -956,6 +967,7 @@ namespace BaseNodeHelper
             IList NodeList = block.NodeList;
             Debug.Assert(NodeList != null);
 
+            Debug.Assert(index < NodeList.Count);
             if (index >= NodeList.Count) throw new ArgumentOutOfRangeException(nameof(index));
 
             INode NodeItem = NodeList[index] as INode;
@@ -984,6 +996,7 @@ namespace BaseNodeHelper
             IList NodeBlockList = BlockList.NodeBlockList;
             Debug.Assert(NodeBlockList != null);
 
+            Debug.Assert(blockIndex < NodeBlockList.Count);
             if (blockIndex >= NodeBlockList.Count) throw new ArgumentOutOfRangeException(nameof(blockIndex));
 
             IBlock Block = NodeBlockList[blockIndex] as IBlock;
@@ -1041,6 +1054,7 @@ namespace BaseNodeHelper
             IList NodeBlockList = BlockList.NodeBlockList;
             Debug.Assert(NodeBlockList != null);
 
+            Debug.Assert(blockIndex < NodeBlockList.Count);
             if (blockIndex >= NodeBlockList.Count) throw new ArgumentOutOfRangeException(nameof(blockIndex));
 
             IBlock Block = NodeBlockList[blockIndex] as IBlock;
@@ -1106,6 +1120,7 @@ namespace BaseNodeHelper
             IList NodeBlockList = BlockList.NodeBlockList;
             Debug.Assert(NodeBlockList != null);
 
+            Debug.Assert(blockIndex < NodeBlockList.Count);
             if (blockIndex >= NodeBlockList.Count) throw new ArgumentOutOfRangeException(nameof(blockIndex));
 
             IBlock Block = NodeBlockList[blockIndex] as IBlock;
@@ -1114,6 +1129,7 @@ namespace BaseNodeHelper
             IList NodeList = Block.NodeList;
             Debug.Assert(NodeList != null);
 
+            Debug.Assert(index <= NodeList.Count);
             if (index > NodeList.Count) throw new ArgumentOutOfRangeException(nameof(index));
 
             NodeList.Insert(index, childNode);
@@ -1128,6 +1144,7 @@ namespace BaseNodeHelper
             IList NodeList = block.NodeList;
             Debug.Assert(NodeList != null);
 
+            Debug.Assert(index <= NodeList.Count);
             if (index > NodeList.Count) throw new ArgumentOutOfRangeException(nameof(index));
 
             NodeList.Insert(index, childNode);
@@ -1153,6 +1170,7 @@ namespace BaseNodeHelper
             IList NodeBlockList = BlockList.NodeBlockList;
             Debug.Assert(NodeBlockList != null);
 
+            Debug.Assert(blockIndex < NodeBlockList.Count);
             if (blockIndex >= NodeBlockList.Count) throw new ArgumentOutOfRangeException(nameof(blockIndex));
 
             IBlock Block = NodeBlockList[blockIndex] as IBlock;
@@ -1161,6 +1179,7 @@ namespace BaseNodeHelper
             IList NodeList = Block.NodeList;
             Debug.Assert(NodeList != null);
 
+            Debug.Assert(index < NodeList.Count);
             if (index >= NodeList.Count) throw new ArgumentOutOfRangeException(nameof(index));
 
             NodeList.RemoveAt(index);
@@ -1195,6 +1214,7 @@ namespace BaseNodeHelper
             IList NodeBlockList = BlockList.NodeBlockList;
             Debug.Assert(NodeBlockList != null);
 
+            Debug.Assert(blockIndex < NodeBlockList.Count);
             if (blockIndex >= NodeBlockList.Count) throw new ArgumentOutOfRangeException(nameof(blockIndex));
 
             IBlock Block = NodeBlockList[blockIndex] as IBlock;
@@ -1203,6 +1223,7 @@ namespace BaseNodeHelper
             IList NodeList = Block.NodeList;
             Debug.Assert(NodeList != null);
 
+            Debug.Assert(index < NodeList.Count);
             if (index >= NodeList.Count) throw new ArgumentOutOfRangeException(nameof(index));
 
             NodeList[index] = newChildNode;
@@ -1217,6 +1238,7 @@ namespace BaseNodeHelper
             IList NodeList = block.NodeList;
             Debug.Assert(NodeList != null);
 
+            Debug.Assert(index < NodeList.Count);
             if (index >= NodeList.Count) throw new ArgumentOutOfRangeException(nameof(index));
 
             NodeList[index] = newChildNode;
@@ -1273,6 +1295,7 @@ namespace BaseNodeHelper
             IList NodeBlockList = BlockList.NodeBlockList;
             Debug.Assert(NodeBlockList != null);
 
+            Debug.Assert(blockIndex <= NodeBlockList.Count);
             if (blockIndex > NodeBlockList.Count) throw new ArgumentOutOfRangeException(nameof(blockIndex));
 
             childBlock = CreateBlock(Property.PropertyType, replication, replicationPattern, sourceIdentifier);
@@ -1321,6 +1344,7 @@ namespace BaseNodeHelper
             IList NodeBlockList = BlockList.NodeBlockList;
             Debug.Assert(NodeBlockList != null);
 
+            Debug.Assert(blockIndex < NodeBlockList.Count);
             if (blockIndex >= NodeBlockList.Count) throw new ArgumentOutOfRangeException(nameof(blockIndex));
 
             NodeBlockList.RemoveAt(blockIndex);
@@ -1348,6 +1372,7 @@ namespace BaseNodeHelper
             IList NodeBlockList = BlockList.NodeBlockList;
             Debug.Assert(NodeBlockList != null);
 
+            Debug.Assert(blockIndex <= NodeBlockList.Count);
             if (blockIndex > NodeBlockList.Count) throw new ArgumentOutOfRangeException(nameof(blockIndex));
 
             IBlock CurrentBlock = NodeBlockList[blockIndex] as IBlock;
@@ -1357,6 +1382,7 @@ namespace BaseNodeHelper
             Debug.Assert(CurrentNodeList != null);
             Debug.Assert(CurrentNodeList.Count > 1);
 
+            Debug.Assert(index < CurrentNodeList.Count);
             if (index >= CurrentNodeList.Count) throw new ArgumentOutOfRangeException(nameof(index));
 
             newChildBlock = CreateBlock(Property.PropertyType, replication, replicationPattern, sourceIdentifier);
@@ -1399,6 +1425,7 @@ namespace BaseNodeHelper
             IList NodeBlockList = BlockList.NodeBlockList;
             Debug.Assert(NodeBlockList != null);
 
+            Debug.Assert(blockIndex < NodeBlockList.Count);
             if (blockIndex >= NodeBlockList.Count) throw new ArgumentOutOfRangeException(nameof(blockIndex));
 
             IBlock MergedBlock = NodeBlockList[blockIndex - 1] as IBlock;
@@ -1433,7 +1460,9 @@ namespace BaseNodeHelper
             IList NodeList = block.NodeList;
             Debug.Assert(NodeList != null);
 
+            Debug.Assert(index < NodeList.Count);
             if (index >= NodeList.Count) throw new ArgumentOutOfRangeException(nameof(index));
+            Debug.Assert(index + direction < NodeList.Count);
             if (index + direction >= NodeList.Count) throw new ArgumentException(nameof(direction));
 
             INode ChildNode = NodeList[index] as INode;
@@ -1463,7 +1492,9 @@ namespace BaseNodeHelper
             IList NodeBlockList = BlockList.NodeBlockList;
             Debug.Assert(NodeBlockList != null);
 
+            Debug.Assert(blockIndex < NodeBlockList.Count);
             if (blockIndex >= NodeBlockList.Count) throw new ArgumentOutOfRangeException(nameof(blockIndex));
+            Debug.Assert(blockIndex + direction < NodeBlockList.Count);
             if (blockIndex + direction >= NodeBlockList.Count) throw new ArgumentOutOfRangeException(nameof(direction));
 
             IBlock MovedBlock = NodeBlockList[blockIndex] as IBlock;
