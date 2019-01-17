@@ -1595,6 +1595,32 @@ namespace BaseNodeHelper
             return null;
         }
 
+        public static Type InterfaceTypeToNodeType(Type type)
+        {
+            if (type == null) throw new ArgumentNullException(nameof(type));
+            if (!type.IsInterface) throw new ArgumentException(nameof(type));
+
+            string FullName = type.FullName;
+            string[] Prefixes = FullName.Split('.');
+            Debug.Assert(Prefixes.Length > 0);
+
+            string LastName = Prefixes[Prefixes.Length - 1];
+            Debug.Assert(LastName.Length > 1);
+            Debug.Assert(LastName[0] == 'I');
+
+            string NodeTypeName = LastName.Substring(1);
+            string NodeTypeFullName = "";
+            for (int i = 0; i + 1 < Prefixes.Length; i++)
+                NodeTypeFullName += Prefixes[i] + ".";
+
+            NodeTypeFullName += NodeTypeName;
+
+            Type Result = type.Assembly.GetType(NodeTypeFullName);
+            Debug.Assert(Result != null);
+
+            return Result;
+        }
+
         public static bool IsOptionalReferenceType(Type type)
         {
             if (type == null) throw new ArgumentNullException(nameof(type));
