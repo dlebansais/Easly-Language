@@ -190,6 +190,15 @@ namespace BaseNodeHelper
             return SimpleAssignmentArgument;
         }
 
+        public static IPositionalTypeArgument CreateEmptyPositionalTypeArgument()
+        {
+            PositionalTypeArgument EmptyPositionalTypeArgument = new PositionalTypeArgument();
+            EmptyPositionalTypeArgument.Documentation = CreateEmptyDocumentation();
+            EmptyPositionalTypeArgument.Source = CreateEmptySimpleType();
+
+            return EmptyPositionalTypeArgument;
+        }
+
         public static IPositionalTypeArgument CreateSimplePositionalTypeArgument(string typeText)
         {
             PositionalTypeArgument SimplePositionalTypeArgument = new PositionalTypeArgument();
@@ -309,6 +318,11 @@ namespace BaseNodeHelper
             return CreateEmptyPositionalArgument();
         }
 
+        public static ITypeArgument CreateDefaultTypeArgument()
+        {
+            return CreateEmptyPositionalTypeArgument();
+        }
+
         public static IBody CreateDefaultBody()
         {
             return CreateEmptyEffectiveBody();
@@ -336,13 +350,15 @@ namespace BaseNodeHelper
             if (Result != null)
                 return Result;
             else
-                throw new ArgumentOutOfRangeException(nameof(interfaceType));
+                throw new ArgumentOutOfRangeException($"{nameof(interfaceType)}: {interfaceType.FullName}");
         }
 
         private static INode CreateDefaultNoCheck(Type interfaceType)
         {
             if (interfaceType == typeof(IArgument))
                 return CreateDefaultArgument();
+            else if (interfaceType == typeof(ITypeArgument))
+                return CreateDefaultTypeArgument();
             else if (interfaceType == typeof(IBody))
                 return CreateDefaultBody();
             else if (interfaceType == typeof(IExpression))
@@ -416,7 +432,14 @@ namespace BaseNodeHelper
                 else if (NodeTreeHelperList.IsNodeListProperty(EmptyNode, PropertyName, out ChildNodeType))
                     if (IsCollectionNeverEmpty(EmptyNode, PropertyName))
                     {
-                        INode FirstNode = CreateEmptyNode(NodeTreeHelper.InterfaceTypeToNodeType(ChildNodeType));
+                        Type NodeType = NodeTreeHelper.InterfaceTypeToNodeType(ChildNodeType);
+
+                        INode FirstNode;
+                        if (NodeType.IsAbstract)
+                            FirstNode = CreateDefault(ChildNodeType);
+                        else
+                            FirstNode = CreateEmptyNode(NodeType);
+
                         InitializeSimpleNodeList(EmptyNode, PropertyName, ChildNodeType, FirstNode);
                     }
                     else
@@ -425,7 +448,14 @@ namespace BaseNodeHelper
                 else if (NodeTreeHelperBlockList.IsBlockListProperty(EmptyNode, PropertyName, out ChildInterfaceType, out ChildNodeType))
                     if (IsCollectionNeverEmpty(EmptyNode, PropertyName))
                     {
-                        INode FirstNode = CreateEmptyNode(NodeTreeHelper.InterfaceTypeToNodeType(ChildInterfaceType));
+                        Type NodeType = NodeTreeHelper.InterfaceTypeToNodeType(ChildInterfaceType);
+
+                        INode FirstNode;
+                        if (NodeType.IsAbstract)
+                            FirstNode = CreateDefault(ChildInterfaceType);
+                        else
+                            FirstNode = CreateEmptyNode(NodeType);
+
                         InitializeSimpleBlockList(EmptyNode, PropertyName, ChildInterfaceType, ChildNodeType, FirstNode);
                     }
                     else
@@ -1629,7 +1659,7 @@ namespace BaseNodeHelper
                         MergeHash(ref Hash, ValueHash((Guid)Info.GetValue(node)));
 
                     else
-                        throw new ArgumentOutOfRangeException(nameof(NodeType));
+                        throw new ArgumentOutOfRangeException($"{nameof(NodeType)}: {NodeType.FullName}");
                 }
             }
 
@@ -1750,7 +1780,7 @@ namespace BaseNodeHelper
                     NodeTreeHelper.CopyDocumentation(root, ClonedRoot);
 
                 else
-                    throw new ArgumentOutOfRangeException(nameof(PropertyName));
+                    throw new ArgumentOutOfRangeException($"{nameof(PropertyName)}: {PropertyName}");
             }
 
             return ClonedRoot;
