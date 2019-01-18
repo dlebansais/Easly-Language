@@ -416,7 +416,7 @@ namespace BaseNodeHelper
                 else if (NodeTreeHelperList.IsNodeListProperty(EmptyNode, PropertyName, out ChildNodeType))
                     if (IsCollectionNeverEmpty(EmptyNode, PropertyName))
                     {
-                        INode FirstNode = CreateEmptyNode(ChildNodeType);
+                        INode FirstNode = CreateEmptyNode(NodeTreeHelper.InterfaceTypeToNodeType(ChildNodeType));
                         InitializeSimpleNodeList(EmptyNode, PropertyName, ChildNodeType, FirstNode);
                     }
                     else
@@ -425,7 +425,7 @@ namespace BaseNodeHelper
                 else if (NodeTreeHelperBlockList.IsBlockListProperty(EmptyNode, PropertyName, out ChildInterfaceType, out ChildNodeType))
                     if (IsCollectionNeverEmpty(EmptyNode, PropertyName))
                     {
-                        INode FirstNode = CreateEmptyNode(ChildNodeType);
+                        INode FirstNode = CreateEmptyNode(NodeTreeHelper.InterfaceTypeToNodeType(ChildNodeType));
                         InitializeSimpleBlockList(EmptyNode, PropertyName, ChildInterfaceType, ChildNodeType, FirstNode);
                     }
                     else
