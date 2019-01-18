@@ -414,10 +414,22 @@ namespace BaseNodeHelper
                     InitializeUnassignedOptionalChildNode(EmptyNode, PropertyName);
 
                 else if (NodeTreeHelperList.IsNodeListProperty(EmptyNode, PropertyName, out ChildNodeType))
-                    InitializeEmptyNodeList(EmptyNode, PropertyName, ChildNodeType);
+                    if (IsCollectionNeverEmpty(EmptyNode, PropertyName))
+                    {
+                        INode FirstNode = CreateEmptyNode(ChildNodeType);
+                        InitializeSimpleNodeList(EmptyNode, PropertyName, ChildNodeType, FirstNode);
+                    }
+                    else
+                        InitializeEmptyNodeList(EmptyNode, PropertyName, ChildNodeType);
 
                 else if (NodeTreeHelperBlockList.IsBlockListProperty(EmptyNode, PropertyName, out ChildInterfaceType, out ChildNodeType))
-                    InitializeEmptyBlockList(EmptyNode, PropertyName, ChildInterfaceType, ChildNodeType);
+                    if (IsCollectionNeverEmpty(EmptyNode, PropertyName))
+                    {
+                        INode FirstNode = CreateEmptyNode(ChildNodeType);
+                        InitializeSimpleBlockList(EmptyNode, PropertyName, ChildInterfaceType, ChildNodeType, FirstNode);
+                    }
+                    else
+                        InitializeEmptyBlockList(EmptyNode, PropertyName, ChildInterfaceType, ChildNodeType);
 
                 else if (NodeTreeHelper.IsStringProperty(EmptyNode, PropertyName))
                     NodeTreeHelper.SetStringProperty(EmptyNode, PropertyName, "");
@@ -1766,6 +1778,57 @@ namespace BaseNodeHelper
 
             return Result;
         }
+
+        public static bool IsCollectionNeverEmpty(INode node, string PropertyName)
+        {
+            return IsCollectionNeverEmpty(node.GetType(), PropertyName);
+        }
+
+        public static bool IsCollectionNeverEmpty(Type nodeType, string PropertyName)
+        {
+            Debug.Assert(NodeTreeHelperList.IsNodeListProperty(nodeType, PropertyName, out Type ChildNodeType) || NodeTreeHelperBlockList.IsBlockListProperty(nodeType, PropertyName, out Type ChildInterfaceType, out ChildNodeType));
+
+            Type InterfaceType = NodeTreeHelper.NodeTypeToInterfaceType(nodeType);
+
+            if (NeverEmptyCollectionTable.ContainsKey(InterfaceType))
+            {
+                foreach (string Item in NeverEmptyCollectionTable[InterfaceType])
+                    if (Item == PropertyName)
+                        return true;
+            }
+
+            return false;
+        }
+
+        public static readonly IReadOnlyDictionary<Type, string[]> NeverEmptyCollectionTable = new Dictionary<Type, string[]>()
+        {
+            { typeof(IAttachment), new string[] { nameof(IAttachment.AttachTypeBlocks) } },
+            { typeof(IClassReplicate), new string[] { nameof(IClassReplicate.PatternBlocks) } },
+            { typeof(IExport), new string[] { nameof(IExport.ClassIdentifierBlocks) } },
+            { typeof(IGlobalReplicate), new string[] { nameof(IGlobalReplicate.Patterns) } },
+            { typeof(IQualifiedName), new string[] { nameof(IQualifiedName.Path) } },
+            { typeof(IQueryOverload), new string[] { nameof(IQueryOverload.ResultBlocks) } },
+            { typeof(IQueryOverloadType), new string[] { nameof(IQueryOverloadType.ResultBlocks) } },
+            { typeof(IAssignmentArgument), new string[] { nameof(IAssignmentArgument.ParameterBlocks) } },
+            { typeof(IWith), new string[] { nameof(IWith.RangeBlocks) } },
+            { typeof(IIndexQueryExpression), new string[] { nameof(IIndexQueryExpression.ArgumentBlocks) } },
+            { typeof(IPrecursorIndexExpression), new string[] { nameof(IPrecursorIndexExpression.ArgumentBlocks) } },
+            { typeof(ICreationFeature), new string[] { nameof(ICreationFeature.OverloadBlocks) } },
+            { typeof(IFunctionFeature), new string[] { nameof(IFunctionFeature.OverloadBlocks) } },
+            { typeof(IProcedureFeature), new string[] { nameof(IProcedureFeature.OverloadBlocks) } },
+            { typeof(IAsLongAsInstruction), new string[] { nameof(IAsLongAsInstruction.ContinuationBlocks) } },
+            { typeof(IAssignmentInstruction), new string[] { nameof(IAssignmentInstruction.DestinationBlocks) } },
+            { typeof(IAttachmentInstruction), new string[] { nameof(IAttachmentInstruction.EntityNameBlocks), nameof(IAttachmentInstruction.AttachmentBlocks) } },
+            { typeof(IIfThenElseInstruction), new string[] { nameof(IIfThenElseInstruction.ConditionalBlocks) } },
+            { typeof(IInspectInstruction), new string[] { nameof(IInspectInstruction.WithBlocks) } },
+            { typeof(IOverLoopInstruction), new string[] { nameof(IOverLoopInstruction.IndexerBlocks) } },
+            { typeof(IPrecursorIndexAssignmentInstruction), new string[] { nameof(IPrecursorIndexAssignmentInstruction.ArgumentBlocks) } },
+            { typeof(IFunctionType), new string[] { nameof(IFunctionType.OverloadBlocks) } },
+            { typeof(IGenericType), new string[] { nameof(IGenericType.TypeArgumentBlocks) } },
+            { typeof(IIndexerType), new string[] { nameof(IIndexerType.IndexParameterBlocks) } },
+            { typeof(IProcedureType), new string[] { nameof(IProcedureType.OverloadBlocks) } },
+            { typeof(ITupleType), new string[] { nameof(ITupleType.EntityDeclarationBlocks) } },
+        };
         #endregion
     }
 }
