@@ -361,8 +361,6 @@ namespace BaseNodeHelper
                 return CreateEmptyScope();
             else if (interfaceType == typeof(IImport))
                 return CreateSimpleImport("", "", ImportType.Latest);
-            else if (interfaceType == typeof(IPattern))
-                return CreateEmptyPattern();
             else
                 return null;
         }
