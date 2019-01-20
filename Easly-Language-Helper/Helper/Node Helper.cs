@@ -2076,6 +2076,486 @@ namespace BaseNodeHelper
         {
             return CreateSimpleDocumentation(documentation.Comment, documentation.Uuid);
         }
+
+        public static bool GetSimplifiedNode(INode node, out INode simplifiedNode)
+        {
+            switch (node)
+            {
+                case IQualifiedName AsQualifiedName:
+                    return SimplifyQualifiedName(AsQualifiedName, out simplifiedNode);
+                case IAssignmentArgument AsAssignmentArgument:
+                    return SimplifyAssignmentArgument(AsAssignmentArgument, out simplifiedNode);
+                case IPositionalArgument AsPositionalArgument:
+                    return SimplifyPositionalArgument(AsPositionalArgument, out simplifiedNode);
+                case IAgentExpression AsAgentExpression:
+                    return SimplifyAgentExpression(AsAgentExpression, out simplifiedNode);
+                case IAssertionTagExpression AsAssertionTagExpression:
+                    return SimplifyAssertionTagExpression(AsAssertionTagExpression, out simplifiedNode);
+                case IBinaryConditionalExpression AsBinaryConditionalExpression:
+                    return SimplifyBinaryConditionalExpression(AsBinaryConditionalExpression, out simplifiedNode);
+                case IBinaryOperatorExpression AsBinaryOperatorExpression:
+                    return SimplifyBinaryOperatorExpression(AsBinaryOperatorExpression, out simplifiedNode);
+                case IClassConstantExpression AsClassConstantExpression:
+                    return SimplifyClassConstantExpression(AsClassConstantExpression, out simplifiedNode);
+                case ICloneOfExpression AsCloneOfExpression:
+                    return SimplifyCloneOfExpression(AsCloneOfExpression, out simplifiedNode);
+                case IEntityExpression AsEntityExpression:
+                    return SimplifyEntityExpression(AsEntityExpression, out simplifiedNode);
+                case IEqualityExpression AsEqualityExpression:
+                    return SimplifyEqualityExpression(AsEqualityExpression, out simplifiedNode);
+                case IIndexQueryExpression AsIndexQueryExpression:
+                    return SimplifyIndexQueryExpression(AsIndexQueryExpression, out simplifiedNode);
+                case IInitializedObjectExpression AsInitializedObjectExpression:
+                    return SimplifyInitializedObjectExpression(AsInitializedObjectExpression, out simplifiedNode);
+                case IKeywordExpression AsKeywordExpression:
+                    return SimplifyKeywordExpression(AsKeywordExpression, out simplifiedNode);
+                case IManifestCharacterExpression AsManifestCharacterExpression:
+                    return SimplifyManifestCharacterExpression(AsManifestCharacterExpression, out simplifiedNode);
+                case IManifestStringExpression AsManifestStringExpression:
+                    return SimplifyManifestStringExpression(AsManifestStringExpression, out simplifiedNode);
+                case INewExpression AsNewExpression:
+                    return SimplifyNewExpression(AsNewExpression, out simplifiedNode);
+                case IOldExpression AsOldExpression:
+                    return SimplifyOldExpression(AsOldExpression, out simplifiedNode);
+                case IPrecursorExpression AsPrecursorExpression:
+                    return SimplifyPrecursorExpression(AsPrecursorExpression, out simplifiedNode);
+                case IPrecursorIndexExpression AsPrecursorIndexExpression:
+                    return SimplifyPrecursorIndexExpression(AsPrecursorIndexExpression, out simplifiedNode);
+                case IPreprocessorExpression AsPreprocessorExpression:
+                    return SimplifyPreprocessorExpression(AsPreprocessorExpression, out simplifiedNode);
+                case IQueryExpression AsQueryExpression:
+                    return SimplifyQueryExpression(AsQueryExpression, out simplifiedNode);
+                case IResultOfExpression AsResultOfExpression:
+                    return SimplifyResultOfExpression(AsResultOfExpression, out simplifiedNode);
+                case IUnaryNotExpression AsUnaryNotExpression:
+                    return SimplifyUnaryNotExpression(AsUnaryNotExpression, out simplifiedNode);
+                case IUnaryOperatorExpression AsUnaryOperatorExpression:
+                    return SimplifyUnaryOperatorExpression(AsUnaryOperatorExpression, out simplifiedNode);
+                case IAssignmentInstruction AsAssignmentInstruction:
+                    return SimplifyAssignmentInstruction(AsAssignmentInstruction, out simplifiedNode);
+                case IKeywordAssignmentInstruction AsKeywordAssignmentInstruction:
+                    return SimplifyKeywordAssignmentInstruction(AsKeywordAssignmentInstruction, out simplifiedNode);
+                case IFunctionType AsFunctionType:
+                    return SimplifyFunctionType(AsFunctionType, out simplifiedNode);
+                case IGenericType AsGenericType:
+                    return SimplifyGenericType(AsGenericType, out simplifiedNode);
+                case IIndexerType AsIndexerType:
+                    return SimplifyIndexerType(AsIndexerType, out simplifiedNode);
+                case IPropertyType AsPropertyType:
+                    return SimplifyPropertyType(AsPropertyType, out simplifiedNode);
+                case IProcedureType AsProcedureType:
+                    return SimplifyProcedureType(AsProcedureType, out simplifiedNode);
+                case ITupleType AsTupleType:
+                    return SimplifyTupleType(AsTupleType, out simplifiedNode);
+                case IAssignmentTypeArgument AsAssignmentTypeArgument:
+                    return SimplifyAssignmentTypeArgument(AsAssignmentTypeArgument, out simplifiedNode);
+                case IPositionalTypeArgument AsPositionalTypeArgument:
+                    return SimplifyPositionalTypeArgument(AsPositionalTypeArgument, out simplifiedNode);
+                default:
+                    simplifiedNode = null;
+                    return false;
+            }
+        }
+
+        private static bool SimplifyQualifiedName(IQualifiedName Node, out INode SimplifiedNode)
+        {
+            if (Node.Path.Count > 1)
+            {
+                string ConcatenatedText = "";
+
+                for (int i = 0; i < Node.Path.Count; i++)
+                {
+                    if (i > 0)
+                        ConcatenatedText += ".";
+
+                    ConcatenatedText += Node.Path[i].Text;
+                }
+
+                SimplifiedNode = CreateSimpleQualifiedName(ConcatenatedText);
+                return true;
+            }
+            else
+            {
+                SimplifiedNode = null;
+                return false;
+            }
+        }
+
+        private static bool SimplifyAssignmentArgument(IAssignmentArgument Node, out INode SimplifiedNode)
+        {
+            SimplifiedNode = CreatePositionalArgument(Node.Source);
+            return true;
+        }
+
+        private static bool SimplifyPositionalArgument(IPositionalArgument Node, out INode SimplifiedNode)
+        {
+            SimplifiedNode = null;
+            return true;
+        }
+
+        private static bool SimplifyAgentExpression(IAgentExpression Node, out INode SimplifiedNode)
+        {
+            SimplifiedNode = CreateSimpleQueryExpression($"agent {Node.Delegated.Text}");
+            return true;
+        }
+
+        private static bool SimplifyAssertionTagExpression(IAssertionTagExpression Node, out INode SimplifiedNode)
+        {
+            SimplifiedNode = CreateSimpleQueryExpression($"tag {Node.TagIdentifier.Text}");
+            return true;
+        }
+
+        private static bool SimplifyBinaryConditionalExpression(IBinaryConditionalExpression Node, out INode SimplifiedNode)
+        {
+            string LeftText, RightText;
+
+            if (GetExpressionText(Node.LeftExpression, out LeftText) && GetExpressionText(Node.RightExpression, out RightText))
+            {
+                string Operator;
+                switch (Node.Conditional)
+                {
+                    case ConditionalTypes.And:
+                        Operator = " and ";
+                        break;
+
+                    case ConditionalTypes.Or:
+                        Operator = " or ";
+                        break;
+
+                    default:
+                        throw new ArgumentOutOfRangeException("Invalid ConditionalTypes");
+                }
+
+                string SimplifiedText = LeftText + Operator + RightText;
+                SimplifiedNode = CreateSimpleQueryExpression(SimplifiedText);
+                return true;
+            }
+            else
+            {
+                SimplifiedNode = null;
+                return true;
+            }
+        }
+
+        private static bool SimplifyBinaryOperatorExpression(IBinaryOperatorExpression Node, out INode SimplifiedNode)
+        {
+            string LeftText, RightText;
+
+            if (GetExpressionText(Node.LeftExpression, out LeftText) && GetExpressionText(Node.RightExpression, out RightText))
+            {
+                string SimplifiedText = LeftText + " " + Node.Operator.Text + " " + RightText;
+                SimplifiedNode = CreateSimpleQueryExpression(SimplifiedText);
+                return true;
+            }
+            else
+            {
+                SimplifiedNode = null;
+                return true;
+            }
+        }
+
+        private static bool SimplifyClassConstantExpression(IClassConstantExpression Node, out INode SimplifiedNode)
+        {
+            string MergedText = $"{{{Node.ClassIdentifier.Text}}}{Node.ConstantIdentifier.Text}";
+            IQualifiedName Query = StringToQualifiedName(MergedText);
+
+            SimplifiedNode = CreateQueryExpression(Query, new List<IArgument>());
+            return true;
+        }
+
+        private static bool SimplifyCloneOfExpression(ICloneOfExpression Node, out INode SimplifiedNode)
+        {
+            string SourceText;
+
+            if (GetExpressionText(Node.Source, out SourceText))
+            {
+                string SimplifiedText = $"clone of {SourceText}";
+                SimplifiedNode = CreateSimpleQueryExpression(SimplifiedText);
+                return true;
+            }
+            else
+            {
+                SimplifiedNode = null;
+                return true;
+            }
+        }
+
+        private static bool SimplifyEntityExpression(IEntityExpression Node, out INode SimplifiedNode)
+        {
+            string SimplifiedText = $"entity {Node.Query.Path[0].Text}";
+            SimplifiedNode = CreateSimpleQueryExpression(SimplifiedText);
+            return true;
+        }
+
+        private static bool SimplifyEqualityExpression(IEqualityExpression Node, out INode SimplifiedNode)
+        {
+            string LeftText, RightText;
+
+            if (GetExpressionText(Node.LeftExpression, out LeftText) && GetExpressionText(Node.RightExpression, out RightText))
+            {
+                string EqualityText = (Node.Comparison == ComparisonType.Equal ? "=" : "/=");
+                string SimplifiedText = $"{LeftText} {EqualityText} {RightText}";
+                SimplifiedNode = CreateSimpleQueryExpression(SimplifiedText);
+                return true;
+            }
+            else
+            {
+                SimplifiedNode = null;
+                return true;
+            }
+        }
+
+        private static bool SimplifyIndexQueryExpression(IIndexQueryExpression Node, out INode SimplifiedNode)
+        {
+            SimplifiedNode = Node.IndexedExpression;
+            return true;
+        }
+
+        private static bool SimplifyInitializedObjectExpression(IInitializedObjectExpression Node, out INode SimplifiedNode)
+        {
+            IQualifiedName Query = StringToQualifiedName(Node.ClassIdentifier.Text);
+
+            List<IBlock<IArgument, Argument>> ArgumentList = new List<IBlock<IArgument, Argument>>();
+            foreach (IBlock<IAssignmentArgument, AssignmentArgument> Block in Node.AssignmentBlocks.NodeBlockList)
+            {
+                List<IArgument> NodeList = new List<IArgument>();
+                foreach (IAssignmentArgument Item in Block.NodeList)
+                    NodeList.Add(Item);
+
+                IBlock<IArgument, Argument> NewBlock = BlockListHelper<IArgument, Argument>.CreateBlock(NodeList, Block.Replication, Block.ReplicationPattern, Block.SourceIdentifier);
+                ArgumentList.Add(NewBlock);
+            }
+
+            IBlockList<IArgument, Argument> ArgumentBlocks = BlockListHelper<IArgument, Argument>.CreateBlockList(ArgumentList);
+
+            SimplifiedNode = CreateQueryExpression(Query, ArgumentBlocks);
+            return true;
+        }
+
+        private static bool SimplifyKeywordExpression(IKeywordExpression Node, out INode SimplifiedNode)
+        {
+            SimplifiedNode = CreateSimpleQueryExpression(Node.Value.ToString());
+            return true;
+        }
+
+        private static bool SimplifyManifestCharacterExpression(IManifestCharacterExpression Node, out INode SimplifiedNode)
+        {
+            SimplifiedNode = CreateSimpleQueryExpression(Node.Text);
+            return true;
+        }
+
+        private static bool SimplifyManifestStringExpression(IManifestStringExpression Node, out INode SimplifiedNode)
+        {
+            SimplifiedNode = CreateSimpleQueryExpression(Node.Text);
+            return true;
+        }
+
+        private static bool SimplifyNewExpression(INewExpression Node, out INode SimplifiedNode)
+        {
+            SimplifiedNode = CreateQueryExpression(Node.Object, new List<IArgument>());
+            return true;
+        }
+
+        private static bool SimplifyOldExpression(IOldExpression Node, out INode SimplifiedNode)
+        {
+            SimplifiedNode = CreateQueryExpression(Node.Query, new List<IArgument>());
+            return true;
+        }
+
+        private static bool SimplifyPrecursorExpression(IPrecursorExpression Node, out INode SimplifiedNode)
+        {
+            IQualifiedName Query = CreateSimpleQualifiedName("precursor");
+            SimplifiedNode = CreateQueryExpression(Query, Node.ArgumentBlocks);
+            return true;
+        }
+
+        private static bool SimplifyPrecursorIndexExpression(IPrecursorIndexExpression Node, out INode SimplifiedNode)
+        {
+            IQualifiedName Query = CreateSimpleQualifiedName("precursor[]");
+            SimplifiedNode = CreateQueryExpression(Query, Node.ArgumentBlocks);
+            return true;
+        }
+
+        private static bool SimplifyPreprocessorExpression(IPreprocessorExpression Node, out INode SimplifiedNode)
+        {
+            SimplifiedNode = CreateSimpleQueryExpression(Node.Value.ToString());
+            return true;
+        }
+
+        private static bool SimplifyQueryExpression(IQueryExpression Node, out INode SimplifiedNode)
+        {
+            IBlockList<IArgument, Argument> ArgumentBlocks = Node.ArgumentBlocks;
+            if (ArgumentBlocks.NodeBlockList.Count > 0)
+            {
+                SimplifiedNode = CreateQueryExpression(Node.Query, new List<IArgument>());
+                return true;
+            }
+            else
+            {
+                SimplifiedNode = null;
+                return false;
+            }
+        }
+
+        private static bool SimplifyResultOfExpression(IResultOfExpression Node, out INode SimplifiedNode)
+        {
+            string SourceText;
+
+            if (GetExpressionText(Node.Source, out SourceText))
+            {
+                string SimplifiedText = $"result of {SourceText}";
+                SimplifiedNode = CreateSimpleQueryExpression(SimplifiedText);
+                return true;
+            }
+            else
+            {
+                SimplifiedNode = null;
+                return true;
+            }
+        }
+
+        private static bool SimplifyUnaryNotExpression(IUnaryNotExpression Node, out INode SimplifiedNode)
+        {
+            string RightText;
+
+            if (GetExpressionText(Node.RightExpression, out RightText))
+            {
+                string SimplifiedText = $"not {RightText}";
+                SimplifiedNode = CreateSimpleQueryExpression(SimplifiedText);
+                return true;
+            }
+            else
+            {
+                SimplifiedNode = null;
+                return true;
+            }
+        }
+
+        private static bool SimplifyUnaryOperatorExpression(IUnaryOperatorExpression Node, out INode SimplifiedNode)
+        {
+            string RightText;
+
+            if (GetExpressionText(Node.RightExpression, out RightText))
+            {
+                string SimplifiedText = $"{Node.Operator.Text} {RightText}";
+                SimplifiedNode = CreateSimpleQueryExpression(SimplifiedText);
+                return true;
+            }
+            else
+            {
+                SimplifiedNode = null;
+                return true;
+            }
+        }
+
+        private static bool SimplifyAssignmentInstruction(IAssignmentInstruction Node, out INode SimplifiedNode)
+        {
+            SimplifiedNode = CreateEmptyCommandInstruction();
+            return true;
+        }
+
+        private static bool SimplifyKeywordAssignmentInstruction(IKeywordAssignmentInstruction Node, out INode SimplifiedNode)
+        {
+            SimplifiedNode = CreateEmptyCommandInstruction();
+            return true;
+        }
+
+        private static bool SimplifyFunctionType(IFunctionType Node, out INode SimplifiedNode)
+        {
+            SimplifiedNode = Node.BaseType;
+            return true;
+        }
+
+        private static bool SimplifyGenericType(IGenericType Node, out INode SimplifiedNode)
+        {
+            SimplifiedNode = CreateSimpleType(Node.ClassIdentifier);
+            return true;
+        }
+
+        private static bool SimplifyIndexerType(IIndexerType Node, out INode SimplifiedNode)
+        {
+            SimplifiedNode = Node.BaseType;
+            return true;
+        }
+
+        private static bool SimplifyPropertyType(IPropertyType Node, out INode SimplifiedNode)
+        {
+            SimplifiedNode = Node.BaseType;
+            return true;
+        }
+
+        private static bool SimplifyProcedureType(IProcedureType Node, out INode SimplifiedNode)
+        {
+            SimplifiedNode = Node.BaseType;
+            return true;
+        }
+
+        private static bool SimplifyTupleType(ITupleType Node, out INode SimplifiedNode)
+        {
+            SimplifiedNode = CreateEmptySimpleType();
+            return true;
+        }
+
+        private static bool SimplifyAssignmentTypeArgument(IAssignmentTypeArgument Node, out INode SimplifiedNode)
+        {
+            SimplifiedNode = CreatePositionalTypeArgument(Node.Source);
+            return true;
+        }
+
+        private static bool SimplifyPositionalTypeArgument(IPositionalTypeArgument Node, out INode SimplifiedNode)
+        {
+            SimplifiedNode = null;
+            return true;
+        }
+
+        private static IQualifiedName StringToQualifiedName(string Text)
+        {
+            string[] StringList;
+            ParseDotSeparatedIdentifiers(Text, out StringList);
+
+            List<IIdentifier> IdentifierList = new List<IIdentifier>();
+            foreach (string Identifier in StringList)
+                IdentifierList.Add(CreateSimpleIdentifier(Identifier));
+
+            return CreateQualifiedName(IdentifierList);
+        }
+
+        private static void ParseDotSeparatedIdentifiers(string Text, out string[] StringList)
+        {
+            ParseSymbolSeparatedStrings(Text, '.', out StringList);
+        }
+
+        private static void ParseSymbolSeparatedStrings(string Text, char Symbol, out string[] StringList)
+        {
+            string[] SplittedStrings = Text.Split(Symbol);
+            StringList = new string[SplittedStrings.Length];
+            for (int i = 0; i < SplittedStrings.Length; i++)
+                StringList[i] = SplittedStrings[i].Trim();
+        }
+
+        private static bool GetExpressionText(IExpression ExpressionNode, out string Text)
+        {
+            IManifestNumberExpression AsNumber;
+            IQueryExpression AsQuery;
+
+            if ((AsNumber = ExpressionNode as IManifestNumberExpression) != null)
+            {
+                Text = AsNumber.Text;
+                return true;
+            }
+
+            else if ((AsQuery = ExpressionNode as IQueryExpression) != null)
+            {
+                Text = AsQuery.Query.Path[0].Text;
+                return true;
+            }
+
+            else
+            {
+                Text = null;
+                return false;
+            }
+        }
         #endregion
     }
 }
