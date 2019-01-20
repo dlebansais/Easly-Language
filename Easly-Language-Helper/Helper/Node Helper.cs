@@ -2315,18 +2315,43 @@ namespace BaseNodeHelper
         {
             IQualifiedName Query = StringToQualifiedName(Node.ClassIdentifier.Text);
 
-            List<IBlock<IArgument, Argument>> ArgumentList = new List<IBlock<IArgument, Argument>>();
-            foreach (IBlock<IAssignmentArgument, AssignmentArgument> Block in Node.AssignmentBlocks.NodeBlockList)
+            IBlockList<IAssignmentArgument, AssignmentArgument> ObjectBlockList = Node.AssignmentBlocks;
+            BlockList<IArgument, Argument> ArgumentBlocks = new BlockList<IArgument, Argument>();
+            ArgumentBlocks.Documentation = NodeHelper.CreateDocumentationCopy(ObjectBlockList.Documentation);
+            ArgumentBlocks.NodeBlockList = new List<IBlock<IArgument, Argument>>();
+
+            for (int BlockIndex = 0; BlockIndex < ObjectBlockList.NodeBlockList.Count; BlockIndex++)
             {
-                List<IArgument> NodeList = new List<IArgument>();
-                foreach (IAssignmentArgument Item in Block.NodeList)
-                    NodeList.Add(Item);
+                IBlock<IAssignmentArgument, AssignmentArgument> Block = ObjectBlockList.NodeBlockList[BlockIndex];
 
-                IBlock<IArgument, Argument> NewBlock = BlockListHelper<IArgument, Argument>.CreateBlock(NodeList, Block.Replication, Block.ReplicationPattern, Block.SourceIdentifier);
-                ArgumentList.Add(NewBlock);
+                Block<IArgument, Argument> NewBlock = new Block<IArgument, Argument>();
+                NewBlock.Documentation = CreateDocumentationCopy(Block.Documentation);
+                NewBlock.Replication = Block.Replication;
+
+                Pattern NewReplicationPattern = new Pattern();
+                NewReplicationPattern.Documentation = CreateDocumentationCopy(Block.ReplicationPattern.Documentation);
+                NewReplicationPattern.Text = Block.ReplicationPattern.Text;
+                NewBlock.ReplicationPattern = NewReplicationPattern;
+
+                Identifier NewSourceIdentifier = new Identifier();
+                NewSourceIdentifier.Documentation = CreateDocumentationCopy(Block.SourceIdentifier.Documentation);
+                NewSourceIdentifier.Text = Block.SourceIdentifier.Text;
+                NewBlock.SourceIdentifier = NewSourceIdentifier;
+
+                List<IArgument> NewNodeList = new List<IArgument>();
+                for (int Index = 0; Index < Block.NodeList.Count; Index++)
+                {
+                    IArgument Item = Block.NodeList[Index];
+                    IArgument NewItem = DeepCloneNode(Item) as IArgument;
+
+                    Debug.Assert(NewItem != null);
+                    NewNodeList.Add(NewItem);
+                }
+
+                NewBlock.NodeList = NewNodeList;
+
+                ArgumentBlocks.NodeBlockList.Add(NewBlock);
             }
-
-            IBlockList<IArgument, Argument> ArgumentBlocks = BlockListHelper<IArgument, Argument>.CreateBlockList(ArgumentList);
 
             SimplifiedNode = CreateQueryExpression(Query, ArgumentBlocks);
             return true;
