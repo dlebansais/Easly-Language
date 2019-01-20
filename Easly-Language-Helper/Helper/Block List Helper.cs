@@ -50,6 +50,51 @@ namespace BaseNodeHelper
             return Blocks;
         }
 
+        public static IBlockList<IN, N> CreateBlockListCopy(IBlockList<IN, N> blockList)
+        {
+            if (blockList == null)
+                return CreateEmptyBlockList();
+
+            BlockList<IN, N> Result = new BlockList<IN, N>();
+            Result.Documentation = NodeHelper.CreateDocumentationCopy(blockList.Documentation);
+            Result.NodeBlockList = new List<IBlock<IN, N>>();
+
+            for (int BlockIndex = 0; BlockIndex < blockList.NodeBlockList.Count; BlockIndex++)
+            {
+                IBlock<IN, N> Block = blockList.NodeBlockList[BlockIndex];
+
+                Block<IN, N> NewBlock = new Block<IN, N>();
+                NewBlock.Documentation = NodeHelper.CreateDocumentationCopy(Block.Documentation);
+                NewBlock.Replication = Block.Replication;
+
+                Pattern NewReplicationPattern = new Pattern();
+                NewReplicationPattern.Documentation = NodeHelper.CreateDocumentationCopy(Block.ReplicationPattern.Documentation);
+                NewReplicationPattern.Text = Block.ReplicationPattern.Text;
+                NewBlock.ReplicationPattern = NewReplicationPattern;
+
+                Identifier NewSourceIdentifier = new Identifier();
+                NewSourceIdentifier.Documentation = NodeHelper.CreateDocumentationCopy(Block.SourceIdentifier.Documentation);
+                NewSourceIdentifier.Text = Block.SourceIdentifier.Text;
+                NewBlock.SourceIdentifier = NewSourceIdentifier;
+
+                List<IN> NewNodeList = new List<IN>();
+                for (int Index = 0; Index < Block.NodeList.Count; Index++)
+                {
+                    IN Item = Block.NodeList[Index];
+                    IN NewItem = NodeHelper.DeepCloneNode(Item) as IN;
+
+                    Debug.Assert(NewItem != null);
+                    NewNodeList.Add(NewItem);
+                }
+
+                NewBlock.NodeList = NewNodeList;
+
+                Result.NodeBlockList.Add(NewBlock);
+            }
+
+            return Result;
+        }
+
         public static IBlock<IN, N> CreateBlock(IList<IN> nodeList)
         {
             Debug.Assert(nodeList.Count > 0);

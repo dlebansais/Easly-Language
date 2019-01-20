@@ -410,6 +410,24 @@ namespace BaseNodeHelper
             childNodeList = NodeList.AsReadOnly();
         }
 
+        public static void ClearChildNodeList(INode node, string propertyName)
+        {
+            if (node == null) throw new ArgumentNullException(nameof(node));
+            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
+
+            Type NodeType = node.GetType();
+            PropertyInfo Property = NodeType.GetProperty(propertyName);
+            Debug.Assert(Property != null);
+
+            Type PropertyType = Property.PropertyType;
+            Debug.Assert(NodeTreeHelper.IsNodeListType(PropertyType));
+
+            IList Collection = Property.GetValue(node) as IList;
+            Debug.Assert(Collection != null);
+
+            Collection.Clear();
+        }
+
         public static bool IsListChildNode(INode node, string propertyName, int index, INode childNode)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
@@ -680,6 +698,25 @@ namespace BaseNodeHelper
             }
 
             childBlockList = Result.AsReadOnly();
+        }
+
+        public static void ClearChildBlockList(INode node, string propertyName)
+        {
+            if (node == null) throw new ArgumentNullException(nameof(node));
+            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
+
+            Type NodeType = node.GetType();
+            PropertyInfo Property = NodeType.GetProperty(propertyName);
+            Debug.Assert(Property != null);
+            Debug.Assert(NodeTreeHelper.IsBlockListType(Property.PropertyType));
+
+            IBlockList BlockList = Property.GetValue(node) as IBlockList;
+            Debug.Assert(BlockList != null);
+
+            IList NodeBlockList = BlockList.NodeBlockList;
+            Debug.Assert(NodeBlockList != null);
+
+            NodeBlockList.Clear();
         }
 
         public static Type BlockListInterfaceType(INode node, string propertyName)
@@ -1527,6 +1564,7 @@ namespace BaseNodeHelper
             foreach (PropertyInfo Property in Properties)
                 Result.Add(Property.Name);
 
+            Result.Sort();
             return Result;
         }
 

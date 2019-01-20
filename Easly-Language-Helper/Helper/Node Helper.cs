@@ -542,6 +542,68 @@ namespace BaseNodeHelper
 
             return Result;
         }
+
+        public static IBody CreateInitializedBody(Type nodeType, IDocument documentation, IBlockList<IAssertion, Assertion> requireBlocks, IBlockList<IAssertion, Assertion> ensureBlocks, IBlockList<IIdentifier, Identifier> exceptionIdentifierBlocks, IBlockList<IEntityDeclaration, EntityDeclaration> entityDeclarationBlocks, IBlockList<IInstruction, Instruction> bodyInstructionBlocks, IBlockList<IExceptionHandler, ExceptionHandler> exceptionHandlerBlocks, IOptionalReference<IObjectType> ancestorType)
+        {
+            if (nodeType == typeof(DeferredBody))
+                return CreateInitializedDeferredBody(documentation, requireBlocks, ensureBlocks, exceptionIdentifierBlocks);
+            else if (nodeType == typeof(EffectiveBody))
+                return CreateInitializedEffectiveBody(documentation, requireBlocks, ensureBlocks, exceptionIdentifierBlocks, entityDeclarationBlocks, bodyInstructionBlocks, exceptionHandlerBlocks);
+            else if (nodeType == typeof(ExternBody))
+                return CreateInitializedExternBody(documentation, requireBlocks, ensureBlocks, exceptionIdentifierBlocks);
+            else if (nodeType == typeof(PrecursorBody))
+                return CreateInitializedPrecursorBody(documentation, requireBlocks, ensureBlocks, exceptionIdentifierBlocks, ancestorType);
+            else
+                throw new ArgumentOutOfRangeException($"{nameof(nodeType)}: {nodeType.FullName}");
+        }
+
+        public static IDeferredBody CreateInitializedDeferredBody(IDocument documentation, IBlockList<IAssertion, Assertion> requireBlocks, IBlockList<IAssertion, Assertion> ensureBlocks, IBlockList<IIdentifier, Identifier> exceptionIdentifierBlocks)
+        {
+            DeferredBody Result = new DeferredBody();
+            Result.Documentation = CreateDocumentationCopy(documentation);
+            Result.RequireBlocks = BlockListHelper<IAssertion, Assertion>.CreateBlockListCopy(requireBlocks);
+            Result.EnsureBlocks = BlockListHelper<IAssertion, Assertion>.CreateBlockListCopy(ensureBlocks);
+            Result.ExceptionIdentifierBlocks = BlockListHelper<IIdentifier, Identifier>.CreateBlockListCopy(exceptionIdentifierBlocks);
+
+            return Result;
+        }
+
+        public static IEffectiveBody CreateInitializedEffectiveBody(IDocument documentation, IBlockList<IAssertion, Assertion> requireBlocks, IBlockList<IAssertion, Assertion> ensureBlocks, IBlockList<IIdentifier, Identifier> exceptionIdentifierBlocks, IBlockList<IEntityDeclaration, EntityDeclaration> entityDeclarationBlocks, IBlockList<IInstruction, Instruction> bodyInstructionBlocks, IBlockList<IExceptionHandler, ExceptionHandler> exceptionHandlerBlocks)
+        {
+            EffectiveBody Result = new EffectiveBody();
+            Result.Documentation = CreateDocumentationCopy(documentation);
+            Result.RequireBlocks = BlockListHelper<IAssertion, Assertion>.CreateBlockListCopy(requireBlocks);
+            Result.EnsureBlocks = BlockListHelper<IAssertion, Assertion>.CreateBlockListCopy(ensureBlocks);
+            Result.ExceptionIdentifierBlocks = BlockListHelper<IIdentifier, Identifier>.CreateBlockListCopy(exceptionIdentifierBlocks);
+            Result.EntityDeclarationBlocks = BlockListHelper<IEntityDeclaration, EntityDeclaration>.CreateBlockListCopy(entityDeclarationBlocks);
+            Result.BodyInstructionBlocks = BlockListHelper<IInstruction, Instruction>.CreateBlockListCopy(bodyInstructionBlocks);
+            Result.ExceptionHandlerBlocks = BlockListHelper<IExceptionHandler, ExceptionHandler>.CreateBlockListCopy(exceptionHandlerBlocks);
+
+            return Result;
+        }
+
+        public static IExternBody CreateInitializedExternBody(IDocument documentation, IBlockList<IAssertion, Assertion> requireBlocks, IBlockList<IAssertion, Assertion> ensureBlocks, IBlockList<IIdentifier, Identifier> exceptionIdentifierBlocks)
+        {
+            ExternBody Result = new ExternBody();
+            Result.Documentation = CreateDocumentationCopy(documentation);
+            Result.RequireBlocks = BlockListHelper<IAssertion, Assertion>.CreateBlockListCopy(requireBlocks);
+            Result.EnsureBlocks = BlockListHelper<IAssertion, Assertion>.CreateBlockListCopy(ensureBlocks);
+            Result.ExceptionIdentifierBlocks = BlockListHelper<IIdentifier, Identifier>.CreateBlockListCopy(exceptionIdentifierBlocks);
+
+            return Result;
+        }
+
+        public static IPrecursorBody CreateInitializedPrecursorBody(IDocument documentation, IBlockList<IAssertion, Assertion> requireBlocks, IBlockList<IAssertion, Assertion> ensureBlocks, IBlockList<IIdentifier, Identifier> exceptionIdentifierBlocks, IOptionalReference<IObjectType> ancestorType)
+        {
+            PrecursorBody Result = new PrecursorBody();
+            Result.Documentation = CreateDocumentationCopy(documentation);
+            Result.RequireBlocks = BlockListHelper<IAssertion, Assertion>.CreateBlockListCopy(requireBlocks);
+            Result.EnsureBlocks = BlockListHelper<IAssertion, Assertion>.CreateBlockListCopy(ensureBlocks);
+            Result.ExceptionIdentifierBlocks = BlockListHelper<IIdentifier, Identifier>.CreateBlockListCopy(exceptionIdentifierBlocks);
+            Result.AncestorType = OptionalReferenceHelper<IObjectType>.CreateReferenceCopy(ancestorType);
+
+            return Result;
+        }
         #endregion
         #region Expression
         public static IAgentExpression CreateAgentExpression(IIdentifier delegated)
@@ -891,6 +953,149 @@ namespace BaseNodeHelper
             Result.ModifiedQueryBlocks = BlockListHelper<IIdentifier, Identifier>.CreateEmptyBlockList();
             Result.GetterBody = OptionalReferenceHelper<IBody>.CreateReference(CreateDefaultBody());
             Result.SetterBody = OptionalReferenceHelper<IBody>.CreateReference(CreateDefaultBody());
+
+            return Result;
+        }
+
+        public static IFeature CreateInitializedFeature(Type nodeType, IDocument documentation, IIdentifier exportIdentifier, ExportStatus export, IName entityName, IObjectType entityType, IBlockList<IAssertion, Assertion> ensureBlocks, IExpression constantValue, IBlockList<ICommandOverload, CommandOverload> commandOverloadBlocks, OnceChoice once, IBlockList<IQueryOverload, QueryOverload> queryOverloadBlocks, UtilityType propertyKind, IBlockList<IIdentifier, Identifier> modifiedQueryBlocks, IOptionalReference<IBody> getterBody, IOptionalReference<IBody> setterBody, IBlockList<IEntityDeclaration, EntityDeclaration> indexParameterBlocks, ParameterEndStatus parameterEnd)
+        {
+            if (nodeType == typeof(AttributeFeature))
+                return CreateInitializedAttributeFeature(documentation, exportIdentifier, export, entityName, entityType, ensureBlocks);
+            else if (nodeType == typeof(ConstantFeature))
+                return CreateInitializedConstantFeature(documentation, exportIdentifier, export, entityName, entityType, constantValue);
+            else if (nodeType == typeof(CreationFeature))
+                return CreateInitializedCreationFeature(documentation, exportIdentifier, export, entityName, commandOverloadBlocks);
+            else if (nodeType == typeof(FunctionFeature))
+                return CreateInitializedFunctionFeature(documentation, exportIdentifier, export, entityName, once, queryOverloadBlocks);
+            else if (nodeType == typeof(ProcedureFeature))
+                return CreateInitializedProcedureFeature(documentation, exportIdentifier, export, entityName, commandOverloadBlocks);
+            else if (nodeType == typeof(PropertyFeature))
+                return CreateInitializedPropertyFeature(documentation, exportIdentifier, export, entityName, entityType, propertyKind, modifiedQueryBlocks, getterBody, setterBody);
+            else if (nodeType == typeof(IndexerFeature))
+                return CreateInitializedIndexerFeature(documentation, exportIdentifier, export, entityType, modifiedQueryBlocks, getterBody, setterBody, indexParameterBlocks, parameterEnd);
+            else
+                throw new ArgumentOutOfRangeException($"{nameof(nodeType)}: {nodeType.FullName}");
+        }
+
+        public static IAttributeFeature CreateInitializedAttributeFeature(IDocument documentation, IIdentifier exportIdentifier, ExportStatus export, IName entityName, IObjectType entityType, IBlockList<IAssertion, Assertion> ensureBlocks)
+        {
+            AttributeFeature Result = new AttributeFeature();
+            Result.Documentation = CreateDocumentationCopy(documentation);
+            Result.ExportIdentifier = exportIdentifier != null ? DeepCloneNode(exportIdentifier) as IIdentifier : CreateEmptyExportIdentifier();
+            Result.Export = export;
+            Result.EntityName = entityName != null ? DeepCloneNode(entityName) as IName : CreateEmptyName();
+            Result.EntityType = entityType != null ? DeepCloneNode(entityType) as IObjectType : CreateDefaultType();
+            Result.EnsureBlocks = BlockListHelper<IAssertion, Assertion>.CreateBlockListCopy(ensureBlocks);
+
+            return Result;
+        }
+
+        public static IConstantFeature CreateInitializedConstantFeature(IDocument documentation, IIdentifier exportIdentifier, ExportStatus export, IName entityName, IObjectType entityType, IExpression constantValue)
+        {
+            ConstantFeature Result = new ConstantFeature();
+            Result.Documentation = CreateDocumentationCopy(documentation);
+            Result.ExportIdentifier = exportIdentifier != null ? DeepCloneNode(exportIdentifier) as IIdentifier : CreateEmptyExportIdentifier();
+            Result.Export = export;
+            Result.EntityName = entityName != null ? DeepCloneNode(entityName) as IName : CreateEmptyName();
+            Result.EntityType = entityType != null ? DeepCloneNode(entityType) as IObjectType : CreateDefaultType();
+            Result.ConstantValue = constantValue != null ? DeepCloneNode(constantValue) as IExpression : CreateDefaultExpression();
+
+            return Result;
+        }
+
+        public static ICreationFeature CreateInitializedCreationFeature(IDocument documentation, IIdentifier exportIdentifier, ExportStatus export, IName entityName, IBlockList<ICommandOverload, CommandOverload> commandOverloadBlocks)
+        {
+            CreationFeature Result = new CreationFeature();
+            Result.Documentation = CreateDocumentationCopy(documentation);
+            Result.ExportIdentifier = exportIdentifier != null ? DeepCloneNode(exportIdentifier) as IIdentifier : CreateEmptyExportIdentifier();
+            Result.Export = export;
+            Result.EntityName = entityName != null ? DeepCloneNode(entityName) as IName : CreateEmptyName();
+            if (commandOverloadBlocks != null)
+            {
+                Debug.Assert(commandOverloadBlocks.NodeBlockList.Count > 0);
+                Debug.Assert(commandOverloadBlocks.NodeBlockList[0].NodeList.Count > 0);
+                Result.OverloadBlocks = BlockListHelper<ICommandOverload, CommandOverload>.CreateBlockListCopy(commandOverloadBlocks);
+            }
+            else
+                Result.OverloadBlocks = BlockListHelper<ICommandOverload, CommandOverload>.CreateSimpleBlockList(CreateEmptyCommandOverload());
+
+            return Result;
+        }
+
+        public static IFunctionFeature CreateInitializedFunctionFeature(IDocument documentation, IIdentifier exportIdentifier, ExportStatus export, IName entityName, OnceChoice once, IBlockList<IQueryOverload, QueryOverload> queryOverloadBlocks)
+        {
+            FunctionFeature Result = new FunctionFeature();
+            Result.Documentation = CreateDocumentationCopy(documentation);
+            Result.ExportIdentifier = exportIdentifier != null ? DeepCloneNode(exportIdentifier) as IIdentifier : CreateEmptyExportIdentifier();
+            Result.Export = export;
+            Result.EntityName = entityName != null ? DeepCloneNode(entityName) as IName : CreateEmptyName();
+            Result.Once = once;
+            if (queryOverloadBlocks != null)
+            {
+                Debug.Assert(queryOverloadBlocks.NodeBlockList.Count > 0);
+                Debug.Assert(queryOverloadBlocks.NodeBlockList[0].NodeList.Count > 0);
+                Result.OverloadBlocks = BlockListHelper<IQueryOverload, QueryOverload>.CreateBlockListCopy(queryOverloadBlocks);
+            }
+            else
+                Result.OverloadBlocks = BlockListHelper<IQueryOverload, QueryOverload>.CreateSimpleBlockList(CreateEmptyQueryOverload());
+
+            return Result;
+        }
+
+        public static IIndexerFeature CreateInitializedIndexerFeature(IDocument documentation, IIdentifier exportIdentifier, ExportStatus export, IObjectType entityType, IBlockList<IIdentifier, Identifier> modifiedQueryBlocks, IOptionalReference<IBody> getterBody, IOptionalReference<IBody> setterBody, IBlockList<IEntityDeclaration, EntityDeclaration> indexParameterBlocks, ParameterEndStatus parameterEnd)
+        {
+            IndexerFeature Result = new IndexerFeature();
+            Result.Documentation = CreateDocumentationCopy(documentation);
+            Result.ExportIdentifier = exportIdentifier != null ? DeepCloneNode(exportIdentifier) as IIdentifier : CreateEmptyExportIdentifier();
+            Result.Export = export;
+            Result.EntityType = entityType != null ? DeepCloneNode(entityType) as IObjectType : CreateDefaultType();
+            if (indexParameterBlocks != null)
+            {
+                Debug.Assert(indexParameterBlocks.NodeBlockList.Count > 0);
+                Debug.Assert(indexParameterBlocks.NodeBlockList[0].NodeList.Count > 0);
+                Result.IndexParameterBlocks = BlockListHelper<IEntityDeclaration, EntityDeclaration>.CreateBlockListCopy(indexParameterBlocks);
+            }
+            else
+                Result.IndexParameterBlocks = BlockListHelper<IEntityDeclaration, EntityDeclaration>.CreateSimpleBlockList(CreateEmptyEntityDeclaration());
+            Result.ParameterEnd = parameterEnd;
+            Result.ModifiedQueryBlocks = BlockListHelper<IIdentifier, Identifier>.CreateBlockListCopy(modifiedQueryBlocks);
+            Result.GetterBody = OptionalReferenceHelper<IBody>.CreateReferenceCopy(getterBody);
+            Result.SetterBody = OptionalReferenceHelper<IBody>.CreateReferenceCopy(setterBody);
+
+            return Result;
+        }
+
+        public static IProcedureFeature CreateInitializedProcedureFeature(IDocument documentation, IIdentifier exportIdentifier, ExportStatus export, IName entityName, IBlockList<ICommandOverload, CommandOverload> commandOverloadBlocks)
+        {
+            ProcedureFeature Result = new ProcedureFeature();
+            Result.Documentation = CreateDocumentationCopy(documentation);
+            Result.ExportIdentifier = exportIdentifier != null ? DeepCloneNode(exportIdentifier) as IIdentifier : CreateEmptyExportIdentifier();
+            Result.Export = export;
+            Result.EntityName = entityName != null ? DeepCloneNode(entityName) as IName : CreateEmptyName();
+            if (commandOverloadBlocks != null)
+            {
+                Debug.Assert(commandOverloadBlocks.NodeBlockList.Count > 0);
+                Debug.Assert(commandOverloadBlocks.NodeBlockList[0].NodeList.Count > 0);
+                Result.OverloadBlocks = BlockListHelper<ICommandOverload, CommandOverload>.CreateBlockListCopy(commandOverloadBlocks);
+            }
+            else
+                Result.OverloadBlocks = BlockListHelper<ICommandOverload, CommandOverload>.CreateSimpleBlockList(CreateEmptyCommandOverload());
+
+            return Result;
+        }
+
+        public static IPropertyFeature CreateInitializedPropertyFeature(IDocument documentation, IIdentifier exportIdentifier, ExportStatus export, IName entityName, IObjectType entityType, UtilityType propertyKind, IBlockList<IIdentifier, Identifier> modifiedQueryBlocks, IOptionalReference<IBody> getterBody, IOptionalReference<IBody> setterBody)
+        {
+            PropertyFeature Result = new PropertyFeature();
+            Result.Documentation = CreateDocumentationCopy(documentation);
+            Result.ExportIdentifier = exportIdentifier != null ? DeepCloneNode(exportIdentifier) as IIdentifier : CreateEmptyExportIdentifier();
+            Result.Export = export;
+            Result.EntityName = entityName != null ? DeepCloneNode(entityName) as IName : CreateEmptyName();
+            Result.EntityType = entityType != null ? DeepCloneNode(entityType) as IObjectType : CreateDefaultType();
+            Result.PropertyKind = propertyKind;
+            Result.ModifiedQueryBlocks = BlockListHelper<IIdentifier, Identifier>.CreateBlockListCopy(modifiedQueryBlocks);
+            Result.GetterBody = OptionalReferenceHelper<IBody>.CreateReferenceCopy(getterBody);
+            Result.SetterBody = OptionalReferenceHelper<IBody>.CreateReferenceCopy(setterBody);
 
             return Result;
         }
@@ -1688,12 +1893,16 @@ namespace BaseNodeHelper
 
         private static void MergeHash(ref ulong hash1, ulong hash2)
         {
+            //Debug.WriteLine($"{hash1} {hash2}");
+
             hash1 ^= hash2;
         }
 
         public static INode DeepCloneNode(INode root)
         {
             IList<string> PropertyNames = NodeTreeHelper.EnumChildNodeProperties(root);
+
+            // Careful, the resulting "empty" node can contain items for lists that are not allowed to be empty.
             INode ClonedRoot = CreateEmptyNode(root.GetType());
 
             foreach (string PropertyName in PropertyNames)
@@ -1723,6 +1932,7 @@ namespace BaseNodeHelper
 
                 else if (NodeTreeHelperList.IsNodeListProperty(root, PropertyName, out ChildNodeType))
                 {
+                    NodeTreeHelperList.ClearChildNodeList(ClonedRoot, PropertyName);
                     NodeTreeHelperList.GetChildNodeList(root, PropertyName, out IReadOnlyList<INode> ChildNodeList);
 
                     for (int Index = 0; Index < ChildNodeList.Count; Index++)
@@ -1736,6 +1946,7 @@ namespace BaseNodeHelper
 
                 else if (NodeTreeHelperBlockList.IsBlockListProperty(root, PropertyName, out ChildInterfaceType, out ChildNodeType))
                 {
+                    NodeTreeHelperBlockList.ClearChildBlockList(ClonedRoot, PropertyName);
                     NodeTreeHelperBlockList.GetChildBlockList(root, PropertyName, out IReadOnlyList<INodeTreeBlock> ChildBlockList);
 
                     for (int BlockIndex = 0; BlockIndex < ChildBlockList.Count; BlockIndex++)
@@ -1845,6 +2056,7 @@ namespace BaseNodeHelper
             { typeof(IPrecursorIndexExpression), new string[] { nameof(IPrecursorIndexExpression.ArgumentBlocks) } },
             { typeof(ICreationFeature), new string[] { nameof(ICreationFeature.OverloadBlocks) } },
             { typeof(IFunctionFeature), new string[] { nameof(IFunctionFeature.OverloadBlocks) } },
+            { typeof(IIndexerFeature), new string[] { nameof(IIndexerFeature.IndexParameterBlocks) } },
             { typeof(IProcedureFeature), new string[] { nameof(IProcedureFeature.OverloadBlocks) } },
             { typeof(IAsLongAsInstruction), new string[] { nameof(IAsLongAsInstruction.ContinuationBlocks) } },
             { typeof(IAssignmentInstruction), new string[] { nameof(IAssignmentInstruction.DestinationBlocks) } },
@@ -1859,6 +2071,11 @@ namespace BaseNodeHelper
             { typeof(IProcedureType), new string[] { nameof(IProcedureType.OverloadBlocks) } },
             { typeof(ITupleType), new string[] { nameof(ITupleType.EntityDeclarationBlocks) } },
         };
+
+        public static IDocument CreateDocumentationCopy(IDocument documentation)
+        {
+            return CreateSimpleDocumentation(documentation.Comment, documentation.Uuid);
+        }
         #endregion
     }
 }

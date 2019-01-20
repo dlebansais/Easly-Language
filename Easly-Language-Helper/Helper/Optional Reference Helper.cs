@@ -1,5 +1,6 @@
 ﻿using BaseNode;
 using Easly;
+using System.Diagnostics;
 
 namespace BaseNodeHelper
 {
@@ -11,6 +12,29 @@ namespace BaseNodeHelper
             OptionalReference<IN> Result = new OptionalReference<IN>();
             Result.Item = item;
             Result.Unassign();
+
+            return Result;
+        }
+
+        public static IOptionalReference<IN> CreateReferenceCopy(IOptionalReference<IN> optional)
+        {
+            OptionalReference<IN> Result = new OptionalReference<IN>();
+
+            if (optional != null)
+            {
+                if (optional.HasItem)
+                {
+                    Debug.Assert(optional.Item != null);
+
+                    IN ClonedItem = NodeHelper.DeepCloneNode(optional.Item) as IN;
+                    Debug.Assert(ClonedItem != null);
+
+                    Result.Item = ClonedItem;
+                }
+
+                if (optional.IsAssigned)
+                    Result.Assign();
+            }
 
             return Result;
         }
