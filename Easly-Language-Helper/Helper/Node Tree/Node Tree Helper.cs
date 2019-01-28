@@ -315,6 +315,32 @@ namespace BaseNodeHelper
             Optional.Assign();
         }
 
+        public static void ClearOptionalChildNode(INode node, string propertyName)
+        {
+            if (node == null) throw new ArgumentNullException(nameof(node));
+            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
+
+            Type NodeType = node.GetType();
+            PropertyInfo Property = NodeType.GetProperty(propertyName);
+            Debug.Assert(Property != null);
+
+            Type PropertyType = Property.PropertyType;
+            Debug.Assert(NodeTreeHelper.IsOptionalReferenceType(PropertyType));
+
+            Debug.Assert(PropertyType.IsGenericType);
+            Type[] GenericArguments = PropertyType.GetGenericArguments();
+            Debug.Assert(GenericArguments != null);
+            Debug.Assert(GenericArguments.Length == 1);
+
+            IOptionalReference Optional = Property.GetValue(node) as IOptionalReference;
+            Debug.Assert(Optional != null);
+
+            PropertyInfo ItemProperty = Optional.GetType().GetProperty(nameof(IOptionalReference<INode>.Item));
+            ItemProperty.SetValue(Optional, null);
+
+            Debug.Assert(!Optional.HasItem);
+        }
+
         public static bool IsChildNodeAssigned(INode node, string propertyName)
         {
             IOptionalReference Optional = GetOptionalReference(node, propertyName);
