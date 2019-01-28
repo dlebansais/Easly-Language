@@ -1898,6 +1898,25 @@ namespace BaseNodeHelper
             GetEnumMinMax(Property, out min, out max);
         }
 
+        public static Guid GetGuid(INode node, string propertyName)
+        {
+            if (node == null) throw new ArgumentNullException(nameof(node));
+            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
+
+            Type NodeType = node.GetType();
+            PropertyInfo Property = NodeType.GetProperty(propertyName);
+            Debug.Assert(Property != null);
+
+            Type PropertyType = Property.PropertyType;
+            Debug.Assert(PropertyType == typeof(Guid));
+
+            Guid Result = (Guid)Property.GetValue(node);
+
+            Debug.Assert(Result != Guid.Empty);
+
+            return Result;
+        }
+
         public static string GetCommentText(INode node)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
