@@ -1311,11 +1311,10 @@ namespace BaseNodeHelper
             return NodeList.Count == 1;
         }
 
-        public static void InsertIntoBlockList(INode node, string propertyName, int blockIndex, ReplicationStatus replication, IPattern replicationPattern, IIdentifier sourceIdentifier, out IBlock childBlock)
+        public static IBlock CreateBlock(INode node, string propertyName, ReplicationStatus replication, IPattern replicationPattern, IIdentifier sourceIdentifier)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
-            if (blockIndex < 0) throw new ArgumentOutOfRangeException(nameof(blockIndex));
             if (replicationPattern == null) throw new ArgumentNullException(nameof(replicationPattern));
             if (sourceIdentifier == null) throw new ArgumentNullException(nameof(sourceIdentifier));
 
@@ -1324,23 +1323,27 @@ namespace BaseNodeHelper
             Debug.Assert(Property != null);
 
             Type PropertyType = Property.PropertyType;
-            Debug.Assert(NodeTreeHelper.IsBlockListType(Property.PropertyType));
+            Debug.Assert(NodeTreeHelper.IsBlockListType(PropertyType));
 
-            IBlockList BlockList = Property.GetValue(node) as IBlockList;
-            Debug.Assert(BlockList != null);
-
-            IList NodeBlockList = BlockList.NodeBlockList;
-            Debug.Assert(NodeBlockList != null);
-
-            Debug.Assert(blockIndex <= NodeBlockList.Count);
-            if (blockIndex > NodeBlockList.Count) throw new ArgumentOutOfRangeException(nameof(blockIndex));
-
-            childBlock = CreateBlock(Property.PropertyType, replication, replicationPattern, sourceIdentifier);
-            NodeBlockList.Insert(blockIndex, childBlock);
+            return CreateBlock(PropertyType, replication, replicationPattern, sourceIdentifier);
         }
 
-        private static IBlock CreateBlock(Type propertyType, ReplicationStatus replication, IPattern replicationPattern, IIdentifier sourceIdentifier)
+        public static IBlock CreateBlock(IBlockList blockList, ReplicationStatus replication, IPattern replicationPattern, IIdentifier sourceIdentifier)
         {
+            if (blockList == null) throw new ArgumentNullException(nameof(blockList));
+            if (replicationPattern == null) throw new ArgumentNullException(nameof(replicationPattern));
+            if (sourceIdentifier == null) throw new ArgumentNullException(nameof(sourceIdentifier));
+
+            return CreateBlock(blockList.GetType(), replication, replicationPattern, sourceIdentifier);
+        }
+
+        public static IBlock CreateBlock(Type propertyType, ReplicationStatus replication, IPattern replicationPattern, IIdentifier sourceIdentifier)
+        {
+            if (propertyType == null) throw new ArgumentNullException(nameof(propertyType));
+            if (!propertyType.IsGenericType || (propertyType.GetGenericTypeDefinition() != typeof(IBlockList<,>) && propertyType.GetGenericTypeDefinition() != typeof(BlockList<,>))) throw new ArgumentException(nameof(propertyType));
+            if (replicationPattern == null) throw new ArgumentNullException(nameof(replicationPattern));
+            if (sourceIdentifier == null) throw new ArgumentNullException(nameof(sourceIdentifier));
+
             Type[] TypeArguments = propertyType.GetGenericArguments();
 
             Type BlockType = typeof(Block<,>).MakeGenericType(TypeArguments);
@@ -1360,6 +1363,32 @@ namespace BaseNodeHelper
             BlockType.GetProperty(nameof(IBlock.SourceIdentifier)).SetValue(NewBlock, sourceIdentifier);
 
             return NewBlock;
+        }
+
+        public static void InsertIntoBlockList(INode node, string propertyName, int blockIndex, IBlock childBlock)
+        {
+            if (node == null) throw new ArgumentNullException(nameof(node));
+            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
+            if (blockIndex < 0) throw new ArgumentOutOfRangeException(nameof(blockIndex));
+            if (childBlock == null) throw new ArgumentNullException(nameof(childBlock));
+
+            Type NodeType = node.GetType();
+            PropertyInfo Property = NodeType.GetProperty(propertyName);
+            Debug.Assert(Property != null);
+
+            Type PropertyType = Property.PropertyType;
+            Debug.Assert(NodeTreeHelper.IsBlockListType(Property.PropertyType));
+
+            IBlockList BlockList = Property.GetValue(node) as IBlockList;
+            Debug.Assert(BlockList != null);
+
+            IList NodeBlockList = BlockList.NodeBlockList;
+            Debug.Assert(NodeBlockList != null);
+
+            Debug.Assert(blockIndex <= NodeBlockList.Count);
+            if (blockIndex > NodeBlockList.Count) throw new ArgumentOutOfRangeException(nameof(blockIndex));
+
+            NodeBlockList.Insert(blockIndex, childBlock);
         }
 
         public static void RemoveFromBlockList(INode node, string propertyName, int blockIndex)

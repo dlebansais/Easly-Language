@@ -1957,7 +1957,8 @@ namespace BaseNodeHelper
 
                         IPattern ClonedPattern = (IPattern)DeepCloneNode(NodeTreeBlock.ReplicationPattern);
                         IIdentifier ClonedSource = (IIdentifier)DeepCloneNode(NodeTreeBlock.SourceIdentifier);
-                        NodeTreeHelperBlockList.InsertIntoBlockList(ClonedRoot, PropertyName, BlockIndex, Block.Replication, ClonedPattern, ClonedSource, out IBlock ClonedBlock);
+                        IBlock ClonedBlock = NodeTreeHelperBlockList.CreateBlock(ClonedRoot, PropertyName, Block.Replication, ClonedPattern, ClonedSource);
+                        NodeTreeHelperBlockList.InsertIntoBlockList(ClonedRoot, PropertyName, BlockIndex, ClonedBlock);
 
                         for (int Index = 0; Index < NodeTreeBlock.NodeList.Count; Index++)
                         {
