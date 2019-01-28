@@ -1442,14 +1442,13 @@ namespace BaseNodeHelper
             NodeBlockList.RemoveAt(blockIndex);
         }
 
-        public static void SplitBlock(INode node, string propertyName, int blockIndex, int index, ReplicationStatus replication, IPattern replicationPattern, IIdentifier sourceIdentifier, out IBlock newChildBlock)
+        public static void SplitBlock(INode node, string propertyName, int blockIndex, int index, IBlock newChildBlock)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
             if (blockIndex < 0) throw new ArgumentOutOfRangeException(nameof(blockIndex));
             if (index <= 0) throw new ArgumentOutOfRangeException(nameof(index));
-            if (replicationPattern == null) throw new ArgumentNullException(nameof(replicationPattern));
-            if (sourceIdentifier == null) throw new ArgumentNullException(nameof(sourceIdentifier));
+            if (newChildBlock == null) throw new ArgumentNullException(nameof(newChildBlock));
 
             Type NodeType = node.GetType();
             PropertyInfo Property = NodeType.GetProperty(propertyName);
@@ -1477,11 +1476,9 @@ namespace BaseNodeHelper
             Debug.Assert(index < CurrentNodeList.Count);
             if (index >= CurrentNodeList.Count) throw new ArgumentOutOfRangeException(nameof(index));
 
-            newChildBlock = CreateBlock(Property.PropertyType, replication, replicationPattern, sourceIdentifier);
-            Debug.Assert(newChildBlock != null);
-
             IList NewNodeList = newChildBlock.NodeList;
             Debug.Assert(NewNodeList != null);
+            Debug.Assert(NewNodeList.Count == 0);
 
             NodeBlockList.Insert(blockIndex, newChildBlock);
 
@@ -1498,7 +1495,7 @@ namespace BaseNodeHelper
             Debug.Assert(NewNodeList.Count > 0);
         }
 
-        public static void MergeBlocks(INode node, string propertyName, int blockIndex)
+        public static void MergeBlocks(INode node, string propertyName, int blockIndex, out IBlock mergedBlock)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
@@ -1520,24 +1517,25 @@ namespace BaseNodeHelper
             Debug.Assert(blockIndex < NodeBlockList.Count);
             if (blockIndex >= NodeBlockList.Count) throw new ArgumentOutOfRangeException(nameof(blockIndex));
 
-            IBlock MergedBlock = NodeBlockList[blockIndex - 1] as IBlock;
-            Debug.Assert(MergedBlock != null);
+            mergedBlock = NodeBlockList[blockIndex - 1] as IBlock;
+            Debug.Assert(mergedBlock != null);
 
             IBlock CurrentBlock = NodeBlockList[blockIndex] as IBlock;
             Debug.Assert(CurrentBlock != null);
 
-            IList MergedNodeList = MergedBlock.NodeList;
+            IList MergedNodeList = mergedBlock.NodeList;
             Debug.Assert(MergedNodeList != null);
 
             IList CurrentNodeList = CurrentBlock.NodeList;
             Debug.Assert(CurrentNodeList != null);
 
-            for (int i = 0; i < MergedNodeList.Count; i++)
+            for (int i = 0; MergedNodeList.Count > 0; i++)
             {
-                INode ChildNode = MergedNodeList[i] as INode;
+                INode ChildNode = MergedNodeList[0] as INode;
                 Debug.Assert(ChildNode != null);
 
                 CurrentNodeList.Insert(i, ChildNode);
+                MergedNodeList.RemoveAt(0);
             }
 
             NodeBlockList.RemoveAt(blockIndex - 1);
