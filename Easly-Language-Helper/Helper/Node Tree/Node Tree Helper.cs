@@ -335,8 +335,7 @@ namespace BaseNodeHelper
             IOptionalReference Optional = Property.GetValue(node) as IOptionalReference;
             Debug.Assert(Optional != null);
 
-            PropertyInfo ItemProperty = Optional.GetType().GetProperty(nameof(IOptionalReference<INode>.Item));
-            ItemProperty.SetValue(Optional, null);
+            Optional.Clear();
 
             Debug.Assert(!Optional.HasItem);
         }
