@@ -9,6 +9,7 @@ namespace Easly
         object Item { get; }
         void Assign();
         void Unassign();
+        void Clear();
     }
 
     public interface IOptionalReference<T>
@@ -19,6 +20,7 @@ namespace Easly
         T Item { get; set; }
         void Assign();
         void Unassign();
+        void Clear();
     }
 
     [PolySerializer.Serializable]
@@ -68,7 +70,7 @@ namespace Easly
         public T _Item;
         #endregion
 
-        #region Unassigning
+        #region Assignment
         public void Assign()
         {
             if (_Item == null)
@@ -80,6 +82,12 @@ namespace Easly
         public void Unassign()
         {
             IsAssigned = false;
+        }
+
+        public void Clear()
+        {
+            IsAssigned = false;
+            _Item = null;
         }
         #endregion
     }
