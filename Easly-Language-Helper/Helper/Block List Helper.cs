@@ -81,7 +81,7 @@ namespace BaseNodeHelper
                 for (int Index = 0; Index < Block.NodeList.Count; Index++)
                 {
                     IN Item = Block.NodeList[Index];
-                    IN NewItem = NodeHelper.DeepCloneNode(Item) as IN;
+                    IN NewItem = NodeHelper.DeepCloneNode(Item, cloneCommentGuid: false) as IN;
 
                     Debug.Assert(NewItem != null);
                     NewNodeList.Add(NewItem);

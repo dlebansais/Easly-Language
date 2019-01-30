@@ -981,10 +981,10 @@ namespace BaseNodeHelper
         {
             AttributeFeature Result = new AttributeFeature();
             Result.Documentation = CreateDocumentationCopy(documentation);
-            Result.ExportIdentifier = exportIdentifier != null ? DeepCloneNode(exportIdentifier) as IIdentifier : CreateEmptyExportIdentifier();
+            Result.ExportIdentifier = exportIdentifier != null ? DeepCloneNode(exportIdentifier, cloneCommentGuid: false) as IIdentifier : CreateEmptyExportIdentifier();
             Result.Export = export;
-            Result.EntityName = entityName != null ? DeepCloneNode(entityName) as IName : CreateEmptyName();
-            Result.EntityType = entityType != null ? DeepCloneNode(entityType) as IObjectType : CreateDefaultType();
+            Result.EntityName = entityName != null ? DeepCloneNode(entityName, cloneCommentGuid: false) as IName : CreateEmptyName();
+            Result.EntityType = entityType != null ? DeepCloneNode(entityType, cloneCommentGuid: false) as IObjectType : CreateDefaultType();
             Result.EnsureBlocks = BlockListHelper<IAssertion, Assertion>.CreateBlockListCopy(ensureBlocks);
 
             return Result;
@@ -994,11 +994,11 @@ namespace BaseNodeHelper
         {
             ConstantFeature Result = new ConstantFeature();
             Result.Documentation = CreateDocumentationCopy(documentation);
-            Result.ExportIdentifier = exportIdentifier != null ? DeepCloneNode(exportIdentifier) as IIdentifier : CreateEmptyExportIdentifier();
+            Result.ExportIdentifier = exportIdentifier != null ? DeepCloneNode(exportIdentifier, cloneCommentGuid: false) as IIdentifier : CreateEmptyExportIdentifier();
             Result.Export = export;
-            Result.EntityName = entityName != null ? DeepCloneNode(entityName) as IName : CreateEmptyName();
-            Result.EntityType = entityType != null ? DeepCloneNode(entityType) as IObjectType : CreateDefaultType();
-            Result.ConstantValue = constantValue != null ? DeepCloneNode(constantValue) as IExpression : CreateDefaultExpression();
+            Result.EntityName = entityName != null ? DeepCloneNode(entityName, cloneCommentGuid: false) as IName : CreateEmptyName();
+            Result.EntityType = entityType != null ? DeepCloneNode(entityType, cloneCommentGuid: false) as IObjectType : CreateDefaultType();
+            Result.ConstantValue = constantValue != null ? DeepCloneNode(constantValue, cloneCommentGuid: false) as IExpression : CreateDefaultExpression();
 
             return Result;
         }
@@ -1007,9 +1007,9 @@ namespace BaseNodeHelper
         {
             CreationFeature Result = new CreationFeature();
             Result.Documentation = CreateDocumentationCopy(documentation);
-            Result.ExportIdentifier = exportIdentifier != null ? DeepCloneNode(exportIdentifier) as IIdentifier : CreateEmptyExportIdentifier();
+            Result.ExportIdentifier = exportIdentifier != null ? DeepCloneNode(exportIdentifier, cloneCommentGuid: false) as IIdentifier : CreateEmptyExportIdentifier();
             Result.Export = export;
-            Result.EntityName = entityName != null ? DeepCloneNode(entityName) as IName : CreateEmptyName();
+            Result.EntityName = entityName != null ? DeepCloneNode(entityName, cloneCommentGuid: false) as IName : CreateEmptyName();
             if (commandOverloadBlocks != null)
             {
                 Debug.Assert(commandOverloadBlocks.NodeBlockList.Count > 0);
@@ -1026,9 +1026,9 @@ namespace BaseNodeHelper
         {
             FunctionFeature Result = new FunctionFeature();
             Result.Documentation = CreateDocumentationCopy(documentation);
-            Result.ExportIdentifier = exportIdentifier != null ? DeepCloneNode(exportIdentifier) as IIdentifier : CreateEmptyExportIdentifier();
+            Result.ExportIdentifier = exportIdentifier != null ? DeepCloneNode(exportIdentifier, cloneCommentGuid: false) as IIdentifier : CreateEmptyExportIdentifier();
             Result.Export = export;
-            Result.EntityName = entityName != null ? DeepCloneNode(entityName) as IName : CreateEmptyName();
+            Result.EntityName = entityName != null ? DeepCloneNode(entityName, cloneCommentGuid: false) as IName : CreateEmptyName();
             Result.Once = once;
             if (queryOverloadBlocks != null)
             {
@@ -1046,9 +1046,9 @@ namespace BaseNodeHelper
         {
             IndexerFeature Result = new IndexerFeature();
             Result.Documentation = CreateDocumentationCopy(documentation);
-            Result.ExportIdentifier = exportIdentifier != null ? DeepCloneNode(exportIdentifier) as IIdentifier : CreateEmptyExportIdentifier();
+            Result.ExportIdentifier = exportIdentifier != null ? DeepCloneNode(exportIdentifier, cloneCommentGuid: false) as IIdentifier : CreateEmptyExportIdentifier();
             Result.Export = export;
-            Result.EntityType = entityType != null ? DeepCloneNode(entityType) as IObjectType : CreateDefaultType();
+            Result.EntityType = entityType != null ? DeepCloneNode(entityType, cloneCommentGuid: false) as IObjectType : CreateDefaultType();
             if (indexParameterBlocks != null)
             {
                 Debug.Assert(indexParameterBlocks.NodeBlockList.Count > 0);
@@ -1069,9 +1069,9 @@ namespace BaseNodeHelper
         {
             ProcedureFeature Result = new ProcedureFeature();
             Result.Documentation = CreateDocumentationCopy(documentation);
-            Result.ExportIdentifier = exportIdentifier != null ? DeepCloneNode(exportIdentifier) as IIdentifier : CreateEmptyExportIdentifier();
+            Result.ExportIdentifier = exportIdentifier != null ? DeepCloneNode(exportIdentifier, cloneCommentGuid: false) as IIdentifier : CreateEmptyExportIdentifier();
             Result.Export = export;
-            Result.EntityName = entityName != null ? DeepCloneNode(entityName) as IName : CreateEmptyName();
+            Result.EntityName = entityName != null ? DeepCloneNode(entityName, cloneCommentGuid: false) as IName : CreateEmptyName();
             if (commandOverloadBlocks != null)
             {
                 Debug.Assert(commandOverloadBlocks.NodeBlockList.Count > 0);
@@ -1088,10 +1088,10 @@ namespace BaseNodeHelper
         {
             PropertyFeature Result = new PropertyFeature();
             Result.Documentation = CreateDocumentationCopy(documentation);
-            Result.ExportIdentifier = exportIdentifier != null ? DeepCloneNode(exportIdentifier) as IIdentifier : CreateEmptyExportIdentifier();
+            Result.ExportIdentifier = exportIdentifier != null ? DeepCloneNode(exportIdentifier, cloneCommentGuid: false) as IIdentifier : CreateEmptyExportIdentifier();
             Result.Export = export;
-            Result.EntityName = entityName != null ? DeepCloneNode(entityName) as IName : CreateEmptyName();
-            Result.EntityType = entityType != null ? DeepCloneNode(entityType) as IObjectType : CreateDefaultType();
+            Result.EntityName = entityName != null ? DeepCloneNode(entityName, cloneCommentGuid: false) as IName : CreateEmptyName();
+            Result.EntityType = entityType != null ? DeepCloneNode(entityType, cloneCommentGuid: false) as IObjectType : CreateDefaultType();
             Result.PropertyKind = propertyKind;
             Result.ModifiedQueryBlocks = BlockListHelper<IIdentifier, Identifier>.CreateBlockListCopy(modifiedQueryBlocks);
             Result.GetterBody = OptionalReferenceHelper<IBody>.CreateReferenceCopy(getterBody);
@@ -1898,7 +1898,7 @@ namespace BaseNodeHelper
             hash1 ^= hash2;
         }
 
-        public static INode DeepCloneNode(INode root)
+        public static INode DeepCloneNode(INode root, bool cloneCommentGuid)
         {
             IList<string> PropertyNames = NodeTreeHelper.EnumChildNodeProperties(root);
 
@@ -1913,7 +1913,7 @@ namespace BaseNodeHelper
                 {
                     NodeTreeHelperChild.GetChildNode(root, PropertyName, out INode ChildNode);
 
-                    INode ClonedChildNode = DeepCloneNode(ChildNode);
+                    INode ClonedChildNode = DeepCloneNode(ChildNode, cloneCommentGuid);
                     NodeTreeHelperChild.SetChildNode(ClonedRoot, PropertyName, ClonedChildNode);
                 }
 
@@ -1923,7 +1923,7 @@ namespace BaseNodeHelper
 
                     if (ChildNode != null)
                     {
-                        INode ClonedChildNode = DeepCloneNode(ChildNode);
+                        INode ClonedChildNode = DeepCloneNode(ChildNode, cloneCommentGuid);
                         NodeTreeHelperOptional.SetOptionalChildNode(ClonedRoot, PropertyName, ClonedChildNode);
                         if (!IsAssigned)
                             NodeTreeHelperOptional.UnassignChildNode(ClonedRoot, PropertyName);
@@ -1938,7 +1938,7 @@ namespace BaseNodeHelper
                     for (int Index = 0; Index < ChildNodeList.Count; Index++)
                     {
                         INode ChildNode = ChildNodeList[Index];
-                        INode ClonedChildNode = DeepCloneNode(ChildNode);
+                        INode ClonedChildNode = DeepCloneNode(ChildNode, cloneCommentGuid);
 
                         NodeTreeHelperList.InsertIntoList(ClonedRoot, PropertyName, Index, ClonedChildNode);
                     }
@@ -1955,25 +1955,25 @@ namespace BaseNodeHelper
                         NodeTreeHelperBlockList.GetChildBlock(root, PropertyName, BlockIndex, out IBlock Block);
                         Type InterfaceType = NodeTreeHelperBlockList.BlockListInterfaceType(root, PropertyName);
 
-                        IPattern ClonedPattern = (IPattern)DeepCloneNode(NodeTreeBlock.ReplicationPattern);
-                        IIdentifier ClonedSource = (IIdentifier)DeepCloneNode(NodeTreeBlock.SourceIdentifier);
+                        IPattern ClonedPattern = (IPattern)DeepCloneNode(NodeTreeBlock.ReplicationPattern, cloneCommentGuid);
+                        IIdentifier ClonedSource = (IIdentifier)DeepCloneNode(NodeTreeBlock.SourceIdentifier, cloneCommentGuid);
                         IBlock ClonedBlock = NodeTreeHelperBlockList.CreateBlock(ClonedRoot, PropertyName, Block.Replication, ClonedPattern, ClonedSource);
                         NodeTreeHelperBlockList.InsertIntoBlockList(ClonedRoot, PropertyName, BlockIndex, ClonedBlock);
 
                         for (int Index = 0; Index < NodeTreeBlock.NodeList.Count; Index++)
                         {
                             INode ChildNode = NodeTreeBlock.NodeList[Index];
-                            INode ClonedChildNode = DeepCloneNode(ChildNode);
+                            INode ClonedChildNode = DeepCloneNode(ChildNode, cloneCommentGuid);
 
                             NodeTreeHelperBlockList.InsertIntoBlock(ClonedBlock, Index, ClonedChildNode);
                         }
 
-                        NodeTreeHelper.CopyDocumentation(Block, ClonedBlock);
+                        NodeTreeHelper.CopyDocumentation(Block, ClonedBlock, cloneCommentGuid);
                     }
 
                     IBlockList BlockList = NodeTreeHelperBlockList.GetBlockList(root, PropertyName);
                     IBlockList ClonedBlockList = NodeTreeHelperBlockList.GetBlockList(ClonedRoot, PropertyName);
-                    NodeTreeHelper.CopyDocumentation(BlockList, ClonedBlockList);
+                    NodeTreeHelper.CopyDocumentation(BlockList, ClonedBlockList, cloneCommentGuid);
                 }
 
                 else if (NodeTreeHelper.IsBooleanProperty(root, PropertyName))
@@ -1989,7 +1989,7 @@ namespace BaseNodeHelper
                     NodeTreeHelper.CopyGuidProperty(root, ClonedRoot, PropertyName);
 
                 else if (NodeTreeHelper.IsDocumentProperty(root, PropertyName))
-                    NodeTreeHelper.CopyDocumentation(root, ClonedRoot);
+                    NodeTreeHelper.CopyDocumentation(root, ClonedRoot, cloneCommentGuid);
 
                 else
                     throw new ArgumentOutOfRangeException($"{nameof(PropertyName)}: {PropertyName}");
@@ -2343,7 +2343,7 @@ namespace BaseNodeHelper
                 for (int Index = 0; Index < Block.NodeList.Count; Index++)
                 {
                     IArgument Item = Block.NodeList[Index];
-                    IArgument NewItem = DeepCloneNode(Item) as IArgument;
+                    IArgument NewItem = DeepCloneNode(Item, cloneCommentGuid: false) as IArgument;
 
                     Debug.Assert(NewItem != null);
                     NewNodeList.Add(NewItem);

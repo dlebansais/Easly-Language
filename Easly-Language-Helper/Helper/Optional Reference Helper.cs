@@ -26,7 +26,7 @@ namespace BaseNodeHelper
                 {
                     Debug.Assert(optional.Item != null);
 
-                    IN ClonedItem = NodeHelper.DeepCloneNode(optional.Item) as IN;
+                    IN ClonedItem = NodeHelper.DeepCloneNode(optional.Item, cloneCommentGuid: false) as IN;
                     Debug.Assert(ClonedItem != null);
 
                     Result.Item = ClonedItem;

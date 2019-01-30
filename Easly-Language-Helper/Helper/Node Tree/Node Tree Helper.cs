@@ -70,7 +70,6 @@ namespace BaseNodeHelper
             Debug.Assert(NodeTreeHelper.IsNodeInterfaceType(Property.PropertyType));
 
             childNode = Property.GetValue(node) as INode;
-            Debug.Assert(childNode != null);
         }
 
         public static Type ChildInterfaceType(INode node, string propertyName)
@@ -420,19 +419,19 @@ namespace BaseNodeHelper
             Debug.Assert(NodeTreeHelper.IsNodeListType(PropertyType));
 
             IList Collection = Property.GetValue(node) as IList;
-            Debug.Assert(Collection != null);
-
-            List<INode> NodeList = new List<INode>();
-
-            foreach (object Item in Collection)
+            if (Collection == null)
+                childNodeList = null;
+            else
             {
-                INode NodeItem = Item as INode;
-                Debug.Assert(NodeItem != null);
+                List<INode> NodeList = new List<INode>();
+                foreach (object Item in Collection)
+                {
+                    INode NodeItem = Item as INode;
+                    NodeList.Add(NodeItem);
+                }
 
-                NodeList.Add(NodeItem);
+                childNodeList = NodeList.AsReadOnly();
             }
-
-            childNodeList = NodeList.AsReadOnly();
         }
 
         public static void ClearChildNodeList(INode node, string propertyName)
@@ -695,34 +694,40 @@ namespace BaseNodeHelper
             Debug.Assert(NodeTreeHelper.IsBlockListType(Property.PropertyType));
 
             IBlockList BlockList = Property.GetValue(node) as IBlockList;
-            Debug.Assert(BlockList != null);
-
-            IList NodeBlockList = BlockList.NodeBlockList;
-            Debug.Assert(NodeBlockList != null);
-
-            List<INodeTreeBlock> Result = new List<INodeTreeBlock>();
-
-            foreach (object Item in NodeBlockList)
+            if (BlockList == null)
             {
-                IBlock Block = Item as IBlock;
-                Debug.Assert(Block != null);
-
-                IPattern ReplicationPattern = Block.ReplicationPattern;
-                Debug.Assert(ReplicationPattern != null);
-                IIdentifier SourceIdentifier = Block.SourceIdentifier;
-                Debug.Assert(SourceIdentifier != null);
-                IList NodeList = Block.NodeList;
-                Debug.Assert(NodeList != null);
-                Debug.Assert(NodeList.Count > 0);
-
-                List<INode> ResultNodeList = new List<INode>();
-                foreach (INode ChildNode in NodeList)
-                    ResultNodeList.Add(ChildNode);
-
-                Result.Add(new NodeTreeBlock(ReplicationPattern, SourceIdentifier, ResultNodeList));
+                childBlockList = null;
+                return;
             }
+            else
+            {
+                IList NodeBlockList = BlockList.NodeBlockList;
+                Debug.Assert(NodeBlockList != null);
 
-            childBlockList = Result.AsReadOnly();
+                List<INodeTreeBlock> Result = new List<INodeTreeBlock>();
+
+                foreach (object Item in NodeBlockList)
+                {
+                    IBlock Block = Item as IBlock;
+                    Debug.Assert(Block != null);
+
+                    IPattern ReplicationPattern = Block.ReplicationPattern;
+                    Debug.Assert(ReplicationPattern != null);
+                    IIdentifier SourceIdentifier = Block.SourceIdentifier;
+                    Debug.Assert(SourceIdentifier != null);
+                    IList NodeList = Block.NodeList;
+                    Debug.Assert(NodeList != null);
+                    Debug.Assert(NodeList.Count > 0);
+
+                    List<INode> ResultNodeList = new List<INode>();
+                    foreach (INode ChildNode in NodeList)
+                        ResultNodeList.Add(ChildNode);
+
+                    Result.Add(new NodeTreeBlock(ReplicationPattern, SourceIdentifier, ResultNodeList));
+                }
+
+                childBlockList = Result.AsReadOnly();
+            }
         }
 
         public static void ClearChildBlockList(INode node, string propertyName)
@@ -1082,7 +1087,7 @@ namespace BaseNodeHelper
             IPattern ReplicationPattern = block.ReplicationPattern;
             Debug.Assert(ReplicationPattern != null);
 
-            return NodeTreeHelper.GetText(ReplicationPattern);
+            return NodeTreeHelper.GetString(ReplicationPattern, nameof(IPattern.Text));
         }
 
         public static void SetPattern(IBlock block, string text)
@@ -1093,7 +1098,7 @@ namespace BaseNodeHelper
             IPattern ReplicationPattern = block.ReplicationPattern;
             Debug.Assert(ReplicationPattern != null);
 
-            NodeTreeHelper.SetText(ReplicationPattern, text);
+            NodeTreeHelper.SetString(ReplicationPattern, nameof(IPattern.Text), text);
         }
 
         public static bool IsBlockSourceNode(INode node, string propertyName, int blockIndex, IIdentifier sourceIdentifier)
@@ -1140,7 +1145,7 @@ namespace BaseNodeHelper
             IIdentifier SourceIdentifier = block.SourceIdentifier;
             Debug.Assert(SourceIdentifier != null);
 
-            return NodeTreeHelper.GetText(SourceIdentifier);
+            return NodeTreeHelper.GetString(SourceIdentifier, nameof(IIdentifier.Text));
         }
 
         public static void SetSource(IBlock block, string text)
@@ -1151,7 +1156,7 @@ namespace BaseNodeHelper
             IIdentifier SourceIdentifier = block.SourceIdentifier;
             Debug.Assert(SourceIdentifier != null);
 
-            NodeTreeHelper.SetText(SourceIdentifier, text);
+            NodeTreeHelper.SetString(SourceIdentifier, nameof(IIdentifier.Text), text);
         }
 
         public static void SetReplication(IBlock block, ReplicationStatus replication)
@@ -1777,27 +1782,29 @@ namespace BaseNodeHelper
             return (Property != null);
         }
 
-        public static string GetText(INode node)
+        public static string GetString(INode node, string propertyName)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
+            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
 
             Type NodeType = node.GetType();
-            PropertyInfo Property = NodeType.GetProperty(nameof(IIdentifier.Text));
+            PropertyInfo Property = NodeType.GetProperty(propertyName);
             Debug.Assert(Property != null);
+            Debug.Assert(Property.PropertyType == typeof(string));
 
             string Text = Property.GetValue(node) as string;
-            Debug.Assert(Text != null);
 
             return Text;
         }
 
-        public static void SetText(INode node, string text)
+        public static void SetString(INode node, string propertyName, string text)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
+            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
             if (text == null) throw new ArgumentNullException(nameof(text));
 
             Type NodeType = node.GetType();
-            PropertyInfo Property = NodeType.GetProperty(nameof(IIdentifier.Text));
+            PropertyInfo Property = NodeType.GetProperty(propertyName);
             Debug.Assert(Property != null);
             Debug.Assert(Property.PropertyType == typeof(string));
 
@@ -2029,7 +2036,7 @@ namespace BaseNodeHelper
             Property.SetValue(node, document);
         }
 
-        public static void CopyDocumentation(INode sourceNode, INode destinationNode)
+        public static void CopyDocumentation(INode sourceNode, INode destinationNode, bool cloneCommentGuid)
         {
             if (sourceNode == null) throw new ArgumentNullException(nameof(sourceNode));
             if (destinationNode == null) throw new ArgumentNullException(nameof(destinationNode));
@@ -2045,11 +2052,12 @@ namespace BaseNodeHelper
             Type PropertyType = Property.PropertyType;
             Debug.Assert(PropertyType == typeof(IDocument));
 
-            IDocument DocumentCopy = NodeHelper.CreateSimpleDocumentation(sourceNode.Documentation.Comment, sourceNode.Documentation.Uuid);
+            Guid GuidCopy = cloneCommentGuid ? sourceNode.Documentation.Uuid : Guid.NewGuid();
+            IDocument DocumentCopy = NodeHelper.CreateSimpleDocumentation(sourceNode.Documentation.Comment, GuidCopy);
             Property.SetValue(destinationNode, DocumentCopy);
         }
 
-        public static void CopyDocumentation(IBlock sourceBlock, IBlock destinationBlock)
+        public static void CopyDocumentation(IBlock sourceBlock, IBlock destinationBlock, bool cloneCommentGuid)
         {
             if (sourceBlock == null) throw new ArgumentNullException(nameof(sourceBlock));
             if (destinationBlock == null) throw new ArgumentNullException(nameof(destinationBlock));
@@ -2064,11 +2072,12 @@ namespace BaseNodeHelper
             Type PropertyType = Property.PropertyType;
             Debug.Assert(PropertyType == typeof(IDocument));
 
-            IDocument DocumentCopy = NodeHelper.CreateSimpleDocumentation(sourceBlock.Documentation.Comment, sourceBlock.Documentation.Uuid);
+            Guid GuidCopy = cloneCommentGuid ? sourceBlock.Documentation.Uuid : Guid.NewGuid();
+            IDocument DocumentCopy = NodeHelper.CreateSimpleDocumentation(sourceBlock.Documentation.Comment, GuidCopy);
             Property.SetValue(destinationBlock, DocumentCopy);
         }
 
-        public static void CopyDocumentation(IBlockList sourceBlockList, IBlockList destinationBlockList)
+        public static void CopyDocumentation(IBlockList sourceBlockList, IBlockList destinationBlockList, bool cloneCommentGuid)
         {
             if (sourceBlockList == null) throw new ArgumentNullException(nameof(sourceBlockList));
             if (destinationBlockList == null) throw new ArgumentNullException(nameof(destinationBlockList));
@@ -2083,7 +2092,8 @@ namespace BaseNodeHelper
             Type PropertyType = Property.PropertyType;
             Debug.Assert(PropertyType == typeof(IDocument));
 
-            IDocument DocumentCopy = NodeHelper.CreateSimpleDocumentation(sourceBlockList.Documentation.Comment, sourceBlockList.Documentation.Uuid);
+            Guid GuidCopy = cloneCommentGuid ? sourceBlockList.Documentation.Uuid : Guid.NewGuid();
+            IDocument DocumentCopy = NodeHelper.CreateSimpleDocumentation(sourceBlockList.Documentation.Comment, GuidCopy);
             Property.SetValue(destinationBlockList, DocumentCopy);
         }
 
