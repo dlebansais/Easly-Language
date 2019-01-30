@@ -525,6 +525,23 @@ namespace BaseNodeHelper
             return true;
         }
 
+        public static void SetChildNodeList(INode node, string propertyName, IList childNodeList)
+        {
+            if (node == null) throw new ArgumentNullException(nameof(node));
+            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
+            if (childNodeList == null) throw new ArgumentNullException(nameof(childNodeList));
+
+            Type NodeType = node.GetType();
+            PropertyInfo Property = NodeType.GetProperty(propertyName);
+            Debug.Assert(Property != null);
+
+            Type PropertyType = Property.PropertyType;
+            Debug.Assert(NodeTreeHelper.IsNodeListType(PropertyType));
+            Debug.Assert(PropertyType.IsAssignableFrom(childNodeList.GetType()));
+
+            Property.SetValue(node, childNodeList);
+        }
+
         public static void InsertIntoList(INode node, string propertyName, int index, INode childNode)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
@@ -1041,6 +1058,22 @@ namespace BaseNodeHelper
             Debug.Assert(NodeItem != null);
 
             childNode = NodeItem;
+        }
+
+        public static void SetBlockList(INode node, string propertyName, IBlockList blockList)
+        {
+            if (node == null) throw new ArgumentNullException(nameof(node));
+            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
+            if (blockList == null) throw new ArgumentNullException(nameof(blockList));
+
+            Type NodeType = node.GetType();
+            PropertyInfo Property = NodeType.GetProperty(propertyName);
+            Debug.Assert(Property != null);
+            Debug.Assert(NodeTreeHelper.IsBlockListType(Property.PropertyType));
+
+            if (!Property.PropertyType.IsAssignableFrom(blockList.GetType())) throw new ArgumentException(nameof(blockList));
+
+            Property.SetValue(node, blockList);
         }
 
         public static bool IsBlockPatternNode(INode node, string propertyName, int blockIndex, IPattern replicationPattern)
