@@ -388,7 +388,7 @@ namespace BaseNodeHelper
             if (Result != null)
                 return Result;
 
-            string NamePrefix = typeof(IClass).AssemblyQualifiedName;
+            string NamePrefix = interfaceType.AssemblyQualifiedName;
             NamePrefix = NamePrefix.Substring(0, NamePrefix.IndexOf('.') + 1);
 
             string NodeTypeName = interfaceType.AssemblyQualifiedName;
