@@ -469,6 +469,96 @@ namespace BaseNodeHelper
 
             return EmptyNode;
         }
+
+        public static bool IsEmptyNode(INode node)
+        {
+            Debug.Assert(node != null);
+
+            IList<string> PropertyNames = NodeTreeHelper.EnumChildNodeProperties(node.GetType());
+
+            foreach (string PropertyName in PropertyNames)
+            {
+                Type ChildInterfaceType, ChildNodeType;
+
+                if (NodeTreeHelperChild.IsChildNodeProperty(node, PropertyName, out ChildNodeType))
+                {
+                    NodeTreeHelperChild.GetChildNode(node, PropertyName, out INode ChildNode);
+                    if (!IsEmptyNode(ChildNode))
+                        return false;
+                }
+
+                else if (NodeTreeHelperOptional.IsOptionalChildNodeProperty(node, PropertyName, out ChildNodeType))
+                {
+                    NodeTreeHelperOptional.GetChildNode(node, PropertyName, out bool IsAssigned, out INode ChildNode);
+                    if (IsAssigned)
+                        return false;
+                }
+
+                else if (NodeTreeHelperList.IsNodeListProperty(node, PropertyName, out ChildNodeType))
+                {
+                    NodeTreeHelperList.GetChildNodeList(node, PropertyName, out IReadOnlyList<INode> ChildNodeList);
+
+                    if (IsCollectionNeverEmpty(node, PropertyName))
+                    {
+                        Debug.Assert(ChildNodeList.Count > 0);
+
+                        if (ChildNodeList.Count != 1)
+                            return false;
+
+                        INode ChildNode = ChildNodeList[0];
+                        if (!IsEmptyNode(ChildNode))
+                            return false;
+                    }
+                    else if (ChildNodeList.Count > 0)
+                        return false;
+                }
+
+                else if (NodeTreeHelperBlockList.IsBlockListProperty(node, PropertyName, out ChildInterfaceType, out ChildNodeType))
+                {
+                    NodeTreeHelperBlockList.GetChildBlockList(node, PropertyName, out IReadOnlyList<INodeTreeBlock> ChildBlockList);
+
+                    if (IsCollectionNeverEmpty(node, PropertyName))
+                    {
+                        Debug.Assert(ChildBlockList.Count > 0);
+
+                        if (ChildBlockList.Count != 1)
+                            return false;
+
+                        INodeTreeBlock FirstBlock = ChildBlockList[0];
+                        Debug.Assert(FirstBlock.NodeList.Count > 0);
+
+                        if (FirstBlock.NodeList.Count != 1)
+                            return false;
+
+                        INode ChildNode = FirstBlock.NodeList[0];
+                        if (!IsEmptyNode(ChildNode))
+                            return false;
+                    }
+                    else if (ChildBlockList.Count > 0)
+                        return false;
+                }
+
+                else if (NodeTreeHelper.IsStringProperty(node, PropertyName))
+                {
+                    string Text = NodeTreeHelper.GetString(node, PropertyName);
+                    Debug.Assert(Text != null);
+
+                    if (Text.Length > 0)
+                        return false;
+                }
+
+                else if (NodeTreeHelper.IsBooleanProperty(node, PropertyName) || NodeTreeHelper.IsEnumProperty(node, PropertyName))
+                {
+                    int Value = NodeTreeHelper.GetEnumValue(node, PropertyName);
+                    NodeTreeHelper.GetEnumRange(node.GetType(), PropertyName, out int Min, out int Max);
+
+                    if (Value != Min)
+                        return false;
+                }
+            }
+
+            return true;
+        }
         #endregion
 
         #region Specific Objects
@@ -1767,8 +1857,11 @@ namespace BaseNodeHelper
                 case IBody AsBody: // Fallback for other IBody.
                     return false;
 
+                case IArgument AsArgument:
+                    return IsDefaultArgument(node);
+
                 default:
-                    return false;
+                    return IsEmptyNode(node);
             }
         }
 
