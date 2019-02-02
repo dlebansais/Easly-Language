@@ -2065,12 +2065,45 @@ namespace BaseNodeHelper
             { typeof(IIfThenElseInstruction), new string[] { nameof(IIfThenElseInstruction.ConditionalBlocks) } },
             { typeof(IInspectInstruction), new string[] { nameof(IInspectInstruction.WithBlocks) } },
             { typeof(IOverLoopInstruction), new string[] { nameof(IOverLoopInstruction.IndexerBlocks) } },
+            { typeof(IIndexAssignmentInstruction), new string[] { nameof(IIndexAssignmentInstruction.ArgumentBlocks) } },
             { typeof(IPrecursorIndexAssignmentInstruction), new string[] { nameof(IPrecursorIndexAssignmentInstruction.ArgumentBlocks) } },
             { typeof(IFunctionType), new string[] { nameof(IFunctionType.OverloadBlocks) } },
             { typeof(IGenericType), new string[] { nameof(IGenericType.TypeArgumentBlocks) } },
             { typeof(IIndexerType), new string[] { nameof(IIndexerType.IndexParameterBlocks) } },
             { typeof(IProcedureType), new string[] { nameof(IProcedureType.OverloadBlocks) } },
             { typeof(ITupleType), new string[] { nameof(ITupleType.EntityDeclarationBlocks) } },
+        };
+
+        public static bool IsCollectionWithExpand(INode node, string PropertyName)
+        {
+            return IsCollectionWithExpand(node.GetType(), PropertyName);
+        }
+
+        public static bool IsCollectionWithExpand(Type nodeType, string PropertyName)
+        {
+            Debug.Assert(NodeTreeHelperList.IsNodeListProperty(nodeType, PropertyName, out Type ChildNodeType) || NodeTreeHelperBlockList.IsBlockListProperty(nodeType, PropertyName, out Type ChildInterfaceType, out ChildNodeType));
+            Debug.Assert(!IsCollectionNeverEmpty(nodeType, PropertyName));
+
+            Type InterfaceType = NodeTreeHelper.NodeTypeToInterfaceType(nodeType);
+
+            if (WithExpandCollectionTable.ContainsKey(InterfaceType))
+            {
+                foreach (string Item in WithExpandCollectionTable[InterfaceType])
+                    if (Item == PropertyName)
+                        return true;
+            }
+
+            return false;
+        }
+
+        public static readonly IReadOnlyDictionary<Type, string[]> WithExpandCollectionTable = new Dictionary<Type, string[]>()
+        {
+            { typeof(IPrecursorExpression), new string[] { nameof(IPrecursorExpression.ArgumentBlocks) } },
+            { typeof(IQueryExpression), new string[] { nameof(IQueryExpression.ArgumentBlocks) } },
+            { typeof(ICommandInstruction), new string[] { nameof(ICommandInstruction.ArgumentBlocks) } },
+            { typeof(ICreateInstruction), new string[] { nameof(ICreateInstruction.ArgumentBlocks) } },
+            { typeof(IPrecursorInstruction), new string[] { nameof(IPrecursorInstruction.ArgumentBlocks) } },
+            { typeof(IThrowInstruction), new string[] { nameof(IThrowInstruction.ArgumentBlocks) } },
         };
 
         public static IDocument CreateDocumentationCopy(IDocument documentation)
