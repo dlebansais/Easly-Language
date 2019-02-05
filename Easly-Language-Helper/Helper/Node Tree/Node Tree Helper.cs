@@ -1732,16 +1732,27 @@ namespace BaseNodeHelper
             string[] Prefixes = FullName.Split('.');
             Debug.Assert(Prefixes.Length > 0);
 
-            string LastName = Prefixes[Prefixes.Length - 1];
+            int InterfaceIndex = 0;
+            while (InterfaceIndex + 1 < Prefixes.Length && !Prefixes[InterfaceIndex].Contains("`") && !Prefixes[InterfaceIndex].Contains("["))
+                InterfaceIndex++;
+
+            string LastName = Prefixes[InterfaceIndex];
             Debug.Assert(LastName.Length > 1);
             Debug.Assert(LastName[0] == 'I');
 
             string NodeTypeName = LastName.Substring(1);
-            string NodeTypeFullName = "";
-            for (int i = 0; i + 1 < Prefixes.Length; i++)
-                NodeTypeFullName += Prefixes[i] + ".";
 
-            NodeTypeFullName += NodeTypeName;
+            string NodeTypeFullName = "";
+            for (int i = 0; i < Prefixes.Length; i++)
+            {
+                if (i > 0)
+                    NodeTypeFullName += ".";
+
+                if (i != InterfaceIndex)
+                    NodeTypeFullName += Prefixes[i];
+                else
+                    NodeTypeFullName += NodeTypeName;
+            }
 
             Type Result = type.Assembly.GetType(NodeTypeFullName);
             Debug.Assert(Result != null);
