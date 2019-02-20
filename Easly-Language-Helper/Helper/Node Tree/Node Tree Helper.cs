@@ -1970,7 +1970,15 @@ namespace BaseNodeHelper
             if (node == null) throw new ArgumentNullException(nameof(node));
 
             Debug.Assert(node.Documentation != null);
-            string Text = node.Documentation.Comment;
+
+            return GetCommentText(node.Documentation);
+        }
+
+        public static string GetCommentText(IDocument documentation)
+        {
+            if (documentation == null) throw new ArgumentNullException(nameof(documentation));
+
+            string Text = documentation.Comment;
             Debug.Assert(Text != null);
 
             return Text;
@@ -1982,7 +1990,17 @@ namespace BaseNodeHelper
             if (text == null) throw new ArgumentNullException(nameof(text));
 
             Debug.Assert(node.Documentation != null);
-            node.Documentation.Comment = text;
+
+            SetCommentText(node.Documentation, text);
+        }
+
+        public static void SetCommentText(IDocument documentation, string text)
+        {
+            if (documentation == null) throw new ArgumentNullException(nameof(documentation));
+
+            Type DocumentationType = documentation.GetType();
+            PropertyInfo CommentProperty = DocumentationType.GetProperty(nameof(IDocument.Comment));
+            CommentProperty.SetValue(documentation, text);
         }
 
         public static void GetOptionalNodes(INode node, out IDictionary<string, IOptionalReference> optionalNodesTable)

@@ -4,8 +4,8 @@ namespace BaseNode
 {
     public interface IDocument
     {
-        string Comment { get; set; }
-        System.Guid Uuid { get; set; }
+        string Comment { get; }
+        System.Guid Uuid { get; }
     }
 
     [System.Serializable]
