@@ -1885,6 +1885,11 @@ namespace BaseNodeHelper
 
         public static int GetEnumValue(INode node, string propertyName)
         {
+            return GetEnumValueAndRange(node, propertyName, out int Min, out int Max);
+        }
+
+        public static int GetEnumValueAndRange(INode node, string propertyName, out int min, out int max)
+        {
             if (node == null) throw new ArgumentNullException(nameof(node));
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
 
@@ -1895,7 +1900,7 @@ namespace BaseNodeHelper
             Type PropertyType = Property.PropertyType;
             Debug.Assert(PropertyType.IsEnum || PropertyType == typeof(bool));
 
-            GetEnumMinMax(Property, out int Min, out int Max);
+            GetEnumMinMax(Property, out min, out max);
             int Result;
 
             if (PropertyType == typeof(bool))
@@ -1906,7 +1911,7 @@ namespace BaseNodeHelper
             else
                 Result = (int)Property.GetValue(node);
 
-            Debug.Assert(Min <= Result && Result <= Max);
+            Debug.Assert(min <= Result && Result <= max);
 
             return Result;
         }
