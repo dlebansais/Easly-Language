@@ -182,15 +182,10 @@
 
             // Get the fractional part.
             int FractionalBegin = n;
-            int ZeroIndex = n;
             while (n < text.Length && IntegerBase.Decimal.IsValidDigit(text[n], out DigitValue))
-            {
                 n++;
-                if (DigitValue > 0)
-                    ZeroIndex = n;
-            }
 
-            string FractionalText = text.Substring(IntegerText.Length + 1, ZeroIndex - IntegerText.Length - 1);
+            string FractionalText = text.Substring(IntegerText.Length + 1, n - IntegerText.Length - 1);
 
             // If the fractional part is empty, or ends with a zero but is not zero, just return the integer.
             if (FractionalText.Length == 0 || FractionalText[FractionalText.Length - 1] == '0')
