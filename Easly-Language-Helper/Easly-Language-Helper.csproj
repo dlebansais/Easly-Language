@@ -44,7 +44,7 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Helpers\Block List Helper.cs" />
+    <Compile Include="Helpers\BlockListHelper.cs" />
     <Compile Include="Helpers\FormattedNumber\CanonicalNumber.cs" />
     <Compile Include="Helpers\FormattedNumber\ExplicitExponents.cs" />
     <Compile Include="Helpers\FormattedNumber\FormattedNumber.cs" />
@@ -57,11 +57,11 @@
     <Compile Include="Helpers\FormattedNumber\IntegerNumberWithBase.cs" />
     <Compile Include="Helpers\FormattedNumber\InvalidNumber.cs" />
     <Compile Include="Helpers\FormattedNumber\RealNumber.cs" />
-    <Compile Include="Helpers\Node Helper.cs" />
-    <Compile Include="Helpers\Node Tree\Node Tree Block.cs" />
-    <Compile Include="Helpers\Node Tree\Node Tree Diagnostic.cs" />
-    <Compile Include="Helpers\Node Tree\Node Tree Helper.cs" />
-    <Compile Include="Helpers\Optional Reference Helper.cs" />
+    <Compile Include="Helpers\NodeHelper.cs" />
+    <Compile Include="Helpers\NodeTree\NodeTreeBlock.cs" />
+    <Compile Include="Helpers\NodeTree\NodeTreeDiagnostic.cs" />
+    <Compile Include="Helpers\NodeTree\NodeTreeHelper.cs" />
+    <Compile Include="Helpers\OptionalReferenceHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
