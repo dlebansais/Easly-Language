@@ -45,6 +45,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Helpers\Block List Helper.cs" />
+    <Compile Include="Helpers\FormattedNumber\CanonicalNumber.cs" />
+    <Compile Include="Helpers\FormattedNumber\ExplicitExponents.cs" />
+    <Compile Include="Helpers\FormattedNumber\FormattedNumber.cs" />
+    <Compile Include="Helpers\FormattedNumber\IntegerBase\BinaryIntegerBase.cs" />
+    <Compile Include="Helpers\FormattedNumber\IntegerBase\DecimalIntegerBase.cs" />
+    <Compile Include="Helpers\FormattedNumber\IntegerBase\HexadecimalIntegerBase.cs" />
+    <Compile Include="Helpers\FormattedNumber\IntegerBase\IntegerBase.cs" />
+    <Compile Include="Helpers\FormattedNumber\IntegerBase\OctalIntegerBase.cs" />
+    <Compile Include="Helpers\FormattedNumber\IntegerNumber.cs" />
+    <Compile Include="Helpers\FormattedNumber\IntegerNumberWithBase.cs" />
+    <Compile Include="Helpers\FormattedNumber\InvalidNumber.cs" />
+    <Compile Include="Helpers\FormattedNumber\RealNumber.cs" />
     <Compile Include="Helpers\Node Helper.cs" />
     <Compile Include="Helpers\Node Tree\Node Tree Block.cs" />
     <Compile Include="Helpers\Node Tree\Node Tree Diagnostic.cs" />
