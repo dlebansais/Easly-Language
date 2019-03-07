@@ -44,12 +44,12 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Helper\Block List Helper.cs" />
-    <Compile Include="Helper\Node Helper.cs" />
-    <Compile Include="Helper\Node Tree\Node Tree Block.cs" />
-    <Compile Include="Helper\Node Tree\Node Tree Diagnostic.cs" />
-    <Compile Include="Helper\Node Tree\Node Tree Helper.cs" />
-    <Compile Include="Helper\Optional Reference Helper.cs" />
+    <Compile Include="Helpers\Block List Helper.cs" />
+    <Compile Include="Helpers\Node Helper.cs" />
+    <Compile Include="Helpers\Node Tree\Node Tree Block.cs" />
+    <Compile Include="Helpers\Node Tree\Node Tree Diagnostic.cs" />
+    <Compile Include="Helpers\Node Tree\Node Tree Helper.cs" />
+    <Compile Include="Helpers\Optional Reference Helper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
