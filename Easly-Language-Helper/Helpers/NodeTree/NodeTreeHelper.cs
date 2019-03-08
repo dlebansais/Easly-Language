@@ -680,8 +680,34 @@ namespace BaseNodeHelper
             Debug.Assert(GenericArguments.Length == 2);
 
             childInterfaceType = GenericArguments[0];
+            Debug.Assert(childInterfaceType != null);
+            Debug.Assert(childInterfaceType.IsInterface);
+
             childNodeType = GenericArguments[1];
+            Debug.Assert(childNodeType != null);
+            Debug.Assert(!childNodeType.IsInterface);
+
             return true;
+        }
+
+        public static void GetBlockType(IBlock block, out Type childInterfaceType, out Type childNodeType)
+        {
+            if (block == null) throw new ArgumentNullException(nameof(block));
+
+            Type BlockType = block.GetType();
+            Debug.Assert(BlockType.IsGenericType);
+
+            Type[] GenericArguments = BlockType.GetGenericArguments();
+            Debug.Assert(GenericArguments != null);
+            Debug.Assert(GenericArguments.Length == 2);
+
+            childInterfaceType = GenericArguments[0];
+            Debug.Assert(childInterfaceType != null);
+            Debug.Assert(childInterfaceType.IsInterface);
+
+            childNodeType = GenericArguments[1];
+            Debug.Assert(childNodeType != null);
+            Debug.Assert(!childNodeType.IsInterface);
         }
 
         public static IBlockList GetBlockList(INode node, string propertyName)
