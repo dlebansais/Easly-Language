@@ -262,13 +262,15 @@ namespace BaseNodeHelper
             return EmptyQueryOverload;
         }
 
-        public static IQueryOverloadType CreateEmptyQueryOverloadType()
+        public static IQueryOverloadType CreateEmptyQueryOverloadType(IObjectType returnType)
         {
+            IName EntityName = CreateSimpleName("Result");
+            IEntityDeclaration ResultEntity = CreateEntityDeclaration(EntityName, returnType);
             QueryOverloadType EmptyQueryOverloadType = new QueryOverloadType();
             EmptyQueryOverloadType.Documentation = CreateEmptyDocumentation();
             EmptyQueryOverloadType.ParameterBlocks  = BlockListHelper<IEntityDeclaration, EntityDeclaration>.CreateEmptyBlockList();
             EmptyQueryOverloadType.ParameterEnd = ParameterEndStatus.Closed;
-            EmptyQueryOverloadType.ResultBlocks = BlockListHelper<IEntityDeclaration, EntityDeclaration>.CreateEmptyBlockList();
+            EmptyQueryOverloadType.ResultBlocks = BlockListHelper<IEntityDeclaration, EntityDeclaration>.CreateSimpleBlockList(ResultEntity);
             EmptyQueryOverloadType.RequireBlocks = BlockListHelper<IAssertion, Assertion>.CreateEmptyBlockList();
             EmptyQueryOverloadType.EnsureBlocks = BlockListHelper<IAssertion, Assertion>.CreateEmptyBlockList();
             EmptyQueryOverloadType.ExceptionIdentifierBlocks = BlockListHelper<IIdentifier, Identifier>.CreateEmptyBlockList();
@@ -1411,9 +1413,9 @@ namespace BaseNodeHelper
             return Result;
         }
 
-        public static IFunctionType CreateFunctionType(IObjectType baseType)
+        public static IFunctionType CreateFunctionType(IObjectType baseType, IObjectType returnType)
         {
-            IQueryOverloadType FirstOverload = CreateEmptyQueryOverloadType();
+            IQueryOverloadType FirstOverload = CreateEmptyQueryOverloadType(returnType);
 
             FunctionType Result = new FunctionType();
             Result.Documentation = CreateEmptyDocumentation();
@@ -2284,62 +2286,246 @@ namespace BaseNodeHelper
             }
         }
 
-        private static bool SimplifyQualifiedName(IQualifiedName Node, out INode SimplifiedNode)
+        public static bool GetComplexifiedNodeList(INode node, out List<INode> complexifiedNodeList)
         {
-            if (Node.Path.Count > 1)
+            complexifiedNodeList = new List<INode>();
+            INode ComplexifiedNode;
+
+            if (node is IQualifiedName AsQualifiedName && ComplexifyQualifiedName(AsQualifiedName, out ComplexifiedNode))
+               complexifiedNodeList.Add(ComplexifiedNode);
+
+            if (node is IPositionalArgument AsPositionalArgument && ComplexifyPositionalArgument(AsPositionalArgument, out ComplexifiedNode))
+                complexifiedNodeList.Add(ComplexifiedNode);
+
+            if (node is IQueryExpression AsQueryExpression)
+            {
+                if (ComplexifyAgentExpression(AsQueryExpression, out ComplexifiedNode))
+                    complexifiedNodeList.Add(ComplexifiedNode);
+
+                if (ComplexifyAssertionTagExpression(AsQueryExpression, out ComplexifiedNode))
+                    complexifiedNodeList.Add(ComplexifiedNode);
+
+                if (ComplexifyBinaryConditionalExpression(AsQueryExpression, out ComplexifiedNode))
+                    complexifiedNodeList.Add(ComplexifiedNode);
+
+                if (ComplexifyBinaryOperatorExpression(AsQueryExpression, out ComplexifiedNode))
+                    complexifiedNodeList.Add(ComplexifiedNode);
+
+                if (ComplexifyClassConstantExpression(AsQueryExpression, out ComplexifiedNode))
+                    complexifiedNodeList.Add(ComplexifiedNode);
+
+                if (ComplexifyCloneOfExpression(AsQueryExpression, out ComplexifiedNode))
+                    complexifiedNodeList.Add(ComplexifiedNode);
+
+                if (ComplexifyEntityExpression(AsQueryExpression, out ComplexifiedNode))
+                    complexifiedNodeList.Add(ComplexifiedNode);
+
+                if (ComplexifyEqualityExpression(AsQueryExpression, out ComplexifiedNode))
+                    complexifiedNodeList.Add(ComplexifiedNode);
+
+                if (ComplexifyIndexQueryExpression(AsQueryExpression, out ComplexifiedNode))
+                    complexifiedNodeList.Add(ComplexifiedNode);
+
+                if (ComplexifyInitializedObjectExpression(AsQueryExpression, out ComplexifiedNode))
+                    complexifiedNodeList.Add(ComplexifiedNode);
+
+                if (ComplexifyKeywordExpression(AsQueryExpression, out ComplexifiedNode))
+                    complexifiedNodeList.Add(ComplexifiedNode);
+
+                if (ComplexifyManifestCharacterExpression(AsQueryExpression, out ComplexifiedNode))
+                    complexifiedNodeList.Add(ComplexifiedNode);
+
+                if (ComplexifyManifestStringExpression(AsQueryExpression, out ComplexifiedNode))
+                    complexifiedNodeList.Add(ComplexifiedNode);
+
+                if (ComplexifyNewExpression(AsQueryExpression, out ComplexifiedNode))
+                    complexifiedNodeList.Add(ComplexifiedNode);
+
+                if (ComplexifyOldExpression(AsQueryExpression, out ComplexifiedNode))
+                    complexifiedNodeList.Add(ComplexifiedNode);
+
+                if (ComplexifyPrecursorExpression(AsQueryExpression, out ComplexifiedNode))
+                    complexifiedNodeList.Add(ComplexifiedNode);
+
+                if (ComplexifyPrecursorIndexExpression(AsQueryExpression, out ComplexifiedNode))
+                    complexifiedNodeList.Add(ComplexifiedNode);
+
+                if (ComplexifyPreprocessorExpression(AsQueryExpression, out ComplexifiedNode))
+                    complexifiedNodeList.Add(ComplexifiedNode);
+
+                if (ComplexifyQueryExpression(AsQueryExpression, out ComplexifiedNode))
+                    complexifiedNodeList.Add(ComplexifiedNode);
+
+                if (ComplexifyResultOfExpression(AsQueryExpression, out ComplexifiedNode))
+                    complexifiedNodeList.Add(ComplexifiedNode);
+
+                if (ComplexifyUnaryNotExpression(AsQueryExpression, out ComplexifiedNode))
+                    complexifiedNodeList.Add(ComplexifiedNode);
+
+                if (ComplexifyUnaryOperatorExpression(AsQueryExpression, out ComplexifiedNode))
+                    complexifiedNodeList.Add(ComplexifiedNode);
+            }
+
+            if (node is ICommandInstruction AsCommandInstruction)
+            {
+                if (ComplexifyAssignmentInstruction(AsCommandInstruction, out ComplexifiedNode))
+                    complexifiedNodeList.Add(ComplexifiedNode);
+
+                if (ComplexifyKeywordAssignmentInstruction(AsCommandInstruction, out ComplexifiedNode))
+                    complexifiedNodeList.Add(ComplexifiedNode);
+            }
+
+            if (node is ISimpleType AsSimpleType)
+            {
+                if (ComplexifyFunctionType(AsSimpleType, out ComplexifiedNode))
+                    complexifiedNodeList.Add(ComplexifiedNode);
+
+                if (ComplexifyGenericType(AsSimpleType, out ComplexifiedNode))
+                    complexifiedNodeList.Add(ComplexifiedNode);
+
+                if (ComplexifyIndexerType(AsSimpleType, out ComplexifiedNode))
+                    complexifiedNodeList.Add(ComplexifiedNode);
+
+                if (ComplexifyPropertyType(AsSimpleType, out ComplexifiedNode))
+                    complexifiedNodeList.Add(ComplexifiedNode);
+
+                if (ComplexifyProcedureType(AsSimpleType, out ComplexifiedNode))
+                    complexifiedNodeList.Add(ComplexifiedNode);
+
+                if (ComplexifyTupleType(AsSimpleType, out ComplexifiedNode))
+                    complexifiedNodeList.Add(ComplexifiedNode);
+            }
+
+            if (node is IPositionalTypeArgument AsPositionalTypeArgument && ComplexifyPositionalTypeArgument(AsPositionalTypeArgument, out ComplexifiedNode))
+                complexifiedNodeList.Add(ComplexifiedNode);
+
+            return complexifiedNodeList.Count > 0;
+        }
+
+        private static bool SimplifyQualifiedName(IQualifiedName node, out INode simplifiedNode)
+        {
+            simplifiedNode = null;
+
+            if (node.Path.Count > 1)
             {
                 string ConcatenatedText = "";
 
-                for (int i = 0; i < Node.Path.Count; i++)
+                for (int i = 0; i < node.Path.Count; i++)
                 {
                     if (i > 0)
                         ConcatenatedText += ".";
 
-                    ConcatenatedText += Node.Path[i].Text;
+                    ConcatenatedText += node.Path[i].Text;
                 }
 
-                SimplifiedNode = CreateSimpleQualifiedName(ConcatenatedText);
-                return true;
+                simplifiedNode = CreateSimpleQualifiedName(ConcatenatedText);
             }
-            else
+
+            return simplifiedNode != null;
+        }
+
+        private static bool ComplexifyQualifiedName(IQualifiedName node, out INode complexifiedNode)
+        {
+            complexifiedNode = null;
+
+            if (node.Path.Count == 1)
             {
-                SimplifiedNode = null;
-                return false;
+                string[] SplitText = node.Path[0].Text.Split('.');
+
+                if (SplitText.Length > 1)
+                {
+                    List<IIdentifier> Path = new List<IIdentifier>();
+                    for (int i = 0; i < SplitText.Length; i++)
+                    {
+                        IIdentifier Identifier = CreateSimpleIdentifier(SplitText[i]);
+                        Path.Add(Identifier);
+                    }
+
+                    complexifiedNode = CreateQualifiedName(Path);
+                    return true;
+                }
             }
+
+            return complexifiedNode != null;
         }
 
-        private static bool SimplifyAssignmentArgument(IAssignmentArgument Node, out INode SimplifiedNode)
+        private static bool SimplifyAssignmentArgument(IAssignmentArgument node, out INode simplifiedNode)
         {
-            SimplifiedNode = CreatePositionalArgument(Node.Source);
+            simplifiedNode = CreatePositionalArgument(node.Source);
             return true;
         }
 
-        private static bool SimplifyPositionalArgument(IPositionalArgument Node, out INode SimplifiedNode)
+        private static bool ComplexifyPositionalArgument(IPositionalArgument node, out INode complexifiedNode)
         {
-            SimplifiedNode = null;
+            List<IIdentifier> IdentifierList = new List<IIdentifier>() { CreateEmptyIdentifier() };
+            complexifiedNode = CreateAssignmentArgument(IdentifierList, node.Source);
             return true;
         }
 
-        private static bool SimplifyAgentExpression(IAgentExpression Node, out INode SimplifiedNode)
+        private static bool SimplifyPositionalArgument(IPositionalArgument node, out INode simplifiedNode)
         {
-            SimplifiedNode = CreateSimpleQueryExpression($"agent {Node.Delegated.Text}");
+            simplifiedNode = null;
             return true;
         }
 
-        private static bool SimplifyAssertionTagExpression(IAssertionTagExpression Node, out INode SimplifiedNode)
+        private static bool SimplifyAgentExpression(IAgentExpression node, out INode simplifiedNode)
         {
-            SimplifiedNode = CreateSimpleQueryExpression($"tag {Node.TagIdentifier.Text}");
+            simplifiedNode = CreateSimpleQueryExpression($"agent {node.Delegated.Text}");
             return true;
         }
 
-        private static bool SimplifyBinaryConditionalExpression(IBinaryConditionalExpression Node, out INode SimplifiedNode)
+        private static bool ComplexifyAgentExpression(IQueryExpression node, out INode complexifiedNode)
         {
+            complexifiedNode = null;
+
+            if (node.ArgumentBlocks.NodeBlockList.Count == 0 && node.Query.Path.Count == 1)
+            {
+                string Text = node.Query.Path[0].Text;
+                
+                if (Text.StartsWith("agent "))
+                {
+                    IIdentifier Delegated = CreateSimpleIdentifier(Text.Substring(6));
+                    complexifiedNode = CreateAgentExpression(Delegated);
+                }
+            }
+
+            return complexifiedNode != null;
+        }
+
+        private static bool SimplifyAssertionTagExpression(IAssertionTagExpression node, out INode simplifiedNode)
+        {
+            simplifiedNode = CreateSimpleQueryExpression($"tag {node.TagIdentifier.Text}");
+            return true;
+        }
+
+        private static bool ComplexifyAssertionTagExpression(IQueryExpression node, out INode complexifiedNode)
+        {
+            complexifiedNode = null;
+
+            if (node.ArgumentBlocks.NodeBlockList.Count == 0 && node.Query.Path.Count == 1)
+            {
+                string Text = node.Query.Path[0].Text;
+
+                if (Text.StartsWith("tag "))
+                {
+                    IIdentifier TagIdentifier = CreateSimpleIdentifier(Text.Substring(4));
+                    complexifiedNode = CreateAssertionTagExpression(TagIdentifier);
+                }
+            }
+
+            return complexifiedNode != null;
+        }
+
+        private static bool SimplifyBinaryConditionalExpression(IBinaryConditionalExpression node, out INode simplifiedNode)
+        {
+            simplifiedNode = null;
+
             string LeftText, RightText;
 
-            if (GetExpressionText(Node.LeftExpression, out LeftText) && GetExpressionText(Node.RightExpression, out RightText))
+            if (GetExpressionText(node.LeftExpression, out LeftText) && GetExpressionText(node.RightExpression, out RightText))
             {
                 string Operator;
-                switch (Node.Conditional)
+                switch (node.Conditional)
                 {
                     case ConditionalTypes.And:
                         Operator = " and ";
@@ -2354,95 +2540,247 @@ namespace BaseNodeHelper
                 }
 
                 string SimplifiedText = LeftText + Operator + RightText;
-                SimplifiedNode = CreateSimpleQueryExpression(SimplifiedText);
-                return true;
+                simplifiedNode = CreateSimpleQueryExpression(SimplifiedText);
             }
-            else
-            {
-                SimplifiedNode = null;
-                return true;
-            }
+
+            return simplifiedNode != null;
         }
 
-        private static bool SimplifyBinaryOperatorExpression(IBinaryOperatorExpression Node, out INode SimplifiedNode)
+        private static bool ComplexifyBinaryConditionalExpression(IQueryExpression node, out INode complexifiedNode)
         {
+            complexifiedNode = null;
+
+            if (node.ArgumentBlocks.NodeBlockList.Count == 0 && node.Query.Path.Count == 1)
+            {
+                string Text = node.Query.Path[0].Text;
+
+                IExpression LeftExpression = null;
+                IExpression RightExpression = null;
+                int OperatorIndex;
+
+                if ((OperatorIndex = Text.IndexOf(" and ")) >= 0)
+                {
+                    LeftExpression = CreateSimpleQueryExpression(Text.Substring(0, OperatorIndex));
+                    RightExpression = CreateSimpleQueryExpression(Text.Substring(OperatorIndex + 5));
+                    complexifiedNode = CreateBinaryConditionalExpression(LeftExpression, ConditionalTypes.And, RightExpression);
+                }
+                else if ((OperatorIndex = Text.IndexOf(" or ")) >= 0)
+                {
+                    LeftExpression = CreateSimpleQueryExpression(Text.Substring(0, OperatorIndex));
+                    RightExpression = CreateSimpleQueryExpression(Text.Substring(OperatorIndex + 4));
+                    complexifiedNode = CreateBinaryConditionalExpression(LeftExpression, ConditionalTypes.Or, RightExpression);
+                }
+            }
+
+            return complexifiedNode != null;
+        }
+
+        private static bool SimplifyBinaryOperatorExpression(IBinaryOperatorExpression node, out INode simplifiedNode)
+        {
+            simplifiedNode = null;
+
             string LeftText, RightText;
 
-            if (GetExpressionText(Node.LeftExpression, out LeftText) && GetExpressionText(Node.RightExpression, out RightText))
+            if (GetExpressionText(node.LeftExpression, out LeftText) && GetExpressionText(node.RightExpression, out RightText))
             {
-                string SimplifiedText = LeftText + " " + Node.Operator.Text + " " + RightText;
-                SimplifiedNode = CreateSimpleQueryExpression(SimplifiedText);
-                return true;
+                string SimplifiedText = LeftText + " " + node.Operator.Text + " " + RightText;
+                simplifiedNode = CreateSimpleQueryExpression(SimplifiedText);
             }
-            else
-            {
-                SimplifiedNode = null;
-                return true;
-            }
+
+            return simplifiedNode != null;
         }
 
-        private static bool SimplifyClassConstantExpression(IClassConstantExpression Node, out INode SimplifiedNode)
+        private static bool ComplexifyBinaryOperatorExpression(IQueryExpression node, out INode complexifiedNode)
         {
-            string MergedText = $"{{{Node.ClassIdentifier.Text}}}{Node.ConstantIdentifier.Text}";
+            complexifiedNode = null;
+
+            if (node.ArgumentBlocks.NodeBlockList.Count == 0 && node.Query.Path.Count == 1)
+            {
+                string Text = node.Query.Path[0].Text;
+
+                int OperatorIndex;
+
+                if ((OperatorIndex = Text.IndexOf("+")) >= 0 ||
+                    (OperatorIndex = Text.IndexOf("-")) >= 0 ||
+                    (OperatorIndex = Text.IndexOf("/")) >= 0 ||
+                    (OperatorIndex = Text.IndexOf("*")) >= 0)
+                {
+                    IExpression LeftExpression = CreateSimpleQueryExpression(Text.Substring(0, OperatorIndex));
+                    IExpression RightExpression = CreateSimpleQueryExpression(Text.Substring(OperatorIndex + 1));
+                    IIdentifier Operator = CreateSimpleIdentifier(Text.Substring(OperatorIndex, 1));
+                    complexifiedNode = CreateBinaryOperatorExpression(LeftExpression, Operator, RightExpression);
+                }
+            }
+
+            return complexifiedNode != null;
+        }
+
+        private static bool SimplifyClassConstantExpression(IClassConstantExpression node, out INode simplifiedNode)
+        {
+            string MergedText = $"{{{node.ClassIdentifier.Text}}}{node.ConstantIdentifier.Text}";
             IQualifiedName Query = StringToQualifiedName(MergedText);
 
-            SimplifiedNode = CreateQueryExpression(Query, new List<IArgument>());
+            simplifiedNode = CreateQueryExpression(Query, new List<IArgument>());
             return true;
         }
 
-        private static bool SimplifyCloneOfExpression(ICloneOfExpression Node, out INode SimplifiedNode)
+        private static bool ComplexifyClassConstantExpression(IQueryExpression node, out INode complexifiedNode)
         {
+            complexifiedNode = null;
+
+            if (node.ArgumentBlocks.NodeBlockList.Count == 0 && node.Query.Path.Count == 1)
+            {
+                string Text = node.Query.Path[0].Text;
+
+                if (Text.StartsWith("{"))
+                {
+                    int ClassNameIndex = Text.IndexOf("}");
+
+                    if (ClassNameIndex > 2)
+                    {
+                        IIdentifier ClassIdentifier = CreateSimpleIdentifier(Text.Substring(1, ClassNameIndex - 1));
+                        IIdentifier ConstantIdentifier = CreateSimpleIdentifier(Text.Substring(ClassNameIndex + 1));
+                        complexifiedNode = CreateClassConstantExpression(ClassIdentifier, ConstantIdentifier);
+                    }
+                }
+            }
+
+            return complexifiedNode != null;
+        }
+
+        private static bool SimplifyCloneOfExpression(ICloneOfExpression node, out INode simplifiedNode)
+        {
+            simplifiedNode = null;
+
             string SourceText;
 
-            if (GetExpressionText(Node.Source, out SourceText))
+            if (GetExpressionText(node.Source, out SourceText))
             {
                 string SimplifiedText = $"clone of {SourceText}";
-                SimplifiedNode = CreateSimpleQueryExpression(SimplifiedText);
-                return true;
+                simplifiedNode = CreateSimpleQueryExpression(SimplifiedText);
             }
-            else
-            {
-                SimplifiedNode = null;
-                return true;
-            }
+
+            return simplifiedNode != null;
         }
 
-        private static bool SimplifyEntityExpression(IEntityExpression Node, out INode SimplifiedNode)
+        private static bool ComplexifyCloneOfExpression(IQueryExpression node, out INode complexifiedNode)
         {
-            string SimplifiedText = $"entity {Node.Query.Path[0].Text}";
-            SimplifiedNode = CreateSimpleQueryExpression(SimplifiedText);
+            complexifiedNode = null;
+
+            if (node.ArgumentBlocks.NodeBlockList.Count == 0 && node.Query.Path.Count == 1)
+            {
+                string Text = node.Query.Path[0].Text;
+
+                if (Text.StartsWith("clone of "))
+                {
+                    IExpression Source = CreateSimpleQueryExpression(Text.Substring(9));
+                    complexifiedNode = CreateCloneOfExpression(Source);
+                }
+            }
+
+            return complexifiedNode != null;
+        }
+
+        private static bool SimplifyEntityExpression(IEntityExpression node, out INode simplifiedNode)
+        {
+            string SimplifiedText = $"entity {node.Query.Path[0].Text}";
+            simplifiedNode = CreateSimpleQueryExpression(SimplifiedText);
             return true;
         }
 
-        private static bool SimplifyEqualityExpression(IEqualityExpression Node, out INode SimplifiedNode)
+        private static bool ComplexifyEntityExpression(IQueryExpression node, out INode complexifiedNode)
         {
+            complexifiedNode = null;
+
+            if (node.ArgumentBlocks.NodeBlockList.Count == 0 && node.Query.Path.Count == 1)
+            {
+                string Text = node.Query.Path[0].Text;
+
+                if (Text.StartsWith("entity "))
+                {
+                    IExpression Source = CreateSimpleQueryExpression(Text.Substring(7));
+                    complexifiedNode = CreateCloneOfExpression(Source);
+                }
+            }
+
+            return complexifiedNode != null;
+        }
+
+        private static bool SimplifyEqualityExpression(IEqualityExpression node, out INode simplifiedNode)
+        {
+            simplifiedNode = null;
+
             string LeftText, RightText;
 
-            if (GetExpressionText(Node.LeftExpression, out LeftText) && GetExpressionText(Node.RightExpression, out RightText))
+            if (GetExpressionText(node.LeftExpression, out LeftText) && GetExpressionText(node.RightExpression, out RightText))
             {
-                string EqualityText = (Node.Comparison == ComparisonType.Equal ? "=" : "/=");
+                string EqualityText = (node.Comparison == ComparisonType.Equal ? "=" : "/=");
                 string SimplifiedText = $"{LeftText} {EqualityText} {RightText}";
-                SimplifiedNode = CreateSimpleQueryExpression(SimplifiedText);
-                return true;
+                simplifiedNode = CreateSimpleQueryExpression(SimplifiedText);
             }
-            else
-            {
-                SimplifiedNode = null;
-                return true;
-            }
+
+            return simplifiedNode != null;
         }
 
-        private static bool SimplifyIndexQueryExpression(IIndexQueryExpression Node, out INode SimplifiedNode)
+        private static bool ComplexifyEqualityExpression(IQueryExpression node, out INode complexifiedNode)
         {
-            SimplifiedNode = Node.IndexedExpression;
+            complexifiedNode = null;
+
+            if (node.ArgumentBlocks.NodeBlockList.Count == 0 && node.Query.Path.Count == 1)
+            {
+                string Text = node.Query.Path[0].Text;
+
+                IExpression LeftExpression = null;
+                IExpression RightExpression = null;
+                int OperatorIndex;
+
+                if ((OperatorIndex = Text.IndexOf(" = ")) >= 0)
+                {
+                    LeftExpression = CreateSimpleQueryExpression(Text.Substring(0, OperatorIndex));
+                    RightExpression = CreateSimpleQueryExpression(Text.Substring(OperatorIndex + 3));
+                    complexifiedNode = CreateEqualityExpression(LeftExpression, ComparisonType.Equal, RightExpression);
+                }
+                else if ((OperatorIndex = Text.IndexOf(" /= ")) >= 0)
+                {
+                    LeftExpression = CreateSimpleQueryExpression(Text.Substring(0, OperatorIndex));
+                    RightExpression = CreateSimpleQueryExpression(Text.Substring(OperatorIndex + 4));
+                    complexifiedNode = CreateEqualityExpression(LeftExpression, ComparisonType.Different, RightExpression);
+                }
+            }
+
+            return complexifiedNode != null;
+        }
+
+        private static bool SimplifyIndexQueryExpression(IIndexQueryExpression node, out INode simplifiedNode)
+        {
+            simplifiedNode = node.IndexedExpression;
             return true;
         }
 
-        private static bool SimplifyInitializedObjectExpression(IInitializedObjectExpression Node, out INode SimplifiedNode)
+        private static bool ComplexifyIndexQueryExpression(IQueryExpression node, out INode complexifiedNode)
         {
-            IQualifiedName Query = StringToQualifiedName(Node.ClassIdentifier.Text);
+            complexifiedNode = null;
 
-            IBlockList<IAssignmentArgument, AssignmentArgument> ObjectBlockList = Node.AssignmentBlocks;
+            if (node.ArgumentBlocks.NodeBlockList.Count == 0 && node.Query.Path.Count == 1)
+            {
+                string Text = node.Query.Path[0].Text;
+
+                if (Text.StartsWith("["))
+                {
+                    IExpression IndexedExpression = CreateSimpleQueryExpression(Text.Substring(1));
+                    List<IArgument> ArgumentList = new List<IArgument>();
+                    complexifiedNode = CreateIndexQueryExpression(IndexedExpression, ArgumentList);
+                }
+            }
+
+            return complexifiedNode != null;
+        }
+
+        private static bool SimplifyInitializedObjectExpression(IInitializedObjectExpression node, out INode simplifiedNode)
+        {
+            IQualifiedName Query = StringToQualifiedName(node.ClassIdentifier.Text);
+
+            IBlockList<IAssignmentArgument, AssignmentArgument> ObjectBlockList = node.AssignmentBlocks;
             BlockList<IArgument, Argument> ArgumentBlocks = new BlockList<IArgument, Argument>();
             ArgumentBlocks.Documentation = NodeHelper.CreateDocumentationCopy(ObjectBlockList.Documentation);
             ArgumentBlocks.NodeBlockList = new List<IBlock<IArgument, Argument>>();
@@ -2480,177 +2818,585 @@ namespace BaseNodeHelper
                 ArgumentBlocks.NodeBlockList.Add(NewBlock);
             }
 
-            SimplifiedNode = CreateQueryExpression(Query, ArgumentBlocks);
+            simplifiedNode = CreateQueryExpression(Query, ArgumentBlocks);
             return true;
         }
 
-        private static bool SimplifyKeywordExpression(IKeywordExpression Node, out INode SimplifiedNode)
+        private static bool ComplexifyInitializedObjectExpression(IQueryExpression node, out INode complexifiedNode)
         {
-            SimplifiedNode = CreateSimpleQueryExpression(Node.Value.ToString());
-            return true;
+            complexifiedNode = null;
+
+            if (node.ArgumentBlocks.NodeBlockList.Count == 0 && node.Query.Path.Count == 1)
+            {
+                string Text = node.Query.Path[0].Text;
+
+                if (Text.StartsWith("{"))
+                {
+                    IIdentifier ClassIdentifier = CreateSimpleIdentifier(Text.Substring(1));
+                    List<IAssignmentArgument> ArgumentList = new List<IAssignmentArgument>();
+                    complexifiedNode = CreateInitializedObjectExpression(ClassIdentifier, ArgumentList);
+                }
+            }
+
+            return complexifiedNode != null;
         }
 
-        private static bool SimplifyManifestCharacterExpression(IManifestCharacterExpression Node, out INode SimplifiedNode)
+        private static bool SimplifyKeywordExpression(IKeywordExpression node, out INode simplifiedNode)
         {
-            SimplifiedNode = CreateSimpleQueryExpression(Node.Text);
+            simplifiedNode = CreateSimpleQueryExpression(node.Value.ToString());
             return true;
         }
 
-        private static bool SimplifyManifestStringExpression(IManifestStringExpression Node, out INode SimplifiedNode)
+        private static bool ComplexifyKeywordExpression(IQueryExpression node, out INode complexifiedNode)
         {
-            SimplifiedNode = CreateSimpleQueryExpression(Node.Text);
-            return true;
+            complexifiedNode = null;
+
+            if (node.ArgumentBlocks.NodeBlockList.Count == 0 && node.Query.Path.Count == 1)
+            {
+                string Text = node.Query.Path[0].Text;
+
+                if (Text == "True")
+                    complexifiedNode = CreateKeywordExpression(Keyword.True);
+                else if (Text == "False")
+                    complexifiedNode = CreateKeywordExpression(Keyword.False);
+                else if (Text == "Current")
+                    complexifiedNode = CreateKeywordExpression(Keyword.Current);
+                else if (Text == "Value")
+                    complexifiedNode = CreateKeywordExpression(Keyword.Value);
+                else if (Text == "Result")
+                    complexifiedNode = CreateKeywordExpression(Keyword.Result);
+                else if (Text == "Retry")
+                    complexifiedNode = CreateKeywordExpression(Keyword.Retry);
+                else if (Text == "Exception")
+                    complexifiedNode = CreateKeywordExpression(Keyword.Exception);
+            }
+
+            return complexifiedNode != null;
         }
 
-        private static bool SimplifyNewExpression(INewExpression Node, out INode SimplifiedNode)
+        private static bool SimplifyManifestCharacterExpression(IManifestCharacterExpression node, out INode simplifiedNode)
         {
-            SimplifiedNode = CreateQueryExpression(Node.Object, new List<IArgument>());
+            simplifiedNode = CreateSimpleQueryExpression(node.Text);
             return true;
         }
 
-        private static bool SimplifyOldExpression(IOldExpression Node, out INode SimplifiedNode)
+        private static bool ComplexifyManifestCharacterExpression(IQueryExpression node, out INode complexifiedNode)
         {
-            SimplifiedNode = CreateQueryExpression(Node.Query, new List<IArgument>());
+            complexifiedNode = null;
+
+            if (node.ArgumentBlocks.NodeBlockList.Count == 0 && node.Query.Path.Count == 1)
+            {
+                string Text = node.Query.Path[0].Text;
+
+                if (Text.Length == 3 && Text[0] == '\'' && Text[2] == '\'')
+                    complexifiedNode = CreateManifestCharacterExpression(Text.Substring(1, 1));
+            }
+
+            return complexifiedNode != null;
+        }
+
+        private static bool SimplifyManifestStringExpression(IManifestStringExpression node, out INode simplifiedNode)
+        {
+            simplifiedNode = CreateSimpleQueryExpression(node.Text);
             return true;
         }
 
-        private static bool SimplifyPrecursorExpression(IPrecursorExpression Node, out INode SimplifiedNode)
+        private static bool ComplexifyManifestStringExpression(IQueryExpression node, out INode complexifiedNode)
+        {
+            complexifiedNode = null;
+
+            if (node.ArgumentBlocks.NodeBlockList.Count == 0 && node.Query.Path.Count == 1)
+            {
+                string Text = node.Query.Path[0].Text;
+
+                if (Text.Length >= 2 && Text[0] == '"' && Text[Text.Length - 1] == '"')
+                    complexifiedNode = CreateManifestStringExpression(Text.Substring(1, Text.Length - 2));
+            }
+
+            return complexifiedNode != null;
+        }
+
+        private static bool SimplifyNewExpression(INewExpression node, out INode simplifiedNode)
+        {
+            simplifiedNode = CreateQueryExpression(node.Object, new List<IArgument>());
+            return true;
+        }
+
+        private static bool ComplexifyNewExpression(IQueryExpression node, out INode complexifiedNode)
+        {
+            complexifiedNode = null;
+
+            if (node.ArgumentBlocks.NodeBlockList.Count == 0 && node.Query.Path.Count == 1)
+            {
+                string Text = node.Query.Path[0].Text;
+
+                if (Text.StartsWith("new "))
+                {
+                    IQualifiedName ObjectName = CreateSimpleQualifiedName(Text.Substring(4));
+                    complexifiedNode = CreateNewExpression(ObjectName);
+                }
+            }
+
+            return complexifiedNode != null;
+        }
+
+        private static bool SimplifyOldExpression(IOldExpression node, out INode simplifiedNode)
+        {
+            simplifiedNode = CreateQueryExpression(node.Query, new List<IArgument>());
+            return true;
+        }
+
+        private static bool ComplexifyOldExpression(IQueryExpression node, out INode complexifiedNode)
+        {
+            complexifiedNode = null;
+
+            if (node.ArgumentBlocks.NodeBlockList.Count == 0 && node.Query.Path.Count == 1)
+            {
+                string Text = node.Query.Path[0].Text;
+
+                if (Text.StartsWith("old "))
+                {
+                    IQualifiedName Query = CreateSimpleQualifiedName(Text.Substring(4));
+                    complexifiedNode = CreateOldExpression(Query);
+                }
+            }
+
+            return complexifiedNode != null;
+        }
+
+        private static bool SimplifyPrecursorExpression(IPrecursorExpression node, out INode simplifiedNode)
         {
             IQualifiedName Query = CreateSimpleQualifiedName("precursor");
-            SimplifiedNode = CreateQueryExpression(Query, Node.ArgumentBlocks);
+            simplifiedNode = CreateQueryExpression(Query, node.ArgumentBlocks);
             return true;
         }
 
-        private static bool SimplifyPrecursorIndexExpression(IPrecursorIndexExpression Node, out INode SimplifiedNode)
+        private static bool ComplexifyPrecursorExpression(IQueryExpression node, out INode complexifiedNode)
+        {
+            complexifiedNode = null;
+
+            if (node.ArgumentBlocks.NodeBlockList.Count == 0 && node.Query.Path.Count == 1)
+            {
+                string Text = node.Query.Path[0].Text;
+
+                if (Text.StartsWith("precursor"))
+                {
+                    List<IArgument> ArgumentList = new List<IArgument>();
+                    complexifiedNode = CreatePrecursorExpression(ArgumentList);
+                }
+            }
+
+            return complexifiedNode != null;
+        }
+
+        private static bool SimplifyPrecursorIndexExpression(IPrecursorIndexExpression node, out INode simplifiedNode)
         {
             IQualifiedName Query = CreateSimpleQualifiedName("precursor[]");
-            SimplifiedNode = CreateQueryExpression(Query, Node.ArgumentBlocks);
+            simplifiedNode = CreateQueryExpression(Query, node.ArgumentBlocks);
             return true;
         }
 
-        private static bool SimplifyPreprocessorExpression(IPreprocessorExpression Node, out INode SimplifiedNode)
+        private static bool ComplexifyPrecursorIndexExpression(IQueryExpression node, out INode complexifiedNode)
         {
-            SimplifiedNode = CreateSimpleQueryExpression(Node.Value.ToString());
+            complexifiedNode = null;
+
+            if (node.ArgumentBlocks.NodeBlockList.Count == 0 && node.Query.Path.Count == 1)
+            {
+                string Text = node.Query.Path[0].Text;
+
+                if (Text.StartsWith("precursor["))
+                {
+                    List<IArgument> ArgumentList = new List<IArgument>();
+                    complexifiedNode = CreatePrecursorIndexExpression(ArgumentList);
+                }
+            }
+
+            return complexifiedNode != null;
+        }
+
+        private static bool SimplifyPreprocessorExpression(IPreprocessorExpression node, out INode simplifiedNode)
+        {
+            simplifiedNode = CreateSimpleQueryExpression(node.Value.ToString());
             return true;
         }
 
-        private static bool SimplifyQueryExpression(IQueryExpression Node, out INode SimplifiedNode)
+        private static bool ComplexifyPreprocessorExpression(IQueryExpression node, out INode complexifiedNode)
         {
-            IBlockList<IArgument, Argument> ArgumentBlocks = Node.ArgumentBlocks;
+            complexifiedNode = null;
+
+            if (node.ArgumentBlocks.NodeBlockList.Count == 0 && node.Query.Path.Count == 1)
+            {
+                string Text = node.Query.Path[0].Text;
+
+                if (Text == "DateAndTime")
+                    complexifiedNode = CreatePreprocessorExpression(PreprocessorMacro.DateAndTime);
+                else if (Text == "CompilationDiscreteIdentifier")
+                    complexifiedNode = CreatePreprocessorExpression(PreprocessorMacro.CompilationDiscreteIdentifier);
+                else if (Text == "ClassPath")
+                    complexifiedNode = CreatePreprocessorExpression(PreprocessorMacro.ClassPath);
+                else if (Text == "CompilerVersion")
+                    complexifiedNode = CreatePreprocessorExpression(PreprocessorMacro.CompilerVersion);
+                else if (Text == "ConformanceToStandard")
+                    complexifiedNode = CreatePreprocessorExpression(PreprocessorMacro.ConformanceToStandard);
+                else if (Text == "DiscreteClassIdentifier")
+                    complexifiedNode = CreatePreprocessorExpression(PreprocessorMacro.DiscreteClassIdentifier);
+                else if (Text == "Counter")
+                    complexifiedNode = CreatePreprocessorExpression(PreprocessorMacro.Counter);
+                else if (Text == "Debugging")
+                    complexifiedNode = CreatePreprocessorExpression(PreprocessorMacro.Debugging);
+                else if (Text == "RandomInteger")
+                    complexifiedNode = CreatePreprocessorExpression(PreprocessorMacro.RandomInteger);
+            }
+
+            return complexifiedNode != null;
+        }
+
+        private static bool SimplifyQueryExpression(IQueryExpression node, out INode simplifiedNode)
+        {
+            simplifiedNode = null;
+
+            IBlockList<IArgument, Argument> ArgumentBlocks = node.ArgumentBlocks;
             if (ArgumentBlocks.NodeBlockList.Count > 0)
             {
-                SimplifiedNode = CreateQueryExpression(Node.Query, new List<IArgument>());
-                return true;
+                simplifiedNode = CreateQueryExpression(node.Query, new List<IArgument>());
             }
-            else
-            {
-                SimplifiedNode = null;
-                return false;
-            }
+
+            return simplifiedNode != null;
         }
 
-        private static bool SimplifyResultOfExpression(IResultOfExpression Node, out INode SimplifiedNode)
+        private static bool ComplexifyQueryExpression(IQueryExpression node, out INode complexifiedNode)
         {
+            complexifiedNode = null;
+
+            if (node.ArgumentBlocks.NodeBlockList.Count == 0 && node.Query.Path.Count == 1)
+            {
+                string Text = node.Query.Path[0].Text;
+                int ArgumentBeginIndex = Text.IndexOf("(");
+                int ArgumentEndIndex = Text.IndexOf(")");
+
+                if (ArgumentBeginIndex >= 0 && ArgumentEndIndex > ArgumentBeginIndex)
+                {
+                    IQualifiedName Query = CreateSimpleQualifiedName(Text.Substring(0, ArgumentBeginIndex));
+
+                    IExpression Source = CreateSimpleQueryExpression(Text.Substring(ArgumentBeginIndex + 1, ArgumentEndIndex - ArgumentBeginIndex - 1));
+                    IPositionalArgument Argument = CreatePositionalArgument(Source);
+                    List<IArgument> ArgumentList = new List<IArgument>();
+                    ArgumentList.Add(Argument);
+
+                    complexifiedNode = CreateQueryExpression(Query, ArgumentList);
+                }
+            }
+
+            return complexifiedNode != null;
+        }
+
+        private static bool SimplifyResultOfExpression(IResultOfExpression node, out INode simplifiedNode)
+        {
+            simplifiedNode = null;
+
             string SourceText;
 
-            if (GetExpressionText(Node.Source, out SourceText))
+            if (GetExpressionText(node.Source, out SourceText))
             {
                 string SimplifiedText = $"result of {SourceText}";
-                SimplifiedNode = CreateSimpleQueryExpression(SimplifiedText);
-                return true;
+                simplifiedNode = CreateSimpleQueryExpression(SimplifiedText);
             }
-            else
-            {
-                SimplifiedNode = null;
-                return true;
-            }
+
+            return simplifiedNode != null;
         }
 
-        private static bool SimplifyUnaryNotExpression(IUnaryNotExpression Node, out INode SimplifiedNode)
+        private static bool ComplexifyResultOfExpression(IQueryExpression node, out INode complexifiedNode)
         {
+            complexifiedNode = null;
+
+            if (node.ArgumentBlocks.NodeBlockList.Count == 0 && node.Query.Path.Count == 1)
+            {
+                string Text = node.Query.Path[0].Text;
+
+                if (Text.StartsWith("result of "))
+                {
+                    IExpression Source = CreateSimpleQueryExpression(Text.Substring(10));
+                    complexifiedNode = CreateResultOfExpression(Source);
+                }
+            }
+
+            return complexifiedNode != null;
+        }
+
+        private static bool SimplifyUnaryNotExpression(IUnaryNotExpression node, out INode simplifiedNode)
+        {
+            simplifiedNode = null;
+
             string RightText;
 
-            if (GetExpressionText(Node.RightExpression, out RightText))
+            if (GetExpressionText(node.RightExpression, out RightText))
             {
                 string SimplifiedText = $"not {RightText}";
-                SimplifiedNode = CreateSimpleQueryExpression(SimplifiedText);
-                return true;
+                simplifiedNode = CreateSimpleQueryExpression(SimplifiedText);
             }
-            else
-            {
-                SimplifiedNode = null;
-                return true;
-            }
+
+            return simplifiedNode != null;
         }
 
-        private static bool SimplifyUnaryOperatorExpression(IUnaryOperatorExpression Node, out INode SimplifiedNode)
+        private static bool ComplexifyUnaryNotExpression(IQueryExpression node, out INode complexifiedNode)
         {
+            complexifiedNode = null;
+
+            if (node.ArgumentBlocks.NodeBlockList.Count == 0 && node.Query.Path.Count == 1)
+            {
+                string Text = node.Query.Path[0].Text;
+
+                if (Text.StartsWith("not "))
+                {
+                    IExpression LeftExpression = CreateSimpleQueryExpression(Text.Substring(4));
+                    complexifiedNode = CreateUnaryNotExpression(LeftExpression);
+                }
+            }
+
+            return complexifiedNode != null;
+        }
+
+        private static bool SimplifyUnaryOperatorExpression(IUnaryOperatorExpression node, out INode simplifiedNode)
+        {
+            simplifiedNode = null;
+
             string RightText;
 
-            if (GetExpressionText(Node.RightExpression, out RightText))
+            if (GetExpressionText(node.RightExpression, out RightText))
             {
-                string SimplifiedText = $"{Node.Operator.Text} {RightText}";
-                SimplifiedNode = CreateSimpleQueryExpression(SimplifiedText);
-                return true;
+                string SimplifiedText = $"{node.Operator.Text} {RightText}";
+                simplifiedNode = CreateSimpleQueryExpression(SimplifiedText);
             }
-            else
+
+            return simplifiedNode != null;
+        }
+
+        private static bool ComplexifyUnaryOperatorExpression(IQueryExpression node, out INode complexifiedNode)
+        {
+            complexifiedNode = null;
+
+            if (node.ArgumentBlocks.NodeBlockList.Count == 0 && node.Query.Path.Count == 1)
             {
-                SimplifiedNode = null;
-                return true;
+                string Text = node.Query.Path[0].Text;
+
+                if (Text.StartsWith("- "))
+                {
+                    IIdentifier OperatorName = CreateSimpleIdentifier("-");
+                    IExpression LeftExpression = CreateSimpleQueryExpression(Text.Substring(2));
+                    complexifiedNode = CreateUnaryOperatorExpression(OperatorName, LeftExpression);
+                }
             }
+
+            return complexifiedNode != null;
         }
 
-        private static bool SimplifyAssignmentInstruction(IAssignmentInstruction Node, out INode SimplifiedNode)
+        private static bool SimplifyAssignmentInstruction(IAssignmentInstruction node, out INode simplifiedNode)
         {
-            SimplifiedNode = CreateEmptyCommandInstruction();
+            simplifiedNode = CreateEmptyCommandInstruction();
             return true;
         }
 
-        private static bool SimplifyKeywordAssignmentInstruction(IKeywordAssignmentInstruction Node, out INode SimplifiedNode)
+        private static bool ComplexifyAssignmentInstruction(ICommandInstruction node, out INode complexifiedNode)
         {
-            SimplifiedNode = CreateEmptyCommandInstruction();
+            complexifiedNode = null;
+
+            if (node.ArgumentBlocks.NodeBlockList.Count == 0 && node.Command.Path.Count == 1)
+            {
+                string Text = node.Command.Path[0].Text;
+                int AssignmentIndex = Text.IndexOf(":=");
+
+                if (AssignmentIndex >= 0)
+                {
+                    IQualifiedName Assignment = CreateSimpleQualifiedName(Text.Substring(0, AssignmentIndex));
+                    List<IQualifiedName> AssignmentList = new List<IQualifiedName>();
+                    AssignmentList.Add(Assignment);
+
+                    IExpression Source = CreateSimpleQueryExpression(Text.Substring(AssignmentIndex + 2));
+
+                    complexifiedNode = CreateAssignmentInstruction(AssignmentList, Source);
+                }
+            }
+
+            return complexifiedNode != null;
+        }
+
+        private static bool SimplifyKeywordAssignmentInstruction(IKeywordAssignmentInstruction node, out INode simplifiedNode)
+        {
+            simplifiedNode = CreateEmptyCommandInstruction();
             return true;
         }
 
-        private static bool SimplifyFunctionType(IFunctionType Node, out INode SimplifiedNode)
+        private static bool ComplexifyKeywordAssignmentInstruction(ICommandInstruction node, out INode complexifiedNode)
         {
-            SimplifiedNode = Node.BaseType;
+            complexifiedNode = null;
+
+            if (node.ArgumentBlocks.NodeBlockList.Count == 0 && node.Command.Path.Count == 1)
+            {
+                string Text = node.Command.Path[0].Text;
+
+                if (Text.StartsWith("Result:="))
+                {
+                    IExpression Source = CreateSimpleQueryExpression(Text.Substring(8));
+                    complexifiedNode = CreateKeywordAssignmentInstruction(Keyword.Result, Source);
+                }
+
+                else if (Text.StartsWith("Retry:="))
+                {
+                    IExpression Source = CreateSimpleQueryExpression(Text.Substring(7));
+                    complexifiedNode = CreateKeywordAssignmentInstruction(Keyword.Retry, Source);
+                }
+            }
+
+            return complexifiedNode != null;
+        }
+
+        private static bool SimplifyFunctionType(IFunctionType node, out INode simplifiedNode)
+        {
+            simplifiedNode = node.BaseType;
             return true;
         }
 
-        private static bool SimplifyGenericType(IGenericType Node, out INode SimplifiedNode)
+        private static bool ComplexifyFunctionType(ISimpleType node, out INode complexifiedNode)
         {
-            SimplifiedNode = CreateSimpleType(Node.ClassIdentifier);
+            complexifiedNode = null;
+
+            string Text = node.ClassIdentifier.Text;
+
+            if (Text.StartsWith("function "))
+            {
+                ISimpleType BaseType = CreateSimpleSimpleType(Text.Substring(9));
+                ISimpleType ReturnType = CreateSimpleSimpleType("");
+                complexifiedNode = CreateFunctionType(BaseType, ReturnType);
+            }
+
+            return complexifiedNode != null;
+        }
+
+        private static bool SimplifyGenericType(IGenericType node, out INode simplifiedNode)
+        {
+            simplifiedNode = CreateSimpleType(node.ClassIdentifier);
             return true;
         }
 
-        private static bool SimplifyIndexerType(IIndexerType Node, out INode SimplifiedNode)
+        private static bool ComplexifyGenericType(ISimpleType node, out INode complexifiedNode)
         {
-            SimplifiedNode = Node.BaseType;
+            complexifiedNode = null;
+
+            string Text = node.ClassIdentifier.Text;
+            int GenericBeginIndex = Text.IndexOf("[");
+            int GenericEndIndex = Text.IndexOf("]");
+
+            if (GenericBeginIndex >= 0 && GenericEndIndex > GenericBeginIndex)
+            {
+                IIdentifier ClassIdentifier = CreateSimpleIdentifier(Text.Substring(0, GenericBeginIndex));
+
+                ISimpleType TypeSource = CreateSimpleSimpleType(Text.Substring(GenericBeginIndex + 1, GenericEndIndex - GenericBeginIndex - 2));
+                ITypeArgument TypeArgument = CreatePositionalTypeArgument(TypeSource);
+                List<ITypeArgument> TypeArgumentList = new List<ITypeArgument>() { TypeArgument };
+
+                complexifiedNode = CreateGenericType(ClassIdentifier, TypeArgumentList);
+            }
+
+            return complexifiedNode != null;
+        }
+
+        private static bool SimplifyIndexerType(IIndexerType node, out INode simplifiedNode)
+        {
+            simplifiedNode = node.BaseType;
             return true;
         }
 
-        private static bool SimplifyPropertyType(IPropertyType Node, out INode SimplifiedNode)
+        private static bool ComplexifyIndexerType(ISimpleType node, out INode complexifiedNode)
         {
-            SimplifiedNode = Node.BaseType;
+            complexifiedNode = null;
+
+            string Text = node.ClassIdentifier.Text;
+
+            if (Text.StartsWith("indexer "))
+            {
+                ISimpleType BaseType = CreateSimpleSimpleType(Text.Substring(8));
+                ISimpleType EntityType = CreateSimpleSimpleType("");
+                complexifiedNode = CreateIndexerType(BaseType, EntityType);
+            }
+
+            return complexifiedNode != null;
+        }
+
+        private static bool SimplifyPropertyType(IPropertyType node, out INode simplifiedNode)
+        {
+            simplifiedNode = node.BaseType;
             return true;
         }
 
-        private static bool SimplifyProcedureType(IProcedureType Node, out INode SimplifiedNode)
+        private static bool ComplexifyPropertyType(ISimpleType node, out INode complexifiedNode)
         {
-            SimplifiedNode = Node.BaseType;
+            complexifiedNode = null;
+
+            string Text = node.ClassIdentifier.Text;
+
+            if (Text.StartsWith("property "))
+            {
+                ISimpleType BaseType = CreateSimpleSimpleType(Text.Substring(9));
+                ISimpleType EntityType = CreateSimpleSimpleType("");
+                complexifiedNode = CreatePropertyType(BaseType, EntityType);
+            }
+
+            return complexifiedNode != null;
+        }
+
+        private static bool SimplifyProcedureType(IProcedureType node, out INode simplifiedNode)
+        {
+            simplifiedNode = node.BaseType;
             return true;
         }
 
-        private static bool SimplifyTupleType(ITupleType Node, out INode SimplifiedNode)
+        private static bool ComplexifyProcedureType(ISimpleType node, out INode complexifiedNode)
         {
-            SimplifiedNode = CreateEmptySimpleType();
+            complexifiedNode = null;
+
+            string Text = node.ClassIdentifier.Text;
+
+            if (Text.StartsWith("procedure "))
+            {
+                ISimpleType BaseType = CreateSimpleSimpleType(Text.Substring(10));
+                complexifiedNode = CreateProcedureType(BaseType);
+            }
+
+            return complexifiedNode != null;
+        }
+
+        private static bool SimplifyTupleType(ITupleType node, out INode simplifiedNode)
+        {
+            simplifiedNode = CreateEmptySimpleType();
             return true;
         }
 
-        private static bool SimplifyAssignmentTypeArgument(IAssignmentTypeArgument Node, out INode SimplifiedNode)
+        private static bool ComplexifyTupleType(ISimpleType node, out INode complexifiedNode)
         {
-            SimplifiedNode = CreatePositionalTypeArgument(Node.Source);
+            complexifiedNode = null;
+
+            string Text = node.ClassIdentifier.Text;
+
+            if (Text.StartsWith("tuple "))
+            {
+                IName EntityName = CreateSimpleName(Text.Substring(6));
+                ISimpleType EntityType = CreateSimpleSimpleType("");
+                IEntityDeclaration Entity = CreateEntityDeclaration(EntityName, EntityType);
+                complexifiedNode = CreateTupleType(Entity);
+            }
+
+            return complexifiedNode != null;
+        }
+
+        private static bool SimplifyAssignmentTypeArgument(IAssignmentTypeArgument node, out INode simplifiedNode)
+        {
+            simplifiedNode = CreatePositionalTypeArgument(node.Source);
+            return true;
+        }
+
+        private static bool ComplexifyPositionalTypeArgument(IPositionalTypeArgument node, out INode complexifiedNode)
+        {
+            complexifiedNode = CreateAssignmentTypeArgument(CreateEmptyIdentifier(), node.Source);
             return true;
         }
 
