@@ -115,5 +115,10 @@ namespace BaseNodeHelper
 
             return Block;
         }
+
+        public static bool IsSimple(IBlockList<IN, N> blockList)
+        {
+            return blockList.NodeBlockList.Count == 1 && blockList.NodeBlockList[0].NodeList.Count == 1;
+        }
     }
 }

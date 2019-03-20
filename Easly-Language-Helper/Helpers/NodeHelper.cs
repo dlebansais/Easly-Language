@@ -875,6 +875,16 @@ namespace BaseNodeHelper
             return Result;
         }
 
+        public static IPrecursorExpression CreatePrecursorExpression(IBlockList<IArgument, Argument> argumentBlocks)
+        {
+            PrecursorExpression Result = new PrecursorExpression();
+            Result.Documentation = CreateEmptyDocumentation();
+            Result.AncestorType = OptionalReferenceHelper<IObjectType>.CreateReference(CreateDefaultType());
+            Result.ArgumentBlocks = argumentBlocks;
+
+            return Result;
+        }
+
         public static IPrecursorIndexExpression CreatePrecursorIndexExpression(List<IArgument> argumentList)
         {
             Debug.Assert(argumentList.Count > 0);
@@ -883,6 +893,18 @@ namespace BaseNodeHelper
             Result.Documentation = CreateEmptyDocumentation();
             Result.AncestorType = OptionalReferenceHelper<IObjectType>.CreateReference(CreateDefaultType());
             Result.ArgumentBlocks = BlockListHelper<IArgument, Argument>.CreateBlockList(argumentList);
+
+            return Result;
+        }
+
+        public static IPrecursorIndexExpression CreatePrecursorIndexExpression(IBlockList<IArgument, Argument> argumentBlocks)
+        {
+            Debug.Assert(argumentBlocks.NodeBlockList.Count > 0);
+
+            PrecursorIndexExpression Result = new PrecursorIndexExpression();
+            Result.Documentation = CreateEmptyDocumentation();
+            Result.AncestorType = OptionalReferenceHelper<IObjectType>.CreateReference(CreateDefaultType());
+            Result.ArgumentBlocks = argumentBlocks;
 
             return Result;
         }
@@ -1250,6 +1272,16 @@ namespace BaseNodeHelper
             return Result;
         }
 
+        public static ICommandInstruction CreateCommandInstruction(IQualifiedName command, IBlockList<IArgument, Argument> argumentBlocks)
+        {
+            CommandInstruction Result = new CommandInstruction();
+            Result.Documentation = CreateEmptyDocumentation();
+            Result.Command = command;
+            Result.ArgumentBlocks = argumentBlocks;
+
+            return Result;
+        }
+
         public static ICreateInstruction CreateCreateInstruction(IIdentifier entityIdentifier, IIdentifier creationRoutineIdentifier, List<IArgument> argumentList)
         {
             CreateInstruction Result = new CreateInstruction();
@@ -1437,13 +1469,13 @@ namespace BaseNodeHelper
             return Result;
         }
 
-        public static IIndexerType CreateIndexerType(IObjectType baseType, IObjectType entityType)
+        public static IIndexerType CreateIndexerType(IObjectType baseType, IObjectType entityType, IEntityDeclaration parameter)
         {
             IndexerType Result = new IndexerType();
             Result.Documentation = CreateEmptyDocumentation();
             Result.BaseType = baseType;
             Result.EntityType = entityType;
-            Result.IndexParameterBlocks = BlockListHelper<IEntityDeclaration, EntityDeclaration>.CreateEmptyBlockList();
+            Result.IndexParameterBlocks = BlockListHelper<IEntityDeclaration, EntityDeclaration>.CreateSimpleBlockList(parameter);
             Result.ParameterEnd = ParameterEndStatus.Closed;
             Result.IndexerKind = UtilityType.ReadWrite;
             Result.GetRequireBlocks = BlockListHelper<IAssertion, Assertion>.CreateEmptyBlockList();
@@ -2216,6 +2248,8 @@ namespace BaseNodeHelper
                     return SimplifyAssignmentArgument(AsAssignmentArgument, out simplifiedNode);
                 case IPositionalArgument AsPositionalArgument:
                     return SimplifyPositionalArgument(AsPositionalArgument, out simplifiedNode);
+                case IQueryExpression AsQueryExpression:
+                    return SimplifyQueryExpression(AsQueryExpression, out simplifiedNode);
                 case IAgentExpression AsAgentExpression:
                     return SimplifyAgentExpression(AsAgentExpression, out simplifiedNode);
                 case IAssertionTagExpression AsAssertionTagExpression:
@@ -2252,14 +2286,14 @@ namespace BaseNodeHelper
                     return SimplifyPrecursorIndexExpression(AsPrecursorIndexExpression, out simplifiedNode);
                 case IPreprocessorExpression AsPreprocessorExpression:
                     return SimplifyPreprocessorExpression(AsPreprocessorExpression, out simplifiedNode);
-                case IQueryExpression AsQueryExpression:
-                    return SimplifyQueryExpression(AsQueryExpression, out simplifiedNode);
                 case IResultOfExpression AsResultOfExpression:
                     return SimplifyResultOfExpression(AsResultOfExpression, out simplifiedNode);
                 case IUnaryNotExpression AsUnaryNotExpression:
                     return SimplifyUnaryNotExpression(AsUnaryNotExpression, out simplifiedNode);
                 case IUnaryOperatorExpression AsUnaryOperatorExpression:
                     return SimplifyUnaryOperatorExpression(AsUnaryOperatorExpression, out simplifiedNode);
+                case ICommandInstruction AsCommandInstruction:
+                    return SimplifyCommandInstruction(AsCommandInstruction, out simplifiedNode);
                 case IAssignmentInstruction AsAssignmentInstruction:
                     return SimplifyAssignmentInstruction(AsAssignmentInstruction, out simplifiedNode);
                 case IKeywordAssignmentInstruction AsKeywordAssignmentInstruction:
@@ -2294,109 +2328,121 @@ namespace BaseNodeHelper
             if (node is IQualifiedName AsQualifiedName && ComplexifyQualifiedName(AsQualifiedName, out ComplexifiedNode))
                complexifiedNodeList.Add(ComplexifiedNode);
 
-            if (node is IPositionalArgument AsPositionalArgument && ComplexifyPositionalArgument(AsPositionalArgument, out ComplexifiedNode))
+            if (node is IPositionalArgument AsPositionalArgument && ComplexifyAsAssignmentArgument(AsPositionalArgument, out ComplexifiedNode))
                 complexifiedNodeList.Add(ComplexifiedNode);
 
             if (node is IQueryExpression AsQueryExpression)
             {
-                if (ComplexifyAgentExpression(AsQueryExpression, out ComplexifiedNode))
-                    complexifiedNodeList.Add(ComplexifiedNode);
-
-                if (ComplexifyAssertionTagExpression(AsQueryExpression, out ComplexifiedNode))
-                    complexifiedNodeList.Add(ComplexifiedNode);
-
-                if (ComplexifyBinaryConditionalExpression(AsQueryExpression, out ComplexifiedNode))
-                    complexifiedNodeList.Add(ComplexifiedNode);
-
-                if (ComplexifyBinaryOperatorExpression(AsQueryExpression, out ComplexifiedNode))
-                    complexifiedNodeList.Add(ComplexifiedNode);
-
-                if (ComplexifyClassConstantExpression(AsQueryExpression, out ComplexifiedNode))
-                    complexifiedNodeList.Add(ComplexifiedNode);
-
-                if (ComplexifyCloneOfExpression(AsQueryExpression, out ComplexifiedNode))
-                    complexifiedNodeList.Add(ComplexifiedNode);
-
-                if (ComplexifyEntityExpression(AsQueryExpression, out ComplexifiedNode))
-                    complexifiedNodeList.Add(ComplexifiedNode);
-
-                if (ComplexifyEqualityExpression(AsQueryExpression, out ComplexifiedNode))
-                    complexifiedNodeList.Add(ComplexifiedNode);
-
-                if (ComplexifyIndexQueryExpression(AsQueryExpression, out ComplexifiedNode))
-                    complexifiedNodeList.Add(ComplexifiedNode);
-
-                if (ComplexifyInitializedObjectExpression(AsQueryExpression, out ComplexifiedNode))
-                    complexifiedNodeList.Add(ComplexifiedNode);
-
-                if (ComplexifyKeywordExpression(AsQueryExpression, out ComplexifiedNode))
-                    complexifiedNodeList.Add(ComplexifiedNode);
-
-                if (ComplexifyManifestCharacterExpression(AsQueryExpression, out ComplexifiedNode))
-                    complexifiedNodeList.Add(ComplexifiedNode);
-
-                if (ComplexifyManifestStringExpression(AsQueryExpression, out ComplexifiedNode))
-                    complexifiedNodeList.Add(ComplexifiedNode);
-
-                if (ComplexifyNewExpression(AsQueryExpression, out ComplexifiedNode))
-                    complexifiedNodeList.Add(ComplexifiedNode);
-
-                if (ComplexifyOldExpression(AsQueryExpression, out ComplexifiedNode))
-                    complexifiedNodeList.Add(ComplexifiedNode);
-
-                if (ComplexifyPrecursorExpression(AsQueryExpression, out ComplexifiedNode))
-                    complexifiedNodeList.Add(ComplexifiedNode);
-
-                if (ComplexifyPrecursorIndexExpression(AsQueryExpression, out ComplexifiedNode))
-                    complexifiedNodeList.Add(ComplexifiedNode);
-
-                if (ComplexifyPreprocessorExpression(AsQueryExpression, out ComplexifiedNode))
-                    complexifiedNodeList.Add(ComplexifiedNode);
-
                 if (ComplexifyQueryExpression(AsQueryExpression, out ComplexifiedNode))
                     complexifiedNodeList.Add(ComplexifiedNode);
 
-                if (ComplexifyResultOfExpression(AsQueryExpression, out ComplexifiedNode))
+                if (ComplexifyAsAgentExpression(AsQueryExpression, out ComplexifiedNode))
                     complexifiedNodeList.Add(ComplexifiedNode);
 
-                if (ComplexifyUnaryNotExpression(AsQueryExpression, out ComplexifiedNode))
+                if (ComplexifyAsAssertionTagExpression(AsQueryExpression, out ComplexifiedNode))
                     complexifiedNodeList.Add(ComplexifiedNode);
 
-                if (ComplexifyUnaryOperatorExpression(AsQueryExpression, out ComplexifiedNode))
+                if (ComplexifyAsBinaryAndConditionalExpression(AsQueryExpression, out ComplexifiedNode))
+                    complexifiedNodeList.Add(ComplexifiedNode);
+
+                if (ComplexifyAsBinaryOrConditionalExpression(AsQueryExpression, out ComplexifiedNode))
+                    complexifiedNodeList.Add(ComplexifiedNode);
+
+                if (ComplexifyAsBinaryOperatorExpression(AsQueryExpression, out ComplexifiedNode))
+                    complexifiedNodeList.Add(ComplexifiedNode);
+
+                if (ComplexifyAsClassConstantExpression(AsQueryExpression, out ComplexifiedNode))
+                    complexifiedNodeList.Add(ComplexifiedNode);
+
+                if (ComplexifyAsCloneOfExpression(AsQueryExpression, out ComplexifiedNode))
+                    complexifiedNodeList.Add(ComplexifiedNode);
+
+                if (ComplexifyAsEntityExpression(AsQueryExpression, out ComplexifiedNode))
+                    complexifiedNodeList.Add(ComplexifiedNode);
+
+                if (ComplexifyAsEqualExpression(AsQueryExpression, out ComplexifiedNode))
+                    complexifiedNodeList.Add(ComplexifiedNode);
+
+                if (ComplexifyAsDifferentExpression(AsQueryExpression, out ComplexifiedNode))
+                    complexifiedNodeList.Add(ComplexifiedNode);
+
+                if (ComplexifyAsIndexQueryExpression(AsQueryExpression, out ComplexifiedNode))
+                    complexifiedNodeList.Add(ComplexifiedNode);
+
+                if (ComplexifyAsInitializedObjectExpression(AsQueryExpression, out ComplexifiedNode))
+                    complexifiedNodeList.Add(ComplexifiedNode);
+
+                if (ComplexifyAsKeywordExpression(AsQueryExpression, out ComplexifiedNode))
+                    complexifiedNodeList.Add(ComplexifiedNode);
+
+                if (ComplexifyAsManifestCharacterExpression(AsQueryExpression, out ComplexifiedNode))
+                    complexifiedNodeList.Add(ComplexifiedNode);
+
+                if (ComplexifyAsManifestStringExpression(AsQueryExpression, out ComplexifiedNode))
+                    complexifiedNodeList.Add(ComplexifiedNode);
+
+                if (ComplexifyAsNewExpression(AsQueryExpression, out ComplexifiedNode))
+                    complexifiedNodeList.Add(ComplexifiedNode);
+
+                if (ComplexifyAsOldExpression(AsQueryExpression, out ComplexifiedNode))
+                    complexifiedNodeList.Add(ComplexifiedNode);
+
+                if (ComplexifyAsPrecursorExpression(AsQueryExpression, out ComplexifiedNode))
+                    complexifiedNodeList.Add(ComplexifiedNode);
+
+                if (ComplexifyAsPrecursorIndexExpression(AsQueryExpression, out ComplexifiedNode))
+                    complexifiedNodeList.Add(ComplexifiedNode);
+
+                if (ComplexifyAsPreprocessorExpression(AsQueryExpression, out ComplexifiedNode))
+                    complexifiedNodeList.Add(ComplexifiedNode);
+
+                if (ComplexifyAsResultOfExpression(AsQueryExpression, out ComplexifiedNode))
+                    complexifiedNodeList.Add(ComplexifiedNode);
+
+                if (ComplexifyAsUnaryNotExpression(AsQueryExpression, out ComplexifiedNode))
+                    complexifiedNodeList.Add(ComplexifiedNode);
+
+                if (ComplexifyAsUnaryOperatorExpression(AsQueryExpression, out ComplexifiedNode))
                     complexifiedNodeList.Add(ComplexifiedNode);
             }
 
             if (node is ICommandInstruction AsCommandInstruction)
             {
-                if (ComplexifyAssignmentInstruction(AsCommandInstruction, out ComplexifiedNode))
+                if (ComplexifyCommandInstruction(AsCommandInstruction, out ComplexifiedNode))
                     complexifiedNodeList.Add(ComplexifiedNode);
 
-                if (ComplexifyKeywordAssignmentInstruction(AsCommandInstruction, out ComplexifiedNode))
+                if (ComplexifyAsAssignmentInstruction(AsCommandInstruction, out ComplexifiedNode))
+                    complexifiedNodeList.Add(ComplexifiedNode);
+            }
+
+            if (node is IAssignmentInstruction AsAssignmentInstruction)
+            {
+                if (ComplexifyAsKeywordAssignmentInstruction(AsAssignmentInstruction, out ComplexifiedNode))
                     complexifiedNodeList.Add(ComplexifiedNode);
             }
 
             if (node is ISimpleType AsSimpleType)
             {
-                if (ComplexifyFunctionType(AsSimpleType, out ComplexifiedNode))
+                if (ComplexifyAsFunctionType(AsSimpleType, out ComplexifiedNode))
                     complexifiedNodeList.Add(ComplexifiedNode);
 
-                if (ComplexifyGenericType(AsSimpleType, out ComplexifiedNode))
+                if (ComplexifyAsGenericType(AsSimpleType, out ComplexifiedNode))
                     complexifiedNodeList.Add(ComplexifiedNode);
 
-                if (ComplexifyIndexerType(AsSimpleType, out ComplexifiedNode))
+                if (ComplexifyAsIndexerType(AsSimpleType, out ComplexifiedNode))
                     complexifiedNodeList.Add(ComplexifiedNode);
 
-                if (ComplexifyPropertyType(AsSimpleType, out ComplexifiedNode))
+                if (ComplexifyAsPropertyType(AsSimpleType, out ComplexifiedNode))
                     complexifiedNodeList.Add(ComplexifiedNode);
 
-                if (ComplexifyProcedureType(AsSimpleType, out ComplexifiedNode))
+                if (ComplexifyAsProcedureType(AsSimpleType, out ComplexifiedNode))
                     complexifiedNodeList.Add(ComplexifiedNode);
 
-                if (ComplexifyTupleType(AsSimpleType, out ComplexifiedNode))
+                if (ComplexifyAsTupleType(AsSimpleType, out ComplexifiedNode))
                     complexifiedNodeList.Add(ComplexifiedNode);
             }
 
-            if (node is IPositionalTypeArgument AsPositionalTypeArgument && ComplexifyPositionalTypeArgument(AsPositionalTypeArgument, out ComplexifiedNode))
+            if (node is IPositionalTypeArgument AsPositionalTypeArgument && ComplexifyAsAssignmentTypeArgument(AsPositionalTypeArgument, out ComplexifiedNode))
                 complexifiedNodeList.Add(ComplexifiedNode);
 
             return complexifiedNodeList.Count > 0;
@@ -2451,15 +2497,27 @@ namespace BaseNodeHelper
 
         private static bool SimplifyAssignmentArgument(IAssignmentArgument node, out INode simplifiedNode)
         {
-            simplifiedNode = CreatePositionalArgument(node.Source);
+            IExpression Source = DeepCloneNode(node.Source, cloneCommentGuid: false) as IExpression;
+            simplifiedNode = CreatePositionalArgument(Source);
             return true;
         }
 
-        private static bool ComplexifyPositionalArgument(IPositionalArgument node, out INode complexifiedNode)
+        private static bool ComplexifyAsAssignmentArgument(IPositionalArgument node, out INode complexifiedNode)
         {
-            List<IIdentifier> IdentifierList = new List<IIdentifier>() { CreateEmptyIdentifier() };
-            complexifiedNode = CreateAssignmentArgument(IdentifierList, node.Source);
-            return true;
+            complexifiedNode = null;
+
+            if (node.Source is IQueryExpression AsQueryExpression)
+            {
+                if (ParsePattern(AsQueryExpression, ":=", out string BeforeText, out string AfterText))
+                {
+                    List<IIdentifier> ParameterList = new List<IIdentifier>() { CreateSimpleIdentifier(BeforeText) };
+                    CloneComplexifiedExpression(AsQueryExpression, AfterText, out IExpression Source);
+
+                    complexifiedNode = CreateAssignmentArgument(ParameterList, Source);
+                }
+            }
+
+            return complexifiedNode != null;
         }
 
         private static bool SimplifyPositionalArgument(IPositionalArgument node, out INode simplifiedNode)
@@ -2468,25 +2526,94 @@ namespace BaseNodeHelper
             return true;
         }
 
+        private static bool SimplifyQueryExpression(IQueryExpression node, out INode simplifiedNode)
+        {
+            simplifiedNode = null;
+
+            IQueryExpression ClonedQuery = DeepCloneNode(node, cloneCommentGuid: false) as IQueryExpression;
+            if (ClonedQuery.ArgumentBlocks.NodeBlockList.Count > 0)
+                simplifiedNode = CreateQueryExpression(ClonedQuery.Query, new List<IArgument>());
+
+            return simplifiedNode != null;
+        }
+
+        private static bool ComplexifyQueryExpression(IQueryExpression node, out INode complexifiedNode)
+        {
+            complexifiedNode = null;
+
+            if (node.ArgumentBlocks.NodeBlockList.Count == 0)
+            {
+                int BreakPathIndex = -1;
+                string BeforeText = null;
+                string AfterText = null;
+
+                for (int i = 0; i < node.Query.Path.Count; i++)
+                {
+                    int Index = node.Query.Path[i].Text.IndexOf("(");
+                    if (Index >= 0)
+                    {
+                        string Text = node.Query.Path[i].Text;
+                        BreakPathIndex = i;
+                        BeforeText = Text.Substring(0, Index);
+                        AfterText = Text.Substring(Index + 1);
+                        break;
+                    }
+                }
+
+                if (BreakPathIndex >= 0 && BeforeText != null && AfterText != null)
+                {
+                    string Text = node.Query.Path[node.Query.Path.Count - 1].Text;
+
+                    if (Text.EndsWith(")"))
+                    {
+                        List<IIdentifier> QueryIdentifierList = new List<IIdentifier>();
+                        for (int i = 0; i < BreakPathIndex; i++)
+                            QueryIdentifierList.Add(CreateSimpleIdentifier(node.Query.Path[i].Text));
+                        QueryIdentifierList.Add(CreateSimpleIdentifier(BeforeText));
+
+                        IQualifiedName Query = CreateQualifiedName(QueryIdentifierList);
+
+                        List<IIdentifier> ArgumentIdentifierList = new List<IIdentifier>();
+
+                        if (BreakPathIndex + 1 < node.Query.Path.Count)
+                        {
+                            ArgumentIdentifierList.Add(CreateSimpleIdentifier(AfterText));
+                            for (int i = BreakPathIndex + 1; i + 1 < node.Query.Path.Count; i++)
+                                ArgumentIdentifierList.Add(CreateSimpleIdentifier(node.Query.Path[i].Text));
+                            ArgumentIdentifierList.Add(CreateSimpleIdentifier(Text.Substring(0, Text.Length - 1)));
+                        }
+                        else
+                            ArgumentIdentifierList.Add(CreateSimpleIdentifier(AfterText.Substring(0, AfterText.Length - 1)));
+
+                        IQualifiedName ArgumentQuery = CreateQualifiedName(ArgumentIdentifierList);
+                        IExpression ArgumentExpression = CreateQueryExpression(ArgumentQuery, new List<IArgument>());
+
+                        List<IArgument> ArgumentList = new List<IArgument>();
+                        IPositionalArgument FirstArgument = CreatePositionalArgument(ArgumentExpression);
+                        ArgumentList.Add(FirstArgument);
+
+                        complexifiedNode = CreateQueryExpression(Query, ArgumentList);
+                    }
+                }
+            }
+
+            return complexifiedNode != null;
+        }
+
         private static bool SimplifyAgentExpression(IAgentExpression node, out INode simplifiedNode)
         {
             simplifiedNode = CreateSimpleQueryExpression($"agent {node.Delegated.Text}");
             return true;
         }
 
-        private static bool ComplexifyAgentExpression(IQueryExpression node, out INode complexifiedNode)
+        private static bool ComplexifyAsAgentExpression(IQueryExpression node, out INode complexifiedNode)
         {
             complexifiedNode = null;
 
-            if (node.ArgumentBlocks.NodeBlockList.Count == 0 && node.Query.Path.Count == 1)
+            if (IsQuerySimple(node) && ParsePattern(node, "agent ", out string BeforeText, out string AfterText) && BeforeText.Length == 0)
             {
-                string Text = node.Query.Path[0].Text;
-                
-                if (Text.StartsWith("agent "))
-                {
-                    IIdentifier Delegated = CreateSimpleIdentifier(Text.Substring(6));
-                    complexifiedNode = CreateAgentExpression(Delegated);
-                }
+                IIdentifier Delegated = CreateSimpleIdentifier(AfterText);
+                complexifiedNode = CreateAgentExpression(Delegated);
             }
 
             return complexifiedNode != null;
@@ -2498,19 +2625,14 @@ namespace BaseNodeHelper
             return true;
         }
 
-        private static bool ComplexifyAssertionTagExpression(IQueryExpression node, out INode complexifiedNode)
+        private static bool ComplexifyAsAssertionTagExpression(IQueryExpression node, out INode complexifiedNode)
         {
             complexifiedNode = null;
 
-            if (node.ArgumentBlocks.NodeBlockList.Count == 0 && node.Query.Path.Count == 1)
+            if (IsQuerySimple(node) && ParsePattern(node, "tag ", out string BeforeText, out string AfterText) && BeforeText.Length == 0)
             {
-                string Text = node.Query.Path[0].Text;
-
-                if (Text.StartsWith("tag "))
-                {
-                    IIdentifier TagIdentifier = CreateSimpleIdentifier(Text.Substring(4));
-                    complexifiedNode = CreateAssertionTagExpression(TagIdentifier);
-                }
+                IIdentifier TagIdentifier = CreateSimpleIdentifier(AfterText);
+                complexifiedNode = CreateAssertionTagExpression(TagIdentifier);
             }
 
             return complexifiedNode != null;
@@ -2546,30 +2668,24 @@ namespace BaseNodeHelper
             return simplifiedNode != null;
         }
 
-        private static bool ComplexifyBinaryConditionalExpression(IQueryExpression node, out INode complexifiedNode)
+        private static bool ComplexifyAsBinaryAndConditionalExpression(IQueryExpression node, out INode complexifiedNode)
+        {
+            return ComplexifyAsBinaryConditionalExpression(node, " and ", ConditionalTypes.And, out complexifiedNode);
+        }
+
+        private static bool ComplexifyAsBinaryOrConditionalExpression(IQueryExpression node, out INode complexifiedNode)
+        {
+            return ComplexifyAsBinaryConditionalExpression(node, " or ", ConditionalTypes.Or, out complexifiedNode);
+        }
+
+        private static bool ComplexifyAsBinaryConditionalExpression(IQueryExpression node, string pattern, ConditionalTypes conditionalType, out INode complexifiedNode)
         {
             complexifiedNode = null;
 
-            if (node.ArgumentBlocks.NodeBlockList.Count == 0 && node.Query.Path.Count == 1)
+            if (ParsePattern(node, pattern, out string BeforeText, out string AfterText))
             {
-                string Text = node.Query.Path[0].Text;
-
-                IExpression LeftExpression = null;
-                IExpression RightExpression = null;
-                int OperatorIndex;
-
-                if ((OperatorIndex = Text.IndexOf(" and ")) >= 0)
-                {
-                    LeftExpression = CreateSimpleQueryExpression(Text.Substring(0, OperatorIndex));
-                    RightExpression = CreateSimpleQueryExpression(Text.Substring(OperatorIndex + 5));
-                    complexifiedNode = CreateBinaryConditionalExpression(LeftExpression, ConditionalTypes.And, RightExpression);
-                }
-                else if ((OperatorIndex = Text.IndexOf(" or ")) >= 0)
-                {
-                    LeftExpression = CreateSimpleQueryExpression(Text.Substring(0, OperatorIndex));
-                    RightExpression = CreateSimpleQueryExpression(Text.Substring(OperatorIndex + 4));
-                    complexifiedNode = CreateBinaryConditionalExpression(LeftExpression, ConditionalTypes.Or, RightExpression);
-                }
+                CloneComplexifiedExpression(node, BeforeText, AfterText, out IExpression LeftExpression, out IExpression RightExpression);
+                complexifiedNode = CreateBinaryConditionalExpression(LeftExpression, conditionalType, RightExpression);
             }
 
             return complexifiedNode != null;
@@ -2579,9 +2695,7 @@ namespace BaseNodeHelper
         {
             simplifiedNode = null;
 
-            string LeftText, RightText;
-
-            if (GetExpressionText(node.LeftExpression, out LeftText) && GetExpressionText(node.RightExpression, out RightText))
+            if (GetExpressionText(node.LeftExpression, out string LeftText) && GetExpressionText(node.RightExpression, out string RightText))
             {
                 string SimplifiedText = LeftText + " " + node.Operator.Text + " " + RightText;
                 simplifiedNode = CreateSimpleQueryExpression(SimplifiedText);
@@ -2590,26 +2704,16 @@ namespace BaseNodeHelper
             return simplifiedNode != null;
         }
 
-        private static bool ComplexifyBinaryOperatorExpression(IQueryExpression node, out INode complexifiedNode)
+        private static bool ComplexifyAsBinaryOperatorExpression(IQueryExpression node, out INode complexifiedNode)
         {
             complexifiedNode = null;
 
-            if (node.ArgumentBlocks.NodeBlockList.Count == 0 && node.Query.Path.Count == 1)
+            string Pattern = "+";
+            if (ParsePattern(node, " " + Pattern + " ", out string BeforeText, out string AfterText))
             {
-                string Text = node.Query.Path[0].Text;
-
-                int OperatorIndex;
-
-                if ((OperatorIndex = Text.IndexOf("+")) >= 0 ||
-                    (OperatorIndex = Text.IndexOf("-")) >= 0 ||
-                    (OperatorIndex = Text.IndexOf("/")) >= 0 ||
-                    (OperatorIndex = Text.IndexOf("*")) >= 0)
-                {
-                    IExpression LeftExpression = CreateSimpleQueryExpression(Text.Substring(0, OperatorIndex));
-                    IExpression RightExpression = CreateSimpleQueryExpression(Text.Substring(OperatorIndex + 1));
-                    IIdentifier Operator = CreateSimpleIdentifier(Text.Substring(OperatorIndex, 1));
-                    complexifiedNode = CreateBinaryOperatorExpression(LeftExpression, Operator, RightExpression);
-                }
+                CloneComplexifiedExpression(node, BeforeText, AfterText, out IExpression LeftExpression, out IExpression RightExpression);
+                IIdentifier Operator = CreateSimpleIdentifier(Pattern);
+                complexifiedNode = CreateBinaryOperatorExpression(LeftExpression, Operator, RightExpression);
             }
 
             return complexifiedNode != null;
@@ -2624,11 +2728,11 @@ namespace BaseNodeHelper
             return true;
         }
 
-        private static bool ComplexifyClassConstantExpression(IQueryExpression node, out INode complexifiedNode)
+        private static bool ComplexifyAsClassConstantExpression(IQueryExpression node, out INode complexifiedNode)
         {
             complexifiedNode = null;
 
-            if (node.ArgumentBlocks.NodeBlockList.Count == 0 && node.Query.Path.Count == 1)
+            if (IsQuerySimple(node))
             {
                 string Text = node.Query.Path[0].Text;
 
@@ -2663,19 +2767,14 @@ namespace BaseNodeHelper
             return simplifiedNode != null;
         }
 
-        private static bool ComplexifyCloneOfExpression(IQueryExpression node, out INode complexifiedNode)
+        private static bool ComplexifyAsCloneOfExpression(IQueryExpression node, out INode complexifiedNode)
         {
             complexifiedNode = null;
 
-            if (node.ArgumentBlocks.NodeBlockList.Count == 0 && node.Query.Path.Count == 1)
+            if (ParsePattern(node, "clone of ", out string BeforeText, out string AfterText) && BeforeText.Length == 0)
             {
-                string Text = node.Query.Path[0].Text;
-
-                if (Text.StartsWith("clone of "))
-                {
-                    IExpression Source = CreateSimpleQueryExpression(Text.Substring(9));
-                    complexifiedNode = CreateCloneOfExpression(Source);
-                }
+                CloneComplexifiedExpression(node, AfterText, out IExpression Source);
+                complexifiedNode = CreateCloneOfExpression(Source);
             }
 
             return complexifiedNode != null;
@@ -2688,19 +2787,19 @@ namespace BaseNodeHelper
             return true;
         }
 
-        private static bool ComplexifyEntityExpression(IQueryExpression node, out INode complexifiedNode)
+        private static bool ComplexifyAsEntityExpression(IQueryExpression node, out INode complexifiedNode)
         {
             complexifiedNode = null;
 
-            if (node.ArgumentBlocks.NodeBlockList.Count == 0 && node.Query.Path.Count == 1)
+            if (node.ArgumentBlocks.NodeBlockList.Count == 0 && ParsePattern(node, "entity ", out string BeforeText, out string AfterText) && BeforeText.Length == 0)
             {
-                string Text = node.Query.Path[0].Text;
+                IQualifiedName ClonedQuery = DeepCloneNode(node.Query, cloneCommentGuid: false) as IQualifiedName;
+                Debug.Assert(ClonedQuery != null);
+                Debug.Assert(ClonedQuery.Path.Count > 0);
 
-                if (Text.StartsWith("entity "))
-                {
-                    IExpression Source = CreateSimpleQueryExpression(Text.Substring(7));
-                    complexifiedNode = CreateCloneOfExpression(Source);
-                }
+                NodeTreeHelper.SetString(ClonedQuery.Path[0], "Text", AfterText);
+
+                complexifiedNode = CreateEntityExpression(ClonedQuery);
             }
 
             return complexifiedNode != null;
@@ -2710,9 +2809,7 @@ namespace BaseNodeHelper
         {
             simplifiedNode = null;
 
-            string LeftText, RightText;
-
-            if (GetExpressionText(node.LeftExpression, out LeftText) && GetExpressionText(node.RightExpression, out RightText))
+            if (GetExpressionText(node.LeftExpression, out string LeftText) && GetExpressionText(node.RightExpression, out string RightText))
             {
                 string EqualityText = (node.Comparison == ComparisonType.Equal ? "=" : "/=");
                 string SimplifiedText = $"{LeftText} {EqualityText} {RightText}";
@@ -2722,30 +2819,24 @@ namespace BaseNodeHelper
             return simplifiedNode != null;
         }
 
-        private static bool ComplexifyEqualityExpression(IQueryExpression node, out INode complexifiedNode)
+        private static bool ComplexifyAsEqualExpression(IQueryExpression node, out INode complexifiedNode)
+        {
+            return ComplexifyEqualityExpression(node, " = ", ComparisonType.Equal, out complexifiedNode);
+        }
+
+        private static bool ComplexifyAsDifferentExpression(IQueryExpression node, out INode complexifiedNode)
+        {
+            return ComplexifyEqualityExpression(node, " /= ", ComparisonType.Different, out complexifiedNode);
+        }
+
+        private static bool ComplexifyEqualityExpression(IQueryExpression node, string pattern, ComparisonType comparisonType,  out INode complexifiedNode)
         {
             complexifiedNode = null;
 
-            if (node.ArgumentBlocks.NodeBlockList.Count == 0 && node.Query.Path.Count == 1)
+            if (ParsePattern(node, pattern, out string BeforeText, out string AfterText))
             {
-                string Text = node.Query.Path[0].Text;
-
-                IExpression LeftExpression = null;
-                IExpression RightExpression = null;
-                int OperatorIndex;
-
-                if ((OperatorIndex = Text.IndexOf(" = ")) >= 0)
-                {
-                    LeftExpression = CreateSimpleQueryExpression(Text.Substring(0, OperatorIndex));
-                    RightExpression = CreateSimpleQueryExpression(Text.Substring(OperatorIndex + 3));
-                    complexifiedNode = CreateEqualityExpression(LeftExpression, ComparisonType.Equal, RightExpression);
-                }
-                else if ((OperatorIndex = Text.IndexOf(" /= ")) >= 0)
-                {
-                    LeftExpression = CreateSimpleQueryExpression(Text.Substring(0, OperatorIndex));
-                    RightExpression = CreateSimpleQueryExpression(Text.Substring(OperatorIndex + 4));
-                    complexifiedNode = CreateEqualityExpression(LeftExpression, ComparisonType.Different, RightExpression);
-                }
+                CloneComplexifiedExpression(node, BeforeText, AfterText, out IExpression LeftExpression, out IExpression RightExpression);
+                complexifiedNode = CreateEqualityExpression(LeftExpression, comparisonType, RightExpression);
             }
 
             return complexifiedNode != null;
@@ -2753,23 +2844,76 @@ namespace BaseNodeHelper
 
         private static bool SimplifyIndexQueryExpression(IIndexQueryExpression node, out INode simplifiedNode)
         {
-            simplifiedNode = node.IndexedExpression;
+            if (node.IndexedExpression is IQueryExpression AsQueryExpression && AsQueryExpression.ArgumentBlocks.NodeBlockList.Count == 0)
+            {
+                IQualifiedName Query = DeepCloneNode(AsQueryExpression.Query, cloneCommentGuid: false) as IQualifiedName;
+                IIndexQueryExpression ClonedIndexQuery = DeepCloneNode(node, cloneCommentGuid: false) as IIndexQueryExpression;
+                simplifiedNode = CreateQueryExpression(Query, ClonedIndexQuery.ArgumentBlocks);
+            }
+            else
+                simplifiedNode = DeepCloneNode(node.IndexedExpression, cloneCommentGuid: false) as IExpression;
+
             return true;
         }
 
-        private static bool ComplexifyIndexQueryExpression(IQueryExpression node, out INode complexifiedNode)
+        private static bool ComplexifyAsIndexQueryExpression(IQueryExpression node, out INode complexifiedNode)
         {
             complexifiedNode = null;
 
-            if (node.ArgumentBlocks.NodeBlockList.Count == 0 && node.Query.Path.Count == 1)
+            if (node.ArgumentBlocks.NodeBlockList.Count == 0)
             {
-                string Text = node.Query.Path[0].Text;
+                int BreakPathIndex = -1;
+                string BeforeText = null;
+                string AfterText = null;
 
-                if (Text.StartsWith("["))
+                for (int i = 0; i < node.Query.Path.Count; i++)
                 {
-                    IExpression IndexedExpression = CreateSimpleQueryExpression(Text.Substring(1));
-                    List<IArgument> ArgumentList = new List<IArgument>();
-                    complexifiedNode = CreateIndexQueryExpression(IndexedExpression, ArgumentList);
+                    int Index = node.Query.Path[i].Text.IndexOf("[");
+                    if (Index >= 0)
+                    {
+                        string Text = node.Query.Path[i].Text;
+                        BreakPathIndex = i;
+                        BeforeText = Text.Substring(0, Index);
+                        AfterText = Text.Substring(Index + 1);
+                        break;
+                    }
+                }
+
+                if (BreakPathIndex >= 0 && BeforeText != null && AfterText != null)
+                {
+                    string Text = node.Query.Path[node.Query.Path.Count - 1].Text;
+
+                    if (Text.EndsWith("]"))
+                    {
+                        List<IIdentifier> IndexedIdentifierList = new List<IIdentifier>();
+                        for (int i = 0; i < BreakPathIndex; i++)
+                            IndexedIdentifierList.Add(CreateSimpleIdentifier(node.Query.Path[i].Text));
+                        IndexedIdentifierList.Add(CreateSimpleIdentifier(BeforeText));
+
+                        IQualifiedName IndexedQuery = CreateQualifiedName(IndexedIdentifierList);
+                        IExpression IndexedExpression = CreateQueryExpression(IndexedQuery, new List<IArgument>());
+
+                        List<IIdentifier> ArgumentIdentifierList = new List<IIdentifier>();
+
+                        if (BreakPathIndex + 1 < node.Query.Path.Count)
+                        {
+                            ArgumentIdentifierList.Add(CreateSimpleIdentifier(AfterText));
+                            for (int i = BreakPathIndex + 1; i + 1 < node.Query.Path.Count; i++)
+                                ArgumentIdentifierList.Add(CreateSimpleIdentifier(node.Query.Path[i].Text));
+                            ArgumentIdentifierList.Add(CreateSimpleIdentifier(Text.Substring(0, Text.Length - 1)));
+                        }
+                        else
+                            ArgumentIdentifierList.Add(CreateSimpleIdentifier(AfterText.Substring(0, AfterText.Length - 1)));
+
+                        IQualifiedName ArgumentQuery = CreateQualifiedName(ArgumentIdentifierList);
+                        IExpression ArgumentExpression = CreateQueryExpression(ArgumentQuery, new List<IArgument>());
+
+                        List<IArgument> ArgumentList = new List<IArgument>();
+                        IPositionalArgument FirstArgument = CreatePositionalArgument(ArgumentExpression);
+                        ArgumentList.Add(FirstArgument);
+
+                        complexifiedNode = CreateIndexQueryExpression(IndexedExpression, ArgumentList);
+                    }
                 }
             }
 
@@ -2822,19 +2966,29 @@ namespace BaseNodeHelper
             return true;
         }
 
-        private static bool ComplexifyInitializedObjectExpression(IQueryExpression node, out INode complexifiedNode)
+        private static bool ComplexifyAsInitializedObjectExpression(IQueryExpression node, out INode complexifiedNode)
         {
             complexifiedNode = null;
 
-            if (node.ArgumentBlocks.NodeBlockList.Count == 0 && node.Query.Path.Count == 1)
+            if (IsQuerySimple(node))
             {
                 string Text = node.Query.Path[0].Text;
 
-                if (Text.StartsWith("{"))
+                if (ParsePattern(Text, "[", out string ClassText, out string InitText))
                 {
-                    IIdentifier ClassIdentifier = CreateSimpleIdentifier(Text.Substring(1));
-                    List<IAssignmentArgument> ArgumentList = new List<IAssignmentArgument>();
-                    complexifiedNode = CreateInitializedObjectExpression(ClassIdentifier, ArgumentList);
+                    if (ParsePattern(InitText, ":=", out string ParameterText, out string SourceText) && SourceText.EndsWith("]"))
+                    {
+                        IIdentifier ClassIdentifier = CreateSimpleIdentifier(ClassText);
+
+                        IIdentifier ParameterIdentifier = CreateSimpleIdentifier(ParameterText);
+                        IExpression Source = CreateSimpleQueryExpression(SourceText.Substring(0, SourceText.Length - 1));
+                        IAssignmentArgument FirstArgument = CreateAssignmentArgument(new List<IIdentifier>() { ParameterIdentifier }, Source);
+
+                        List<IAssignmentArgument> ArgumentList = new List<IAssignmentArgument>();
+                        ArgumentList.Add(FirstArgument);
+
+                        complexifiedNode = CreateInitializedObjectExpression(ClassIdentifier, ArgumentList);
+                    }
                 }
             }
 
@@ -2847,28 +3001,32 @@ namespace BaseNodeHelper
             return true;
         }
 
-        private static bool ComplexifyKeywordExpression(IQueryExpression node, out INode complexifiedNode)
+        private static bool ComplexifyAsKeywordExpression(IQueryExpression node, out INode complexifiedNode)
         {
             complexifiedNode = null;
 
-            if (node.ArgumentBlocks.NodeBlockList.Count == 0 && node.Query.Path.Count == 1)
+            if (IsQuerySimple(node))
             {
                 string Text = node.Query.Path[0].Text;
+                if (Text.Length > 0)
+                {
+                    Text = Text.Substring(0, 1).ToUpper() + Text.Substring(1);
 
-                if (Text == "True")
-                    complexifiedNode = CreateKeywordExpression(Keyword.True);
-                else if (Text == "False")
-                    complexifiedNode = CreateKeywordExpression(Keyword.False);
-                else if (Text == "Current")
-                    complexifiedNode = CreateKeywordExpression(Keyword.Current);
-                else if (Text == "Value")
-                    complexifiedNode = CreateKeywordExpression(Keyword.Value);
-                else if (Text == "Result")
-                    complexifiedNode = CreateKeywordExpression(Keyword.Result);
-                else if (Text == "Retry")
-                    complexifiedNode = CreateKeywordExpression(Keyword.Retry);
-                else if (Text == "Exception")
-                    complexifiedNode = CreateKeywordExpression(Keyword.Exception);
+                    if (Text == "True")
+                        complexifiedNode = CreateKeywordExpression(Keyword.True);
+                    else if (Text == "False")
+                        complexifiedNode = CreateKeywordExpression(Keyword.False);
+                    else if (Text == "Current")
+                        complexifiedNode = CreateKeywordExpression(Keyword.Current);
+                    else if (Text == "Value")
+                        complexifiedNode = CreateKeywordExpression(Keyword.Value);
+                    else if (Text == "Result")
+                        complexifiedNode = CreateKeywordExpression(Keyword.Result);
+                    else if (Text == "Retry")
+                        complexifiedNode = CreateKeywordExpression(Keyword.Retry);
+                    else if (Text == "Exception")
+                        complexifiedNode = CreateKeywordExpression(Keyword.Exception);
+                }
             }
 
             return complexifiedNode != null;
@@ -2880,11 +3038,11 @@ namespace BaseNodeHelper
             return true;
         }
 
-        private static bool ComplexifyManifestCharacterExpression(IQueryExpression node, out INode complexifiedNode)
+        private static bool ComplexifyAsManifestCharacterExpression(IQueryExpression node, out INode complexifiedNode)
         {
             complexifiedNode = null;
 
-            if (node.ArgumentBlocks.NodeBlockList.Count == 0 && node.Query.Path.Count == 1)
+            if (IsQuerySimple(node))
             {
                 string Text = node.Query.Path[0].Text;
 
@@ -2901,11 +3059,11 @@ namespace BaseNodeHelper
             return true;
         }
 
-        private static bool ComplexifyManifestStringExpression(IQueryExpression node, out INode complexifiedNode)
+        private static bool ComplexifyAsManifestStringExpression(IQueryExpression node, out INode complexifiedNode)
         {
             complexifiedNode = null;
 
-            if (node.ArgumentBlocks.NodeBlockList.Count == 0 && node.Query.Path.Count == 1)
+            if (IsQuerySimple(node))
             {
                 string Text = node.Query.Path[0].Text;
 
@@ -2918,23 +3076,30 @@ namespace BaseNodeHelper
 
         private static bool SimplifyNewExpression(INewExpression node, out INode simplifiedNode)
         {
-            simplifiedNode = CreateQueryExpression(node.Object, new List<IArgument>());
+            IQualifiedName Query = DeepCloneNode(node.Object, cloneCommentGuid: false) as IQualifiedName;
+
+            Debug.Assert(Query.Path.Count > 0);
+            string Text = Query.Path[0].Text;
+            Text = "new " + Text;
+
+            NodeTreeHelper.SetString(Query.Path[0], "Text", Text);
+            simplifiedNode = CreateQueryExpression(Query, new List<IArgument>());
             return true;
         }
 
-        private static bool ComplexifyNewExpression(IQueryExpression node, out INode complexifiedNode)
+        private static bool ComplexifyAsNewExpression(IQueryExpression node, out INode complexifiedNode)
         {
             complexifiedNode = null;
 
-            if (node.ArgumentBlocks.NodeBlockList.Count == 0 && node.Query.Path.Count == 1)
+            if (node.ArgumentBlocks.NodeBlockList.Count == 0 && ParsePattern(node, "new ", out string BeforeText, out string AfterText) && BeforeText.Length == 0)
             {
-                string Text = node.Query.Path[0].Text;
+                IQualifiedName ClonedQuery = DeepCloneNode(node.Query, cloneCommentGuid: false) as IQualifiedName;
+                Debug.Assert(ClonedQuery != null);
+                Debug.Assert(ClonedQuery.Path.Count > 0);
 
-                if (Text.StartsWith("new "))
-                {
-                    IQualifiedName ObjectName = CreateSimpleQualifiedName(Text.Substring(4));
-                    complexifiedNode = CreateNewExpression(ObjectName);
-                }
+                NodeTreeHelper.SetString(ClonedQuery.Path[0], "Text", AfterText);
+
+                complexifiedNode = CreateNewExpression(ClonedQuery);
             }
 
             return complexifiedNode != null;
@@ -2942,23 +3107,30 @@ namespace BaseNodeHelper
 
         private static bool SimplifyOldExpression(IOldExpression node, out INode simplifiedNode)
         {
-            simplifiedNode = CreateQueryExpression(node.Query, new List<IArgument>());
+            IQualifiedName Query = DeepCloneNode(node.Query, cloneCommentGuid: false) as IQualifiedName;
+
+            Debug.Assert(Query.Path.Count > 0);
+            string Text = Query.Path[0].Text;
+            Text = "old " + Text;
+
+            NodeTreeHelper.SetString(Query.Path[0], "Text", Text);
+            simplifiedNode = CreateQueryExpression(Query, new List<IArgument>());
             return true;
         }
 
-        private static bool ComplexifyOldExpression(IQueryExpression node, out INode complexifiedNode)
+        private static bool ComplexifyAsOldExpression(IQueryExpression node, out INode complexifiedNode)
         {
             complexifiedNode = null;
 
-            if (node.ArgumentBlocks.NodeBlockList.Count == 0 && node.Query.Path.Count == 1)
+            if (node.ArgumentBlocks.NodeBlockList.Count == 0 && ParsePattern(node, "old ", out string BeforeText, out string AfterText) && BeforeText.Length == 0)
             {
-                string Text = node.Query.Path[0].Text;
+                IQualifiedName ClonedQuery = DeepCloneNode(node.Query, cloneCommentGuid: false) as IQualifiedName;
+                Debug.Assert(ClonedQuery != null);
+                Debug.Assert(ClonedQuery.Path.Count > 0);
 
-                if (Text.StartsWith("old "))
-                {
-                    IQualifiedName Query = CreateSimpleQualifiedName(Text.Substring(4));
-                    complexifiedNode = CreateOldExpression(Query);
-                }
+                NodeTreeHelper.SetString(ClonedQuery.Path[0], "Text", AfterText);
+
+                complexifiedNode = CreateOldExpression(ClonedQuery);
             }
 
             return complexifiedNode != null;
@@ -2967,22 +3139,23 @@ namespace BaseNodeHelper
         private static bool SimplifyPrecursorExpression(IPrecursorExpression node, out INode simplifiedNode)
         {
             IQualifiedName Query = CreateSimpleQualifiedName("precursor");
-            simplifiedNode = CreateQueryExpression(Query, node.ArgumentBlocks);
+            IPrecursorExpression ClonedQuery = DeepCloneNode(node, cloneCommentGuid: false) as IPrecursorExpression;
+            simplifiedNode = CreateQueryExpression(Query, ClonedQuery.ArgumentBlocks);
             return true;
         }
 
-        private static bool ComplexifyPrecursorExpression(IQueryExpression node, out INode complexifiedNode)
+        private static bool ComplexifyAsPrecursorExpression(IQueryExpression node, out INode complexifiedNode)
         {
             complexifiedNode = null;
 
-            if (node.ArgumentBlocks.NodeBlockList.Count == 0 && node.Query.Path.Count == 1)
+            if (node.Query.Path.Count == 1)
             {
                 string Text = node.Query.Path[0].Text;
 
-                if (Text.StartsWith("precursor"))
+                if (Text == "precursor")
                 {
-                    List<IArgument> ArgumentList = new List<IArgument>();
-                    complexifiedNode = CreatePrecursorExpression(ArgumentList);
+                    IQueryExpression ClonedQuery = DeepCloneNode(node, cloneCommentGuid: false) as IQueryExpression;
+                    complexifiedNode = CreatePrecursorExpression(ClonedQuery.ArgumentBlocks);
                 }
             }
 
@@ -2992,22 +3165,23 @@ namespace BaseNodeHelper
         private static bool SimplifyPrecursorIndexExpression(IPrecursorIndexExpression node, out INode simplifiedNode)
         {
             IQualifiedName Query = CreateSimpleQualifiedName("precursor[]");
-            simplifiedNode = CreateQueryExpression(Query, node.ArgumentBlocks);
+            IPrecursorIndexExpression ClonedQuery = DeepCloneNode(node, cloneCommentGuid: false) as IPrecursorIndexExpression;
+            simplifiedNode = CreateQueryExpression(Query, ClonedQuery.ArgumentBlocks);
             return true;
         }
 
-        private static bool ComplexifyPrecursorIndexExpression(IQueryExpression node, out INode complexifiedNode)
+        private static bool ComplexifyAsPrecursorIndexExpression(IQueryExpression node, out INode complexifiedNode)
         {
             complexifiedNode = null;
 
-            if (node.ArgumentBlocks.NodeBlockList.Count == 0 && node.Query.Path.Count == 1)
+            if (node.Query.Path.Count == 1 && node.ArgumentBlocks.NodeBlockList.Count > 0)
             {
                 string Text = node.Query.Path[0].Text;
 
-                if (Text.StartsWith("precursor["))
+                if (Text == "precursor[]")
                 {
-                    List<IArgument> ArgumentList = new List<IArgument>();
-                    complexifiedNode = CreatePrecursorIndexExpression(ArgumentList);
+                    IQueryExpression ClonedQuery = DeepCloneNode(node, cloneCommentGuid: false) as IQueryExpression;
+                    complexifiedNode = CreatePrecursorIndexExpression(ClonedQuery.ArgumentBlocks);
                 }
             }
 
@@ -3020,11 +3194,11 @@ namespace BaseNodeHelper
             return true;
         }
 
-        private static bool ComplexifyPreprocessorExpression(IQueryExpression node, out INode complexifiedNode)
+        private static bool ComplexifyAsPreprocessorExpression(IQueryExpression node, out INode complexifiedNode)
         {
             complexifiedNode = null;
 
-            if (node.ArgumentBlocks.NodeBlockList.Count == 0 && node.Query.Path.Count == 1)
+            if (IsQuerySimple(node))
             {
                 string Text = node.Query.Path[0].Text;
 
@@ -3051,45 +3225,6 @@ namespace BaseNodeHelper
             return complexifiedNode != null;
         }
 
-        private static bool SimplifyQueryExpression(IQueryExpression node, out INode simplifiedNode)
-        {
-            simplifiedNode = null;
-
-            IBlockList<IArgument, Argument> ArgumentBlocks = node.ArgumentBlocks;
-            if (ArgumentBlocks.NodeBlockList.Count > 0)
-            {
-                simplifiedNode = CreateQueryExpression(node.Query, new List<IArgument>());
-            }
-
-            return simplifiedNode != null;
-        }
-
-        private static bool ComplexifyQueryExpression(IQueryExpression node, out INode complexifiedNode)
-        {
-            complexifiedNode = null;
-
-            if (node.ArgumentBlocks.NodeBlockList.Count == 0 && node.Query.Path.Count == 1)
-            {
-                string Text = node.Query.Path[0].Text;
-                int ArgumentBeginIndex = Text.IndexOf("(");
-                int ArgumentEndIndex = Text.IndexOf(")");
-
-                if (ArgumentBeginIndex >= 0 && ArgumentEndIndex > ArgumentBeginIndex)
-                {
-                    IQualifiedName Query = CreateSimpleQualifiedName(Text.Substring(0, ArgumentBeginIndex));
-
-                    IExpression Source = CreateSimpleQueryExpression(Text.Substring(ArgumentBeginIndex + 1, ArgumentEndIndex - ArgumentBeginIndex - 1));
-                    IPositionalArgument Argument = CreatePositionalArgument(Source);
-                    List<IArgument> ArgumentList = new List<IArgument>();
-                    ArgumentList.Add(Argument);
-
-                    complexifiedNode = CreateQueryExpression(Query, ArgumentList);
-                }
-            }
-
-            return complexifiedNode != null;
-        }
-
         private static bool SimplifyResultOfExpression(IResultOfExpression node, out INode simplifiedNode)
         {
             simplifiedNode = null;
@@ -3105,19 +3240,14 @@ namespace BaseNodeHelper
             return simplifiedNode != null;
         }
 
-        private static bool ComplexifyResultOfExpression(IQueryExpression node, out INode complexifiedNode)
+        private static bool ComplexifyAsResultOfExpression(IQueryExpression node, out INode complexifiedNode)
         {
             complexifiedNode = null;
 
-            if (node.ArgumentBlocks.NodeBlockList.Count == 0 && node.Query.Path.Count == 1)
+            if (ParsePattern(node, "result of ", out string BeforeText, out string AfterText) && BeforeText.Length == 0)
             {
-                string Text = node.Query.Path[0].Text;
-
-                if (Text.StartsWith("result of "))
-                {
-                    IExpression Source = CreateSimpleQueryExpression(Text.Substring(10));
-                    complexifiedNode = CreateResultOfExpression(Source);
-                }
+                CloneComplexifiedExpression(node, AfterText, out IExpression Source);
+                complexifiedNode = CreateResultOfExpression(Source);
             }
 
             return complexifiedNode != null;
@@ -3138,19 +3268,17 @@ namespace BaseNodeHelper
             return simplifiedNode != null;
         }
 
-        private static bool ComplexifyUnaryNotExpression(IQueryExpression node, out INode complexifiedNode)
+        private static bool ComplexifyAsUnaryNotExpression(IQueryExpression node, out INode complexifiedNode)
         {
             complexifiedNode = null;
 
-            if (node.ArgumentBlocks.NodeBlockList.Count == 0 && node.Query.Path.Count == 1)
-            {
-                string Text = node.Query.Path[0].Text;
+            Debug.Assert(node.Query.Path.Count > 0);
+            string Text = node.Query.Path[0].Text;
 
-                if (Text.StartsWith("not "))
-                {
-                    IExpression LeftExpression = CreateSimpleQueryExpression(Text.Substring(4));
-                    complexifiedNode = CreateUnaryNotExpression(LeftExpression);
-                }
+            if (Text.StartsWith("not "))
+            {
+                CloneComplexifiedExpression(node, Text.Substring(4), out IExpression RightExpression);
+                complexifiedNode = CreateUnaryNotExpression(RightExpression);
             }
 
             return complexifiedNode != null;
@@ -3171,19 +3299,94 @@ namespace BaseNodeHelper
             return simplifiedNode != null;
         }
 
-        private static bool ComplexifyUnaryOperatorExpression(IQueryExpression node, out INode complexifiedNode)
+        private static bool ComplexifyAsUnaryOperatorExpression(IQueryExpression node, out INode complexifiedNode)
         {
             complexifiedNode = null;
 
-            if (node.ArgumentBlocks.NodeBlockList.Count == 0 && node.Query.Path.Count == 1)
-            {
-                string Text = node.Query.Path[0].Text;
+            Debug.Assert(node.Query.Path.Count > 0);
+            string Text = node.Query.Path[0].Text;
 
-                if (Text.StartsWith("- "))
+            string Pattern = "-";
+
+            if (Text.StartsWith(Pattern + " "))
+            {
+                IIdentifier OperatorName = CreateSimpleIdentifier(Pattern);
+
+                CloneComplexifiedExpression(node, Text.Substring(Pattern.Length + 1), out IExpression RightExpression);
+                complexifiedNode = CreateUnaryOperatorExpression(OperatorName, RightExpression);
+            }
+
+            return complexifiedNode != null;
+        }
+
+        private static bool SimplifyCommandInstruction(ICommandInstruction node, out INode simplifiedNode)
+        {
+            simplifiedNode = null;
+
+            ICommandInstruction ClonedCommand = DeepCloneNode(node, cloneCommentGuid: false) as ICommandInstruction;
+            if (ClonedCommand.ArgumentBlocks.NodeBlockList.Count > 0)
+                simplifiedNode = CreateCommandInstruction(ClonedCommand.Command, new List<IArgument>());
+
+            return simplifiedNode != null;
+        }
+
+        private static bool ComplexifyCommandInstruction(ICommandInstruction node, out INode complexifiedNode)
+        {
+            complexifiedNode = null;
+
+            if (node.ArgumentBlocks.NodeBlockList.Count == 0)
+            {
+                int BreakPathIndex = -1;
+                string BeforeText = null;
+                string AfterText = null;
+
+                for (int i = 0; i < node.Command.Path.Count; i++)
                 {
-                    IIdentifier OperatorName = CreateSimpleIdentifier("-");
-                    IExpression LeftExpression = CreateSimpleQueryExpression(Text.Substring(2));
-                    complexifiedNode = CreateUnaryOperatorExpression(OperatorName, LeftExpression);
+                    int Index = node.Command.Path[i].Text.IndexOf("(");
+                    if (Index >= 0)
+                    {
+                        string Text = node.Command.Path[i].Text;
+                        BreakPathIndex = i;
+                        BeforeText = Text.Substring(0, Index);
+                        AfterText = Text.Substring(Index + 1);
+                        break;
+                    }
+                }
+
+                if (BreakPathIndex >= 0 && BeforeText != null && AfterText != null)
+                {
+                    string Text = node.Command.Path[node.Command.Path.Count - 1].Text;
+
+                    if (Text.EndsWith(")"))
+                    {
+                        List<IIdentifier> CommandIdentifierList = new List<IIdentifier>();
+                        for (int i = 0; i < BreakPathIndex; i++)
+                            CommandIdentifierList.Add(CreateSimpleIdentifier(node.Command.Path[i].Text));
+                        CommandIdentifierList.Add(CreateSimpleIdentifier(BeforeText));
+
+                        IQualifiedName Command = CreateQualifiedName(CommandIdentifierList);
+
+                        List<IIdentifier> ArgumentIdentifierList = new List<IIdentifier>();
+
+                        if (BreakPathIndex + 1 < node.Command.Path.Count)
+                        {
+                            ArgumentIdentifierList.Add(CreateSimpleIdentifier(AfterText));
+                            for (int i = BreakPathIndex + 1; i + 1 < node.Command.Path.Count; i++)
+                                ArgumentIdentifierList.Add(CreateSimpleIdentifier(node.Command.Path[i].Text));
+                            ArgumentIdentifierList.Add(CreateSimpleIdentifier(Text.Substring(0, Text.Length - 1)));
+                        }
+                        else
+                            ArgumentIdentifierList.Add(CreateSimpleIdentifier(AfterText.Substring(0, AfterText.Length - 1)));
+
+                        IQualifiedName ArgumentQuery = CreateQualifiedName(ArgumentIdentifierList);
+                        IExpression ArgumentExpression = CreateQueryExpression(ArgumentQuery, new List<IArgument>());
+
+                        List<IArgument> ArgumentList = new List<IArgument>();
+                        IPositionalArgument FirstArgument = CreatePositionalArgument(ArgumentExpression);
+                        ArgumentList.Add(FirstArgument);
+
+                        complexifiedNode = CreateCommandInstruction(Command, ArgumentList);
+                    }
                 }
             }
 
@@ -3192,29 +3395,78 @@ namespace BaseNodeHelper
 
         private static bool SimplifyAssignmentInstruction(IAssignmentInstruction node, out INode simplifiedNode)
         {
-            simplifiedNode = CreateEmptyCommandInstruction();
+            if (BlockListHelper<IQualifiedName, QualifiedName>.IsSimple(node.DestinationBlocks))
+            {
+                IAssignmentInstruction ClonedInstruction = DeepCloneNode(node, cloneCommentGuid: false) as IAssignmentInstruction;
+                IQualifiedName Target = ClonedInstruction.DestinationBlocks.NodeBlockList[0].NodeList[0];
+
+                if (ClonedInstruction.Source is IQueryExpression AsQueryExpression)
+                {
+                    List<IIdentifier> IdentifierList = new List<IIdentifier>();
+                    for (int i = 0; i + 1 < Target.Path.Count; i++)
+                        IdentifierList.Add(Target.Path[i]);
+
+                    IIdentifier MiddleIdentifier = CreateSimpleIdentifier(Target.Path[Target.Path.Count - 1].Text + AsQueryExpression.Query.Path[0].Text);
+                    IdentifierList.Add(MiddleIdentifier);
+
+                    for (int i = 1; i < AsQueryExpression.Query.Path.Count; i++)
+                        IdentifierList.Add(AsQueryExpression.Query.Path[i]);
+
+                    IQualifiedName Command = CreateQualifiedName(IdentifierList);
+                    simplifiedNode = CreateCommandInstruction(Command, AsQueryExpression.ArgumentBlocks);
+                }
+                else
+                {
+                    IArgument FirstArgument = CreatePositionalArgument(ClonedInstruction.Source);
+                    simplifiedNode = CreateCommandInstruction(Target, new List<IArgument>() { FirstArgument });
+                }
+            }
+            else
+                simplifiedNode = CreateEmptyCommandInstruction();
+
             return true;
         }
 
-        private static bool ComplexifyAssignmentInstruction(ICommandInstruction node, out INode complexifiedNode)
+        private static bool ComplexifyAsAssignmentInstruction(ICommandInstruction node, out INode complexifiedNode)
         {
             complexifiedNode = null;
 
-            if (node.ArgumentBlocks.NodeBlockList.Count == 0 && node.Command.Path.Count == 1)
+            int BreakIndex = -1;
+            int BreakTextIndex = -1;
+
+            for (int i = 0; i < node.Command.Path.Count; i++)
             {
-                string Text = node.Command.Path[0].Text;
-                int AssignmentIndex = Text.IndexOf(":=");
-
-                if (AssignmentIndex >= 0)
+                BreakTextIndex = node.Command.Path[i].Text.IndexOf(":=");
+                if (BreakTextIndex >= 0)
                 {
-                    IQualifiedName Assignment = CreateSimpleQualifiedName(Text.Substring(0, AssignmentIndex));
-                    List<IQualifiedName> AssignmentList = new List<IQualifiedName>();
-                    AssignmentList.Add(Assignment);
-
-                    IExpression Source = CreateSimpleQueryExpression(Text.Substring(AssignmentIndex + 2));
-
-                    complexifiedNode = CreateAssignmentInstruction(AssignmentList, Source);
+                    BreakIndex = i;
+                    break;
                 }
+            }
+
+            if (BreakIndex >= 0)
+            {
+                string BeforeText = node.Command.Path[BreakIndex].Text.Substring(0, BreakTextIndex);
+
+                List<IIdentifier> TargetIdentifierList = new List<IIdentifier>();
+                for (int i = 0; i < BreakIndex; i++)
+                    TargetIdentifierList.Add(CreateSimpleIdentifier(node.Command.Path[i].Text));
+                TargetIdentifierList.Add(CreateSimpleIdentifier(BeforeText));
+
+                string AfterText = node.Command.Path[BreakIndex].Text.Substring(BreakTextIndex + 2);
+
+                List<IIdentifier> SourceIdentifierList = new List<IIdentifier>();
+                SourceIdentifierList.Add(CreateSimpleIdentifier(AfterText));
+                for (int i = BreakIndex + 1; i < node.Command.Path.Count; i++)
+                    SourceIdentifierList.Add(CreateSimpleIdentifier(node.Command.Path[i].Text));
+
+                IQualifiedName AssignmentTarget = CreateQualifiedName(TargetIdentifierList);
+
+                ICommandInstruction ClonedCommand = DeepCloneNode(node, cloneCommentGuid: false) as ICommandInstruction;
+                IQualifiedName AssignmentSource = CreateQualifiedName(SourceIdentifierList);
+                IExpression Source = CreateQueryExpression(AssignmentSource, ClonedCommand.ArgumentBlocks);
+
+                complexifiedNode = CreateAssignmentInstruction(new List<IQualifiedName>() { AssignmentTarget }, Source);
             }
 
             return complexifiedNode != null;
@@ -3222,28 +3474,62 @@ namespace BaseNodeHelper
 
         private static bool SimplifyKeywordAssignmentInstruction(IKeywordAssignmentInstruction node, out INode simplifiedNode)
         {
-            simplifiedNode = CreateEmptyCommandInstruction();
+            IIdentifier KeywordIdentifier = CreateSimpleIdentifier(node.Destination.ToString());
+
+            List<IIdentifier> IdentifierList = new List<IIdentifier>();
+            IdentifierList.Add(KeywordIdentifier);
+
+            List<IArgument> ArgumentList = new List<IArgument>();
+            IBlockList<IArgument, Argument> ArgumentBlocks;
+
+            if (node.Source is IQueryExpression AsQueryExpression)
+            {
+                IQueryExpression ClonedSource = DeepCloneNode(AsQueryExpression, cloneCommentGuid: false) as IQueryExpression;
+
+                IdentifierList.AddRange(ClonedSource.Query.Path);
+                ArgumentBlocks = ClonedSource.ArgumentBlocks;
+            }
+            else
+            {
+                IExpression ClonedSource = DeepCloneNode(node.Source, cloneCommentGuid: false) as IExpression;
+                IArgument FirstArgument = CreatePositionalArgument(ClonedSource);
+                ArgumentBlocks = BlockListHelper<IArgument, Argument>.CreateSimpleBlockList(FirstArgument);
+            }
+
+            IQualifiedName Command = CreateQualifiedName(IdentifierList);
+
+            simplifiedNode = CreateCommandInstruction(Command, ArgumentBlocks);
             return true;
         }
 
-        private static bool ComplexifyKeywordAssignmentInstruction(ICommandInstruction node, out INode complexifiedNode)
+        private static bool ComplexifyAsKeywordAssignmentInstruction(IAssignmentInstruction node, out INode complexifiedNode)
         {
             complexifiedNode = null;
 
-            if (node.ArgumentBlocks.NodeBlockList.Count == 0 && node.Command.Path.Count == 1)
+            if (BlockListHelper<IQualifiedName, QualifiedName>.IsSimple(node.DestinationBlocks))
             {
-                string Text = node.Command.Path[0].Text;
-
-                if (Text.StartsWith("Result:="))
+                IQualifiedName AssignmentTarget = node.DestinationBlocks.NodeBlockList[0].NodeList[0];
+                if (AssignmentTarget.Path.Count == 1)
                 {
-                    IExpression Source = CreateSimpleQueryExpression(Text.Substring(8));
-                    complexifiedNode = CreateKeywordAssignmentInstruction(Keyword.Result, Source);
-                }
+                    string Text = AssignmentTarget.Path[0].Text;
+                    if (Text.Length > 0)
+                    {
+                        Text = Text.Substring(0, 1).ToUpper() + Text.Substring(1);
 
-                else if (Text.StartsWith("Retry:="))
-                {
-                    IExpression Source = CreateSimpleQueryExpression(Text.Substring(7));
-                    complexifiedNode = CreateKeywordAssignmentInstruction(Keyword.Retry, Source);
+                        Keyword Keyword = Keyword.Current;
+
+                        if (Text == "Result")
+                            Keyword = Keyword.Result;
+
+                        else if (Text == "Retry")
+                            Keyword = Keyword.Retry;
+
+                        if (Keyword != Keyword.Current)
+                        {
+                            IExpression Source = DeepCloneNode(node.Source, cloneCommentGuid: false) as IExpression;
+                            complexifiedNode = CreateKeywordAssignmentInstruction(Keyword, Source);
+                        }
+                    }
                 }
             }
 
@@ -3252,11 +3538,11 @@ namespace BaseNodeHelper
 
         private static bool SimplifyFunctionType(IFunctionType node, out INode simplifiedNode)
         {
-            simplifiedNode = node.BaseType;
+            simplifiedNode = DeepCloneNode(node.BaseType, cloneCommentGuid: false) as IObjectType;
             return true;
         }
 
-        private static bool ComplexifyFunctionType(ISimpleType node, out INode complexifiedNode)
+        private static bool ComplexifyAsFunctionType(ISimpleType node, out INode complexifiedNode)
         {
             complexifiedNode = null;
 
@@ -3265,7 +3551,7 @@ namespace BaseNodeHelper
             if (Text.StartsWith("function "))
             {
                 ISimpleType BaseType = CreateSimpleSimpleType(Text.Substring(9));
-                ISimpleType ReturnType = CreateSimpleSimpleType("");
+                ISimpleType ReturnType = CreateEmptySimpleType();
                 complexifiedNode = CreateFunctionType(BaseType, ReturnType);
             }
 
@@ -3274,27 +3560,35 @@ namespace BaseNodeHelper
 
         private static bool SimplifyGenericType(IGenericType node, out INode simplifiedNode)
         {
-            simplifiedNode = CreateSimpleType(node.ClassIdentifier);
+            string Text = node.ClassIdentifier.Text;
+
+            if (BlockListHelper<ITypeArgument, TypeArgument>.IsSimple(node.TypeArgumentBlocks))
+            {
+                ITypeArgument FirstArgument = node.TypeArgumentBlocks.NodeBlockList[0].NodeList[0];
+                if (FirstArgument is IPositionalTypeArgument AsPositionalTypeArgument && AsPositionalTypeArgument.Source is ISimpleType AsSimpleType)
+                {
+                    Text += AsSimpleType.ClassIdentifier.Text;
+                }
+            }
+
+            simplifiedNode = CreateSimpleSimpleType(Text);
             return true;
         }
 
-        private static bool ComplexifyGenericType(ISimpleType node, out INode complexifiedNode)
+        private static bool ComplexifyAsGenericType(ISimpleType node, out INode complexifiedNode)
         {
             complexifiedNode = null;
 
             string Text = node.ClassIdentifier.Text;
             int GenericBeginIndex = Text.IndexOf("[");
-            int GenericEndIndex = Text.IndexOf("]");
 
-            if (GenericBeginIndex >= 0 && GenericEndIndex > GenericBeginIndex)
+            if (GenericBeginIndex >= 0 && Text.EndsWith("]"))
             {
                 IIdentifier ClassIdentifier = CreateSimpleIdentifier(Text.Substring(0, GenericBeginIndex));
-
-                ISimpleType TypeSource = CreateSimpleSimpleType(Text.Substring(GenericBeginIndex + 1, GenericEndIndex - GenericBeginIndex - 2));
+                ISimpleType TypeSource = CreateSimpleSimpleType(Text.Substring(GenericBeginIndex + 1, Text.Length - GenericBeginIndex - 2));
                 ITypeArgument TypeArgument = CreatePositionalTypeArgument(TypeSource);
-                List<ITypeArgument> TypeArgumentList = new List<ITypeArgument>() { TypeArgument };
 
-                complexifiedNode = CreateGenericType(ClassIdentifier, TypeArgumentList);
+                complexifiedNode = CreateGenericType(ClassIdentifier, new List<ITypeArgument>() { TypeArgument });
             }
 
             return complexifiedNode != null;
@@ -3302,11 +3596,11 @@ namespace BaseNodeHelper
 
         private static bool SimplifyIndexerType(IIndexerType node, out INode simplifiedNode)
         {
-            simplifiedNode = node.BaseType;
+            simplifiedNode = DeepCloneNode(node.BaseType, cloneCommentGuid: false) as IObjectType;
             return true;
         }
 
-        private static bool ComplexifyIndexerType(ISimpleType node, out INode complexifiedNode)
+        private static bool ComplexifyAsIndexerType(ISimpleType node, out INode complexifiedNode)
         {
             complexifiedNode = null;
 
@@ -3315,8 +3609,11 @@ namespace BaseNodeHelper
             if (Text.StartsWith("indexer "))
             {
                 ISimpleType BaseType = CreateSimpleSimpleType(Text.Substring(8));
-                ISimpleType EntityType = CreateSimpleSimpleType("");
-                complexifiedNode = CreateIndexerType(BaseType, EntityType);
+                ISimpleType EntityType = CreateEmptySimpleType();
+                IName ParameterName = CreateEmptyName();
+                ISimpleType ParameterType = CreateEmptySimpleType();
+                IEntityDeclaration Parameter = CreateEntityDeclaration(ParameterName, ParameterType);
+                complexifiedNode = CreateIndexerType(BaseType, EntityType, Parameter);
             }
 
             return complexifiedNode != null;
@@ -3324,11 +3621,11 @@ namespace BaseNodeHelper
 
         private static bool SimplifyPropertyType(IPropertyType node, out INode simplifiedNode)
         {
-            simplifiedNode = node.BaseType;
+            simplifiedNode = DeepCloneNode(node.BaseType, cloneCommentGuid: false) as IObjectType;
             return true;
         }
 
-        private static bool ComplexifyPropertyType(ISimpleType node, out INode complexifiedNode)
+        private static bool ComplexifyAsPropertyType(ISimpleType node, out INode complexifiedNode)
         {
             complexifiedNode = null;
 
@@ -3337,7 +3634,7 @@ namespace BaseNodeHelper
             if (Text.StartsWith("property "))
             {
                 ISimpleType BaseType = CreateSimpleSimpleType(Text.Substring(9));
-                ISimpleType EntityType = CreateSimpleSimpleType("");
+                ISimpleType EntityType = CreateEmptySimpleType();
                 complexifiedNode = CreatePropertyType(BaseType, EntityType);
             }
 
@@ -3346,11 +3643,11 @@ namespace BaseNodeHelper
 
         private static bool SimplifyProcedureType(IProcedureType node, out INode simplifiedNode)
         {
-            simplifiedNode = node.BaseType;
+            simplifiedNode = DeepCloneNode(node.BaseType, cloneCommentGuid: false) as IObjectType;
             return true;
         }
 
-        private static bool ComplexifyProcedureType(ISimpleType node, out INode complexifiedNode)
+        private static bool ComplexifyAsProcedureType(ISimpleType node, out INode complexifiedNode)
         {
             complexifiedNode = null;
 
@@ -3367,20 +3664,21 @@ namespace BaseNodeHelper
 
         private static bool SimplifyTupleType(ITupleType node, out INode simplifiedNode)
         {
-            simplifiedNode = CreateEmptySimpleType();
+            IEntityDeclaration FirstField = node.EntityDeclarationBlocks.NodeBlockList[0].NodeList[0];
+            simplifiedNode = DeepCloneNode(FirstField.EntityType, cloneCommentGuid: false) as IObjectType;
             return true;
         }
 
-        private static bool ComplexifyTupleType(ISimpleType node, out INode complexifiedNode)
+        private static bool ComplexifyAsTupleType(ISimpleType node, out INode complexifiedNode)
         {
             complexifiedNode = null;
 
             string Text = node.ClassIdentifier.Text;
 
             if (Text.StartsWith("tuple "))
-            {
-                IName EntityName = CreateSimpleName(Text.Substring(6));
-                ISimpleType EntityType = CreateSimpleSimpleType("");
+            {       
+                IName EntityName = CreateEmptyName();
+                ISimpleType EntityType = CreateSimpleSimpleType(Text.Substring(6));
                 IEntityDeclaration Entity = CreateEntityDeclaration(EntityName, EntityType);
                 complexifiedNode = CreateTupleType(Entity);
             }
@@ -3394,15 +3692,29 @@ namespace BaseNodeHelper
             return true;
         }
 
-        private static bool ComplexifyPositionalTypeArgument(IPositionalTypeArgument node, out INode complexifiedNode)
+        private static bool ComplexifyAsAssignmentTypeArgument(IPositionalTypeArgument node, out INode complexifiedNode)
         {
-            complexifiedNode = CreateAssignmentTypeArgument(CreateEmptyIdentifier(), node.Source);
-            return true;
+            complexifiedNode = null;
+
+            if (node.Source is ISimpleType AsSimpleType)
+            {
+                string Text = AsSimpleType.ClassIdentifier.Text;
+
+                if (ParsePattern(Text, ":=", out string BeforeText, out string AfterText))
+                {
+                    IIdentifier AssignmentTarget = CreateSimpleIdentifier(BeforeText);
+                    ISimpleType AssignmentType = CreateSimpleSimpleType(AfterText);
+
+                    complexifiedNode = CreateAssignmentTypeArgument(AssignmentTarget, AssignmentType);
+                }
+            }
+
+            return complexifiedNode != null;
         }
 
-        private static bool SimplifyPositionalTypeArgument(IPositionalTypeArgument Node, out INode SimplifiedNode)
+        private static bool SimplifyPositionalTypeArgument(IPositionalTypeArgument node, out INode simplifiedNode)
         {
-            SimplifiedNode = null;
+            simplifiedNode = null;
             return true;
         }
 
@@ -3453,6 +3765,66 @@ namespace BaseNodeHelper
                 Text = null;
                 return false;
             }
+        }
+
+        private static bool IsQuerySimple(IQueryExpression node)
+        {
+            return node.Query.Path.Count == 1 && node.ArgumentBlocks.NodeBlockList.Count == 0;
+        }
+
+        private static bool ParsePattern(IQueryExpression node, string patternText, out string beforeText, out string afterText)
+        {
+            Debug.Assert(node.Query.Path.Count > 0);
+
+            string Text = node.Query.Path[0].Text;
+            return ParsePattern(Text, patternText, out beforeText, out afterText);
+        }
+
+        private static bool ParsePattern(ICommandInstruction node, string patternText, out string beforeText, out string afterText)
+        {
+            Debug.Assert(node.Command.Path.Count > 0);
+
+            string Text = node.Command.Path[0].Text;
+            return ParsePattern(Text, patternText, out beforeText, out afterText);
+        }
+
+        private static bool ParsePattern(string text, string patternText, out string beforeText, out string afterText)
+        {
+            beforeText = null;
+            afterText = null;
+
+            int PatternIndex = text.IndexOf(patternText);
+            if (PatternIndex >= 0)
+            {
+                beforeText = text.Substring(0, PatternIndex);
+                afterText = text.Substring(PatternIndex + patternText.Length);
+            }
+
+            return beforeText != null || afterText != null;
+        }
+
+        private static void CloneComplexifiedExpression(IQueryExpression node, string afterText, out IExpression rightExpression)
+        {
+            IQueryExpression ClonedQuery = DeepCloneNode(node, cloneCommentGuid: false) as IQueryExpression;
+            Debug.Assert(ClonedQuery.Query != null);
+            Debug.Assert(ClonedQuery.Query.Path.Count > 0);
+
+            NodeTreeHelper.SetString(ClonedQuery.Query.Path[0], "Text", afterText);
+
+            rightExpression = ClonedQuery;
+        }
+
+        private static void CloneComplexifiedExpression(IQueryExpression node, string beforeText, string afterText, out IExpression leftExpression, out IExpression rightExpression)
+        {
+            leftExpression = CreateSimpleQueryExpression(beforeText);
+
+            IQueryExpression ClonedQuery = DeepCloneNode(node, cloneCommentGuid: false) as IQueryExpression;
+            Debug.Assert(ClonedQuery.Query != null);
+            Debug.Assert(ClonedQuery.Query.Path.Count > 0);
+
+            NodeTreeHelper.SetString(ClonedQuery.Query.Path[0], "Text", afterText);
+
+            rightExpression = ClonedQuery;
         }
         #endregion
     }
