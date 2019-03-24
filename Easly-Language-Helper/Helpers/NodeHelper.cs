@@ -340,6 +340,11 @@ namespace BaseNodeHelper
             return CreateEmptyCommandInstruction();
         }
 
+        public static IFeature CreateDefaultFeature()
+        {
+            return CreateEmptyAttributeFeature();
+        }
+
         public static IObjectType CreateDefaultType()
         {
             return CreateEmptySimpleType();
@@ -367,6 +372,8 @@ namespace BaseNodeHelper
                 return CreateDefaultExpression();
             else if (interfaceType == typeof(IInstruction))
                 return CreateDefaultInstruction();
+            else if (interfaceType == typeof(IFeature))
+                return CreateDefaultFeature();
             else if (interfaceType == typeof(IObjectType))
                 return CreateDefaultType();
             else if (interfaceType == typeof(IName))
@@ -397,6 +404,7 @@ namespace BaseNodeHelper
             NodeTypeName = NodeTypeName.Replace(NamePrefix + "I", NamePrefix);
 
             Type NodeType = Type.GetType(NodeTypeName);
+            Debug.Assert(!NodeType.IsAbstract);
 
             Result = CreateEmptyNode(NodeType);
             Debug.Assert(Result != null);
@@ -415,6 +423,7 @@ namespace BaseNodeHelper
         public static INode CreateEmptyNode(Type objectType)
         {
             Debug.Assert(IsNodeType(objectType));
+            Debug.Assert(!objectType.IsAbstract);
 
             INode EmptyNode = objectType.Assembly.CreateInstance(objectType.FullName) as INode;
             Debug.Assert(EmptyNode != null);
