@@ -17,87 +17,105 @@ namespace BaseNodeHelper
         {
             Debug.Assert((parentNode == null && propertyName == null) || (parentNode != null && propertyName != null));
 
-            if (callbacks.HandlerNode != null && !callbacks.HandlerNode(node, parentNode, propertyName, data))
+            if (callbacks.HandlerNode != null && !callbacks.HandlerNode(node, parentNode, propertyName, callbacks, data))
                 return false;
+
+            if (!callbacks.IsRecursive && parentNode != null)
+                return true;
 
             IList<string> PropertyNames = NodeTreeHelper.EnumChildNodeProperties(node);
 
-            foreach (string PropertyName in PropertyNames)
+            foreach (string NodePropertyName in PropertyNames)
             {
                 Type ChildInterfaceType, ChildNodeType;
 
-                if (NodeTreeHelperChild.IsChildNodeProperty(node, PropertyName, out ChildNodeType))
+                if (NodeTreeHelperChild.IsChildNodeProperty(node, NodePropertyName, out ChildNodeType))
                 {
-                    NodeTreeHelperChild.GetChildNode(node, PropertyName, out INode ChildNode);
-                    if (!Walk(ChildNode, node, PropertyName, callbacks, data))
+                    NodeTreeHelperChild.GetChildNode(node, NodePropertyName, out INode ChildNode);
+                    if (!Walk(ChildNode, node, NodePropertyName, callbacks, data))
                         return false;
                 }
 
-                else if (NodeTreeHelperOptional.IsOptionalChildNodeProperty(node, PropertyName, out ChildNodeType))
+                else if (NodeTreeHelperOptional.IsOptionalChildNodeProperty(node, NodePropertyName, out ChildNodeType))
                 {
-                    NodeTreeHelperOptional.GetChildNode(node, PropertyName, out bool IsAssigned, out INode ChildNode);
+                    NodeTreeHelperOptional.GetChildNode(node, NodePropertyName, out bool IsAssigned, out INode ChildNode);
 
-                    if (ChildNode != null && !Walk(ChildNode, node, PropertyName, callbacks, data))
+                    if (ChildNode != null && !Walk(ChildNode, node, NodePropertyName, callbacks, data))
                         return false;
                 }
 
-                else if (NodeTreeHelperList.IsNodeListProperty(node, PropertyName, out ChildNodeType))
+                else if (NodeTreeHelperList.IsNodeListProperty(node, NodePropertyName, out ChildNodeType))
                 {
-                    NodeTreeHelperList.GetChildNodeList(node, PropertyName, out IReadOnlyList<INode> ChildNodeList);
+                    NodeTreeHelperList.GetChildNodeList(node, NodePropertyName, out IReadOnlyList<INode> ChildNodeList);
                     Debug.Assert(ChildNodeList != null);
 
-                    for (int Index = 0; Index < ChildNodeList.Count; Index++)
+                    if (callbacks.HandlerList != null && !callbacks.HandlerList(node, NodePropertyName, ChildNodeList, callbacks, data))
+                        return false;
+
+                    if (callbacks.IsRecursive)
                     {
-                        INode ChildNode = ChildNodeList[Index];
-                        if (!Walk(ChildNode, node, PropertyName, callbacks, data))
-                            return false;
-                    }
-                }
-
-                else if (NodeTreeHelperBlockList.IsBlockListProperty(node, PropertyName, out ChildInterfaceType, out ChildNodeType))
-                {
-                    IBlockList BlockList = NodeTreeHelperBlockList.GetBlockList(node, PropertyName);
-                    Debug.Assert(BlockList.NodeBlockList != null);
-
-                    for (int BlockIndex = 0; BlockIndex < BlockList.NodeBlockList.Count; BlockIndex++)
-                    {
-                        IBlock Block = BlockList.NodeBlockList[BlockIndex] as IBlock;
-                        Debug.Assert(Block.NodeList != null);
-
-                        for (int Index = 0; Index < Block.NodeList.Count; Index++)
+                        for (int Index = 0; Index < ChildNodeList.Count; Index++)
                         {
-                            INode ChildNode = Block.NodeList[Index] as INode;
-                            if (!Walk(ChildNode, node, PropertyName, callbacks, data))
+                            INode ChildNode = ChildNodeList[Index];
+                            if (!Walk(ChildNode, node, NodePropertyName, callbacks, data))
                                 return false;
                         }
                     }
                 }
 
-                else if (NodeTreeHelper.IsBooleanProperty(node, PropertyName))
+                else if (NodeTreeHelperBlockList.IsBlockListProperty(node, NodePropertyName, out ChildInterfaceType, out ChildNodeType))
                 {
-                    if (callbacks.HandlerEnum != null && !callbacks.HandlerEnum(node, PropertyName, data))
+                    IBlockList BlockList = NodeTreeHelperBlockList.GetBlockList(node, NodePropertyName);
+                    Debug.Assert(BlockList.NodeBlockList != null);
+
+                    if (callbacks.HandlerBlockList != null && !callbacks.HandlerBlockList(node, NodePropertyName, BlockList, callbacks, data))
+                        return false;
+
+                    if (callbacks.IsRecursive)
+                    {
+                        for (int BlockIndex = 0; BlockIndex < BlockList.NodeBlockList.Count; BlockIndex++)
+                        {
+                            IBlock Block = BlockList.NodeBlockList[BlockIndex] as IBlock;
+                            Debug.Assert(Block.NodeList != null);
+
+                            if (callbacks.HandlerBlock != null && !callbacks.HandlerBlock(node, NodePropertyName, BlockList, Block, callbacks, data))
+                                return false;
+
+                            for (int Index = 0; Index < Block.NodeList.Count; Index++)
+                            {
+                                INode ChildNode = Block.NodeList[Index] as INode;
+                                if (!Walk(ChildNode, node, NodePropertyName, callbacks, data))
+                                    return false;
+                            }
+                        }
+                    }
+                }
+
+                else if (NodeTreeHelper.IsBooleanProperty(node, NodePropertyName))
+                {
+                    if (callbacks.HandlerEnum != null && !callbacks.HandlerEnum(node, NodePropertyName, data))
                         return false;
                 }
 
-                else if (NodeTreeHelper.IsEnumProperty(node, PropertyName))
+                else if (NodeTreeHelper.IsEnumProperty(node, NodePropertyName))
                 {
-                    if (callbacks.HandlerEnum != null && !callbacks.HandlerEnum(node, PropertyName, data))
+                    if (callbacks.HandlerEnum != null && !callbacks.HandlerEnum(node, NodePropertyName, data))
                         return false;
                 }
 
-                else if (NodeTreeHelper.IsStringProperty(node, PropertyName))
+                else if (NodeTreeHelper.IsStringProperty(node, NodePropertyName))
                 {
-                    if (callbacks.HandlerString != null && !callbacks.HandlerString(node, PropertyName, data))
+                    if (callbacks.HandlerString != null && !callbacks.HandlerString(node, NodePropertyName, data))
                         return false;
                 }
 
-                else if (NodeTreeHelper.IsGuidProperty(node, PropertyName))
+                else if (NodeTreeHelper.IsGuidProperty(node, NodePropertyName))
                 {
-                    if (callbacks.HandlerGuid != null && !callbacks.HandlerGuid(node, PropertyName, data))
+                    if (callbacks.HandlerGuid != null && !callbacks.HandlerGuid(node, NodePropertyName, data))
                         return false;
                 }
 
-                else if (NodeTreeHelper.IsDocumentProperty(node, PropertyName))
+                else if (NodeTreeHelper.IsDocumentProperty(node, NodePropertyName))
                 {
                 }
             }
