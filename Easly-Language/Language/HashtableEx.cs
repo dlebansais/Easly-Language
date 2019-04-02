@@ -17,8 +17,16 @@ namespace Easly
         void ChangeKey(TKey oldKey, TKey newKey);
     }
 
+    public interface IHashtableEx<TKey, TValue> : IDictionary<TKey, TValue>, IHashtableEx, IHashtableIndex<TKey>
+    {
+        new bool ContainsKey(TKey key);
+        IHashtableEx<TKey, TValue> CloneUnsealed();
+        void Merge(IHashtableEx<TKey, TValue> otherTable);
+        void MergeWithConflicts(IHashtableEx<TKey, TValue> otherTable);
+    }
+
     [Serializable]
-    public class HashtableEx<TKey, TValue> : Dictionary<TKey, TValue>, IHashtableEx, IHashtableIndex<TKey>
+    public class HashtableEx<TKey, TValue> : Dictionary<TKey, TValue>, IHashtableEx<TKey, TValue>
     {
         public HashtableEx()
             : base()
@@ -54,7 +62,7 @@ namespace Easly
             }
         }
 
-        public HashtableEx<TKey, TValue> CloneUnsealed()
+        public IHashtableEx<TKey, TValue> CloneUnsealed()
         {
             HashtableEx<TKey, TValue> CloneTable = new HashtableEx<TKey, TValue>();
 
@@ -83,7 +91,7 @@ namespace Easly
             Add(newKey, EntryValue);
         }
 
-        public void Merge(HashtableEx<TKey, TValue> otherTable)
+        public void Merge(IHashtableEx<TKey, TValue> otherTable)
         {
             if (IsSealed)
                 throw new InvalidOperationException();
@@ -92,7 +100,7 @@ namespace Easly
                 base.Add(Item.Key, Item.Value);
         }
 
-        public void MergeWithConflicts(HashtableEx<TKey, TValue> otherTable)
+        public void MergeWithConflicts(IHashtableEx<TKey, TValue> otherTable)
         {
             if (IsSealed)
                 throw new InvalidOperationException();

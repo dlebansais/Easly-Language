@@ -1152,7 +1152,47 @@ All characters in range U+037A to U+037F
 
 All characters in range U+0384 to U+0E01EF
   
-### Whitespace charracters:
+### Whitespace characters:
 
 U+0009, U+0020, U+00A0, U+1680, U+2000, U+2001, U+2002, U+2003, U+2004, U+2005, U+2006, U+2007, U+2008, U+2009, U+200A, U+202F, U+205F, U+3000.
+
+## Annex B
+
+The definition of built-in constructs.
+
+Name | Class Guid
+------------ | -------------
+Any Detachable Reference | a035583e-30d7-4434-be9a-8c4780029ead
+Any Once Reference | 894e9bd1-f516-42c4-a95f-a40e698eea97
+Any Optional Reference | ba18c1c9-f75f-4783-b99a-acfe78ff21fc
+Any Stable Reference | d3c9682c-5b9f-437c-97a2-f92a76dd2904
+Attribute Entity | 1a3bcacb-9e25-4b39-bb4a-aaf1d826a578
+Bit Field Enumeration | fefd8baf-090a-40c1-85e2-ffc6c7236bdd
+Boolean | 0ce78910-608d-41ee-a5e2-666d834bbb86
+Character | 040a43ee-aa73-457f-9a32-022c2d89e041
+Constant Entity | 123ac71a-2be4-4677-924e-b5013472d3b0
+Detachable Reference | bc6c211d-737b-4de5-bb69-22fa6f145018
+Entity | 04abab65-fca1-4cc5-8584-c527f20ae95a
+Enumeration | 56943636-5db9-48f6-8456-9bb593698aa2
+Event | 296a70a8-d07a-4f9a-ab09-46fbd9a4f08e
+Exception | d7a3c606-3521-46df-8bd5-d1f16074bd60
+Feature Entity | a24ff4d8-4cc7-40ca-9e20-5990537c683a
+Function Entity | f497d05b-32a2-420f-8d0b-add133e17098
+Hashtable | d50a2e83-7d47-4aa1-9cb3-1e3f91f3e299
+Indexer Entity | 3c5d167e-8406-418d-814a-8fc296524513
+Key Value Pair | a531b63d-73cd-48ee-8115-027c4eb21473
+List | ce8fb534-1c8b-4563-a7d2-e617571e5333
+Local Entity | 43b2429b-e9d6-417e-b6fe-942fa261b176
+Named Feature Entity | c1555fa7-928a-40ee-b21f-ded92bc7b756
+Number | 337731dc-37ba-47a3-9e85-1d7c2304e36e
+Once Reference | 415dd598-bc65-4e74-ae7d-2f9aafd1d975
+Optional Reference | 9af0a9f5-820f-4ddb-b221-f7a1b3446676
+Over Loop Source | 4273b1ee-4b1b-4ae1-bf22-f72563f87c02
+Procedure Entity | 085550a0-9456-4791-b4a4-303b685a2b99
+Property Entity | 270a1358-45e3-4d36-86f1-3e150bbf341d
+Sealable Hashtable | d6d59964-9b33-434e-8511-2453e84fbd68
+Specialized Type Entity | a3a0be99-7c93-4d88-8afc-14d53cce8345
+Stable Reference | c3ba9569-b9c7-4e30-9146-d489f2e49a64
+String | 46a55923-c615-49b8-a4b7-620738d4a941
+Type Entity | eda30eb6-27d8-4632-8cf3-394c9bc61eb6
 

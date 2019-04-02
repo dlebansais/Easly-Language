@@ -59,6 +59,7 @@
     <Compile Include="Helpers\FormattedNumber\RealNumber.cs" />
     <Compile Include="Helpers\NodeHelper.cs" />
     <Compile Include="Helpers\NodeTree\NodeTreeBlock.cs" />
+    <Compile Include="Helpers\NodeTree\NodeTreeWalk.cs" />
     <Compile Include="Helpers\NodeTree\NodeTreeDiagnostic.cs" />
     <Compile Include="Helpers\NodeTree\NodeTreeHelper.cs" />
     <Compile Include="Helpers\OptionalReferenceHelper.cs" />
