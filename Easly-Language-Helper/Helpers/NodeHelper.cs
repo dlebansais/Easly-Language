@@ -2142,7 +2142,7 @@ namespace BaseNodeHelper
 
             foreach (Type Item in LanguageTypes)
             {
-                if (!Item.IsInterface && !Item.IsAbstract && Item.GetInterface(typeof(INode).Name) != null)
+                if (!Item.IsInterface && !Item.IsAbstract && Item.GetInterface(typeof(INode).FullName) != null)
                 {
                     Type[] Interfaces = Item.GetInterfaces();
                     foreach (Type InterfaceType in Interfaces)

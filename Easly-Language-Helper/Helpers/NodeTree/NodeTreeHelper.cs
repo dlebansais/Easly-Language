@@ -1671,7 +1671,12 @@ namespace BaseNodeHelper
         public static IList<string> EnumChildNodeProperties(Type nodeType)
         {
             if (nodeType == null) throw new ArgumentNullException(nameof(nodeType));
-            if (nodeType.GetInterface(typeof(INode).Name) == null) throw new ArgumentException(nameof(nodeType));
+            if (nodeType.GetInterface(typeof(INode).FullName) == null) throw new ArgumentException(nameof(nodeType));
+
+            string BaseNodeNamespace = typeof(INode).FullName.Substring(0, typeof(INode).FullName.IndexOf(".") + 1);
+            while (nodeType != typeof(object) && !nodeType.FullName.StartsWith(BaseNodeNamespace))
+                nodeType = nodeType.BaseType;
+            Debug.Assert(nodeType != typeof(object));
 
             IList<PropertyInfo> Properties = GetTypeProperties(nodeType);
             Debug.Assert(Properties != null);
@@ -1733,7 +1738,7 @@ namespace BaseNodeHelper
         {
             if (type == null) throw new ArgumentNullException(nameof(type));
 
-            return type.IsInterface && type.GetInterface(typeof(INode).Name) != null;
+            return type.IsInterface && type.GetInterface(typeof(INode).FullName) != null;
         }
 
         public static Type NodeTypeToInterfaceType(Type type)

@@ -62,6 +62,7 @@
     <Compile Include="Helpers\NodeTree\NodeTreeWalk.cs" />
     <Compile Include="Helpers\NodeTree\NodeTreeDiagnostic.cs" />
     <Compile Include="Helpers\NodeTree\NodeTreeHelper.cs" />
+    <Compile Include="Helpers\NodeTree\WalkCallbacks.cs" />
     <Compile Include="Helpers\OptionalReferenceHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

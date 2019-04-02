@@ -5,25 +5,20 @@ using BaseNode;
 
 namespace BaseNodeHelper
 {
-    public static class NodeTreeWalk
+    public static class NodeTreeWalk<TContext>
+        where TContext : class
     {
-        public static bool Walk(INode root, Func<INode, INode, string, IClass, bool> handlerNode, Func<INode, string, Type, bool> handlerProperty)
+        public static bool Walk(INode root, IWalkCallbacks<TContext> callbacks, TContext data)
         {
-            return Walk(root, null, null, null, handlerNode, handlerProperty);
+            return Walk(root, null, null, callbacks, data);
         }
 
-        private static bool Walk(INode node, INode parentNode, string propertyName, IClass parentClass, Func<INode, INode, string, IClass, bool> handlerNode, Func<INode, string, Type, bool> handlerProperty)
+        private static bool Walk(INode node, INode parentNode, string propertyName, IWalkCallbacks<TContext> callbacks, TContext data)
         {
             Debug.Assert((parentNode == null && propertyName == null) || (parentNode != null && propertyName != null));
 
-            if (!handlerNode(node, parentNode, propertyName, parentClass))
+            if (callbacks.HandlerNode != null && !callbacks.HandlerNode(node, parentNode, propertyName, data))
                 return false;
-
-            if (node is IClass AsClass)
-            {
-                Debug.Assert(parentClass == null);
-                parentClass = AsClass;
-            }
 
             IList<string> PropertyNames = NodeTreeHelper.EnumChildNodeProperties(node);
 
@@ -34,7 +29,7 @@ namespace BaseNodeHelper
                 if (NodeTreeHelperChild.IsChildNodeProperty(node, PropertyName, out ChildNodeType))
                 {
                     NodeTreeHelperChild.GetChildNode(node, PropertyName, out INode ChildNode);
-                    if (!Walk(ChildNode, node, PropertyName, parentClass, handlerNode, handlerProperty))
+                    if (!Walk(ChildNode, node, PropertyName, callbacks, data))
                         return false;
                 }
 
@@ -42,7 +37,7 @@ namespace BaseNodeHelper
                 {
                     NodeTreeHelperOptional.GetChildNode(node, PropertyName, out bool IsAssigned, out INode ChildNode);
 
-                    if (ChildNode != null && !Walk(ChildNode, node, PropertyName, parentClass, handlerNode, handlerProperty))
+                    if (ChildNode != null && !Walk(ChildNode, node, PropertyName, callbacks, data))
                         return false;
                 }
 
@@ -54,7 +49,7 @@ namespace BaseNodeHelper
                     for (int Index = 0; Index < ChildNodeList.Count; Index++)
                     {
                         INode ChildNode = ChildNodeList[Index];
-                        if (!Walk(ChildNode, node, PropertyName, parentClass, handlerNode, handlerProperty))
+                        if (!Walk(ChildNode, node, PropertyName, callbacks, data))
                             return false;
                     }
                 }
@@ -72,7 +67,7 @@ namespace BaseNodeHelper
                         for (int Index = 0; Index < Block.NodeList.Count; Index++)
                         {
                             INode ChildNode = Block.NodeList[Index] as INode;
-                            if (!Walk(ChildNode, node, PropertyName, parentClass, handlerNode, handlerProperty))
+                            if (!Walk(ChildNode, node, PropertyName, callbacks, data))
                                 return false;
                         }
                     }
@@ -80,32 +75,30 @@ namespace BaseNodeHelper
 
                 else if (NodeTreeHelper.IsBooleanProperty(node, PropertyName))
                 {
-                    if (!handlerProperty(node, PropertyName, typeof(bool)))
+                    if (callbacks.HandlerEnum != null && !callbacks.HandlerEnum(node, PropertyName, data))
                         return false;
                 }
 
                 else if (NodeTreeHelper.IsEnumProperty(node, PropertyName))
                 {
-                    if (!handlerProperty(node, PropertyName, typeof(Enum)))
+                    if (callbacks.HandlerEnum != null && !callbacks.HandlerEnum(node, PropertyName, data))
                         return false;
                 }
 
                 else if (NodeTreeHelper.IsStringProperty(node, PropertyName))
                 {
-                    if (!handlerProperty(node, PropertyName, typeof(string)))
+                    if (callbacks.HandlerString != null && !callbacks.HandlerString(node, PropertyName, data))
                         return false;
                 }
 
                 else if (NodeTreeHelper.IsGuidProperty(node, PropertyName))
                 {
-                    if (!handlerProperty(node, PropertyName, typeof(Guid)))
+                    if (callbacks.HandlerGuid != null && !callbacks.HandlerGuid(node, PropertyName, data))
                         return false;
                 }
 
                 else if (NodeTreeHelper.IsDocumentProperty(node, PropertyName))
                 {
-                    if (!handlerProperty(node, PropertyName, typeof(Document)))
-                        return false;
                 }
             }
 
