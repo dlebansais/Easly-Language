@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Reflection;
 using BaseNode;
 
 namespace BaseNodeHelper
@@ -73,19 +75,47 @@ namespace BaseNodeHelper
 
                     if (callbacks.IsRecursive)
                     {
-                        for (int BlockIndex = 0; BlockIndex < BlockList.NodeBlockList.Count; BlockIndex++)
+                        string Key = callbacks.BlockSubstitution.Key;
+
+                        if (Key != null)
                         {
-                            IBlock Block = BlockList.NodeBlockList[BlockIndex] as IBlock;
-                            Debug.Assert(Block.NodeList != null);
+                            string Value = callbacks.BlockSubstitution.Value;
+                            Debug.Assert(Value != null);
 
-                            if (callbacks.HandlerBlock != null && !callbacks.HandlerBlock(node, NodePropertyName, BlockList, Block, callbacks, data))
-                                return false;
+                            string ListPropertyName = NodePropertyName.Replace(Key, Value);
+                            Debug.Assert(ListPropertyName != NodePropertyName);
 
-                            for (int Index = 0; Index < Block.NodeList.Count; Index++)
+                            PropertyInfo Property = node.GetType().GetProperty(ListPropertyName);
+                            Debug.Assert(Property != null);
+
+                            IList NodeList = Property.GetValue(node) as IList;
+                            Debug.Assert(NodeList != null);
+
+                            for (int Index = 0; Index < NodeList.Count; Index++)
                             {
-                                INode ChildNode = Block.NodeList[Index] as INode;
+                                INode ChildNode = NodeList[Index] as INode;
+                                Debug.Assert(ChildNode != null);
+
                                 if (!Walk(ChildNode, node, NodePropertyName, callbacks, data))
                                     return false;
+                            }
+                        }
+                        else
+                        {
+                            for (int BlockIndex = 0; BlockIndex < BlockList.NodeBlockList.Count; BlockIndex++)
+                            {
+                                IBlock Block = BlockList.NodeBlockList[BlockIndex] as IBlock;
+                                Debug.Assert(Block.NodeList != null);
+
+                                if (callbacks.HandlerBlock != null && !callbacks.HandlerBlock(node, NodePropertyName, BlockList, Block, callbacks, data))
+                                    return false;
+
+                                for (int Index = 0; Index < Block.NodeList.Count; Index++)
+                                {
+                                    INode ChildNode = Block.NodeList[Index] as INode;
+                                    if (!Walk(ChildNode, node, NodePropertyName, callbacks, data))
+                                        return false;
+                                }
                             }
                         }
                     }

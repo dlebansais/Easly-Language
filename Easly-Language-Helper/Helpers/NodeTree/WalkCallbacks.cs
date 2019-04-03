@@ -15,6 +15,7 @@ namespace BaseNodeHelper
         Func<INode, string, TContext, bool> HandlerGuid { get; }
         Func<INode, string, TContext, bool> HandlerEnum { get; }
         bool IsRecursive { get; }
+        KeyValuePair<string, string> BlockSubstitution { get; }
     }
 
     public struct WalkCallbacks<TContext> : IWalkCallbacks<TContext>
@@ -28,5 +29,6 @@ namespace BaseNodeHelper
         public Func<INode, string, TContext, bool> HandlerGuid { get; set; }
         public Func<INode, string, TContext, bool> HandlerEnum { get; set; }
         public bool IsRecursive { get; set; }
+        public KeyValuePair<string, string> BlockSubstitution { get; set; }
     }
 }
