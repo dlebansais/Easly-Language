@@ -1996,8 +1996,6 @@ namespace BaseNodeHelper
 
             Guid Result = (Guid)Property.GetValue(node);
 
-            Debug.Assert(Result != Guid.Empty);
-
             return Result;
         }
 
