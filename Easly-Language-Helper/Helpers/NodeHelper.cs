@@ -1715,6 +1715,17 @@ namespace BaseNodeHelper
 
             return EmptyRoot;
         }
+
+        public static IRoot CreateRoot(IList<IBlock<IClass, Class>> classBlockList, IList<IBlock<ILibrary, Library>> libraryBlockList, IList<IGlobalReplicate> globalReplicateList)
+        {
+            Root EmptyRoot = new Root();
+            EmptyRoot.Documentation = CreateEmptyDocumentation();
+            EmptyRoot.ClassBlocks = BlockListHelper<IClass, Class>.CreateBlockList(classBlockList);
+            EmptyRoot.LibraryBlocks = BlockListHelper<ILibrary, Library>.CreateBlockList(libraryBlockList);
+            EmptyRoot.Replicates = globalReplicateList;
+
+            return EmptyRoot;
+        }
         #endregion
         #endregion
 
