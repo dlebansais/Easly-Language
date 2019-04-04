@@ -54,7 +54,7 @@ namespace BaseNodeHelper
                     if (callbacks.HandlerList != null && !callbacks.HandlerList(node, NodePropertyName, ChildNodeList, callbacks, data))
                         return false;
 
-                    if (callbacks.IsRecursive)
+                    if (callbacks.IsRecursive || callbacks.HandlerList == null)
                     {
                         for (int Index = 0; Index < ChildNodeList.Count; Index++)
                         {
@@ -73,7 +73,7 @@ namespace BaseNodeHelper
                     if (callbacks.HandlerBlockList != null && !callbacks.HandlerBlockList(node, NodePropertyName, BlockList, callbacks, data))
                         return false;
 
-                    if (callbacks.IsRecursive)
+                    if (callbacks.IsRecursive || callbacks.HandlerBlockList == null)
                     {
                         string Key = callbacks.BlockSubstitution.Key;
 
