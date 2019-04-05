@@ -1234,13 +1234,23 @@ namespace BaseNodeHelper
         }
         #endregion
         #region Instruction
-        public static IAsLongAsInstruction CreateAsLongAsInstruction(IExpression continueCondition)
+        public static IAsLongAsInstruction CreateAsLongAsInstruction(IExpression continueCondition, IContinuation continuation)
         {
             AsLongAsInstruction Result = new AsLongAsInstruction();
             Result.Documentation = CreateEmptyDocumentation();
             Result.ContinueCondition = continueCondition;
-            Result.ContinuationBlocks = BlockListHelper<IContinuation, Continuation>.CreateEmptyBlockList();
+            Result.ContinuationBlocks = BlockListHelper<IContinuation, Continuation>.CreateSimpleBlockList(continuation);
             Result.ElseInstructions = OptionalReferenceHelper<IScope>.CreateReference(CreateEmptyScope());
+
+            return Result;
+        }
+
+        public static IContinuation CreateEmptyContinuation()
+        {
+            Continuation Result = new Continuation();
+            Result.Documentation = CreateEmptyDocumentation();
+            Result.Instructions = CreateEmptyScope();
+            Result.CleanupBlocks = BlockListHelper<IInstruction, Instruction>.CreateEmptyBlockList();
 
             return Result;
         }
@@ -3635,7 +3645,8 @@ namespace BaseNodeHelper
             if (ParsePattern(node, "as long as ", out string BeforeText, out string AfterText) && BeforeText.Length == 0)
             {
                 CloneComplexifiedCommand(node, AfterText, out IExpression Source);
-                complexifiedNode = CreateAsLongAsInstruction(Source);
+                IContinuation FirstContinuation = CreateEmptyContinuation();
+                complexifiedNode = CreateAsLongAsInstruction(Source, FirstContinuation);
             }
 
             return complexifiedNode != null;
@@ -3938,7 +3949,7 @@ namespace BaseNodeHelper
         private static bool ComplexifyAsInspectInstruction(ICommandInstruction node, out INode complexifiedNode)
         {
             complexifiedNode = null;
-            string Pattern = "if ";
+            string Pattern = "inspect ";
 
             if (ParsePattern(node, Pattern, out string BeforeText, out string AfterText) && BeforeText.Length == 0)
             {
@@ -4057,7 +4068,7 @@ namespace BaseNodeHelper
         {
             complexifiedNode = null;
 
-            if (node.Command.Path.Count == 1 && node.Command.Path[0].Text == "precursor[]:=")
+            if (node.Command.Path.Count == 1 && node.Command.Path[0].Text == "precursor[]:=" && node.ArgumentBlocks.NodeBlockList.Count > 0)
             {
                 IBlockList<IArgument, Argument> ClonedArgumentBlocks = BlockListHelper<IArgument, Argument>.CreateBlockListCopy(node.ArgumentBlocks);
                 complexifiedNode = CreatePrecursorIndexAssignmentInstruction(ClonedArgumentBlocks, CreateEmptyQueryExpression());
