@@ -236,6 +236,16 @@ namespace BaseNodeHelper
             return EmptyScope;
         }
 
+        public static IScope CreateSimpleScope(IInstruction instruction)
+        {
+            Scope EmptyScope = new Scope();
+            EmptyScope.Documentation = CreateEmptyDocumentation();
+            EmptyScope.EntityDeclarationBlocks = BlockListHelper<IEntityDeclaration, EntityDeclaration>.CreateEmptyBlockList();
+            EmptyScope.InstructionBlocks = BlockListHelper<IInstruction, Instruction>.CreateSimpleBlockList(instruction);
+
+            return EmptyScope;
+        }
+
         public static IConditional CreateEmptyConditional()
         {
             Conditional EmptyConditional = new Conditional();
@@ -1303,11 +1313,20 @@ namespace BaseNodeHelper
             return Result;
         }
 
-        public static IDebugInstruction CreateDebugInstruction()
+        public static IDebugInstruction CreateEmptyDebugInstruction()
         {
             DebugInstruction Result = new DebugInstruction();
             Result.Documentation = CreateEmptyDocumentation();
             Result.Instructions = CreateEmptyScope();
+
+            return Result;
+        }
+
+        public static IDebugInstruction CreateSimpleDebugInstruction(IInstruction instruction)
+        {
+            DebugInstruction Result = new DebugInstruction();
+            Result.Documentation = CreateEmptyDocumentation();
+            Result.Instructions = CreateSimpleScope(instruction);
 
             return Result;
         }
@@ -1320,6 +1339,21 @@ namespace BaseNodeHelper
             Result.InitInstructionBlocks = BlockListHelper<IInstruction, Instruction>.CreateEmptyBlockList();
             Result.WhileCondition = whileCondition;
             Result.LoopInstructionBlocks = BlockListHelper<IInstruction, Instruction>.CreateEmptyBlockList();
+            Result.IterationInstructionBlocks = BlockListHelper<IInstruction, Instruction>.CreateEmptyBlockList();
+            Result.InvariantBlocks = BlockListHelper<IAssertion, Assertion>.CreateEmptyBlockList();
+            Result.Variant = OptionalReferenceHelper<IExpression>.CreateReference(CreateDefaultExpression());
+
+            return Result;
+        }
+
+        public static IForLoopInstruction CreateForLoopInstruction(IInstruction instruction)
+        {
+            ForLoopInstruction Result = new ForLoopInstruction();
+            Result.Documentation = CreateEmptyDocumentation();
+            Result.EntityDeclarationBlocks = BlockListHelper<IEntityDeclaration, EntityDeclaration>.CreateEmptyBlockList();
+            Result.InitInstructionBlocks = BlockListHelper<IInstruction, Instruction>.CreateEmptyBlockList();
+            Result.WhileCondition = CreateEmptyQueryExpression();
+            Result.LoopInstructionBlocks = BlockListHelper<IInstruction, Instruction>.CreateSimpleBlockList(instruction);
             Result.IterationInstructionBlocks = BlockListHelper<IInstruction, Instruction>.CreateEmptyBlockList();
             Result.InvariantBlocks = BlockListHelper<IAssertion, Assertion>.CreateEmptyBlockList();
             Result.Variant = OptionalReferenceHelper<IExpression>.CreateReference(CreateDefaultExpression());
@@ -1350,6 +1384,19 @@ namespace BaseNodeHelper
             return Result;
         }
 
+        public static IIndexAssignmentInstruction CreateIndexAssignmentInstruction(IQualifiedName destination, IBlockList<IArgument, Argument> argumentBlocks, IExpression source)
+        {
+            Debug.Assert(argumentBlocks.NodeBlockList.Count > 0 && argumentBlocks.NodeBlockList[0].NodeList.Count > 0);
+
+            IndexAssignmentInstruction Result = new IndexAssignmentInstruction();
+            Result.Documentation = CreateEmptyDocumentation();
+            Result.Destination = destination;
+            Result.ArgumentBlocks = argumentBlocks;
+            Result.Source = source;
+
+            return Result;
+        }
+
         public static IInspectInstruction CreateInspectInstruction(IExpression source)
         {
             IExpression FirstExpression = CreateDefaultManifestNumberExpression();
@@ -1359,6 +1406,17 @@ namespace BaseNodeHelper
             Result.Documentation = CreateEmptyDocumentation();
             Result.Source = source;
             Result.WithBlocks = BlockListHelper<IWith, With>.CreateSimpleBlockList(FirstWith);
+            Result.ElseInstructions = OptionalReferenceHelper<IScope>.CreateReference(CreateEmptyScope());
+
+            return Result;
+        }
+
+        public static IInspectInstruction CreateInspectInstruction(IExpression source, IWith with)
+        {
+            InspectInstruction Result = new InspectInstruction();
+            Result.Documentation = CreateEmptyDocumentation();
+            Result.Source = source;
+            Result.WithBlocks = BlockListHelper<IWith, With>.CreateSimpleBlockList(with);
             Result.ElseInstructions = OptionalReferenceHelper<IScope>.CreateReference(CreateEmptyScope());
 
             return Result;
@@ -1390,6 +1448,22 @@ namespace BaseNodeHelper
             return Result;
         }
 
+        public static IOverLoopInstruction CreateOverLoopInstruction(IExpression overList, List<IName> nameList, IInstruction instruction)
+        {
+            Debug.Assert(nameList.Count > 0);
+
+            OverLoopInstruction Result = new OverLoopInstruction();
+            Result.Documentation = CreateEmptyDocumentation();
+            Result.OverList = overList;
+            Result.IndexerBlocks = BlockListHelper<IName, Name>.CreateBlockList(nameList);
+            Result.Iteration = IterationType.Single;
+            Result.LoopInstructions = CreateSimpleScope(instruction);
+            Result.ExitEntityName = OptionalReferenceHelper<IIdentifier>.CreateReference(CreateEmptyIdentifier());
+            Result.InvariantBlocks = BlockListHelper<IAssertion, Assertion>.CreateEmptyBlockList();
+
+            return Result;
+        }
+
         public static IPrecursorIndexAssignmentInstruction CreatePrecursorIndexAssignmentInstruction(List<IArgument> argumentList, IExpression source)
         {
             Debug.Assert(argumentList.Count > 0);
@@ -1403,12 +1477,35 @@ namespace BaseNodeHelper
             return Result;
         }
 
+        public static IPrecursorIndexAssignmentInstruction CreatePrecursorIndexAssignmentInstruction(IBlockList<IArgument, Argument> argumentBlocks, IExpression source)
+        {
+            Debug.Assert(argumentBlocks.NodeBlockList.Count > 0 && argumentBlocks.NodeBlockList[0].NodeList.Count > 0);
+
+            PrecursorIndexAssignmentInstruction Result = new PrecursorIndexAssignmentInstruction();
+            Result.Documentation = CreateEmptyDocumentation();
+            Result.AncestorType = OptionalReferenceHelper<IObjectType>.CreateReference(CreateDefaultType());
+            Result.ArgumentBlocks = argumentBlocks;
+            Result.Source = source;
+
+            return Result;
+        }
+
         public static IPrecursorInstruction CreatePrecursorInstruction(List<IArgument> argumentList)
         {
             PrecursorInstruction Result = new PrecursorInstruction();
             Result.Documentation = CreateEmptyDocumentation();
             Result.AncestorType = OptionalReferenceHelper<IObjectType>.CreateReference(CreateDefaultType());
             Result.ArgumentBlocks = BlockListHelper<IArgument, Argument>.CreateBlockList(argumentList);
+
+            return Result;
+        }
+
+        public static IPrecursorInstruction CreatePrecursorInstruction(IBlockList<IArgument, Argument> argumentBlocks)
+        {
+            PrecursorInstruction Result = new PrecursorInstruction();
+            Result.Documentation = CreateEmptyDocumentation();
+            Result.AncestorType = OptionalReferenceHelper<IObjectType>.CreateReference(CreateDefaultType());
+            Result.ArgumentBlocks = argumentBlocks;
 
             return Result;
         }
@@ -1439,6 +1536,17 @@ namespace BaseNodeHelper
             Result.ExceptionType = exceptionType;
             Result.CreationRoutine = creationRoutineIdentifier;
             Result.ArgumentBlocks = BlockListHelper<IArgument, Argument>.CreateBlockList(argumentList);
+
+            return Result;
+        }
+
+        public static IThrowInstruction CreateThrowInstruction(IObjectType exceptionType, IIdentifier creationRoutineIdentifier, IBlockList<IArgument, Argument> argumentBlocks)
+        {
+            ThrowInstruction Result = new ThrowInstruction();
+            Result.Documentation = CreateEmptyDocumentation();
+            Result.ExceptionType = exceptionType;
+            Result.CreationRoutine = creationRoutineIdentifier;
+            Result.ArgumentBlocks = argumentBlocks;
 
             return Result;
         }
@@ -1592,6 +1700,16 @@ namespace BaseNodeHelper
             return SimpleConditional;
         }
 
+        public static IConditional CreateConditional(IExpression booleanExpression, IInstruction instruction)
+        {
+            Conditional SimpleConditional = new Conditional();
+            SimpleConditional.Documentation = CreateEmptyDocumentation();
+            SimpleConditional.BooleanExpression = booleanExpression;
+            SimpleConditional.Instructions = CreateSimpleScope(instruction);
+
+            return SimpleConditional;
+        }
+
         public static IWith CreateWith(IExpression firstExpression)
         {
             IRange FirstRange = CreateRange(firstExpression);
@@ -1600,6 +1718,18 @@ namespace BaseNodeHelper
             Result.Documentation = CreateEmptyDocumentation();
             Result.RangeBlocks = BlockListHelper<IRange, Range>.CreateSimpleBlockList(FirstRange);
             Result.Instructions = CreateEmptyScope();
+
+            return Result;
+        }
+
+        public static IWith CreateWith(IExpression firstExpression, IInstruction instruction)
+        {
+            IRange FirstRange = CreateRange(firstExpression);
+
+            With Result = new With();
+            Result.Documentation = CreateEmptyDocumentation();
+            Result.RangeBlocks = BlockListHelper<IRange, Range>.CreateSimpleBlockList(FirstRange);
+            Result.Instructions = CreateSimpleScope(instruction);
 
             return Result;
         }
@@ -2314,10 +2444,40 @@ namespace BaseNodeHelper
                     return SimplifyUnaryOperatorExpression(AsUnaryOperatorExpression, out simplifiedNode);
                 case ICommandInstruction AsCommandInstruction:
                     return SimplifyCommandInstruction(AsCommandInstruction, out simplifiedNode);
+                case IAsLongAsInstruction AsAsLongAsInstruction:
+                    return SimplifyAsLongAsInstruction(AsAsLongAsInstruction, out simplifiedNode);
                 case IAssignmentInstruction AsAssignmentInstruction:
                     return SimplifyAssignmentInstruction(AsAssignmentInstruction, out simplifiedNode);
+                case IAttachmentInstruction AsAttachmentInstruction:
+                    return SimplifyAttachmentInstruction(AsAttachmentInstruction, out simplifiedNode);
+                case ICheckInstruction AsCheckInstruction:
+                    return SimplifyCheckInstruction(AsCheckInstruction, out simplifiedNode);
+                case ICreateInstruction AsCreateInstruction:
+                    return SimplifyCreateInstruction(AsCreateInstruction, out simplifiedNode);
+                case IDebugInstruction AsDebugInstruction:
+                    return SimplifyDebugInstruction(AsDebugInstruction, out simplifiedNode);
+                case IForLoopInstruction AsForLoopInstruction:
+                    return SimplifyForLoopInstruction(AsForLoopInstruction, out simplifiedNode);
+                case IIfThenElseInstruction AsIfThenElseInstruction:
+                    return SimplifyIfThenElseInstruction(AsIfThenElseInstruction, out simplifiedNode);
+                case IIndexAssignmentInstruction AsIndexAssignmentInstruction:
+                    return SimplifyIndexAssignmentInstruction(AsIndexAssignmentInstruction, out simplifiedNode);
+                case IInspectInstruction AsInspectInstruction:
+                    return SimplifyInspectInstruction(AsInspectInstruction, out simplifiedNode);
                 case IKeywordAssignmentInstruction AsKeywordAssignmentInstruction:
                     return SimplifyKeywordAssignmentInstruction(AsKeywordAssignmentInstruction, out simplifiedNode);
+                case IOverLoopInstruction AsOverLoopInstruction:
+                    return SimplifyOverLoopInstruction(AsOverLoopInstruction, out simplifiedNode);
+                case IPrecursorIndexAssignmentInstruction AsPrecursorIndexAssignmentInstruction:
+                    return SimplifyPrecursorIndexAssignmentInstruction(AsPrecursorIndexAssignmentInstruction, out simplifiedNode);
+                case IPrecursorInstruction AsPrecursorInstruction:
+                    return SimplifyPrecursorInstruction(AsPrecursorInstruction, out simplifiedNode);
+                case IRaiseEventInstruction AsRaiseEventInstruction:
+                    return SimplifyRaiseEventInstruction(AsRaiseEventInstruction, out simplifiedNode);
+                case IReleaseInstruction AsReleaseInstruction:
+                    return SimplifyReleaseInstruction(AsReleaseInstruction, out simplifiedNode);
+                case IThrowInstruction AsThrowInstruction:
+                    return SimplifyThrowInstruction(AsThrowInstruction, out simplifiedNode);
                 case IFunctionType AsFunctionType:
                     return SimplifyFunctionType(AsFunctionType, out simplifiedNode);
                 case IGenericType AsGenericType:
@@ -2431,7 +2591,52 @@ namespace BaseNodeHelper
                 if (ComplexifyCommandInstruction(AsCommandInstruction, out ComplexifiedNode))
                     complexifiedNodeList.Add(ComplexifiedNode);
 
+                if (ComplexifyAsAsLongAsInstruction(AsCommandInstruction, out ComplexifiedNode))
+                    complexifiedNodeList.Add(ComplexifiedNode);
+
                 if (ComplexifyAsAssignmentInstruction(AsCommandInstruction, out ComplexifiedNode))
+                    complexifiedNodeList.Add(ComplexifiedNode);
+
+                if (ComplexifyAsAttachmentInstruction(AsCommandInstruction, out ComplexifiedNode))
+                    complexifiedNodeList.Add(ComplexifiedNode);
+
+                if (ComplexifyAsCheckInstruction(AsCommandInstruction, out ComplexifiedNode))
+                    complexifiedNodeList.Add(ComplexifiedNode);
+
+                if (ComplexifyAsCreateInstruction(AsCommandInstruction, out ComplexifiedNode))
+                    complexifiedNodeList.Add(ComplexifiedNode);
+
+                if (ComplexifyAsDebugInstruction(AsCommandInstruction, out ComplexifiedNode))
+                    complexifiedNodeList.Add(ComplexifiedNode);
+
+                if (ComplexifyAsForLoopInstruction(AsCommandInstruction, out ComplexifiedNode))
+                    complexifiedNodeList.Add(ComplexifiedNode);
+
+                if (ComplexifyAsIfThenElseInstruction(AsCommandInstruction, out ComplexifiedNode))
+                    complexifiedNodeList.Add(ComplexifiedNode);
+
+                if (ComplexifyAsIndexAssignmentInstruction(AsCommandInstruction, out ComplexifiedNode))
+                    complexifiedNodeList.Add(ComplexifiedNode);
+
+                if (ComplexifyAsInspectInstruction(AsCommandInstruction, out ComplexifiedNode))
+                    complexifiedNodeList.Add(ComplexifiedNode);
+
+                if (ComplexifyAsOverLoopInstruction(AsCommandInstruction, out ComplexifiedNode))
+                    complexifiedNodeList.Add(ComplexifiedNode);
+
+                if (ComplexifyAsPrecursorIndexAssignmentInstruction(AsCommandInstruction, out ComplexifiedNode))
+                    complexifiedNodeList.Add(ComplexifiedNode);
+
+                if (ComplexifyAsPrecursorInstruction(AsCommandInstruction, out ComplexifiedNode))
+                    complexifiedNodeList.Add(ComplexifiedNode);
+
+                if (ComplexifyAsRaiseEventInstruction(AsCommandInstruction, out ComplexifiedNode))
+                    complexifiedNodeList.Add(ComplexifiedNode);
+
+                if (ComplexifyAsReleaseInstruction(AsCommandInstruction, out ComplexifiedNode))
+                    complexifiedNodeList.Add(ComplexifiedNode);
+
+                if (ComplexifyAsThrowInstruction(AsCommandInstruction, out ComplexifiedNode))
                     complexifiedNodeList.Add(ComplexifiedNode);
             }
 
@@ -3413,6 +3618,29 @@ namespace BaseNodeHelper
             return complexifiedNode != null;
         }
 
+        private static bool SimplifyAsLongAsInstruction(IAsLongAsInstruction node, out INode simplifiedNode)
+        {
+            IQualifiedName AssignmentTarget = CreateEmptyQualifiedName();
+            IExpression Source = DeepCloneNode(node.ContinueCondition, cloneCommentGuid: false) as IExpression;
+
+            simplifiedNode = CreateAssignmentInstruction(new List<IQualifiedName>() { AssignmentTarget }, Source);
+
+            return true;
+        }
+
+        private static bool ComplexifyAsAsLongAsInstruction(ICommandInstruction node, out INode complexifiedNode)
+        {
+            complexifiedNode = null;
+
+            if (ParsePattern(node, "as long as ", out string BeforeText, out string AfterText) && BeforeText.Length == 0)
+            {
+                CloneComplexifiedCommand(node, AfterText, out IExpression Source);
+                complexifiedNode = CreateAsLongAsInstruction(Source);
+            }
+
+            return complexifiedNode != null;
+        }
+
         private static bool SimplifyAssignmentInstruction(IAssignmentInstruction node, out INode simplifiedNode)
         {
             if (BlockListHelper<IQualifiedName, QualifiedName>.IsSimple(node.DestinationBlocks))
@@ -3492,6 +3720,239 @@ namespace BaseNodeHelper
             return complexifiedNode != null;
         }
 
+        private static bool SimplifyAttachmentInstruction(IAttachmentInstruction node, out INode simplifiedNode)
+        {
+            IQualifiedName AssignmentTarget = CreateEmptyQualifiedName();
+            IExpression Source = DeepCloneNode(node.Source, cloneCommentGuid: false) as IExpression;
+
+            simplifiedNode = CreateAssignmentInstruction(new List<IQualifiedName>() { AssignmentTarget }, Source);
+
+            return true;
+        }
+
+        private static bool ComplexifyAsAttachmentInstruction(ICommandInstruction node, out INode complexifiedNode)
+        {
+            complexifiedNode = null;
+
+            if (ParsePattern(node, "attach ", out string BeforeText, out string AfterText) && BeforeText.Length == 0)
+            {
+                CloneComplexifiedCommand(node, AfterText, out IExpression Source);
+                complexifiedNode = CreateAttachmentInstruction(Source, new List<IName>() { CreateEmptyName() });
+            }
+
+            return complexifiedNode != null;
+        }
+
+        private static bool SimplifyCheckInstruction(ICheckInstruction node, out INode simplifiedNode)
+        {
+            IQualifiedName AssignmentTarget = CreateEmptyQualifiedName();
+            IExpression Source = DeepCloneNode(node.BooleanExpression, cloneCommentGuid: false) as IExpression;
+
+            simplifiedNode = CreateAssignmentInstruction(new List<IQualifiedName>() { AssignmentTarget }, Source);
+
+            return true;
+        }
+
+        private static bool ComplexifyAsCheckInstruction(ICommandInstruction node, out INode complexifiedNode)
+        {
+            complexifiedNode = null;
+
+            if (ParsePattern(node, "check ", out string BeforeText, out string AfterText) && BeforeText.Length == 0)
+            {
+                CloneComplexifiedCommand(node, AfterText, out IExpression Source);
+                complexifiedNode = CreateCheckInstruction(Source);
+            }
+
+            return complexifiedNode != null;
+        }
+
+        private static bool SimplifyCreateInstruction(ICreateInstruction node, out INode simplifiedNode)
+        {
+            IQualifiedName Command = CreateSimpleQualifiedName(node.CreationRoutineIdentifier.Text);
+
+            IBlockList<IArgument, Argument> ArgumentCopy = BlockListHelper<IArgument, Argument>.CreateBlockListCopy(node.ArgumentBlocks);
+            simplifiedNode = CreateCommandInstruction(Command, ArgumentCopy);
+
+            return true;
+        }
+
+        private static bool ComplexifyAsCreateInstruction(ICommandInstruction node, out INode complexifiedNode)
+        {
+            complexifiedNode = null;
+
+            if (ParsePattern(node, "create ", out string BeforeText, out string AfterText) && BeforeText.Length == 0)
+            {
+                IIdentifier EntityIdentifier = CreateEmptyIdentifier();
+                IIdentifier CreationRoutineIdentifier = CreateSimpleIdentifier(AfterText);
+                complexifiedNode = CreateCreateInstruction(EntityIdentifier, CreationRoutineIdentifier, new List<IArgument>());
+            }
+
+            return complexifiedNode != null;
+        }
+
+        private static bool SimplifyDebugInstruction(IDebugInstruction node, out INode simplifiedNode)
+        {
+            if (node.Instructions.InstructionBlocks.NodeBlockList.Count > 0)
+            {
+                Debug.Assert(node.Instructions.InstructionBlocks.NodeBlockList[0].NodeList.Count > 0);
+                simplifiedNode = DeepCloneNode(node.Instructions.InstructionBlocks.NodeBlockList[0].NodeList[0], cloneCommentGuid: false) as IInstruction;
+            }
+            else
+                simplifiedNode = CreateEmptyCommandInstruction();
+
+            return true;
+        }
+
+        private static bool ComplexifyAsDebugInstruction(ICommandInstruction node, out INode complexifiedNode)
+        {
+            complexifiedNode = null;
+            string Pattern = "debug ";
+
+            if (ParsePattern(node, Pattern, out string BeforeText, out string AfterText) && BeforeText.Length == 0)
+            {
+                CloneComplexifiedCommand(node, Pattern, out ICommandInstruction ClonedCommand);
+                complexifiedNode = CreateSimpleDebugInstruction(ClonedCommand);
+            }
+
+            return complexifiedNode != null;
+        }
+
+        private static bool SimplifyForLoopInstruction(IForLoopInstruction node, out INode simplifiedNode)
+        {
+            IInstruction SelectedInstruction = null;
+
+            if (node.InitInstructionBlocks.NodeBlockList.Count > 0)
+            {
+                Debug.Assert(node.InitInstructionBlocks.NodeBlockList[0].NodeList.Count > 0);
+                SelectedInstruction = node.InitInstructionBlocks.NodeBlockList[0].NodeList[0];
+            }
+            else if (node.LoopInstructionBlocks.NodeBlockList.Count > 0)
+            {
+                Debug.Assert(node.LoopInstructionBlocks.NodeBlockList[0].NodeList.Count > 0);
+                SelectedInstruction = node.LoopInstructionBlocks.NodeBlockList[0].NodeList[0];
+            }
+            else if (node.IterationInstructionBlocks.NodeBlockList.Count > 0)
+            {
+                Debug.Assert(node.IterationInstructionBlocks.NodeBlockList[0].NodeList.Count > 0);
+                SelectedInstruction = node.IterationInstructionBlocks.NodeBlockList[0].NodeList[0];
+            }
+
+            if (SelectedInstruction != null)
+                simplifiedNode = DeepCloneNode(SelectedInstruction, cloneCommentGuid: false) as IInstruction;
+            else
+            {
+                IQualifiedName AssignmentTarget = CreateEmptyQualifiedName();
+                IExpression Source = DeepCloneNode(node.WhileCondition, cloneCommentGuid: false) as IExpression;
+
+                simplifiedNode = CreateAssignmentInstruction(new List<IQualifiedName>() { AssignmentTarget }, Source);
+            }
+
+            return true;
+        }
+
+        private static bool ComplexifyAsForLoopInstruction(ICommandInstruction node, out INode complexifiedNode)
+        {
+            complexifiedNode = null;
+            string Pattern = "for ";
+
+            if (ParsePattern(node, Pattern, out string BeforeText, out string AfterText) && BeforeText.Length == 0)
+            {
+                CloneComplexifiedCommand(node, Pattern, out ICommandInstruction ClonedCommand);
+                complexifiedNode = CreateForLoopInstruction(ClonedCommand);
+            }
+
+            return complexifiedNode != null;
+        }
+
+        private static bool SimplifyIfThenElseInstruction(IIfThenElseInstruction node, out INode simplifiedNode)
+        {
+            Debug.Assert(node.ConditionalBlocks.NodeBlockList.Count > 0 && node.ConditionalBlocks.NodeBlockList[0].NodeList.Count > 0);
+            IConditional FirstConditional = node.ConditionalBlocks.NodeBlockList[0].NodeList[0];
+            
+            if (FirstConditional.Instructions.InstructionBlocks.NodeBlockList.Count > 0)
+            {
+                Debug.Assert(FirstConditional.Instructions.InstructionBlocks.NodeBlockList[0].NodeList.Count > 0);
+                simplifiedNode = DeepCloneNode(FirstConditional.Instructions.InstructionBlocks.NodeBlockList[0].NodeList[0], cloneCommentGuid: false) as IInstruction;
+            }
+            else
+            {
+                IQualifiedName AssignmentTarget = CreateEmptyQualifiedName();
+                IExpression Source = DeepCloneNode(FirstConditional.BooleanExpression, cloneCommentGuid: false) as IExpression;
+
+                simplifiedNode = CreateAssignmentInstruction(new List<IQualifiedName>() { AssignmentTarget }, Source);
+            }
+
+            return true;
+        }
+
+        private static bool ComplexifyAsIfThenElseInstruction(ICommandInstruction node, out INode complexifiedNode)
+        {
+            complexifiedNode = null;
+            string Pattern = "if ";
+
+            if (ParsePattern(node, Pattern, out string BeforeText, out string AfterText) && BeforeText.Length == 0)
+            {
+                CloneComplexifiedCommand(node, Pattern, out ICommandInstruction ClonedCommand);
+                IConditional FirstConditional = CreateConditional(CreateEmptyQueryExpression(), ClonedCommand);
+                complexifiedNode = CreateIfThenElseInstruction(FirstConditional);
+            }
+
+            return complexifiedNode != null;
+        }
+
+        private static bool SimplifyIndexAssignmentInstruction(IIndexAssignmentInstruction node, out INode simplifiedNode)
+        {
+            IQualifiedName AssignmentTarget = DeepCloneNode(node.Destination, cloneCommentGuid: false) as IQualifiedName;
+            IExpression Source = DeepCloneNode(node.Source, cloneCommentGuid: false) as IExpression;
+
+            simplifiedNode = CreateAssignmentInstruction(new List<IQualifiedName>() { AssignmentTarget }, Source);
+
+            return true;
+        }
+
+        private static bool ComplexifyAsIndexAssignmentInstruction(ICommandInstruction node, out INode complexifiedNode)
+        {
+            complexifiedNode = null;
+
+            if (node.Command.Path.Count > 1 && node.Command.Path[node.Command.Path.Count - 1].Text == "[]:=")
+            {
+                IQualifiedName ClonedDestination = DeepCloneNode(node.Command, cloneCommentGuid: false) as IQualifiedName;
+                ClonedDestination.Path.RemoveAt(ClonedDestination.Path.Count - 1);
+                IBlockList<IArgument, Argument> ClonedArgumentBlocks = BlockListHelper<IArgument, Argument>.CreateBlockListCopy(node.ArgumentBlocks);
+                complexifiedNode = CreateIndexAssignmentInstruction(ClonedDestination, ClonedArgumentBlocks, CreateEmptyQueryExpression());
+            }
+
+            return complexifiedNode != null;
+        }
+
+        private static bool SimplifyInspectInstruction(IInspectInstruction node, out INode simplifiedNode)
+        {
+            IQualifiedName AssignmentTarget = CreateEmptyQualifiedName();
+            IExpression Source = DeepCloneNode(node.Source, cloneCommentGuid: false) as IExpression;
+
+            simplifiedNode = CreateAssignmentInstruction(new List<IQualifiedName>() { AssignmentTarget }, Source);
+
+            return true;
+        }
+
+        private static bool ComplexifyAsInspectInstruction(ICommandInstruction node, out INode complexifiedNode)
+        {
+            complexifiedNode = null;
+            string Pattern = "if ";
+
+            if (ParsePattern(node, Pattern, out string BeforeText, out string AfterText) && BeforeText.Length == 0)
+            {
+                CloneComplexifiedCommand(node, Pattern, out ICommandInstruction ClonedCommand);
+                IExpression FirstExpression = CreateDefaultManifestNumberExpression();
+                IWith FirstWith = CreateWith(FirstExpression, ClonedCommand);
+
+                IExpression Source = CreateEmptyQueryExpression();
+                complexifiedNode = CreateInspectInstruction(Source, FirstWith);
+            }
+
+            return complexifiedNode != null;
+        }
+
         private static bool SimplifyKeywordAssignmentInstruction(IKeywordAssignmentInstruction node, out INode simplifiedNode)
         {
             IIdentifier KeywordIdentifier = CreateSimpleIdentifier(node.Destination.ToString());
@@ -3551,6 +4012,147 @@ namespace BaseNodeHelper
                         }
                     }
                 }
+            }
+
+            return complexifiedNode != null;
+        }
+
+        private static bool SimplifyOverLoopInstruction(IOverLoopInstruction node, out INode simplifiedNode)
+        {
+            IQualifiedName AssignmentTarget = CreateEmptyQualifiedName();
+            IExpression Source = DeepCloneNode(node.OverList, cloneCommentGuid: false) as IExpression;
+
+            simplifiedNode = CreateAssignmentInstruction(new List<IQualifiedName>() { AssignmentTarget }, Source);
+
+            return true;
+        }
+
+        private static bool ComplexifyAsOverLoopInstruction(ICommandInstruction node, out INode complexifiedNode)
+        {
+            complexifiedNode = null;
+            string Pattern = "over ";
+
+            if (ParsePattern(node, Pattern, out string BeforeText, out string AfterText) && BeforeText.Length == 0)
+            {
+                CloneComplexifiedCommand(node, Pattern, out ICommandInstruction ClonedCommand);
+
+                IExpression OverList = CreateDefaultManifestNumberExpression();
+                complexifiedNode = CreateOverLoopInstruction(OverList, new List<IName>() { CreateEmptyName() }, ClonedCommand);
+            }
+
+            return complexifiedNode != null;
+        }
+
+        private static bool SimplifyPrecursorIndexAssignmentInstruction(IPrecursorIndexAssignmentInstruction node, out INode simplifiedNode)
+        {
+            IQualifiedName AssignmentTarget = CreateEmptyQualifiedName();
+            IExpression Source = DeepCloneNode(node.Source, cloneCommentGuid: false) as IExpression;
+
+            simplifiedNode = CreateAssignmentInstruction(new List<IQualifiedName>() { AssignmentTarget }, Source);
+
+            return true;
+        }
+
+        private static bool ComplexifyAsPrecursorIndexAssignmentInstruction(ICommandInstruction node, out INode complexifiedNode)
+        {
+            complexifiedNode = null;
+
+            if (node.Command.Path.Count == 1 && node.Command.Path[0].Text == "precursor[]:=")
+            {
+                IBlockList<IArgument, Argument> ClonedArgumentBlocks = BlockListHelper<IArgument, Argument>.CreateBlockListCopy(node.ArgumentBlocks);
+                complexifiedNode = CreatePrecursorIndexAssignmentInstruction(ClonedArgumentBlocks, CreateEmptyQueryExpression());
+            }
+
+            return complexifiedNode != null;
+        }
+
+        private static bool SimplifyPrecursorInstruction(IPrecursorInstruction node, out INode simplifiedNode)
+        {
+            IQualifiedName Command = CreateSimpleQualifiedName("precursor");
+            IBlockList<IArgument, Argument> ClonedArgumentBlocks = BlockListHelper<IArgument, Argument>.CreateBlockListCopy(node.ArgumentBlocks);
+
+            simplifiedNode = CreateCommandInstruction(Command, ClonedArgumentBlocks);
+
+            return true;
+        }
+
+        private static bool ComplexifyAsPrecursorInstruction(ICommandInstruction node, out INode complexifiedNode)
+        {
+            complexifiedNode = null;
+
+            if (node.Command.Path.Count == 1 && node.Command.Path[0].Text == "precursor")
+            {
+                IBlockList<IArgument, Argument> ClonedArgumentBlocks = BlockListHelper<IArgument, Argument>.CreateBlockListCopy(node.ArgumentBlocks);
+                complexifiedNode = CreatePrecursorInstruction(ClonedArgumentBlocks);
+            }
+
+            return complexifiedNode != null;
+        }
+
+        private static bool SimplifyRaiseEventInstruction(IRaiseEventInstruction node, out INode simplifiedNode)
+        {
+            simplifiedNode = CreateSimpleCommandInstruction(node.QueryIdentifier.Text);
+
+            return true;
+        }
+
+        private static bool ComplexifyAsRaiseEventInstruction(ICommandInstruction node, out INode complexifiedNode)
+        {
+            complexifiedNode = null;
+            string Pattern = "raise ";
+
+            if (ParsePattern(node, Pattern, out string BeforeText, out string AfterText) && BeforeText.Length == 0)
+            {
+                IIdentifier QueryIdentifier = CreateSimpleIdentifier(AfterText);
+                complexifiedNode = CreateRaiseEventInstruction(QueryIdentifier);
+            }
+
+            return complexifiedNode != null;
+        }
+
+        private static bool SimplifyReleaseInstruction(IReleaseInstruction node, out INode simplifiedNode)
+        {
+            IQualifiedName Command = DeepCloneNode(node.EntityName, cloneCommentGuid: false) as IQualifiedName;
+            simplifiedNode = CreateCommandInstruction(Command, new List<IArgument>());
+
+            return true;
+        }
+
+        private static bool ComplexifyAsReleaseInstruction(ICommandInstruction node, out INode complexifiedNode)
+        {
+            complexifiedNode = null;
+            string Pattern = "release ";
+
+            if (ParsePattern(node, Pattern, out string BeforeText, out string AfterText) && BeforeText.Length == 0)
+            {
+                IQualifiedName entityName = CreateSimpleQualifiedName(AfterText);
+                complexifiedNode = CreateReleaseInstruction(entityName);
+            }
+
+            return complexifiedNode != null;
+        }
+
+        private static bool SimplifyThrowInstruction(IThrowInstruction node, out INode simplifiedNode)
+        {
+            IQualifiedName Command = CreateSimpleQualifiedName("precursor");
+            IBlockList<IArgument, Argument> ClonedArgumentBlocks = BlockListHelper<IArgument, Argument>.CreateBlockListCopy(node.ArgumentBlocks);
+
+            simplifiedNode = CreateCommandInstruction(Command, ClonedArgumentBlocks);
+
+            return true;
+        }
+
+        private static bool ComplexifyAsThrowInstruction(ICommandInstruction node, out INode complexifiedNode)
+        {
+            complexifiedNode = null;
+
+            if (ParsePattern(node, "throw ", out string BeforeText, out string AfterText) && BeforeText.Length == 0)
+            {
+                IObjectType ExceptionType = CreateEmptySimpleType();
+                IIdentifier CreationRoutineIdentifier = CreateSimpleIdentifier(AfterText);
+                IBlockList<IArgument, Argument> ClonedArgumentBlocks = BlockListHelper<IArgument, Argument>.CreateBlockListCopy(node.ArgumentBlocks);
+                
+                complexifiedNode = CreateThrowInstruction(ExceptionType, CreationRoutineIdentifier, ClonedArgumentBlocks);
             }
 
             return complexifiedNode != null;
@@ -3845,6 +4447,44 @@ namespace BaseNodeHelper
             NodeTreeHelper.SetString(ClonedQuery.Query.Path[0], "Text", afterText);
 
             rightExpression = ClonedQuery;
+        }
+
+        private static void CloneComplexifiedCommand(ICommandInstruction node, string afterText, out IExpression rightExpression)
+        {
+            ICommandInstruction ClonedCommand = DeepCloneNode(node, cloneCommentGuid: false) as ICommandInstruction;
+            Debug.Assert(ClonedCommand.Command != null);
+            Debug.Assert(ClonedCommand.Command.Path.Count > 0);
+
+            NodeTreeHelper.SetString(ClonedCommand.Command.Path[0], "Text", afterText);
+
+            rightExpression = CreateQueryExpression(ClonedCommand.Command, ClonedCommand.ArgumentBlocks);
+        }
+
+        private static void CloneComplexifiedCommand(ICommandInstruction node, string beforeText, string afterText, out IExpression leftExpression, out IExpression rightExpression)
+        {
+            leftExpression = CreateSimpleQueryExpression(beforeText);
+
+            ICommandInstruction ClonedCommand = DeepCloneNode(node, cloneCommentGuid: false) as ICommandInstruction;
+            Debug.Assert(ClonedCommand.Command != null);
+            Debug.Assert(ClonedCommand.Command.Path.Count > 0);
+
+            NodeTreeHelper.SetString(ClonedCommand.Command.Path[0], "Text", afterText);
+
+            rightExpression = CreateQueryExpression(ClonedCommand.Command, ClonedCommand.ArgumentBlocks);
+        }
+
+        private static void CloneComplexifiedCommand(ICommandInstruction node, string pattern, out ICommandInstruction clonedCommand)
+        {
+            clonedCommand = DeepCloneNode(node, cloneCommentGuid: false) as ICommandInstruction;
+            Debug.Assert(clonedCommand.Command.Path.Count > 0);
+            IIdentifier FirstIdentifier = clonedCommand.Command.Path[0];
+            string Text = FirstIdentifier.Text;
+            Debug.Assert(Text.StartsWith(pattern));
+
+            if (Text.Length > pattern.Length || clonedCommand.Command.Path.Count == 1)
+                NodeTreeHelper.SetString(FirstIdentifier, nameof(IIdentifier.Text), Text.Substring(pattern.Length));
+            else
+                clonedCommand.Command.Path.RemoveAt(0);
         }
         #endregion
     }
