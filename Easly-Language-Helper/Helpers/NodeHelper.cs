@@ -2354,6 +2354,7 @@ namespace BaseNodeHelper
             { typeof(IOverLoopInstruction), new string[] { nameof(IOverLoopInstruction.IndexerBlocks) } },
             { typeof(IIndexAssignmentInstruction), new string[] { nameof(IIndexAssignmentInstruction.ArgumentBlocks) } },
             { typeof(IPrecursorIndexAssignmentInstruction), new string[] { nameof(IPrecursorIndexAssignmentInstruction.ArgumentBlocks) } },
+            { typeof(IAnchoredType), new string[] { nameof(IAnchoredType.AnchoredName) } },
             { typeof(IFunctionType), new string[] { nameof(IFunctionType.OverloadBlocks) } },
             { typeof(IGenericType), new string[] { nameof(IGenericType.TypeArgumentBlocks) } },
             { typeof(IIndexerType), new string[] { nameof(IIndexerType.IndexParameterBlocks) } },
@@ -2488,6 +2489,8 @@ namespace BaseNodeHelper
                     return SimplifyReleaseInstruction(AsReleaseInstruction, out simplifiedNode);
                 case IThrowInstruction AsThrowInstruction:
                     return SimplifyThrowInstruction(AsThrowInstruction, out simplifiedNode);
+                case IAnchoredType AsAnchoredType:
+                    return SimplifyAnchoredType(AsAnchoredType, out simplifiedNode);
                 case IFunctionType AsFunctionType:
                     return SimplifyFunctionType(AsFunctionType, out simplifiedNode);
                 case IGenericType AsGenericType:
@@ -2658,6 +2661,9 @@ namespace BaseNodeHelper
 
             if (node is ISimpleType AsSimpleType)
             {
+                if (ComplexifyAsAnchoredType(AsSimpleType, out ComplexifiedNode))
+                    complexifiedNodeList.Add(ComplexifiedNode);
+
                 if (ComplexifyAsFunctionType(AsSimpleType, out ComplexifiedNode))
                     complexifiedNodeList.Add(ComplexifiedNode);
 
@@ -3929,8 +3935,14 @@ namespace BaseNodeHelper
             {
                 IQualifiedName ClonedDestination = DeepCloneNode(node.Command, cloneCommentGuid: false) as IQualifiedName;
                 ClonedDestination.Path.RemoveAt(ClonedDestination.Path.Count - 1);
-                IBlockList<IArgument, Argument> ClonedArgumentBlocks = BlockListHelper<IArgument, Argument>.CreateBlockListCopy(node.ArgumentBlocks);
-                complexifiedNode = CreateIndexAssignmentInstruction(ClonedDestination, ClonedArgumentBlocks, CreateEmptyQueryExpression());
+
+                IBlockList<IArgument, Argument> ClonedArgumentBlocks;
+                if (node.ArgumentBlocks.NodeBlockList.Count > 0)
+                    ClonedArgumentBlocks = BlockListHelper<IArgument, Argument>.CreateBlockListCopy(node.ArgumentBlocks);
+                else
+                    ClonedArgumentBlocks = BlockListHelper<IArgument, Argument>.CreateSimpleBlockList(CreatePositionalArgument(CreateSimpleManifestNumberExpression("0")));
+
+                  complexifiedNode = CreateIndexAssignmentInstruction(ClonedDestination, ClonedArgumentBlocks, CreateEmptyQueryExpression());
             }
 
             return complexifiedNode != null;
@@ -4164,6 +4176,28 @@ namespace BaseNodeHelper
                 IBlockList<IArgument, Argument> ClonedArgumentBlocks = BlockListHelper<IArgument, Argument>.CreateBlockListCopy(node.ArgumentBlocks);
                 
                 complexifiedNode = CreateThrowInstruction(ExceptionType, CreationRoutineIdentifier, ClonedArgumentBlocks);
+            }
+
+            return complexifiedNode != null;
+        }
+
+        private static bool SimplifyAnchoredType(IAnchoredType node, out INode simplifiedNode)
+        {
+            Debug.Assert(node.AnchoredName.Path.Count > 0);
+            simplifiedNode = CreateSimpleSimpleType(node.AnchoredName.Path[0].Text);
+            return true;
+        }
+
+        private static bool ComplexifyAsAnchoredType(ISimpleType node, out INode complexifiedNode)
+        {
+            complexifiedNode = null;
+
+            string Text = node.ClassIdentifier.Text;
+
+            if (Text.StartsWith("like "))
+            {
+                IQualifiedName AnchoredName = CreateSimpleQualifiedName(Text.Substring(5));
+                complexifiedNode = CreateAnchoredType(AnchoredName);
             }
 
             return complexifiedNode != null;
