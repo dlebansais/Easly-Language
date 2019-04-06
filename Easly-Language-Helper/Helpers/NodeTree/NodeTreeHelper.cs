@@ -1673,10 +1673,8 @@ namespace BaseNodeHelper
             if (nodeType == null) throw new ArgumentNullException(nameof(nodeType));
             if (nodeType.GetInterface(typeof(INode).FullName) == null) throw new ArgumentException(nameof(nodeType));
 
-            string BaseNodeNamespace = typeof(INode).FullName.Substring(0, typeof(INode).FullName.IndexOf(".") + 1);
-            while (nodeType != typeof(object) && !nodeType.FullName.StartsWith(BaseNodeNamespace))
-                nodeType = nodeType.BaseType;
-            Debug.Assert(nodeType != typeof(object));
+            if (GetBaseNodeAncestor(nodeType, out Type AncestorType))
+                nodeType = AncestorType;
 
             IList<PropertyInfo> Properties = GetTypeProperties(nodeType);
             Debug.Assert(Properties != null);
@@ -1686,6 +1684,25 @@ namespace BaseNodeHelper
                 Result.Add(Property.Name);
 
             Result.Sort();
+            return Result;
+        }
+
+        private static bool GetBaseNodeAncestor(Type nodeType, out Type ancestorType)
+        {
+            ancestorType = null;
+            bool Result = false;
+
+            string BaseNodeNamespace = typeof(INode).FullName.Substring(0, typeof(INode).FullName.IndexOf(".") + 1);
+            while (nodeType != typeof(object) && !nodeType.FullName.StartsWith(BaseNodeNamespace))
+                nodeType = nodeType.BaseType;
+            Debug.Assert(nodeType != typeof(object));
+
+            if (nodeType != typeof(INode) && nodeType != typeof(Node))
+            {
+                ancestorType = nodeType;
+                Result = true;
+            }
+
             return Result;
         }
 

@@ -372,32 +372,61 @@ namespace BaseNodeHelper
 
         private static INode CreateDefaultNoCheck(Type interfaceType)
         {
+            INode Result;
+
             if (interfaceType == typeof(IArgument))
-                return CreateDefaultArgument();
+                Result = CreateDefaultArgument();
             else if (interfaceType == typeof(ITypeArgument))
-                return CreateDefaultTypeArgument();
+                Result = CreateDefaultTypeArgument();
             else if (interfaceType == typeof(IBody))
-                return CreateDefaultBody();
+                Result = CreateDefaultBody();
             else if (interfaceType == typeof(IExpression))
-                return CreateDefaultExpression();
+                Result = CreateDefaultExpression();
             else if (interfaceType == typeof(IInstruction))
-                return CreateDefaultInstruction();
+                Result = CreateDefaultInstruction();
             else if (interfaceType == typeof(IFeature))
-                return CreateDefaultFeature();
+                Result = CreateDefaultFeature();
             else if (interfaceType == typeof(IObjectType))
-                return CreateDefaultType();
+                Result = CreateDefaultType();
             else if (interfaceType == typeof(IName))
-                return CreateEmptyName();
+                Result = CreateEmptyName();
             else if (interfaceType == typeof(IIdentifier))
-                return CreateEmptyIdentifier();
+                Result = CreateEmptyIdentifier();
             else if (interfaceType == typeof(IQualifiedName))
-                return CreateEmptyQualifiedName();
+                Result = CreateEmptyQualifiedName();
             else if (interfaceType == typeof(IScope))
-                return CreateEmptyScope();
+                Result = CreateEmptyScope();
             else if (interfaceType == typeof(IImport))
-                return CreateSimpleImport("", "", ImportType.Latest);
+                Result = CreateSimpleImport("", "", ImportType.Latest);
             else
-                return null;
+                Result = null;
+
+            return Result;
+        }
+
+        public static Type GetDefaultItemType(Type interfaceType)
+        {
+            Type Result;
+
+            if (interfaceType == typeof(IArgument))
+                Result = typeof(IPositionalArgument);
+            else if (interfaceType == typeof(ITypeArgument))
+                Result = typeof(IPositionalTypeArgument);
+            else if (interfaceType == typeof(IBody))
+                Result = typeof(IEffectiveBody);
+            else if (interfaceType == typeof(IExpression))
+                Result = typeof(IQueryExpression);
+            else if (interfaceType == typeof(IInstruction))
+                Result = typeof(ICommandInstruction);
+            else if (interfaceType == typeof(IFeature))
+                Result = typeof(IAttributeFeature);
+            else if (interfaceType == typeof(IObjectType))
+                Result = typeof(ISimpleType);
+            else
+                Result = interfaceType;
+
+            Debug.Assert(Result != null);
+            return Result;
         }
 
         public static INode CreateDefaultFromInterface(Type interfaceType)
