@@ -513,6 +513,9 @@ namespace BaseNodeHelper
 
                 else if (NodeTreeHelper.IsStringProperty(EmptyNode, PropertyName))
                     NodeTreeHelper.SetStringProperty(EmptyNode, PropertyName, "");
+
+                else if (NodeTreeHelper.IsGuidProperty(EmptyNode, PropertyName))
+                    NodeTreeHelper.SetGuidProperty(EmptyNode, PropertyName, Guid.NewGuid());
             }
 
             InitializeDocumentation(EmptyNode);
