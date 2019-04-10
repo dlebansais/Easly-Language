@@ -65,6 +65,7 @@
     <Compile Include="Enums\ReplicationStatus.cs" />
     <Compile Include="Enums\SharingType.cs" />
     <Compile Include="Enums\UtilityType.cs" />
+    <Compile Include="Language\DateAndTime.cs" />
     <Compile Include="Language\DetachableReference.cs" />
     <Compile Include="Language\Entity\Entity.cs" />
     <Compile Include="Language\Entity\FeatureEntity\FeatureEntity.cs" />

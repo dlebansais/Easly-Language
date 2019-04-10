@@ -2,7 +2,7 @@
 
 Easly language AST description and helpers.
 
-![Easly](https://www.easly.org/images/16.png) [![Build Status](https://travis-ci.com/dlebansais/Easly-Language.svg?branch=master)](https://travis-ci.com/dlebansais/Easly-Language)
+[![Easly](https://www.easly.org/images/16.png)](https://www.easly.org) [![Build Status](https://travis-ci.com/dlebansais/Easly-Language.svg?branch=master)](https://travis-ci.com/dlebansais/Easly-Language)
 
 This assembly contains definitions for all nodes of the [Easly](https://www.easly.org) language, as well as helper classes to create these nodes.
 

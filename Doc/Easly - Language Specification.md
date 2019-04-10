@@ -1162,6 +1162,7 @@ The definition of built-in constructs.
 
 Name | Class Guid
 ------------ | -------------
+Any | c6297be4-e121-400f-ad78-79df3ecf2858
 Any Detachable Reference | a035583e-30d7-4434-be9a-8c4780029ead
 Any Once Reference | 894e9bd1-f516-42c4-a95f-a40e698eea97
 Any Optional Reference | ba18c1c9-f75f-4783-b99a-acfe78ff21fc
