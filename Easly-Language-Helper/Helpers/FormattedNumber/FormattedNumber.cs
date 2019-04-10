@@ -130,23 +130,24 @@
             string InvalidText = DigitText.Substring(i);
 
             // Convert to decimal. The result can start or finish with a zero
-            string DecimalNumber = IntegerBase.Convert(ValidText, integerBase, IntegerBase.Decimal);
+            string DecimalSignificand = IntegerBase.Convert(ValidText, integerBase, IntegerBase.Decimal);
 
             // Eliminate starting zeroes.
-            while (DecimalNumber.Length > 1 && DecimalNumber[0] == '0')
-                DecimalNumber = DecimalNumber.Substring(1);
+            while (DecimalSignificand.Length > 1 && DecimalSignificand[0] == '0')
+                DecimalSignificand = DecimalSignificand.Substring(1);
 
             // Eliminate ending zeroes. Don't forget they are significant.
             int BaseExponent = 0;
-            while (DecimalNumber.Length > 1 && DecimalNumber[DecimalNumber.Length - 1] == '0')
+            while (DecimalSignificand.Length > 1 && DecimalSignificand[DecimalSignificand.Length - 1] == '0')
             {
-                DecimalNumber = DecimalNumber.Substring(0, DecimalNumber.Length - 1);
+                DecimalSignificand = DecimalSignificand.Substring(0, DecimalSignificand.Length - 1);
                 BaseExponent++;
             }
+            IntegerBase.Decimal.IsValidSignificand(DecimalSignificand);
 
-            string DecimalExponent = (BaseExponent + DecimalNumber.Length - 1).ToString();
+            string DecimalExponent = (BaseExponent + DecimalSignificand.Length - 1).ToString();
 
-            ICanonicalNumber Canonical = new CanonicalNumber(false, DecimalNumber, false, DecimalExponent);
+            ICanonicalNumber Canonical = new CanonicalNumber(false, DecimalSignificand, false, DecimalExponent);
 
             number = new IntegerNumberWithBase(ValidText, InvalidText, Canonical, integerBase);
         }
