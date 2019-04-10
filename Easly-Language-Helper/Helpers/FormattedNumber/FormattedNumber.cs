@@ -128,8 +128,23 @@
 
             string ValidText = DigitText.Substring(0, i);
             string InvalidText = DigitText.Substring(i);
+
+            // Convert to decimal. The result can start or finish with a zero
             string DecimalNumber = IntegerBase.Convert(ValidText, integerBase, IntegerBase.Decimal);
-            string DecimalExponent = (DecimalNumber.Length - 1).ToString();
+
+            // Eliminate starting zeroes.
+            while (DecimalNumber.Length > 1 && DecimalNumber[0] == '0')
+                DecimalNumber = DecimalNumber.Substring(1);
+
+            // Eliminate ending zeroes. Don't forget they are significant.
+            int BaseExponent = 0;
+            while (DecimalNumber.Length > 1 && DecimalNumber[DecimalNumber.Length - 1] == '0')
+            {
+                DecimalNumber = DecimalNumber.Substring(0, DecimalNumber.Length - 1);
+                BaseExponent++;
+            }
+
+            string DecimalExponent = (BaseExponent + DecimalNumber.Length - 1).ToString();
 
             ICanonicalNumber Canonical = new CanonicalNumber(false, DecimalNumber, false, DecimalExponent);
 

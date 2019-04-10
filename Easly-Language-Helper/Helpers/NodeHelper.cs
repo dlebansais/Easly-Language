@@ -374,19 +374,19 @@ namespace BaseNodeHelper
         {
             INode Result;
 
-            if (interfaceType == typeof(IArgument))
+            if (interfaceType == typeof(IArgument) || interfaceType == typeof(IPositionalArgument))
                 Result = CreateDefaultArgument();
-            else if (interfaceType == typeof(ITypeArgument))
+            else if (interfaceType == typeof(ITypeArgument) || interfaceType == typeof(IPositionalTypeArgument))
                 Result = CreateDefaultTypeArgument();
-            else if (interfaceType == typeof(IBody))
+            else if (interfaceType == typeof(IBody) || interfaceType == typeof(IEffectiveBody))
                 Result = CreateDefaultBody();
-            else if (interfaceType == typeof(IExpression))
+            else if (interfaceType == typeof(IExpression) || interfaceType == typeof(IQueryExpression))
                 Result = CreateDefaultExpression();
-            else if (interfaceType == typeof(IInstruction))
+            else if (interfaceType == typeof(IInstruction) || interfaceType == typeof(ICommandInstruction))
                 Result = CreateDefaultInstruction();
-            else if (interfaceType == typeof(IFeature))
+            else if (interfaceType == typeof(IFeature) || interfaceType == typeof(IAttributeFeature))
                 Result = CreateDefaultFeature();
-            else if (interfaceType == typeof(IObjectType))
+            else if (interfaceType == typeof(IObjectType) || interfaceType == typeof(ISimpleType))
                 Result = CreateDefaultType();
             else if (interfaceType == typeof(IName))
                 Result = CreateEmptyName();
