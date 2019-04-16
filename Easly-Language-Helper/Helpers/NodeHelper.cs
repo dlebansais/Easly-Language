@@ -2467,6 +2467,8 @@ namespace BaseNodeHelper
                     return SimplifyKeywordExpression(AsKeywordExpression, out simplifiedNode);
                 case IManifestCharacterExpression AsManifestCharacterExpression:
                     return SimplifyManifestCharacterExpression(AsManifestCharacterExpression, out simplifiedNode);
+                case IManifestNumberExpression AsManifestNumberExpression:
+                    return SimplifyManifestNumberExpression(AsManifestNumberExpression, out simplifiedNode);
                 case IManifestStringExpression AsManifestStringExpression:
                     return SimplifyManifestStringExpression(AsManifestStringExpression, out simplifiedNode);
                 case INewExpression AsNewExpression:
@@ -2601,6 +2603,9 @@ namespace BaseNodeHelper
                     complexifiedNodeList.Add(ComplexifiedNode);
 
                 if (ComplexifyAsManifestCharacterExpression(AsQueryExpression, out ComplexifiedNode))
+                    complexifiedNodeList.Add(ComplexifiedNode);
+
+                if (ComplexifyAsManifestNumberExpression(AsQueryExpression, out ComplexifiedNode))
                     complexifiedNodeList.Add(ComplexifiedNode);
 
                 if (ComplexifyAsManifestStringExpression(AsQueryExpression, out ComplexifiedNode))
@@ -3321,6 +3326,31 @@ namespace BaseNodeHelper
 
                 if (Text.Length == 3 && Text[0] == '\'' && Text[2] == '\'')
                     complexifiedNode = CreateManifestCharacterExpression(Text.Substring(1, 1));
+            }
+
+            return complexifiedNode != null;
+        }
+
+        private static bool SimplifyManifestNumberExpression(IManifestNumberExpression node, out INode simplifiedNode)
+        {
+            simplifiedNode = CreateSimpleQueryExpression(node.Text);
+            return true;
+        }
+
+        private static bool ComplexifyAsManifestNumberExpression(IQueryExpression node, out INode complexifiedNode)
+        {
+            complexifiedNode = null;
+
+            if (IsQuerySimple(node))
+            {
+                string Text = node.Query.Path[0].Text;
+
+                if (Text.Length >= 1)
+                {
+                    IFormattedNumber fn = FormattedNumber.Parse(Text);
+                    if (fn.InvalidText.Length == 0)
+                        complexifiedNode = CreateSimpleManifestNumberExpression(Text);
+                }
             }
 
             return complexifiedNode != null;
