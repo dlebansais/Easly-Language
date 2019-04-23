@@ -41,9 +41,13 @@ namespace BaseNodeHelper
                 else if (NodeTreeHelperOptional.IsOptionalChildNodeProperty(node, NodePropertyName, out ChildNodeType))
                 {
                     NodeTreeHelperOptional.GetChildNode(node, NodePropertyName, out bool IsAssigned, out INode ChildNode);
+                    if (IsAssigned)
+                    {
+                        Debug.Assert(ChildNode != null);
 
-                    if (ChildNode != null && !Walk(ChildNode, node, NodePropertyName, callbacks, data))
-                        return false;
+                        if (!Walk(ChildNode, node, NodePropertyName, callbacks, data))
+                            return false;
+                    }
                 }
 
                 else if (NodeTreeHelperList.IsNodeListProperty(node, NodePropertyName, out ChildNodeType))
