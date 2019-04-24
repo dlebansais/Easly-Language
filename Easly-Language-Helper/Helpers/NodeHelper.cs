@@ -2475,6 +2475,7 @@ namespace BaseNodeHelper
             { typeof(ICreateInstruction), new string[] { nameof(ICreateInstruction.ArgumentBlocks) } },
             { typeof(IPrecursorInstruction), new string[] { nameof(IPrecursorInstruction.ArgumentBlocks) } },
             { typeof(IThrowInstruction), new string[] { nameof(IThrowInstruction.ArgumentBlocks) } },
+            { typeof(ICommandOverload), new string[] { nameof(ICommandOverload.ParameterBlocks) } },
         };
 
         public static IDocument CreateDocumentationCopy(IDocument documentation)
