@@ -1429,7 +1429,9 @@ namespace BaseNodeHelper
         public static IBlock CreateBlock(Type propertyType, ReplicationStatus replication, IPattern replicationPattern, IIdentifier sourceIdentifier)
         {
             if (propertyType == null) throw new ArgumentNullException(nameof(propertyType));
-            if (!propertyType.IsGenericType || (propertyType.GetGenericTypeDefinition() != typeof(IBlockList<,>) && propertyType.GetGenericTypeDefinition() != typeof(BlockList<,>))) throw new ArgumentException(nameof(propertyType));
+            if (!propertyType.IsGenericType) throw new ArgumentException(nameof(propertyType));
+            Type GenericTypeDefinition = propertyType.GetGenericTypeDefinition();
+            if (GenericTypeDefinition != typeof(IBlockList<,>) && GenericTypeDefinition != typeof(BlockList<,>) && GenericTypeDefinition != typeof(IBlock<,>) && GenericTypeDefinition != typeof(Block<,>)) throw new ArgumentException(nameof(propertyType));
             if (replicationPattern == null) throw new ArgumentNullException(nameof(replicationPattern));
             if (sourceIdentifier == null) throw new ArgumentNullException(nameof(sourceIdentifier));
 
