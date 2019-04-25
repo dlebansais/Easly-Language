@@ -2577,6 +2577,8 @@ namespace BaseNodeHelper
                     return SimplifyThrowInstruction(AsThrowInstruction, out simplifiedNode);
                 case IAnchoredType AsAnchoredType:
                     return SimplifyAnchoredType(AsAnchoredType, out simplifiedNode);
+                case IKeywordAnchoredType AsKeywordAnchoredType:
+                    return SimplifyKeywordAnchoredType(AsKeywordAnchoredType, out simplifiedNode);
                 case IFunctionType AsFunctionType:
                     return SimplifyFunctionType(AsFunctionType, out simplifiedNode);
                 case IGenericType AsGenericType:
@@ -2751,6 +2753,9 @@ namespace BaseNodeHelper
             if (node is ISimpleType AsSimpleType)
             {
                 if (ComplexifyAsAnchoredType(AsSimpleType, out ComplexifiedNode))
+                    complexifiedNodeList.Add(ComplexifiedNode);
+
+                if (ComplexifyAsKeywordAnchoredType(AsSimpleType, out ComplexifiedNode))
                     complexifiedNodeList.Add(ComplexifiedNode);
 
                 if (ComplexifyAsFunctionType(AsSimpleType, out ComplexifiedNode))
@@ -4312,6 +4317,33 @@ namespace BaseNodeHelper
             {
                 IQualifiedName AnchoredName = CreateSimpleQualifiedName(Text.Substring(5));
                 complexifiedNode = CreateAnchoredType(AnchoredName);
+            }
+
+            return complexifiedNode != null;
+        }
+
+        private static bool SimplifyKeywordAnchoredType(IKeywordAnchoredType node, out INode simplifiedNode)
+        {
+            simplifiedNode = CreateSimpleSimpleType(node.Anchor.ToString());
+            return true;
+        }
+
+        private static bool ComplexifyAsKeywordAnchoredType(ISimpleType node, out INode complexifiedNode)
+        {
+            complexifiedNode = null;
+
+            string Text = node.ClassIdentifier.Text;
+
+            if (Text.StartsWith("like "))
+            {
+                foreach (Keyword k in typeof(Keyword).GetEnumValues())
+                {
+                    if (Text.Substring(5).ToLower() == k.ToString().ToLower())
+                    {
+                        complexifiedNode = CreateKeywordAnchoredType(k);
+                        break;
+                    }
+                }
             }
 
             return complexifiedNode != null;
