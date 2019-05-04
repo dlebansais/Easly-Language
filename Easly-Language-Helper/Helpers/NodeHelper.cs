@@ -2746,6 +2746,9 @@ namespace BaseNodeHelper
 
             if (node is IAssignmentInstruction AsAssignmentInstruction)
             {
+                if (ComplexifyAssignmentInstruction(AsAssignmentInstruction, out ComplexifiedNode))
+                    complexifiedNodeList.Add(ComplexifiedNode);
+
                 if (ComplexifyAsKeywordAssignmentInstruction(AsAssignmentInstruction, out ComplexifiedNode))
                     complexifiedNodeList.Add(ComplexifiedNode);
             }
@@ -4090,6 +4093,60 @@ namespace BaseNodeHelper
 
                 IExpression Source = CreateEmptyQueryExpression();
                 complexifiedNode = CreateInspectInstruction(Source, FirstWith);
+            }
+
+            return complexifiedNode != null;
+        }
+
+        private static bool ComplexifyAssignmentInstruction(IAssignmentInstruction node, out INode complexifiedNode)
+        {
+            complexifiedNode = null;
+
+            IAssignmentInstruction ClonedInstruction = DeepCloneNode(node, cloneCommentGuid: false) as IAssignmentInstruction;
+
+            foreach (Block<IQualifiedName, QualifiedName> Block in ClonedInstruction.DestinationBlocks.NodeBlockList)
+            {
+                for (int Index = 0; Index < Block.NodeList.Count; Index++)
+                {
+                    IQualifiedName Item = Block.NodeList[Index];
+
+                    int SplitIndex = -1;
+                    int SplitTextIndex = -1;
+                    for (int i = 0; i < Item.Path.Count; i++)
+                    {
+                        SplitTextIndex = Item.Path[i].Text.IndexOf(',');
+                        if (SplitTextIndex > 0)
+                        {
+                            SplitIndex = i;
+                            break;
+                        }
+                    }
+
+                    if (SplitIndex >= 0 && SplitTextIndex > 0)
+                    {
+                        List<IIdentifier> LeftList = new List<IIdentifier>();
+                        List<IIdentifier> RightList = new List<IIdentifier>();
+                        string Text = Item.Path[SplitIndex].Text;
+
+                        for (int i = 0; i < SplitIndex; i++)
+                            LeftList.Add(Item.Path[i]);
+                        LeftList.Add(CreateSimpleIdentifier(Text.Substring(0, SplitTextIndex)));
+
+                        RightList.Add(CreateSimpleIdentifier(Text.Substring(SplitTextIndex + 1)));
+                        for (int i = SplitIndex + 1; i < Item.Path.Count; i++)
+                            RightList.Add(Item.Path[i]);
+
+                        IQualifiedName LeftQualifiedName = CreateQualifiedName(LeftList);
+                        IQualifiedName RightQualifiedName = CreateQualifiedName(RightList);
+
+                        Block.NodeList.RemoveAt(Index);
+                        Block.NodeList.Insert(Index, RightQualifiedName);
+                        Block.NodeList.Insert(Index, LeftQualifiedName);
+
+                        complexifiedNode = ClonedInstruction;
+                        break;
+                    }
+                }
             }
 
             return complexifiedNode != null;
