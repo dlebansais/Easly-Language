@@ -3407,7 +3407,7 @@ namespace BaseNodeHelper
 
                 if (Text.Length >= 1)
                 {
-                    IFormattedNumber fn = FormattedNumber.Parse(Text);
+                    IFormattedNumber fn = FormattedNumber.Parse(Text, false);
                     if (fn.InvalidText.Length == 0)
                         complexifiedNode = CreateSimpleManifestNumberExpression(Text);
                 }

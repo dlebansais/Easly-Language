@@ -40,8 +40,16 @@
         /// Parses a string to a formatted number.
         /// </summary>
         /// <param name="text">The string to parse.</param>
-        public static IFormattedNumber Parse(string text)
+        /// <param name="supportLeadingZeroes">True if <paramref name="text"/> might have leading zeroes.</param>
+        public static IFormattedNumber Parse(string text, bool supportLeadingZeroes)
         {
+            if (supportLeadingZeroes)
+            {
+                // Eliminate leading zeroes.
+                while (text.Length > 1 && text[0] == '0')
+                    text = text.Substring(1);
+            }
+
             IFormattedNumber Result = null;
 
             if (!TryParseAsIntegerWithBase(text, IntegerBase.Hexadecimal, out Result) &&
