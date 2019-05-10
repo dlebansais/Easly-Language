@@ -31,6 +31,28 @@
         /// The canonic representation.
         /// </summary>
         string CanonicRepresentation { get; }
+
+        /// <summary>
+        /// Checks if two numbers are equal.
+        /// </summary>
+        /// <param name="other">The other instance.</param>
+        bool IsEqual(ICanonicalNumber other);
+
+        /// <summary>
+        /// Returns the opposite number.
+        /// </summary>
+        ICanonicalNumber OppositeOf();
+
+        /// <summary>
+        /// Checks if this instance is greater than another constant.
+        /// </summary>
+        bool IsGreater(ICanonicalNumber other);
+
+        /// <summary>
+        /// Gets the value if it can be represented with a <see cref="int"/>.
+        /// </summary>
+        /// <param name="value">The value upon return.</param>
+        bool TryParseInt(out int value);
     }
 
     /// <summary>
@@ -133,6 +155,53 @@
         }
 
         /// <summary>
+        /// Returns the opposite number.
+        /// </summary>
+        public virtual ICanonicalNumber OppositeOf()
+        {
+            return new CanonicalNumber(!IsNegative, SignificandText, IsExponentNegative, ExponentText);
+        }
+
+        /// <summary>
+        /// Checks if this instance is greater than another constant.
+        /// </summary>
+        public virtual bool IsGreater(ICanonicalNumber other)
+        {
+            return this > (CanonicalNumber)other;
+        }
+
+        /// <summary>
+        /// Gets the value if it can be represented with a <see cref="int"/>.
+        /// </summary>
+        /// <param name="value">The value upon return.</param>
+        public bool TryParseInt(out int value)
+        {
+            value = 0;
+
+            if (IsExponentNegative)
+                return false;
+
+            if (SignificandText.Length > 10 || ExponentText.Length > 1)
+                return false;
+
+            int Significand;
+            int Exponent;
+            if (!int.TryParse(SignificandText, out Significand) || !int.TryParse(ExponentText, out Exponent))
+                return false;
+
+            if (Exponent + 1 < SignificandText.Length)
+                return false;
+
+            value = Significand;
+            int RemainingDigits = Exponent + 1 - SignificandText.Length;
+
+            while (RemainingDigits-- > 0)
+                value *= 10;
+
+            return true;
+        }
+
+        /// <summary>
         /// Checks if <paramref name="number1"/> is lesser than <paramref name="number2"/>.
         /// </summary>
         /// <param name="number1">The first number.</param>
@@ -177,45 +246,6 @@
         public static bool operator >(CanonicalNumber number1, CanonicalNumber number2)
         {
             return number2 < number1;
-        }
-
-        /// <summary>
-        /// Returns the opposite number.
-        /// </summary>
-        public virtual ICanonicalNumber OppositeOf()
-        {
-            return new CanonicalNumber(!IsNegative, SignificandText, IsExponentNegative, ExponentText);
-        }
-
-        /// <summary>
-        /// Gets the value if it can be represented with a <see cref="int"/>.
-        /// </summary>
-        /// <param name="value">The value upon return.</param>
-        public bool TryParseInt(out int value)
-        {
-            value = 0;
-
-            if (IsExponentNegative)
-                return false;
-
-            if (SignificandText.Length > 10 || ExponentText.Length > 1)
-                return false;
-
-            int Significand;
-            int Exponent;
-            if (!int.TryParse(SignificandText, out Significand) || !int.TryParse(ExponentText, out Exponent))
-                return false;
-
-            if (Exponent + 1 < SignificandText.Length)
-                return false;
-
-            value = Significand;
-            int RemainingDigits = Exponent + 1 - SignificandText.Length;
-
-            while (RemainingDigits-- > 0)
-                value *= 10;
-
-            return true;
         }
         #endregion
 
