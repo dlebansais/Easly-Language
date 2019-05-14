@@ -27,11 +27,12 @@
 
         /// <summary>
         /// Checks if a number is made of digits in this base.
-        /// A valid number must not start with 0 (unless it is zero), and must not be empty.
+        /// A valid number must not start with 0 (unless it is zero or <paramref name="supportLeadingZeroes"/> is set), and must not be empty.
         /// </summary>
         /// <param name="text">The number to check.</param>
+        /// <param name="supportLeadingZeroes">True if <paramref name="text"/> might have leading zeroes.</param>
         /// <returns>True if <paramref name="text"/> is a valid number; Otherwise, false.</returns>
-        bool IsValidNumber(string text);
+        bool IsValidNumber(string text, bool supportLeadingZeroes);
 
         /// <summary>
         /// Checks if a number is made of digits in this base.
@@ -132,11 +133,12 @@
 
         /// <summary>
         /// Checks if a number is made of digits in this base.
-        /// A valid number must not start with 0, and must not be empty.
+        /// A valid number must not start with 0 (unless it is zero or <paramref name="supportLeadingZeroes"/> is set), and must not be empty.
         /// </summary>
         /// <param name="text">The number to check.</param>
+        /// <param name="supportLeadingZeroes">True if <paramref name="text"/> might have leading zeroes.</param>
         /// <returns>True if <paramref name="text"/> is a valid number; Otherwise, false.</returns>
-        public virtual bool IsValidNumber(string text)
+        public virtual bool IsValidNumber(string text, bool supportLeadingZeroes = true)
         {
             if (string.IsNullOrEmpty(text))
                 return false;
@@ -147,7 +149,7 @@
                 if (!IsValidDigit(digit, out int Value))
                     return false;
 
-                if (i == 0 && Value == 0 && text.Length != 1)
+                if (i == 0 && Value == 0 && text.Length != 1 && !supportLeadingZeroes)
                     return false;
             }
 

@@ -78,7 +78,7 @@
         public CanonicalNumber(bool isNegative, string significandText, bool isExponentNegative, string exponentText)
         {
             Debug.Assert(IntegerBase.Decimal.IsValidSignificand(significandText));
-            Debug.Assert(IntegerBase.Decimal.IsValidNumber(exponentText));
+            Debug.Assert(IntegerBase.Decimal.IsValidNumber(exponentText, supportLeadingZeroes: false));
             Debug.Assert(significandText != IntegerBase.Zero || (!isNegative && !isExponentNegative && exponentText == IntegerBase.Zero));
 
             IsNegative = isNegative;
