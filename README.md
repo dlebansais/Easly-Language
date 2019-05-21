@@ -9,7 +9,8 @@ This assembly contains definitions for all nodes of the [Easly](https://www.easl
 TODO:
 
 - [ ] Make all nodes with a "Text" property inherit from a ITextNode interface.
-- [ ] Get rid of the hack in IOptionalReference 
+- [ ] Get rid of the hack in IOptionalReference
+- [ ] Allow the special identifier "indexer" in a qualified name.  
 
 ## Hack in IOptionalReference
 
