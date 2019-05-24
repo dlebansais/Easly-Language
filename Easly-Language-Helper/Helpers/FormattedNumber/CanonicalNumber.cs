@@ -233,7 +233,12 @@
                 else
                 {
                     int ComparedSignificand = string.Compare(number1.SignificandText, number2.SignificandText);
-                    return (ComparedSignificand < 0) == number1.IsNegative;
+
+                    // If they are equal, return not lesser than.
+                    if (ComparedSignificand == 0)
+                        return false;
+                    else
+                        return (ComparedSignificand < 0) == number1.IsNegative;
                 }
             }
         }
