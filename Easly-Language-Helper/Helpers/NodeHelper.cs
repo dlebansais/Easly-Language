@@ -2810,25 +2810,29 @@ namespace BaseNodeHelper
 
         private static bool ComplexifyQualifiedName(IQualifiedName node, out INode complexifiedNode)
         {
+            Debug.Assert(node.Path.Count > 0);
+
             complexifiedNode = null;
+            bool IsSplit = false;
 
-            if (node.Path.Count == 1)
+            IList<IIdentifier> Path = new List<IIdentifier>();
+
+            foreach (IIdentifier Item in node.Path)
             {
-                string[] SplitText = node.Path[0].Text.Split('.');
+                string[] SplitText = Item.Text.Split('.');
+                IsSplit |= SplitText.Length > 1;
 
-                if (SplitText.Length > 1)
+                for (int i = 0; i < SplitText.Length; i++)
                 {
-                    List<IIdentifier> Path = new List<IIdentifier>();
-                    for (int i = 0; i < SplitText.Length; i++)
-                    {
-                        IIdentifier Identifier = CreateSimpleIdentifier(SplitText[i]);
-                        Path.Add(Identifier);
-                    }
-
-                    complexifiedNode = CreateQualifiedName(Path);
-                    return true;
+                    IIdentifier Identifier = CreateSimpleIdentifier(SplitText[i]);
+                    Path.Add(Identifier);
                 }
             }
+
+            Debug.Assert((IsSplit && Path.Count >= node.Path.Count) || (!IsSplit && Path.Count == node.Path.Count));
+
+            if (IsSplit)
+                complexifiedNode = CreateQualifiedName(Path);
 
             return complexifiedNode != null;
         }
