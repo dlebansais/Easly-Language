@@ -77,7 +77,7 @@
     <Compile Include="Language\Entity\SpecializedTypeEntity.cs" />
     <Compile Include="Language\Entity\TypeEntity.cs" />
     <Compile Include="Language\SealableDictionary.cs" />
-    <Compile Include="Language\ListTableEx.cs" />
+    <Compile Include="Language\SealableList.cs" />
     <Compile Include="Language\OnceReference.cs" />
     <Compile Include="Language\OptionalReference.cs" />
     <Compile Include="Language\StableReference.cs" />
