@@ -16,12 +16,12 @@ namespace Easly
         {
             TypeInfo = typeInfo;
 
-            HashtableEx<string, MethodInfo> FlattenedMethodList = new HashtableEx<string, MethodInfo>();
+            SealableDictionary<string, MethodInfo> FlattenedMethodList = new SealableDictionary<string, MethodInfo>();
             RecursiveGetMethods(TypeInfo, FlattenedMethodList);
 
             Features = new List<FeatureEntity>();
-            Procedures = new HashtableEx<string, ProcedureEntity>();
-            Functions = new HashtableEx<string, FunctionEntity>();
+            Procedures = new SealableDictionary<string, ProcedureEntity>();
+            Functions = new SealableDictionary<string, FunctionEntity>();
             foreach (KeyValuePair<string, MethodInfo> Item in FlattenedMethodList)
                 if (Item.Value.ReturnType == typeof(void))
                 {
@@ -40,10 +40,10 @@ namespace Easly
 
             Indexer = new OnceReference<IndexerEntity>();
 
-            HashtableEx<string, PropertyInfo> FlattenedPropertyList = new HashtableEx<string, PropertyInfo>();
+            SealableDictionary<string, PropertyInfo> FlattenedPropertyList = new SealableDictionary<string, PropertyInfo>();
             RecursiveGetProperties(TypeInfo, FlattenedPropertyList);
 
-            Properties = new HashtableEx<string, PropertyEntity>();
+            Properties = new SealableDictionary<string, PropertyEntity>();
             foreach (KeyValuePair<string, PropertyInfo> Item in FlattenedPropertyList)
             {
                 PropertyEntity FeatureEntity = new PropertyEntity(Item.Value);
@@ -65,7 +65,7 @@ namespace Easly
             }
         }
 
-        private static void RecursiveGetMethods(Type typeInfo, HashtableEx<string, MethodInfo> result)
+        private static void RecursiveGetMethods(Type typeInfo, SealableDictionary<string, MethodInfo> result)
         {
             foreach (MethodInfo Item in typeInfo.GetMethods())
                 if (!result.ContainsKey(Item.Name))
@@ -78,7 +78,7 @@ namespace Easly
                 RecursiveGetMethods(Item, result);
         }
 
-        private static void RecursiveGetProperties(Type typeInfo, HashtableEx<string, PropertyInfo> result)
+        private static void RecursiveGetProperties(Type typeInfo, SealableDictionary<string, PropertyInfo> result)
         {
             foreach (PropertyInfo Item in typeInfo.GetProperties())
                 if (!result.ContainsKey(Item.Name))
@@ -91,7 +91,7 @@ namespace Easly
                 RecursiveGetProperties(Item, result);
         }
 
-        private static string OverloadedName(IHashtableIndex<string> table, string name)
+        private static string OverloadedName(IDictionaryIndex<string> table, string name)
         {
             if (table.ContainsKey(name))
             {
@@ -131,10 +131,10 @@ namespace Easly
             get { return TypeInfo.Name; }
         }
 
-        public HashtableEx<string, ProcedureEntity> Procedures { get; private set; }
-        public HashtableEx<string, FunctionEntity> Functions { get; private set; }
+        public SealableDictionary<string, ProcedureEntity> Procedures { get; private set; }
+        public SealableDictionary<string, FunctionEntity> Functions { get; private set; }
         public OnceReference<IndexerEntity> Indexer { get; private set; }
-        public HashtableEx<string, PropertyEntity> Properties { get; private set; }
+        public SealableDictionary<string, PropertyEntity> Properties { get; private set; }
         public List<FeatureEntity> Features { get; private set; }
         public List<TypeEntity> Parents { get; private set; }
         public List<TypeEntity> Ancestors { get; private set; }

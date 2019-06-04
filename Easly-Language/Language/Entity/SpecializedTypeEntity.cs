@@ -6,10 +6,10 @@ namespace Easly
     {
         static SpecializedTypeEntityInternal()
         {
-            SingletonSet = new HashtableEx<Type, TypeEntity>();
+            SingletonSet = new SealableDictionary<Type, TypeEntity>();
         }
 
-        public static HashtableEx<Type, TypeEntity> SingletonSet;
+        public static SealableDictionary<Type, TypeEntity> SingletonSet;
     }
 
     public class SpecializedTypeEntity<T> : TypeEntity
