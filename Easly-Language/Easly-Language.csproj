@@ -37,8 +37,8 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="PolySerializer">
-      <HintPath>..\PolySerializer\$(Platform)\$(Configuration)\PolySerializer.dll</HintPath>
+    <Reference Include="PolySerializer-Attributes">
+      <HintPath>..\PolySerializer\$(Platform)\$(Configuration)\PolySerializer-Attributes.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
