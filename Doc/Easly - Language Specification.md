@@ -188,6 +188,7 @@ Uuid | Uuid | N/A |
 ### Other nodes
 
 *Agent Expression*, member of: *Expressions*
+
 See [Agent Expression](https://github.com/dlebansais/Easly-Language/blob/master/Doc/Nodes/Expression/AgentExpression.md)
 
 Name | Kind | Optional | Requirement
