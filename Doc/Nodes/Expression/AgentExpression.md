@@ -5,12 +5,25 @@ An agent expression turns a feature into an agent. Agents are used to make a cal
 <div style="margin-top: 10px; line-height:0; background-color:whitesmoke; border-style:solid; border-color: lightgray; border-width: thin; font-family: Courier">
 <div style="margin-left: 10px">
 <br/>
+<p><u>UUU</u></p>
+<p><b>BBB</b></p>
+<p><i>III</i></p>
+<p><q>QQQ</q></p>
+<p><strong>strong</strong></p>
+<p><em>em</em></p>
+<p><pre>pre</pre></p>
+<p><code>code</code></p>
+<p><strike>strike</strike></p>
+<p><tt>tt</tt></p>
+<ruby>
+漢 <rt> ㄏㄢˋ </rt>
+</ruby>
 <p><span style="color: #000000;">&nbsp;&nbsp;Result&nbsp;</span><span style="color: #0000FF;">&#8592&nbsp;</span><span style="color: #0000FF">agent</span><span style="color: #0000FF">{</span><span style="color: #2B91AF">My&nbsp;Type&nbsp;</span><span style="color: #0000FF">}&nbsp;</span><span style="color: #000000">My&nbsp;Feature</span></p>
 <br/>
 </div>
 </div>
     
-My Feature must be a feature of My Type, available under the same conditions as a regular call. For example:
+`My Feature` must be a feature of `My Type`, available under the same conditions as a regular call. For example:
 
 <div style="margin-top: 10px; line-height:0; background-color:whitesmoke; border-style:solid; border-color: lightgray; border-width: thin; font-family: Courier">
 <div style="margin-left: 10px">
@@ -25,8 +38,10 @@ My Feature must be a feature of My Type, available under the same conditions as 
 <br/>
 </div>
 </div>
-    
-The agent, result of the expression, can be used wherever a call to My Feature would be valid. 
+
+Note that `My Type` is optional. If not provided, the feature is obtained from the class itself, directly of through inheritance.
+
+The agent, result of the expression, can be used wherever a call to `My Feature` would be valid. 
 <div style="margin-top: 10px; line-height:0; background-color:whitesmoke; border-style:solid; border-color: lightgray; border-width: thin; font-family: Courier">
 <div style="margin-left: 10px">
 <br/>
