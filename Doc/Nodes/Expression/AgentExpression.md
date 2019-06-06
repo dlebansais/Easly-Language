@@ -2,42 +2,21 @@
 
 An agent expression turns a feature into an agent. Agents are used to make a call dynamic, instead of always calling the same feature. (See agents).
 
-<div style="margin-top: 10px; line-height:0; background-color:whitesmoke; border-style:solid; border-color: lightgray; border-width: thin; font-family: Courier">
-<div style="margin-left: 10px">
-<br/>
-<p><u>UUU</u></p>
-<p><b>BBB</b></p>
-<p><i>III</i></p>
-<p><q>QQQ</q></p>
-<p><strong>strong</strong></p>
-<p><em>em</em></p>
-<p><pre>pre</pre></p>
-<p><code>code</code></p>
-<p><strike>strike</strike></p>
-<p><tt>tt</tt></p>
-<ruby>
-漢 <rt> ㄏㄢˋ </rt>
-</ruby>
-<p><span style="color: #000000;">&nbsp;&nbsp;Result&nbsp;</span><span style="color: #0000FF;">&#8592&nbsp;</span><span style="color: #0000FF">agent</span><span style="color: #0000FF">{</span><span style="color: #2B91AF">My&nbsp;Type&nbsp;</span><span style="color: #0000FF">}&nbsp;</span><span style="color: #000000">My&nbsp;Feature</span></p>
-<br/>
-</div>
-</div>
+<pre>
+&nbsp;&nbsp;Result&nbsp;&#8592;&nbsp;<b>agent</b>{<i>My&nbsp;Type&nbsp;</i>}&nbsp;My&nbsp;Feature
+</pre>
     
 `My Feature` must be a feature of `My Type`, available under the same conditions as a regular call. For example:
 
-<div style="margin-top: 10px; line-height:0; background-color:whitesmoke; border-style:solid; border-color: lightgray; border-width: thin; font-family: Courier">
-<div style="margin-left: 10px">
-<br/>
-<p><span style="color: #000000">Foo&nbsp;</span><span style="color: #0000FF">procedure</span></p>
-<p><span style="color: #000000">&nbsp;&nbsp;&nbsp;</span><span style="color: #0000FF">local</span></p>
-<p><span style="color: #000000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;X</span><span style="color: #0000FF">:&nbsp;</span><span style="color: #2B91AF">My&nbsp;Type</span></p>
-<p><span style="color: #000000">&nbsp;&nbsp;&nbsp;</span><span style="color: #0000FF">do</span></p>
-<p><span style="color: #000000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;X&#183;My&nbsp;feature</span></p>
-<p><span style="color: #000000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Result&nbsp;</span><span style="color: #0000FF">&#8592&nbsp;</span><span style="color: #0000FF">agent</span><span style="color: #0000FF">{</span><span style="color: #2B91AF">My&nbsp;Type</span><span style="color: #0000FF">}&nbsp;</span><span style="color: #000000">My&nbsp;Feature</span></p>
-<p><span style="color: #000000"></span><span style="color: #0000FF">end</span></p>
-<br/>
-</div>
-</div>
+<pre>
+Foo&nbsp;<b>procedure</b>
+&nbsp;&nbsp;&nbsp;<b>local</b>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;X<b>:&nbsp;</b><i>My&nbsp;Type</i>
+&nbsp;&nbsp;&nbsp;<b>do</b>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;X&#183;My&nbsp;Feature
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Result&nbsp;&#8592;&nbsp;<b>agent</b>{<i>My&nbsp;Type&nbsp;</i>}&nbsp;My&nbsp;Feature
+<b>end</b>
+</pre>
 
 Note that `My Type` is optional. If not provided, the feature is obtained from the class itself, directly of through inheritance.
 
