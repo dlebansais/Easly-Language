@@ -2604,186 +2604,253 @@ namespace BaseNodeHelper
         public static bool GetComplexifiedNodeList(INode node, out List<INode> complexifiedNodeList)
         {
             complexifiedNodeList = new List<INode>();
-            INode ComplexifiedNode;
-
-            if (node is IQualifiedName AsQualifiedName && ComplexifyQualifiedName(AsQualifiedName, out ComplexifiedNode))
-               complexifiedNodeList.Add(ComplexifiedNode);
-
-            if (node is IPositionalArgument AsPositionalArgument && ComplexifyAsAssignmentArgument(AsPositionalArgument, out ComplexifiedNode))
-                complexifiedNodeList.Add(ComplexifiedNode);
-
-            if (node is IQueryExpression AsQueryExpression)
-            {
-                if (ComplexifyQueryExpression(AsQueryExpression, out ComplexifiedNode))
-                    complexifiedNodeList.Add(ComplexifiedNode);
-
-                if (ComplexifyAsAgentExpression(AsQueryExpression, out ComplexifiedNode))
-                    complexifiedNodeList.Add(ComplexifiedNode);
-
-                if (ComplexifyAsAssertionTagExpression(AsQueryExpression, out ComplexifiedNode))
-                    complexifiedNodeList.Add(ComplexifiedNode);
-
-                if (ComplexifyAsBinaryAndConditionalExpression(AsQueryExpression, out ComplexifiedNode))
-                    complexifiedNodeList.Add(ComplexifiedNode);
-
-                if (ComplexifyAsBinaryOrConditionalExpression(AsQueryExpression, out ComplexifiedNode))
-                    complexifiedNodeList.Add(ComplexifiedNode);
-
-                if (ComplexifyAsBinaryOperatorExpression(AsQueryExpression, out ComplexifiedNode))
-                    complexifiedNodeList.Add(ComplexifiedNode);
-
-                if (ComplexifyAsClassConstantExpression(AsQueryExpression, out ComplexifiedNode))
-                    complexifiedNodeList.Add(ComplexifiedNode);
-
-                if (ComplexifyAsCloneOfExpression(AsQueryExpression, out ComplexifiedNode))
-                    complexifiedNodeList.Add(ComplexifiedNode);
-
-                if (ComplexifyAsEntityExpression(AsQueryExpression, out ComplexifiedNode))
-                    complexifiedNodeList.Add(ComplexifiedNode);
-
-                if (ComplexifyAsEqualExpression(AsQueryExpression, out ComplexifiedNode))
-                    complexifiedNodeList.Add(ComplexifiedNode);
-
-                if (ComplexifyAsDifferentExpression(AsQueryExpression, out ComplexifiedNode))
-                    complexifiedNodeList.Add(ComplexifiedNode);
-
-                if (ComplexifyAsIndexQueryExpression(AsQueryExpression, out ComplexifiedNode))
-                    complexifiedNodeList.Add(ComplexifiedNode);
-
-                if (ComplexifyAsInitializedObjectExpression(AsQueryExpression, out ComplexifiedNode))
-                    complexifiedNodeList.Add(ComplexifiedNode);
-
-                if (ComplexifyAsKeywordExpression(AsQueryExpression, out ComplexifiedNode))
-                    complexifiedNodeList.Add(ComplexifiedNode);
-
-                if (ComplexifyAsManifestCharacterExpression(AsQueryExpression, out ComplexifiedNode))
-                    complexifiedNodeList.Add(ComplexifiedNode);
-
-                if (ComplexifyAsManifestNumberExpression(AsQueryExpression, out ComplexifiedNode))
-                    complexifiedNodeList.Add(ComplexifiedNode);
-
-                if (ComplexifyAsManifestStringExpression(AsQueryExpression, out ComplexifiedNode))
-                    complexifiedNodeList.Add(ComplexifiedNode);
-
-                if (ComplexifyAsNewExpression(AsQueryExpression, out ComplexifiedNode))
-                    complexifiedNodeList.Add(ComplexifiedNode);
-
-                if (ComplexifyAsOldExpression(AsQueryExpression, out ComplexifiedNode))
-                    complexifiedNodeList.Add(ComplexifiedNode);
-
-                if (ComplexifyAsPrecursorExpression(AsQueryExpression, out ComplexifiedNode))
-                    complexifiedNodeList.Add(ComplexifiedNode);
-
-                if (ComplexifyAsPrecursorIndexExpression(AsQueryExpression, out ComplexifiedNode))
-                    complexifiedNodeList.Add(ComplexifiedNode);
-
-                if (ComplexifyAsPreprocessorExpression(AsQueryExpression, out ComplexifiedNode))
-                    complexifiedNodeList.Add(ComplexifiedNode);
-
-                if (ComplexifyAsResultOfExpression(AsQueryExpression, out ComplexifiedNode))
-                    complexifiedNodeList.Add(ComplexifiedNode);
-
-                if (ComplexifyAsUnaryNotExpression(AsQueryExpression, out ComplexifiedNode))
-                    complexifiedNodeList.Add(ComplexifiedNode);
-
-                if (ComplexifyAsUnaryOperatorExpression(AsQueryExpression, out ComplexifiedNode))
-                    complexifiedNodeList.Add(ComplexifiedNode);
-            }
-
-            if (node is ICommandInstruction AsCommandInstruction)
-            {
-                if (ComplexifyCommandInstruction(AsCommandInstruction, out ComplexifiedNode))
-                    complexifiedNodeList.Add(ComplexifiedNode);
-
-                if (ComplexifyAsAsLongAsInstruction(AsCommandInstruction, out ComplexifiedNode))
-                    complexifiedNodeList.Add(ComplexifiedNode);
-
-                if (ComplexifyAsAssignmentInstruction(AsCommandInstruction, out ComplexifiedNode))
-                    complexifiedNodeList.Add(ComplexifiedNode);
-
-                if (ComplexifyAsAttachmentInstruction(AsCommandInstruction, out ComplexifiedNode))
-                    complexifiedNodeList.Add(ComplexifiedNode);
-
-                if (ComplexifyAsCheckInstruction(AsCommandInstruction, out ComplexifiedNode))
-                    complexifiedNodeList.Add(ComplexifiedNode);
-
-                if (ComplexifyAsCreateInstruction(AsCommandInstruction, out ComplexifiedNode))
-                    complexifiedNodeList.Add(ComplexifiedNode);
-
-                if (ComplexifyAsDebugInstruction(AsCommandInstruction, out ComplexifiedNode))
-                    complexifiedNodeList.Add(ComplexifiedNode);
-
-                if (ComplexifyAsForLoopInstruction(AsCommandInstruction, out ComplexifiedNode))
-                    complexifiedNodeList.Add(ComplexifiedNode);
-
-                if (ComplexifyAsIfThenElseInstruction(AsCommandInstruction, out ComplexifiedNode))
-                    complexifiedNodeList.Add(ComplexifiedNode);
-
-                if (ComplexifyAsIndexAssignmentInstruction(AsCommandInstruction, out ComplexifiedNode))
-                    complexifiedNodeList.Add(ComplexifiedNode);
-
-                if (ComplexifyAsInspectInstruction(AsCommandInstruction, out ComplexifiedNode))
-                    complexifiedNodeList.Add(ComplexifiedNode);
-
-                if (ComplexifyAsOverLoopInstruction(AsCommandInstruction, out ComplexifiedNode))
-                    complexifiedNodeList.Add(ComplexifiedNode);
-
-                if (ComplexifyAsPrecursorIndexAssignmentInstruction(AsCommandInstruction, out ComplexifiedNode))
-                    complexifiedNodeList.Add(ComplexifiedNode);
-
-                if (ComplexifyAsPrecursorInstruction(AsCommandInstruction, out ComplexifiedNode))
-                    complexifiedNodeList.Add(ComplexifiedNode);
-
-                if (ComplexifyAsRaiseEventInstruction(AsCommandInstruction, out ComplexifiedNode))
-                    complexifiedNodeList.Add(ComplexifiedNode);
-
-                if (ComplexifyAsReleaseInstruction(AsCommandInstruction, out ComplexifiedNode))
-                    complexifiedNodeList.Add(ComplexifiedNode);
-
-                if (ComplexifyAsThrowInstruction(AsCommandInstruction, out ComplexifiedNode))
-                    complexifiedNodeList.Add(ComplexifiedNode);
-            }
-
-            if (node is IAssignmentInstruction AsAssignmentInstruction)
-            {
-                if (ComplexifyAssignmentInstruction(AsAssignmentInstruction, out ComplexifiedNode))
-                    complexifiedNodeList.Add(ComplexifiedNode);
-
-                if (ComplexifyAsKeywordAssignmentInstruction(AsAssignmentInstruction, out ComplexifiedNode))
-                    complexifiedNodeList.Add(ComplexifiedNode);
-            }
-
-            if (node is ISimpleType AsSimpleType)
-            {
-                if (ComplexifyAsAnchoredType(AsSimpleType, out ComplexifiedNode))
-                    complexifiedNodeList.Add(ComplexifiedNode);
-
-                if (ComplexifyAsKeywordAnchoredType(AsSimpleType, out ComplexifiedNode))
-                    complexifiedNodeList.Add(ComplexifiedNode);
-
-                if (ComplexifyAsFunctionType(AsSimpleType, out ComplexifiedNode))
-                    complexifiedNodeList.Add(ComplexifiedNode);
-
-                if (ComplexifyAsGenericType(AsSimpleType, out ComplexifiedNode))
-                    complexifiedNodeList.Add(ComplexifiedNode);
-
-                if (ComplexifyAsIndexerType(AsSimpleType, out ComplexifiedNode))
-                    complexifiedNodeList.Add(ComplexifiedNode);
-
-                if (ComplexifyAsPropertyType(AsSimpleType, out ComplexifiedNode))
-                    complexifiedNodeList.Add(ComplexifiedNode);
-
-                if (ComplexifyAsProcedureType(AsSimpleType, out ComplexifiedNode))
-                    complexifiedNodeList.Add(ComplexifiedNode);
-
-                if (ComplexifyAsTupleType(AsSimpleType, out ComplexifiedNode))
-                    complexifiedNodeList.Add(ComplexifiedNode);
-            }
-
-            if (node is IPositionalTypeArgument AsPositionalTypeArgument && ComplexifyAsAssignmentTypeArgument(AsPositionalTypeArgument, out ComplexifiedNode))
-                complexifiedNodeList.Add(ComplexifiedNode);
+            GetComplexifiedNodeListRecursive(node, complexifiedNodeList);
 
             return complexifiedNodeList.Count > 0;
+        }
+
+        public static void GetComplexifiedNodeListRecursive(INode node, List<INode> complexifiedNodeList)
+        {
+            int OldCount = complexifiedNodeList.Count;
+
+            switch (node)
+            {
+                case IQualifiedName AsQualifiedName:
+                    GetComplexifiedQualifiedNameNodeList(AsQualifiedName, complexifiedNodeList);
+                    break;
+
+                case IPositionalArgument AsPositionalArgument:
+                    GetComplexifiedPositionalArgumentNodeList(AsPositionalArgument, complexifiedNodeList);
+                    break;
+
+                case IQueryExpression AsQueryExpression:
+                    GetComplexifiedQueryExpressionNodeList(AsQueryExpression, complexifiedNodeList);
+                    break;
+
+                case ICommandInstruction AsCommandInstruction:
+                    GetComplexifiedCommandInstructionNodeList(AsCommandInstruction, complexifiedNodeList);
+                    break;
+
+                case IAssignmentInstruction AsAssignmentInstruction:
+                    GetComplexifiedAssignmentInstructionNodeList(AsAssignmentInstruction, complexifiedNodeList);
+                    break;
+
+                case ISimpleType AsSimpleType:
+                    GetComplexifiedSimpleTypeNodeList(AsSimpleType, complexifiedNodeList);
+                    break;
+
+                case IPositionalTypeArgument AsPositionalTypeArgument:
+                    GetComplexifiedPositionalTypeArgumentNodeList(AsPositionalTypeArgument, complexifiedNodeList);
+                    break;
+            }
+
+            int NewCount = complexifiedNodeList.Count;
+
+            for (int i = OldCount; i < NewCount; i++)
+                GetComplexifiedNodeListRecursive(complexifiedNodeList[i], complexifiedNodeList);
+        }
+
+        public static void GetComplexifiedQualifiedNameNodeList(IQualifiedName node, IList<INode> complexifiedNodeList)
+        {
+            INode ComplexifiedNode;
+
+            if (ComplexifyQualifiedName(node, out ComplexifiedNode))
+                complexifiedNodeList.Add(ComplexifiedNode);
+        }
+
+        public static void GetComplexifiedPositionalArgumentNodeList(IPositionalArgument node, IList<INode> complexifiedNodeList)
+        {
+            INode ComplexifiedNode;
+
+            if (ComplexifyPositionalArgument(node, out ComplexifiedNode))
+                complexifiedNodeList.Add(ComplexifiedNode);
+
+            if (ComplexifyAsAssignmentArgument(node, out ComplexifiedNode))
+                complexifiedNodeList.Add(ComplexifiedNode);
+        }
+
+        public static void GetComplexifiedQueryExpressionNodeList(IQueryExpression node, IList<INode> complexifiedNodeList)
+        {
+            INode ComplexifiedNode;
+
+            if (ComplexifyQueryExpression(node, out ComplexifiedNode))
+                complexifiedNodeList.Add(ComplexifiedNode);
+
+            if (ComplexifyAsAgentExpression(node, out ComplexifiedNode))
+                complexifiedNodeList.Add(ComplexifiedNode);
+
+            if (ComplexifyAsAssertionTagExpression(node, out ComplexifiedNode))
+                complexifiedNodeList.Add(ComplexifiedNode);
+
+            if (ComplexifyAsBinaryAndConditionalExpression(node, out ComplexifiedNode))
+                complexifiedNodeList.Add(ComplexifiedNode);
+
+            if (ComplexifyAsBinaryOrConditionalExpression(node, out ComplexifiedNode))
+                complexifiedNodeList.Add(ComplexifiedNode);
+
+            if (ComplexifyAsBinaryOperatorExpression(node, out ComplexifiedNode))
+                complexifiedNodeList.Add(ComplexifiedNode);
+
+            if (ComplexifyAsClassConstantExpression(node, out ComplexifiedNode))
+                complexifiedNodeList.Add(ComplexifiedNode);
+
+            if (ComplexifyAsCloneOfExpression(node, out ComplexifiedNode))
+                complexifiedNodeList.Add(ComplexifiedNode);
+
+            if (ComplexifyAsEntityExpression(node, out ComplexifiedNode))
+                complexifiedNodeList.Add(ComplexifiedNode);
+
+            if (ComplexifyAsEqualExpression(node, out ComplexifiedNode))
+                complexifiedNodeList.Add(ComplexifiedNode);
+
+            if (ComplexifyAsDifferentExpression(node, out ComplexifiedNode))
+                complexifiedNodeList.Add(ComplexifiedNode);
+
+            if (ComplexifyAsIndexQueryExpression(node, out ComplexifiedNode))
+                complexifiedNodeList.Add(ComplexifiedNode);
+
+            if (ComplexifyAsInitializedObjectExpression(node, out ComplexifiedNode))
+                complexifiedNodeList.Add(ComplexifiedNode);
+
+            if (ComplexifyAsKeywordExpression(node, out ComplexifiedNode))
+                complexifiedNodeList.Add(ComplexifiedNode);
+
+            if (ComplexifyAsManifestCharacterExpression(node, out ComplexifiedNode))
+                complexifiedNodeList.Add(ComplexifiedNode);
+
+            if (ComplexifyAsManifestNumberExpression(node, out ComplexifiedNode))
+                complexifiedNodeList.Add(ComplexifiedNode);
+
+            if (ComplexifyAsManifestStringExpression(node, out ComplexifiedNode))
+                complexifiedNodeList.Add(ComplexifiedNode);
+
+            if (ComplexifyAsNewExpression(node, out ComplexifiedNode))
+                complexifiedNodeList.Add(ComplexifiedNode);
+
+            if (ComplexifyAsOldExpression(node, out ComplexifiedNode))
+                complexifiedNodeList.Add(ComplexifiedNode);
+
+            if (ComplexifyAsPrecursorExpression(node, out ComplexifiedNode))
+                complexifiedNodeList.Add(ComplexifiedNode);
+
+            if (ComplexifyAsPrecursorIndexExpression(node, out ComplexifiedNode))
+                complexifiedNodeList.Add(ComplexifiedNode);
+
+            if (ComplexifyAsPreprocessorExpression(node, out ComplexifiedNode))
+                complexifiedNodeList.Add(ComplexifiedNode);
+
+            if (ComplexifyAsResultOfExpression(node, out ComplexifiedNode))
+                complexifiedNodeList.Add(ComplexifiedNode);
+
+            if (ComplexifyAsUnaryNotExpression(node, out ComplexifiedNode))
+                complexifiedNodeList.Add(ComplexifiedNode);
+
+            if (ComplexifyAsUnaryOperatorExpression(node, out ComplexifiedNode))
+                complexifiedNodeList.Add(ComplexifiedNode);
+        }
+
+        public static void GetComplexifiedCommandInstructionNodeList(ICommandInstruction node, List<INode> complexifiedNodeList)
+        {
+            INode ComplexifiedNode;
+
+            if (ComplexifyCommandInstruction(node, out ComplexifiedNode))
+                complexifiedNodeList.Add(ComplexifiedNode);
+
+            if (ComplexifyAsAsLongAsInstruction(node, out ComplexifiedNode))
+                complexifiedNodeList.Add(ComplexifiedNode);
+
+            if (ComplexifyAsAssignmentInstruction(node, out ComplexifiedNode))
+                complexifiedNodeList.Add(ComplexifiedNode);
+
+            if (ComplexifyAsAttachmentInstruction(node, out ComplexifiedNode))
+                complexifiedNodeList.Add(ComplexifiedNode);
+
+            if (ComplexifyAsCheckInstruction(node, out ComplexifiedNode))
+                complexifiedNodeList.Add(ComplexifiedNode);
+
+            if (ComplexifyAsCreateInstruction(node, out ComplexifiedNode))
+                complexifiedNodeList.Add(ComplexifiedNode);
+
+            if (ComplexifyAsDebugInstruction(node, out ComplexifiedNode))
+                complexifiedNodeList.Add(ComplexifiedNode);
+
+            if (ComplexifyAsForLoopInstruction(node, out ComplexifiedNode))
+                complexifiedNodeList.Add(ComplexifiedNode);
+
+            if (ComplexifyAsIfThenElseInstruction(node, out ComplexifiedNode))
+                complexifiedNodeList.Add(ComplexifiedNode);
+
+            if (ComplexifyAsIndexAssignmentInstruction(node, out ComplexifiedNode))
+                complexifiedNodeList.Add(ComplexifiedNode);
+
+            if (ComplexifyAsInspectInstruction(node, out ComplexifiedNode))
+                complexifiedNodeList.Add(ComplexifiedNode);
+
+            if (ComplexifyAsOverLoopInstruction(node, out ComplexifiedNode))
+                complexifiedNodeList.Add(ComplexifiedNode);
+
+            if (ComplexifyAsPrecursorIndexAssignmentInstruction(node, out ComplexifiedNode))
+                complexifiedNodeList.Add(ComplexifiedNode);
+
+            if (ComplexifyAsPrecursorInstruction(node, out ComplexifiedNode))
+                complexifiedNodeList.Add(ComplexifiedNode);
+
+            if (ComplexifyAsRaiseEventInstruction(node, out ComplexifiedNode))
+                complexifiedNodeList.Add(ComplexifiedNode);
+
+            if (ComplexifyAsReleaseInstruction(node, out ComplexifiedNode))
+                complexifiedNodeList.Add(ComplexifiedNode);
+
+            if (ComplexifyAsThrowInstruction(node, out ComplexifiedNode))
+                complexifiedNodeList.Add(ComplexifiedNode);
+        }
+
+        public static void GetComplexifiedAssignmentInstructionNodeList(IAssignmentInstruction node, List<INode> complexifiedNodeList)
+        {
+            INode ComplexifiedNode;
+
+            if (ComplexifyAssignmentInstruction(node, out ComplexifiedNode))
+                complexifiedNodeList.Add(ComplexifiedNode);
+
+            if (ComplexifyAsKeywordAssignmentInstruction(node, out ComplexifiedNode))
+                complexifiedNodeList.Add(ComplexifiedNode);
+        }
+
+        public static void GetComplexifiedSimpleTypeNodeList(ISimpleType node, List<INode> complexifiedNodeList)
+        {
+            INode ComplexifiedNode;
+
+            if (ComplexifyAsAnchoredType(node, out ComplexifiedNode))
+                complexifiedNodeList.Add(ComplexifiedNode);
+
+            if (ComplexifyAsKeywordAnchoredType(node, out ComplexifiedNode))
+                complexifiedNodeList.Add(ComplexifiedNode);
+
+            if (ComplexifyAsFunctionType(node, out ComplexifiedNode))
+                complexifiedNodeList.Add(ComplexifiedNode);
+
+            if (ComplexifyAsGenericType(node, out ComplexifiedNode))
+                complexifiedNodeList.Add(ComplexifiedNode);
+
+            if (ComplexifyAsIndexerType(node, out ComplexifiedNode))
+                complexifiedNodeList.Add(ComplexifiedNode);
+
+            if (ComplexifyAsPropertyType(node, out ComplexifiedNode))
+                complexifiedNodeList.Add(ComplexifiedNode);
+
+            if (ComplexifyAsProcedureType(node, out ComplexifiedNode))
+                complexifiedNodeList.Add(ComplexifiedNode);
+
+            if (ComplexifyAsTupleType(node, out ComplexifiedNode))
+                complexifiedNodeList.Add(ComplexifiedNode);
+        }
+
+        public static void GetComplexifiedPositionalTypeArgumentNodeList(IPositionalTypeArgument node, IList<INode> complexifiedNodeList)
+        {
+            INode ComplexifiedNode;
+
+            if (ComplexifyAsAssignmentTypeArgument(node, out ComplexifiedNode))
+                complexifiedNodeList.Add(ComplexifiedNode);
         }
 
         private static bool SimplifyQualifiedName(IQualifiedName node, out INode simplifiedNode)
@@ -2842,6 +2909,16 @@ namespace BaseNodeHelper
             IExpression Source = DeepCloneNode(node.Source, cloneCommentGuid: false) as IExpression;
             simplifiedNode = CreatePositionalArgument(Source);
             return true;
+        }
+
+        private static bool ComplexifyPositionalArgument(IPositionalArgument node, out INode complexifiedNode)
+        {
+            complexifiedNode = null;
+
+            if (GetComplexifiedNodeList(node.Source, out List<INode> complexifiedSourceList) && complexifiedSourceList[0] is IExpression AsComplexifiedExpression)
+                complexifiedNode = CreatePositionalArgument(AsComplexifiedExpression);
+
+            return complexifiedNode != null;
         }
 
         private static bool ComplexifyAsAssignmentArgument(IPositionalArgument node, out INode complexifiedNode)
@@ -3701,63 +3778,110 @@ namespace BaseNodeHelper
         {
             complexifiedNode = null;
 
-            if (node.ArgumentBlocks.NodeBlockList.Count == 0)
+            IQualifiedName NewCommand;
+
+            if (node.ArgumentBlocks.NodeBlockList.Count == 0 && ComplexifyWithArguments(node.Command, out NewCommand, out List<IArgument> ArgumentList))
+                complexifiedNode = CreateCommandInstruction(NewCommand, ArgumentList);
+            else if (ComplexifyQualifiedName(node.Command, out INode NewNode))
             {
-                int BreakPathIndex = -1;
-                string BeforeText = null;
-                string AfterText = null;
+                NewCommand = (IQualifiedName)NewNode;
+                IBlockList<IArgument, Argument> ClonedArgumentBlocks = (IBlockList<IArgument, Argument>)DeepCloneBlockList((IBlockList)node.ArgumentBlocks, cloneCommentGuid: false);
+                complexifiedNode = CreateCommandInstruction(NewCommand, ClonedArgumentBlocks);
+            }
+            else if (ComplexifyArgumentBlocks(node.ArgumentBlocks, out IBlockList<IArgument, Argument> ClonedArgumentBlocks))
+            {
+                NewCommand = (IQualifiedName)DeepCloneNode(node.Command, cloneCommentGuid: false);
+                complexifiedNode = CreateCommandInstruction(NewCommand, ClonedArgumentBlocks);
+            }
 
-                for (int i = 0; i < node.Command.Path.Count; i++)
+            return complexifiedNode != null;
+        }
+
+        private static bool ComplexifyWithArguments(IQualifiedName qualifiedName, out IQualifiedName newQualifiedName, out List<IArgument> argumentList)
+        {
+            newQualifiedName = null;
+            argumentList = null;
+
+            int BreakPathIndex = -1;
+            string BeforeText = null;
+            string AfterText = null;
+
+            for (int i = 0; i < qualifiedName.Path.Count; i++)
+            {
+                int Index = qualifiedName.Path[i].Text.IndexOf("(");
+                if (Index >= 0)
                 {
-                    int Index = node.Command.Path[i].Text.IndexOf("(");
-                    if (Index >= 0)
-                    {
-                        string Text = node.Command.Path[i].Text;
-                        BreakPathIndex = i;
-                        BeforeText = Text.Substring(0, Index);
-                        AfterText = Text.Substring(Index + 1);
-                        break;
-                    }
+                    string Text = qualifiedName.Path[i].Text;
+                    BreakPathIndex = i;
+                    BeforeText = Text.Substring(0, Index);
+                    AfterText = Text.Substring(Index + 1);
+                    break;
                 }
+            }
 
-                if (BreakPathIndex >= 0 && BeforeText != null && AfterText != null)
+            if (BreakPathIndex >= 0 && BeforeText != null && AfterText != null)
+            {
+                string Text = qualifiedName.Path[qualifiedName.Path.Count - 1].Text;
+
+                if (Text.EndsWith(")"))
                 {
-                    string Text = node.Command.Path[node.Command.Path.Count - 1].Text;
+                    List<IIdentifier> CommandIdentifierList = new List<IIdentifier>();
+                    for (int i = 0; i < BreakPathIndex; i++)
+                        CommandIdentifierList.Add(CreateSimpleIdentifier(qualifiedName.Path[i].Text));
+                    CommandIdentifierList.Add(CreateSimpleIdentifier(BeforeText));
 
-                    if (Text.EndsWith(")"))
+                    newQualifiedName = CreateQualifiedName(CommandIdentifierList);
+
+                    List<IIdentifier> ArgumentIdentifierList = new List<IIdentifier>();
+
+                    if (BreakPathIndex + 1 < qualifiedName.Path.Count)
                     {
-                        List<IIdentifier> CommandIdentifierList = new List<IIdentifier>();
-                        for (int i = 0; i < BreakPathIndex; i++)
-                            CommandIdentifierList.Add(CreateSimpleIdentifier(node.Command.Path[i].Text));
-                        CommandIdentifierList.Add(CreateSimpleIdentifier(BeforeText));
+                        ArgumentIdentifierList.Add(CreateSimpleIdentifier(AfterText));
+                        for (int i = BreakPathIndex + 1; i + 1 < qualifiedName.Path.Count; i++)
+                            ArgumentIdentifierList.Add(CreateSimpleIdentifier(qualifiedName.Path[i].Text));
+                        ArgumentIdentifierList.Add(CreateSimpleIdentifier(Text.Substring(0, Text.Length - 1)));
+                    }
+                    else
+                        ArgumentIdentifierList.Add(CreateSimpleIdentifier(AfterText.Substring(0, AfterText.Length - 1)));
 
-                        IQualifiedName Command = CreateQualifiedName(CommandIdentifierList);
+                    IQualifiedName ArgumentQuery = CreateQualifiedName(ArgumentIdentifierList);
+                    IExpression ArgumentExpression = CreateQueryExpression(ArgumentQuery, new List<IArgument>());
 
-                        List<IIdentifier> ArgumentIdentifierList = new List<IIdentifier>();
+                    argumentList = new List<IArgument>();
+                    IPositionalArgument FirstArgument = CreatePositionalArgument(ArgumentExpression);
+                    argumentList.Add(FirstArgument);
 
-                        if (BreakPathIndex + 1 < node.Command.Path.Count)
-                        {
-                            ArgumentIdentifierList.Add(CreateSimpleIdentifier(AfterText));
-                            for (int i = BreakPathIndex + 1; i + 1 < node.Command.Path.Count; i++)
-                                ArgumentIdentifierList.Add(CreateSimpleIdentifier(node.Command.Path[i].Text));
-                            ArgumentIdentifierList.Add(CreateSimpleIdentifier(Text.Substring(0, Text.Length - 1)));
-                        }
-                        else
-                            ArgumentIdentifierList.Add(CreateSimpleIdentifier(AfterText.Substring(0, AfterText.Length - 1)));
+                    return true;
+                }
+            }
 
-                        IQualifiedName ArgumentQuery = CreateQualifiedName(ArgumentIdentifierList);
-                        IExpression ArgumentExpression = CreateQueryExpression(ArgumentQuery, new List<IArgument>());
+            return false;
+        }
 
-                        List<IArgument> ArgumentList = new List<IArgument>();
-                        IPositionalArgument FirstArgument = CreatePositionalArgument(ArgumentExpression);
-                        ArgumentList.Add(FirstArgument);
+        private static bool ComplexifyArgumentBlocks(IBlockList<IArgument, Argument> argumentBlocks, out IBlockList<IArgument, Argument> newArgumentBlocks)
+        {
+            newArgumentBlocks = null;
 
-                        complexifiedNode = CreateCommandInstruction(Command, ArgumentList);
+            for (int BlockIndex = 0; BlockIndex < argumentBlocks.NodeBlockList.Count; BlockIndex++)
+            {
+                IBlock<IArgument, Argument> Block = argumentBlocks.NodeBlockList[BlockIndex];
+
+                for (int NodeIndex = 0; NodeIndex < Block.NodeList.Count; NodeIndex++)
+                {
+                    IArgument Argument = Block.NodeList[NodeIndex];
+
+                    if (GetComplexifiedNodeList(Argument, out List<INode> ComplexifiedArgumentList) && ComplexifiedArgumentList[0] is IArgument AsComplexifiedArgument)
+                    {
+                        newArgumentBlocks = (IBlockList<IArgument, Argument>)DeepCloneBlockList((IBlockList)argumentBlocks, cloneCommentGuid: false);
+
+                        Block = newArgumentBlocks.NodeBlockList[BlockIndex];
+                        Block.NodeList[NodeIndex] = AsComplexifiedArgument;
+                        return true;
                     }
                 }
             }
 
-            return complexifiedNode != null;
+            return false;
         }
 
         private static bool SimplifyAsLongAsInstruction(IAsLongAsInstruction node, out INode simplifiedNode)
