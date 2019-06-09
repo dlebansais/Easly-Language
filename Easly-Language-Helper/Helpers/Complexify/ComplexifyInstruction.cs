@@ -122,8 +122,6 @@
 
         public static void GetComplexifiedAssignmentInstruction(IAssignmentInstruction node, List<INode> complexifiedNodeList)
         {
-            INode ComplexifiedNode;
-
             if (GetComplexifiedQualifiedNameBlockList(node.DestinationBlocks, out IBlockList<IQualifiedName, QualifiedName> ComplexifiedDestinationBlocks))
             {
                 IExpression ClonedSource = (IExpression)DeepCloneNode(node.Source, cloneCommentGuid: false);
@@ -136,11 +134,11 @@
                 IAssignmentInstruction NewAssignmentInstruction = CreateAssignmentInstruction(ClonedDestinationBlocks, AsComplexifiedSource);
                 complexifiedNodeList.Add(NewAssignmentInstruction);
             }
-            else if (ComplexifyAsKeywordAssignmentInstruction(node, out ComplexifiedNode))
-                complexifiedNodeList.Add(ComplexifiedNode);
+            else if (ComplexifyAsKeywordAssignmentInstruction(node, out IKeywordAssignmentInstruction ComplexifiedKeywordAssignmentInstruction))
+                complexifiedNodeList.Add(ComplexifiedKeywordAssignmentInstruction);
         }
 
-        private static bool ComplexifyAsKeywordAssignmentInstruction(IAssignmentInstruction node, out INode complexifiedNode)
+        private static bool ComplexifyAsKeywordAssignmentInstruction(IAssignmentInstruction node, out IKeywordAssignmentInstruction complexifiedNode)
         {
             complexifiedNode = null;
 
@@ -206,8 +204,6 @@
 
         public static void GetComplexifiedCommandInstruction(ICommandInstruction node, IList<INode> complexifiedNodeList)
         {
-            INode ComplexifiedNode;
-
             if (node.ArgumentBlocks.NodeBlockList.Count == 0 && ComplexifyWithArguments(node.Command, out IQualifiedName NewCommand, out List<IArgument> ArgumentList))
             {
                 ICommandInstruction NewCommandInstruction = CreateCommandInstruction(NewCommand, ArgumentList);
@@ -224,41 +220,41 @@
                 IQualifiedName ClonedCommand = (IQualifiedName)DeepCloneNode(node.Command, cloneCommentGuid: false);
                 ICommandInstruction NewCommandInstruction = CreateCommandInstruction(ClonedCommand, ComplexifiedArgumentBlocks);
             }
-            else if (ComplexifyAsAsLongAsInstruction(node, out ComplexifiedNode))
-                complexifiedNodeList.Add(ComplexifiedNode);
-            else if (ComplexifyAsAssignmentInstruction(node, out ComplexifiedNode))
-                complexifiedNodeList.Add(ComplexifiedNode);
-            else if (ComplexifyAsAttachmentInstruction(node, out ComplexifiedNode))
-                complexifiedNodeList.Add(ComplexifiedNode);
-            else if (ComplexifyAsCheckInstruction(node, out ComplexifiedNode))
-                complexifiedNodeList.Add(ComplexifiedNode);
-            else if (ComplexifyAsCreateInstruction(node, out ComplexifiedNode))
-                complexifiedNodeList.Add(ComplexifiedNode);
-            else if (ComplexifyAsDebugInstruction(node, out ComplexifiedNode))
-                complexifiedNodeList.Add(ComplexifiedNode);
-            else if (ComplexifyAsForLoopInstruction(node, out ComplexifiedNode))
-                complexifiedNodeList.Add(ComplexifiedNode);
-            else if (ComplexifyAsIfThenElseInstruction(node, out ComplexifiedNode))
-                complexifiedNodeList.Add(ComplexifiedNode);
-            else if (ComplexifyAsIndexAssignmentInstruction(node, out ComplexifiedNode))
-                complexifiedNodeList.Add(ComplexifiedNode);
-            else if (ComplexifyAsInspectInstruction(node, out ComplexifiedNode))
-                complexifiedNodeList.Add(ComplexifiedNode);
-            else if (ComplexifyAsOverLoopInstruction(node, out ComplexifiedNode))
-                complexifiedNodeList.Add(ComplexifiedNode);
-            else if (ComplexifyAsPrecursorIndexAssignmentInstruction(node, out ComplexifiedNode))
-                complexifiedNodeList.Add(ComplexifiedNode);
-            else if (ComplexifyAsPrecursorInstruction(node, out ComplexifiedNode))
-                complexifiedNodeList.Add(ComplexifiedNode);
-            else if (ComplexifyAsRaiseEventInstruction(node, out ComplexifiedNode))
-                complexifiedNodeList.Add(ComplexifiedNode);
-            else if (ComplexifyAsReleaseInstruction(node, out ComplexifiedNode))
-                complexifiedNodeList.Add(ComplexifiedNode);
-            else if (ComplexifyAsThrowInstruction(node, out ComplexifiedNode))
-                complexifiedNodeList.Add(ComplexifiedNode);
+            else if (ComplexifyAsAsLongAsInstruction(node, out IAsLongAsInstruction ComplexifiedAsLongAsInstruction))
+                complexifiedNodeList.Add(ComplexifiedAsLongAsInstruction);
+            else if (ComplexifyAsAssignmentInstruction(node, out IAssignmentInstruction ComplexifiedAssignmentInstruction))
+                complexifiedNodeList.Add(ComplexifiedAssignmentInstruction);
+            else if (ComplexifyAsAttachmentInstruction(node, out IAttachmentInstruction ComplexifiedAttachmentInstruction))
+                complexifiedNodeList.Add(ComplexifiedAttachmentInstruction);
+            else if (ComplexifyAsCheckInstruction(node, out ICheckInstruction ComplexifiedCheckInstruction))
+                complexifiedNodeList.Add(ComplexifiedCheckInstruction);
+            else if (ComplexifyAsCreateInstruction(node, out ICreateInstruction ComplexifiedCreateInstruction))
+                complexifiedNodeList.Add(ComplexifiedCreateInstruction);
+            else if (ComplexifyAsDebugInstruction(node, out IDebugInstruction ComplexifieDebugInstruction))
+                complexifiedNodeList.Add(ComplexifieDebugInstruction);
+            else if (ComplexifyAsForLoopInstruction(node, out IForLoopInstruction ComplexifiedForLoopInstruction))
+                complexifiedNodeList.Add(ComplexifiedForLoopInstruction);
+            else if (ComplexifyAsIfThenElseInstruction(node, out IIfThenElseInstruction ComplexifiedIfThenElseInstruction))
+                complexifiedNodeList.Add(ComplexifiedIfThenElseInstruction);
+            else if (ComplexifyAsIndexAssignmentInstruction(node, out IIndexAssignmentInstruction ComplexifiedIndexAssignmentInstruction))
+                complexifiedNodeList.Add(ComplexifiedIndexAssignmentInstruction);
+            else if (ComplexifyAsInspectInstruction(node, out IInspectInstruction ComplexifiedInspectInstruction))
+                complexifiedNodeList.Add(ComplexifiedInspectInstruction);
+            else if (ComplexifyAsOverLoopInstruction(node, out IOverLoopInstruction ComplexifiedOverLoopInstruction))
+                complexifiedNodeList.Add(ComplexifiedOverLoopInstruction);
+            else if (ComplexifyAsPrecursorIndexAssignmentInstruction(node, out IPrecursorIndexAssignmentInstruction ComplexifiedPrecursorIndexAssignmentInstruction))
+                complexifiedNodeList.Add(ComplexifiedPrecursorIndexAssignmentInstruction);
+            else if (ComplexifyAsPrecursorInstruction(node, out IPrecursorInstruction ComplexifiedPrecursorInstruction))
+                complexifiedNodeList.Add(ComplexifiedPrecursorInstruction);
+            else if (ComplexifyAsRaiseEventInstruction(node, out IRaiseEventInstruction ComplexifiedRaiseEventInstruction))
+                complexifiedNodeList.Add(ComplexifiedRaiseEventInstruction);
+            else if (ComplexifyAsReleaseInstruction(node, out IReleaseInstruction ComplexifiedReleaseInstruction))
+                complexifiedNodeList.Add(ComplexifiedReleaseInstruction);
+            else if (ComplexifyAsThrowInstruction(node, out IThrowInstruction ComplexifiedThrowInstruction))
+                complexifiedNodeList.Add(ComplexifiedThrowInstruction);
         }
 
-        private static bool ComplexifyAsAsLongAsInstruction(ICommandInstruction node, out INode complexifiedNode)
+        private static bool ComplexifyAsAsLongAsInstruction(ICommandInstruction node, out IAsLongAsInstruction complexifiedNode)
         {
             complexifiedNode = null;
 
@@ -272,7 +268,7 @@
             return complexifiedNode != null;
         }
 
-        private static bool ComplexifyAsAssignmentInstruction(ICommandInstruction node, out INode complexifiedNode)
+        private static bool ComplexifyAsAssignmentInstruction(ICommandInstruction node, out IAssignmentInstruction complexifiedNode)
         {
             complexifiedNode = null;
 
@@ -317,7 +313,7 @@
             return complexifiedNode != null;
         }
 
-        private static bool ComplexifyAsAttachmentInstruction(ICommandInstruction node, out INode complexifiedNode)
+        private static bool ComplexifyAsAttachmentInstruction(ICommandInstruction node, out IAttachmentInstruction complexifiedNode)
         {
             complexifiedNode = null;
 
@@ -330,7 +326,7 @@
             return complexifiedNode != null;
         }
 
-        private static bool ComplexifyAsCheckInstruction(ICommandInstruction node, out INode complexifiedNode)
+        private static bool ComplexifyAsCheckInstruction(ICommandInstruction node, out ICheckInstruction complexifiedNode)
         {
             complexifiedNode = null;
 
@@ -343,7 +339,7 @@
             return complexifiedNode != null;
         }
 
-        private static bool ComplexifyAsCreateInstruction(ICommandInstruction node, out INode complexifiedNode)
+        private static bool ComplexifyAsCreateInstruction(ICommandInstruction node, out ICreateInstruction complexifiedNode)
         {
             complexifiedNode = null;
 
@@ -357,7 +353,7 @@
             return complexifiedNode != null;
         }
 
-        private static bool ComplexifyAsDebugInstruction(ICommandInstruction node, out INode complexifiedNode)
+        private static bool ComplexifyAsDebugInstruction(ICommandInstruction node, out IDebugInstruction complexifiedNode)
         {
             complexifiedNode = null;
             string Pattern = "debug ";
@@ -371,7 +367,7 @@
             return complexifiedNode != null;
         }
 
-        private static bool ComplexifyAsForLoopInstruction(ICommandInstruction node, out INode complexifiedNode)
+        private static bool ComplexifyAsForLoopInstruction(ICommandInstruction node, out IForLoopInstruction complexifiedNode)
         {
             complexifiedNode = null;
             string Pattern = "for ";
@@ -385,7 +381,7 @@
             return complexifiedNode != null;
         }
 
-        private static bool ComplexifyAsIfThenElseInstruction(ICommandInstruction node, out INode complexifiedNode)
+        private static bool ComplexifyAsIfThenElseInstruction(ICommandInstruction node, out IIfThenElseInstruction complexifiedNode)
         {
             complexifiedNode = null;
             string Pattern = "if ";
@@ -400,7 +396,7 @@
             return complexifiedNode != null;
         }
 
-        private static bool ComplexifyAsIndexAssignmentInstruction(ICommandInstruction node, out INode complexifiedNode)
+        private static bool ComplexifyAsIndexAssignmentInstruction(ICommandInstruction node, out IIndexAssignmentInstruction complexifiedNode)
         {
             complexifiedNode = null;
 
@@ -421,7 +417,7 @@
             return complexifiedNode != null;
         }
 
-        private static bool ComplexifyAsInspectInstruction(ICommandInstruction node, out INode complexifiedNode)
+        private static bool ComplexifyAsInspectInstruction(ICommandInstruction node, out IInspectInstruction complexifiedNode)
         {
             complexifiedNode = null;
             string Pattern = "inspect ";
@@ -439,7 +435,7 @@
             return complexifiedNode != null;
         }
 
-        private static bool ComplexifyAsOverLoopInstruction(ICommandInstruction node, out INode complexifiedNode)
+        private static bool ComplexifyAsOverLoopInstruction(ICommandInstruction node, out IOverLoopInstruction complexifiedNode)
         {
             complexifiedNode = null;
             string Pattern = "over ";
@@ -455,7 +451,7 @@
             return complexifiedNode != null;
         }
 
-        private static bool ComplexifyAsPrecursorIndexAssignmentInstruction(ICommandInstruction node, out INode complexifiedNode)
+        private static bool ComplexifyAsPrecursorIndexAssignmentInstruction(ICommandInstruction node, out IPrecursorIndexAssignmentInstruction complexifiedNode)
         {
             complexifiedNode = null;
 
@@ -468,7 +464,7 @@
             return complexifiedNode != null;
         }
 
-        private static bool ComplexifyAsPrecursorInstruction(ICommandInstruction node, out INode complexifiedNode)
+        private static bool ComplexifyAsPrecursorInstruction(ICommandInstruction node, out IPrecursorInstruction complexifiedNode)
         {
             complexifiedNode = null;
 
@@ -481,7 +477,7 @@
             return complexifiedNode != null;
         }
 
-        private static bool ComplexifyAsRaiseEventInstruction(ICommandInstruction node, out INode complexifiedNode)
+        private static bool ComplexifyAsRaiseEventInstruction(ICommandInstruction node, out IRaiseEventInstruction complexifiedNode)
         {
             complexifiedNode = null;
             string Pattern = "raise ";
@@ -495,7 +491,7 @@
             return complexifiedNode != null;
         }
 
-        private static bool ComplexifyAsReleaseInstruction(ICommandInstruction node, out INode complexifiedNode)
+        private static bool ComplexifyAsReleaseInstruction(ICommandInstruction node, out IReleaseInstruction complexifiedNode)
         {
             complexifiedNode = null;
             string Pattern = "release ";
@@ -509,7 +505,7 @@
             return complexifiedNode != null;
         }
 
-        private static bool ComplexifyAsThrowInstruction(ICommandInstruction node, out INode complexifiedNode)
+        private static bool ComplexifyAsThrowInstruction(ICommandInstruction node, out IThrowInstruction complexifiedNode)
         {
             complexifiedNode = null;
 

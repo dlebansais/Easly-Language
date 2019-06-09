@@ -43,8 +43,8 @@
                 IPositionalTypeArgument NewPositionalTypeArgument = CreatePositionalTypeArgument(AsComplexifiedSource);
                 complexifiedNodeList.Add(NewPositionalTypeArgument);
             }
-            else if (ComplexifyAsAssignmentTypeArgument(node, out IAssignmentTypeArgument ComplexifiedNode))
-                complexifiedNodeList.Add(ComplexifiedNode);
+            else if (ComplexifyAsAssignmentTypeArgument(node, out IAssignmentTypeArgument ComplexifiedAssignmentTypeArgument))
+                complexifiedNodeList.Add(ComplexifiedAssignmentTypeArgument);
         }
 
         private static bool ComplexifyAsAssignmentTypeArgument(IPositionalTypeArgument node, out IAssignmentTypeArgument complexifiedNode)

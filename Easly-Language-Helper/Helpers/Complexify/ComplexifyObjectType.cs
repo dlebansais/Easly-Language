@@ -160,27 +160,25 @@
 
         private static void GetComplexifiedSimpleType(ISimpleType node, IList<INode> complexifiedNodeList)
         {
-            INode ComplexifiedNode;
-
-            if (ComplexifyAsAnchoredType(node, out ComplexifiedNode))
-                complexifiedNodeList.Add(ComplexifiedNode);
-            else if (ComplexifyAsKeywordAnchoredType(node, out ComplexifiedNode))
-                complexifiedNodeList.Add(ComplexifiedNode);
-            else if (ComplexifyAsFunctionType(node, out ComplexifiedNode))
-                complexifiedNodeList.Add(ComplexifiedNode);
-            else if (ComplexifyAsGenericType(node, out ComplexifiedNode))
-                complexifiedNodeList.Add(ComplexifiedNode);
-            else if (ComplexifyAsIndexerType(node, out ComplexifiedNode))
-                complexifiedNodeList.Add(ComplexifiedNode);
-            else if (ComplexifyAsPropertyType(node, out ComplexifiedNode))
-                complexifiedNodeList.Add(ComplexifiedNode);
-            else if (ComplexifyAsProcedureType(node, out ComplexifiedNode))
-                complexifiedNodeList.Add(ComplexifiedNode);
-            else if (ComplexifyAsTupleType(node, out ComplexifiedNode))
-                complexifiedNodeList.Add(ComplexifiedNode);
+            if (ComplexifyAsAnchoredType(node, out IAnchoredType ComplexifiedAnchoredType))
+                complexifiedNodeList.Add(ComplexifiedAnchoredType);
+            else if (ComplexifyAsKeywordAnchoredType(node, out IKeywordAnchoredType ComplexifiedKeywordAnchoredType))
+                complexifiedNodeList.Add(ComplexifiedKeywordAnchoredType);
+            else if (ComplexifyAsFunctionType(node, out IFunctionType ComplexifiedFunctionType))
+                complexifiedNodeList.Add(ComplexifiedFunctionType);
+            else if (ComplexifyAsGenericType(node, out IGenericType ComplexifiedGenericType))
+                complexifiedNodeList.Add(ComplexifiedGenericType);
+            else if (ComplexifyAsIndexerType(node, out IIndexerType ComplexifiedIndexerType))
+                complexifiedNodeList.Add(ComplexifiedIndexerType);
+            else if (ComplexifyAsPropertyType(node, out IPropertyType ComplexifiedPropertyType))
+                complexifiedNodeList.Add(ComplexifiedPropertyType);
+            else if (ComplexifyAsProcedureType(node, out IProcedureType ComplexifiedProcedureType))
+                complexifiedNodeList.Add(ComplexifiedProcedureType);
+            else if (ComplexifyAsTupleType(node, out ITupleType ComplexifiedTupleType))
+                complexifiedNodeList.Add(ComplexifiedTupleType);
         }
 
-        private static bool ComplexifyAsAnchoredType(ISimpleType node, out INode complexifiedNode)
+        private static bool ComplexifyAsAnchoredType(ISimpleType node, out IAnchoredType complexifiedNode)
         {
             complexifiedNode = null;
 
@@ -195,7 +193,7 @@
             return complexifiedNode != null;
         }
 
-        private static bool ComplexifyAsKeywordAnchoredType(ISimpleType node, out INode complexifiedNode)
+        private static bool ComplexifyAsKeywordAnchoredType(ISimpleType node, out IKeywordAnchoredType complexifiedNode)
         {
             complexifiedNode = null;
 
@@ -216,7 +214,7 @@
             return complexifiedNode != null;
         }
 
-        private static bool ComplexifyAsFunctionType(ISimpleType node, out INode complexifiedNode)
+        private static bool ComplexifyAsFunctionType(ISimpleType node, out IFunctionType complexifiedNode)
         {
             complexifiedNode = null;
 
@@ -232,7 +230,7 @@
             return complexifiedNode != null;
         }
 
-        private static bool ComplexifyAsGenericType(ISimpleType node, out INode complexifiedNode)
+        private static bool ComplexifyAsGenericType(ISimpleType node, out IGenericType complexifiedNode)
         {
             complexifiedNode = null;
 
@@ -251,7 +249,7 @@
             return complexifiedNode != null;
         }
 
-        private static bool ComplexifyAsIndexerType(ISimpleType node, out INode complexifiedNode)
+        private static bool ComplexifyAsIndexerType(ISimpleType node, out IIndexerType complexifiedNode)
         {
             complexifiedNode = null;
 
@@ -270,7 +268,7 @@
             return complexifiedNode != null;
         }
 
-        private static bool ComplexifyAsPropertyType(ISimpleType node, out INode complexifiedNode)
+        private static bool ComplexifyAsPropertyType(ISimpleType node, out IPropertyType complexifiedNode)
         {
             complexifiedNode = null;
 
@@ -286,7 +284,7 @@
             return complexifiedNode != null;
         }
 
-        private static bool ComplexifyAsProcedureType(ISimpleType node, out INode complexifiedNode)
+        private static bool ComplexifyAsProcedureType(ISimpleType node, out IProcedureType complexifiedNode)
         {
             complexifiedNode = null;
 
@@ -301,7 +299,7 @@
             return complexifiedNode != null;
         }
 
-        private static bool ComplexifyAsTupleType(ISimpleType node, out INode complexifiedNode)
+        private static bool ComplexifyAsTupleType(ISimpleType node, out ITupleType complexifiedNode)
         {
             complexifiedNode = null;
 

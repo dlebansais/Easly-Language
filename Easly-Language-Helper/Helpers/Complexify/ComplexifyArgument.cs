@@ -44,13 +44,13 @@
 
         private static void GetComplexifiedPositionalArgument(IPositionalArgument node, IList<INode> complexifiedNodeList)
         {
-            if (GetComplexifiedAsAssignmentArgument(node, out IAssignmentArgument ComplexifiedAsAssignmentArgument))
-                complexifiedNodeList.Add(ComplexifiedAsAssignmentArgument);
-            else if (GetComplexifiedNode(node.Source, out List<INode> complexifiedSourceList) && complexifiedSourceList[0] is IExpression AsComplexifiedSource)
+            if (GetComplexifiedNode(node.Source, out List<INode> complexifiedSourceList) && complexifiedSourceList[0] is IExpression AsComplexifiedSource)
             {
                 IPositionalArgument NewPositionalArgument = CreatePositionalArgument(AsComplexifiedSource);
                 complexifiedNodeList.Add(NewPositionalArgument);
             }
+            else if (GetComplexifiedAsAssignmentArgument(node, out IAssignmentArgument ComplexifiedAssignmentArgument))
+                complexifiedNodeList.Add(ComplexifiedAssignmentArgument);
         }
 
         private static bool GetComplexifiedAsAssignmentArgument(IPositionalArgument node, out IAssignmentArgument complexifiedNode)
