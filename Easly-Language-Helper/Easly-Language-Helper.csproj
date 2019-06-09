@@ -45,6 +45,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Helpers\BlockListHelper.cs" />
+    <Compile Include="Helpers\Complexify\ComplexifyTypeArgument.cs" />
+    <Compile Include="Helpers\Complexify\ComplexifyObjectType.cs" />
+    <Compile Include="Helpers\Complexify\ComplexifyInstruction.cs" />
+    <Compile Include="Helpers\Complexify\ComplexifyExpression.cs" />
+    <Compile Include="Helpers\Complexify\ComplexifyArgument.cs" />
+    <Compile Include="Helpers\Complexify\Complexify.cs" />
     <Compile Include="Helpers\FormattedNumber\CanonicalNumber.cs" />
     <Compile Include="Helpers\FormattedNumber\ExplicitExponents.cs" />
     <Compile Include="Helpers\FormattedNumber\FormattedNumber.cs" />
