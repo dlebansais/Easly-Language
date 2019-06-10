@@ -333,6 +333,7 @@
 
             if (IsQuerySimple(node) && ParsePattern(node, "agent", out string BeforeText, out string AfterText) && BeforeText.Length == 0)
             {
+                AfterText = AfterText.Trim();
                 IIdentifier Delegated = null;
 
                 if (AfterText.StartsWith("{"))
