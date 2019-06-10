@@ -58,8 +58,9 @@ If the agent expression doesn't specify the type, the base type is the class typ
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;X<b>:&nbsp;procedure&nbsp;</b>My&nbsp;Class[<i>T</i>]&nbsp;&#9484;<b>parameter&nbsp;</b>&#9488;
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#9492;<b>end&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b>&#9496;
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>do</b>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;X&nbsp;&#8592;&nbsp;<b>agent&nbsp;My&nbsp;Feature
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;X&nbsp;&#8592;&nbsp;<b>agent</b>&nbsp;My&nbsp;Feature
 &nbsp;&nbsp;&nbsp;<b>end</b>
+<p/>
 &nbsp;&nbsp;&nbsp;My Feature&nbsp;<b>procedure</b>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>do</b>
 &nbsp;&nbsp;&nbsp;<b>end</b>
@@ -81,6 +82,7 @@ If the agent expression specifies a type, and it's a class type (possibly with g
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>do</b>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;X&nbsp;&#8592;&nbsp;<b>agent</b>{Other&nbsp;Class[<i>T</i>]}&nbsp;Other&nbsp;Feature
 &nbsp;&nbsp;&nbsp;<b>end</b>
+<p/>
 &nbsp;&nbsp;&nbsp;My Feature&nbsp;<b>procedure</b>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>do</b>
 &nbsp;&nbsp;&nbsp;<b>end</b>
