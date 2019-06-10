@@ -35,7 +35,8 @@ Foo&nbsp;<b>procedure</b>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;X&#183;Y(0)
 <b>end</b>
 </pre>
-    
+
+## Type    
 Its type is:
 
 + A procedure type if the feature is a procedure or a creation feature, with parameters matching those of the procedure.
@@ -44,7 +45,8 @@ Its type is:
 
 The base type (of the procedure, function or property type) is obtained as follow:
 
-+ If the agent expression doesn't specify the type, the base type is the class type, with generics if any.
+### Optional type unspecified
+If the agent expression doesn't specify the type, the base type is the class type, with generics if any.
 
 <pre>
 <b>class&nbsp;</b>My&nbsp;Class
@@ -58,13 +60,14 @@ The base type (of the procedure, function or property type) is obtained as follo
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>do</b>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;X&nbsp;&#8592;&nbsp;<b>agent&nbsp;My&nbsp;Feature
 &nbsp;&nbsp;&nbsp;<b>end</b>
-&nbsp;&nbsp;&nbsp;My&nbsp;Feature&#9473;<b>procedure</b>&#9473;
+&nbsp;&nbsp;&nbsp;My Feature&nbsp;<b>procedure</b>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>do</b>
 &nbsp;&nbsp;&nbsp;<b>end</b>
 <b>end</b>
 </pre>
 
-+ If the agent expression specifies a type, and it's a class type (possibly with generic arguments), the base type is the same as this specified type.
+### Optional type is a class type
+If the agent expression specifies a type, and it's a class type (possibly with generic arguments), the base type is the same as this specified type.
 
 <pre>
 <b>class&nbsp;</b>My&nbsp;Class
@@ -78,13 +81,14 @@ The base type (of the procedure, function or property type) is obtained as follo
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>do</b>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;X&nbsp;&#8592;&nbsp;<b>agent</b>{Other&nbsp;Class[<i>T</i>]}&nbsp;Other&nbsp;Feature
 &nbsp;&nbsp;&nbsp;<b>end</b>
-&nbsp;&nbsp;&nbsp;My&nbsp;Feature&#9473;<b>procedure</b>&#9473;
+&nbsp;&nbsp;&nbsp;My Feature&nbsp;<b>procedure</b>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>do</b>
 &nbsp;&nbsp;&nbsp;<b>end</b>
 <b>end</b>
 </pre>
 
-+ If it's a generic, it has to have at least one constraint (otherwise there would be no feature available) and then the base type is the constraint in which the feature could be found. Note that, if there is a conflict between several constraints using the same name for a feature, this conflict is resolved with renaming in constraints. 
+### Optional type is a generic type
+If it's a generic type, it has to have at least one constraint (otherwise there would be no feature available) and then the base type is the constraint in which the feature could be found. Note that, if there is a conflict between several constraints using the same name for a feature, this conflict is resolved with renaming in constraints. 
 
 <pre>
 <b>class&nbsp;</b>My&nbsp;Class
