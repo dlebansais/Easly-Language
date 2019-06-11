@@ -1097,7 +1097,7 @@ False"";{7780c0f0-ad0f-4346-8c31-3566b07c977c}{BaseNode.Document, Easly-Language
 
 The following examples demonstrate how the agent expression can be translated to C#.
 
-+ In class `A`, `AgentA` is a simple agent with no optional type specified.
++ In class `A`, `Agent` is a simple agent with no optional type specified.
 
 ```csharp
     class A
@@ -1107,7 +1107,7 @@ The following examples demonstrate how the agent expression can be translated to
             // Agent ← agent TestProcedure
             Agent = TestProcedure;
 
-            // AgentA(3.14)
+            // Agent(3.14)
             Agent(3.14);
         }
 
@@ -1128,7 +1128,7 @@ The following examples demonstrate how the agent expression can be translated to
         {
             a = new A();
 
-            // AgentA &#8592; agent {A} TestProcedure
+            // AgentA ← agent {A} TestProcedure
             AgentA = (A agentBase, double x) => { agentBase.TestProcedure(x); };
 
             // a.AgentA(3.14)
@@ -1149,7 +1149,7 @@ The following examples demonstrate how the agent expression can be translated to
         {
             b = new B();
 
-            // AgentA &#8592; agent {A} TestProcedure
+            // AgentA ← agent {A} TestProcedure
             AgentA = (A agentBase, double x) => { agentBase.TestProcedure(x); };
 
             // b.a.AgentA(3.14)
@@ -1171,7 +1171,7 @@ The following examples demonstrate how the agent expression can be translated to
         {
             T t = new T();
 
-            // AgentA &#8592; agent {T} TestProcedure
+            // AgentA ← agent {T} TestProcedure
             AgentT = (A agentBase, double x) => { agentBase.TestProcedure(x); };
 
             // t.AgentA(3.14)
