@@ -160,6 +160,8 @@ Foo&nbsp;<b>procedure</b>
 
 Note that `My Type` is optional. If not provided, the feature is obtained from the class itself, directly or through inheritance. If the optional type is provided, it must be a class type, or a generic type with constraints, for which `My Feature` can be resolved to an existing feature.
 
+Also, since the feature is specified by name, an agent expression cannot refer to an indexer. On the other hand, there can be only one indexer in a class, therefore the concept of agent is meaningless for them.
+
 The agent, result of the expression, can be used wherever a call to `My Feature` would be valid.
 
 
@@ -1097,6 +1099,8 @@ False"";{7780c0f0-ad0f-4346-8c31-3566b07c977c}{BaseNode.Document, Easly-Language
 
 The following examples demonstrate how the agent expression can be translated to C#.
 
+## Procedure
+
 + In class `A`, `Agent` is a simple agent with no optional type specified.
 
 ```csharp
@@ -1135,8 +1139,8 @@ The following examples demonstrate how the agent expression can be translated to
             AgentA(a, 3.14);
         }
 
-        public Action<A, double> AgentA;
         public A a;
+        public Action<A, double> AgentA;
     }
 ```
 
@@ -1171,10 +1175,10 @@ The following examples demonstrate how the agent expression can be translated to
         {
             T t = new T();
 
-            // AgentA ← agent {T} TestProcedure
+            // AgentT ← agent {T} TestProcedure
             AgentT = (A agentBase, double x) => { agentBase.TestProcedure(x); };
 
-            // t.AgentA(3.14)
+            // t.AgentT(3.14)
             AgentT(t, 3.14);
         }
 
@@ -1182,3 +1186,90 @@ The following examples demonstrate how the agent expression can be translated to
     }
 ```
 
+## Function
+
++ In class `A`, `Agent` is a simple agent with no optional type specified.
+
+```csharp
+    class A
+    {
+        public A()
+        {
+            // Agent ← agent TestFunction
+            Agent = TestFunction;
+
+            // n ← Agent(3.14)
+            int n = Agent(3.14);
+        }
+
+        public int TestFunction(double x)
+        {
+            return (int)x;
+        }
+
+        public Func<double, int> Agent;
+    }
+```
+
++ In class `B`, `AgentA` is an agent with optional type `A` specified.
+
+```csharp
+    class B
+    {
+        public B()
+        {
+            a = new A();
+
+            // AgentA ← agent {A} TestFunction
+            AgentA = (A agentBase, double x) => { return agentBase.TestFunction(x); };
+
+            // n ← a.AgentA(3.14)
+            int n = AgentA(a, 3.14);
+        }
+
+        public A a;
+        public Func<A, double, int> AgentA;
+    }
+```
+
++ In class `C`, `AgentA` is an agent with optional type `A` specified, and is used at the end of a qualified name path.
+
+```csharp
+    class C
+    {
+        public C()
+        {
+            b = new B();
+
+            // AgentA ← agent {A} TestFunction
+            AgentA = (A agentBase, double x) => { return agentBase.TestFunction(x); };
+
+            // n ← b.a.AgentA(3.14)
+            AgentA(b.a, 3.14);
+        }
+
+        public B b;
+        public Func<A, double, int> AgentA;
+    }
+```
+
++ In class `D`, `AgentT` is an agent with optional type `T` specified, and the resulting type uses base type `A`.  
+
+```csharp
+    class D<T>
+        where T : A, new()
+    {
+        public D()
+        {
+            T t = new T();
+
+            // AgentT ← agent {T} TestFunction
+            AgentT = (A agentBase, double x) => { return agentBase.TestFunction(x); };
+
+            // n ← t.AgentT(3.14)
+            AgentT(t, 3.14);
+        }
+
+        public Func<A, double, int> AgentT;
+    }
+```
