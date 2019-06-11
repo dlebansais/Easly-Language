@@ -1273,3 +1273,45 @@ The following examples demonstrate how the agent expression can be translated to
         public Func<A, double, int> AgentT;
     }
 ```
+
+## Property
+
+For a property, the C# source code is pretty much the same as a function, except there are no parameters. However, for an agent with no optional type specified, we can't use the simplified syntax. The resulting code looks as follow.
+
+```csharp
+    class A
+    {
+        public A()
+        {
+            // Agent ← agent TestProperty
+            Agent = (A agentBase) => { return agentBase.TestProperty; };
+
+            // n ← Agent(3.14)
+            int n = Agent(this);
+        }
+
+        public int TestProperty
+        {
+            get { return 0; }
+        }
+
+        public Func<A, int> Agent;
+    }
+
+    class B
+    {
+        public B()
+        {
+            a = new A();
+
+            // AgentA ← agent {A} TestProperty
+            AgentA = (A agentBase) => { return agentBase.TestProperty; };
+
+            // n ← a.AgentA(3.14)
+            int n = AgentA(a);
+        }
+
+        public A a;
+        public Func<A, int> AgentA;
+    }
+```
