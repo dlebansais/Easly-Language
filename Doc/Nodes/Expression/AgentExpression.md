@@ -1092,3 +1092,93 @@ False"";{7780c0f0-ad0f-4346-8c31-3566b07c977c}{BaseNode.Document, Easly-Language
 &nbsp;&nbsp;&nbsp;<b>end</b>
 <b>end</b>
 </pre>
+
+# Translation to C&#35;
+
+The following examples demonstrate how the agent expression can be translated to C#.
+
++ In class `A`, `AgentA` is a simple agent with no optional type specified.
+
+```csharp
+    class A
+    {
+        public A()
+        {
+            // Agent &#8592; agent TestProcedure
+            Agent = TestProcedure;
+
+            // AgentA(3.14)
+            Agent(3.14);
+        }
+
+        public void TestProcedure(double x)
+        {
+        }
+
+        public Action<double> Agent;
+    }
+```
+
++ In class `B`, `AgentA` is an agent with optional type `A` specified.
+
+```csharp
+    class B
+    {
+        public B()
+        {
+            a = new A();
+
+            // AgentA &#8592; agent {A} TestProcedure
+            AgentA = (A agentBase, double x) => { agentBase.TestProcedure(x); };
+
+            // a.AgentA(3.14)
+            AgentA(a, 3.14);
+        }
+
+        public Action<A, double> AgentA;
+        public A a;
+    }
+```
+
++ In class `C`, `AgentA` is an agent with optional type `A` specified, and is used at the end of a qualified name path.
+
+```csharp
+    class C
+    {
+        public C()
+        {
+            b = new B();
+
+            // AgentA &#8592; agent {A} TestProcedure
+            AgentA = (A agentBase, double x) => { agentBase.TestProcedure(x); };
+
+            // b.a.AgentA(3.14)
+            AgentA(b.a, 3.14);
+        }
+
+        public B b;
+        public Action<A, double> AgentA;
+    }
+```
+
++ In class `D`, `AgentT` is an agent with optional type `T` specified, and the resulting type uses base type `A`.  
+
+```csharp
+    class D<T>
+        where T: A, new()
+    {
+        public D()
+        {
+            T t = new T();
+
+            // AgentA &#8592; agent {T} TestProcedure
+            AgentT = (A agentBase, double x) => { agentBase.TestProcedure(x); };
+
+            // t.AgentA(3.14)
+            AgentT(t, 3.14);
+        }
+
+        public Action<A, double> AgentT;
+    }
+```
+
