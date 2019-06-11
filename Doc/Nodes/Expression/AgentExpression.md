@@ -1104,7 +1104,7 @@ The following examples demonstrate how the agent expression can be translated to
     {
         public A()
         {
-            // Agent &#8592; agent TestProcedure
+            // Agent ← agent TestProcedure
             Agent = TestProcedure;
 
             // AgentA(3.14)
