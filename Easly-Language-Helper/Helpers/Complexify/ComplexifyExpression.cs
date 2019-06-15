@@ -123,6 +123,29 @@
                 IAgentExpression NewAgentExpression = CreateAgentExpression(ClonedDelegated, AsComplexifiedBaseType);
                 complexifiedNodeList.Add(NewAgentExpression);
             }
+            else
+            {
+                IIdentifier Delegated = node.Delegated;
+                string Text = Delegated.Text;
+
+                if (Text.StartsWith("{"))
+                {
+                    int TypeNameIndex = Text.IndexOf("}");
+
+                    if (TypeNameIndex > 1)
+                    {
+                        string FeatureName = Text.Substring(TypeNameIndex + 1).Trim();
+                        IIdentifier NewDelegated = CreateSimpleIdentifier(FeatureName);
+
+                        string BaseTypeName = Text.Substring(1, TypeNameIndex - 1).Trim();
+                        IIdentifier BaseTypeIdentifier = CreateSimpleIdentifier(BaseTypeName);
+                        IObjectType NewBaseType = CreateSimpleType(SharingType.NotShared, BaseTypeIdentifier);
+
+                        IAgentExpression NewAgentExpression = CreateAgentExpression(NewDelegated, NewBaseType);
+                        complexifiedNodeList.Add(NewAgentExpression);
+                    }
+                }
+            }
         }
 
         private static void GetComplexifiedBinaryConditionalExpression(IBinaryConditionalExpression node, IList<INode> complexifiedNodeList)
