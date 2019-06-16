@@ -1,13 +1,13 @@
 # Keyword Anchored Type
 
-A keyword anchored type is an anchored type using one of the predefined language entities as anchor (See Anchored Type).
+A keyword anchored type is an anchored type using one of the predefined language entities as anchor (See [Anchored Type](https://github.com/dlebansais/Easly-Language/blob/master/Doc/Nodes/Type/AnchoredType.md)).
 
 The following keywords can be used as anchor:
 + `True`, `False` and `Retry`. The resulting type is the language-defined *Boolean* type.
 + `Current`. The resulting type is the same as the class where the keyword anchored type is used.
 + `Result` and `Value`. These keywords can be used only within a property or indexer: in the getter for `Result`, in the getter or setter for `Value`. The resulting type is the same as the property or indexer.
 + `Exception`. The resulting type is the language-defined *Exception* type
-+ `Indexer`. The class where this keyword is used must have an indexer, and the resulting type is an agent (See Agents) for this indexer.
++ `Indexer`. The class where this keyword is used must have an indexer, and the resulting type is an indexer type.
 
 For example:
 
@@ -118,7 +118,7 @@ X&nbsp;<b>is&nbsp;</b><i>Number</i>
 <b>end</b>
 </pre>
 
-## Invalid uses of a kewyord anchored type
+## Invalid uses of a keyword anchored type
 
 Keyword anchored types cannot be used in the following situations:
 

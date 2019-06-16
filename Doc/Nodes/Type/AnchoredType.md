@@ -1,6 +1,6 @@
 # Anchored Type
 
-An anchored type is a type defined as being the same as the type of some other entity. The point of an acnhored type is to ensure that assignments are valid, when the source and destination can't easily guarantee they are of a compatible type.
+An anchored type is a type defined as being the same as the type of some other entity. The point of an anchored type is to ensure that assignments are valid, when the source and destination can't easily guarantee they are of a compatible type.
 
 <!---
 Mode=Default
@@ -120,7 +120,7 @@ Foo&nbsp;<b>procedure</b>
 <b>end</b>
 </pre>
 
-The point of anchored types is more visible when a feature of a parent class is redefined in a child class. If `X` is the redefined feature, and `Y` was declared as `like X`, the type of `Y` will also follow the redeclaration. This ensures that assignments `X ← Y` and `Y ← X` in the code of the parent class will remain valid in children.  
+The usefulness of anchored types is more visible when a feature of a parent class is redefined in a child class. If `X` is the redefined feature, and `Y` was declared as `like X`, the type of `Y` will also follow the redefinition. This ensures that assignments `X ← Y` and `Y ← X` in the code of the parent class will remain valid in children.  
 
 <!---
 Mode=Default
@@ -475,7 +475,9 @@ False{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, Publi
 <b>end</b>
 </pre>
 
-Anchored types can be used to follow the type of a parameter, but also the `Value` or `Result` of a property (See Keyword Anchored Type).
+In the code above, the `Adult Speed` of a `Bird` is of type *Flying Speed*.
+
+Anchored types can be used to follow the type of a parameter, but also the `Value` or `Result` of a property (See [Keyword Anchored Type](https://github.com/dlebansais/Easly-Language/blob/master/Doc/Nodes/Type/KeywordAnchoredType.md)).
 
 This language feature is also useful to make the declaration of a variable simpler.
 
@@ -543,7 +545,7 @@ Mode=Default
 &nbsp;&nbsp;&nbsp;Speed<b>:&nbsp;like&nbsp;</b>B<b>&#183;</b>Speed
 </pre>
 
-The anchor can also be one of the language entities, such as `Value` and `Result` in a property, `Retry`, `Exception` etc. For this, use a Keyword Anchored Type.
+The anchor can also be one of the language entities, such as `Value` and `Result` in a property, `Retry`, `Exception` etc. For this, use a [Keyword Anchored Type](https://github.com/dlebansais/Easly-Language/blob/master/Doc/Nodes/Type/KeywordAnchoredType.md).
 Since the anchor must be a name, to refer to the indexer of a class you must use a Keyword Anchored Type too, with the `Indexer` keyword. 
 
 ## Invalid uses of an anchored type
@@ -580,7 +582,7 @@ could have two outcomes:
 + The created object `Y` is of the type used to declare `X`.
 + The created object `Y` is of the same type as `X` when the instruction is executed.
 
-This subtlety is most visible when the run time type of X really can't be predicted:
+This subtlety is most visible when the run time type of `X` really can't be predicted:
 
 <!---
 Mode=Default
@@ -693,7 +695,7 @@ Age&nbsp;<b>procedure</b>
 
 In the example above, `X` could be any `Animal`, but also could be a `Bird`. Should we create a `Bird` or an `Animal` object and assign it to `Y`?
 
-To resolve this, anchored types have an optional creation flag. When the flag is set, the created object will be of the run-time type, otherwise it will be of the declaration type.
+To resolve this issue, anchored types have an optional `creation` flag. When the flag is set, the created object will be of the run-time type, otherwise it will be of the declaration type.
 
 <!---
 Mode=Default
@@ -824,7 +826,7 @@ Age&nbsp;<b>procedure</b>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Maybe&nbsp;Bird<b>:&nbsp;like&nbsp;</b>creation&nbsp;X
 &nbsp;&nbsp;&nbsp;<b>do</b>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>create&nbsp;</b>Always&nbsp;Animal&nbsp;<b>with&nbsp;</b>Make
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>create&nbsp;</b>maybe&nbsp;Bird&nbsp;<b>with&nbsp;</b>Make
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>create&nbsp;</b>Maybe&nbsp;Bird&nbsp;<b>with&nbsp;</b>Make
 <b>end</b>
 </pre>
 
