@@ -487,6 +487,28 @@
             else
                 clonedCommand.Command.Path.RemoveAt(0);
         }
+
+        private static bool StringToKeyword(string text, out Keyword value)
+        {
+            if (!string.IsNullOrEmpty(text))
+            {
+                text = text.Substring(0, 1).ToUpper() + text.Substring(1);
+
+                string[] Names = typeof(Keyword).GetEnumNames();
+
+                for (int i = 0; i < Names.Length; i++)
+                {
+                    if (text == Names[i])
+                    {
+                        value = (Keyword)i;
+                        return true;
+                    }
+                }
+            }
+
+            value = (Keyword)(-1);
+            return false;
+        }
         #endregion
     }
 }

@@ -112,6 +112,7 @@
     <Compile Include="Nodes\Expression\BinaryOperatorExpression.cs" />
     <Compile Include="Nodes\Expression\ClassConstantExpression.cs" />
     <Compile Include="Nodes\Expression\CloneOfExpression.cs" />
+    <Compile Include="Nodes\Expression\KeywordEntityExpression.cs" />
     <Compile Include="Nodes\Expression\EntityExpression.cs" />
     <Compile Include="Nodes\Expression\EqualityExpression.cs" />
     <Compile Include="Nodes\Expression\Expression.cs" />

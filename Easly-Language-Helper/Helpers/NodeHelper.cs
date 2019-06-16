@@ -898,6 +898,15 @@ namespace BaseNodeHelper
             return Result;
         }
 
+        public static IKeywordEntityExpression CreateKeywordEntityExpression(Keyword value)
+        {
+            KeywordEntityExpression Result = new KeywordEntityExpression();
+            Result.Documentation = CreateEmptyDocumentation();
+            Result.Value = value;
+
+            return Result;
+        }
+
         public static IKeywordExpression CreateKeywordExpression(Keyword value)
         {
             KeywordExpression Result = new KeywordExpression();
@@ -2867,6 +2876,8 @@ namespace BaseNodeHelper
                     return SimplifyIndexQueryExpression(AsIndexQueryExpression, out simplifiedNode);
                 case IInitializedObjectExpression AsInitializedObjectExpression:
                     return SimplifyInitializedObjectExpression(AsInitializedObjectExpression, out simplifiedNode);
+                case IKeywordEntityExpression AsKeywordEntityExpression:
+                    return SimplifyKeywordEntityExpression(AsKeywordEntityExpression, out simplifiedNode);
                 case IKeywordExpression AsKeywordExpression:
                     return SimplifyKeywordExpression(AsKeywordExpression, out simplifiedNode);
                 case IManifestCharacterExpression AsManifestCharacterExpression:
@@ -3157,6 +3168,12 @@ namespace BaseNodeHelper
             }
 
             simplifiedNode = CreateQueryExpression(Query, ArgumentBlocks);
+            return true;
+        }
+
+        private static bool SimplifyKeywordEntityExpression(IKeywordEntityExpression node, out INode simplifiedNode)
+        {
+            simplifiedNode = CreateSimpleQueryExpression($"entity {node.Value}");
             return true;
         }
 

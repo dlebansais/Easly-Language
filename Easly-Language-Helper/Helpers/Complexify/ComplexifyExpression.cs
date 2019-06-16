@@ -60,6 +60,7 @@
                     IsHandled = true;
                     break;
 
+                case IKeywordEntityExpression AsKeywordEntityExpression:
                 case IKeywordExpression AsKeywordExpression:
                 case IManifestCharacterExpression AsManifestCharacterExpression:
                 case IManifestNumberExpression AsManifestNumberExpression:
@@ -314,8 +315,12 @@
                 complexifiedNodeList.Add(ComplexifiedClassConstantExpression);
             else if (ComplexifyAsCloneOfExpression(node, out ICloneOfExpression ComplexifiedCloneOfExpression))
                 complexifiedNodeList.Add(ComplexifiedCloneOfExpression);
-            else if (ComplexifyAsEntityExpression(node, out IEntityExpression ComplexifiedEntityExpression))
+            else if (ComplexifyAsEntityExpression(node, out IEntityExpression ComplexifiedEntityExpression, out IKeywordEntityExpression ComplexifiedKeywordEntityExpression))
+            {
                 complexifiedNodeList.Add(ComplexifiedEntityExpression);
+                if (ComplexifiedKeywordEntityExpression != null)
+                    complexifiedNodeList.Add(ComplexifiedKeywordEntityExpression);
+            }
             else if (ComplexifyAsEqualExpression(node, out IEqualityExpression ComplexifiedEqualityExpression))
                 complexifiedNodeList.Add(ComplexifiedEqualityExpression);
             else if (ComplexifyAsDifferentExpression(node, out IEqualityExpression ComplexifiedDifferentExpression))
@@ -474,19 +479,25 @@
             return complexifiedNode != null;
         }
 
-        private static bool ComplexifyAsEntityExpression(IQueryExpression node, out IEntityExpression complexifiedNode)
+        private static bool ComplexifyAsEntityExpression(IQueryExpression node, out IEntityExpression complexifiedNode, out IKeywordEntityExpression complexifiedKeywordNode)
         {
             complexifiedNode = null;
+            complexifiedKeywordNode = null;
 
             if (node.ArgumentBlocks.NodeBlockList.Count == 0 && ParsePattern(node, "entity ", out string BeforeText, out string AfterText) && BeforeText.Length == 0)
             {
+                string Text = AfterText.Trim();
+
                 IQualifiedName ClonedQuery = DeepCloneNode(node.Query, cloneCommentGuid: false) as IQualifiedName;
                 Debug.Assert(ClonedQuery != null);
                 Debug.Assert(ClonedQuery.Path.Count > 0);
 
-                NodeTreeHelper.SetString(ClonedQuery.Path[0], "Text", AfterText);
+                NodeTreeHelper.SetString(ClonedQuery.Path[0], "Text", Text);
 
                 complexifiedNode = CreateEntityExpression(ClonedQuery);
+
+                if (StringToKeyword(Text, out Keyword Value))
+                    complexifiedKeywordNode = CreateKeywordEntityExpression(Value);
             }
 
             return complexifiedNode != null;
@@ -557,6 +568,21 @@
             return complexifiedNode != null;
         }
 
+        private static bool ComplexifyAsKeywordEntityExpression(IQueryExpression node, out IKeywordEntityExpression complexifiedNode)
+        {
+            complexifiedNode = null;
+
+            if (node.ArgumentBlocks.NodeBlockList.Count == 0 && ParsePattern(node, "entity ", out string BeforeText, out string AfterText) && BeforeText.Length == 0)
+            {
+                string Text = AfterText.Trim();
+
+                if (StringToKeyword(Text, out Keyword Value) && Value == Keyword.Indexer)
+                    complexifiedNode = CreateKeywordEntityExpression(Value);
+            }
+
+            return complexifiedNode != null;
+        }
+
         private static bool ComplexifyAsKeywordExpression(IQueryExpression node, out IKeywordExpression complexifiedNode)
         {
             complexifiedNode = null;
@@ -564,27 +590,9 @@
             if (IsQuerySimple(node))
             {
                 string Text = node.Query.Path[0].Text;
-                if (Text.Length > 0)
-                {
-                    Text = Text.Substring(0, 1).ToUpper() + Text.Substring(1);
 
-                    if (Text == "True")
-                        complexifiedNode = CreateKeywordExpression(Keyword.True);
-                    else if (Text == "False")
-                        complexifiedNode = CreateKeywordExpression(Keyword.False);
-                    else if (Text == "Current")
-                        complexifiedNode = CreateKeywordExpression(Keyword.Current);
-                    else if (Text == "Value")
-                        complexifiedNode = CreateKeywordExpression(Keyword.Value);
-                    else if (Text == "Result")
-                        complexifiedNode = CreateKeywordExpression(Keyword.Result);
-                    else if (Text == "Retry")
-                        complexifiedNode = CreateKeywordExpression(Keyword.Retry);
-                    else if (Text == "Exception")
-                        complexifiedNode = CreateKeywordExpression(Keyword.Exception);
-                    else if (Text == "Indexer")
-                        complexifiedNode = CreateKeywordExpression(Keyword.Indexer);
-                }
+                if (StringToKeyword(Text, out Keyword Value))
+                    complexifiedNode = CreateKeywordExpression(Value);
             }
 
             return complexifiedNode != null;

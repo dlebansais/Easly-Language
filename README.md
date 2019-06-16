@@ -11,7 +11,7 @@ TODO:
 - [ ] Make all nodes with a "Text" property inherit from a ITextNode interface.
 - [ ] Get rid of the hack in IOptionalReference
 - [X] Add a new keyword: Indexer   
-- [ ] Add a new node: keyword entity expression.   
+- [X] Add a new node: keyword entity expression.   
 
 ## Hack in IOptionalReference
 
