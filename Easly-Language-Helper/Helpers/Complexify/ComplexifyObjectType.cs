@@ -160,10 +160,12 @@
 
         private static void GetComplexifiedSimpleType(ISimpleType node, IList<INode> complexifiedNodeList)
         {
-            if (ComplexifyAsAnchoredType(node, out IAnchoredType ComplexifiedAnchoredType))
+            if (ComplexifyAsAnchoredType(node, out IAnchoredType ComplexifiedAnchoredType, out IKeywordAnchoredType ComplexifiedKeywordAnchoredType))
+            {
                 complexifiedNodeList.Add(ComplexifiedAnchoredType);
-            else if (ComplexifyAsKeywordAnchoredType(node, out IKeywordAnchoredType ComplexifiedKeywordAnchoredType))
-                complexifiedNodeList.Add(ComplexifiedKeywordAnchoredType);
+                if (ComplexifiedKeywordAnchoredType != null)
+                    complexifiedNodeList.Add(ComplexifiedKeywordAnchoredType);
+            }
             else if (ComplexifyAsFunctionType(node, out IFunctionType ComplexifiedFunctionType))
                 complexifiedNodeList.Add(ComplexifiedFunctionType);
             else if (ComplexifyAsGenericType(node, out IGenericType ComplexifiedGenericType))
@@ -178,37 +180,21 @@
                 complexifiedNodeList.Add(ComplexifiedTupleType);
         }
 
-        private static bool ComplexifyAsAnchoredType(ISimpleType node, out IAnchoredType complexifiedNode)
+        private static bool ComplexifyAsAnchoredType(ISimpleType node, out IAnchoredType complexifiedNode, out IKeywordAnchoredType complexifiedKeywordNode)
         {
             complexifiedNode = null;
+            complexifiedKeywordNode = null;
 
-            string Text = node.ClassIdentifier.Text;
+            string ClassIdentifierText = node.ClassIdentifier.Text;
 
-            if (Text.StartsWith("like "))
+            if (ClassIdentifierText.StartsWith("like "))
             {
-                IQualifiedName AnchoredName = CreateSimpleQualifiedName(Text.Substring(5));
+                string Text = ClassIdentifierText.Substring(5).Trim();
+                IQualifiedName AnchoredName = StringToQualifiedName(Text);
                 complexifiedNode = CreateAnchoredType(AnchoredName, AnchorKinds.Declaration);
-            }
 
-            return complexifiedNode != null;
-        }
-
-        private static bool ComplexifyAsKeywordAnchoredType(ISimpleType node, out IKeywordAnchoredType complexifiedNode)
-        {
-            complexifiedNode = null;
-
-            string Text = node.ClassIdentifier.Text;
-
-            if (Text.StartsWith("like "))
-            {
-                foreach (Keyword k in typeof(Keyword).GetEnumValues())
-                {
-                    if (Text.Substring(5).ToLower() == k.ToString().ToLower())
-                    {
-                        complexifiedNode = CreateKeywordAnchoredType(k);
-                        break;
-                    }
-                }
+                if (StringToKeyword(Text, out Keyword Value))
+                    complexifiedKeywordNode = CreateKeywordAnchoredType(Value);
             }
 
             return complexifiedNode != null;

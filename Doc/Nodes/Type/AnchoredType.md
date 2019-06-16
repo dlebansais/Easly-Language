@@ -278,13 +278,13 @@ False{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, Publi
 <b>feature</b>
 &nbsp;&nbsp;&nbsp;Speed<b>:&nbsp;</b><i>Movement&nbsp;Speed</i>
 
+&nbsp;&nbsp;&nbsp;<b>&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;</b>
 
+&nbsp;&nbsp;&nbsp;Adult&nbsp;Speed<b>:&nbsp;like&nbsp;</b>Speed
 
-&nbsp;&nbsp;&nbsp;Adult&nbsp;Speed<b>:&#9473;like&#9473;</b>Speed
+&nbsp;&nbsp;&nbsp;<b>&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;</b>
 
-
-
-&nbsp;&nbsp;&nbsp;Set&nbsp;Adult<b>&#9473;procedure&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;</b>
+&nbsp;&nbsp;&nbsp;Set&nbsp;Adult&nbsp;<b>procedure</b>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>do</b>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Speed&nbsp;<b>&#8592;&nbsp;</b>Adult&nbsp;Speed
 &nbsp;&nbsp;&nbsp;<b>end</b>
@@ -799,7 +799,7 @@ Mode=Default
 ;{System.Collections.Generic.List`1[[BaseNode.IBlock`2[[BaseNode.IArgument, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null],[BaseNode.Argument, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089} *0
 {BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
 ;"Make""";{fa35df85-84d7-4fc4-b503-1f485e553cb7}{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
-;"maybe Bird"FalseFalse"";{090d59e0-accb-49b6-8e33-8f071dbe19b3}{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
+;"Maybe Bird"FalseFalse"";{090d59e0-accb-49b6-8e33-8f071dbe19b3}{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
 ;"Always Animal"{BaseNode.QualifiedName, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
 ;0x00000000;{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
 False"";{663d36d2-1ddf-4242-adb8-680eac7e00a4}{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}

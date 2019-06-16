@@ -200,6 +200,8 @@ Base Type | Reference | Yes | Any *Object Types*
 
 *Anchored Type*, member of: *Object Types*
 
+See [Anchored Type](https://github.com/dlebansais/Easly-Language/blob/master/Doc/Nodes/Type/AnchoredType.md).
+
 Name | Kind | Optional | Requirement
 ------------ | ------------- | ------------- | -------------
 Anchored Name | Reference | No | *Qualified Name*
@@ -752,6 +754,8 @@ Else Instructions | Reference | Yes | *Scope*
 ***
 
 *Keyword Anchored Type*, member of: *Object Types*
+
+See [Keyword Anchored Type](https://github.com/dlebansais/Easly-Language/blob/master/Doc/Nodes/Type/KeywordAnchoredType.md).
 
 Name | Kind | Optional | Requirement
 ------------ | ------------- | ------------- | -------------

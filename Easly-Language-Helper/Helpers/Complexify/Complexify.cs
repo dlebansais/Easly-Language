@@ -89,16 +89,22 @@
             return complexifiedNode != null;
         }
 
-        private static bool ComplexifyConditional(IConditional node, out IConditional complexifiedNode)
+        private static bool ComplexifyConditional(IConditional node, out IList<IConditional> complexifiedNodeList)
         {
-            if (GetComplexifiedNode(node.BooleanExpression, out List<INode> ComplexifiedBooleanExpressionList) && ComplexifiedBooleanExpressionList[0] is IExpression AsComplexifiedBooleanExpression)
+            if (GetComplexifiedNode(node.BooleanExpression, out List<INode> ComplexifiedBooleanExpressionList) && IsNodeListSameType(ComplexifiedBooleanExpressionList, out IList<IExpression> ComplexifiedList))
             {
-                IScope ClonedInstructions = (IScope)DeepCloneNode(node.Instructions, cloneCommentGuid: false);
-                complexifiedNode = CreateConditional(AsComplexifiedBooleanExpression, ClonedInstructions);
+                complexifiedNodeList = new List<IConditional>();
+                foreach (IExpression ComplexifiedBooleanExpression in ComplexifiedList)
+                {
+                    IScope ClonedInstructions = (IScope)DeepCloneNode(node.Instructions, cloneCommentGuid: false);
+                    IConditional ComplexifiedNode = CreateConditional(ComplexifiedBooleanExpression, ClonedInstructions);
+                    complexifiedNodeList.Add(ComplexifiedNode);
+                }
+
                 return true;
             }
 
-            complexifiedNode = null;
+            complexifiedNodeList = null;
             return false;
         }
         #endregion
@@ -508,6 +514,20 @@
 
             value = (Keyword)(-1);
             return false;
+        }
+
+        private static bool IsNodeListSameType<T>(List<INode> nodeList, out IList<T> result)
+            where T: INode
+        {
+            result = new List<T>();
+
+            foreach (INode Node in nodeList)
+                if (Node is T AsT)
+                    result.Add(AsT);
+                else
+                    return false;
+
+            return true;
         }
         #endregion
     }

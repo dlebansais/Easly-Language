@@ -194,10 +194,13 @@
 
         private static void GetComplexifiedEntityExpression(IEntityExpression node, IList<INode> complexifiedNodeList)
         {
-            if (GetComplexifiedNode(node.Query, out List<INode> ComplexifiedQueryList) && ComplexifiedQueryList[0] is IQualifiedName AsComplexifiedQuery)
+            if (GetComplexifiedNode(node.Query, out List<INode> ComplexifiedQueryList) && IsNodeListSameType(ComplexifiedQueryList, out IList<IQualifiedName> ComplexifiedList))
             {
-                IEntityExpression NewEntityExpression = CreateEntityExpression(AsComplexifiedQuery);
-                complexifiedNodeList.Add(NewEntityExpression);
+                foreach (IQualifiedName ComplexifiedQuery in ComplexifiedQueryList)
+                {
+                    IEntityExpression NewEntityExpression = CreateEntityExpression(ComplexifiedQuery);
+                    complexifiedNodeList.Add(NewEntityExpression);
+                }
             }
         }
 

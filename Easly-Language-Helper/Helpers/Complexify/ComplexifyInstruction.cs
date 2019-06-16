@@ -128,11 +128,14 @@
                 IAssignmentInstruction NewAssignmentInstruction = CreateAssignmentInstruction(ComplexifiedDestinationBlocks, ClonedSource);
                 complexifiedNodeList.Add(NewAssignmentInstruction);
             }
-            else if (GetComplexifiedNode(node.Source, out List<INode> ComplexifiedSourceList) && ComplexifiedSourceList[0] is IExpression AsComplexifiedSource)
+            else if (GetComplexifiedNode(node.Source, out List<INode> ComplexifiedSourceList) && IsNodeListSameType(ComplexifiedSourceList, out IList<IExpression> ComplexifiedList))
             {
-                IBlockList<IQualifiedName, QualifiedName> ClonedDestinationBlocks = (IBlockList<IQualifiedName, QualifiedName>)DeepCloneBlockList((IBlockList)node.DestinationBlocks, cloneCommentGuid: false);
-                IAssignmentInstruction NewAssignmentInstruction = CreateAssignmentInstruction(ClonedDestinationBlocks, AsComplexifiedSource);
-                complexifiedNodeList.Add(NewAssignmentInstruction);
+                foreach (IExpression ComplexifiedSource in ComplexifiedSourceList)
+                {
+                    IBlockList<IQualifiedName, QualifiedName> ClonedDestinationBlocks = (IBlockList<IQualifiedName, QualifiedName>)DeepCloneBlockList((IBlockList)node.DestinationBlocks, cloneCommentGuid: false);
+                    IAssignmentInstruction NewAssignmentInstruction = CreateAssignmentInstruction(ClonedDestinationBlocks, ComplexifiedSource);
+                    complexifiedNodeList.Add(NewAssignmentInstruction);
+                }
             }
             else if (ComplexifyAsKeywordAssignmentInstruction(node, out IKeywordAssignmentInstruction ComplexifiedKeywordAssignmentInstruction))
                 complexifiedNodeList.Add(ComplexifiedKeywordAssignmentInstruction);
@@ -555,20 +558,25 @@
             Debug.Assert(!NodeTreeHelperBlockList.IsBlockListEmpty((IBlockList)node.ConditionalBlocks));
 
             IConditional FirstConditional = node.ConditionalBlocks.NodeBlockList[0].NodeList[0];
-            if (ComplexifyConditional(FirstConditional, out IConditional ComplexifiedConditional))
+            if (ComplexifyConditional(FirstConditional, out IList<IConditional> ComplexifiedConditionalList))
             {
-                IBlockList<IConditional, Conditional> ClonedConditionalBlocks = (IBlockList<IConditional, Conditional>)DeepCloneBlockList((IBlockList)node.ConditionalBlocks, cloneCommentGuid: false);
-                ClonedConditionalBlocks.NodeBlockList[0].NodeList[0] = ComplexifiedConditional;
-
-                IIfThenElseInstruction NewIfThenElseInstruction;
-
-                if (node.ElseInstructions.IsAssigned)
+                foreach (IConditional ComplexifiedConditional in ComplexifiedConditionalList)
                 {
-                    IScope ClonedElseInstructions = (IScope)DeepCloneNode(node.ElseInstructions.Item, cloneCommentGuid: false);
-                    NewIfThenElseInstruction = CreateIfThenElseInstruction(ClonedConditionalBlocks, ClonedElseInstructions);
+                    IBlockList<IConditional, Conditional> ClonedConditionalBlocks = (IBlockList<IConditional, Conditional>)DeepCloneBlockList((IBlockList)node.ConditionalBlocks, cloneCommentGuid: false);
+                    ClonedConditionalBlocks.NodeBlockList[0].NodeList[0] = ComplexifiedConditional;
+
+                    IIfThenElseInstruction NewIfThenElseInstruction;
+
+                    if (node.ElseInstructions.IsAssigned)
+                    {
+                        IScope ClonedElseInstructions = (IScope)DeepCloneNode(node.ElseInstructions.Item, cloneCommentGuid: false);
+                        NewIfThenElseInstruction = CreateIfThenElseInstruction(ClonedConditionalBlocks, ClonedElseInstructions);
+                    }
+                    else
+                        NewIfThenElseInstruction = CreateIfThenElseInstruction(ClonedConditionalBlocks);
+
+                    complexifiedNodeList.Add(NewIfThenElseInstruction);
                 }
-                else
-                    NewIfThenElseInstruction = CreateIfThenElseInstruction(ClonedConditionalBlocks);
             }
         }
 
