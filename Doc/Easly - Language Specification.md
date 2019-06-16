@@ -755,7 +755,7 @@ Else Instructions | Reference | Yes | *Scope*
 
 Name | Kind | Optional | Requirement
 ------------ | ------------- | ------------- | -------------
-Anchor | Discrete | N/A | True, False, Current, Value, Result, Retry, Exception 
+Anchor | Discrete | N/A | True, False, Current, Value, Result, Retry, Exception, Indexer
 
 ***
 
@@ -768,11 +768,19 @@ Source | Reference | No | Any *Expressions*
 
 ***
 
+*Keyword Entity Expression*, member of: *Expressions*
+
+Name | Kind | Optional | Requirement
+------------ | ------------- | ------------- | -------------
+Value | Discrete | N/A | Indexer
+
+***
+
 *Keyword Expression*, member of: *Expressions*
 
 Name | Kind | Optional | Requirement
 ------------ | ------------- | ------------- | -------------
-Value | Discrete | N/A | True, False, Current, Value, Result, Retry, Exception
+Value | Discrete | N/A | True, False, Current, Value, Result, Retry, Exception, Indexer
 
 ***
 
@@ -1130,7 +1138,7 @@ Group Name | Member
 ------------ | -------------
 Arguments | Assignment Argument, Positional Argument 
 Bodies | Deferred Body, Effective Body, Extern Body, Precursor Body 
-Expressions | Agent Expression, Assertion Tag Expression, Binary Conditional Expression, Binary Operator Expression, Class Constant Expression, Clone Of Expression, Entity Expression, Equality Expression, Index Query Expression, Initialized Object Expression, Keyword Expression, Manifest Character Expression, Manifest Number Expression, Manifest Numeric Expression, Manifest String Expression, New Expression, Old Expression, Precursor Expression, Precursor Index Expression, Preprocessor Expression, Query Expression, Result Of Expression, Unary Not Expression, Unary Operator Expression 
+Expressions | Agent Expression, Assertion Tag Expression, Binary Conditional Expression, Binary Operator Expression, Class Constant Expression, Clone Of Expression, Entity Expression, Equality Expression, Index Query Expression, Initialized Object Expression, Keyword Entity Expression, Keyword Expression, Manifest Character Expression, Manifest Number Expression, Manifest Numeric Expression, Manifest String Expression, New Expression, Old Expression, Precursor Expression, Precursor Index Expression, Preprocessor Expression, Query Expression, Result Of Expression, Unary Not Expression, Unary Operator Expression 
 Features | Attribute Feature, Constant Feature, Creation Feature, Function Feature, Indexer Feature, Procedure Feature, Property Feature 
 Instructions | As Long As Instruction, Assignment Instruction, Attachment Instruction, Check Instruction, Command Instruction, Create Instruction, Debug Instruction, For Loop Instruction, If Then Else Instruction, Index Assignment Instruction, Inspect Instruction, Keyword Assignment Instruction, Over Loop Instruction, Precursor Index Assignment Instruction, Precursor Instruction, Raise Event Instruction, Release Instruction, Throw Instruction 
 Object Types | Anchored Type, Function Type, Generic Type, Indexer Type, Keyword Anchored Type, Procedure Type, Property Type, Simple Type, Tuple Type 
