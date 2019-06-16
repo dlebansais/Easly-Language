@@ -8,6 +8,7 @@ namespace BaseNode
         Value,
         Result,
         Retry,
-        Exception
+        Exception,
+        Indexer
     }
 }

@@ -193,7 +193,7 @@ Foo&nbsp;<b>procedure</b>
 <b>end</b>
 </pre>
 
-Note that `My Type` is optional. If not provided, the feature is obtained from the class itself, directly or through inheritance. If the optional type is provided, it must be a class type, a tuple type, or a generic type with constraints, for which `My Feature` can be resolved to an existing feature.
+Note that `My Type` is optional. If not provided, the feature is obtained from the class itself, directly or through inheritance. If the optional type is provided, it must be a class type or a generic type with constraints, for which `My Feature` can be resolved to an existing feature.
 
 Also, since the feature is specified by name, an agent expression cannot refer to an indexer. On the other hand, there can be only one indexer in a class, therefore the concept of agent is meaningless for them.
 
@@ -410,9 +410,7 @@ Its type is:
 
 + A procedure type if the feature is a procedure or a creation feature, with parameters matching those of the procedure.
 + A function type if the feature is a function, with parameters and results matching those of the function.
-+ A property type if the feature is a property, an attribute or a constant.
-  * For an attribute, the property type is read/write
-  * For a constant, the property type is read only.
++ A property type if the feature is a property, an attribute or a constant. The property type is read-only, because if `X` is an agent, assigning something to `X` would assign the agent, not the property or attribute it refers to. 
 
 The base type (of the procedure, function or property type) is obtained as follow:
 
@@ -624,8 +622,8 @@ False"";{7780c0f0-ad0f-4346-8c31-3566b07c977c}{BaseNode.Document, Easly-Language
 <b>end</b>
 </pre>
 
-### Optional type is a class type or tuple type
-If the agent expression specifies a type, and it's a class type (possibly with generic arguments) or a tuple type, the base type is the same as this specified type.
+### Optional type is a class type
+If the agent expression specifies a type, and it's a class type (possibly with generic arguments), the base type is the same as this specified type.
 
 <!---
 Mode=Default

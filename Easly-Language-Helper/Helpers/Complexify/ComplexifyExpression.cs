@@ -582,6 +582,8 @@
                         complexifiedNode = CreateKeywordExpression(Keyword.Retry);
                     else if (Text == "Exception")
                         complexifiedNode = CreateKeywordExpression(Keyword.Exception);
+                    else if (Text == "Indexer")
+                        complexifiedNode = CreateKeywordExpression(Keyword.Indexer);
                 }
             }
 
