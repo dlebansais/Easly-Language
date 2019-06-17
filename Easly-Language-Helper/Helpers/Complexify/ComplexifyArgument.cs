@@ -6,51 +6,82 @@
 
     public static partial class NodeHelper
     {
-        private static void GetComplexifiedArgument(IArgument node, List<INode> complexifiedNodeList)
+        private static bool GetComplexifiedArgument(IArgument node, out IList<IArgument> complexifiedArgumentList)
         {
+            complexifiedArgumentList = null;
+            bool Result = false;
             bool IsHandled = false;
 
             switch (node)
             {
                 case IAssignmentArgument AsAssignmentArgument:
-                    GetComplexifiedAssignmentArgument(AsAssignmentArgument, complexifiedNodeList);
+                    Result = GetComplexifiedAssignmentArgument(AsAssignmentArgument, out complexifiedArgumentList);
                     IsHandled = true;
                     break;
 
                 case IPositionalArgument AsPositionalArgument:
-                    GetComplexifiedPositionalArgument(AsPositionalArgument, complexifiedNodeList);
+                    Result = GetComplexifiedPositionalArgument(AsPositionalArgument, out complexifiedArgumentList);
                     IsHandled = true;
                     break;
             }
 
             Debug.Assert(IsHandled);
+
+            return Result;
         }
 
-        private static void GetComplexifiedAssignmentArgument(IAssignmentArgument node, IList<INode> complexifiedNodeList)
+        private static bool GetComplexifiedAssignmentArgument(IAssignmentArgument node, out IList<IArgument> complexifiedArgumentList)
         {
             if (GetComplexifiedIdentifierBlockList(node.ParameterBlocks, out IBlockList<IIdentifier, Identifier> ComplexifiedParameterBlocks))
             {
+                complexifiedArgumentList = new List<IArgument>();
+
                 IExpression ClonedSource = (IExpression)DeepCloneNode(node.Source, cloneCommentGuid: false);
                 IAssignmentArgument NewAssignmentArgument = CreateAssignmentArgument(ComplexifiedParameterBlocks, ClonedSource);
-                complexifiedNodeList.Add(NewAssignmentArgument);
+                complexifiedArgumentList.Add(NewAssignmentArgument);
+
+                return true;
             }
-            else if (GetComplexifiedNode(node.Source, out List<INode> complexifiedSourceList) && complexifiedSourceList[0] is IExpression AsComplexifiedSource)
+            else if (GetComplexifiedExpression(node.Source, out IList<IExpression> ComplexifiedSourceList))
             {
-                IBlockList<IIdentifier, Identifier> ClonedParameterBlocks = (IBlockList<IIdentifier, Identifier>)DeepCloneBlockList((IBlockList)node.ParameterBlocks, cloneCommentGuid: false);
-                IAssignmentArgument NewAssignmentArgument = CreateAssignmentArgument(ClonedParameterBlocks, AsComplexifiedSource);
-                complexifiedNodeList.Add(NewAssignmentArgument);
+                complexifiedArgumentList = new List<IArgument>();
+
+                foreach (IExpression ComplexifiedSource in ComplexifiedSourceList)
+                {
+                    IBlockList<IIdentifier, Identifier> ClonedParameterBlocks = (IBlockList<IIdentifier, Identifier>)DeepCloneBlockList((IBlockList)node.ParameterBlocks, cloneCommentGuid: false);
+                    IAssignmentArgument NewAssignmentArgument = CreateAssignmentArgument(ClonedParameterBlocks, ComplexifiedSource);
+                    complexifiedArgumentList.Add(NewAssignmentArgument);
+                }
+
+                return true;
             }
+
+            complexifiedArgumentList = null;
+            return false;
         }
 
-        private static void GetComplexifiedPositionalArgument(IPositionalArgument node, IList<INode> complexifiedNodeList)
+        private static bool GetComplexifiedPositionalArgument(IPositionalArgument node, out IList<IArgument> complexifiedArgumentList)
         {
-            if (GetComplexifiedNode(node.Source, out List<INode> complexifiedSourceList) && complexifiedSourceList[0] is IExpression AsComplexifiedSource)
+            if (GetComplexifiedExpression(node.Source, out IList<IExpression> ComplexifiedSourceList))
             {
-                IPositionalArgument NewPositionalArgument = CreatePositionalArgument(AsComplexifiedSource);
-                complexifiedNodeList.Add(NewPositionalArgument);
+                complexifiedArgumentList = new List<IArgument>();
+
+                foreach (IExpression ComplexifiedSource in ComplexifiedSourceList)
+                {
+                    IPositionalArgument NewPositionalArgument = CreatePositionalArgument(ComplexifiedSource);
+                    complexifiedArgumentList.Add(NewPositionalArgument);
+                }
+
+                return true;
             }
             else if (GetComplexifiedAsAssignmentArgument(node, out IAssignmentArgument ComplexifiedAssignmentArgument))
-                complexifiedNodeList.Add(ComplexifiedAssignmentArgument);
+            {
+                complexifiedArgumentList = new List<IArgument>() { ComplexifiedAssignmentArgument };
+                return true;
+            }
+
+            complexifiedArgumentList = null;
+            return false;
         }
 
         private static bool GetComplexifiedAsAssignmentArgument(IPositionalArgument node, out IAssignmentArgument complexifiedNode)

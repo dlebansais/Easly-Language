@@ -1,5 +1,6 @@
 ﻿namespace BaseNodeHelper
 {
+    using System.Collections;
     using System.Collections.Generic;
     using System.Diagnostics;
     using BaseNode;
@@ -7,7 +8,7 @@
     public static partial class NodeHelper
     {
         #region General
-        public static bool GetComplexifiedNode(INode node, out List<INode> complexifiedNodeList)
+        public static bool GetComplexifiedNode(INode node, out IList<INode> complexifiedNodeList)
         {
             complexifiedNodeList = new List<INode>();
             GetComplexifiedNodeRecursive(node, complexifiedNodeList);
@@ -15,49 +16,82 @@
             return complexifiedNodeList.Count > 0;
         }
 
-        private static void GetComplexifiedNodeRecursive(INode node, List<INode> complexifiedNodeList)
+        private static void GetComplexifiedNodeRecursive(INode node, IList<INode> complexifiedNodeList)
         {
-            int OldCount = complexifiedNodeList.Count;
+            if (GetComplexifiedNodeNotRecursive(node, out IList ComplexifiedList))
+            {
+                int OldCount = complexifiedNodeList.Count;
+
+                foreach (INode Node in ComplexifiedList)
+                    complexifiedNodeList.Add(Node);
+
+                int NewCount = complexifiedNodeList.Count;
+
+                for (int i = OldCount; i < NewCount; i++)
+                    GetComplexifiedNodeRecursive(complexifiedNodeList[i], complexifiedNodeList);
+            }
+        }
+
+        private static bool GetComplexifiedNodeNotRecursive(INode node, out IList complexifiedNodeList)
+        {
+            bool Result = false;
+            complexifiedNodeList = null;
 
             switch (node)
             {
                 case IArgument AsArgument:
-                    GetComplexifiedArgument(AsArgument, complexifiedNodeList);
+                    Result = GetComplexifiedArgument(AsArgument, out IList<IArgument> ComplexifiedArgumentList);
+                    complexifiedNodeList = (IList)ComplexifiedArgumentList;
                     break;
 
                 case IExpression AsExpression:
-                    GetComplexifiedExpression(AsExpression, complexifiedNodeList);
+                    Result = GetComplexifiedExpression(AsExpression, out IList<IExpression> ComplexifiedExpressionList);
+                    complexifiedNodeList = (IList)ComplexifiedExpressionList;
                     break;
 
                 case IInstruction AsInstruction:
-                    GetComplexifiedInstruction(AsInstruction, complexifiedNodeList);
+                    Result = GetComplexifiedInstruction(AsInstruction, out IList<IInstruction> ComplexifiedInstructionList);
+                    complexifiedNodeList = (IList)ComplexifiedInstructionList;
                     break;
 
                 case IObjectType AsObjectType:
-                    GetComplexifiedObjectType(AsObjectType, complexifiedNodeList);
+                    Result = GetComplexifiedObjectType(AsObjectType, out IList<IObjectType> ComplexifiedObjectTypeList);
+                    complexifiedNodeList = (IList)ComplexifiedObjectTypeList;
                     break;
 
                 case ITypeArgument AsTypeArgument:
-                    GetComplexifiedTypeArgument(AsTypeArgument, complexifiedNodeList);
+                    Result = GetComplexifiedTypeArgument(AsTypeArgument, out IList<ITypeArgument> ComplexifiedTypeArgumentList);
+                    complexifiedNodeList = (IList)ComplexifiedTypeArgumentList;
                     break;
 
                 case IQualifiedName AsQualifiedName:
-                    GetComplexifiedQualifiedName(AsQualifiedName, complexifiedNodeList);
+                    Result = GetComplexifiedQualifiedName(AsQualifiedName, out IList<IQualifiedName> ComplexifiedQualifiedNameList);
+                    complexifiedNodeList = (IList)ComplexifiedQualifiedNameList;
                     break;
+
+                case IConditional AsConditional:
+                    Result = GetComplexifiedConditional(AsConditional, out IList<IConditional> ComplexifiedConditionalList);
+                    complexifiedNodeList = (IList)ComplexifiedConditionalList;
+                    break;
+
+                default:
+                    complexifiedNodeList = null;
+                    return false;
             }
 
-            int NewCount = complexifiedNodeList.Count;
-
-            for (int i = OldCount; i < NewCount; i++)
-                GetComplexifiedNodeRecursive(complexifiedNodeList[i], complexifiedNodeList);
+            return Result;
         }
         #endregion
 
         #region Others
-        private static void GetComplexifiedQualifiedName(IQualifiedName node, IList<INode> complexifiedNodeList)
+        private static bool GetComplexifiedQualifiedName(IQualifiedName node, out IList<IQualifiedName> complexifiedQualifiedNameList)
         {
-            if (ComplexifyQualifiedName(node, out IQualifiedName ComplexifiedNode))
-                complexifiedNodeList.Add(ComplexifiedNode);
+            complexifiedQualifiedNameList = null;
+
+            if (ComplexifyQualifiedName(node, out IQualifiedName ComplexifiedQualifiedName))
+                complexifiedQualifiedNameList = new List<IQualifiedName>() { ComplexifiedQualifiedName };
+
+            return complexifiedQualifiedNameList != null;
         }
 
         private static bool ComplexifyQualifiedName(IQualifiedName node, out IQualifiedName complexifiedNode)
@@ -89,22 +123,25 @@
             return complexifiedNode != null;
         }
 
-        private static bool ComplexifyConditional(IConditional node, out IList<IConditional> complexifiedNodeList)
+        private static bool GetComplexifiedConditional(IConditional node, out IList<IConditional> complexifiedConditionalList)
         {
-            if (GetComplexifiedNode(node.BooleanExpression, out List<INode> ComplexifiedBooleanExpressionList) && IsNodeListSameType(ComplexifiedBooleanExpressionList, out IList<IExpression> ComplexifiedList))
+            complexifiedConditionalList = null;
+
+            if (GetComplexifiedExpression(node.BooleanExpression, out IList<IExpression> ComplexifiedBooleanExpressionList))
             {
-                complexifiedNodeList = new List<IConditional>();
-                foreach (IExpression ComplexifiedBooleanExpression in ComplexifiedList)
+                complexifiedConditionalList = new List<IConditional>();
+
+                foreach (IExpression ComplexifiedBooleanExpression in ComplexifiedBooleanExpressionList)
                 {
                     IScope ClonedInstructions = (IScope)DeepCloneNode(node.Instructions, cloneCommentGuid: false);
                     IConditional ComplexifiedNode = CreateConditional(ComplexifiedBooleanExpression, ClonedInstructions);
-                    complexifiedNodeList.Add(ComplexifiedNode);
+                    complexifiedConditionalList.Add(ComplexifiedNode);
                 }
 
                 return true;
             }
 
-            complexifiedNodeList = null;
+            complexifiedConditionalList = null;
             return false;
         }
         #endregion
@@ -167,12 +204,13 @@
                 {
                     IArgument Argument = Block.NodeList[NodeIndex];
 
-                    if (GetComplexifiedNode(Argument, out List<INode> ComplexifiedArgumentList) && ComplexifiedArgumentList[0] is IArgument AsComplexifiedArgument)
+                    if (GetComplexifiedArgument(Argument, out IList<IArgument> ComplexifiedArgumentList))
                     {
+                        IArgument ComplexifiedArgument = ComplexifiedArgumentList[0];
                         newArgumentBlocks = (IBlockList<IArgument, Argument>)DeepCloneBlockList((IBlockList)argumentBlocks, cloneCommentGuid: false);
 
                         Block = newArgumentBlocks.NodeBlockList[BlockIndex];
-                        Block.NodeList[NodeIndex] = AsComplexifiedArgument;
+                        Block.NodeList[NodeIndex] = ComplexifiedArgument;
                         return true;
                     }
                 }
@@ -192,12 +230,15 @@
                 {
                     IAssignmentArgument AssignmentArgument = Block.NodeList[NodeIndex];
 
-                    if (GetComplexifiedNode(AssignmentArgument, out List<INode> ComplexifiedAssignmentArgumentList) && ComplexifiedAssignmentArgumentList[0] is IAssignmentArgument AsComplexifiedAssignmentArgument)
+                    if (GetComplexifiedAssignmentArgument(AssignmentArgument, out IList<IArgument> ComplexifiedAssignmentArgumentList))
                     {
+                        IAssignmentArgument ComplexifiedAssignmentArgument = ComplexifiedAssignmentArgumentList[0] as IAssignmentArgument;
+                        Debug.Assert(ComplexifiedAssignmentArgument != null);
+
                         newAssignmentArgumentBlocks = (IBlockList<IAssignmentArgument, AssignmentArgument>)DeepCloneBlockList((IBlockList)argumentBlocks, cloneCommentGuid: false);
 
                         Block = newAssignmentArgumentBlocks.NodeBlockList[BlockIndex];
-                        Block.NodeList[NodeIndex] = AsComplexifiedAssignmentArgument;
+                        Block.NodeList[NodeIndex] = ComplexifiedAssignmentArgument;
                         return true;
                     }
                 }
@@ -217,12 +258,13 @@
                 {
                     IQualifiedName QualifiedName = Block.NodeList[NodeIndex];
 
-                    if (GetComplexifiedNode(QualifiedName, out List<INode> ComplexifiedQualifiedNameList) && ComplexifiedQualifiedNameList[0] is IQualifiedName AsComplexifiedQualifiedName)
+                    if (GetComplexifiedQualifiedName(QualifiedName, out IList<IQualifiedName> ComplexifiedQualifiedNameList))
                     {
+                        IQualifiedName ComplexifiedQualifiedName = ComplexifiedQualifiedNameList[0];
                         newQualifiedNameBlocks = (IBlockList<IQualifiedName, QualifiedName>)DeepCloneBlockList((IBlockList)argumentBlocks, cloneCommentGuid: false);
 
                         Block = newQualifiedNameBlocks.NodeBlockList[BlockIndex];
-                        Block.NodeList[NodeIndex] = AsComplexifiedQualifiedName;
+                        Block.NodeList[NodeIndex] = ComplexifiedQualifiedName;
                         return true;
                     }
                 }
@@ -381,12 +423,13 @@
                 {
                     ITypeArgument TypeArgument = Block.NodeList[NodeIndex];
 
-                    if (GetComplexifiedNode(TypeArgument, out List<INode> ComplexifiedTypeArgumentList) && ComplexifiedTypeArgumentList[0] is ITypeArgument AsComplexifiedTypeArgument)
+                    if (GetComplexifiedTypeArgument(TypeArgument, out IList<ITypeArgument> ComplexifiedTypeArgumentList))
                     {
+                        ITypeArgument ComplexifiedTypeArgument = ComplexifiedTypeArgumentList[0];
                         newTypeArgumentBlocks = (IBlockList<ITypeArgument, TypeArgument>)DeepCloneBlockList((IBlockList)argumentBlocks, cloneCommentGuid: false);
 
                         Block = newTypeArgumentBlocks.NodeBlockList[BlockIndex];
-                        Block.NodeList[NodeIndex] = AsComplexifiedTypeArgument;
+                        Block.NodeList[NodeIndex] = ComplexifiedTypeArgument;
                         return true;
                     }
                 }
@@ -516,12 +559,12 @@
             return false;
         }
 
-        private static bool IsNodeListSameType<T>(List<INode> nodeList, out IList<T> result)
+        private static bool IsNodeListSameType<T>(IList nodeList, out IList<T> result)
             where T: INode
         {
             result = new List<T>();
 
-            foreach (INode Node in nodeList)
+            foreach (object Node in nodeList)
                 if (Node is T AsT)
                     result.Add(AsT);
                 else

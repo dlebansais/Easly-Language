@@ -6,39 +6,41 @@
 
     public static partial class NodeHelper
     {
-        private static void GetComplexifiedInstruction(IInstruction node, List<INode> complexifiedNodeList)
+        private static bool GetComplexifiedInstruction(IInstruction node, out IList<IInstruction> complexifiedInstructionList)
         {
+            complexifiedInstructionList = null;
+            bool Result = false;
             bool IsHandled = false;
 
             switch (node)
             {
                 case IAsLongAsInstruction AsAsLongAsInstruction:
-                    GetComplexifiedAsLongAsInstruction(AsAsLongAsInstruction, complexifiedNodeList);
+                    Result = GetComplexifiedAsLongAsInstruction(AsAsLongAsInstruction, out complexifiedInstructionList);
                     IsHandled = true;
                     break;
 
                 case IAssignmentInstruction AsAssignmentInstruction:
-                    GetComplexifiedAssignmentInstruction(AsAssignmentInstruction, complexifiedNodeList);
+                    Result = GetComplexifiedAssignmentInstruction(AsAssignmentInstruction, out complexifiedInstructionList);
                     IsHandled = true;
                     break;
 
                 case IAttachmentInstruction AsAttachmentInstruction:
-                    GetComplexifiedAttachmentInstruction(AsAttachmentInstruction, complexifiedNodeList);
+                    Result = GetComplexifiedAttachmentInstruction(AsAttachmentInstruction, out complexifiedInstructionList);
                     IsHandled = true;
                     break;
 
                 case ICheckInstruction AsCheckInstruction:
-                    GetComplexifiedCheckInstruction(AsCheckInstruction, complexifiedNodeList);
+                    Result = GetComplexifiedCheckInstruction(AsCheckInstruction, out complexifiedInstructionList);
                     IsHandled = true;
                     break;
 
                 case ICommandInstruction AsCommandInstruction:
-                    GetComplexifiedCommandInstruction(AsCommandInstruction, complexifiedNodeList);
+                    Result = GetComplexifiedCommandInstruction(AsCommandInstruction, out complexifiedInstructionList);
                     IsHandled = true;
                     break;
 
                 case ICreateInstruction AsCreateInstruction:
-                    GetComplexifiedCreateInstruction(AsCreateInstruction, complexifiedNodeList);
+                    Result = GetComplexifiedCreateInstruction(AsCreateInstruction, out complexifiedInstructionList);
                     IsHandled = true;
                     break;
 
@@ -48,37 +50,37 @@
                     break;
 
                 case IIfThenElseInstruction AsIfThenElseInstruction:
-                    GetComplexifiedIfThenElseInstruction(AsIfThenElseInstruction, complexifiedNodeList);
+                    Result = GetComplexifiedIfThenElseInstruction(AsIfThenElseInstruction, out complexifiedInstructionList);
                     IsHandled = true;
                     break;
 
                 case IIndexAssignmentInstruction AsIndexAssignmentInstruction:
-                    GetComplexifiedIndexAssignmentInstruction(AsIndexAssignmentInstruction, complexifiedNodeList);
+                    Result = GetComplexifiedIndexAssignmentInstruction(AsIndexAssignmentInstruction, out complexifiedInstructionList);
                     IsHandled = true;
                     break;
 
                 case IInspectInstruction AsInspectInstruction:
-                    GetComplexifiedInspectInstruction(AsInspectInstruction, complexifiedNodeList);
+                    Result = GetComplexifiedInspectInstruction(AsInspectInstruction, out complexifiedInstructionList);
                     IsHandled = true;
                     break;
 
                 case IKeywordAssignmentInstruction AsKeywordAssignmentInstruction:
-                    GetComplexifiedKeywordAssignmentInstruction(AsKeywordAssignmentInstruction, complexifiedNodeList);
+                    Result = GetComplexifiedKeywordAssignmentInstruction(AsKeywordAssignmentInstruction, out complexifiedInstructionList);
                     IsHandled = true;
                     break;
 
                 case IOverLoopInstruction AsOverLoopInstruction:
-                    GetComplexifiedOverLoopInstruction(AsOverLoopInstruction, complexifiedNodeList);
+                    Result = GetComplexifiedOverLoopInstruction(AsOverLoopInstruction, out complexifiedInstructionList);
                     IsHandled = true;
                     break;
 
                 case IPrecursorIndexAssignmentInstruction AsPrecursorIndexAssignmentInstruction:
-                    GetComplexifiedPrecursorIndexAssignmentInstruction(AsPrecursorIndexAssignmentInstruction, complexifiedNodeList);
+                    Result = GetComplexifiedPrecursorIndexAssignmentInstruction(AsPrecursorIndexAssignmentInstruction, out complexifiedInstructionList);
                     IsHandled = true;
                     break;
 
                 case IPrecursorInstruction AsPrecursorInstruction:
-                    GetComplexifiedPrecursorInstruction(AsPrecursorInstruction, complexifiedNodeList);
+                    Result = GetComplexifiedPrecursorInstruction(AsPrecursorInstruction, out complexifiedInstructionList);
                     IsHandled = true;
                     break;
 
@@ -87,58 +89,75 @@
                     break;
 
                 case IReleaseInstruction AsReleaseInstruction:
-                    GetComplexifiedReleaseInstruction(AsReleaseInstruction, complexifiedNodeList);
+                    Result = GetComplexifiedReleaseInstruction(AsReleaseInstruction, out complexifiedInstructionList);
                     IsHandled = true;
                     break;
 
                 case IThrowInstruction AsThrowInstruction:
-                    GetComplexifiedThrowInstruction(AsThrowInstruction, complexifiedNodeList);
+                    Result = GetComplexifiedThrowInstruction(AsThrowInstruction, out complexifiedInstructionList);
                     IsHandled = true;
                     break;
             }
 
             Debug.Assert(IsHandled);
+
+            return Result;
         }
 
-        public static void GetComplexifiedAsLongAsInstruction(IAsLongAsInstruction node, List<INode> complexifiedNodeList)
+        private static bool GetComplexifiedAsLongAsInstruction(IAsLongAsInstruction node, out IList<IInstruction> complexifiedInstructionList)
         {
-            if (GetComplexifiedNode(node.ContinueCondition, out List<INode> ComplexifiedContinueConditionList) && ComplexifiedContinueConditionList[0] is IExpression AsComplexifiedContinueCondition)
+            complexifiedInstructionList = null;
+
+            if (GetComplexifiedExpression(node.ContinueCondition, out IList<IExpression> ComplexifiedContinueConditionList))
             {
-                IBlockList<IContinuation, Continuation> ClonedContinuationBlocks = (IBlockList<IContinuation, Continuation>)DeepCloneBlockList((IBlockList)node.ContinuationBlocks, cloneCommentGuid: false);
+                complexifiedInstructionList = new List<IInstruction>();
 
-                IAsLongAsInstruction NewAsLongAsInstruction;
-
-                if (node.ElseInstructions.IsAssigned)
+                foreach (IExpression ComplexifiedContinueCondition in ComplexifiedContinueConditionList)
                 {
-                    IScope ClonedElseInstructions = (IScope)DeepCloneNode(node.ElseInstructions.Item, cloneCommentGuid: false);
-                    NewAsLongAsInstruction = CreateAsLongAsInstruction(AsComplexifiedContinueCondition, ClonedContinuationBlocks, ClonedElseInstructions);
-                }
-                else
-                    NewAsLongAsInstruction = CreateAsLongAsInstruction(AsComplexifiedContinueCondition, ClonedContinuationBlocks);
+                    IBlockList<IContinuation, Continuation> ClonedContinuationBlocks = (IBlockList<IContinuation, Continuation>)DeepCloneBlockList((IBlockList)node.ContinuationBlocks, cloneCommentGuid: false);
 
-                complexifiedNodeList.Add(NewAsLongAsInstruction);
+                    IAsLongAsInstruction NewAsLongAsInstruction;
+
+                    if (node.ElseInstructions.IsAssigned)
+                    {
+                        IScope ClonedElseInstructions = (IScope)DeepCloneNode(node.ElseInstructions.Item, cloneCommentGuid: false);
+                        NewAsLongAsInstruction = CreateAsLongAsInstruction(ComplexifiedContinueCondition, ClonedContinuationBlocks, ClonedElseInstructions);
+                    }
+                    else
+                        NewAsLongAsInstruction = CreateAsLongAsInstruction(ComplexifiedContinueCondition, ClonedContinuationBlocks);
+
+                    complexifiedInstructionList.Add(NewAsLongAsInstruction);
+                }
             }
+
+            return complexifiedInstructionList != null;
         }
 
-        public static void GetComplexifiedAssignmentInstruction(IAssignmentInstruction node, List<INode> complexifiedNodeList)
+        private static bool GetComplexifiedAssignmentInstruction(IAssignmentInstruction node, out IList<IInstruction> complexifiedInstructionList)
         {
+            complexifiedInstructionList = null;
+
             if (GetComplexifiedQualifiedNameBlockList(node.DestinationBlocks, out IBlockList<IQualifiedName, QualifiedName> ComplexifiedDestinationBlocks))
             {
                 IExpression ClonedSource = (IExpression)DeepCloneNode(node.Source, cloneCommentGuid: false);
                 IAssignmentInstruction NewAssignmentInstruction = CreateAssignmentInstruction(ComplexifiedDestinationBlocks, ClonedSource);
-                complexifiedNodeList.Add(NewAssignmentInstruction);
+                complexifiedInstructionList = new List<IInstruction>() { NewAssignmentInstruction };
             }
-            else if (GetComplexifiedNode(node.Source, out List<INode> ComplexifiedSourceList) && IsNodeListSameType(ComplexifiedSourceList, out IList<IExpression> ComplexifiedList))
+            else if (GetComplexifiedExpression(node.Source, out IList<IExpression> ComplexifiedSourceList))
             {
+                complexifiedInstructionList = new List<IInstruction>();
+
                 foreach (IExpression ComplexifiedSource in ComplexifiedSourceList)
                 {
                     IBlockList<IQualifiedName, QualifiedName> ClonedDestinationBlocks = (IBlockList<IQualifiedName, QualifiedName>)DeepCloneBlockList((IBlockList)node.DestinationBlocks, cloneCommentGuid: false);
                     IAssignmentInstruction NewAssignmentInstruction = CreateAssignmentInstruction(ClonedDestinationBlocks, ComplexifiedSource);
-                    complexifiedNodeList.Add(NewAssignmentInstruction);
+                    complexifiedInstructionList.Add(NewAssignmentInstruction);
                 }
             }
             else if (ComplexifyAsKeywordAssignmentInstruction(node, out IKeywordAssignmentInstruction ComplexifiedKeywordAssignmentInstruction))
-                complexifiedNodeList.Add(ComplexifiedKeywordAssignmentInstruction);
+                complexifiedInstructionList = new List<IInstruction>() { ComplexifiedKeywordAssignmentInstruction };
+
+            return complexifiedInstructionList != null;
         }
 
         private static bool ComplexifyAsKeywordAssignmentInstruction(IAssignmentInstruction node, out IKeywordAssignmentInstruction complexifiedNode)
@@ -175,86 +194,109 @@
             return complexifiedNode != null;
         }
 
-        public static void GetComplexifiedAttachmentInstruction(IAttachmentInstruction node, List<INode> complexifiedNodeList)
+        private static bool GetComplexifiedAttachmentInstruction(IAttachmentInstruction node, out IList<IInstruction> complexifiedInstructionList)
         {
-            if (GetComplexifiedNode(node.Source, out List<INode> ComplexifiedSourceList) && ComplexifiedSourceList[0] is IExpression AsComplexifiedSource)
+            complexifiedInstructionList = null;
+
+            if (GetComplexifiedExpression(node.Source, out IList<IExpression> ComplexifiedSourceList))
             {
-                IBlockList<IName, Name> ClonedEntityNameBlocks = (IBlockList<IName, Name>)DeepCloneBlockList((IBlockList)node.EntityNameBlocks, cloneCommentGuid: false);
-                IBlockList<IAttachment, Attachment> ClonedAttachmentBlocks = (IBlockList<IAttachment, Attachment>)DeepCloneBlockList((IBlockList)node.AttachmentBlocks, cloneCommentGuid: false);
+                complexifiedInstructionList = new List<IInstruction>();
 
-                IAttachmentInstruction NewAttachmentInstruction;
-
-                if (node.ElseInstructions.IsAssigned)
+                foreach (IExpression ComplexifiedSource in ComplexifiedSourceList)
                 {
-                    IScope ClonedElseInstructions = (IScope)DeepCloneNode(node.ElseInstructions.Item, cloneCommentGuid: false);
-                    NewAttachmentInstruction = CreateAttachmentInstruction(AsComplexifiedSource, ClonedEntityNameBlocks, ClonedAttachmentBlocks, ClonedElseInstructions);
+                    IBlockList<IName, Name> ClonedEntityNameBlocks = (IBlockList<IName, Name>)DeepCloneBlockList((IBlockList)node.EntityNameBlocks, cloneCommentGuid: false);
+                    IBlockList<IAttachment, Attachment> ClonedAttachmentBlocks = (IBlockList<IAttachment, Attachment>)DeepCloneBlockList((IBlockList)node.AttachmentBlocks, cloneCommentGuid: false);
+
+                    IAttachmentInstruction NewAttachmentInstruction;
+
+                    if (node.ElseInstructions.IsAssigned)
+                    {
+                        IScope ClonedElseInstructions = (IScope)DeepCloneNode(node.ElseInstructions.Item, cloneCommentGuid: false);
+                        NewAttachmentInstruction = CreateAttachmentInstruction(ComplexifiedSource, ClonedEntityNameBlocks, ClonedAttachmentBlocks, ClonedElseInstructions);
+                    }
+                    else
+                        NewAttachmentInstruction = CreateAttachmentInstruction(ComplexifiedSource, ClonedEntityNameBlocks, ClonedAttachmentBlocks);
+
+                    complexifiedInstructionList.Add(NewAttachmentInstruction);
                 }
-                else
-                    NewAttachmentInstruction = CreateAttachmentInstruction(AsComplexifiedSource, ClonedEntityNameBlocks, ClonedAttachmentBlocks);
-
-                complexifiedNodeList.Add(NewAttachmentInstruction);
             }
+
+            return complexifiedInstructionList != null;
         }
 
-        public static void GetComplexifiedCheckInstruction(ICheckInstruction node, List<INode> complexifiedNodeList)
+        private static bool GetComplexifiedCheckInstruction(ICheckInstruction node, out IList<IInstruction> complexifiedInstructionList)
         {
-            if (GetComplexifiedNode(node.BooleanExpression, out List<INode> ComplexifiedBooleanExpressionList) && ComplexifiedBooleanExpressionList[0] is IExpression AsComplexifiedBooleanExpression)
+            complexifiedInstructionList = null;
+
+            if (GetComplexifiedExpression(node.BooleanExpression, out IList<IExpression> ComplexifiedBooleanExpressionList))
             {
-                ICheckInstruction NewCheckInstruction = CreateCheckInstruction(AsComplexifiedBooleanExpression);
-                complexifiedNodeList.Add(NewCheckInstruction);
+                complexifiedInstructionList = new List<IInstruction>();
+
+                foreach (IExpression ComplexifiedBooleanExpression in ComplexifiedBooleanExpressionList)
+                {
+                    ICheckInstruction NewCheckInstruction = CreateCheckInstruction(ComplexifiedBooleanExpression);
+                    complexifiedInstructionList.Add(NewCheckInstruction);
+                }
             }
+
+            return complexifiedInstructionList != null;
         }
 
-        public static void GetComplexifiedCommandInstruction(ICommandInstruction node, IList<INode> complexifiedNodeList)
+        private static bool GetComplexifiedCommandInstruction(ICommandInstruction node, out IList<IInstruction> complexifiedInstructionList)
         {
+            complexifiedInstructionList = null;
+
             if (node.ArgumentBlocks.NodeBlockList.Count == 0 && ComplexifyWithArguments(node.Command, out IQualifiedName NewCommand, out List<IArgument> ArgumentList))
             {
                 ICommandInstruction NewCommandInstruction = CreateCommandInstruction(NewCommand, ArgumentList);
-                complexifiedNodeList.Add(NewCommandInstruction);
+                complexifiedInstructionList = new List<IInstruction>() { NewCommandInstruction };
             }
             else if (ComplexifyQualifiedName(node.Command, out IQualifiedName ComplexifiedCommand))
             {
                 IBlockList<IArgument, Argument> ClonedArgumentBlocks = (IBlockList<IArgument, Argument>)DeepCloneBlockList((IBlockList)node.ArgumentBlocks, cloneCommentGuid: false);
                 ICommandInstruction NewCommandInstruction = CreateCommandInstruction(ComplexifiedCommand, ClonedArgumentBlocks);
-                complexifiedNodeList.Add(NewCommandInstruction);
+                complexifiedInstructionList = new List<IInstruction>() { NewCommandInstruction };
             }
             else if (GetComplexifiedArgumentBlockList(node.ArgumentBlocks, out IBlockList<IArgument, Argument> ComplexifiedArgumentBlocks))
             {
                 IQualifiedName ClonedCommand = (IQualifiedName)DeepCloneNode(node.Command, cloneCommentGuid: false);
                 ICommandInstruction NewCommandInstruction = CreateCommandInstruction(ClonedCommand, ComplexifiedArgumentBlocks);
+                complexifiedInstructionList = new List<IInstruction>() { NewCommandInstruction };
             }
             else if (ComplexifyAsAsLongAsInstruction(node, out IAsLongAsInstruction ComplexifiedAsLongAsInstruction))
-                complexifiedNodeList.Add(ComplexifiedAsLongAsInstruction);
+                complexifiedInstructionList = new List<IInstruction>() { ComplexifiedAsLongAsInstruction };
             else if (ComplexifyAsAssignmentInstruction(node, out IAssignmentInstruction ComplexifiedAssignmentInstruction))
-                complexifiedNodeList.Add(ComplexifiedAssignmentInstruction);
+                complexifiedInstructionList = new List<IInstruction>() { ComplexifiedAssignmentInstruction };
             else if (ComplexifyAsAttachmentInstruction(node, out IAttachmentInstruction ComplexifiedAttachmentInstruction))
-                complexifiedNodeList.Add(ComplexifiedAttachmentInstruction);
+                complexifiedInstructionList = new List<IInstruction>() { ComplexifiedAttachmentInstruction };
             else if (ComplexifyAsCheckInstruction(node, out ICheckInstruction ComplexifiedCheckInstruction))
-                complexifiedNodeList.Add(ComplexifiedCheckInstruction);
+                complexifiedInstructionList = new List<IInstruction>() { ComplexifiedCheckInstruction };
             else if (ComplexifyAsCreateInstruction(node, out ICreateInstruction ComplexifiedCreateInstruction))
-                complexifiedNodeList.Add(ComplexifiedCreateInstruction);
+                complexifiedInstructionList = new List<IInstruction>() { ComplexifiedCreateInstruction };
             else if (ComplexifyAsDebugInstruction(node, out IDebugInstruction ComplexifieDebugInstruction))
-                complexifiedNodeList.Add(ComplexifieDebugInstruction);
+                complexifiedInstructionList = new List<IInstruction>() { ComplexifieDebugInstruction };
             else if (ComplexifyAsForLoopInstruction(node, out IForLoopInstruction ComplexifiedForLoopInstruction))
-                complexifiedNodeList.Add(ComplexifiedForLoopInstruction);
+                complexifiedInstructionList = new List<IInstruction>() { ComplexifiedForLoopInstruction };
             else if (ComplexifyAsIfThenElseInstruction(node, out IIfThenElseInstruction ComplexifiedIfThenElseInstruction))
-                complexifiedNodeList.Add(ComplexifiedIfThenElseInstruction);
+                complexifiedInstructionList = new List<IInstruction>() { ComplexifiedIfThenElseInstruction };
             else if (ComplexifyAsIndexAssignmentInstruction(node, out IIndexAssignmentInstruction ComplexifiedIndexAssignmentInstruction))
-                complexifiedNodeList.Add(ComplexifiedIndexAssignmentInstruction);
+                complexifiedInstructionList = new List<IInstruction>() { ComplexifiedIndexAssignmentInstruction };
             else if (ComplexifyAsInspectInstruction(node, out IInspectInstruction ComplexifiedInspectInstruction))
-                complexifiedNodeList.Add(ComplexifiedInspectInstruction);
+                complexifiedInstructionList = new List<IInstruction>() { ComplexifiedInspectInstruction };
             else if (ComplexifyAsOverLoopInstruction(node, out IOverLoopInstruction ComplexifiedOverLoopInstruction))
-                complexifiedNodeList.Add(ComplexifiedOverLoopInstruction);
+                complexifiedInstructionList = new List<IInstruction>() { ComplexifiedOverLoopInstruction };
             else if (ComplexifyAsPrecursorIndexAssignmentInstruction(node, out IPrecursorIndexAssignmentInstruction ComplexifiedPrecursorIndexAssignmentInstruction))
-                complexifiedNodeList.Add(ComplexifiedPrecursorIndexAssignmentInstruction);
+                complexifiedInstructionList = new List<IInstruction>() { ComplexifiedPrecursorIndexAssignmentInstruction };
             else if (ComplexifyAsPrecursorInstruction(node, out IPrecursorInstruction ComplexifiedPrecursorInstruction))
-                complexifiedNodeList.Add(ComplexifiedPrecursorInstruction);
+                complexifiedInstructionList = new List<IInstruction>() { ComplexifiedPrecursorInstruction };
             else if (ComplexifyAsRaiseEventInstruction(node, out IRaiseEventInstruction ComplexifiedRaiseEventInstruction))
-                complexifiedNodeList.Add(ComplexifiedRaiseEventInstruction);
+                complexifiedInstructionList = new List<IInstruction>() { ComplexifiedRaiseEventInstruction };
             else if (ComplexifyAsReleaseInstruction(node, out IReleaseInstruction ComplexifiedReleaseInstruction))
-                complexifiedNodeList.Add(ComplexifiedReleaseInstruction);
+                complexifiedInstructionList = new List<IInstruction>() { ComplexifiedReleaseInstruction };
             else if (ComplexifyAsThrowInstruction(node, out IThrowInstruction ComplexifiedThrowInstruction))
-                complexifiedNodeList.Add(ComplexifiedThrowInstruction);
+                complexifiedInstructionList = new List<IInstruction>() { ComplexifiedThrowInstruction };
+
+            return complexifiedInstructionList != null;
         }
 
         private static bool ComplexifyAsAsLongAsInstruction(ICommandInstruction node, out IAsLongAsInstruction complexifiedNode)
@@ -524,8 +566,10 @@
             return complexifiedNode != null;
         }
 
-        public static void GetComplexifiedCreateInstruction(ICreateInstruction node, List<INode> complexifiedNodeList)
+        private static bool GetComplexifiedCreateInstruction(ICreateInstruction node, out IList<IInstruction> complexifiedInstructionList)
         {
+            complexifiedInstructionList = null;
+
             if (GetComplexifiedArgumentBlockList(node.ArgumentBlocks, out IBlockList<IArgument, Argument> ComplexifiedArgumentBlocks))
             {
                 IIdentifier ClonedEntityIdentifier = (IIdentifier)DeepCloneNode(node.EntityIdentifier, cloneCommentGuid: false);
@@ -541,7 +585,7 @@
                 else
                     NewCreateInstruction = CreateCreateInstruction(ClonedEntityIdentifier, ClonedCreationRoutineIdentifier, ComplexifiedArgumentBlocks);
 
-                complexifiedNodeList.Add(NewCreateInstruction);
+                complexifiedInstructionList = new List<IInstruction>() { NewCreateInstruction };
             }
             else if (node.Processor.IsAssigned && ComplexifyQualifiedName(node.Processor.Item, out IQualifiedName ComplexifiedPropcessor))
             {
@@ -550,16 +594,23 @@
                 IBlockList<IArgument, Argument> ClonedArgumentBlocks = (IBlockList<IArgument, Argument>)DeepCloneBlockList((IBlockList)node.ArgumentBlocks, cloneCommentGuid: false);
 
                 ICreateInstruction NewCreateInstruction = CreateCreateInstruction(ClonedEntityIdentifier, ClonedCreationRoutineIdentifier, ClonedArgumentBlocks, ComplexifiedPropcessor);
+                complexifiedInstructionList = new List<IInstruction>() { NewCreateInstruction };
             }
+
+            return complexifiedInstructionList != null;
         }
 
-        public static void GetComplexifiedIfThenElseInstruction(IIfThenElseInstruction node, List<INode> complexifiedNodeList)
+        private static bool GetComplexifiedIfThenElseInstruction(IIfThenElseInstruction node, out IList<IInstruction> complexifiedInstructionList)
         {
+            complexifiedInstructionList = null;
+
             Debug.Assert(!NodeTreeHelperBlockList.IsBlockListEmpty((IBlockList)node.ConditionalBlocks));
 
             IConditional FirstConditional = node.ConditionalBlocks.NodeBlockList[0].NodeList[0];
-            if (ComplexifyConditional(FirstConditional, out IList<IConditional> ComplexifiedConditionalList))
+            if (GetComplexifiedConditional(FirstConditional, out IList<IConditional> ComplexifiedConditionalList))
             {
+                complexifiedInstructionList = new List<IInstruction>();
+
                 foreach (IConditional ComplexifiedConditional in ComplexifiedConditionalList)
                 {
                     IBlockList<IConditional, Conditional> ClonedConditionalBlocks = (IBlockList<IConditional, Conditional>)DeepCloneBlockList((IBlockList)node.ConditionalBlocks, cloneCommentGuid: false);
@@ -575,96 +626,140 @@
                     else
                         NewIfThenElseInstruction = CreateIfThenElseInstruction(ClonedConditionalBlocks);
 
-                    complexifiedNodeList.Add(NewIfThenElseInstruction);
+                    complexifiedInstructionList.Add(NewIfThenElseInstruction);
                 }
             }
+
+            return complexifiedInstructionList != null;
         }
 
-        public static void GetComplexifiedIndexAssignmentInstruction(IIndexAssignmentInstruction node, List<INode> complexifiedNodeList)
+        private static bool GetComplexifiedIndexAssignmentInstruction(IIndexAssignmentInstruction node, out IList<IInstruction> complexifiedInstructionList)
         {
+            complexifiedInstructionList = null;
+
             if (ComplexifyQualifiedName(node.Destination, out IQualifiedName ComplexifiedDestination))
             {
                 IBlockList<IArgument, Argument> ClonedArgumentBlocks = (IBlockList<IArgument, Argument>)DeepCloneBlockList((IBlockList)node.ArgumentBlocks, cloneCommentGuid: false);
                 IExpression ClonedSource = (IExpression)DeepCloneNode(node.Source, cloneCommentGuid: false);
                 IIndexAssignmentInstruction NewIndexAssignmentInstruction = CreateIndexAssignmentInstruction(ComplexifiedDestination, ClonedArgumentBlocks, ClonedSource);
-                complexifiedNodeList.Add(NewIndexAssignmentInstruction);
+                complexifiedInstructionList = new List<IInstruction>() { NewIndexAssignmentInstruction };
             }
             else if (GetComplexifiedArgumentBlockList(node.ArgumentBlocks, out IBlockList<IArgument, Argument> ComplexifiedArgumentBlocks))
             {
                 IQualifiedName ClonedDestination = (IQualifiedName)DeepCloneNode(node.Destination, cloneCommentGuid: false);
                 IExpression ClonedSource = (IExpression)DeepCloneNode(node.Source, cloneCommentGuid: false);
                 IIndexAssignmentInstruction NewIndexAssignmentInstruction = CreateIndexAssignmentInstruction(ClonedDestination, ComplexifiedArgumentBlocks, ClonedSource);
-                complexifiedNodeList.Add(NewIndexAssignmentInstruction);
+                complexifiedInstructionList = new List<IInstruction>() { NewIndexAssignmentInstruction };
             }
-            else if (GetComplexifiedNode(node.Source, out List<INode> ComplexifiedSourceList) && ComplexifiedSourceList[0] is IExpression AsComplexifiedSource)
+            else if (GetComplexifiedExpression(node.Source, out IList<IExpression> ComplexifiedSourceList))
             {
-                IQualifiedName ClonedDestination = (IQualifiedName)DeepCloneNode(node.Destination, cloneCommentGuid: false);
-                IBlockList<IArgument, Argument> ClonedArgumentBlocks = (IBlockList<IArgument, Argument>)DeepCloneBlockList((IBlockList)node.ArgumentBlocks, cloneCommentGuid: false);
-                IIndexAssignmentInstruction NewIndexAssignmentInstruction = CreateIndexAssignmentInstruction(ClonedDestination, ClonedArgumentBlocks, AsComplexifiedSource);
-                complexifiedNodeList.Add(NewIndexAssignmentInstruction);
-            }
-        }
+                complexifiedInstructionList = new List<IInstruction>();
 
-        public static void GetComplexifiedInspectInstruction(IInspectInstruction node, List<INode> complexifiedNodeList)
-        {
-            if (GetComplexifiedNode(node.Source, out List<INode> ComplexifiedSourceList) && ComplexifiedSourceList[0] is IExpression AsComplexifiedSource)
-            {
-                IBlockList<IWith, With> ClonedWithBlocks = (IBlockList<IWith, With>)DeepCloneBlockList((IBlockList)node.WithBlocks, cloneCommentGuid: false);
-
-                IInspectInstruction NewInspectInstruction;
-
-                if (node.ElseInstructions.IsAssigned)
+                foreach (IExpression ComplexifiedSource in ComplexifiedSourceList)
                 {
-                    IScope ClonedElseInstructions = (IScope)DeepCloneNode(node.ElseInstructions.Item, cloneCommentGuid: false);
-                    NewInspectInstruction = CreateInspectInstruction(AsComplexifiedSource, ClonedWithBlocks, ClonedElseInstructions);
+                    IQualifiedName ClonedDestination = (IQualifiedName)DeepCloneNode(node.Destination, cloneCommentGuid: false);
+                    IBlockList<IArgument, Argument> ClonedArgumentBlocks = (IBlockList<IArgument, Argument>)DeepCloneBlockList((IBlockList)node.ArgumentBlocks, cloneCommentGuid: false);
+                    IIndexAssignmentInstruction NewIndexAssignmentInstruction = CreateIndexAssignmentInstruction(ClonedDestination, ClonedArgumentBlocks, ComplexifiedSource);
+                    complexifiedInstructionList.Add(NewIndexAssignmentInstruction);
                 }
-                else
-                    NewInspectInstruction = CreateInspectInstruction(AsComplexifiedSource, ClonedWithBlocks);
-
-                complexifiedNodeList.Add(NewInspectInstruction);
             }
+
+            return complexifiedInstructionList != null;
         }
 
-        public static void GetComplexifiedKeywordAssignmentInstruction(IKeywordAssignmentInstruction node, List<INode> complexifiedNodeList)
+        private static bool GetComplexifiedInspectInstruction(IInspectInstruction node, out IList<IInstruction> complexifiedInstructionList)
         {
-            if (GetComplexifiedNode(node.Source, out List<INode> ComplexifiedSourceList) && ComplexifiedSourceList[0] is IExpression AsComplexifiedSource)
+            complexifiedInstructionList = null;
+
+            if (GetComplexifiedExpression(node.Source, out IList<IExpression> ComplexifiedSourceList))
             {
-                IKeywordAssignmentInstruction NewKeywordAssignmentInstruction = CreateKeywordAssignmentInstruction(node.Destination, AsComplexifiedSource);
-                complexifiedNodeList.Add(NewKeywordAssignmentInstruction);
-            }
-        }
+                complexifiedInstructionList = new List<IInstruction>();
 
-        public static void GetComplexifiedOverLoopInstruction(IOverLoopInstruction node, List<INode> complexifiedNodeList)
-        {
-            if (GetComplexifiedNode(node.OverList, out List<INode> ComplexifiedOverListList) && ComplexifiedOverListList[0] is IExpression AsComplexifiedOverList)
-            {
-                IBlockList<IName, Name> ClonedIndexerBlocks = (IBlockList<IName, Name>)DeepCloneBlockList((IBlockList)node.IndexerBlocks, cloneCommentGuid: false);
-                IScope ClonedLoopInstructions = (IScope)DeepCloneNode(node.LoopInstructions, cloneCommentGuid: false);
-                IBlockList<IAssertion, Assertion> ClonedInvariantBlocks = (IBlockList<IAssertion, Assertion>)DeepCloneBlockList((IBlockList)node.InvariantBlocks, cloneCommentGuid: false);
-
-                IOverLoopInstruction NewOverLoopInstruction;
-
-                if (node.ExitEntityName.IsAssigned)
+                foreach (IExpression ComplexifiedSource in ComplexifiedSourceList)
                 {
-                    IIdentifier ClonedExitEntityName = (IIdentifier)DeepCloneNode(node.ExitEntityName.Item, cloneCommentGuid: false);
-                    NewOverLoopInstruction = CreateOverLoopInstruction(AsComplexifiedOverList, ClonedIndexerBlocks, node.Iteration, ClonedLoopInstructions, ClonedExitEntityName, ClonedInvariantBlocks);
-                }
-                else
-                    NewOverLoopInstruction = CreateOverLoopInstruction(AsComplexifiedOverList, ClonedIndexerBlocks, node.Iteration, ClonedLoopInstructions, ClonedInvariantBlocks);
+                    IBlockList<IWith, With> ClonedWithBlocks = (IBlockList<IWith, With>)DeepCloneBlockList((IBlockList)node.WithBlocks, cloneCommentGuid: false);
+                    IInspectInstruction NewInspectInstruction;
 
-                complexifiedNodeList.Add(NewOverLoopInstruction);
+                    if (node.ElseInstructions.IsAssigned)
+                    {
+                        IScope ClonedElseInstructions = (IScope)DeepCloneNode(node.ElseInstructions.Item, cloneCommentGuid: false);
+                        NewInspectInstruction = CreateInspectInstruction(ComplexifiedSource, ClonedWithBlocks, ClonedElseInstructions);
+                    }
+                    else
+                        NewInspectInstruction = CreateInspectInstruction(ComplexifiedSource, ClonedWithBlocks);
+
+                    complexifiedInstructionList.Add(NewInspectInstruction);
+                }
             }
+
+            return complexifiedInstructionList != null;
         }
 
-        public static void GetComplexifiedPrecursorIndexAssignmentInstruction(IPrecursorIndexAssignmentInstruction node, List<INode> complexifiedNodeList)
+        private static bool GetComplexifiedKeywordAssignmentInstruction(IKeywordAssignmentInstruction node, out IList<IInstruction> complexifiedInstructionList)
         {
-            if (node.AncestorType.IsAssigned && GetComplexifiedNode(node.AncestorType.Item, out List<INode> ComplexifiedAncestorTypeList) && ComplexifiedAncestorTypeList[0] is IObjectType AsComplexifiedAncestorType)
-            {
-                IBlockList<IArgument, Argument> ClonedArgumentBlocks = (IBlockList<IArgument, Argument>)DeepCloneBlockList((IBlockList)node.ArgumentBlocks, cloneCommentGuid: false);
-                IExpression ClonedSource = (IExpression)DeepCloneNode(node.Source, cloneCommentGuid: false);
+            complexifiedInstructionList = null;
 
-                IPrecursorIndexAssignmentInstruction NewPrecursorIndexAssignmentInstruction = CreatePrecursorIndexAssignmentInstruction(AsComplexifiedAncestorType, ClonedArgumentBlocks, ClonedSource);
-                complexifiedNodeList.Add(NewPrecursorIndexAssignmentInstruction);
+            if (GetComplexifiedExpression(node.Source, out IList<IExpression> ComplexifiedSourceList))
+            {
+                complexifiedInstructionList = new List<IInstruction>();
+
+                foreach (IExpression ComplexifiedSource in ComplexifiedSourceList)
+                {
+                    IKeywordAssignmentInstruction NewKeywordAssignmentInstruction = CreateKeywordAssignmentInstruction(node.Destination, ComplexifiedSource);
+                    complexifiedInstructionList.Add(NewKeywordAssignmentInstruction);
+                }
+            }
+
+            return complexifiedInstructionList != null;
+        }
+
+        private static bool GetComplexifiedOverLoopInstruction(IOverLoopInstruction node, out IList<IInstruction> complexifiedInstructionList)
+        {
+            complexifiedInstructionList = null;
+
+            if (GetComplexifiedExpression(node.OverList, out IList<IExpression> ComplexifiedOverListList))
+            {
+                complexifiedInstructionList = new List<IInstruction>();
+
+                foreach (IExpression ComplexifiedOverList in ComplexifiedOverListList)
+                {
+                    IBlockList<IName, Name> ClonedIndexerBlocks = (IBlockList<IName, Name>)DeepCloneBlockList((IBlockList)node.IndexerBlocks, cloneCommentGuid: false);
+                    IScope ClonedLoopInstructions = (IScope)DeepCloneNode(node.LoopInstructions, cloneCommentGuid: false);
+                    IBlockList<IAssertion, Assertion> ClonedInvariantBlocks = (IBlockList<IAssertion, Assertion>)DeepCloneBlockList((IBlockList)node.InvariantBlocks, cloneCommentGuid: false);
+
+                    IOverLoopInstruction NewOverLoopInstruction;
+
+                    if (node.ExitEntityName.IsAssigned)
+                    {
+                        IIdentifier ClonedExitEntityName = (IIdentifier)DeepCloneNode(node.ExitEntityName.Item, cloneCommentGuid: false);
+                        NewOverLoopInstruction = CreateOverLoopInstruction(ComplexifiedOverList, ClonedIndexerBlocks, node.Iteration, ClonedLoopInstructions, ClonedExitEntityName, ClonedInvariantBlocks);
+                    }
+                    else
+                        NewOverLoopInstruction = CreateOverLoopInstruction(ComplexifiedOverList, ClonedIndexerBlocks, node.Iteration, ClonedLoopInstructions, ClonedInvariantBlocks);
+
+                    complexifiedInstructionList.Add(NewOverLoopInstruction);
+                }
+            }
+
+            return complexifiedInstructionList != null;
+        }
+
+        private static bool GetComplexifiedPrecursorIndexAssignmentInstruction(IPrecursorIndexAssignmentInstruction node, out IList<IInstruction> complexifiedInstructionList)
+        {
+            complexifiedInstructionList = null;
+
+            if (node.AncestorType.IsAssigned && GetComplexifiedObjectType(node.AncestorType.Item, out IList<IObjectType> ComplexifiedAncestorTypeList))
+            {
+                complexifiedInstructionList = new List<IInstruction>();
+
+                foreach (IObjectType ComplexifiedAncestorType in ComplexifiedAncestorTypeList)
+                {
+                    IBlockList<IArgument, Argument> ClonedArgumentBlocks = (IBlockList<IArgument, Argument>)DeepCloneBlockList((IBlockList)node.ArgumentBlocks, cloneCommentGuid: false);
+                    IExpression ClonedSource = (IExpression)DeepCloneNode(node.Source, cloneCommentGuid: false);
+
+                    IPrecursorIndexAssignmentInstruction NewPrecursorIndexAssignmentInstruction = CreatePrecursorIndexAssignmentInstruction(ComplexifiedAncestorType, ClonedArgumentBlocks, ClonedSource);
+                    complexifiedInstructionList.Add(NewPrecursorIndexAssignmentInstruction);
+                }
             }
             else if (GetComplexifiedArgumentBlockList(node.ArgumentBlocks, out IBlockList<IArgument, Argument> ComplexifiedArgumentBlocks))
             {
@@ -680,34 +775,48 @@
                 else
                     NewPrecursorIndexAssignmentInstruction = CreatePrecursorIndexAssignmentInstruction(ComplexifiedArgumentBlocks, ClonedSource);
 
-                complexifiedNodeList.Add(NewPrecursorIndexAssignmentInstruction);
+                complexifiedInstructionList = new List<IInstruction>() { NewPrecursorIndexAssignmentInstruction };
             }
-            else if (GetComplexifiedNode(node.Source, out List<INode> ComplexifiedSourceList) && ComplexifiedSourceList[0] is IExpression AsComplexifiedSource)
+            else if (GetComplexifiedExpression(node.Source, out IList<IExpression> ComplexifiedSourceList))
             {
-                IBlockList<IArgument, Argument> ClonedArgumentBlocks = (IBlockList<IArgument, Argument>)DeepCloneBlockList((IBlockList)node.ArgumentBlocks, cloneCommentGuid: false);
+                complexifiedInstructionList = new List<IInstruction>();
 
-                IPrecursorIndexAssignmentInstruction NewPrecursorIndexAssignmentInstruction;
-
-                if (node.AncestorType.IsAssigned)
+                foreach (IExpression ComplexifiedSource in ComplexifiedSourceList)
                 {
-                    IObjectType ClonedAncestorType = (IObjectType)DeepCloneNode(node.AncestorType.Item, cloneCommentGuid: false);
-                    NewPrecursorIndexAssignmentInstruction = CreatePrecursorIndexAssignmentInstruction(ClonedAncestorType, ClonedArgumentBlocks, AsComplexifiedSource);
-                }
-                else
-                    NewPrecursorIndexAssignmentInstruction = CreatePrecursorIndexAssignmentInstruction(ClonedArgumentBlocks, AsComplexifiedSource);
+                    IBlockList<IArgument, Argument> ClonedArgumentBlocks = (IBlockList<IArgument, Argument>)DeepCloneBlockList((IBlockList)node.ArgumentBlocks, cloneCommentGuid: false);
 
-                complexifiedNodeList.Add(NewPrecursorIndexAssignmentInstruction);
+                    IPrecursorIndexAssignmentInstruction NewPrecursorIndexAssignmentInstruction;
+
+                    if (node.AncestorType.IsAssigned)
+                    {
+                        IObjectType ClonedAncestorType = (IObjectType)DeepCloneNode(node.AncestorType.Item, cloneCommentGuid: false);
+                        NewPrecursorIndexAssignmentInstruction = CreatePrecursorIndexAssignmentInstruction(ClonedAncestorType, ClonedArgumentBlocks, ComplexifiedSource);
+                    }
+                    else
+                        NewPrecursorIndexAssignmentInstruction = CreatePrecursorIndexAssignmentInstruction(ClonedArgumentBlocks, ComplexifiedSource);
+
+                    complexifiedInstructionList.Add(NewPrecursorIndexAssignmentInstruction);
+                }
             }
+
+            return complexifiedInstructionList != null;
         }
 
-        public static void GetComplexifiedPrecursorInstruction(IPrecursorInstruction node, List<INode> complexifiedNodeList)
+        private static bool GetComplexifiedPrecursorInstruction(IPrecursorInstruction node, out IList<IInstruction> complexifiedInstructionList)
         {
-            if (node.AncestorType.IsAssigned && GetComplexifiedNode(node.AncestorType.Item, out List<INode> ComplexifiedAncestorTypeList) && ComplexifiedAncestorTypeList[0] is IObjectType AsComplexifiedAncestorType)
-            {
-                IBlockList<IArgument, Argument> ClonedArgumentBlocks = (IBlockList<IArgument, Argument>)DeepCloneBlockList((IBlockList)node.ArgumentBlocks, cloneCommentGuid: false);
+            complexifiedInstructionList = null;
 
-                IPrecursorInstruction NewPrecursorInstruction = CreatePrecursorInstruction(AsComplexifiedAncestorType, ClonedArgumentBlocks);
-                complexifiedNodeList.Add(NewPrecursorInstruction);
+            if (node.AncestorType.IsAssigned && GetComplexifiedObjectType(node.AncestorType.Item, out IList<IObjectType> ComplexifiedAncestorTypeList))
+            {
+                complexifiedInstructionList = new List<IInstruction>();
+
+                foreach (IObjectType ComplexifiedAncestorType in ComplexifiedAncestorTypeList)
+                {
+                    IBlockList<IArgument, Argument> ClonedArgumentBlocks = (IBlockList<IArgument, Argument>)DeepCloneBlockList((IBlockList)node.ArgumentBlocks, cloneCommentGuid: false);
+
+                    IPrecursorInstruction NewPrecursorInstruction = CreatePrecursorInstruction(ComplexifiedAncestorType, ClonedArgumentBlocks);
+                    complexifiedInstructionList.Add(NewPrecursorInstruction);
+                }
             }
             else if (GetComplexifiedArgumentBlockList(node.ArgumentBlocks, out IBlockList<IArgument, Argument> ComplexifiedArgumentBlocks))
             {
@@ -721,28 +830,41 @@
                 else
                     NewPrecursorInstruction = CreatePrecursorInstruction(ComplexifiedArgumentBlocks);
 
-                complexifiedNodeList.Add(NewPrecursorInstruction);
+                complexifiedInstructionList = new List<IInstruction>() { NewPrecursorInstruction };
             }
+
+            return complexifiedInstructionList != null;
         }
 
-        public static void GetComplexifiedReleaseInstruction(IReleaseInstruction node, List<INode> complexifiedNodeList)
+        private static bool GetComplexifiedReleaseInstruction(IReleaseInstruction node, out IList<IInstruction> complexifiedInstructionList)
         {
+            complexifiedInstructionList = null;
+
             if (ComplexifyQualifiedName(node.EntityName, out IQualifiedName ComplexifiedEntityName))
             {
                 IReleaseInstruction NewReleaseInstruction = CreateReleaseInstruction(ComplexifiedEntityName);
-                complexifiedNodeList.Add(NewReleaseInstruction);
+                complexifiedInstructionList = new List<IInstruction>() { NewReleaseInstruction };
             }
+
+            return complexifiedInstructionList != null;
         }
 
-        public static void GetComplexifiedThrowInstruction(IThrowInstruction node, List<INode> complexifiedNodeList)
+        private static bool GetComplexifiedThrowInstruction(IThrowInstruction node, out IList<IInstruction> complexifiedInstructionList)
         {
-            if (GetComplexifiedNode(node.ExceptionType, out List<INode> ComplexifiedExceptionTypeList) && ComplexifiedExceptionTypeList[0] is IObjectType AsComplexifiedExceptionType)
-            {
-                IIdentifier ClonedCreationRoutine = (IIdentifier)DeepCloneNode(node.CreationRoutine, cloneCommentGuid: false);
-                IBlockList<IArgument, Argument> ClonedArgumentBlocks = (IBlockList<IArgument, Argument>)DeepCloneBlockList((IBlockList)node.ArgumentBlocks, cloneCommentGuid: false);
+            complexifiedInstructionList = null;
 
-                IThrowInstruction NewThrowInstruction = CreateThrowInstruction(AsComplexifiedExceptionType, ClonedCreationRoutine, ClonedArgumentBlocks);
-                complexifiedNodeList.Add(NewThrowInstruction);
+            if (GetComplexifiedObjectType(node.ExceptionType, out IList<IObjectType> ComplexifiedExceptionTypeList))
+            {
+                complexifiedInstructionList = new List<IInstruction>();
+
+                foreach (IObjectType ComplexifiedExceptionType in ComplexifiedExceptionTypeList)
+                {
+                    IIdentifier ClonedCreationRoutine = (IIdentifier)DeepCloneNode(node.CreationRoutine, cloneCommentGuid: false);
+                    IBlockList<IArgument, Argument> ClonedArgumentBlocks = (IBlockList<IArgument, Argument>)DeepCloneBlockList((IBlockList)node.ArgumentBlocks, cloneCommentGuid: false);
+
+                    IThrowInstruction NewThrowInstruction = CreateThrowInstruction(ComplexifiedExceptionType, ClonedCreationRoutine, ClonedArgumentBlocks);
+                    complexifiedInstructionList.Add(NewThrowInstruction);
+                }
             }
             else if (GetComplexifiedArgumentBlockList(node.ArgumentBlocks, out IBlockList<IArgument, Argument> ComplexifiedArgumentBlocks))
             {
@@ -750,8 +872,10 @@
                 IIdentifier ClonedCreationRoutine = (IIdentifier)DeepCloneNode(node.CreationRoutine, cloneCommentGuid: false);
 
                 IThrowInstruction NewThrowInstruction = CreateThrowInstruction(ClonedExceptionType, ClonedCreationRoutine, ComplexifiedArgumentBlocks);
-                complexifiedNodeList.Add(NewThrowInstruction);
+                complexifiedInstructionList = new List<IInstruction>() { NewThrowInstruction };
             }
+
+            return complexifiedInstructionList != null;
         }
     }
 }

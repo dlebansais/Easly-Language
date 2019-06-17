@@ -6,45 +6,67 @@
 
     public static partial class NodeHelper
     {
-        private static void GetComplexifiedTypeArgument(ITypeArgument node, List<INode> complexifiedNodeList)
+        private static bool GetComplexifiedTypeArgument(ITypeArgument node, out IList<ITypeArgument> ComplexifiedTypeArgumentList)
         {
+            ComplexifiedTypeArgumentList = null;
+            bool Result = false;
             bool IsHandled = false;
 
             switch (node)
             {
                 case IAssignmentTypeArgument AsAssignmentTypeArgument:
-                    GetComplexifiedAssignmentTypeArgument(AsAssignmentTypeArgument, complexifiedNodeList);
+                    Result = GetComplexifiedAssignmentTypeArgument(AsAssignmentTypeArgument, out ComplexifiedTypeArgumentList);
                     IsHandled = true;
                     break;
 
                 case IPositionalTypeArgument AsPositionalTypeArgument:
-                    GetComplexifiedPositionalTypeArgument(AsPositionalTypeArgument, complexifiedNodeList);
+                    Result = GetComplexifiedPositionalTypeArgument(AsPositionalTypeArgument, out ComplexifiedTypeArgumentList);
                     IsHandled = true;
                     break;
             }
 
             Debug.Assert(IsHandled);
+
+            return Result;
         }
 
-        private static void GetComplexifiedAssignmentTypeArgument(IAssignmentTypeArgument node, IList<INode> complexifiedNodeList)
+        private static bool GetComplexifiedAssignmentTypeArgument(IAssignmentTypeArgument node, out IList<ITypeArgument> ComplexifiedTypeArgumentList)
         {
-            if (GetComplexifiedNode(node.Source, out List<INode> complexifiedSourceList) && complexifiedSourceList[0] is IObjectType AsComplexifiedSource)
+            ComplexifiedTypeArgumentList = null;
+
+            if (GetComplexifiedObjectType(node.Source, out IList<IObjectType> ComplexifiedSourceList))
             {
-                IIdentifier ClonedParameterIdentifier = (IIdentifier)DeepCloneNode(node.ParameterIdentifier, cloneCommentGuid: false);
-                IAssignmentTypeArgument NewAssignmentTypeArgument = CreateAssignmentTypeArgument(ClonedParameterIdentifier, AsComplexifiedSource);
-                complexifiedNodeList.Add(NewAssignmentTypeArgument);
+                ComplexifiedTypeArgumentList = new List<ITypeArgument>();
+
+                foreach (IObjectType ComplexifiedSource in ComplexifiedSourceList)
+                {
+                    IIdentifier ClonedParameterIdentifier = (IIdentifier)DeepCloneNode(node.ParameterIdentifier, cloneCommentGuid: false);
+                    IAssignmentTypeArgument NewAssignmentTypeArgument = CreateAssignmentTypeArgument(ClonedParameterIdentifier, ComplexifiedSource);
+                    ComplexifiedTypeArgumentList.Add(NewAssignmentTypeArgument);
+                }
             }
+
+            return ComplexifiedTypeArgumentList != null;
         }
 
-        private static void GetComplexifiedPositionalTypeArgument(IPositionalTypeArgument node, IList<INode> complexifiedNodeList)
+        private static bool GetComplexifiedPositionalTypeArgument(IPositionalTypeArgument node, out IList<ITypeArgument> ComplexifiedTypeArgumentList)
         {
-            if (GetComplexifiedNode(node.Source, out List<INode> complexifiedSourceList) && complexifiedSourceList[0] is IObjectType AsComplexifiedSource)
+            ComplexifiedTypeArgumentList = null;
+
+            if (GetComplexifiedObjectType(node.Source, out IList<IObjectType> ComplexifiedSourceList))
             {
-                IPositionalTypeArgument NewPositionalTypeArgument = CreatePositionalTypeArgument(AsComplexifiedSource);
-                complexifiedNodeList.Add(NewPositionalTypeArgument);
+                ComplexifiedTypeArgumentList = new List<ITypeArgument>();
+
+                foreach (IObjectType ComplexifiedSource in ComplexifiedSourceList)
+                {
+                    IPositionalTypeArgument NewPositionalTypeArgument = CreatePositionalTypeArgument(ComplexifiedSource);
+                    ComplexifiedTypeArgumentList.Add(NewPositionalTypeArgument);
+                }
             }
             else if (ComplexifyAsAssignmentTypeArgument(node, out IAssignmentTypeArgument ComplexifiedAssignmentTypeArgument))
-                complexifiedNodeList.Add(ComplexifiedAssignmentTypeArgument);
+                ComplexifiedTypeArgumentList = new List<ITypeArgument>() { ComplexifiedAssignmentTypeArgument };
+
+            return ComplexifiedTypeArgumentList != null;
         }
 
         private static bool ComplexifyAsAssignmentTypeArgument(IPositionalTypeArgument node, out IAssignmentTypeArgument complexifiedNode)

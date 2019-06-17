@@ -6,14 +6,16 @@
 
     public static partial class NodeHelper
     {
-        private static void GetComplexifiedExpression(IExpression node, List<INode> complexifiedNodeList)
+        private static bool GetComplexifiedExpression(IExpression node, out IList<IExpression> complexifiedExpressionList)
         {
+            complexifiedExpressionList = null;
+            bool Result = false;
             bool IsHandled = false;
 
             switch (node)
             {
                 case IAgentExpression AsAgentExpression:
-                    GetComplexifiedAgentExpression(AsAgentExpression, complexifiedNodeList);
+                    Result = GetComplexifiedAgentExpression(AsAgentExpression, out complexifiedExpressionList);
                     IsHandled = true;
                     break;
 
@@ -22,12 +24,12 @@
                     break;
 
                 case IBinaryConditionalExpression AsBinaryConditionalExpression:
-                    GetComplexifiedBinaryConditionalExpression(AsBinaryConditionalExpression, complexifiedNodeList);
+                    Result = GetComplexifiedBinaryConditionalExpression(AsBinaryConditionalExpression, out complexifiedExpressionList);
                     IsHandled = true;
                     break;
 
                 case IBinaryOperatorExpression AsBinaryOperatorExpression:
-                    GetComplexifiedBinaryOperatorExpression(AsBinaryOperatorExpression, complexifiedNodeList);
+                    Result = GetComplexifiedBinaryOperatorExpression(AsBinaryOperatorExpression, out complexifiedExpressionList);
                     IsHandled = true;
                     break;
 
@@ -36,27 +38,27 @@
                     break;
 
                 case ICloneOfExpression AsCloneOfExpression:
-                    GetComplexifiedCloneOfExpression(AsCloneOfExpression, complexifiedNodeList);
+                    Result = GetComplexifiedCloneOfExpression(AsCloneOfExpression, out complexifiedExpressionList);
                     IsHandled = true;
                     break;
 
                 case IEntityExpression AsEntityExpression:
-                    GetComplexifiedEntityExpression(AsEntityExpression, complexifiedNodeList);
+                    Result = GetComplexifiedEntityExpression(AsEntityExpression, out complexifiedExpressionList);
                     IsHandled = true;
                     break;
 
                 case IEqualityExpression AsEqualityExpression:
-                    GetComplexifiedEqualityExpression(AsEqualityExpression, complexifiedNodeList);
+                    Result = GetComplexifiedEqualityExpression(AsEqualityExpression, out complexifiedExpressionList);
                     IsHandled = true;
                     break;
 
                 case IIndexQueryExpression AsIndexQueryExpression:
-                    GetComplexifiedIndexQueryExpression(AsIndexQueryExpression, complexifiedNodeList);
+                    Result = GetComplexifiedIndexQueryExpression(AsIndexQueryExpression, out complexifiedExpressionList);
                     IsHandled = true;
                     break;
 
                 case IInitializedObjectExpression AsInitializedObjectExpression:
-                    GetComplexifiedInitializedObjectExpression(AsInitializedObjectExpression, complexifiedNodeList);
+                    Result = GetComplexifiedInitializedObjectExpression(AsInitializedObjectExpression, out complexifiedExpressionList);
                     IsHandled = true;
                     break;
 
@@ -69,22 +71,22 @@
                     break;
 
                 case INewExpression AsNewExpression:
-                    GetComplexifiedNewExpression(AsNewExpression, complexifiedNodeList);
+                    Result = GetComplexifiedNewExpression(AsNewExpression, out complexifiedExpressionList);
                     IsHandled = true;
                     break;
 
                 case IOldExpression AsOldExpression:
-                    GetComplexifiedOldExpression(AsOldExpression, complexifiedNodeList);
+                    Result = GetComplexifiedOldExpression(AsOldExpression, out complexifiedExpressionList);
                     IsHandled = true;
                     break;
 
                 case IPrecursorExpression AsPrecursorExpression:
-                    GetComplexifiedPrecursorExpression(AsPrecursorExpression, complexifiedNodeList);
+                    Result = GetComplexifiedPrecursorExpression(AsPrecursorExpression, out complexifiedExpressionList);
                     IsHandled = true;
                     break;
 
                 case IPrecursorIndexExpression AsPrecursorIndexExpression:
-                    GetComplexifiedPrecursorIndexExpression(AsPrecursorIndexExpression, complexifiedNodeList);
+                    Result = GetComplexifiedPrecursorIndexExpression(AsPrecursorIndexExpression, out complexifiedExpressionList);
                     IsHandled = true;
                     break;
 
@@ -93,36 +95,45 @@
                     break;
 
                 case IQueryExpression AsQueryExpression:
-                    GetComplexifiedQueryExpression(AsQueryExpression, complexifiedNodeList);
+                    Result = GetComplexifiedQueryExpression(AsQueryExpression, out complexifiedExpressionList);
                     IsHandled = true;
                     break;
 
                 case IResultOfExpression AsResultOfExpression:
-                    GetComplexifiedResultOfExpression(AsResultOfExpression, complexifiedNodeList);
+                    Result = GetComplexifiedResultOfExpression(AsResultOfExpression, out complexifiedExpressionList);
                     IsHandled = true;
                     break;
 
                 case IUnaryNotExpression AsUnaryNotExpression:
-                    GetComplexifiedUnaryNotExpression(AsUnaryNotExpression, complexifiedNodeList);
+                    Result = GetComplexifiedUnaryNotExpression(AsUnaryNotExpression, out complexifiedExpressionList);
                     IsHandled = true;
                     break;
 
                 case IUnaryOperatorExpression AsUnaryOperatorExpression:
-                    GetComplexifiedUnaryOperatorExpression(AsUnaryOperatorExpression, complexifiedNodeList);
+                    Result = GetComplexifiedUnaryOperatorExpression(AsUnaryOperatorExpression, out complexifiedExpressionList);
                     IsHandled = true;
                     break;
             }
 
             Debug.Assert(IsHandled);
+
+            return Result;
         }
 
-        private static void GetComplexifiedAgentExpression(IAgentExpression node, IList<INode> complexifiedNodeList)
+        private static bool GetComplexifiedAgentExpression(IAgentExpression node, out IList<IExpression> complexifiedExpressionList)
         {
-            if (node.BaseType.IsAssigned && GetComplexifiedNode(node.BaseType.Item, out List<INode> ComplexifiedBaseTypeList) && ComplexifiedBaseTypeList[0] is IObjectType AsComplexifiedBaseType)
+            complexifiedExpressionList = null;
+
+            if (node.BaseType.IsAssigned && GetComplexifiedObjectType(node.BaseType.Item, out IList<IObjectType> ComplexifiedBaseTypeList))
             {
-                IIdentifier ClonedDelegated = (IIdentifier)DeepCloneNode(node.Delegated, cloneCommentGuid: false);
-                IAgentExpression NewAgentExpression = CreateAgentExpression(ClonedDelegated, AsComplexifiedBaseType);
-                complexifiedNodeList.Add(NewAgentExpression);
+                complexifiedExpressionList = new List<IExpression>();
+
+                foreach (IObjectType ComplexifiedBaseType in ComplexifiedBaseTypeList)
+                {
+                    IIdentifier ClonedDelegated = (IIdentifier)DeepCloneNode(node.Delegated, cloneCommentGuid: false);
+                    IAgentExpression NewAgentExpression = CreateAgentExpression(ClonedDelegated, ComplexifiedBaseType);
+                    complexifiedExpressionList.Add(NewAgentExpression);
+                }
             }
             else
             {
@@ -135,6 +146,8 @@
 
                     if (TypeNameIndex > 1)
                     {
+                        complexifiedExpressionList = new List<IExpression>();
+
                         string FeatureName = Text.Substring(TypeNameIndex + 1).Trim();
                         IIdentifier NewDelegated = CreateSimpleIdentifier(FeatureName);
 
@@ -143,219 +156,321 @@
                         IObjectType NewBaseType = CreateSimpleType(SharingType.NotShared, BaseTypeIdentifier);
 
                         IAgentExpression NewAgentExpression = CreateAgentExpression(NewDelegated, NewBaseType);
-                        complexifiedNodeList.Add(NewAgentExpression);
+                        complexifiedExpressionList.Add(NewAgentExpression);
                     }
                 }
             }
+
+            return complexifiedExpressionList != null;
         }
 
-        private static void GetComplexifiedBinaryConditionalExpression(IBinaryConditionalExpression node, IList<INode> complexifiedNodeList)
+        private static bool GetComplexifiedBinaryConditionalExpression(IBinaryConditionalExpression node, out IList<IExpression> complexifiedExpressionList)
         {
-            if (GetComplexifiedNode(node.LeftExpression, out List<INode> ComplexifiedLeftExpressionList) && ComplexifiedLeftExpressionList[0] is IExpression AsComplexifiedLeftExpression)
+            complexifiedExpressionList = null;
+
+            if (GetComplexifiedExpression(node.LeftExpression, out IList<IExpression> ComplexifiedLeftExpressionList))
             {
-                IExpression ClonedRightExpression = (IExpression)DeepCloneNode(node.RightExpression, cloneCommentGuid: false);
-                IBinaryConditionalExpression NewBinaryConditionalExpression = CreateBinaryConditionalExpression(AsComplexifiedLeftExpression, node.Conditional, ClonedRightExpression);
-                complexifiedNodeList.Add(NewBinaryConditionalExpression);
+                complexifiedExpressionList = new List<IExpression>();
+
+                foreach (IExpression ComplexifiedLeftExpression in ComplexifiedLeftExpressionList)
+                {
+                    IExpression ClonedRightExpression = (IExpression)DeepCloneNode(node.RightExpression, cloneCommentGuid: false);
+                    IBinaryConditionalExpression NewBinaryConditionalExpression = CreateBinaryConditionalExpression(ComplexifiedLeftExpression, node.Conditional, ClonedRightExpression);
+                    complexifiedExpressionList.Add(NewBinaryConditionalExpression);
+                }
             }
-            else if (GetComplexifiedNode(node.RightExpression, out List<INode> ComplexifiedRightExpressionList) && ComplexifiedRightExpressionList[0] is IExpression AsComplexifiedRightExpression)
+            else if (GetComplexifiedExpression(node.RightExpression, out IList<IExpression> ComplexifiedRightExpressionList))
             {
-                IExpression ClonedLeftExpression = (IExpression)DeepCloneNode(node.LeftExpression, cloneCommentGuid: false);
-                IBinaryConditionalExpression NewBinaryConditionalExpression = CreateBinaryConditionalExpression(ClonedLeftExpression, node.Conditional, AsComplexifiedRightExpression);
-                complexifiedNodeList.Add(NewBinaryConditionalExpression);
+                complexifiedExpressionList = new List<IExpression>();
+
+                foreach (IExpression ComplexifiedRightExpression in ComplexifiedRightExpressionList)
+                {
+                    IExpression ClonedLeftExpression = (IExpression)DeepCloneNode(node.LeftExpression, cloneCommentGuid: false);
+                    IBinaryConditionalExpression NewBinaryConditionalExpression = CreateBinaryConditionalExpression(ClonedLeftExpression, node.Conditional, ComplexifiedRightExpression);
+                    complexifiedExpressionList.Add(NewBinaryConditionalExpression);
+                }
             }
+
+            return complexifiedExpressionList != null;
         }
 
-        private static void GetComplexifiedBinaryOperatorExpression(IBinaryOperatorExpression node, IList<INode> complexifiedNodeList)
+        private static bool GetComplexifiedBinaryOperatorExpression(IBinaryOperatorExpression node, out IList<IExpression> complexifiedExpressionList)
         {
-            if (GetComplexifiedNode(node.LeftExpression, out List<INode> ComplexifiedLeftExpressionList) && ComplexifiedLeftExpressionList[0] is IExpression AsComplexifiedLeftExpression)
+            complexifiedExpressionList = null;
+
+            if (GetComplexifiedExpression(node.LeftExpression, out IList<IExpression> ComplexifiedLeftExpressionList))
             {
-                IExpression ClonedRightExpression = (IExpression)DeepCloneNode(node.RightExpression, cloneCommentGuid: false);
-                IIdentifier ClonedOperator = (IIdentifier)DeepCloneNode(node.Operator, cloneCommentGuid: false);
-                IBinaryOperatorExpression NewBinaryOperatorExpression = CreateBinaryOperatorExpression(AsComplexifiedLeftExpression, ClonedOperator, ClonedRightExpression);
-                complexifiedNodeList.Add(NewBinaryOperatorExpression);
+                complexifiedExpressionList = new List<IExpression>();
+
+                foreach (IExpression ComplexifiedLeftExpression in ComplexifiedLeftExpressionList)
+                {
+                    IExpression ClonedRightExpression = (IExpression)DeepCloneNode(node.RightExpression, cloneCommentGuid: false);
+                    IIdentifier ClonedOperator = (IIdentifier)DeepCloneNode(node.Operator, cloneCommentGuid: false);
+                    IBinaryOperatorExpression NewBinaryOperatorExpression = CreateBinaryOperatorExpression(ComplexifiedLeftExpression, ClonedOperator, ClonedRightExpression);
+                    complexifiedExpressionList.Add(NewBinaryOperatorExpression);
+                }
             }
-            else if (GetComplexifiedNode(node.RightExpression, out List<INode> ComplexifiedRightExpressionList) && ComplexifiedRightExpressionList[0] is IExpression AsComplexifiedRightExpression)
+            else if (GetComplexifiedExpression(node.RightExpression, out IList<IExpression> ComplexifiedRightExpressionList))
             {
-                IExpression ClonedLeftExpression = (IExpression)DeepCloneNode(node.LeftExpression, cloneCommentGuid: false);
-                IIdentifier ClonedOperator = (IIdentifier)DeepCloneNode(node.Operator, cloneCommentGuid: false);
-                IBinaryOperatorExpression NewBinaryOperatorExpression = CreateBinaryOperatorExpression(ClonedLeftExpression, ClonedOperator, AsComplexifiedRightExpression);
-                complexifiedNodeList.Add(NewBinaryOperatorExpression);
+                complexifiedExpressionList = new List<IExpression>();
+
+                foreach (IExpression ComplexifiedRightExpression in ComplexifiedRightExpressionList)
+                {
+                    IExpression ClonedLeftExpression = (IExpression)DeepCloneNode(node.LeftExpression, cloneCommentGuid: false);
+                    IIdentifier ClonedOperator = (IIdentifier)DeepCloneNode(node.Operator, cloneCommentGuid: false);
+                    IBinaryOperatorExpression NewBinaryOperatorExpression = CreateBinaryOperatorExpression(ClonedLeftExpression, ClonedOperator, ComplexifiedRightExpression);
+                    complexifiedExpressionList.Add(NewBinaryOperatorExpression);
+                }
             }
+
+            return complexifiedExpressionList != null;
         }
 
-        private static void GetComplexifiedCloneOfExpression(ICloneOfExpression node, IList<INode> complexifiedNodeList)
+        private static bool GetComplexifiedCloneOfExpression(ICloneOfExpression node, out IList<IExpression> complexifiedExpressionList)
         {
-            if (GetComplexifiedNode(node.Source, out List<INode> ComplexifiedSourceList) && ComplexifiedSourceList[0] is IExpression AsComplexifiedSource)
+            complexifiedExpressionList = null;
+
+            if (GetComplexifiedExpression(node.Source, out IList<IExpression> ComplexifiedSourceList))
             {
-                ICloneOfExpression NewCloneOfExpression = CreateCloneOfExpression(node.Type, AsComplexifiedSource);
-                complexifiedNodeList.Add(NewCloneOfExpression);
+                complexifiedExpressionList = new List<IExpression>();
+
+                foreach (IExpression ComplexifiedSource in ComplexifiedSourceList)
+                {
+                    ICloneOfExpression NewCloneOfExpression = CreateCloneOfExpression(node.Type, ComplexifiedSource);
+                    complexifiedExpressionList.Add(NewCloneOfExpression);
+                }
             }
+
+            return complexifiedExpressionList != null;
         }
 
-        private static void GetComplexifiedEntityExpression(IEntityExpression node, IList<INode> complexifiedNodeList)
+        private static bool GetComplexifiedEntityExpression(IEntityExpression node, out IList<IExpression> complexifiedExpressionList)
         {
-            if (GetComplexifiedNode(node.Query, out List<INode> ComplexifiedQueryList) && IsNodeListSameType(ComplexifiedQueryList, out IList<IQualifiedName> ComplexifiedList))
+            complexifiedExpressionList = null;
+
+            if (GetComplexifiedQualifiedName(node.Query, out IList<IQualifiedName> ComplexifiedQueryList))
             {
+                complexifiedExpressionList = new List<IExpression>();
+
                 foreach (IQualifiedName ComplexifiedQuery in ComplexifiedQueryList)
                 {
                     IEntityExpression NewEntityExpression = CreateEntityExpression(ComplexifiedQuery);
-                    complexifiedNodeList.Add(NewEntityExpression);
+                    complexifiedExpressionList.Add(NewEntityExpression);
                 }
             }
+
+            return complexifiedExpressionList != null;
         }
 
-        private static void GetComplexifiedEqualityExpression(IEqualityExpression node, IList<INode> complexifiedNodeList)
+        private static bool GetComplexifiedEqualityExpression(IEqualityExpression node, out IList<IExpression> complexifiedExpressionList)
         {
-            if (GetComplexifiedNode(node.LeftExpression, out List<INode> ComplexifiedLeftExpressionList) && ComplexifiedLeftExpressionList[0] is IExpression AsComplexifiedLeftExpression)
+            complexifiedExpressionList = null;
+
+            if (GetComplexifiedExpression(node.LeftExpression, out IList<IExpression> ComplexifiedLeftExpressionList))
             {
-                IExpression ClonedRightExpression = (IExpression)DeepCloneNode(node.RightExpression, cloneCommentGuid: false);
-                IEqualityExpression NewEqualityExpression = CreateEqualityExpression(AsComplexifiedLeftExpression, node.Comparison, node.Equality, ClonedRightExpression);
-                complexifiedNodeList.Add(NewEqualityExpression);
+                complexifiedExpressionList = new List<IExpression>();
+
+                foreach (IExpression ComplexifiedLeftExpression in ComplexifiedLeftExpressionList)
+                {
+                    IExpression ClonedRightExpression = (IExpression)DeepCloneNode(node.RightExpression, cloneCommentGuid: false);
+                    IEqualityExpression NewEqualityExpression = CreateEqualityExpression(ComplexifiedLeftExpression, node.Comparison, node.Equality, ClonedRightExpression);
+                    complexifiedExpressionList.Add(NewEqualityExpression);
+                }
             }
-            else if (GetComplexifiedNode(node.RightExpression, out List<INode> ComplexifiedRightExpressionList) && ComplexifiedRightExpressionList[0] is IExpression AsComplexifiedRightExpression)
+            else if (GetComplexifiedExpression(node.RightExpression, out IList<IExpression> ComplexifiedRightExpressionList))
             {
-                IExpression ClonedLeftExpression = (IExpression)DeepCloneNode(node.LeftExpression, cloneCommentGuid: false);
-                IEqualityExpression NewEqualityExpression = CreateEqualityExpression(ClonedLeftExpression, node.Comparison, node.Equality, AsComplexifiedRightExpression);
-                complexifiedNodeList.Add(NewEqualityExpression);
+                complexifiedExpressionList = new List<IExpression>();
+
+                foreach (IExpression ComplexifiedRightExpression in ComplexifiedRightExpressionList)
+                {
+                    IExpression ClonedLeftExpression = (IExpression)DeepCloneNode(node.LeftExpression, cloneCommentGuid: false);
+                    IEqualityExpression NewEqualityExpression = CreateEqualityExpression(ClonedLeftExpression, node.Comparison, node.Equality, ComplexifiedRightExpression);
+                    complexifiedExpressionList.Add(NewEqualityExpression);
+                }
             }
+
+            return complexifiedExpressionList != null;
         }
 
-        private static void GetComplexifiedIndexQueryExpression(IIndexQueryExpression node, IList<INode> complexifiedNodeList)
+        private static bool GetComplexifiedIndexQueryExpression(IIndexQueryExpression node, out IList<IExpression> complexifiedExpressionList)
         {
-            if (GetComplexifiedNode(node.IndexedExpression, out List<INode> ComplexifiedIndexedExpressionList) && ComplexifiedIndexedExpressionList[0] is IExpression AsComplexifiedIndexedExpression)
+            complexifiedExpressionList = null;
+
+            if (GetComplexifiedExpression(node.IndexedExpression, out IList<IExpression> ComplexifiedIndexedExpressionList))
             {
-                IBlockList<IArgument, Argument> ClonedArgumentBlocks = (IBlockList<IArgument, Argument>)DeepCloneBlockList((IBlockList)node.ArgumentBlocks, cloneCommentGuid: false);
-                IIndexQueryExpression NewIndexQueryExpression = CreateIndexQueryExpression(AsComplexifiedIndexedExpression, ClonedArgumentBlocks);
-                complexifiedNodeList.Add(NewIndexQueryExpression);
+                complexifiedExpressionList = new List<IExpression>();
+
+                foreach (IExpression ComplexifiedIndexedExpression in ComplexifiedIndexedExpressionList)
+                {
+                    IBlockList<IArgument, Argument> ClonedArgumentBlocks = (IBlockList<IArgument, Argument>)DeepCloneBlockList((IBlockList)node.ArgumentBlocks, cloneCommentGuid: false);
+                    IIndexQueryExpression NewIndexQueryExpression = CreateIndexQueryExpression(ComplexifiedIndexedExpression, ClonedArgumentBlocks);
+                    complexifiedExpressionList.Add(NewIndexQueryExpression);
+                }
             }
             else if (GetComplexifiedArgumentBlockList(node.ArgumentBlocks, out IBlockList<IArgument, Argument> ComplexifiedArgumentBlocks))
             {
                 IExpression ClonedIndexedExpression = (IExpression)DeepCloneNode(node.IndexedExpression, cloneCommentGuid: false);
                 IIndexQueryExpression NewIndexQueryExpression = CreateIndexQueryExpression(ClonedIndexedExpression, ComplexifiedArgumentBlocks);
-                complexifiedNodeList.Add(NewIndexQueryExpression);
+                complexifiedExpressionList = new List<IExpression>() { NewIndexQueryExpression };
             }
+
+            return complexifiedExpressionList != null;
         }
 
-        private static void GetComplexifiedInitializedObjectExpression(IInitializedObjectExpression node, IList<INode> complexifiedNodeList)
+        private static bool GetComplexifiedInitializedObjectExpression(IInitializedObjectExpression node, out IList<IExpression> complexifiedExpressionList)
         {
+            complexifiedExpressionList = null;
+
             if (GetComplexifiedAssignmentArgumentBlockList(node.AssignmentBlocks, out IBlockList<IAssignmentArgument, AssignmentArgument> ComplexifiedAssignmentBlocks))
             {
                 IIdentifier ClonedClassIdentifier = (IIdentifier)DeepCloneNode(node.ClassIdentifier, cloneCommentGuid: false);
                 IInitializedObjectExpression NewInitializedObjectExpression = CreateInitializedObjectExpression(ClonedClassIdentifier, ComplexifiedAssignmentBlocks);
-                complexifiedNodeList.Add(NewInitializedObjectExpression);
+                complexifiedExpressionList = new List<IExpression>() { NewInitializedObjectExpression };
             }
+
+            return complexifiedExpressionList != null;
         }
 
-        private static void GetComplexifiedNewExpression(INewExpression node, IList<INode> complexifiedNodeList)
+        private static bool GetComplexifiedNewExpression(INewExpression node, out IList<IExpression> complexifiedExpressionList)
         {
-            if (GetComplexifiedNode(node.Object, out List<INode> ComplexifiedObjectList) && ComplexifiedObjectList[0] is IQualifiedName AsComplexifiedObject)
+            complexifiedExpressionList = null;
+
+            if (GetComplexifiedNode(node.Object, out IList<INode> ComplexifiedObjectList) && ComplexifiedObjectList[0] is IQualifiedName AsComplexifiedObject)
             {
                 INewExpression NewNewExpression = CreateNewExpression(AsComplexifiedObject);
-                complexifiedNodeList.Add(NewNewExpression);
+                complexifiedExpressionList = new List<IExpression>() { NewNewExpression };
             }
+
+            return complexifiedExpressionList != null;
         }
 
-        private static void GetComplexifiedOldExpression(IOldExpression node, IList<INode> complexifiedNodeList)
+        private static bool GetComplexifiedOldExpression(IOldExpression node, out IList<IExpression> complexifiedExpressionList)
         {
-            if (GetComplexifiedNode(node.Query, out List<INode> ComplexifiedQueryList) && ComplexifiedQueryList[0] is IQualifiedName AsComplexifiedQuery)
+            complexifiedExpressionList = null;
+
+            if (GetComplexifiedNode(node.Query, out IList<INode> ComplexifiedQueryList) && ComplexifiedQueryList[0] is IQualifiedName AsComplexifiedQuery)
             {
                 IOldExpression NewOldExpression = CreateOldExpression(AsComplexifiedQuery);
-                complexifiedNodeList.Add(NewOldExpression);
+                complexifiedExpressionList = new List<IExpression>() { NewOldExpression };
             }
+
+            return complexifiedExpressionList != null;
         }
 
-        private static void GetComplexifiedPrecursorExpression(IPrecursorExpression node, IList<INode> complexifiedNodeList)
+        private static bool GetComplexifiedPrecursorExpression(IPrecursorExpression node, out IList<IExpression> complexifiedExpressionList)
         {
-            if (node.AncestorType.IsAssigned && GetComplexifiedNode(node.AncestorType.Item, out List<INode> ComplexifiedAncestorTypeList) && ComplexifiedAncestorTypeList[0] is IObjectType AsComplexifiedAncestorType)
+            complexifiedExpressionList = null;
+
+            if (node.AncestorType.IsAssigned && GetComplexifiedObjectType(node.AncestorType.Item, out IList<IObjectType> ComplexifiedAncestorTypeList))
             {
-                IBlockList<IArgument, Argument> ClonedArgumentBlocks = (IBlockList<IArgument, Argument>)DeepCloneBlockList((IBlockList)node.ArgumentBlocks, cloneCommentGuid: false);
-                IPrecursorExpression NewPrecursorExpression = CreatePrecursorExpression(ClonedArgumentBlocks, AsComplexifiedAncestorType);
-                complexifiedNodeList.Add(NewPrecursorExpression);
+                complexifiedExpressionList = new List<IExpression>();
+
+                foreach (IObjectType ComplexifiedAncestorType in ComplexifiedAncestorTypeList)
+                {
+                    IBlockList<IArgument, Argument> ClonedArgumentBlocks = (IBlockList<IArgument, Argument>)DeepCloneBlockList((IBlockList)node.ArgumentBlocks, cloneCommentGuid: false);
+                    IPrecursorExpression NewPrecursorExpression = CreatePrecursorExpression(ClonedArgumentBlocks, ComplexifiedAncestorType);
+                    complexifiedExpressionList.Add(NewPrecursorExpression);
+                }
             }
+
+            return complexifiedExpressionList != null;
         }
 
-        private static void GetComplexifiedPrecursorIndexExpression(IPrecursorIndexExpression node, IList<INode> complexifiedNodeList)
+        private static bool GetComplexifiedPrecursorIndexExpression(IPrecursorIndexExpression node, out IList<IExpression> complexifiedExpressionList)
         {
-            if (node.AncestorType.IsAssigned && GetComplexifiedNode(node.AncestorType.Item, out List<INode> ComplexifiedAncestorTypeList) && ComplexifiedAncestorTypeList[0] is IObjectType AsComplexifiedAncestorType)
+            complexifiedExpressionList = null;
+
+            if (node.AncestorType.IsAssigned && GetComplexifiedObjectType(node.AncestorType.Item, out IList<IObjectType> ComplexifiedAncestorTypeList))
             {
-                IBlockList<IArgument, Argument> ClonedArgumentBlocks = (IBlockList<IArgument, Argument>)DeepCloneBlockList((IBlockList)node.ArgumentBlocks, cloneCommentGuid: false);
-                IPrecursorIndexExpression NewPrecursorIndexExpression = CreatePrecursorIndexExpression(ClonedArgumentBlocks, AsComplexifiedAncestorType);
-                complexifiedNodeList.Add(NewPrecursorIndexExpression);
+                complexifiedExpressionList = new List<IExpression>();
+
+                foreach (IObjectType ComplexifiedAncestorType in ComplexifiedAncestorTypeList)
+                {
+                    IBlockList<IArgument, Argument> ClonedArgumentBlocks = (IBlockList<IArgument, Argument>)DeepCloneBlockList((IBlockList)node.ArgumentBlocks, cloneCommentGuid: false);
+                    IPrecursorIndexExpression NewPrecursorIndexExpression = CreatePrecursorIndexExpression(ClonedArgumentBlocks, ComplexifiedAncestorType);
+                    complexifiedExpressionList.Add(NewPrecursorIndexExpression);
+                }
             }
+
+            return complexifiedExpressionList != null;
         }
 
-        public static void GetComplexifiedQueryExpression(IQueryExpression node, IList<INode> complexifiedNodeList)
+        private static bool GetComplexifiedQueryExpression(IQueryExpression node, out IList<IExpression> complexifiedExpressionList)
         {
-            if (GetComplexifiedNode(node.Query, out List<INode> ComplexifiedQueryList) && ComplexifiedQueryList[0] is IQualifiedName AsComplexifiedQuery)
+            complexifiedExpressionList = null;
+
+            if (GetComplexifiedNode(node.Query, out IList<INode> ComplexifiedQueryList) && ComplexifiedQueryList[0] is IQualifiedName AsComplexifiedQuery)
             {
                 IBlockList<IArgument, Argument> ClonedArgumentBlocks = (IBlockList<IArgument, Argument>)DeepCloneBlockList((IBlockList)node.ArgumentBlocks, cloneCommentGuid: false);
                 IQueryExpression NewQueryExpression = CreateQueryExpression(AsComplexifiedQuery, ClonedArgumentBlocks);
-                complexifiedNodeList.Add(NewQueryExpression);
+                complexifiedExpressionList = new List<IExpression>() { NewQueryExpression };
             }
             else if (GetComplexifiedArgumentBlockList(node.ArgumentBlocks, out IBlockList<IArgument, Argument> ComplexifiedArgumentBlocks))
             {
                 IQualifiedName ClonedQuery = (IQualifiedName)DeepCloneNode(node.Query, cloneCommentGuid: false);
                 IQueryExpression NewQueryExpression = CreateQueryExpression(ClonedQuery, ComplexifiedArgumentBlocks);
-                complexifiedNodeList.Add(NewQueryExpression);
+                complexifiedExpressionList = new List<IExpression>() { NewQueryExpression };
             }
             else if (node.ArgumentBlocks.NodeBlockList.Count == 0 && ComplexifyWithArguments(node.Query, out IQualifiedName NewQuery, out List<IArgument> ArgumentList))
             {
                 IQualifiedName ClonedQuery = (IQualifiedName)DeepCloneNode(node.Query, cloneCommentGuid: false);
                 IQueryExpression NewQueryExpression = CreateQueryExpression(ClonedQuery, ArgumentList);
-                complexifiedNodeList.Add(NewQueryExpression);
+                complexifiedExpressionList = new List<IExpression>() { NewQueryExpression };
             }
             else if (ComplexifyAsAgentExpression(node, out IAgentExpression ComplexifiedAgentExpression))
-                complexifiedNodeList.Add(ComplexifiedAgentExpression);
+                complexifiedExpressionList = new List<IExpression>() { ComplexifiedAgentExpression };
             else if (ComplexifyAsAssertionTagExpression(node, out IAssertionTagExpression ComplexifiedAssertionTagExpression))
-                complexifiedNodeList.Add(ComplexifiedAssertionTagExpression);
+                complexifiedExpressionList = new List<IExpression>() { ComplexifiedAssertionTagExpression };
             else if (ComplexifyAsBinaryAndConditionalExpression(node, out IBinaryConditionalExpression ComplexifiedBinaryAndConditionalExpression))
-                complexifiedNodeList.Add(ComplexifiedBinaryAndConditionalExpression);
+                complexifiedExpressionList = new List<IExpression>() { ComplexifiedBinaryAndConditionalExpression };
             else if (ComplexifyAsBinaryOrConditionalExpression(node, out IBinaryConditionalExpression ComplexifiedBinaryOrConditionalExpression))
-                complexifiedNodeList.Add(ComplexifiedBinaryOrConditionalExpression);
+                complexifiedExpressionList = new List<IExpression>() { ComplexifiedBinaryOrConditionalExpression };
             else if (ComplexifyAsBinaryOperatorExpression(node, out IBinaryOperatorExpression ComplexifiedBinaryOperatorExpression))
-                complexifiedNodeList.Add(ComplexifiedBinaryOperatorExpression);
+                complexifiedExpressionList = new List<IExpression>() { ComplexifiedBinaryOperatorExpression };
             else if (ComplexifyAsClassConstantExpression(node, out IClassConstantExpression ComplexifiedClassConstantExpression))
-                complexifiedNodeList.Add(ComplexifiedClassConstantExpression);
+                complexifiedExpressionList = new List<IExpression>() { ComplexifiedClassConstantExpression };
             else if (ComplexifyAsCloneOfExpression(node, out ICloneOfExpression ComplexifiedCloneOfExpression))
-                complexifiedNodeList.Add(ComplexifiedCloneOfExpression);
+                complexifiedExpressionList = new List<IExpression>() { ComplexifiedCloneOfExpression };
             else if (ComplexifyAsEntityExpression(node, out IEntityExpression ComplexifiedEntityExpression, out IKeywordEntityExpression ComplexifiedKeywordEntityExpression))
             {
-                complexifiedNodeList.Add(ComplexifiedEntityExpression);
+                complexifiedExpressionList = new List<IExpression>() { ComplexifiedEntityExpression };
                 if (ComplexifiedKeywordEntityExpression != null)
-                    complexifiedNodeList.Add(ComplexifiedKeywordEntityExpression);
+                    complexifiedExpressionList.Add(ComplexifiedKeywordEntityExpression);
             }
             else if (ComplexifyAsEqualExpression(node, out IEqualityExpression ComplexifiedEqualityExpression))
-                complexifiedNodeList.Add(ComplexifiedEqualityExpression);
+                complexifiedExpressionList = new List<IExpression>() { ComplexifiedEqualityExpression };
             else if (ComplexifyAsDifferentExpression(node, out IEqualityExpression ComplexifiedDifferentExpression))
-                complexifiedNodeList.Add(ComplexifiedDifferentExpression);
+                complexifiedExpressionList = new List<IExpression>() { ComplexifiedDifferentExpression };
             else if (ComplexifyAsIndexQueryExpression(node, out IIndexQueryExpression ComplexifiedIndexQueryExpression))
-                complexifiedNodeList.Add(ComplexifiedIndexQueryExpression);
+                complexifiedExpressionList = new List<IExpression>() { ComplexifiedIndexQueryExpression };
             else if (ComplexifyAsInitializedObjectExpression(node, out IInitializedObjectExpression ComplexifiedInitializedObjectExpression))
-                complexifiedNodeList.Add(ComplexifiedInitializedObjectExpression);
+                complexifiedExpressionList = new List<IExpression>() { ComplexifiedInitializedObjectExpression };
             else if (ComplexifyAsKeywordExpression(node, out IKeywordExpression ComplexifiedKeywordExpression))
-                complexifiedNodeList.Add(ComplexifiedKeywordExpression);
+                complexifiedExpressionList = new List<IExpression>() { ComplexifiedKeywordExpression };
             else if (ComplexifyAsManifestCharacterExpression(node, out IManifestCharacterExpression ComplexifiedManifestCharacterExpression))
-                complexifiedNodeList.Add(ComplexifiedManifestCharacterExpression);
+                complexifiedExpressionList = new List<IExpression>() { ComplexifiedManifestCharacterExpression };
             else if (ComplexifyAsManifestNumberExpression(node, out IManifestNumberExpression ComplexifiedManifestNumberExpression))
-                complexifiedNodeList.Add(ComplexifiedManifestNumberExpression);
+                complexifiedExpressionList = new List<IExpression>() { ComplexifiedManifestNumberExpression };
             else if (ComplexifyAsManifestStringExpression(node, out IManifestStringExpression ComplexifiedManifestStringExpression))
-                complexifiedNodeList.Add(ComplexifiedManifestStringExpression);
+                complexifiedExpressionList = new List<IExpression>() { ComplexifiedManifestStringExpression };
             else if (ComplexifyAsNewExpression(node, out INewExpression ComplexifiedNewExpression))
-                complexifiedNodeList.Add(ComplexifiedNewExpression);
+                complexifiedExpressionList = new List<IExpression>() { ComplexifiedNewExpression };
             else if (ComplexifyAsOldExpression(node, out IOldExpression ComplexifiedOldExpression))
-                complexifiedNodeList.Add(ComplexifiedOldExpression);
+                complexifiedExpressionList = new List<IExpression>() { ComplexifiedOldExpression };
             else if (ComplexifyAsPrecursorExpression(node, out IPrecursorExpression ComplexifiedPrecursorExpression))
-                complexifiedNodeList.Add(ComplexifiedPrecursorExpression);
+                complexifiedExpressionList = new List<IExpression>() { ComplexifiedPrecursorExpression };
             else if (ComplexifyAsPrecursorIndexExpression(node, out IPrecursorIndexExpression ComplexifiedPrecursorIndexExpression))
-                complexifiedNodeList.Add(ComplexifiedPrecursorIndexExpression);
+                complexifiedExpressionList = new List<IExpression>() { ComplexifiedPrecursorIndexExpression };
             else if (ComplexifyAsPreprocessorExpression(node, out IPreprocessorExpression ComplexifiedPreprocessorExpression))
-                complexifiedNodeList.Add(ComplexifiedPreprocessorExpression);
+                complexifiedExpressionList = new List<IExpression>() { ComplexifiedPreprocessorExpression };
             else if (ComplexifyAsResultOfExpression(node, out IResultOfExpression ComplexifiedResultOfExpression))
-                complexifiedNodeList.Add(ComplexifiedResultOfExpression);
+                complexifiedExpressionList = new List<IExpression>() { ComplexifiedResultOfExpression };
             else if (ComplexifyAsUnaryNotExpression(node, out IUnaryNotExpression ComplexifiedUnaryNotExpression))
-                complexifiedNodeList.Add(ComplexifiedUnaryNotExpression);
+                complexifiedExpressionList = new List<IExpression>() { ComplexifiedUnaryNotExpression };
             else if (ComplexifyAsUnaryOperatorExpression(node, out IUnaryOperatorExpression ComplexifiedUnaryOperatorExpression))
-                complexifiedNodeList.Add(ComplexifiedUnaryOperatorExpression);
+                complexifiedExpressionList = new List<IExpression>() { ComplexifiedUnaryOperatorExpression };
+
+            return complexifiedExpressionList != null;
         }
 
         private static bool ComplexifyAsAgentExpression(IQueryExpression node, out IAgentExpression complexifiedNode)
@@ -365,30 +480,9 @@
             if (IsQuerySimple(node) && ParsePattern(node, "agent", out string BeforeText, out string AfterText) && BeforeText.Length == 0)
             {
                 AfterText = AfterText.Trim();
-                IIdentifier Delegated = null;
 
-                if (AfterText.StartsWith("{"))
-                {
-                    int TypeNameIndex = AfterText.IndexOf("}");
-
-                    if (TypeNameIndex > 1)
-                    {
-                        string FeatureName = AfterText.Substring(TypeNameIndex + 1).Trim();
-                        Delegated = CreateSimpleIdentifier(FeatureName);
-
-                        string BaseTypeName = AfterText.Substring(1, TypeNameIndex - 1).Trim();
-                        IIdentifier BaseTypeIdentifier = CreateSimpleIdentifier(BaseTypeName);
-                        IObjectType BaseType = CreateSimpleType(SharingType.NotShared, BaseTypeIdentifier);
-
-                        complexifiedNode = CreateAgentExpression(Delegated, BaseType);
-                    }
-                }
-
-                if (complexifiedNode == null)
-                {
-                    Delegated = CreateSimpleIdentifier(AfterText.Trim());
-                    complexifiedNode = CreateAgentExpression(Delegated);
-                }
+                IIdentifier Delegated = CreateSimpleIdentifier(AfterText);
+                complexifiedNode = CreateAgentExpression(Delegated);
             }
 
             return complexifiedNode != null;
@@ -802,32 +896,59 @@
             return complexifiedNode != null;
         }
 
-        private static void GetComplexifiedResultOfExpression(IResultOfExpression node, IList<INode> complexifiedNodeList)
+        private static bool GetComplexifiedResultOfExpression(IResultOfExpression node, out IList<IExpression> complexifiedExpressionList)
         {
-            if (GetComplexifiedNode(node.Source, out List<INode> ComplexifiedSourceList) && ComplexifiedSourceList[0] is IExpression AsComplexifiedSource)
+            complexifiedExpressionList = null;
+
+            if (GetComplexifiedExpression(node.Source, out IList<IExpression> ComplexifiedSourceList))
             {
-                IResultOfExpression NewResultOfExpression = CreateResultOfExpression(AsComplexifiedSource);
-                complexifiedNodeList.Add(NewResultOfExpression);
+                complexifiedExpressionList = new List<IExpression>();
+
+                foreach (IExpression ComplexifiedSource in ComplexifiedSourceList)
+                {
+                    IResultOfExpression NewResultOfExpression = CreateResultOfExpression(ComplexifiedSource);
+                    complexifiedExpressionList.Add(NewResultOfExpression);
+                }
             }
+
+            return complexifiedExpressionList != null;
         }
 
-        private static void GetComplexifiedUnaryNotExpression(IUnaryNotExpression node, IList<INode> complexifiedNodeList)
+        private static bool GetComplexifiedUnaryNotExpression(IUnaryNotExpression node, out IList<IExpression> complexifiedExpressionList)
         {
-            if (GetComplexifiedNode(node.RightExpression, out List<INode> ComplexifiedRightExpressionList) && ComplexifiedRightExpressionList[0] is IExpression AsComplexifiedRightExpression)
+            complexifiedExpressionList = null;
+
+            if (GetComplexifiedExpression(node.RightExpression, out IList<IExpression> ComplexifiedRightExpressionList))
             {
-                IUnaryNotExpression NewUnaryNotExpression = CreateUnaryNotExpression(AsComplexifiedRightExpression);
-                complexifiedNodeList.Add(NewUnaryNotExpression);
+                complexifiedExpressionList = new List<IExpression>();
+
+                foreach (IExpression ComplexifiedRightExpression in ComplexifiedRightExpressionList)
+                {
+                    IUnaryNotExpression NewUnaryNotExpression = CreateUnaryNotExpression(ComplexifiedRightExpression);
+                    complexifiedExpressionList.Add(NewUnaryNotExpression);
+                }
             }
+
+            return complexifiedExpressionList != null;
         }
 
-        private static void GetComplexifiedUnaryOperatorExpression(IUnaryOperatorExpression node, IList<INode> complexifiedNodeList)
+        private static bool GetComplexifiedUnaryOperatorExpression(IUnaryOperatorExpression node, out IList<IExpression> complexifiedExpressionList)
         {
-            if (GetComplexifiedNode(node.RightExpression, out List<INode> ComplexifiedRightExpressionList) && ComplexifiedRightExpressionList[0] is IExpression AsComplexifiedRightExpression)
+            complexifiedExpressionList = null;
+
+            if (GetComplexifiedExpression(node.RightExpression, out IList<IExpression> ComplexifiedRightExpressionList))
             {
-                IIdentifier ClonedOperator = (IIdentifier)DeepCloneNode(node.Operator, cloneCommentGuid: false);
-                IUnaryOperatorExpression NewUnaryOperatorExpression = CreateUnaryOperatorExpression(ClonedOperator, AsComplexifiedRightExpression);
-                complexifiedNodeList.Add(NewUnaryOperatorExpression);
+                complexifiedExpressionList = new List<IExpression>();
+
+                foreach (IExpression ComplexifiedRightExpression in ComplexifiedRightExpressionList)
+                {
+                    IIdentifier ClonedOperator = (IIdentifier)DeepCloneNode(node.Operator, cloneCommentGuid: false);
+                    IUnaryOperatorExpression NewUnaryOperatorExpression = CreateUnaryOperatorExpression(ClonedOperator, ComplexifiedRightExpression);
+                    complexifiedExpressionList.Add(NewUnaryOperatorExpression);
+                }
             }
+
+            return complexifiedExpressionList != null;
         }
     }
 }
