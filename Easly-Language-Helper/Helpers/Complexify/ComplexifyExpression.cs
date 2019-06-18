@@ -227,6 +227,17 @@
                 }
             }
 
+            if (GetRenamedBinarySymbol(node.Operator, out IIdentifier RenamedOperator))
+            {
+                if (complexifiedExpressionList == null)
+                    complexifiedExpressionList = new List<IExpression>();
+
+                IExpression ClonedLeftExpression = (IExpression)DeepCloneNode(node.LeftExpression, cloneCommentGuid: false);
+                IExpression ClonedRightExpression = (IExpression)DeepCloneNode(node.RightExpression, cloneCommentGuid: false);
+                IBinaryOperatorExpression NewBinaryOperatorExpression = CreateBinaryOperatorExpression(ClonedLeftExpression, RenamedOperator, ClonedRightExpression);
+                complexifiedExpressionList.Add(NewBinaryOperatorExpression);
+            }
+
             return complexifiedExpressionList != null;
         }
 
@@ -956,6 +967,16 @@
                     IUnaryOperatorExpression NewUnaryOperatorExpression = CreateUnaryOperatorExpression(ClonedOperator, ComplexifiedRightExpression);
                     complexifiedExpressionList.Add(NewUnaryOperatorExpression);
                 }
+            }
+
+            if (GetRenamedUnarySymbol(node.Operator, out IIdentifier RenamedOperator))
+            {
+                if (complexifiedExpressionList == null)
+                    complexifiedExpressionList = new List<IExpression>();
+
+                IExpression ClonedRightExpression = (IExpression)DeepCloneNode(node.RightExpression, cloneCommentGuid: false);
+                IUnaryOperatorExpression NewUnaryOperatorExpression = CreateUnaryOperatorExpression(RenamedOperator, ClonedRightExpression);
+                complexifiedExpressionList.Add(NewUnaryOperatorExpression);
             }
 
             return complexifiedExpressionList != null;

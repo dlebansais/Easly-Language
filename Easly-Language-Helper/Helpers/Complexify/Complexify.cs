@@ -572,6 +572,50 @@
 
             return true;
         }
+
+        private static bool GetRenamedBinarySymbol(IIdentifier symbol, out IIdentifier renamedSymbol)
+        {
+            renamedSymbol = null;
+
+            string Text = symbol.Text;
+            string RenamedText = null;
+
+            switch (Text)
+            {
+                case ">=":
+                    RenamedText = "≥";
+                    break;
+
+                case "<=":
+                    RenamedText = "≤";
+                    break;
+            }
+
+            if (RenamedText != null)
+                renamedSymbol = CreateSimpleIdentifier(RenamedText);
+
+            return renamedSymbol != null;
+        }
+
+        private static bool GetRenamedUnarySymbol(IIdentifier symbol, out IIdentifier renamedSymbol)
+        {
+            renamedSymbol = null;
+
+            string Text = symbol.Text;
+            string RenamedText = null;
+
+            switch (Text)
+            {
+                case "sqrt":
+                    RenamedText = "√";
+                    break;
+            }
+
+            if (RenamedText != null)
+                renamedSymbol = CreateSimpleIdentifier(RenamedText);
+
+            return renamedSymbol != null;
+        }
         #endregion
     }
 }
