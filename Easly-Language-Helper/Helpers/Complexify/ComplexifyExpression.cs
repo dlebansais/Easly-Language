@@ -549,12 +549,17 @@
         {
             complexifiedNode = null;
 
-            string Pattern = "+";
-            if (ParsePattern(node, " " + Pattern + " ", out string BeforeText, out string AfterText))
+            string[] Patterns = new string[] { "+", "-", "/", "*", ">", "<", ">=", "<=" };
+
+            foreach (string Pattern in Patterns)
             {
-                CloneComplexifiedExpression(node, BeforeText, AfterText, out IExpression LeftExpression, out IExpression RightExpression);
-                IIdentifier Operator = CreateSimpleIdentifier(Pattern);
-                complexifiedNode = CreateBinaryOperatorExpression(LeftExpression, Operator, RightExpression);
+                if (ParsePattern(node, $" {Pattern} ", out string BeforeText, out string AfterText))
+                {
+                    CloneComplexifiedExpression(node, BeforeText, AfterText, out IExpression LeftExpression, out IExpression RightExpression);
+                    IIdentifier Operator = CreateSimpleIdentifier(Pattern);
+                    complexifiedNode = CreateBinaryOperatorExpression(LeftExpression, Operator, RightExpression);
+                    break;
+                }
             }
 
             return complexifiedNode != null;

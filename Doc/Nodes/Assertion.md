@@ -207,7 +207,7 @@ It is evaluated at compile time, when possible. If the compiler cannot evaluate 
 
 Sometimes, executing a debug instruction can take so much time it's not practical. If the compiler is able to detect it, the assertion can be replaced with a simple comment instead.
 
-An assertion can have an optional tag.
+An assertion can have an optional tag:
 
 <!---
 Mode=Default
@@ -412,17 +412,25 @@ Currently, the technology is not available to evaluate assertions at compile tim
 
 If a tag is present, a comment is added with the tag.
 
+For assertions in a feature contract, or a class invariant, a summary of the contract is also added, in comments.
+
 ```csharp
+    // Require:
+    //   Valid Input: X ≥ 0
+    // Ensure:
+    //   Valid Output: Result ≥ 0
+    //   (Result * Result) = X
     public virtual double SquareRoot(double X)
     {
-	    Debug.Assert(X >= 0); // Valid Input?
-	    
-	    double Result = default;
-	    
-	    Debug.Assert(Result >= 0); // Valid Output?
-	    Debug.Assert((Result * Result) == X);
-	    
-	    return Result;
+        Debug.Assert(X >= 0); // Valid Input?
+
+        double Result = default;
+
+
+        Debug.Assert(Result >= 0); // Valid Output?
+        Debug.Assert((Result * Result) == X);
+
+        return Result;
     }
 ```
      
