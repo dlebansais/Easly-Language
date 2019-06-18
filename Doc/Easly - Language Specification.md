@@ -223,6 +223,8 @@ Else Instructions | Reference | Yes | *Scope*
 
 *Assertion*
 
+See [Assertion](https://github.com/dlebansais/Easly-Language/blob/master/Doc/Nodes/Assertion.md).
+
 Name | Kind | Optional | Requirement
 ------------ | ------------- | ------------- | -------------
 Tag | Reference | Yes | *Name*

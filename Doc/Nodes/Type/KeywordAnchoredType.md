@@ -125,3 +125,7 @@ Keyword anchored types cannot be used in the following situations:
 + An inheritance clause.
 + A constraint conformance clause.
 + A typedef clause, unless the keyword is `True`, `False`, `Retry` or `Exception`.
+
+# Translation to C&#35;
+
+Keyword Anchored types, like other anchored types, are not translated to C#. See [Anchored Type](https://github.com/dlebansais/Easly-Language/blob/master/Doc/Nodes/Type/AnchoredType.md) for details.

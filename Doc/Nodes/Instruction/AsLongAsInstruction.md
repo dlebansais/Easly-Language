@@ -260,7 +260,7 @@ Foo&nbsp;<b>procedure</b>
 
 The condition, called the continue condition, must be a en expression that conforms or convert to boolean. If it has multiple results, all of them must be true for execution to continue.
  
-The Long As instruction can have an else case, executed only if any of the steps fails.
+The As Long As instruction can have an else case, executed only if any of the steps fails.
 
 <!---
 Mode=Default

@@ -179,9 +179,11 @@
                     complexifiedExpressionList.Add(NewBinaryConditionalExpression);
                 }
             }
-            else if (GetComplexifiedExpression(node.RightExpression, out IList<IExpression> ComplexifiedRightExpressionList))
+
+            if (GetComplexifiedExpression(node.RightExpression, out IList<IExpression> ComplexifiedRightExpressionList))
             {
-                complexifiedExpressionList = new List<IExpression>();
+                if (complexifiedExpressionList == null)
+                    complexifiedExpressionList = new List<IExpression>();
 
                 foreach (IExpression ComplexifiedRightExpression in ComplexifiedRightExpressionList)
                 {
@@ -210,9 +212,11 @@
                     complexifiedExpressionList.Add(NewBinaryOperatorExpression);
                 }
             }
-            else if (GetComplexifiedExpression(node.RightExpression, out IList<IExpression> ComplexifiedRightExpressionList))
+
+            if (GetComplexifiedExpression(node.RightExpression, out IList<IExpression> ComplexifiedRightExpressionList))
             {
-                complexifiedExpressionList = new List<IExpression>();
+                if (complexifiedExpressionList == null)
+                    complexifiedExpressionList = new List<IExpression>();
 
                 foreach (IExpression ComplexifiedRightExpression in ComplexifiedRightExpressionList)
                 {
@@ -277,9 +281,11 @@
                     complexifiedExpressionList.Add(NewEqualityExpression);
                 }
             }
-            else if (GetComplexifiedExpression(node.RightExpression, out IList<IExpression> ComplexifiedRightExpressionList))
+
+            if (GetComplexifiedExpression(node.RightExpression, out IList<IExpression> ComplexifiedRightExpressionList))
             {
-                complexifiedExpressionList = new List<IExpression>();
+                if (complexifiedExpressionList == null)
+                    complexifiedExpressionList = new List<IExpression>();
 
                 foreach (IExpression ComplexifiedRightExpression in ComplexifiedRightExpressionList)
                 {
@@ -307,11 +313,15 @@
                     complexifiedExpressionList.Add(NewIndexQueryExpression);
                 }
             }
-            else if (GetComplexifiedArgumentBlockList(node.ArgumentBlocks, out IBlockList<IArgument, Argument> ComplexifiedArgumentBlocks))
+
+            if (GetComplexifiedArgumentBlockList(node.ArgumentBlocks, out IBlockList<IArgument, Argument> ComplexifiedArgumentBlocks))
             {
+                if (complexifiedExpressionList == null)
+                    complexifiedExpressionList = new List<IExpression>();
+
                 IExpression ClonedIndexedExpression = (IExpression)DeepCloneNode(node.IndexedExpression, cloneCommentGuid: false);
                 IIndexQueryExpression NewIndexQueryExpression = CreateIndexQueryExpression(ClonedIndexedExpression, ComplexifiedArgumentBlocks);
-                complexifiedExpressionList = new List<IExpression>() { NewIndexQueryExpression };
+                complexifiedExpressionList.Add(NewIndexQueryExpression);
             }
 
             return complexifiedExpressionList != null;
