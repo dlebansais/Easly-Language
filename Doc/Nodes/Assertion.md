@@ -501,8 +501,65 @@ Mode=Default
 
 This means an agent of this type can be assigned the `Square Root` feature, and at the point where the agent is used, the compiler can evaluate the contract and ensure the parameter fits the requirement (is greater than or equal to zero).
 
-Note that the type doesn't include any ensure assertion. In that case, where the agent is used, the compiler will not be able to use the additional info that the `Square Root` feature provide. Taking the square root of the square root for example would fail, since the result is not guaranteed to be positive.
-  
+Note that the type doesn't include any ensure assertion. In that case, where the agent is used, the compiler will not be able to use the additional info that the `Square Root` feature provide. Taking the square root of the square root for example would fail, since the intermediate result is not guaranteed to be positive.
+
+## Attribute feature assertions
+
+An attribute can have an ensure clause:
+
+<!---
+Mode=Default
+{BaseNode.AttributeFeature, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
+{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
+;{BaseNode.BlockList`2[[BaseNode.IAssertion, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null],[BaseNode.Assertion, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
+;{BaseNode.Name, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
+;{BaseNode.SimpleType, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
+;0x00000000;{BaseNode.Identifier, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
+"";{46b2933e-d84d-457e-a456-5ec53c46fb66}{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
+;{System.Collections.Generic.List`1[[BaseNode.IBlock`2[[BaseNode.IAssertion, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null],[BaseNode.Assertion, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089} *1
+{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
+;"N"{BaseNode.Identifier, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
+;{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
+;0x00000000{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
+;"All""";{9840331f-c272-465b-801d-1edf794ad3eb}{BaseNode.Block`2[[BaseNode.IAssertion, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null],[BaseNode.Assertion, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
+0x00000004"";{0f05dde9-ee08-4f7c-be7b-7b1e572436a4}{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
+;"Number""";{e8719afa-66f3-4825-a691-9f24b34631c9}"";{7ea15f14-f6ff-4012-b362-410748432fc3}{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
+;{System.Collections.Generic.List`1[[BaseNode.IAssertion, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089} *1
+;0x00000000;{BaseNode.Pattern, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
+;{BaseNode.Identifier, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
+"";{44a7ac08-3c11-4204-a95b-78c28dd88311}"";{dbedd4eb-4413-42d3-9237-d2d017524ebf}{BaseNode.Assertion, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
+0x00000004{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
+;"*"{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
+;""{BaseNode.BinaryOperatorExpression, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
+;{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
+;{Easly.OptionalReference`1[[BaseNode.IName, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
+"";{1002179b-28f1-4d6f-87c5-f63b6020bd03}"";{427130cc-8c49-4f74-aa55-da1f3657a241}{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
+;{BaseNode.QueryExpression, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
+;{BaseNode.Identifier, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
+;{BaseNode.ManifestNumberExpression, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
+"";{e0c5bc3b-2904-4d7b-a4bf-635369289ce0}False"";{db710aa9-4b0f-4b40-aa62-9bef356acc35}{BaseNode.BlockList`2[[BaseNode.IArgument, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null],[BaseNode.Argument, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
+;{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
+;{BaseNode.QualifiedName, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
+{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
+;">"{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
+;"0"{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
+;{System.Collections.Generic.List`1[[BaseNode.IBlock`2[[BaseNode.IArgument, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null],[BaseNode.Argument, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089} *0
+"";{b95ed7e1-ed24-4b85-b030-14f8b25290f4}{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
+;{System.Collections.Generic.List`1[[BaseNode.IIdentifier, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089} *1
+"";{cee8d67e-6cc1-4c73-80db-9584074af4c8}"";{a53b2a92-b0f1-4961-a999-60c355d90999}"";{62552fd1-954f-4176-b5de-c2b8795dc3c0}0x00000000"";{83003417-b8c7-4894-ae42-d1e343747fe8}{BaseNode.Identifier, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
+0x00000004{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
+;"N""";{a470a8cd-9149-4ac8-b36b-73987877a46e}
+-->
+
+<pre>
+N<b>:&nbsp;</b><i>Number</i>
+&nbsp;&nbsp;&nbsp;<b>ensure</b>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;N&nbsp;>&nbsp;0
+<b>end</b>
+</pre>
+
+In this case, assertions serve both to ensure a contract to anyone reading the value, but also as a requirement for any code changing the attribute.
+
 # Translation to C&#35;
 
 Currently, the technology is not available to evaluate assertions at compile time, and even the simplest case are not implemented that way. Instead, each assertion is translated to a call to `Debug.Assert(...);` and the compiler doesn't check how long executing `Assert` will take.
@@ -557,3 +614,23 @@ For assertions in the class invariant, a dedicated method is added to the class,
 ```
 
 For assertions in types, no code is added, because the assertion is tested inside the callee.
+
+For assertions in attribute features, a special procedure is added to the code, to check assertions and then set the attribute. This procedure is called instead of just setting the attribute value.
+
+```csharp
+    // Ensure:
+    //   My Attribute ≥ 0
+    public double MyAttribute { get; private set; }
+    private void Set_MyAttribute(double value)
+    {
+        Debug.Assert(MyAttribute >= 0);
+
+        MyAttribute = value;
+    }
+```
+
+```csharp
+    ...
+    Set_MyAttribute(1.0);
+    ...
+```
