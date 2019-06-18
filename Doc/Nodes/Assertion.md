@@ -644,7 +644,7 @@ For assertions in attribute features, a special procedure is added to the code, 
 
 ## For loop
 
-Assertions in a For Loop instructions are added after the initialization part, and after the loop part.
+Assertions in a For Loop instructions are added after the initialization part, and after the iteration part.
 
 <!---
 Mode=Default
@@ -748,12 +748,12 @@ False{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, Publi
 ;0x00000000{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
 ;{System.Collections.Generic.List`1[[BaseNode.IBlock`2[[BaseNode.IQualifiedName, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null],[BaseNode.QualifiedName, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089} *1
 "";{dca62ff6-fbc2-4fa7-92d4-716fa9167cde}{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
-;"0"{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
+;"-1"{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
 ;{System.Collections.Generic.List`1[[BaseNode.IBlock`2[[BaseNode.IQualifiedName, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null],[BaseNode.QualifiedName, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089} *1
 "";{a2fa9742-7f7e-4be1-979f-e4ba353315f5}{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
 ;"0"0x00000000;{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
 ;0x00000000;{BaseNode.QueryExpression, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
-;{BaseNode.QueryExpression, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
+;{BaseNode.BinaryOperatorExpression, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
 "";{c1670bbd-419b-4a45-b1a4-bf307460d1db}False{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
 ;{System.Collections.Generic.List`1[[BaseNode.IBlock`2[[BaseNode.IArgument, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null],[BaseNode.Argument, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089} *0
 {BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
@@ -769,9 +769,10 @@ False{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, Publi
 0x00000004"";{74046da6-b058-4cc8-9713-e08ebfaec181}"";{21271175-7cc2-43c8-a5a9-7ec1efb14917}{BaseNode.BlockList`2[[BaseNode.IArgument, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null],[BaseNode.Argument, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
 ;{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
 ;{BaseNode.QualifiedName, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
-{BaseNode.BlockList`2[[BaseNode.IArgument, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null],[BaseNode.Argument, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
-;{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
-;{BaseNode.QualifiedName, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
+{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
+;{BaseNode.QueryExpression, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
+;{BaseNode.Identifier, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
+;{BaseNode.ManifestNumberExpression, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
 "";{97142079-30e7-4aa3-9ad1-64a8df98d01c}0x00000000"";{85e35060-1918-4c81-b184-6a6af688c71e}{BaseNode.Identifier, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
 ;{BaseNode.Identifier, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
 0x00000004"";{aa4a3bae-a21f-418b-9ee2-84f329cdfe3f}{BaseNode.Block`2[[BaseNode.IQualifiedName, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null],[BaseNode.QualifiedName, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
@@ -791,11 +792,12 @@ False{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, Publi
 ;{System.Collections.Generic.List`1[[BaseNode.IBlock`2[[BaseNode.IArgument, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null],[BaseNode.Argument, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089} *0
 "";{1447b379-c585-43e4-ac68-e59f1d19d667}{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
 ;{System.Collections.Generic.List`1[[BaseNode.IIdentifier, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089} *1
+"";{3a71aa81-abec-4336-947b-833322ff7be6}{BaseNode.BlockList`2[[BaseNode.IArgument, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null],[BaseNode.Argument, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
+;{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
+;{BaseNode.QualifiedName, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
 {BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
-;{System.Collections.Generic.List`1[[BaseNode.IBlock`2[[BaseNode.IArgument, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null],[BaseNode.Argument, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089} *0
-"";{c910671e-700c-4465-8e15-97a85c4c502e}{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
-;{System.Collections.Generic.List`1[[BaseNode.IIdentifier, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089} *1
-{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
+;"+"{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
+;"1"{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
 ;"i"{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
 ;"Increment"{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
 ;{System.Collections.Generic.List`1[[BaseNode.IQualifiedName, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089} *1
@@ -809,8 +811,11 @@ False{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, Publi
 0x00000004{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
 ;"*"{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
 ;"""";{90ffc225-80d0-4439-b103-68e873359426}0x00000000"";{0022ad17-01f0-4024-adb5-4897552210cb}{BaseNode.Identifier, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
-0x00000004"";{a8fe5110-25b8-419f-8db5-105749d23e7a}0x00000000"";{6251ed09-ea52-4d8d-94d6-102c0ff69bd3}{BaseNode.Identifier, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
-0x00000004"";{f023b70e-745f-413b-b85f-7ac41de69bd1}"";{095fd821-d1ab-4cca-bd7c-47e426ad97e5}"";{a57e14f3-6b4e-4cfc-afea-6e6298548737}{BaseNode.QualifiedName, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
+0x00000004{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
+;{System.Collections.Generic.List`1[[BaseNode.IBlock`2[[BaseNode.IArgument, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null],[BaseNode.Argument, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089} *0
+"";{06c67ffb-11e4-4eec-ac7e-0f2976e91275}{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
+;{System.Collections.Generic.List`1[[BaseNode.IIdentifier, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089} *1
+"";{b9056540-3495-480f-a88c-150ec81502cf}"";{06d6f0b7-9a23-4602-aa1e-1d72950eb8d6}"";{f023b70e-745f-413b-b85f-7ac41de69bd1}"";{095fd821-d1ab-4cca-bd7c-47e426ad97e5}"";{a57e14f3-6b4e-4cfc-afea-6e6298548737}{BaseNode.QualifiedName, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
 0x00000004{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
 ;"*"{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
 ;""{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
@@ -819,15 +824,16 @@ False{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, Publi
 "";{c35844e9-cc42-4a58-a3c6-2611e25f0977}"";{3f1afebd-f819-4c60-9697-03f34501deed}{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
 ;{System.Collections.Generic.List`1[[BaseNode.IIdentifier, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089} *1
 "";{061a4784-af99-4304-a0b9-2c434c1760a7}"";{8424ac33-5287-4a6f-847d-c9c71827cf55}{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
-;"i"{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
-;"My Attribute"{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
+;"i""";{abcfee3c-5da5-43a1-b594-f8f3c43d83a7}0x00000000"";{698bd90d-454b-43ab-871d-afc42bad875e}{BaseNode.Identifier, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
+0x00000004{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
 ;{System.Collections.Generic.List`1[[BaseNode.IIdentifier, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089} *1
 "";{7443f628-27a0-4923-8659-39a0fa544b2c}"";{c079183a-c228-4f65-9faf-283c26fc50b1}"";{bab4d545-2d7f-48f8-8881-1616392affe0}"";{5c0d9e78-9e9b-43d9-b53a-3747e78e46b0}{BaseNode.Identifier, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
 0x00000004"";{54d9e541-fed6-46d9-97d2-29f2a3bee3cc}{BaseNode.Identifier, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
-0x00000004"";{af0a6518-da48-41e8-a604-ff701786e889}"";{dbe0a9b4-2847-469d-bcc5-31ecb21b96dd}"";{05c1cce4-10b6-4470-a199-714eadf13daf}{BaseNode.Identifier, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
+0x00000004"";{af0a6518-da48-41e8-a604-ff701786e889}{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
+;"My Attribute""";{05c1cce4-10b6-4470-a199-714eadf13daf}{BaseNode.Identifier, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
 0x00000004{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
 ;"My Attribute"{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
-;"i"{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
+;"i""";{d004f565-14d7-4478-baf0-1ae2d0048aa8}{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
 ;"My Attribute""";{81fa4944-1f41-463a-9688-0089b7fed11e}"";{fc62d2e8-5453-4bee-b600-f3ac37a849eb}"";{257ef6dd-d723-46b0-969c-2ac14b0e4345}
 -->
 
@@ -836,24 +842,24 @@ False{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, Publi
 &nbsp;&nbsp;&nbsp;<b>local</b>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i<b>:&nbsp;</b><i>Number</i>
 &nbsp;&nbsp;&nbsp;<b>init</b>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;My&nbsp;Attribute&nbsp;<b>&#8592;&nbsp;</b>0
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;My&nbsp;Attribute&nbsp;<b>&#8592;&nbsp;</b>-1
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i&nbsp;<b>&#8592;&nbsp;</b>0
 &nbsp;&nbsp;&nbsp;<b>while&nbsp;</b>i&nbsp;<&nbsp;10
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;My&nbsp;Attribute&nbsp;<b>&#8592;&nbsp;</b>i
 &nbsp;&nbsp;&nbsp;<b>iterate</b>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i<b>&#183;</b>Increment
 &nbsp;&nbsp;&nbsp;<b>invariant</b>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i&nbsp;=<b>&nbsp;</b>My&nbsp;Attribute
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i&nbsp;=<b>&nbsp;(</b>My&nbsp;Attribute&nbsp;+&nbsp;1<b>)</b>
 <b>end</b>
 </pre>
 
 ```csharp
     int i = default;
 
-    Set_MyAttribute(0);
+    Set_MyAttribute(-1);
     i = 0;
 
-    Debug.Assert(i == MyAttribute);
+    Debug.Assert(i == (MyAttribute + 1));
 
     while (i < 10)
     {
@@ -861,6 +867,7 @@ False{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, Publi
 
         i++;
 
-        Debug.Assert(i == MyAttribute);
+        Debug.Assert(i == (MyAttribute + 1));
     }
 ```
+
