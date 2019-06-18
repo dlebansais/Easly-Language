@@ -211,6 +211,8 @@ Anchor Kind | Discrete | N/A | Declaration, Creation
 
 *As Long As Instruction*, member of: *Instructions*
 
+See [As Long As Instruction](https://github.com/dlebansais/Easly-Language/blob/master/Doc/Nodes/Instruction/AsLongAsInstruction.md).
+
 Name | Kind | Optional | Requirement
 ------------ | ------------- | ------------- | -------------
 Continue Condition | Reference | No | Any *Expressions*

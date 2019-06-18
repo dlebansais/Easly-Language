@@ -258,6 +258,8 @@ Foo&nbsp;<b>procedure</b>
 <b>end</b>
 </pre>
 
+The condition, called the continue condition, must be a en expression that conforms or convert to boolean. If it has multiple results, all of them must be true for execution to continue.
+ 
 The Long As instruction can have an else case, executed only if any of the steps fails.
 
 <!---
@@ -471,7 +473,7 @@ Mode=Default
 <b>end</b>
 </pre>
 
-The continue condition is tested before each step, therefore if it's false before entering the as Long As instruction, no step will be executed. If theere is an else case, it will be executed instead.
+The continue condition is tested before each step, therefore if it's false before entering the As Long As instruction, no step will be executed. If there is an else case, it will be executed instead.
 
 Each step is its own scope and can have local variables. It also has a cleanup part: if a step is completed successfully, but one of the next steps fails, the cleanup part is executed. It is expected to cancel operations performed in steps that succeeded. Cleanup parts are executed in reverse order.
 
@@ -611,7 +613,7 @@ Mode=Default
     
 ## Algorithm
 
-This section describes the algorithm used to execute this instruction. In what follows, each step is numbered n, from 0 to N (excluded), and has a cleanup part called cleanup n. N must be greater than or equal to 1.
+This section describes the algorithm used to execute this instruction. In what follows, each step is numbered *n*, from 0 to N (excluded), and has a cleanup part called cleanup *n*. As Long As instructions must have at least one step, therefore N must be greater than or equal to 1.
 
 1. *n* ← 0.
 2. If *n* >= N, go to 12.
