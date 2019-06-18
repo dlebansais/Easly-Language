@@ -426,6 +426,7 @@ For assertions in a feature contract, or a class invariant, a summary of the con
 
         double Result = default;
 
+        /*...*/
 
         Debug.Assert(Result >= 0); // Valid Output?
         Debug.Assert((Result * Result) == X);
