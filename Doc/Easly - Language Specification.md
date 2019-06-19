@@ -234,6 +234,8 @@ Boolean Expression | Reference | No | Any *Expressions*
 
 *Assertion Tag Expression*, member of: *Expressions*
 
+See [Assertion Tag Expression](https://github.com/dlebansais/Easly-Language/blob/master/Doc/Nodes/Expression/AssertionTagExpression.md).
+
 Name | Kind | Optional | Requirement
 ------------ | ------------- | ------------- | -------------
 Tag Identifier | Reference | No | *Identifier*
