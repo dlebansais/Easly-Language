@@ -416,6 +416,8 @@ False"";{5b659477-deb1-4f94-ba10-69ee6ba83b9d}"";{c8afa317-36b8-4319-b5c4-f1de83
 <b>end</b>
 </pre>
 
+An Assertion Tag expression can only appear within an assertion, but can otherwise be combined at will. Its type is the same type as the expression in the assertion with that tag.
+ 
 # Translation to C&#35;
 
 The translation to C# is straightforward: it is a simple carbon-copy of the expression from the assertion it replaces.
