@@ -361,15 +361,15 @@ See [Qualified Name](https://github.com/dlebansais/Easly-Language/blob/master/Do
 
 There are several issues to take into account when translating assignments to C#. In particular, C# doesn't support returning multiple results and instead uses the `out` and `ref` mechanisms instead.
 
-First of all, note that only following 3 sources can return multiple results in an assignment instruction:
+First of all, note that only the following 3 sources can return multiple results in an assignment instruction:
 
 + Binary Operator expression
 + Precursor Expression
 + Query expression
 
-Of these 3, the Query expression is by far the most common, and will be used as an example in what follows.
+Of these three, the Query expression is by far the most common, and will be used as an example in what follows.
 
-## One result
+## Single result
 
 If the source returns only one result, the assignment is a simple C# assignment.
 
@@ -786,7 +786,7 @@ N<b>,&nbsp;</b>S&nbsp;<b>&#8592;&nbsp;</b>Foo
 
 ## Multiple results, some not simple
 
-When the destination is a path rather than a variable, one cannot use the out mechanism directly. Instead, the caller store these results in temporary variables that are declared on the spot, and copy the content of these variables to the proper destination after the call.
+When the destination is a path rather than a variable, one cannot use the `out` mechanism directly. Instead, the caller store these results in temporary variables that are declared on the spot, and copy the content of these variables to the proper destination after the call.
 
 The choice for the name of the temporary variable is currently to reuse the destination name, as follow.
 

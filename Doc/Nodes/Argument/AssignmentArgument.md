@@ -647,7 +647,7 @@ Foo<b>(</b>P1&nbsp;<b>&#8592;&nbsp;</b>0&nbsp;&nbsp;P3&nbsp;<b>&#8592;&nbsp;"</b
 </pre>
 
 ```csharp
-    Foo(0, 0, "Hello, World!");
+Foo(0, 0, "Hello, World!");
 ```
 
 Since C# 7.2, named arguments can be used more liberally. Writing down assignment arguments as C# named arguments is an improvement that could happen in the future.
