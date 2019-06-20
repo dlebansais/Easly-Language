@@ -244,6 +244,8 @@ Tag Identifier | Reference | No | *Identifier*
 
 *Assignment Argument*, member of: *Arguments*
 
+See [Assignment Argument](https://github.com/dlebansais/Easly-Language/blob/master/Doc/Nodes/Argument/AssignmentArgument.md).
+
 Name | Kind | Optional | Requirement
 ------------ | ------------- | ------------- | -------------
 Parameter Blocks | Block list | N/A | *Identifier*

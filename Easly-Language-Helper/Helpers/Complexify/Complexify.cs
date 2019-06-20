@@ -204,6 +204,28 @@
                 {
                     IArgument Argument = Block.NodeList[NodeIndex];
 
+                    if (SplitArgument(Argument, out IList<IArgument> SplitArgumentList))
+                    {
+                        newArgumentBlocks = (IBlockList<IArgument, Argument>)DeepCloneBlockList((IBlockList)argumentBlocks, cloneCommentGuid: false);
+
+                        Block = newArgumentBlocks.NodeBlockList[BlockIndex];
+                        Block.NodeList.RemoveAt(NodeIndex);
+
+                        for (int i = 0; i < SplitArgumentList.Count; i++)
+                            Block.NodeList.Insert(NodeIndex + i, SplitArgumentList[i]);
+                        return true;
+                    }
+                }
+            }
+
+            for (int BlockIndex = 0; BlockIndex < argumentBlocks.NodeBlockList.Count; BlockIndex++)
+            {
+                IBlock<IArgument, Argument> Block = argumentBlocks.NodeBlockList[BlockIndex];
+
+                for (int NodeIndex = 0; NodeIndex < Block.NodeList.Count; NodeIndex++)
+                {
+                    IArgument Argument = Block.NodeList[NodeIndex];
+
                     if (GetComplexifiedArgument(Argument, out IList<IArgument> ComplexifiedArgumentList))
                     {
                         IArgument ComplexifiedArgument = ComplexifiedArgumentList[0];
@@ -217,6 +239,29 @@
             }
 
             newArgumentBlocks = null;
+            return false;
+        }
+
+        private static bool SplitArgument(IArgument argument, out IList<IArgument> split)
+        {
+            if (argument is IPositionalArgument AsPositionalArgument && AsPositionalArgument.Source is IQueryExpression AsQueryExpression && IsQuerySimple(AsQueryExpression))
+            {
+                IIdentifier QueryIdentifier = AsQueryExpression.Query.Path[0];
+                if (SplitIdentifier(QueryIdentifier, out IList<IIdentifier> SplitIdentifierList))
+                {
+                    split = new List<IArgument>();
+
+                    foreach (IIdentifier Item in SplitIdentifierList)
+                    {
+                        IArgument NewArgument = CreateSimplePositionalArgument(Item.Text);
+                        split.Add(NewArgument);
+                    }
+
+                    return true;
+                }
+            }
+
+            split = null;
             return false;
         }
 
