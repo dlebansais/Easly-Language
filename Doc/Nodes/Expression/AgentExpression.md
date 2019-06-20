@@ -1135,86 +1135,86 @@ The following examples demonstrate how the agent expression can be translated to
 + In class `A`, `Agent` is a simple agent with no optional type specified.
 
 ```csharp
-    class A
+class A
+{
+    public A()
     {
-        public A()
-        {
-            // Agent ← agent TestProcedure
-            Agent = TestProcedure;
+        // Agent ← agent TestProcedure
+        Agent = TestProcedure;
 
-            // Agent(3.14)
-            Agent(3.14);
-        }
-
-        public void TestProcedure(double x)
-        {
-        }
-
-        public Action<double> Agent;
+        // Agent(3.14)
+        Agent(3.14);
     }
+
+    public void TestProcedure(double x)
+    {
+    }
+
+    public Action<double> Agent;
+}
 ```
 
 + In class `B`, `AgentA` is an agent with optional type `A` specified.
 
 ```csharp
-    class B
+class B
+{
+    public B()
     {
-        public B()
-        {
-            a = new A();
+        a = new A();
 
-            // AgentA ← agent {A} TestProcedure
-            AgentA = (A agentBase, double x) => { agentBase.TestProcedure(x); };
+        // AgentA ← agent {A} TestProcedure
+        AgentA = (A agentBase, double x) => { agentBase.TestProcedure(x); };
 
-            // a.AgentA(3.14)
-            AgentA(a, 3.14);
-        }
-
-        public A a;
-        public Action<A, double> AgentA;
+        // a.AgentA(3.14)
+        AgentA(a, 3.14);
     }
+
+    public A a;
+    public Action<A, double> AgentA;
+}
 ```
 
 + In class `C`, `AgentA` is an agent with optional type `A` specified, and is used at the end of a qualified name path.
 
 ```csharp
-    class C
+class C
+{
+    public C()
     {
-        public C()
-        {
-            b = new B();
+        b = new B();
 
-            // AgentA ← agent {A} TestProcedure
-            AgentA = (A agentBase, double x) => { agentBase.TestProcedure(x); };
+        // AgentA ← agent {A} TestProcedure
+        AgentA = (A agentBase, double x) => { agentBase.TestProcedure(x); };
 
-            // b.a.AgentA(3.14)
-            AgentA(b.a, 3.14);
-        }
-
-        public B b;
-        public Action<A, double> AgentA;
+        // b.a.AgentA(3.14)
+        AgentA(b.a, 3.14);
     }
+
+    public B b;
+    public Action<A, double> AgentA;
+}
 ```
 
 + In class `D`, `AgentT` is an agent with optional type `T` specified, and the resulting type uses base type `A`.  
 
 ```csharp
-    class D<T>
-        where T: A, new()
+class D<T>
+    where T: A, new()
+{
+    public D()
     {
-        public D()
-        {
-            T t = new T();
+        T t = new T();
 
-            // AgentT ← agent {T} TestProcedure
-            AgentT = (A agentBase, double x) => { agentBase.TestProcedure(x); };
+        // AgentT ← agent {T} TestProcedure
+        AgentT = (A agentBase, double x) => { agentBase.TestProcedure(x); };
 
-            // t.AgentT(3.14)
-            AgentT(t, 3.14);
-        }
-
-        public Action<A, double> AgentT;
+        // t.AgentT(3.14)
+        AgentT(t, 3.14);
     }
+
+    public Action<A, double> AgentT;
+}
 ```
 
 ## Function
@@ -1222,87 +1222,87 @@ The following examples demonstrate how the agent expression can be translated to
 + In class `A`, `Agent` is a simple agent with no optional type specified.
 
 ```csharp
-    class A
+class A
+{
+    public A()
     {
-        public A()
-        {
-            // Agent ← agent TestFunction
-            Agent = TestFunction;
+        // Agent ← agent TestFunction
+        Agent = TestFunction;
 
-            // n ← Agent(3.14)
-            int n = Agent(3.14);
-        }
-
-        public int TestFunction(double x)
-        {
-            return (int)x;
-        }
-
-        public Func<double, int> Agent;
+        // n ← Agent(3.14)
+        int n = Agent(3.14);
     }
+
+    public int TestFunction(double x)
+    {
+        return (int)x;
+    }
+
+    public Func<double, int> Agent;
+}
 ```
 
 + In class `B`, `AgentA` is an agent with optional type `A` specified.
 
 ```csharp
-    class B
+class B
+{
+    public B()
     {
-        public B()
-        {
-            a = new A();
+        a = new A();
 
-            // AgentA ← agent {A} TestFunction
-            AgentA = (A agentBase, double x) => { return agentBase.TestFunction(x); };
+        // AgentA ← agent {A} TestFunction
+        AgentA = (A agentBase, double x) => { return agentBase.TestFunction(x); };
 
-            // n ← a.AgentA(3.14)
-            int n = AgentA(a, 3.14);
-        }
-
-        public A a;
-        public Func<A, double, int> AgentA;
+        // n ← a.AgentA(3.14)
+        int n = AgentA(a, 3.14);
     }
+
+    public A a;
+    public Func<A, double, int> AgentA;
+}
 ```
 
 + In class `C`, `AgentA` is an agent with optional type `A` specified, and is used at the end of a qualified name path.
 
 ```csharp
-    class C
+class C
+{
+    public C()
     {
-        public C()
-        {
-            b = new B();
+        b = new B();
 
-            // AgentA ← agent {A} TestFunction
-            AgentA = (A agentBase, double x) => { return agentBase.TestFunction(x); };
+        // AgentA ← agent {A} TestFunction
+        AgentA = (A agentBase, double x) => { return agentBase.TestFunction(x); };
 
-            // n ← b.a.AgentA(3.14)
-            AgentA(b.a, 3.14);
-        }
-
-        public B b;
-        public Func<A, double, int> AgentA;
+        // n ← b.a.AgentA(3.14)
+        AgentA(b.a, 3.14);
     }
+
+    public B b;
+    public Func<A, double, int> AgentA;
+}
 ```
 
 + In class `D`, `AgentT` is an agent with optional type `T` specified, and the resulting type uses base type `A`.  
 
 ```csharp
-    class D<T>
-        where T : A, new()
+class D<T>
+    where T : A, new()
+{
+    public D()
     {
-        public D()
-        {
-            T t = new T();
+        T t = new T();
 
-            // AgentT ← agent {T} TestFunction
-            AgentT = (A agentBase, double x) => { return agentBase.TestFunction(x); };
+        // AgentT ← agent {T} TestFunction
+        AgentT = (A agentBase, double x) => { return agentBase.TestFunction(x); };
 
-            // n ← t.AgentT(3.14)
-            AgentT(t, 3.14);
-        }
-
-        public Func<A, double, int> AgentT;
+        // n ← t.AgentT(3.14)
+        AgentT(t, 3.14);
     }
+
+    public Func<A, double, int> AgentT;
+}
 ```
 
 ## Property, attribute and constant
@@ -1310,39 +1310,39 @@ The following examples demonstrate how the agent expression can be translated to
 For a property, an attribute or a constant, the C# source code is pretty much the same as a function, except there are no parameters. However, for an agent with no optional type specified, we can't use the simplified syntax. The resulting code looks as follow.
 
 ```csharp
-    class A
+class A
+{
+    public A()
     {
-        public A()
-        {
-            // Agent ← agent TestProperty
-            Agent = (A agentBase) => { return agentBase.TestProperty; };
+        // Agent ← agent TestProperty
+        Agent = (A agentBase) => { return agentBase.TestProperty; };
 
-            // n ← Agent(3.14)
-            int n = Agent(this);
-        }
-
-        public int TestProperty
-        {
-            get { return 0; }
-        }
-
-        public Func<A, int> Agent;
+        // n ← Agent(3.14)
+        int n = Agent(this);
     }
 
-    class B
+    public int TestProperty
     {
-        public B()
-        {
-            a = new A();
-
-            // AgentA ← agent {A} TestProperty
-            AgentA = (A agentBase) => { return agentBase.TestProperty; };
-
-            // n ← a.AgentA(3.14)
-            int n = AgentA(a);
-        }
-
-        public A a;
-        public Func<A, int> AgentA;
+        get { return 0; }
     }
+
+    public Func<A, int> Agent;
+}
+
+class B
+{
+    public B()
+    {
+        a = new A();
+
+        // AgentA ← agent {A} TestProperty
+        AgentA = (A agentBase) => { return agentBase.TestProperty; };
+
+        // n ← a.AgentA(3.14)
+        int n = AgentA(a);
+    }
+
+    public A a;
+    public Func<A, int> AgentA;
+}
 ```

@@ -479,11 +479,11 @@ Mode=Default
 </pre>
 
 ```csharp
-    int N = default;
-    string S = default;
+int N = default;
+string S = default;
 
-    N = 0;
-    S = "";
+N = 0;
+S = "";
 ```
 
 ## Multiple results, with no special `Result`, and simple destinations
@@ -619,18 +619,18 @@ N<b>,&nbsp;</b>S&nbsp;<b>&#8592;&nbsp;</b>Foo
 </pre>
 
 ```csharp
-    public virtual void Foo(out int R1, out string R2)
-    {
-        R1 = 0;
-        R2 = "";
-    }
+public virtual void Foo(out int R1, out string R2)
+{
+    R1 = 0;
+    R2 = "";
+}
 
-	/*...*/
+/*...*/
 
-    int N = default;
-    string S = default;
+int N = default;
+string S = default;
 
-    Foo(out N, out S);
+Foo(out N, out S);
 ```
 
 ## Multiple results, with the special `Result`, and simple destinations
@@ -766,22 +766,22 @@ N<b>,&nbsp;</b>S&nbsp;<b>&#8592;&nbsp;</b>Foo
 </pre>
 
 ```csharp
-    public virtual string Foo(out int R1)
-    {
-        string Result = default;
+public virtual string Foo(out int R1)
+{
+    string Result = default;
 
-        R1 = 0;
-        Result = "";
+    R1 = 0;
+    Result = "";
 
-        return Result;
-    }
+    return Result;
+}
 
-	/*...*/
+/*...*/
 
-    int N = default;
-    string S = default;
+int N = default;
+string S = default;
 
-    S = Foo(out N);
+S = Foo(out N);
 ```
 
 ## Multiple results, some not simple
@@ -834,9 +834,9 @@ N<b>&#183;</b>Test<b>,&nbsp;</b>S&nbsp;<b>&#8592;&nbsp;</b>Foo
 </pre>
 
 ```csharp
-    MyType N = default;
-    string S = default;
+MyType N = default;
+string S = default;
 
-    S = Foo(out int Temp_N_Test);
-    N.Test = Temp_N_Test;
+S = Foo(out int Temp_N_Test);
+N.Test = Temp_N_Test;
 ```

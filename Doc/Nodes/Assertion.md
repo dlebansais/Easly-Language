@@ -602,24 +602,24 @@ If a tag is present, a comment is added with the tag.
 For assertions in a feature contract, or a class invariant, a summary of the contract is also added, in comments.
 
 ```csharp
-    // Require:
-    //   Valid Input: X ≥ 0
-    // Ensure:
-    //   Valid Output: Result ≥ 0
-    //   (Result * Result) = X
-    public virtual double SquareRoot(double X)
-    {
-        Debug.Assert(X >= 0); // Valid Input
+// Require:
+//   Valid Input: X ≥ 0
+// Ensure:
+//   Valid Output: Result ≥ 0
+//   (Result * Result) = X
+public virtual double SquareRoot(double X)
+{
+    Debug.Assert(X >= 0); // Valid Input
 
-        double Result = default;
+    double Result = default;
 
-        /*...*/
+    /*...*/
 
-        Debug.Assert(Result >= 0); // Valid Output
-        Debug.Assert((Result * Result) == X);
+    Debug.Assert(Result >= 0); // Valid Output
+    Debug.Assert((Result * Result) == X);
 
-        return Result;
-    }
+    return Result;
+}
 ```
 
 ## Class invariant
@@ -627,25 +627,25 @@ For assertions in a feature contract, or a class invariant, a summary of the con
 For assertions in the class invariant, a dedicated method is added to the class, and called at the end of all other methods of the class.
 
 ```csharp
-    #region Invariant
-    protected virtual void CheckInvariant()
-    {
-        Debug.Assert(Invariant1);
-        Debug.Assert(Invariant2);
-        /*...*/
-    }
-    #endregion
+#region Invariant
+protected virtual void CheckInvariant()
+{
+    Debug.Assert(Invariant1);
+    Debug.Assert(Invariant2);
+    /*...*/
+}
+#endregion
 ```
 
 ```csharp
-    /*...*/
+/*...*/
 
-    Debug.Assert(Result >= 0); // Valid Output
-    Debug.Assert((Result * Result) == X);
+Debug.Assert(Result >= 0); // Valid Output
+Debug.Assert((Result * Result) == X);
 
-    CheckInvariant();
+CheckInvariant();
 
-    return Result;
+return Result;
 ```
 
 ## Assertion in types
@@ -656,21 +656,19 @@ In this case, no code is added, because the assertion is tested inside the calle
 For assertions in attribute features, a special procedure is added to the code, to check assertions and then set the attribute. This procedure is called instead of just setting the attribute value.
 
 ```csharp
-    // Ensure:
-    //   My Attribute ≥ 0
-    public double MyAttribute { get; private set; }
-    private void Set_MyAttribute(double value)
-    {
-        MyAttribute = value;
+// Ensure:
+//   My Attribute ≥ 0
+public double MyAttribute { get; private set; }
+private void Set_MyAttribute(double value)
+{
+    MyAttribute = value;
 
-        Debug.Assert(MyAttribute >= 0);
-    }
+    Debug.Assert(MyAttribute >= 0);
+}
 ```
 
 ```csharp
-    ...
-    Set_MyAttribute(1.0);
-    ...
+Set_MyAttribute(1.0);
 ```
 
 ## For loop
@@ -885,21 +883,21 @@ False{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, Publi
 </pre>
 
 ```csharp
-    int i = default;
+int i = default;
 
-    Set_MyAttribute(-1);
-    i = 0;
+Set_MyAttribute(-1);
+i = 0;
+
+Debug.Assert(i == (MyAttribute + 1));
+
+while (i < 10)
+{
+    Set_MyAttribute(i);
+
+    i++;
 
     Debug.Assert(i == (MyAttribute + 1));
-
-    while (i < 10)
-    {
-        Set_MyAttribute(i);
-
-        i++;
-
-        Debug.Assert(i == (MyAttribute + 1));
-    }
+}
 ```
 
 ## Over Loop
@@ -1102,19 +1100,19 @@ Foo&nbsp;<b>procedure</b>
 </pre>
 
 ```csharp
-	public virtual void Foo()
-	{
-	    IList<int> OverList = default;
-	
-	    foreach (int Item in OverList)
-	    {
-	        Set_MyAttribute(Item);
-	
-	        Debug.Assert(Item >= 0);
-	    }
-	
-	    CheckInvariant();
-	}
+public virtual void Foo()
+{
+    IList<int> OverList = default;
+
+    foreach (int Item in OverList)
+    {
+        Set_MyAttribute(Item);
+
+        Debug.Assert(Item >= 0);
+    }
+
+    CheckInvariant();
+}
 ```
 
 ## Inheritance
@@ -1124,10 +1122,10 @@ Features can be redefined according to one of the following schemes:
 + The feature is redefined and has a precursor body.<br>In this case, assertions aren't ported over to the new feature.
 
 ```csharp
-    public override double SquareRoot(double X)
-    {
-        return base.SquareRoot(X);
-    }
+public override double SquareRoot(double X)
+{
+    return base.SquareRoot(X);
+}
 ```
 
 + The feature is redefined, doesn't have a specific Require or Ensure clause, but has its own body that may or may not call the precursor.<br>Assertions are then just copied in the new body.
@@ -1278,19 +1276,19 @@ Square&nbsp;Root&nbsp;<b>function</b>
 </pre>
 
 ```csharp
-    public override double SquareRoot(double X)
-    {
-        Debug.Assert(X >= 0); // Valid Input
+public override double SquareRoot(double X)
+{
+    Debug.Assert(X >= 0); // Valid Input
 
-        double Result = default;
+    double Result = default;
 
-        Result = base.SquareRoot(X);
+    Result = base.SquareRoot(X);
 
-        Debug.Assert(Result >= 0); // Valid Output
-        Debug.Assert((Result * Result) == X);
+    Debug.Assert(Result >= 0); // Valid Output
+    Debug.Assert((Result * Result) == X);
 
-        return Result;
-    }
+    return Result;
+}
 ```
 
 + The feature is redefined and has its own Require or Ensure clause, and body.<br>We use assertions from the redefined body.
@@ -1497,20 +1495,20 @@ Square&nbsp;Root&nbsp;<b>function</b>
 </pre>
 
 ```csharp
-    // Require:
-    //   X ≥ 1
-    // Ensure:
-    //   Result ≥ 1
-    public override double SquareRoot(double X)
-    {
-        Debug.Assert(X >= 1);
+// Require:
+//   X ≥ 1
+// Ensure:
+//   Result ≥ 1
+public override double SquareRoot(double X)
+{
+    Debug.Assert(X >= 1);
 
-        double Result = default;
+    double Result = default;
 
-        Result = base.SquareRoot(X);
+    Result = base.SquareRoot(X);
 
-        Debug.Assert(Result >= 1);
+    Debug.Assert(Result >= 1);
 
-        return Result;
-    }
+    return Result;
+}
 ```
