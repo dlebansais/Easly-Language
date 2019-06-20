@@ -255,6 +255,8 @@ Source | Reference | No | Any *Expressions*
 
 *Assignment Instruction*, member of: *Instructions*
 
+See [Assignment Instruction](https://github.com/dlebansais/Easly-Language/blob/master/Doc/Nodes/Instruction/AssignmentInstruction.md).
+
 Name | Kind | Optional | Requirement
 ------------ | ------------- | ------------- | -------------
 Destination Blocks | Block list | N/A | *QualifiedName*
