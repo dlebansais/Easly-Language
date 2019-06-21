@@ -315,7 +315,7 @@ False"";{08c2c7b6-3e10-4354-89fc-625e13d50363}{BaseNode.Document, Easly-Language
 
 Translating type arguments to C# code is straightforward. Once the proper argument order has been verified, type arguments distributed to all generic parameters, and the default value extracted from type parameters if not assigned explicitely, type arguments are just written separated by comma.
 
-However, since C# use a hierarchy where interface and implementation are separate, the compiler always include two C# type for one Easly type: the interface type, and the class type. This results in code looking as follow:
+However, since C# use a hierarchy where interface and implementation are separate, the compiler always include two C# types for one Easly type: the interface type, and the class type. This results in code looking as follow:
 
 <!---
 Mode=Default
