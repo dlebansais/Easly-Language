@@ -156,7 +156,7 @@
                 for (int NodeIndex = 0; NodeIndex < Block.NodeList.Count; NodeIndex++)
                 {
                     IIdentifier Identifier = Block.NodeList[NodeIndex];
-                    if (SplitIdentifier(Identifier, out IList<IIdentifier> Split))
+                    if (SplitIdentifier(Identifier, ',', ',', out IList<IIdentifier> Split))
                     {
                         newBlockList = (IBlockList<IIdentifier, Identifier>)DeepCloneBlockList((IBlockList)identifierBlockList, cloneCommentGuid: false);
 
@@ -173,17 +173,17 @@
             return false;
         }
 
-        private static bool SplitIdentifier(IIdentifier identifier, out IList<IIdentifier> split)
+        private static bool SplitIdentifier(IIdentifier identifier, char startTag, char endTag, out IList<IIdentifier> split)
         {
-            string[] SplitText = identifier.Text.Split(',');
+            IList<string> SplitList = SplitString(identifier.Text, startTag, endTag);
 
-            if (SplitText.Length > 1)
+            if (SplitList.Count > 1)
             {
                 split = new List<IIdentifier>();
 
-                for (int i = 0; i < SplitText.Length; i++)
+                foreach (string Item in SplitList)
                 {
-                    IIdentifier NewIdentifier = CreateSimpleIdentifier(SplitText[i].Trim());
+                    IIdentifier NewIdentifier = CreateSimpleIdentifier(Item.Trim());
                     split.Add(NewIdentifier);
                 }
 
@@ -192,6 +192,40 @@
 
             split = null;
             return false;
+        }
+
+        private static IList<string> SplitString(string text, char startTag, char endTag)
+        {
+            IList<string> SplitList = new List<string>();
+
+            int StartIndex = 0;
+            int AtomCount = 0;
+            int i = 0;
+
+            while (i < text.Length)
+            {
+                char c = text[i];
+
+                if (c == ',')
+                {
+                    if (AtomCount == 0)
+                    {
+                        SplitList.Add(text.Substring(StartIndex, i - StartIndex));
+                        StartIndex = i + 1;
+                    }
+                }
+                else if (c == startTag)
+                    AtomCount++;
+                else if (c == endTag && AtomCount > 0)
+                    AtomCount--;
+
+                i++;
+            }
+
+            if (StartIndex < i || text.Length == 0)
+                SplitList.Add(text.Substring(StartIndex, i - StartIndex));
+
+            return SplitList;
         }
 
         private static bool GetComplexifiedArgumentBlockList(IBlockList<IArgument, Argument> argumentBlocks, out IBlockList<IArgument, Argument> newArgumentBlocks)
@@ -247,7 +281,7 @@
             if (argument is IPositionalArgument AsPositionalArgument && AsPositionalArgument.Source is IQueryExpression AsQueryExpression && IsQuerySimple(AsQueryExpression))
             {
                 IIdentifier QueryIdentifier = AsQueryExpression.Query.Path[0];
-                if (SplitIdentifier(QueryIdentifier, out IList<IIdentifier> SplitIdentifierList))
+                if (SplitIdentifier(QueryIdentifier, '(', ')', out IList<IIdentifier> SplitIdentifierList))
                 {
                     split = new List<IArgument>();
 
@@ -458,11 +492,33 @@
             return false;
         }
 
-        private static bool GetComplexifiedTypeArgumentBlockList(IBlockList<ITypeArgument, TypeArgument> argumentBlocks, out IBlockList<ITypeArgument, TypeArgument> newTypeArgumentBlocks)
+        private static bool GetComplexifiedTypeArgumentBlockList(IBlockList<ITypeArgument, TypeArgument> typeArgumentBlocks, out IBlockList<ITypeArgument, TypeArgument> newTypeArgumentBlocks)
         {
-            for (int BlockIndex = 0; BlockIndex < argumentBlocks.NodeBlockList.Count; BlockIndex++)
+            for (int BlockIndex = 0; BlockIndex < typeArgumentBlocks.NodeBlockList.Count; BlockIndex++)
             {
-                IBlock<ITypeArgument, TypeArgument> Block = argumentBlocks.NodeBlockList[BlockIndex];
+                IBlock<ITypeArgument, TypeArgument> Block = typeArgumentBlocks.NodeBlockList[BlockIndex];
+
+                for (int NodeIndex = 0; NodeIndex < Block.NodeList.Count; NodeIndex++)
+                {
+                    ITypeArgument TypeArgument = Block.NodeList[NodeIndex];
+
+                    if (SplitTypeArgument(TypeArgument, out IList<ITypeArgument> SplitTypeArgumentList))
+                    {
+                        newTypeArgumentBlocks = (IBlockList<ITypeArgument, TypeArgument>)DeepCloneBlockList((IBlockList)typeArgumentBlocks, cloneCommentGuid: false);
+
+                        Block = newTypeArgumentBlocks.NodeBlockList[BlockIndex];
+                        Block.NodeList.RemoveAt(NodeIndex);
+
+                        for (int i = 0; i < SplitTypeArgumentList.Count; i++)
+                            Block.NodeList.Insert(NodeIndex + i, SplitTypeArgumentList[i]);
+                        return true;
+                    }
+                }
+            }
+
+            for (int BlockIndex = 0; BlockIndex < typeArgumentBlocks.NodeBlockList.Count; BlockIndex++)
+            {
+                IBlock<ITypeArgument, TypeArgument> Block = typeArgumentBlocks.NodeBlockList[BlockIndex];
 
                 for (int NodeIndex = 0; NodeIndex < Block.NodeList.Count; NodeIndex++)
                 {
@@ -471,7 +527,7 @@
                     if (GetComplexifiedTypeArgument(TypeArgument, out IList<ITypeArgument> ComplexifiedTypeArgumentList))
                     {
                         ITypeArgument ComplexifiedTypeArgument = ComplexifiedTypeArgumentList[0];
-                        newTypeArgumentBlocks = (IBlockList<ITypeArgument, TypeArgument>)DeepCloneBlockList((IBlockList)argumentBlocks, cloneCommentGuid: false);
+                        newTypeArgumentBlocks = (IBlockList<ITypeArgument, TypeArgument>)DeepCloneBlockList((IBlockList)typeArgumentBlocks, cloneCommentGuid: false);
 
                         Block = newTypeArgumentBlocks.NodeBlockList[BlockIndex];
                         Block.NodeList[NodeIndex] = ComplexifiedTypeArgument;
@@ -481,6 +537,29 @@
             }
 
             newTypeArgumentBlocks = null;
+            return false;
+        }
+
+        private static bool SplitTypeArgument(ITypeArgument typeArgument, out IList<ITypeArgument> split)
+        {
+            if (typeArgument is IPositionalTypeArgument AsPositionalTypeArgument && AsPositionalTypeArgument.Source is ISimpleType AsSimpleType)
+            {
+                IIdentifier ClassIdentifier = AsSimpleType.ClassIdentifier;
+                if (SplitIdentifier(ClassIdentifier, '[', ']', out IList<IIdentifier> SplitIdentifierList))
+                {
+                    split = new List<ITypeArgument>();
+
+                    foreach (IIdentifier Item in SplitIdentifierList)
+                    {
+                        ITypeArgument NewTypeArgument = CreateSimplePositionalTypeArgument(Item.Text);
+                        split.Add(NewTypeArgument);
+                    }
+
+                    return true;
+                }
+            }
+
+            split = null;
             return false;
         }
 

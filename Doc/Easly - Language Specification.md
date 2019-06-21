@@ -266,6 +266,8 @@ Source | Reference | No | Any *Expressions*
 
 *Assignment Type Argument*, member of: *Type Argument*
 
+See [Assignment Type Argument](https://github.com/dlebansais/Easly-Language/blob/master/Doc/Nodes/TypeArgument/AssignmentTypeArgument.md).
+
 Name | Kind | Optional | Requirement
 ------------ | ------------- | ------------- | -------------
 Parameter Identifier | Reference | No | *Identifier*

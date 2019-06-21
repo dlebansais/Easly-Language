@@ -85,6 +85,20 @@
                     complexifiedNode = CreateAssignmentTypeArgument(AssignmentTarget, AssignmentType);
                 }
             }
+            else if (node.Source is IGenericType AsGenericType)
+            {
+                string Text = AsGenericType.ClassIdentifier.Text;
+
+                if (ParsePattern(Text, ":=", out string BeforeText, out string AfterText))
+                {
+                    IIdentifier AssignmentTarget = CreateSimpleIdentifier(BeforeText);
+                    IIdentifier NewClassIdentifier = CreateSimpleIdentifier(AfterText);
+                    IBlockList<ITypeArgument, TypeArgument> ClonedTypeArgumentBlocks = (IBlockList<ITypeArgument, TypeArgument>)DeepCloneBlockList((IBlockList)AsGenericType.TypeArgumentBlocks, cloneCommentGuid: false);
+                    IGenericType NewGenericType = CreateGenericType(SharingType.NotShared, NewClassIdentifier, ClonedTypeArgumentBlocks);
+
+                    complexifiedNode = CreateAssignmentTypeArgument(AssignmentTarget, NewGenericType);
+                }
+            }
 
             return complexifiedNode != null;
         }
