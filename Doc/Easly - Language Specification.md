@@ -277,6 +277,8 @@ Source | Reference | No | Any *Object Types*
 
 *Attachment*
 
+See [Attachment](https://github.com/dlebansais/Easly-Language/blob/master/Doc/Nodes/Attachment.md).
+
 Name | Kind | Optional | Requirement
 ------------ | ------------- | ------------- | -------------
 Attach Type Blocks | Block list | N/A | Any *Object Types*
@@ -285,6 +287,8 @@ Instructions | Reference | No | *Scope*
 ***
 
 *Attachment Instruction*, member of: *Instructions*
+
+See [Attachment Instruction](https://github.com/dlebansais/Easly-Language/blob/master/Doc/Nodes/Instruction/AttachmentInstruction.md).
 
 Name | Kind | Optional | Requirement
 ------------ | ------------- | ------------- | -------------

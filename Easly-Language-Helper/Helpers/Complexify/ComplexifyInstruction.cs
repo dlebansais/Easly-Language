@@ -156,6 +156,8 @@
             }
             else if (ComplexifyAsKeywordAssignmentInstruction(node, out IKeywordAssignmentInstruction ComplexifiedKeywordAssignmentInstruction))
                 complexifiedInstructionList = new List<IInstruction>() { ComplexifiedKeywordAssignmentInstruction };
+            else if (ComplexifyAsIndexAssignmentInstruction(node, out IIndexAssignmentInstruction ComplexifiedIndexAssignmentInstruction))
+                complexifiedInstructionList = new List<IInstruction>() { ComplexifiedIndexAssignmentInstruction };
 
             return complexifiedInstructionList != null;
         }
@@ -188,6 +190,23 @@
                             complexifiedNode = CreateKeywordAssignmentInstruction(Keyword, Source);
                         }
                     }
+                }
+            }
+
+            return complexifiedNode != null;
+        }
+
+        private static bool ComplexifyAsIndexAssignmentInstruction(IAssignmentInstruction node, out IIndexAssignmentInstruction complexifiedNode)
+        {
+            complexifiedNode = null;
+
+            if (BlockListHelper<IQualifiedName, QualifiedName>.IsSimple(node.DestinationBlocks))
+            {
+                IQualifiedName AssignmentTarget = node.DestinationBlocks.NodeBlockList[0].NodeList[0];
+                if (ComplexifyWithArguments(AssignmentTarget, '[', ']', out IQualifiedName NewQuery, out List<IArgument> ArgumentList))
+                {
+                    IExpression ClonedSource = (IExpression)DeepCloneNode(node.Source, cloneCommentGuid: false);
+                    complexifiedNode = CreateIndexAssignmentInstruction(NewQuery, ArgumentList, ClonedSource);
                 }
             }
 
