@@ -2083,6 +2083,16 @@ namespace BaseNodeHelper
             return Result;
         }
 
+        public static IAttachment CreateAttachment(IBlockList<IObjectType, ObjectType> attachTypeBlocks, IScope instructions)
+        {
+            Attachment Result = new Attachment();
+            Result.Documentation = CreateEmptyDocumentation();
+            Result.AttachTypeBlocks = attachTypeBlocks;
+            Result.Instructions = instructions;
+
+            return Result;
+        }
+
         public static IConditional CreateConditional(IExpression booleanExpression)
         {
             Conditional SimpleConditional = new Conditional();

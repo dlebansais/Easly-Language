@@ -44,6 +44,11 @@
                     complexifiedNodeList = (IList)ComplexifiedArgumentList;
                     break;
 
+                case IAttachment AsAttachment:
+                    Result = GetComplexifiedAttachment(AsAttachment, out IList<IAttachment> ComplexifiedAttachmentList);
+                    complexifiedNodeList = (IList)ComplexifiedAttachmentList;
+                    break;
+
                 case IExpression AsExpression:
                     Result = GetComplexifiedExpression(AsExpression, out IList<IExpression> ComplexifiedExpressionList);
                     complexifiedNodeList = (IList)ComplexifiedExpressionList;
@@ -84,6 +89,24 @@
         #endregion
 
         #region Others
+        private static bool GetComplexifiedAttachment(IAttachment node, out IList<IAttachment> complexifiedAttachmentList)
+        {
+            complexifiedAttachmentList = null;
+
+            if (GetComplexifiedObjectTypeBlockList(node.AttachTypeBlocks, out IBlockList<IObjectType, ObjectType> ComplexifiedAttachTypeBlocks))
+            {
+                IScope ClonedInstructions = (IScope)DeepCloneNode(node.Instructions, cloneCommentGuid: false);
+                IAttachment ComplexifiedAttachment = CreateAttachment(ComplexifiedAttachTypeBlocks, ClonedInstructions);
+
+                complexifiedAttachmentList = new List<IAttachment>() { ComplexifiedAttachment };
+
+                return true;
+            }
+
+            complexifiedAttachmentList = null;
+            return false;
+        }
+
         private static bool GetComplexifiedQualifiedName(IQualifiedName node, out IList<IQualifiedName> complexifiedQualifiedNameList)
         {
             complexifiedQualifiedNameList = null;
@@ -600,6 +623,77 @@
                     {
                         ITypeArgument NewTypeArgument = CreateSimplePositionalTypeArgument(Item.Text);
                         split.Add(NewTypeArgument);
+                    }
+
+                    return true;
+                }
+            }
+
+            split = null;
+            return false;
+        }
+
+        private static bool GetComplexifiedObjectTypeBlockList(IBlockList<IObjectType, ObjectType> objectTypeBlocks, out IBlockList<IObjectType, ObjectType> newObjectTypeBlocks)
+        {
+            for (int BlockIndex = 0; BlockIndex < objectTypeBlocks.NodeBlockList.Count; BlockIndex++)
+            {
+                IBlock<IObjectType, ObjectType> Block = objectTypeBlocks.NodeBlockList[BlockIndex];
+
+                for (int NodeIndex = 0; NodeIndex < Block.NodeList.Count; NodeIndex++)
+                {
+                    IObjectType ObjectType = Block.NodeList[NodeIndex];
+
+                    if (SplitObjectType(ObjectType, out IList<IObjectType> SplitObjectTypeList))
+                    {
+                        newObjectTypeBlocks = (IBlockList<IObjectType, ObjectType>)DeepCloneBlockList((IBlockList)objectTypeBlocks, cloneCommentGuid: false);
+
+                        Block = newObjectTypeBlocks.NodeBlockList[BlockIndex];
+                        Block.NodeList.RemoveAt(NodeIndex);
+
+                        for (int i = 0; i < SplitObjectTypeList.Count; i++)
+                            Block.NodeList.Insert(NodeIndex + i, SplitObjectTypeList[i]);
+                        return true;
+                    }
+                }
+            }
+
+            for (int BlockIndex = 0; BlockIndex < objectTypeBlocks.NodeBlockList.Count; BlockIndex++)
+            {
+                IBlock<IObjectType, ObjectType> Block = objectTypeBlocks.NodeBlockList[BlockIndex];
+
+                for (int NodeIndex = 0; NodeIndex < Block.NodeList.Count; NodeIndex++)
+                {
+                    IObjectType ObjectType = Block.NodeList[NodeIndex];
+
+                    if (GetComplexifiedObjectType(ObjectType, out IList<IObjectType> ComplexifiedObjectTypeList))
+                    {
+                        IObjectType ComplexifiedObjectType = ComplexifiedObjectTypeList[0];
+                        newObjectTypeBlocks = (IBlockList<IObjectType, ObjectType>)DeepCloneBlockList((IBlockList)objectTypeBlocks, cloneCommentGuid: false);
+
+                        Block = newObjectTypeBlocks.NodeBlockList[BlockIndex];
+                        Block.NodeList[NodeIndex] = ComplexifiedObjectType;
+                        return true;
+                    }
+                }
+            }
+
+            newObjectTypeBlocks = null;
+            return false;
+        }
+
+        private static bool SplitObjectType(IObjectType objectType, out IList<IObjectType> split)
+        {
+            if (objectType is ISimpleType AsSimpleType)
+            {
+                IIdentifier ClassIdentifier = AsSimpleType.ClassIdentifier;
+                if (SplitIdentifier(ClassIdentifier, ',', ',', out IList<IIdentifier> SplitIdentifierList))
+                {
+                    split = new List<IObjectType>();
+
+                    foreach (IIdentifier Item in SplitIdentifierList)
+                    {
+                        IObjectType NewObjectType = CreateSimpleSimpleType(Item.Text);
+                        split.Add(NewObjectType);
                     }
 
                     return true;
