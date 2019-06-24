@@ -194,6 +194,53 @@
             return false;
         }
 
+        private static bool GetComplexifiedNameBlockList(IBlockList<IName, Name> nameBlockList, out IBlockList<IName, Name> newBlockList)
+        {
+            for (int BlockIndex = 0; BlockIndex < nameBlockList.NodeBlockList.Count; BlockIndex++)
+            {
+                IBlock<IName, Name> Block = nameBlockList.NodeBlockList[BlockIndex];
+
+                for (int NodeIndex = 0; NodeIndex < Block.NodeList.Count; NodeIndex++)
+                {
+                    IName Name = Block.NodeList[NodeIndex];
+                    if (SplitName(Name, ',', ',', out IList<IName> Split))
+                    {
+                        newBlockList = (IBlockList<IName, Name>)DeepCloneBlockList((IBlockList)nameBlockList, cloneCommentGuid: false);
+
+                        newBlockList.NodeBlockList[BlockIndex].NodeList.RemoveAt(NodeIndex);
+                        for (int i = 0; i < Split.Count; i++)
+                            newBlockList.NodeBlockList[BlockIndex].NodeList.Insert(NodeIndex + i, Split[i]);
+
+                        return true;
+                    }
+                }
+            }
+
+            newBlockList = null;
+            return false;
+        }
+
+        private static bool SplitName(IName name, char startTag, char endTag, out IList<IName> split)
+        {
+            IList<string> SplitList = SplitString(name.Text, startTag, endTag);
+
+            if (SplitList.Count > 1)
+            {
+                split = new List<IName>();
+
+                foreach (string Item in SplitList)
+                {
+                    IName NewName = CreateSimpleName(Item.Trim());
+                    split.Add(NewName);
+                }
+
+                return true;
+            }
+
+            split = null;
+            return false;
+        }
+
         private static IList<string> SplitString(string text, char startTag, char endTag)
         {
             IList<string> SplitList = new List<string>();

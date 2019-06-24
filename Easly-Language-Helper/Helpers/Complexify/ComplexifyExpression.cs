@@ -434,8 +434,7 @@
             }
             else if (node.ArgumentBlocks.NodeBlockList.Count == 0 && ComplexifyWithArguments(node.Query, out IQualifiedName NewQuery, out List<IArgument> ArgumentList))
             {
-                IQualifiedName ClonedQuery = (IQualifiedName)DeepCloneNode(node.Query, cloneCommentGuid: false);
-                IQueryExpression NewQueryExpression = CreateQueryExpression(ClonedQuery, ArgumentList);
+                IQueryExpression NewQueryExpression = CreateQueryExpression(NewQuery, ArgumentList);
                 complexifiedExpressionList = new List<IExpression>() { NewQueryExpression };
             }
             else if (ComplexifyAsAgentExpression(node, out IAgentExpression ComplexifiedAgentExpression))

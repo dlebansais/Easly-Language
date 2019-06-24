@@ -239,6 +239,23 @@
                     complexifiedInstructionList.Add(NewAttachmentInstruction);
                 }
             }
+            else if (GetComplexifiedNameBlockList(node.EntityNameBlocks, out IBlockList<IName, Name> ComplexifiedEntityNameBlocks))
+            {
+                IExpression ClonedSource = (IExpression)DeepCloneNode(node.Source, cloneCommentGuid: false);
+                IBlockList<IAttachment, Attachment> ClonedAttachmentBlocks = (IBlockList<IAttachment, Attachment>)DeepCloneBlockList((IBlockList)node.AttachmentBlocks, cloneCommentGuid: false);
+
+                IAttachmentInstruction NewAttachmentInstruction;
+
+                if (node.ElseInstructions.IsAssigned)
+                {
+                    IScope ClonedElseInstructions = (IScope)DeepCloneNode(node.ElseInstructions.Item, cloneCommentGuid: false);
+                    NewAttachmentInstruction = CreateAttachmentInstruction(ClonedSource, ComplexifiedEntityNameBlocks, ClonedAttachmentBlocks, ClonedElseInstructions);
+                }
+                else
+                    NewAttachmentInstruction = CreateAttachmentInstruction(ClonedSource, ComplexifiedEntityNameBlocks, ClonedAttachmentBlocks);
+
+                complexifiedInstructionList = new List<IInstruction>() { NewAttachmentInstruction };
+            }
 
             return complexifiedInstructionList != null;
         }
@@ -381,10 +398,27 @@
         {
             complexifiedNode = null;
 
-            if (ParsePattern(node, "attach ", out string BeforeText, out string AfterText) && BeforeText.Length == 0)
+            if (ParsePattern(node, "attach", out string BeforeText, out string AfterText) && BeforeText.Length == 0)
             {
-                CloneComplexifiedCommand(node, AfterText, out IExpression Source);
-                complexifiedNode = CreateAttachmentInstruction(Source, new List<IName>() { CreateEmptyName() });
+                string ExpressionText;
+                string NameText;
+
+                int ToIndex = AfterText.LastIndexOf("to");
+                if (ToIndex >= 1)
+                {
+                    ExpressionText = AfterText.Substring(0, ToIndex).Trim();
+                    NameText = AfterText.Substring(ToIndex + 2).Trim();
+                }
+                else
+                {
+                    ExpressionText = AfterText.Trim();
+                    NameText = string.Empty;
+                }
+
+                IExpression Source = CreateSimpleQueryExpression(ExpressionText);
+                IName Name = CreateSimpleName(NameText);
+
+                complexifiedNode = CreateAttachmentInstruction(Source, new List<IName>() { Name });
             }
 
             return complexifiedNode != null;

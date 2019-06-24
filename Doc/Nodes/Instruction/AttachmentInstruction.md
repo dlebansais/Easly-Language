@@ -1,10 +1,10 @@
 # Attachment Instruction
 
-The purpose of this instruction is test one or more objects, to see if they conform to provided types. When they do, instructions are then executed with this knowledge.
+The purpose of this instruction is to test one or more objects, to see if they conform to provided types. When they do, instructions are then executed with this knowledge.
 
 The attachment instruction contains:
 
-+ An expression that provides the objects to test. Usually, it's one object only, but a Query Expression for example can return more than one. 
++ An expression that provides the objects to test. Usually, it's one object only, but a [Query Expression](https://github.com/dlebansais/Easly-Language/blob/master/Doc/Nodes/Expression/QueryExpression.md) for example can return more than one. 
 + A set of names that will be used to create new variables if an attachment is successful. There must be as many names as there are objects to test.
 + A list of [attachments](https://github.com/dlebansais/Easly-Language/blob/master/Doc/Nodes/Attachment.md), tested in the order they appear, with types to test. In each attachment, there must be as many types as there are objects to test.
 + An else clause if no attachment succeeded.
