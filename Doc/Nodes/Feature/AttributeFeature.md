@@ -1,13 +1,13 @@
 # Attribute Feature
 
-An attribute is where data is stored. An Easly program contains many classes (and libraries to group them), and each class contains usually several attributes that describe:
+An attribute is the main way to store data. An Easly program contains many classes (and libraries to group them), and each class contains usually several attributes that describe:
 
 + The data stored, in one or more attributes.
-+ How the data must be interpreted, which is the goal of the attribute type.
++ How the data must be interpreted, by way of the attribute type.
 
 ## Attribute name
 
-An attribute has a name, and a type. The name is how attribute are accessed, and referenced in general, from other parts of the program. The type describe how to interpret the data.
+An attribute has a name, and a type. The name is how attributes are accessed, and referenced in general, from other parts of the program. The type describe how to interpret the data.
 
 For example, the following attribute
 
@@ -43,11 +43,11 @@ Attributes can have any type. The type can be for example a class value or refer
 
 ## Modifying attributes of a class
 
-Only other features of a class can modify an attribute. In C# or C++ terminology, they are "protected" for read access. For features that can changed outside a class, and how to manage that, see [Properties](https://github.com/dlebansais/Easly-Language/blob/master/Doc/Nodes/Feature/PropertyFeature.md).
+Only other features of a class can modify an attribute. In C# or C++ terminology, they are "protected" for read access. For features that can be modified outside of a class, and how to manage that, see [Properties](https://github.com/dlebansais/Easly-Language/blob/master/Doc/Nodes/Feature/PropertyFeature.md).
 
 ## Attribute contract
 
-An attribute cannot be modified from the outside, but they can be read and for this purpose support *ensure* [assertions](https://github.com/dlebansais/Easly-Language/blob/master/Doc/Nodes/Assertion.md). For example, the following code
+An attribute cannot be modified from the outside, but they can be read and for this purpose support **ensure** [assertions](https://github.com/dlebansais/Easly-Language/blob/master/Doc/Nodes/Assertion.md). For example, the following code
 
 <!---
 Mode=Default
@@ -102,7 +102,7 @@ X<b>:&nbsp;</b><i>Number</i>
 
 describes an attribute that contains a positive number.
 
-Since the value of an attribute is equal to the value it is assigned to when modified, the assigned value must abide by the contract. So ensure assertions mean both *require* and *ensure*.
+Since the value of an attribute is equal to the value it is assigned to when modified, the assigned value must abide by the contract. So ensure assertions mean both **require** and **ensure**.
 
 # Translation to C&#35;
 
@@ -130,11 +130,13 @@ Mode=Default
 X<b>:&nbsp;</b><i>Number</i>
 </pre>
 
+translates to
+
 ```csharp
 public int X { get; protected set; }
 ```
 
-If an attribute includes a contract that can be checked at run-time (see [Assertion](https://github.com/dlebansais/Easly-Language/blob/master/Doc/Nodes/Assertion.md), the C# code uses a more complicated approach, where assigning the attribute is done in a setter that verifies the contract.
+If an attribute includes a contract that can be checked at run-time (see [Assertion](https://github.com/dlebansais/Easly-Language/blob/master/Doc/Nodes/Assertion.md)), the C# code uses a more complicated approach, where assigning the attribute is done in a setter that verifies the contract.
 
 <!---
 Mode=Default
@@ -190,8 +192,8 @@ Y<b>:&nbsp;</b><i>Number</i>
 ```csharp
 // Ensure:
 //   Y ≥ 0
-public int Y { get; private set; }
-protected void Set_Y(int value)
+public double Y { get; private set; }
+protected void Set_Y(double value)
 {
     Y = value;
 
