@@ -301,6 +301,8 @@ Else Instructions | Reference | Yes | *Scope*
 
 *Attribute Feature*, member of: *Features*
 
+See [Attribute Feature](https://github.com/dlebansais/Easly-Language/blob/master/Doc/Nodes/Feature/AttributeFeature.md).
+
 Name | Kind | Optional | Requirement
 ------------ | ------------- | ------------- | -------------
 Export Identifier | Reference | No | *Identifier*
