@@ -136,7 +136,7 @@ translates to
 public int X { get; protected set; }
 ```
 
-If an attribute includes a contract that can be checked at run-time (see [Assertion](https://github.com/dlebansais/Easly-Language/blob/master/Doc/Nodes/Assertion.md)), the C# code uses a more complicated approach, where assigning the attribute is done in a setter that verifies the contract.
+If an attribute includes a contract that is checked at run-time (see [Assertion](https://github.com/dlebansais/Easly-Language/blob/master/Doc/Nodes/Assertion.md)), the C# code uses a more complicated approach, where assigning the attribute is done in a setter that verifies the contract.
 
 <!---
 Mode=Default

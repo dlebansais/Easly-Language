@@ -315,6 +315,8 @@ Ensure Blocks | Block list | N/A | *Assertion*
 
 *Binary Conditional Expression*, member of: *Expressions*
 
+See [Binary Conditional Expression](https://github.com/dlebansais/Easly-Language/blob/master/Doc/Nodes/Expression/BinaryConditionalExpression.md).
+
 Name | Kind | Optional | Requirement
 ------------ | ------------- | ------------- | -------------
 Left Expression | Reference | No | Any *Expressions*
