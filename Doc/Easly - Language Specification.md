@@ -320,12 +320,14 @@ See [Binary Conditional Expression](https://github.com/dlebansais/Easly-Language
 Name | Kind | Optional | Requirement
 ------------ | ------------- | ------------- | -------------
 Left Expression | Reference | No | Any *Expressions*
-Conditional | Discrete | N/A | And, Or
+Conditional | Discrete | N/A | And, Or, Xor, Implies
 Right Expression | Reference | No | Any *Expressions*
 
 ***
 
 *Binary Operator Expression*, member of: *Expressions*
+
+See [Binary Operator Expression](https://github.com/dlebansais/Easly-Language/blob/master/Doc/Nodes/Expression/BinaryOperatorExpression.md).
 
 Name | Kind | Optional | Requirement
 ------------ | ------------- | ------------- | -------------
