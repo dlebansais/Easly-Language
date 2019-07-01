@@ -76,6 +76,7 @@
     <Compile Include="Language\Entity\FeatureEntity\PropertyEntity.cs" />
     <Compile Include="Language\Entity\SpecializedTypeEntity.cs" />
     <Compile Include="Language\Entity\TypeEntity.cs" />
+    <Compile Include="Language\Event.cs" />
     <Compile Include="Language\SealableDictionary.cs" />
     <Compile Include="Language\SealableList.cs" />
     <Compile Include="Language\OnceReference.cs" />
