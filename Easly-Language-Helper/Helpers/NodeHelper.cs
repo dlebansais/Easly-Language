@@ -3041,7 +3041,8 @@ namespace BaseNodeHelper
 
             if (GetExpressionText(node.LeftExpression, out LeftText) && GetExpressionText(node.RightExpression, out RightText))
             {
-                string Operator;
+                string Operator = null;
+
                 switch (node.Conditional)
                 {
                     case ConditionalTypes.And:
@@ -3052,9 +3053,16 @@ namespace BaseNodeHelper
                         Operator = " or ";
                         break;
 
-                    default:
-                        throw new ArgumentOutOfRangeException("Invalid ConditionalTypes");
+                    case ConditionalTypes.Xor:
+                        Operator = " xor ";
+                        break;
+
+                    case ConditionalTypes.Implies:
+                        Operator = " → ";
+                        break;
                 }
+
+                Debug.Assert(Operator != null);
 
                 string SimplifiedText = LeftText + Operator + RightText;
                 simplifiedNode = CreateSimpleQueryExpression(SimplifiedText);

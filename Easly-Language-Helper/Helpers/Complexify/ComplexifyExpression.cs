@@ -445,6 +445,10 @@
                 complexifiedExpressionList = new List<IExpression>() { ComplexifiedBinaryAndConditionalExpression };
             else if (ComplexifyAsBinaryOrConditionalExpression(node, out IBinaryConditionalExpression ComplexifiedBinaryOrConditionalExpression))
                 complexifiedExpressionList = new List<IExpression>() { ComplexifiedBinaryOrConditionalExpression };
+            else if (ComplexifyAsBinaryXorConditionalExpression(node, out IBinaryConditionalExpression ComplexifiedBinaryXorConditionalExpression))
+                complexifiedExpressionList = new List<IExpression>() { ComplexifiedBinaryXorConditionalExpression };
+            else if (ComplexifyAsBinaryImpliesConditionalExpression(node, out IBinaryConditionalExpression ComplexifiedBinaryImpliesConditionalExpression))
+                complexifiedExpressionList = new List<IExpression>() { ComplexifiedBinaryImpliesConditionalExpression };
             else if (ComplexifyAsBinaryOperatorExpression(node, out IBinaryOperatorExpression ComplexifiedBinaryOperatorExpression))
                 complexifiedExpressionList = new List<IExpression>() { ComplexifiedBinaryOperatorExpression };
             else if (ComplexifyAsClassConstantExpression(node, out IClassConstantExpression ComplexifiedClassConstantExpression))
@@ -529,6 +533,17 @@
         private static bool ComplexifyAsBinaryOrConditionalExpression(IQueryExpression node, out IBinaryConditionalExpression complexifiedNode)
         {
             return ComplexifyAsBinaryConditionalExpression(node, " or ", ConditionalTypes.Or, out complexifiedNode);
+        }
+
+        private static bool ComplexifyAsBinaryXorConditionalExpression(IQueryExpression node, out IBinaryConditionalExpression complexifiedNode)
+        {
+            return ComplexifyAsBinaryConditionalExpression(node, " xor ", ConditionalTypes.Xor, out complexifiedNode);
+        }
+
+        private static bool ComplexifyAsBinaryImpliesConditionalExpression(IQueryExpression node, out IBinaryConditionalExpression complexifiedNode)
+        {
+            return ComplexifyAsBinaryConditionalExpression(node, " => ", ConditionalTypes.Implies, out complexifiedNode) ||
+                   ComplexifyAsBinaryConditionalExpression(node, " → ", ConditionalTypes.Implies, out complexifiedNode);
         }
 
         private static bool ComplexifyAsBinaryConditionalExpression(IQueryExpression node, string pattern, ConditionalTypes conditionalType, out IBinaryConditionalExpression complexifiedNode)

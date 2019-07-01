@@ -1,6 +1,6 @@
 # Binary Conditional Expression
 
-The most commonly used binary conditional expression takes two expressions, on the left and right of a binary operator that can be `or` or `and`, to give the corresponding boolean result.
+The most commonly used binary conditional expression takes two expressions, on the left and right of a binary operator that can be `and`, `or`, `xor` or `→` (the logical implication operator), to give the corresponding boolean result.
 
 <!---
 Mode=Default
@@ -181,14 +181,16 @@ False"";{0bada933-20a3-46c2-afd5-5405d9a72ae7}{BaseNode.Document, Easly-Language
 
 In the example above, `a` and `b` are Boolean variables, but any expression that returns a boolean or a class that inherits from `Boolean` is valid for the left and right sides of the operator. The result is a `Boolean`.
 
-To propagate information in the descendant class of `a` and `b`, one can use a [Binary Operator Expression](https://github.com/dlebansais/Easly-Language/blob/master/Doc/Nodes/Expression/BinaryOperatorExpression.md) instead, using the `Or` or `And` functions as operator. 
+To propagate information in the descendant class of `a` and `b`, one can use a [Binary Operator Expression](https://github.com/dlebansais/Easly-Language/blob/master/Doc/Nodes/Expression/BinaryOperatorExpression.md) instead, using the `And`, `Or`, `Xor` or `→` functions as operator. 
 
 ## Events
 
 The conditional expression can also operate on events (or any descendant of the `Event` type). In this case:
 
-+ If the operator is `or`, the expression returns whether either of the left or right expressions are signaled. 
 + If the operator is `and`, the expression returns whether both the left and right expressions are signaled.  
++ If the operator is `or`, the expression returns whether either of the left or right expressions are signaled. 
++ If the operator is `xor`, the expression returns whether either of the left or right expressions are signaled, but not both at the same time. 
++ If the operator is `→`, the expression returns whether the left expression is not signaled, or the right expressions is. 
 
 The type of the expression is an event. These events can be chained to obtain complex conditions on events.
 
@@ -203,7 +205,7 @@ The conditional expression operating on events can only be used in the following
 
 ## Boolean operators
 
-The C# `||` and `&&` operators provide the same feature as `or` and `and`, respectively.
+The C# `&&` and `||` operators provide the same feature as `and` and `or`, respectively. `xor` is translated as `^`, `P → Q` as `!P || Q`.
 
 <!---
 Mode=Default
@@ -478,7 +480,7 @@ public virtual bool AAndB()
 
 ## Events
 
-Binary conditional expressions operating on events use the built-in `EventBase` class. This class declares the `||` and `&&` operators, and the `IsSignaled` property. Combining operators gives an `EventBase` object, and then the compiler adds a call to `IsSignaled`.
+Binary conditional expressions operating on events use the built-in `EventBase` class. This class declares the `&&`, `||`, `^` and `/` operators (where `/` is used for the logical implication), and the `IsSignaled` property. Combining operators gives an `EventBase` object, and then the compiler adds a call to `IsSignaled`.
 
 <!---
 Mode=Default

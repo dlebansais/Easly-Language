@@ -3,6 +3,8 @@
     public enum ConditionalTypes
     {
         And,
-        Or
+        Or,
+        Xor,
+        Implies,
     }
 }

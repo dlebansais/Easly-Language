@@ -854,6 +854,10 @@
                 case "<=":
                     RenamedText = "≤";
                     break;
+
+                case "=>":
+                    RenamedText = "→";
+                    break;
             }
 
             if (RenamedText != null)
