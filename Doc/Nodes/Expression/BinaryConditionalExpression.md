@@ -187,17 +187,17 @@ To propagate information in the descendant class of `a` and `b`, one can use a [
 
 The conditional expression can also operate on events (or any descendant of the `Event` type). In this case:
 
-+ If the operator is `or`, the expression returns when either of the left and right expressions are signaled. 
-+ If the operator is `and`, the expression returns when both the left and right expressions are signaled.  
++ If the operator is `or`, the expression returns whether either of the left or right expressions are signaled. 
++ If the operator is `and`, the expression returns whether both the left and right expressions are signaled.  
 
-The type of the expression is a signaled event. These events can be chained to obtain complex conditions on events.
+The type of the expression is an event. These events can be chained to obtain complex conditions on events.
 
 Note that left and right operands must be either both booleans, or both events (or descendants of these classes). Mixing boolean and events is not allowed.
 
 The conditional expression operating on events can only be used in the following situations:
 
-+ As the source of a conditional in the if then else instruction. In can only be used nested in other binary conditional expressions, or as the source of the conditional itself.
-+ As the source of a check instruction.
++ As the source of a conditional in the [if then else instruction](https://github.com/dlebansais/Easly-Language/blob/master/Doc/Nodes/Instruction/IfThenElseInstruction.md). It can only be used nested in other binary conditional expressions, or as the source of the conditional itself.
++ As the source of a [check instruction](https://github.com/dlebansais/Easly-Language/blob/master/Doc/Nodes/Instruction/CheckInstruction.md).
 
 # Translation to C&#35;
 
@@ -478,7 +478,7 @@ public virtual bool AAndB()
 
 ## Events
 
-Binary conditional expressions operating on events use the built-in EventBase class. This class declares the || and && operators, and the IsSignaled property. Combining operators gives an EventBase object, and then the compiler adds a call to IsSignaled.
+Binary conditional expressions operating on events use the built-in `EventBase` class. This class declares the `||` and `&&` operators, and the `IsSignaled` property. Combining operators gives an `EventBase` object, and then the compiler adds a call to `IsSignaled`.
 
 <!---
 Mode=Default
