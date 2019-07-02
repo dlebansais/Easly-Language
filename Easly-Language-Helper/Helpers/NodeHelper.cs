@@ -3058,7 +3058,7 @@ namespace BaseNodeHelper
                         break;
 
                     case ConditionalTypes.Implies:
-                        Operator = " → ";
+                        Operator = " ⇒ ";
                         break;
                 }
 

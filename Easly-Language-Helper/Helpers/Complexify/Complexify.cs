@@ -733,8 +733,8 @@
             int PatternIndex = text.IndexOf(patternText);
             if (PatternIndex >= 0)
             {
-                beforeText = text.Substring(0, PatternIndex);
-                afterText = text.Substring(PatternIndex + patternText.Length);
+                beforeText = text.Substring(0, PatternIndex).Trim();
+                afterText = text.Substring(PatternIndex + patternText.Length).Trim();
             }
 
             return beforeText != null || afterText != null;
@@ -841,27 +841,57 @@
         private static bool GetRenamedBinarySymbol(IIdentifier symbol, out IIdentifier renamedSymbol)
         {
             renamedSymbol = null;
+            bool Result = false;
 
-            string Text = symbol.Text;
-            string RenamedText = null;
+            if (GetRenamedBinarySymbol(symbol.Text, out string renamedSymbolText))
+            {
+                renamedSymbol = CreateSimpleIdentifier(renamedSymbolText);
+                Result = true;
+            }
 
-            switch (Text)
+            return Result;
+        }
+
+        public static bool GetRenamedBinarySymbol(string symbol, out string renamedSymbol)
+        {
+            renamedSymbol = null;
+
+            switch (symbol)
             {
                 case ">=":
-                    RenamedText = "≥";
+                    renamedSymbol = "≥";
                     break;
 
                 case "<=":
-                    RenamedText = "≤";
+                    renamedSymbol = "≤";
                     break;
 
                 case "=>":
-                    RenamedText = "→";
+                    renamedSymbol = "⇒";
                     break;
             }
 
-            if (RenamedText != null)
-                renamedSymbol = CreateSimpleIdentifier(RenamedText);
+            return renamedSymbol != null;
+        }
+
+        public static bool GetInverseRenamedBinarySymbol(string symbol, out string renamedSymbol)
+        {
+            renamedSymbol = null;
+
+            switch (symbol)
+            {
+                case "≥":
+                    renamedSymbol = ">=";
+                    break;
+
+                case "≤":
+                    renamedSymbol = "<=";
+                    break;
+
+                case "⇒":
+                    renamedSymbol = "=>";
+                    break;
+            }
 
             return renamedSymbol != null;
         }
@@ -869,19 +899,41 @@
         private static bool GetRenamedUnarySymbol(IIdentifier symbol, out IIdentifier renamedSymbol)
         {
             renamedSymbol = null;
+            bool Result = false;
 
-            string Text = symbol.Text;
-            string RenamedText = null;
+            if (GetRenamedUnarySymbol(symbol.Text, out string renamedSymbolText))
+            {
+                renamedSymbol = CreateSimpleIdentifier(renamedSymbolText);
+                Result = true;
+            }
 
-            switch (Text)
+            return Result;
+        }
+
+        public static bool GetRenamedUnarySymbol(string symbol, out string renamedSymbol)
+        {
+            renamedSymbol = null;
+
+            switch (symbol)
             {
                 case "sqrt":
-                    RenamedText = "√";
+                    renamedSymbol = "√";
                     break;
             }
 
-            if (RenamedText != null)
-                renamedSymbol = CreateSimpleIdentifier(RenamedText);
+            return renamedSymbol != null;
+        }
+
+        public static bool GetInverseRenamedUnarySymbol(string symbol, out string renamedSymbol)
+        {
+            renamedSymbol = null;
+
+            switch (symbol)
+            {
+                case "√":
+                    renamedSymbol = "sqrt";
+                    break;
+            }
 
             return renamedSymbol != null;
         }

@@ -543,7 +543,7 @@
         private static bool ComplexifyAsBinaryImpliesConditionalExpression(IQueryExpression node, out IBinaryConditionalExpression complexifiedNode)
         {
             return ComplexifyAsBinaryConditionalExpression(node, " => ", ConditionalTypes.Implies, out complexifiedNode) ||
-                   ComplexifyAsBinaryConditionalExpression(node, " → ", ConditionalTypes.Implies, out complexifiedNode);
+                   ComplexifyAsBinaryConditionalExpression(node, " ⇒ ", ConditionalTypes.Implies, out complexifiedNode);
         }
 
         private static bool ComplexifyAsBinaryConditionalExpression(IQueryExpression node, string pattern, ConditionalTypes conditionalType, out IBinaryConditionalExpression complexifiedNode)
@@ -563,11 +563,11 @@
         {
             complexifiedNode = null;
 
-            string[] Patterns = new string[] { "+", "-", "/", "*", ">", "<", ">=", "<=" };
+            string[] Patterns = new string[] { "+", "-", "/", "*", ">>", "<<", ">=", "<=", ">", "<" };
 
             foreach (string Pattern in Patterns)
             {
-                if (ParsePattern(node, $" {Pattern} ", out string BeforeText, out string AfterText))
+                if (ParsePattern(node, Pattern, out string BeforeText, out string AfterText))
                 {
                     CloneComplexifiedExpression(node, BeforeText, AfterText, out IExpression LeftExpression, out IExpression RightExpression);
                     IIdentifier Operator = CreateSimpleIdentifier(Pattern);

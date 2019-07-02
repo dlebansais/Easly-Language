@@ -206,12 +206,15 @@ False"";{b2631cf0-bad5-44b9-a134-b70ef72fd1f1}{BaseNode.Document, Easly-Language
 &nbsp;&nbsp;&nbsp;z&nbsp;<b>&#8592;&nbsp;</b>x&nbsp;+&nbsp;y
 </pre>
 
-The left operand has a type, that must be either a class type or a generic type with contraints. The operand identifier (`+` in the example above) must be the name of a function feature of that type, taking one parameter.
+The left operand has a type, that must be either a class type or a generic type with contraints. The operand identifier (`+` in the example above) must be the name of a function feature of that type, taking one or more parameters.
+
 The right operand type is used to select the function overload that will be executed, and the result of that overload is the result of the binary operator expression.
+
+If the left operand returns more than one result, one of them must have the name `Result`, and this is the object for which the operator is called.
 
 # Translation to C&#35;
 
-All operators of the Number class are translated directly.
+Most operators of the Number class are translated directly.
 
 <!---
 Mode=Default
@@ -266,3 +269,14 @@ z&nbsp;<b>&#8592;&nbsp;</b>x&nbsp;+&nbsp;y
 ```csharp
 z = x + y;
 ```
+
+The list of these operators is: `+`, `-`, `*`, `/`, `>`, `<`, `>>`, `<<`.
+
+The following operators use a different name in Easly, but are otherwise translated to their C# counterpart directly:
+ 
++ `modulo` to `%`.
++ `≥` to `>=`.
++ `≤` to `<=`. 
++ `bitwise and` to `&`.
++ `bitwise or` to `|`.
++ `bitwise xor` to `^`.
