@@ -339,6 +339,8 @@ Right Expression | Reference | No | Any *Expressions*
 
 *Check Instruction*, member of: *Instructions*
 
+See [Check Instruction](https://github.com/dlebansais/Easly-Language/blob/master/Doc/Nodes/Instruction/CheckInstruction.md).
+
 Name | Kind | Optional | Requirement
 ------------ | ------------- | ------------- | -------------
 Boolean Expression | Reference | No | Any *Expressions*
