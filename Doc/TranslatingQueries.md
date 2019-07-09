@@ -1,8 +1,8 @@
 # Translating queries
 
-In Easly, a [binary operator expression](https://github.com/dlebansais/Easly-Language/blob/master/Doc/Nodes/Expression/BinaryOperatorExpression.md), a [Unary Operator Expression](https://github.com/dlebansais/Easly-Language/blob/master/Doc/Nodes/Expression/UnaryOperatorExpression.md) or a [Query Expression](https://github.com/dlebansais/Easly-Language/blob/master/Doc/Nodes/Expression/QueryExpression.md) can be translated to C# by a call to a function.
+In Easly, a [Binary Operator Expression](https://github.com/dlebansais/Easly-Language/blob/master/Doc/Nodes/Expression/BinaryOperatorExpression.md), a [Unary Operator Expression](https://github.com/dlebansais/Easly-Language/blob/master/Doc/Nodes/Expression/UnaryOperatorExpression.md) or a [Query Expression](https://github.com/dlebansais/Easly-Language/blob/master/Doc/Nodes/Expression/QueryExpression.md) can be translated to C# by a call to a function.
 
-In the case of operator expressions, this happens when the operator can't be translated to an existing C# operator, for example `+` or `/`. In the case of query expressions, it's when the query is to a function and not an attribute, property or local variable.
+In the case of operator expressions, this happens when the operator can't be translated to an existing C# operator (such as `+` or `/`). In the case of query expressions, it's when the query is to a function and not an attribute, property or local variable.
 
 This document explains the difference between Easly and C#, and how the C# code is implemented.
 
@@ -173,7 +173,7 @@ double Foo(double P)
 }
 ```
 
-+ If the function has several returned values, none of them called 'Result', the C# method is a procedure with as many out parameters as there are results.
++ If the function has several returned values, none of them called `Result`, the C# method is a procedure with as many `out` parameters as there are results.
 
 <!---
 Mode=Default
@@ -678,7 +678,7 @@ Mode=Default
 V<b>&#183;</b>Foo&nbsp;<b>&#8592;&nbsp;</b>N
 </pre>
 
-Since out parameters must be variables, and qualified name are not allowed, the final assignment may have to use a temporary variable.
+Since `out` parameters must be variables, and qualified name are not allowed, the final assignment may have to use a temporary variable.
 
 ```csharp
 // When the assigned value is the returned value. 
@@ -693,9 +693,9 @@ V.Foo = temp;
 
 ### Final attachment
 
-For attachments, the situation is even more complexified by the fact that there can be only one, or several, variables attached together.
+For attachments, the situation is even more complexified by the fact that there can be just one, or instead several, variables attached together.
 
-When there is only one, the attachment instruction is translated to a switch instruction. The expression in the switch is then either the returned value, or one of the out parameters.
+When there is only one, the attachment instruction is translated to a `switch` instruction. The expression in the `switch` is then either the returned value, or one of the `out` parameters.
 
 ```csharp
 // When the attached value is the returned value. 
@@ -712,7 +712,7 @@ switch (temp)
 }
 ```
 
-When there are multiple attachments, all results are assigned to temporary variables, and these variables are in turn tentatively attached to various conbinations of types.
+When there are multiple attachments, all results are assigned to temporary variables, and these variables are in turn tentatively attached to various combinations of types.
 
 ```csharp
 // When the assigned value is not the returned value.
@@ -809,7 +809,7 @@ N&nbsp;<b>&#8592;&nbsp;</b>FooC<b>(</b>FooB<b>(</b>FooA<b>))</b>
 </pre>
 
 ```csharp
-var temp0 = FooA(out var temp1)
+var temp0 = FooA(out var temp1);
 var temp2 = FooB(temp0, temp1, out var temp3);
 N = FooC(temp2, temp3);
 ```
