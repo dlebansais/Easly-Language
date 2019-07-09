@@ -177,6 +177,8 @@ Foo&nbsp;<b>procedure</b>
 </pre>
 
 The check instruction helps the compiler to validate the code that comes after it.
+
+The checked expression must have only one result, and it must be either a `Boolean` or an `Event`, or a type that inherits from either of these built-in classes, or a type that converts to them.
  
 ## Checking events
 
@@ -190,7 +192,7 @@ This instruction can either be not translated (since it only participate to cont
 Debug.Assert(x < 1);
 ```
 
-For an event, the translated code asserts that IsSignaled is true.
+For an event, the translated code asserts that `IsSignaled` is true.
 
 <!---
 Mode=Default
