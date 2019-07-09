@@ -1,8 +1,8 @@
 # Check Instruction
 
-This instruction is used to reinforce a contract when the compiler is unable to automatically check that the contract is fulfilled. By adding the Check instruction, a programmer tells the compiler that a condition is true. This helps the compiler evaluate other conditions, allowing to validate other contracts.
+This instruction is used to reinforce a contract when the compiler is unable to automatically check that the contract is fulfilled. By adding the Check instruction, a programmer tells the compiler that a condition is true. This helps the compiler evaluate other conditions, allowing it to validate other contracts.
 
-In the example below, the compiler can tell that after `x ← x / (x + 1)` we still have x ≥ 0, but not necessarily that x < 1. That could be too complicated to verify.  
+In the example below, the compiler can tell that after `x ← x / (x + 1)` we still have x ≥ 0, but not necessarily that x < 1. This could be too complicated to verify.  
 
 <!---
 Mode=Default
@@ -176,7 +176,7 @@ Foo&nbsp;<b>procedure</b>
 <b>end</b>
 </pre>
 
-The check instruction helps the compiler to validate the code that comes after.
+The check instruction helps the compiler to validate the code that comes after it.
  
 ## Checking events
 

@@ -442,4 +442,4 @@ z = x.Foo(y);
 
 ## Multiple parameters or results
 
-In this case, the translation follows the same mechanism as [Query Expressions](https://github.com/dlebansais/Easly-Language/blob/master/Doc/Nodes/Expression/QueryExpression.md).  
+In this case, the translation follows a mechanism explained in [Translating Queries](https://github.com/dlebansais/Easly-Language/blob/master/Doc/TranslatingQueries.md).  
