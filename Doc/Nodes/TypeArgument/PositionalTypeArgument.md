@@ -1,0 +1,3 @@
+# Positional Type Argument
+
+Placeholder.

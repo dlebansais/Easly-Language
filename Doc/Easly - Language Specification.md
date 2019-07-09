@@ -349,6 +349,8 @@ Boolean Expression | Reference | No | Any *Expressions*
 
 *Class*
 
+See [Class](https://github.com/dlebansais/Easly-Language/blob/master/Doc/Nodes/Class.md).
+
 Name | Kind | Optional | Requirement
 ------------ | ------------- | ------------- | -------------
 Entity Name | Reference | No | *Name*

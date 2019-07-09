@@ -5,8 +5,3 @@ An attachment is a part of the [Attachment Instruction](https://github.com/dleba
 Attachments contain instruction but also have their own scope and can declare local variables.
 
 See the [Attachment instruction](https://github.com/dlebansais/Easly-Language/blob/master/Doc/Nodes/Instruction/AttachmentInstruction.md) for details. 
-
-# Translation to C&#35;
-
-```csharp
-```
