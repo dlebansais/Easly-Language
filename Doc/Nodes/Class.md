@@ -8,18 +8,30 @@ The first sections are dedicated to features that Easly and C# have in common, f
 
 In C# a reference type is declared with the `class` keyword, and a value type with `struct`. In Easly, both types are defined in a class, and the copy semantic (what differentiate a reference type from a value type) is specified. Usually, since `Reference` is the default, it is not displayed in the Easly editor.
 
+## Null references
 
+While not a class concept, note that Easly doesn't have `null` references. Every references must be initialized somehow.
 
+## Creating an object
 
-
-
-An attachment is a part of the [Attachment Instruction](https://github.com/dlebansais/Easly-Language/blob/master/Doc/Nodes/Instruction/AttachmentInstruction.md) where a set of variables are tested to see if they conform to given types (provided in the attachment). If they do, instructions contained in the attachment are executed.
-
-Attachments contain instruction but also have their own scope and can declare local variables.
-
-See the [Attachment instruction](https://github.com/dlebansais/Easly-Language/blob/master/Doc/Nodes/Instruction/AttachmentInstruction.md) for details. 
-
-# Translation to C&#35;
+In C#, an object is created with the new instruction, and one of the class constructor is called based on arguments of this instruction. In Easly, one must specify explicitely the name of the constructor (that must be a creation feature), and only then the corresponding overload is selected by arguments. This allows for example two constructors for a `Complex` class, one with cartesian coordinates and another with polar coordinates.
 
 ```csharp
+class Complex
+{
+	public Complex(double x, double y)
+	{
+		/*...*/
+	}
+
+	// Not allowed in C#
+	public Complex(double rho, double theta)
+	{
+		/*...*/
+	}
+}
 ```
+
+## Releasing an object
+
+Both languages use a garbage collector, and both can explicitely free memory and collect it. For this purpose Easly uses the [Release Instruction](https://github.com/dlebansais/Easly-Language/blob/master/Doc/Nodes/Instruction/ReleaseInstruction.md).

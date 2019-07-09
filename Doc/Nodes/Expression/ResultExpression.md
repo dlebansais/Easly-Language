@@ -1,3 +1,0 @@
-# Result Expression
-
-Placeholder.
