@@ -1,6 +1,6 @@
 # Class Constant Expression
 
-This expression is used to get the value of a [Constant Feature](https://github.com/dlebansais/Easly-Language/blob/master/Doc/Nodes/Feature/ConstantFeature.md). Since the constant is per class and not per instance, the class constant expression uses the class name and constant name directly to identify the feature.
+This expression is used to get the value of a [Constant Feature](https://github.com/dlebansais/Easly-Language/blob/master/Doc/Nodes/Feature/CCCCConstantFeature.md). Since the constant is per class and not per instance, the class constant expression uses the class name and constant name directly to identify the feature.
 
 <!---
 Mode=Default
