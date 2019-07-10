@@ -8,7 +8,7 @@ before_script:
 
 script:
 - ./link-verifier | grep FAILED
-- echo "${PIPESTATUS[0]}" | grep 0
+- echo "${PIPESTATUS[0]} ${PIPESTATUS[1]}"
 - msbuild Easly-Language.sln /p:Configuration=Travis
 
 deploy:
