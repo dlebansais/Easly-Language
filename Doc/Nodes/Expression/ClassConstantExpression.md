@@ -1,6 +1,6 @@
 # Class Constant Expression
 
-This expression is used to get the value of a [Constant Feature](https://github.com/dlebansais/Easly-Language/blob/master/Doc/Nodes/Feature/ConstantFeature.md). Since the constant is per class and not per instance, the class constant expression directly use the class name and constant name to identify the feature.
+This expression is used to get the value of a [Constant Feature](https://github.com/dlebansais/Easly-Language/blob/master/Doc/Nodes/Feature/ConstantFeature.md). Since the constant is per class and not per instance, the class constant expression uses the class name and constant name directly to identify the feature.
 
 <!---
 Mode=Default
@@ -207,7 +207,7 @@ N&nbsp;<b>&#8592;&nbsp;{</b>Foo<b>}&#183;</b>My&nbsp;Discrete
 
 # Translation to C&#35;
 
-The C# code for this expression is straightforward, since the same syntax is used for enum members and class constants.
+The C# code for this expression is straightforward, since the same syntax is used for both enum members and class constants.
 
 ```csharp
 double N;
