@@ -7,7 +7,7 @@ before_script:
   - export PATH=$PATH:$PWD/link-verifier/
 
 script:
-- ./link-verifier | grep FAILED
+- ./link-verifier | grep TOTO
 - echo "${PIPESTATUS[0]}"
 - echo "${PIPESTATUS[1]}"
 - echo "${PIPESTATUS[2]}"
