@@ -376,6 +376,8 @@ Class Path | String | N/A |
 
 *Class Constant Expression*, member of: *Expressions*
 
+See [Class Constant Expression](https://github.com/dlebansais/Easly-Language/blob/master/Doc/Nodes/Expression/ClassConstantExpression.md).
+
 Name | Kind | Optional | Requirement
 ------------ | ------------- | ------------- | -------------
 Class Identifier | Reference | No | *Identifier*
