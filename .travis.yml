@@ -7,11 +7,8 @@ before_script:
   - export PATH=$PATH:$PWD/link-verifier/
 
 script:
-- ./link-verifier | grep TOTO
-- echo "${PIPESTATUS[0]}"
-- echo "${PIPESTATUS[1]}"
-- echo "${PIPESTATUS[2]}"
-
+- ./link-verifier > link-verifier-output.txt
+- grep FAILED link-verifier-output.txt
 - msbuild Easly-Language.sln /p:Configuration=Travis
 
 deploy:
