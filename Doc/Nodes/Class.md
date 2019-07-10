@@ -12,25 +12,25 @@ In C# a reference type is declared with the `class` keyword, and a value type wi
 
 ### Null references
 
-While not a class concept, note that Easly doesn't have `null` references. Every references must be initialized somehow.
+While not a class concept, note that Easly doesn't have `null` references. Every references must be initialized somehow to an existing object.
 
 ### Creating an object
 
-In C#, an object is created with the new instruction, and one of the class constructor is called based on arguments of this instruction. In Easly, one must specify explicitely the name of the constructor (that must be a creation feature), and only then the corresponding overload is selected by arguments. This allows for example two constructors for a `Complex` class, one with cartesian coordinates and another with polar coordinates.
+In C#, an object is created with the `new` instruction, and one of the class constructor is called based on arguments of this instruction. In Easly, one must specify explicitely the name of the constructor (it must be a creation feature), and only then the corresponding overload is selected by arguments. This allows for example two constructors for a `Complex` class, one with cartesian coordinates and another with polar coordinates.
 
 ```csharp
 class Complex
 {
-	public Complex(double x, double y)
-	{
-		/*...*/
-	}
+    public Complex(double x, double y)
+    {
+        /*...*/
+    }
 
-	// Not allowed in C#
-	public Complex(double rho, double theta)
-	{
-		/*...*/
-	}
+    // Not allowed in C#
+    public Complex(double rho, double theta)
+    {
+        /*...*/
+    }
 }
 ```
 
@@ -48,8 +48,8 @@ A C# class can have various access rights. Easly supports `public` (the default)
 
 A major difference between Easly and C# is that Easly support multiple inheritance. The compiler tries to obtain the same inheritance hierarchy in C# using the following strategy:
 
-+ If the class inherits from no class or from one class only, the hierarchy is preserved and this parent is the C# base class.
-+ If one of the parents contains one or more extern bodies, this parent becomes the C# base class.
++ If the class inherits from no class or from one class only, the hierarchy is preserved and this parent (if any) is the C# base class.
++ If one of the parents contains one or more extern bodies, this parent becomes the C# base class. Other parents are implemented as described in the last case below.
 + Otherwise, the C# class has no base, but instead inherits from as many interfaces as there are parents, and code from parents is duplicated in this child.
 
 ### Abstract class
@@ -62,7 +62,7 @@ Easly supports generic with constraints but is more flexible than C# on constrai
 
 ### Comparing objects
 
-In C#, a class inherits from objects (directly or indirectly through its base class) and therefore contains the `Equal` method that compares the current object with another. Easly is in some way more restrictive, as you can explicitely disallow comparison (at least using the [Equality Expression](https://github.com/dlebansais/Easly-Language/blob/master/Doc/Nodes/Expression/EqualityExpression.md), you can always write your own comparison code)
+In C#, a class inherits from objects (directly or indirectly through its base class) and therefore contains the `Equal` method that compares the current object with another. Easly is in some way more restrictive, as you can explicitely disallow comparison (at least using the [Equality Expression](https://github.com/dlebansais/Easly-Language/blob/master/Doc/Nodes/Expression/EqualityExpression.md), you can always write your own comparison code).
 
 If comparison is enabled, the translation is straightforward, and either compare references, or use the `Equal` method to compare by value.
 
@@ -70,14 +70,14 @@ If comparison is enabled, the translation is straightforward, and either compare
 
 ### From identifier
 
-An easly class can have an additional identifier to separate it from other classes of the same name. This is translated to C# by:
+An Easly class can have an additional identifier to separate it from other classes of the same name. This is translated to C# by:
 
 + Adding the identifier as a suffix to the class name.
 + Storing the class file in a directory named from this identifier.
 
 ### Clone
 
-An easly class can be cloned with the [Clone Of Expression](https://github.com/dlebansais/Easly-Language/blob/master/Doc/Nodes/Expression/CloneOfExpression.md). There is no such support in C#, but the compiler has all the necessary knowledge to create a `Clone` feature that does exactly that. 
+An Easly class can be cloned with the [Clone Of Expression](https://github.com/dlebansais/Easly-Language/blob/master/Doc/Nodes/Expression/CloneOfExpression.md). There is no such support in C#, but the compiler has all the necessary knowledge to create a `Clone` feature that does exactly that. 
 
 ### Invariant
 
@@ -91,7 +91,7 @@ Each class has its own unique ID, available using a [Preprocessor Expression](ht
 
 ### Class Path
 
-Each class has its own unique path string, created at compile time, and available using a [Preprocessor Expression](https://github.com/dlebansais/Easly-Language/blob/master/Doc/Nodes/Expression/PreprocessorExpression.md). This string is intended to be added to logs, to help with debugging. 
+Each class has its own unique path string, created at compile time, and available using a [Preprocessor Expression](https://github.com/dlebansais/Easly-Language/blob/master/Doc/Nodes/Expression/PreprocessorExpression.md). This string is intended to be added to logs, to help with debugging.
 
 ## Features not supported in Easly
 
