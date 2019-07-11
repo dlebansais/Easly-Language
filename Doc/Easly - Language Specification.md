@@ -387,6 +387,8 @@ Constant Identifier | Reference | No | *Identifier*
 
 *Class Replicate*
 
+See [Compilation](https://github.com/dlebansais/Easly-Compiler/blob/master/Doc/Easly%20-%20Compilation.md).
+
 Name | Kind | Optional | Requirement
 ------------ | ------------- | ------------- | -------------
 Replicate Name | Reference | No | *Name*
@@ -395,6 +397,8 @@ Pattern Blocks | Block list | N/A | *Pattern*
 ***
 
 *Clone Of Expression*, member of: *Expressions*
+
+See [Clone Of Expression](https://github.com/dlebansais/Easly-Language/blob/master/Doc/Nodes/Expression/CloneOfExpression.md).
 
 Name | Kind | Optional | Requirement
 ------------ | ------------- | ------------- | -------------

@@ -79,6 +79,10 @@ An Easly class can have an additional identifier to separate it from other class
 
 An Easly class can be cloned with the [Clone Of Expression](https://github.com/dlebansais/Easly-Language/blob/master/Doc/Nodes/Expression/CloneOfExpression.md). There is no such support in C#, but the compiler has all the necessary knowledge to create a `Clone` feature that does exactly that. 
 
+### Singleton
+
+A class may declare itself as `Single`. When this flag is set, there can be at most one instance of the class in the system, and this instance cannot be cloned.
+
 ### Invariant
 
 A class can have several invariants, expressions that constitute a permanent contract and must always evaluate to `True` in any possible state of an instance of the class.
