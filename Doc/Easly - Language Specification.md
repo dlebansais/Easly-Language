@@ -409,6 +409,8 @@ Source | Reference | No | Any *Expressions*
 
 *Command Instruction*, member of: *Instructions*
 
+See [Command Instruction](https://github.com/dlebansais/Easly-Language/blob/master/Doc/Nodes/Instruction/CommandInstruction.md).
+
 Name | Kind | Optional | Requirement
 ------------ | ------------- | ------------- | -------------
 Command | Reference | No | *QualifiedName*
