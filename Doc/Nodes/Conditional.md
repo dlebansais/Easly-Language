@@ -1,6 +1,6 @@
 # Conditional
 
-A conditional is a part of the [If Then Else Instruction](https://github.com/dlebansais/Easly-Language/blob/master/Doc/Nodes/Instruction/IfThenElseInstruction.md) where an expression is evaluated and compared to `True` (or, in the case of an event, is signaled). If if is, instructions contained in the conditional are executed.
+A conditional is a part of the [If Then Else Instruction](https://github.com/dlebansais/Easly-Language/blob/master/Doc/Nodes/Instruction/IfThenElseInstruction.md) where an expression is evaluated and checked if true (or, in the case of an event, is signaled). If if is, instructions contained in the conditional are executed.
 
 Conditionals contain instructions but also have their own scope and can declare local variables.
 
