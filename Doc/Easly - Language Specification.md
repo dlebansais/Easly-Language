@@ -446,6 +446,8 @@ Exception Identifier Blocks | Block list | N/A | *Identifier*
 
 *Conditional*
 
+See [Conditional](https://github.com/dlebansais/Easly-Language/blob/master/Doc/Nodes/Conditional.md).
+
 Name | Kind | Optional | Requirement
 ------------ | ------------- | ------------- | -------------
 Boolean Expression | Reference | No | Any *Expressions*
