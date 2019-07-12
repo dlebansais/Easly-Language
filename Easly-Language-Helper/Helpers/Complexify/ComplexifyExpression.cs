@@ -420,7 +420,9 @@
         {
             complexifiedExpressionList = null;
 
-            if (GetComplexifiedNode(node.Query, out IList<INode> ComplexifiedQueryList) && ComplexifiedQueryList[0] is IQualifiedName AsComplexifiedQuery)
+            if (ComplexifyAsManifestNumberExpression(node, out IManifestNumberExpression ComplexifiedManifestNumberExpression))
+                complexifiedExpressionList = new List<IExpression>() { ComplexifiedManifestNumberExpression };
+            else if (GetComplexifiedNode(node.Query, out IList<INode> ComplexifiedQueryList) && ComplexifiedQueryList[0] is IQualifiedName AsComplexifiedQuery)
             {
                 IBlockList<IArgument, Argument> ClonedArgumentBlocks = (IBlockList<IArgument, Argument>)DeepCloneBlockList((IBlockList)node.ArgumentBlocks, cloneCommentGuid: false);
                 IQueryExpression NewQueryExpression = CreateQueryExpression(AsComplexifiedQuery, ClonedArgumentBlocks);
@@ -473,8 +475,6 @@
                 complexifiedExpressionList = new List<IExpression>() { ComplexifiedKeywordExpression };
             else if (ComplexifyAsManifestCharacterExpression(node, out IManifestCharacterExpression ComplexifiedManifestCharacterExpression))
                 complexifiedExpressionList = new List<IExpression>() { ComplexifiedManifestCharacterExpression };
-            else if (ComplexifyAsManifestNumberExpression(node, out IManifestNumberExpression ComplexifiedManifestNumberExpression))
-                complexifiedExpressionList = new List<IExpression>() { ComplexifiedManifestNumberExpression };
             else if (ComplexifyAsManifestStringExpression(node, out IManifestStringExpression ComplexifiedManifestStringExpression))
                 complexifiedExpressionList = new List<IExpression>() { ComplexifiedManifestStringExpression };
             else if (ComplexifyAsNewExpression(node, out INewExpression ComplexifiedNewExpression))
