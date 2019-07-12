@@ -2,7 +2,7 @@
 
 Commands are used to perform operations on objects as defined by their class. A command instruction takes an object, using a qualified name, provides the name of a procedure feature of the object's class, and provides arguments to the call when necessary. The corresponding operation is then executed on the object.
 
-The feature called must be a [procedure](https://github.com/dlebansais/Easly-Language/blob/master/Doc/Nodes/Feature/ProcedureFeature.md)procedure, and caling a creation feature is not allowed.
+The feature called must be a [procedure](https://github.com/dlebansais/Easly-Language/blob/master/Doc/Nodes/Feature/ProcedureFeature.md). Calling a creation feature is not allowed.
 
 Arguments to the call can be [assignment arguments](https://github.com/dlebansais/Easly-Language/blob/master/Doc/Nodes/Argument/AssignmentArgument.md) or [positional arguments](https://github.com/dlebansais/Easly-Language/blob/master/Doc/Nodes/Argument/PositionalArgument.md), and must comply with the [feature call rules](https://github.com/dlebansais/Easly-Language/blob/master/Doc/Misc/FeatureCallRules.md).
 
