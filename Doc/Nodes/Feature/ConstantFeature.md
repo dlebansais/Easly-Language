@@ -13,24 +13,22 @@ Mode=Default
 {BaseNode.BlockList`2[[BaseNode.IArgument, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null],[BaseNode.Argument, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
 ;{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
 ;{BaseNode.QualifiedName, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
-"";{95559bb3-7c72-414f-b0bf-1e821d8b67df}{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
+"";{8e94e31c-d493-4f78-bc20-8c6b59b23ea9}{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
 ;"π"{BaseNode.Identifier, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
 ;{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
 ;0x00000000{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
 ;"All"{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
 ;{System.Collections.Generic.List`1[[BaseNode.IBlock`2[[BaseNode.IArgument, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null],[BaseNode.Argument, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089} *0
-"";{6e33554e-7ab6-435e-aa22-2477fc57e9c1}{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
-;{System.Collections.Generic.List`1[[BaseNode.IIdentifier, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089} *2
-"";{410e50bf-72c6-4ec4-abe8-8f88e9d78965}{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
-;"Number""";{dde5bee5-2de5-487c-bd19-61c8ae576384}"";{f63b6d16-17fc-456e-b242-07428debea81}"";{85883ed0-c34e-4542-a1b4-a074a2ad21ce}0x00000000"";{c5a2899e-f3b1-484f-bae6-6dffbe3205e2}{BaseNode.Identifier, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
-;{BaseNode.Identifier, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
-0x00000004"";{2f69f85c-4ef4-489b-8978-9bb2a493f9f5}{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
-;"3"{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
-;"1415""";{f1910038-1df4-4697-b62a-7e32a4a81941}"";{67a871c9-b8fe-4cae-bcf3-5808864f70e3}
+"";{834c21a4-7cfd-4f2d-b46e-e6c4f14952ff}{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
+;{System.Collections.Generic.List`1[[BaseNode.IIdentifier, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089} *1
+"";{2af5e0e3-7dab-4268-92c9-38f6d9d1584f}{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
+;"Number""";{c11311dd-61cc-4901-be03-1d4d711f82f4}"";{1b4a597d-3887-4520-bb20-ed5667cee392}"";{fad69add-780c-450a-8b29-7ace0e2b44a3}0x00000000"";{21bb3d2a-7660-4717-b078-43b5042dd089}{BaseNode.Identifier, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
+0x00000004"";{09998671-38d0-4156-bc0f-e2d56e6a10a6}{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
+;"3.1415""";{2286085f-79d3-42be-b491-276644ba097b}
 -->
 
 <pre>
-&#960;<b>:&nbsp;</b><i>Number&nbsp;</i><b>=&nbsp;</b>3<b>&#183;</b>1415
+&#960;<b>:&nbsp;</b><i>Number&nbsp;</i><b>=&nbsp;</b>3.1415
 </pre>
 
 <!---
@@ -92,24 +90,22 @@ Mode=Default
 {BaseNode.BlockList`2[[BaseNode.IArgument, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null],[BaseNode.Argument, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
 ;{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
 ;{BaseNode.QualifiedName, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
-"";{95559bb3-7c72-414f-b0bf-1e821d8b67df}{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
+"";{8e94e31c-d493-4f78-bc20-8c6b59b23ea9}{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
 ;"π"{BaseNode.Identifier, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
 ;{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
 ;0x00000000{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
 ;"All"{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
 ;{System.Collections.Generic.List`1[[BaseNode.IBlock`2[[BaseNode.IArgument, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null],[BaseNode.Argument, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089} *0
-"";{6e33554e-7ab6-435e-aa22-2477fc57e9c1}{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
-;{System.Collections.Generic.List`1[[BaseNode.IIdentifier, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089} *2
-"";{410e50bf-72c6-4ec4-abe8-8f88e9d78965}{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
-;"Number""";{dde5bee5-2de5-487c-bd19-61c8ae576384}"";{f63b6d16-17fc-456e-b242-07428debea81}"";{85883ed0-c34e-4542-a1b4-a074a2ad21ce}0x00000000"";{c5a2899e-f3b1-484f-bae6-6dffbe3205e2}{BaseNode.Identifier, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
-;{BaseNode.Identifier, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
-0x00000004"";{2f69f85c-4ef4-489b-8978-9bb2a493f9f5}{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
-;"3"{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
-;"1415""";{f1910038-1df4-4697-b62a-7e32a4a81941}"";{67a871c9-b8fe-4cae-bcf3-5808864f70e3}
+"";{834c21a4-7cfd-4f2d-b46e-e6c4f14952ff}{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
+;{System.Collections.Generic.List`1[[BaseNode.IIdentifier, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089} *1
+"";{2af5e0e3-7dab-4268-92c9-38f6d9d1584f}{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
+;"Number""";{c11311dd-61cc-4901-be03-1d4d711f82f4}"";{1b4a597d-3887-4520-bb20-ed5667cee392}"";{fad69add-780c-450a-8b29-7ace0e2b44a3}0x00000000"";{21bb3d2a-7660-4717-b078-43b5042dd089}{BaseNode.Identifier, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
+0x00000004"";{09998671-38d0-4156-bc0f-e2d56e6a10a6}{BaseNode.Document, Easly-Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null}
+;"3.1415""";{2286085f-79d3-42be-b491-276644ba097b}
 -->
 
 <pre>
-&#960;<b>:&nbsp;</b><i>Number&nbsp;</i><b>=&nbsp;</b>3<b>&#183;</b>1415
+&#960;<b>:&nbsp;</b><i>Number&nbsp;</i><b>=&nbsp;</b>3.1415
 </pre>
 
 has the name `π`, and is a number, as represented by the built-in class `Number`.
@@ -331,7 +327,7 @@ If the source expression is simple, such as a manifest string, it can be transla
 public const string HelloMessage = "Hello, World!";
 ```
 
-The keyword const is used if the constant value is a number, a boolean or a string. Otherwise, it's a complex object and the syntax used is a readonly initialized object.
+The `const` keyword is used if the constant value is a number, a boolean or a string. Otherwise, it's a complex object and the syntax used is a `readonly` initialized object.
 
 <!---
 Mode=Default
@@ -533,5 +529,5 @@ Cartesian&nbsp;Complex&nbsp;<b>function</b>
 
 ```csharp
 // Identity = Cartesian Complex(1, 0)
-public readonly Complex Identity = new Complex() { X = 1, X = 0 };
+public readonly Complex Identity = new Complex() { X = 1, Y = 0 };
 ```
