@@ -432,6 +432,8 @@ Command Body | Reference | No | Any *Bodies*
 
 *Command Overload Type*
 
+See [Command Overload Type](https://github.com/dlebansais/Easly-Language/blob/master/Doc/Nodes/CommandOverloadType.md).
+
 Name | Kind | Optional | Requirement
 ------------ | ------------- | ------------- | -------------
 Parameter Blocks | Block list | N/A | *Entity Declaration*
