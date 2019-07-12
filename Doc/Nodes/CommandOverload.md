@@ -2,7 +2,7 @@
 
 In Easly, and contrary to C#, all overloads of a feature are grouped at the same place: in the feature declaration. A command overload is one of the many overloads a [procedure](https://github.com/dlebansais/Easly-Language/blob/master/Doc/Nodes/Feature/ProcedureFeature.md) or [creation](https://github.com/dlebansais/Easly-Language/blob/master/Doc/Nodes/Feature/CreationFeature.md) feature can have.
 
-All overloads must follow the overload declaration rules. However, since command overloads don't have results, requirement for results don't apply to them.
+All overloads must follow the [overload declaration rules](https://github.com/dlebansais/Easly-Language/blob/master/Doc/Misc/OverloadDeclarationRules.md). However, since command overloads don't have results, requirement for results don't apply to them.
  
 # Translation to C&#35;
 
