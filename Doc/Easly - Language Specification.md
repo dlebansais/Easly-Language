@@ -457,6 +457,8 @@ Instructions | Reference | No | *Scope*
 
 *Constant Feature*, member of: *Features*
 
+See [Constant Feature](https://github.com/dlebansais/Easly-Language/blob/master/Doc/Nodes/Feature/ConstantFeature.md).
+
 Name | Kind | Optional | Requirement
 ------------ | ------------- | ------------- | -------------
 Export Identifier | Reference | No | *Identifier*
