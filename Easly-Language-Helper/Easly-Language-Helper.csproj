@@ -40,6 +40,10 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="FormattedNumber">
+      <HintPath>..\FormattedNumber\$(Platform)\$(Configuration)\FormattedNumber.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>

@@ -120,7 +120,7 @@ The exception is that a constant is not allowed to be the instance of a [singlet
 
 ## Evaluating the constant
 
-A constant can be obtained from any expression — except the [Clone Of expression](https://github.com/dlebansais/Easly-Language/blob/master/Doc/Nodes/Expression/CloneOfExpression.md) — as long as the result can be evaluated as a constant by the compiler. For example, the following code stores the value 4 in the constant `Foo`: 
+A constant can be obtained from any expression — except the [Clone Of expression](https://github.com/dlebansais/Easly-Language/blob/master/Doc/Nodes/Expression/CloneOfExpression.md) and expressions that can only be used in assertions — as long as the result can be evaluated as a constant by the compiler. For example, the following code stores the value 4 in the constant `Foo`: 
 
 <!---
 Mode=Default
@@ -306,6 +306,8 @@ Square&nbsp;<b>function</b>
 <b>end</b>
 </pre>
 
+The source expression must also have only one result.
+
 ## Attribute contract
 
 A constant feature doesn't have a contract.
@@ -327,7 +329,7 @@ If the source expression is simple, such as a manifest string, it can be transla
 public const string HelloMessage = "Hello, World!";
 ```
 
-The `const` keyword is used if the constant value is a number, a boolean or a string. Otherwise, it's a complex object and the syntax used is a `readonly` initialized object.
+The `const` keyword is used if the constant value is a number, a boolean or a string. Otherwise, it's a complex object and the syntax used is a `static readonly` initialized object.
 
 <!---
 Mode=Default
@@ -529,5 +531,5 @@ Cartesian&nbsp;Complex&nbsp;<b>function</b>
 
 ```csharp
 // Identity = Cartesian Complex(1, 0)
-public readonly Complex Identity = new Complex() { X = 1, Y = 0 };
+public static readonly Complex Identity = new Complex() { X = 1, Y = 0 };
 ```
