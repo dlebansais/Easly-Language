@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Diagnostics;
     using BaseNode;
+    using FormattedNumber;
 
     public static partial class NodeHelper
     {
@@ -760,8 +761,8 @@
 
                 if (Text.Length >= 1)
                 {
-                    IFormattedNumber fn = FormattedNumber.Parse(Text, false);
-                    if (fn.InvalidText.Length == 0)
+                    FormattedNumber fn = Parser.Parse(Text);
+                    if (fn.IsValid)
                         complexifiedNode = CreateSimpleManifestNumberExpression(Text);
                 }
             }
