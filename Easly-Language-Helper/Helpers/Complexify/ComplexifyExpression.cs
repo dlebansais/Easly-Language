@@ -3,7 +3,7 @@
     using System.Collections.Generic;
     using System.Diagnostics;
     using BaseNode;
-    using FormattedNumber;
+    using EaslyNumber;
 
     public static partial class NodeHelper
     {
@@ -685,9 +685,9 @@
             {
                 string Text = node.Query.Path[0].Text;
 
-                if (ParsePattern(Text, "[", out string ClassText, out string InitText))
+                if (ParsePattern(Text, "{", out string ClassText, out string InitText))
                 {
-                    if (ParsePattern(InitText, ":=", out string ParameterText, out string SourceText) && SourceText.EndsWith("]"))
+                    if (ParsePattern(InitText, ":=", out string ParameterText, out string SourceText) && SourceText.EndsWith("}"))
                     {
                         IIdentifier ClassIdentifier = CreateSimpleIdentifier(ClassText);
 
@@ -761,7 +761,7 @@
 
                 if (Text.Length >= 1)
                 {
-                    FormattedNumber fn = Parser.Parse(Text);
+                    FormattedNumber fn = new FormattedNumber(Text);
                     if (fn.IsValid)
                         complexifiedNode = CreateSimpleManifestNumberExpression(Text);
                 }
