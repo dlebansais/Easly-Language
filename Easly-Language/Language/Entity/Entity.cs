@@ -2,6 +2,7 @@
 {
     using System;
     using System.Diagnostics;
+    using System.Diagnostics.Contracts;
     using System.Reflection;
 
     public abstract class Entity
@@ -9,7 +10,9 @@
         #region Init
         public static TypeEntity FromThis(object o) // entityof()
         {
-            return TypeEntity.BuiltTypeEntity(o.GetType());
+            Contract.Requires(o != null);
+
+            return TypeEntity.BuiltTypeEntity(o!.GetType());
         }
 
         public static TypeEntity FromStaticConstructor()

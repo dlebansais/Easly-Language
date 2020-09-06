@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Diagnostics.Contracts;
     using System.Runtime.Serialization;
 
     public interface ISealableDictionary
@@ -94,9 +95,11 @@
 
         public void Merge(ISealableDictionary<TKey, TValue> other)
         {
+            Contract.Requires(other != null);
+
             Debug.Assert(!IsSealed, "A sealed collection cannot be modified");
 
-            foreach (KeyValuePair<TKey, TValue> Item in other)
+            foreach (KeyValuePair<TKey, TValue> Item in other!)
             {
                 Debug.Assert(!ContainsKey(Item.Key), "Two merged collections must not contain the same key");
 
@@ -106,9 +109,11 @@
 
         public void MergeWithConflicts(ISealableDictionary<TKey, TValue> other)
         {
+            Contract.Requires(other != null);
+
             Debug.Assert(!IsSealed, "A sealed collection cannot be modified");
 
-            foreach (KeyValuePair<TKey, TValue> Item in other)
+            foreach (KeyValuePair<TKey, TValue> Item in other!)
                 if (!ContainsKey(Item.Key))
                     base.Add(Item.Key, Item.Value);
         }

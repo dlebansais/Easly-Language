@@ -9,4 +9,4 @@
 [assembly: SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Special Case", Scope = "type", Target = "~T:BaseNodeHelper.BlockListHelper`2")]
 [assembly: SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Special Case", Scope = "type", Target = "~T:BaseNodeHelper.NodeTreeWalk`1")]
 
-[assembly: SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1405:Debug.Assert should provide message text", Justification = "<Pending>")]
+[assembly: SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1405:Debug.Assert should provide message text", Justification = "TODO")]

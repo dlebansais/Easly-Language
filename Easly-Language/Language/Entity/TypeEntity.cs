@@ -69,46 +69,6 @@
                 Ancestors.Add(ParentEntity);
             }
         }
-
-        private static void RecursiveGetMethods(Type typeInfo, SealableDictionary<string, MethodInfo> result)
-        {
-            foreach (MethodInfo Item in typeInfo.GetMethods())
-                if (!result.ContainsKey(Item.Name))
-                    result.Add(Item.Name, Item);
-
-            if (typeInfo.BaseType != null)
-                RecursiveGetMethods(typeInfo.BaseType, result);
-
-            foreach (Type Item in typeInfo.GetInterfaces())
-                RecursiveGetMethods(Item, result);
-        }
-
-        private static void RecursiveGetProperties(Type typeInfo, SealableDictionary<string, PropertyInfo> result)
-        {
-            foreach (PropertyInfo Item in typeInfo.GetProperties())
-                if (!result.ContainsKey(Item.Name))
-                    result.Add(Item.Name, Item);
-
-            if (typeInfo.BaseType != null)
-                RecursiveGetProperties(typeInfo.BaseType, result);
-
-            foreach (Type Item in typeInfo.GetInterfaces())
-                RecursiveGetProperties(Item, result);
-        }
-
-        private static string OverloadedName(IDictionaryIndex<string> table, string name)
-        {
-            if (table.ContainsKey(name))
-            {
-                int i = 1;
-                while (table.ContainsKey(name + i.ToString(CultureInfo.InvariantCulture)))
-                    i++;
-
-                return name + i.ToString(CultureInfo.InvariantCulture);
-            }
-            else
-                return name;
-        }
         #endregion
 
         #region Properties
@@ -170,6 +130,48 @@
         {
             string FullName = TypeInfo.FullName !;
             return TypeInfo.Assembly.CreateInstance(FullName) !;
+        }
+        #endregion
+
+        #region Implementation
+        private static void RecursiveGetMethods(Type typeInfo, SealableDictionary<string, MethodInfo> result)
+        {
+            foreach (MethodInfo Item in typeInfo.GetMethods())
+                if (!result.ContainsKey(Item.Name))
+                    result.Add(Item.Name, Item);
+
+            if (typeInfo.BaseType != null)
+                RecursiveGetMethods(typeInfo.BaseType, result);
+
+            foreach (Type Item in typeInfo.GetInterfaces())
+                RecursiveGetMethods(Item, result);
+        }
+
+        private static void RecursiveGetProperties(Type typeInfo, SealableDictionary<string, PropertyInfo> result)
+        {
+            foreach (PropertyInfo Item in typeInfo.GetProperties())
+                if (!result.ContainsKey(Item.Name))
+                    result.Add(Item.Name, Item);
+
+            if (typeInfo.BaseType != null)
+                RecursiveGetProperties(typeInfo.BaseType, result);
+
+            foreach (Type Item in typeInfo.GetInterfaces())
+                RecursiveGetProperties(Item, result);
+        }
+
+        private static string OverloadedName(IDictionaryIndex<string> table, string name)
+        {
+            if (table.ContainsKey(name))
+            {
+                int i = 1;
+                while (table.ContainsKey(name + i.ToString(CultureInfo.InvariantCulture)))
+                    i++;
+
+                return name + i.ToString(CultureInfo.InvariantCulture);
+            }
+            else
+                return name;
         }
         #endregion
     }

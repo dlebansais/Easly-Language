@@ -10,6 +10,11 @@
       "documentInternalElements": false,
       "documentPrivateElements": false,
       "documentPrivateFields": false
+    },
+    "orderingRules": {
+      "elementOrder": [
+        "constant"
+      ]
     }
   }
 }
