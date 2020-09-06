@@ -16,20 +16,20 @@
         {
             get
             {
-                PropertyInfo AsPropertyInfo = FeatureInfo as PropertyInfo;
+                PropertyInfo AsPropertyInfo = (PropertyInfo)FeatureInfo;
                 return TypeEntity.BuiltTypeEntity(AsPropertyInfo.PropertyType);
             }
         }
 
         public object GetValue(object o)
         {
-            PropertyInfo AsPropertyInfo = FeatureInfo as PropertyInfo;
-            return AsPropertyInfo.GetValue(o);
+            PropertyInfo AsPropertyInfo = (PropertyInfo)FeatureInfo;
+            return AsPropertyInfo.GetValue(o) !;
         }
 
         public void SetValue(object o, object value)
         {
-            PropertyInfo AsPropertyInfo = FeatureInfo as PropertyInfo;
+            PropertyInfo AsPropertyInfo = (PropertyInfo)FeatureInfo;
             AsPropertyInfo.SetValue(o, value);
         }
         #endregion

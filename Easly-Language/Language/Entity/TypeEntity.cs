@@ -136,8 +136,14 @@
             {
                 Type[] GenericArguments = new Type[] { t };
                 Type BoundType = typeof(SpecializedTypeEntity<>).MakeGenericType(GenericArguments);
-                PropertyInfo p = BoundType.GetProperty(nameof(SpecializedTypeEntity<object>.Singleton));
-                Result = (TypeEntity)p.GetValue(null);
+
+                PropertyInfo? BoundTypePropertyInfo = BoundType.GetProperty(nameof(SpecializedTypeEntity<object>.Singleton));
+                if (BoundTypePropertyInfo == null) throw new InvalidOperationException();
+
+                object? BoundTypePropertyValue = BoundTypePropertyInfo.GetValue(null);
+                if (BoundTypePropertyValue == null) throw new InvalidOperationException();
+
+                Result = (TypeEntity)BoundTypePropertyValue;
             }
             else
                 Result = SpecializedTypeEntityInternal.SingletonSet[t];
@@ -162,7 +168,8 @@
 
         public object CreateInstance()
         {
-            return TypeInfo.Assembly.CreateInstance(TypeInfo.FullName);
+            string FullName = TypeInfo.FullName !;
+            return TypeInfo.Assembly.CreateInstance(FullName) !;
         }
         #endregion
     }

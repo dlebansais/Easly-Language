@@ -14,10 +14,12 @@
 
         public static TypeEntity FromStaticConstructor()
         {
-            StackTrace st = new StackTrace();
-            StackFrame sf = st.GetFrame(1);
-            MethodBase mb = sf.GetMethod();
-            Type CallerType = mb.DeclaringType;
+            StackTrace Trace = new StackTrace();
+
+            StackFrame Frame = Trace.GetFrame(1) !;
+            MethodBase? Method = Frame.GetMethod() !;
+            Type? CallerType = Method.DeclaringType !;
+
             if (CallerType.IsGenericType)
                 throw new InvalidOperationException();
 

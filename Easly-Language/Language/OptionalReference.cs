@@ -68,7 +68,7 @@
         object IOptionalReference.Item { get { return Item; } }
 
         [PolySerializer.Serializable(Exclude = true)]
-        public T ItemInternal;
+        public T? ItemInternal;
         #endregion
 
         #region Assignment

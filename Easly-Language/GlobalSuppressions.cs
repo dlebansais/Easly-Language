@@ -20,4 +20,3 @@
 [assembly: SuppressMessage("Usage", "CA2227:Collection properties should be read only", Justification = "<Pending>")]
 [assembly: SuppressMessage("Design", "CA1000:Do not declare static members on generic types", Justification = "<Pending>", Scope = "member", Target = "~P:Easly.SpecializedTypeEntity`1.Singleton")]
 [assembly: SuppressMessage("Naming", "CA1720:Identifier contains type name", Justification = "<Pending>")]
-[assembly: SuppressMessage("Design", "CA1062:Validate arguments of public methods", Justification = "<Pending>")]

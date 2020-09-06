@@ -16,7 +16,7 @@
         {
             get
             {
-                MethodInfo AsPropertyInfo = FeatureInfo as MethodInfo;
+                MethodInfo AsPropertyInfo = (MethodInfo)FeatureInfo;
                 return TypeEntity.BuiltTypeEntity(AsPropertyInfo.ReturnType);
             }
         }

@@ -19,6 +19,7 @@
     }
 
     public interface ISealableDictionary<TKey, TValue> : IDictionary<TKey, TValue>, ISealableDictionary, IDictionaryIndex<TKey>
+        where TKey : notnull
     {
         new bool ContainsKey(TKey key);
         ISealableDictionary<TKey, TValue> CloneUnsealed();
@@ -28,6 +29,7 @@
 
     [Serializable]
     public class SealableDictionary<TKey, TValue> : Dictionary<TKey, TValue>, ISealableDictionary<TKey, TValue>
+        where TKey : notnull
     {
         public SealableDictionary()
             : base()

@@ -1,6 +1,7 @@
 ﻿namespace Easly
 {
     using System;
+    using System.Diagnostics;
 
     public class DetachableReference<T>
         where T : class
@@ -14,7 +15,9 @@
             {
                 T Result;
 
-                if (IsAssigned)
+                Debug.Assert(IsAssigned == (ItemInternal != null), $"{nameof(IsAssigned)} is always true if {nameof(ItemInternal)} has been assigned, and it can only be to a non-null value");
+
+                if (ItemInternal != null)
                     Result = ItemInternal;
                 else
                     throw new InvalidOperationException();
@@ -33,7 +36,7 @@
             }
         }
 
-        private T ItemInternal;
+        private T? ItemInternal;
         #endregion
 
         #region Detaching

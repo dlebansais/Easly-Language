@@ -1,11 +1,12 @@
 ﻿namespace Easly
 {
     using System;
+    using System.Diagnostics;
 
     public interface IOnceReference
     {
         bool IsAssigned { get; }
-        object Reference { get; }
+        object? Reference { get; }
     }
 
     public class OnceReference<T> : IOnceReference
@@ -20,7 +21,9 @@
             {
                 T Result;
 
-                if (IsAssigned)
+                Debug.Assert(IsAssigned == (ItemInternal != null), $"{nameof(IsAssigned)} is always true if {nameof(ItemInternal)} has been assigned, and it can only be to a non-null value");
+
+                if (ItemInternal != null)
                     Result = ItemInternal;
                 else
                     throw new InvalidOperationException();
@@ -42,12 +45,15 @@
             }
         }
 
-        public object Reference
+        public object? Reference
         {
-            get { return ItemInternal; }
+            get
+            {
+                return ItemInternal;
+            }
         }
 
-        private T ItemInternal;
+        private T? ItemInternal;
         #endregion
     }
 }

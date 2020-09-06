@@ -1,3 +1,5 @@
+#pragma warning disable CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
+
 namespace BaseNode
 {
     using System.Collections;
@@ -25,6 +27,6 @@ namespace BaseNode
         public virtual IDocument Documentation { get; set; }
         IDocument IBlockList.Documentation { get { return Documentation; } }
         public virtual IList<IBlock<TNodeInterface, TNode>> NodeBlockList { get; set; }
-        IList IBlockList.NodeBlockList { get { return NodeBlockList as IList; } }
+        IList IBlockList.NodeBlockList { get { return (IList)NodeBlockList; } }
     }
 }
