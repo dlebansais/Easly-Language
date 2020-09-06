@@ -1,5 +1,6 @@
 ﻿namespace BaseNodeHelper
 {
+    using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using BaseNode;
@@ -141,9 +142,9 @@
                 IIdentifier Delegated = node.Delegated;
                 string Text = Delegated.Text;
 
-                if (Text.StartsWith("{"))
+                if (Text.StartsWith("{", StringComparison.InvariantCulture))
                 {
-                    int TypeNameIndex = Text.IndexOf("}");
+                    int TypeNameIndex = Text.IndexOf("}", StringComparison.InvariantCulture);
 
                     if (TypeNameIndex > 1)
                     {
@@ -588,9 +589,9 @@
             {
                 string Text = node.Query.Path[0].Text;
 
-                if (Text.StartsWith("{"))
+                if (Text.StartsWith("{", StringComparison.InvariantCulture))
                 {
-                    int ClassNameIndex = Text.IndexOf("}");
+                    int ClassNameIndex = Text.IndexOf("}", StringComparison.InvariantCulture);
 
                     if (ClassNameIndex > 2)
                     {
@@ -687,7 +688,7 @@
 
                 if (ParsePattern(Text, "{", out string ClassText, out string InitText))
                 {
-                    if (ParsePattern(InitText, ":=", out string ParameterText, out string SourceText) && SourceText.EndsWith("}"))
+                    if (ParsePattern(InitText, ":=", out string ParameterText, out string SourceText) && SourceText.EndsWith("}", StringComparison.InvariantCulture))
                     {
                         IIdentifier ClassIdentifier = CreateSimpleIdentifier(ClassText);
 
@@ -908,7 +909,7 @@
             Debug.Assert(node.Query.Path.Count > 0);
             string Text = node.Query.Path[0].Text;
 
-            if (Text.StartsWith("not "))
+            if (Text.StartsWith("not ", StringComparison.InvariantCulture))
             {
                 CloneComplexifiedExpression(node, Text.Substring(4), out IExpression RightExpression);
                 complexifiedNode = CreateUnaryNotExpression(RightExpression);
@@ -926,7 +927,7 @@
 
             string Pattern = "-";
 
-            if (Text.StartsWith(Pattern + " "))
+            if (Text.StartsWith(Pattern + " ", StringComparison.InvariantCulture))
             {
                 IIdentifier OperatorName = CreateSimpleIdentifier(Pattern);
 

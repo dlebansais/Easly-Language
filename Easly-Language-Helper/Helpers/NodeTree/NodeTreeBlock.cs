@@ -1,5 +1,6 @@
 ﻿namespace BaseNodeHelper
 {
+    using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using BaseNode;
@@ -16,6 +17,9 @@
         #region Init
         public NodeTreeBlock(IPattern replicationPattern, IIdentifier sourceIdentifier, IReadOnlyList<INode> nodeList)
         {
+            if (nodeList == null)
+                throw new ArgumentNullException(nameof(nodeList));
+
             Debug.Assert(nodeList.Count > 0);
 
             ReplicationPattern = replicationPattern;

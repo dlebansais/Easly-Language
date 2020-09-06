@@ -1,5 +1,6 @@
 ﻿namespace BaseNodeHelper
 {
+    using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using BaseNode;
@@ -23,6 +24,9 @@
 
         public static IBlockList<TNodeInterface, TNode> CreateBlockList(IList<TNodeInterface> nodeList)
         {
+            if (nodeList == null)
+                throw new ArgumentNullException(nameof(nodeList));
+
             BlockList<TNodeInterface, TNode> Blocks = new BlockList<TNodeInterface, TNode>();
             Blocks.Documentation = NodeHelper.CreateEmptyDocumentation();
             Blocks.NodeBlockList = new List<IBlock<TNodeInterface, TNode>>();
@@ -38,6 +42,9 @@
 
         public static IBlockList<TNodeInterface, TNode> CreateBlockList(IList<IBlock<TNodeInterface, TNode>> nodeBlockList)
         {
+            if (nodeBlockList == null)
+                throw new ArgumentNullException(nameof(nodeBlockList));
+
             Debug.Assert(nodeBlockList.Count > 0, $"{nameof(nodeBlockList)} must have at least one block");
 
             foreach (IBlock<TNodeInterface, TNode> Block in nodeBlockList)
@@ -97,6 +104,9 @@
 
         public static IBlock<TNodeInterface, TNode> CreateBlock(IList<TNodeInterface> nodeList)
         {
+            if (nodeList == null)
+                throw new ArgumentNullException(nameof(nodeList));
+
             Debug.Assert(nodeList.Count > 0, "A block must be created with at least one node");
 
             return CreateBlock(nodeList, ReplicationStatus.Normal, NodeHelper.CreateEmptyPattern(), NodeHelper.CreateEmptyIdentifier());
@@ -104,6 +114,9 @@
 
         public static IBlock<TNodeInterface, TNode> CreateBlock(IList<TNodeInterface> nodeList, ReplicationStatus replication, IPattern replicationPattern, IIdentifier sourceIdentifier)
         {
+            if (nodeList == null)
+                throw new ArgumentNullException(nameof(nodeList));
+
             Debug.Assert(nodeList.Count > 0, "A block must be created with at least one node");
 
             Block<TNodeInterface, TNode> Block = new Block<TNodeInterface, TNode>();
@@ -118,6 +131,9 @@
 
         public static bool IsSimple(IBlockList<TNodeInterface, TNode> blockList)
         {
+            if (blockList == null)
+                throw new ArgumentNullException(nameof(blockList));
+
             return blockList.NodeBlockList.Count == 1 && blockList.NodeBlockList[0].NodeList.Count == 1;
         }
     }

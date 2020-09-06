@@ -61,7 +61,6 @@
                     if (!IsValid(nodeList, guidList, ChildNode, assertValid))
                         return FailIsValidCheck(assertValid);
                 }
-
                 else if (NodeTreeHelperOptional.IsOptionalChildNodeProperty(root, PropertyName, out ChildNodeType))
                 {
                     NodeTreeHelperOptional.GetChildNode(root, PropertyName, out bool IsAssigned, out INode ChildNode);
@@ -72,7 +71,6 @@
                             return FailIsValidCheck(assertValid);
                     }
                 }
-
                 else if (NodeTreeHelperList.IsNodeListProperty(root, PropertyName, out ChildNodeType))
                 {
                     NodeTreeHelperList.GetChildNodeList(root, PropertyName, out IReadOnlyList<INode> ChildNodeList);
@@ -89,7 +87,6 @@
                     if (ChildNodeList.Count == 0 && NodeHelper.IsCollectionNeverEmpty(root, PropertyName))
                         return FailIsValidCheck(assertValid);
                 }
-
                 else if (NodeTreeHelperBlockList.IsBlockListProperty(root, PropertyName, out ChildInterfaceType, out ChildNodeType))
                 {
                     IBlockList BlockList = NodeTreeHelperBlockList.GetBlockList(root, PropertyName);
@@ -113,10 +110,9 @@
                     if (BlockList.NodeBlockList.Count == 0 && NodeHelper.IsCollectionNeverEmpty(root, PropertyName))
                         return FailIsValidCheck(assertValid);
                 }
-
                 else if (NodeTreeHelper.IsBooleanProperty(root, PropertyName))
-                { }
-
+                {
+                }
                 else if (NodeTreeHelper.IsEnumProperty(root, PropertyName))
                 {
                     NodeTreeHelper.GetEnumRange(root.GetType(), PropertyName, out int Min, out int Max);
@@ -125,13 +121,11 @@
                     if (Value < Min || Value > Max)
                         return FailIsValidCheck(assertValid);
                 }
-
                 else if (NodeTreeHelper.IsStringProperty(root, PropertyName))
                 {
                     if (NodeTreeHelper.GetString(root, PropertyName) == null)
                         return FailIsValidCheck(assertValid);
                 }
-
                 else if (NodeTreeHelper.IsGuidProperty(root, PropertyName))
                 {
                     Guid PropertyGuid = NodeTreeHelper.GetGuid(root, PropertyName);
@@ -143,10 +137,9 @@
 
                     guidList.Add(PropertyGuid);
                 }
-
                 else if (NodeTreeHelper.IsDocumentProperty(root, PropertyName))
-                { }
-
+                {
+                }
                 else
                     return FailIsValidCheck(assertValid);
             }

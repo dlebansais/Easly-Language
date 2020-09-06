@@ -12,6 +12,12 @@
     {
         public static bool Walk(INode root, IWalkCallbacks<TContext> callbacks, TContext data)
         {
+            if (root == null)
+                throw new ArgumentNullException(nameof(root));
+
+            if (callbacks == null)
+                throw new ArgumentNullException(nameof(callbacks));
+
             return Walk(root, null, null, callbacks, data);
         }
 
@@ -37,7 +43,6 @@
                     if (!Walk(ChildNode, node, NodePropertyName, callbacks, data))
                         return false;
                 }
-
                 else if (NodeTreeHelperOptional.IsOptionalChildNodeProperty(node, NodePropertyName, out ChildNodeType))
                 {
                     NodeTreeHelperOptional.GetChildNode(node, NodePropertyName, out bool IsAssigned, out INode ChildNode);
@@ -49,7 +54,6 @@
                             return false;
                     }
                 }
-
                 else if (NodeTreeHelperList.IsNodeListProperty(node, NodePropertyName, out ChildNodeType))
                 {
                     NodeTreeHelperList.GetChildNodeList(node, NodePropertyName, out IReadOnlyList<INode> ChildNodeList);
@@ -68,7 +72,6 @@
                         }
                     }
                 }
-
                 else if (NodeTreeHelperBlockList.IsBlockListProperty(node, NodePropertyName, out ChildInterfaceType, out ChildNodeType))
                 {
                     IBlockList BlockList = NodeTreeHelperBlockList.GetBlockList(node, NodePropertyName);
@@ -124,31 +127,26 @@
                         }
                     }
                 }
-
                 else if (NodeTreeHelper.IsBooleanProperty(node, NodePropertyName))
                 {
                     if (callbacks.HandlerEnum != null && !callbacks.HandlerEnum(node, NodePropertyName, data))
                         return false;
                 }
-
                 else if (NodeTreeHelper.IsEnumProperty(node, NodePropertyName))
                 {
                     if (callbacks.HandlerEnum != null && !callbacks.HandlerEnum(node, NodePropertyName, data))
                         return false;
                 }
-
                 else if (NodeTreeHelper.IsStringProperty(node, NodePropertyName))
                 {
                     if (callbacks.HandlerString != null && !callbacks.HandlerString(node, NodePropertyName, data))
                         return false;
                 }
-
                 else if (NodeTreeHelper.IsGuidProperty(node, NodePropertyName))
                 {
                     if (callbacks.HandlerGuid != null && !callbacks.HandlerGuid(node, NodePropertyName, data))
                         return false;
                 }
-
                 else if (NodeTreeHelper.IsDocumentProperty(node, NodePropertyName))
                 {
                 }

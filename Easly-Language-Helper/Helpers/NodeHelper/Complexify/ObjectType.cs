@@ -1,5 +1,6 @@
 ﻿namespace BaseNodeHelper
 {
+    using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using BaseNode;
@@ -249,7 +250,7 @@
 
             string ClassIdentifierText = node.ClassIdentifier.Text;
 
-            if (ClassIdentifierText.StartsWith("like"))
+            if (ClassIdentifierText.StartsWith("like", StringComparison.InvariantCulture))
             {
                 string Text = ClassIdentifierText.Substring(4).Trim();
                 IQualifiedName AnchoredName = CreateSimpleQualifiedName(Text);
@@ -265,7 +266,7 @@
 
             string Text = node.ClassIdentifier.Text;
 
-            if (Text.StartsWith("function "))
+            if (Text.StartsWith("function ", StringComparison.InvariantCulture))
             {
                 ISimpleType BaseType = CreateSimpleSimpleType(Text.Substring(9));
                 ISimpleType ReturnType = CreateEmptySimpleType();
@@ -280,9 +281,9 @@
             complexifiedNode = null;
 
             string Text = node.ClassIdentifier.Text;
-            int GenericBeginIndex = Text.IndexOf("[");
+            int GenericBeginIndex = Text.IndexOf("[", StringComparison.InvariantCulture);
 
-            if (GenericBeginIndex >= 0 && Text.EndsWith("]"))
+            if (GenericBeginIndex >= 0 && Text.EndsWith("]", StringComparison.InvariantCulture))
             {
                 IIdentifier ClassIdentifier = CreateSimpleIdentifier(Text.Substring(0, GenericBeginIndex));
                 ISimpleType TypeSource = CreateSimpleSimpleType(Text.Substring(GenericBeginIndex + 1, Text.Length - GenericBeginIndex - 2));
@@ -300,7 +301,7 @@
 
             string Text = node.ClassIdentifier.Text;
 
-            if (Text.StartsWith("indexer "))
+            if (Text.StartsWith("indexer ", StringComparison.InvariantCulture))
             {
                 ISimpleType BaseType = CreateSimpleSimpleType(Text.Substring(8));
                 ISimpleType EntityType = CreateEmptySimpleType();
@@ -319,7 +320,7 @@
 
             string Text = node.ClassIdentifier.Text;
 
-            if (Text.StartsWith("property "))
+            if (Text.StartsWith("property ", StringComparison.InvariantCulture))
             {
                 ISimpleType BaseType = CreateSimpleSimpleType(Text.Substring(9));
                 ISimpleType EntityType = CreateEmptySimpleType();
@@ -335,7 +336,7 @@
 
             string Text = node.ClassIdentifier.Text;
 
-            if (Text.StartsWith("procedure "))
+            if (Text.StartsWith("procedure ", StringComparison.InvariantCulture))
             {
                 ISimpleType BaseType = CreateSimpleSimpleType(Text.Substring(10));
                 complexifiedNode = CreateProcedureType(BaseType);
@@ -350,7 +351,7 @@
 
             string Text = node.ClassIdentifier.Text;
 
-            if (Text.StartsWith("tuple "))
+            if (Text.StartsWith("tuple ", StringComparison.InvariantCulture))
             {
                 IName EntityName = CreateEmptyName();
                 ISimpleType EntityType = CreateSimpleSimpleType(Text.Substring(6));

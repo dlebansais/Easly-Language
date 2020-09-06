@@ -1,5 +1,6 @@
 ﻿namespace BaseNodeHelper
 {
+    using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.Diagnostics;
@@ -7,169 +8,78 @@
 
     public static partial class NodeHelper
     {
-        #region General
-        public static bool GetComplexifiedNode(INode node, out IList<INode> complexifiedNodeList)
+        public static bool GetRenamedBinarySymbol(string symbol, out string renamedSymbol)
         {
-            complexifiedNodeList = new List<INode>();
-            GetComplexifiedNodeRecursive(node, complexifiedNodeList);
+            renamedSymbol = null;
 
-            return complexifiedNodeList.Count > 0;
-        }
-
-        private static void GetComplexifiedNodeRecursive(INode node, IList<INode> complexifiedNodeList)
-        {
-            if (GetComplexifiedNodeNotRecursive(node, out IList ComplexifiedList))
+            switch (symbol)
             {
-                int OldCount = complexifiedNodeList.Count;
-
-                foreach (INode Node in ComplexifiedList)
-                    complexifiedNodeList.Add(Node);
-
-                int NewCount = complexifiedNodeList.Count;
-
-                for (int i = OldCount; i < NewCount; i++)
-                    GetComplexifiedNodeRecursive(complexifiedNodeList[i], complexifiedNodeList);
-            }
-        }
-
-        private static bool GetComplexifiedNodeNotRecursive(INode node, out IList complexifiedNodeList)
-        {
-            bool Result = false;
-            complexifiedNodeList = null;
-
-            switch (node)
-            {
-                case IArgument AsArgument:
-                    Result = GetComplexifiedArgument(AsArgument, out IList<IArgument> ComplexifiedArgumentList);
-                    complexifiedNodeList = (IList)ComplexifiedArgumentList;
+                case ">=":
+                    renamedSymbol = "≥";
                     break;
 
-                case IAttachment AsAttachment:
-                    Result = GetComplexifiedAttachment(AsAttachment, out IList<IAttachment> ComplexifiedAttachmentList);
-                    complexifiedNodeList = (IList)ComplexifiedAttachmentList;
+                case "<=":
+                    renamedSymbol = "≤";
                     break;
 
-                case IExpression AsExpression:
-                    Result = GetComplexifiedExpression(AsExpression, out IList<IExpression> ComplexifiedExpressionList);
-                    complexifiedNodeList = (IList)ComplexifiedExpressionList;
+                case "=>":
+                    renamedSymbol = "⇒";
                     break;
-
-                case IInstruction AsInstruction:
-                    Result = GetComplexifiedInstruction(AsInstruction, out IList<IInstruction> ComplexifiedInstructionList);
-                    complexifiedNodeList = (IList)ComplexifiedInstructionList;
-                    break;
-
-                case IObjectType AsObjectType:
-                    Result = GetComplexifiedObjectType(AsObjectType, out IList<IObjectType> ComplexifiedObjectTypeList);
-                    complexifiedNodeList = (IList)ComplexifiedObjectTypeList;
-                    break;
-
-                case ITypeArgument AsTypeArgument:
-                    Result = GetComplexifiedTypeArgument(AsTypeArgument, out IList<ITypeArgument> ComplexifiedTypeArgumentList);
-                    complexifiedNodeList = (IList)ComplexifiedTypeArgumentList;
-                    break;
-
-                case IQualifiedName AsQualifiedName:
-                    Result = GetComplexifiedQualifiedName(AsQualifiedName, out IList<IQualifiedName> ComplexifiedQualifiedNameList);
-                    complexifiedNodeList = (IList)ComplexifiedQualifiedNameList;
-                    break;
-
-                case IConditional AsConditional:
-                    Result = GetComplexifiedConditional(AsConditional, out IList<IConditional> ComplexifiedConditionalList);
-                    complexifiedNodeList = (IList)ComplexifiedConditionalList;
-                    break;
-
-                default:
-                    complexifiedNodeList = null;
-                    return false;
             }
 
-            return Result;
+            return renamedSymbol != null;
         }
-        #endregion
 
-        #region Others
-        private static bool GetComplexifiedAttachment(IAttachment node, out IList<IAttachment> complexifiedAttachmentList)
+        public static bool GetInverseRenamedBinarySymbol(string symbol, out string renamedSymbol)
         {
-            complexifiedAttachmentList = null;
+            renamedSymbol = null;
 
-            if (GetComplexifiedObjectTypeBlockList(node.AttachTypeBlocks, out IBlockList<IObjectType, ObjectType> ComplexifiedAttachTypeBlocks))
+            switch (symbol)
             {
-                IScope ClonedInstructions = (IScope)DeepCloneNode(node.Instructions, cloneCommentGuid: false);
-                IAttachment ComplexifiedAttachment = CreateAttachment(ComplexifiedAttachTypeBlocks, ClonedInstructions);
+                case "≥":
+                    renamedSymbol = ">=";
+                    break;
 
-                complexifiedAttachmentList = new List<IAttachment>() { ComplexifiedAttachment };
+                case "≤":
+                    renamedSymbol = "<=";
+                    break;
 
-                return true;
+                case "⇒":
+                    renamedSymbol = "=>";
+                    break;
             }
 
-            complexifiedAttachmentList = null;
-            return false;
+            return renamedSymbol != null;
         }
 
-        private static bool GetComplexifiedQualifiedName(IQualifiedName node, out IList<IQualifiedName> complexifiedQualifiedNameList)
+        public static bool GetRenamedUnarySymbol(string symbol, out string renamedSymbol)
         {
-            complexifiedQualifiedNameList = null;
+            renamedSymbol = null;
 
-            if (ComplexifyQualifiedName(node, out IQualifiedName ComplexifiedQualifiedName))
-                complexifiedQualifiedNameList = new List<IQualifiedName>() { ComplexifiedQualifiedName };
-
-            return complexifiedQualifiedNameList != null;
-        }
-
-        private static bool ComplexifyQualifiedName(IQualifiedName node, out IQualifiedName complexifiedNode)
-        {
-            Debug.Assert(node.Path.Count > 0, "A qualified name path must contain at least one element");
-
-            complexifiedNode = null;
-            bool IsSplit = false;
-
-            IList<IIdentifier> Path = new List<IIdentifier>();
-
-            foreach (IIdentifier Item in node.Path)
+            switch (symbol)
             {
-                string[] SplitText = Item.Text.Split('.');
-                IsSplit |= SplitText.Length > 1;
-
-                for (int i = 0; i < SplitText.Length; i++)
-                {
-                    IIdentifier Identifier = CreateSimpleIdentifier(SplitText[i]);
-                    Path.Add(Identifier);
-                }
+                case "sqrt":
+                    renamedSymbol = "√";
+                    break;
             }
 
-            Debug.Assert((IsSplit && Path.Count >= node.Path.Count) || (!IsSplit && Path.Count == node.Path.Count), "A split at least increases the count of elements, and no split preserves it");
-
-            if (IsSplit)
-                complexifiedNode = CreateQualifiedName(Path);
-
-            return complexifiedNode != null;
+            return renamedSymbol != null;
         }
 
-        private static bool GetComplexifiedConditional(IConditional node, out IList<IConditional> complexifiedConditionalList)
+        public static bool GetInverseRenamedUnarySymbol(string symbol, out string renamedSymbol)
         {
-            complexifiedConditionalList = null;
+            renamedSymbol = null;
 
-            if (GetComplexifiedExpression(node.BooleanExpression, out IList<IExpression> ComplexifiedBooleanExpressionList))
+            switch (symbol)
             {
-                complexifiedConditionalList = new List<IConditional>();
-
-                foreach (IExpression ComplexifiedBooleanExpression in ComplexifiedBooleanExpressionList)
-                {
-                    IScope ClonedInstructions = (IScope)DeepCloneNode(node.Instructions, cloneCommentGuid: false);
-                    IConditional ComplexifiedNode = CreateConditional(ComplexifiedBooleanExpression, ClonedInstructions);
-                    complexifiedConditionalList.Add(ComplexifiedNode);
-                }
-
-                return true;
+                case "√":
+                    renamedSymbol = "sqrt";
+                    break;
             }
 
-            complexifiedConditionalList = null;
-            return false;
+            return renamedSymbol != null;
         }
-        #endregion
 
-        #region Tools
         private static bool GetComplexifiedIdentifierBlockList(IBlockList<IIdentifier, Identifier> identifierBlockList, out IBlockList<IIdentifier, Identifier> newBlockList)
         {
             for (int BlockIndex = 0; BlockIndex < identifierBlockList.NodeBlockList.Count; BlockIndex++)
@@ -439,7 +349,7 @@
 
             for (int i = 0; i < qualifiedName.Path.Count; i++)
             {
-                int Index = qualifiedName.Path[i].Text.IndexOf(leftSymbol);
+                int Index = qualifiedName.Path[i].Text.IndexOf(leftSymbol.ToString(), StringComparison.InvariantCulture);
                 if (Index >= 0)
                 {
                     string Text = qualifiedName.Path[i].Text;
@@ -454,7 +364,7 @@
             {
                 string Text = qualifiedName.Path[qualifiedName.Path.Count - 1].Text;
 
-                if (Text.EndsWith(rightSymbol.ToString()))
+                if (Text.EndsWith(rightSymbol.ToString(), StringComparison.InvariantCulture))
                 {
                     List<IIdentifier> CommandIdentifierList = new List<IIdentifier>();
                     for (int i = 0; i < BreakPathIndex; i++)
@@ -524,7 +434,7 @@
                 IEntityDeclaration FirstEntityDeclaration = null;
                 IEntityDeclaration SecondEntityDeclaration = null;
 
-                if ((ColonIndex = entityDeclaration.EntityName.Text.IndexOf(':')) >= 0)
+                if ((ColonIndex = entityDeclaration.EntityName.Text.IndexOf(":", StringComparison.InvariantCulture)) >= 0)
                 {
                     string FirstName = entityDeclaration.EntityName.Text.Substring(0, ColonIndex);
                     string FirstType = entityDeclaration.EntityName.Text.Substring(ColonIndex + 1);
@@ -536,7 +446,7 @@
 
                     SecondEntityDeclaration = CreateEntityDeclaration(SecondName, SecondType);
                 }
-                else if ((CommaIndex = AsSimpleType.ClassIdentifier.Text.IndexOf(',')) >= 0)
+                else if ((CommaIndex = AsSimpleType.ClassIdentifier.Text.IndexOf(",", StringComparison.InvariantCulture)) >= 0)
                 {
                     IName FirstName = (IName)DeepCloneNode(entityDeclaration.EntityName, cloneCommentGuid: false);
                     string FirstType = AsSimpleType.ClassIdentifier.Text.Substring(0, CommaIndex);
@@ -730,7 +640,7 @@
             beforeText = null;
             afterText = null;
 
-            int PatternIndex = text.IndexOf(patternText);
+            int PatternIndex = text.IndexOf(patternText, StringComparison.InvariantCulture);
             if (PatternIndex >= 0)
             {
                 beforeText = text.Substring(0, PatternIndex).Trim();
@@ -794,7 +704,7 @@
             Debug.Assert(clonedCommand.Command.Path.Count > 0, "The clone command path is always valid");
             IIdentifier FirstIdentifier = clonedCommand.Command.Path[0];
             string Text = FirstIdentifier.Text;
-            Debug.Assert(Text.StartsWith(pattern), "The first element in the clone command path is always unchanged");
+            Debug.Assert(Text.StartsWith(pattern, StringComparison.InvariantCulture), "The first element in the clone command path is always unchanged");
 
             if (Text.Length > pattern.Length || clonedCommand.Command.Path.Count == 1)
                 NodeTreeHelper.SetString(FirstIdentifier, nameof(IIdentifier.Text), Text.Substring(pattern.Length));
@@ -806,7 +716,7 @@
         {
             if (!string.IsNullOrEmpty(text))
             {
-                text = text.Substring(0, 1).ToUpper() + text.Substring(1);
+                text = text.Substring(0, 1).ToUpperInvariant() + text.Substring(1);
 
                 string[] Names = typeof(Keyword).GetEnumNames();
 
@@ -822,78 +732,6 @@
 
             value = (Keyword)(-1);
             return false;
-        }
-
-        public static bool GetRenamedBinarySymbol(string symbol, out string renamedSymbol)
-        {
-            renamedSymbol = null;
-
-            switch (symbol)
-            {
-                case ">=":
-                    renamedSymbol = "≥";
-                    break;
-
-                case "<=":
-                    renamedSymbol = "≤";
-                    break;
-
-                case "=>":
-                    renamedSymbol = "⇒";
-                    break;
-            }
-
-            return renamedSymbol != null;
-        }
-
-        public static bool GetInverseRenamedBinarySymbol(string symbol, out string renamedSymbol)
-        {
-            renamedSymbol = null;
-
-            switch (symbol)
-            {
-                case "≥":
-                    renamedSymbol = ">=";
-                    break;
-
-                case "≤":
-                    renamedSymbol = "<=";
-                    break;
-
-                case "⇒":
-                    renamedSymbol = "=>";
-                    break;
-            }
-
-            return renamedSymbol != null;
-        }
-
-        public static bool GetRenamedUnarySymbol(string symbol, out string renamedSymbol)
-        {
-            renamedSymbol = null;
-
-            switch (symbol)
-            {
-                case "sqrt":
-                    renamedSymbol = "√";
-                    break;
-            }
-
-            return renamedSymbol != null;
-        }
-
-        public static bool GetInverseRenamedUnarySymbol(string symbol, out string renamedSymbol)
-        {
-            renamedSymbol = null;
-
-            switch (symbol)
-            {
-                case "√":
-                    renamedSymbol = "sqrt";
-                    break;
-            }
-
-            return renamedSymbol != null;
         }
 
         private static bool IsNodeListSameType<T>(IList nodeList, out IList<T> result)
@@ -937,6 +775,5 @@
 
             return Result;
         }
-        #endregion
     }
 }

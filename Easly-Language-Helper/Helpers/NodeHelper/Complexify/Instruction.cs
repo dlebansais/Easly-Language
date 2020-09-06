@@ -1,5 +1,6 @@
 ﻿namespace BaseNodeHelper
 {
+    using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using BaseNode;
@@ -174,13 +175,12 @@
                     string Text = AssignmentTarget.Path[0].Text;
                     if (Text.Length > 0)
                     {
-                        Text = Text.Substring(0, 1).ToUpper() + Text.Substring(1);
+                        Text = Text.Substring(0, 1).ToUpperInvariant() + Text.Substring(1);
 
                         Keyword Keyword = Keyword.Current;
 
                         if (Text == "Result")
                             Keyword = Keyword.Result;
-
                         else if (Text == "Retry")
                             Keyword = Keyword.Retry;
 
@@ -358,7 +358,7 @@
 
             for (int i = 0; i < node.Command.Path.Count; i++)
             {
-                BreakTextIndex = node.Command.Path[i].Text.IndexOf(":=");
+                BreakTextIndex = node.Command.Path[i].Text.IndexOf(":=", StringComparison.InvariantCulture);
                 if (BreakTextIndex >= 0)
                 {
                     BreakIndex = i;
@@ -403,7 +403,7 @@
                 string ExpressionText;
                 string NameText;
 
-                int ToIndex = AfterText.LastIndexOf("to");
+                int ToIndex = AfterText.LastIndexOf("to", StringComparison.InvariantCulture);
                 if (ToIndex >= 1)
                 {
                     ExpressionText = AfterText.Substring(0, ToIndex).Trim();
