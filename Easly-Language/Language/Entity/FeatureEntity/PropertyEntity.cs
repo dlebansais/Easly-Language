@@ -11,7 +11,7 @@
         }
         #endregion
 
-        #region Client Interface
+        #region Properties
         public TypeEntity Type
         {
             get
@@ -20,7 +20,9 @@
                 return TypeEntity.BuiltTypeEntity(AsPropertyInfo.PropertyType);
             }
         }
+        #endregion
 
+        #region Client Interface
         public object GetValue(object o)
         {
             PropertyInfo AsPropertyInfo = (PropertyInfo)FeatureInfo;

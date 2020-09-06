@@ -97,11 +97,8 @@
                 Type[] GenericArguments = new Type[] { t };
                 Type BoundType = typeof(SpecializedTypeEntity<>).MakeGenericType(GenericArguments);
 
-                PropertyInfo? BoundTypePropertyInfo = BoundType.GetProperty(nameof(SpecializedTypeEntity<object>.Singleton));
-                if (BoundTypePropertyInfo == null) throw new InvalidOperationException();
-
-                object? BoundTypePropertyValue = BoundTypePropertyInfo.GetValue(null);
-                if (BoundTypePropertyValue == null) throw new InvalidOperationException();
+                PropertyInfo BoundTypePropertyInfo = BoundType.GetProperty(nameof(SpecializedTypeEntity<object>.Singleton)) !;
+                object BoundTypePropertyValue = BoundTypePropertyInfo.GetValue(null) !;
 
                 Result = (TypeEntity)BoundTypePropertyValue;
             }

@@ -11,7 +11,7 @@
         }
         #endregion
 
-        #region Client Interface
+        #region Properties
         public TypeEntity Type
         {
             get

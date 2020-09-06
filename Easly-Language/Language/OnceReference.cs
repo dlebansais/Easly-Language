@@ -12,8 +12,6 @@
     public class OnceReference<T> : IOnceReference
         where T : class
     {
-        private T? ItemInternal;
-
         #region Properties
         public bool IsAssigned { get; private set; }
 
@@ -54,6 +52,8 @@
                 return ItemInternal;
             }
         }
+
+        private T? ItemInternal;
         #endregion
     }
 }

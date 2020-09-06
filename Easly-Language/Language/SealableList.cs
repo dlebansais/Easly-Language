@@ -19,13 +19,18 @@
 
     public class SealableList<TItem> : List<TItem>, ISealableList<TItem>
     {
+        #region Init
         public SealableList()
             : base()
         {
         }
+        #endregion
 
+        #region Properties
         public bool IsSealed { get; private set; }
+        #endregion
 
+        #region Client Interface
         public void Seal()
         {
             Debug.Assert(!IsSealed, "Sealing should be done only once");
@@ -56,5 +61,6 @@
 
             base.AddRange(other);
         }
+        #endregion
     }
 }

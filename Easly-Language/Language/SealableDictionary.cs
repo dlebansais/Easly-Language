@@ -32,6 +32,7 @@
     public class SealableDictionary<TKey, TValue> : Dictionary<TKey, TValue>, ISealableDictionary<TKey, TValue>
         where TKey : notnull
     {
+        #region Init
         public SealableDictionary()
             : base()
         {
@@ -41,9 +42,25 @@
             : base(info, context)
         {
         }
+        #endregion
 
+        #region Properties
         public bool IsSealed { get; private set; }
 
+        public ICollection<TKey> Indexes
+        {
+            get
+            {
+                IList<TKey> Result = new List<TKey>();
+                foreach (KeyValuePair<TKey, TValue> Item in this)
+                    Result.Add(Item.Key);
+
+                return Result;
+            }
+        }
+        #endregion
+
+        #region Client Interface
         public void Seal()
         {
             Debug.Assert(!IsSealed, "Sealing should be done only once");
@@ -67,18 +84,6 @@
                 CloneTable.Add(Entry.Key, Entry.Value);
 
             return CloneTable;
-        }
-
-        public ICollection<TKey> Indexes
-        {
-            get
-            {
-                IList<TKey> Result = new List<TKey>();
-                foreach (KeyValuePair<TKey, TValue> Item in this)
-                    Result.Add(Item.Key);
-
-                return Result;
-            }
         }
 
         public void ChangeKey(TKey oldKey, TKey newKey)
@@ -117,5 +122,6 @@
                 if (!ContainsKey(Item.Key))
                     base.Add(Item.Key, Item.Value);
         }
+        #endregion
     }
 }

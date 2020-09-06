@@ -9,7 +9,9 @@
         {
             FeatureInfo = featureInfo;
         }
+        #endregion
 
+        #region Properties
         protected MemberInfo FeatureInfo { get; private set; }
         #endregion
     }

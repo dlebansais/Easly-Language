@@ -27,11 +27,6 @@
     public class OptionalReference<T> : IOptionalReference<T>, IOptionalReference
         where T : class
     {
-        #region Implementation
-        [PolySerializer.Serializable(Exclude = true)]
-        public T? ItemInternal;
-        #endregion
-
         #region Init
         public OptionalReference()
         {
@@ -71,6 +66,9 @@
         }
 
         object IOptionalReference.Item { get { return Item; } }
+
+        [PolySerializer.Serializable(Exclude = true)]
+        public T? ItemInternal;
         #endregion
 
         #region Assignment

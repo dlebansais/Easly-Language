@@ -7,8 +7,6 @@
         where T : class
     {
         #region Properties
-        private T? ItemInternal;
-
         public virtual bool IsAssigned { get; protected set; }
 
         public virtual T Item
@@ -37,6 +35,8 @@
                     throw new InvalidOperationException();
             }
         }
+
+        private T? ItemInternal;
         #endregion
 
         #region Detaching

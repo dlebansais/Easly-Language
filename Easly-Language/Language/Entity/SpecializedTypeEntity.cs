@@ -9,7 +9,9 @@
             : base(t)
         {
         }
+        #endregion
 
+        #region Properties
         public static SpecializedTypeEntity<T> Singleton
         {
             get
