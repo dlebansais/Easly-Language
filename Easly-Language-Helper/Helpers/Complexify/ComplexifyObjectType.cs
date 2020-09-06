@@ -59,7 +59,7 @@
                     break;
             }
 
-            Debug.Assert(IsHandled);
+            Debug.Assert(IsHandled, $"All descendants of {nameof(IObjectType)} have been handled");
 
             return Result;
         }

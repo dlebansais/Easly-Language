@@ -1,8 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
-
 namespace BaseNode
 {
+    using System.Collections;
+    using System.Collections.Generic;
+
     public interface IBlock
     {
         IDocument Documentation { get; }
@@ -12,24 +12,24 @@ namespace BaseNode
         IIdentifier SourceIdentifier { get; }
     }
 
-    public interface IBlock<IN, N>
-        where IN : class, INode
-        where N : Node, IN
+    public interface IBlock<TNodeInterface, TNode>
+        where TNodeInterface : class, INode
+        where TNode : Node, TNodeInterface
     {
         IDocument Documentation { get; }
-        IList<IN> NodeList { get; }
+        IList<TNodeInterface> NodeList { get; }
         ReplicationStatus Replication { get; }
         IPattern ReplicationPattern { get; }
         IIdentifier SourceIdentifier { get; }
     }
 
     [System.Serializable]
-    public class Block<IN, N> : IBlock<IN, N>, IBlock
-        where IN : class, INode
-        where N : Node, IN
+    public class Block<TNodeInterface, TNode> : IBlock<TNodeInterface, TNode>, IBlock
+        where TNodeInterface : class, INode
+        where TNode : Node, TNodeInterface
     {
         public virtual IDocument Documentation { get; set; }
-        public virtual IList<IN> NodeList { get; set; }
+        public virtual IList<TNodeInterface> NodeList { get; set; }
         IList IBlock.NodeList { get { return NodeList as IList; } }
         public virtual ReplicationStatus Replication { get; set; }
         public virtual IPattern ReplicationPattern { get; set; }

@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Reflection;
-using BaseNode;
-
-namespace BaseNodeHelper
+﻿namespace BaseNodeHelper
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Reflection;
+    using BaseNode;
+
     public static class NodeTreeDiagnostic
     {
         public static bool IsValid(INode root, bool assertValid = true)

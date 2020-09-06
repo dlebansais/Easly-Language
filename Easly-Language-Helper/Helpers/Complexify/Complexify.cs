@@ -119,7 +119,7 @@
 
         private static bool ComplexifyQualifiedName(IQualifiedName node, out IQualifiedName complexifiedNode)
         {
-            Debug.Assert(node.Path.Count > 0);
+            Debug.Assert(node.Path.Count > 0, "A qualified name path must contain at least one element");
 
             complexifiedNode = null;
             bool IsSplit = false;
@@ -138,7 +138,7 @@
                 }
             }
 
-            Debug.Assert((IsSplit && Path.Count >= node.Path.Count) || (!IsSplit && Path.Count == node.Path.Count));
+            Debug.Assert((IsSplit && Path.Count >= node.Path.Count) || (!IsSplit && Path.Count == node.Path.Count), "A split at least increases the count of elements, and no split preserves it");
 
             if (IsSplit)
                 complexifiedNode = CreateQualifiedName(Path);
@@ -382,7 +382,7 @@
                     if (GetComplexifiedAssignmentArgument(AssignmentArgument, out IList<IArgument> ComplexifiedAssignmentArgumentList))
                     {
                         IAssignmentArgument ComplexifiedAssignmentArgument = ComplexifiedAssignmentArgumentList[0] as IAssignmentArgument;
-                        Debug.Assert(ComplexifiedAssignmentArgument != null);
+                        Debug.Assert(ComplexifiedAssignmentArgument != null, $"The list can't contain anything else than {nameof(IAssignmentArgument)} elements");
 
                         newAssignmentArgumentBlocks = (IBlockList<IAssignmentArgument, AssignmentArgument>)DeepCloneBlockList((IBlockList)argumentBlocks, cloneCommentGuid: false);
 
@@ -711,7 +711,7 @@
 
         private static bool ParsePattern(IQueryExpression node, string patternText, out string beforeText, out string afterText)
         {
-            Debug.Assert(node.Query.Path.Count > 0);
+            Debug.Assert(node.Query.Path.Count > 0, "The parsed node has a valid path");
 
             string Text = node.Query.Path[0].Text;
             return ParsePattern(Text, patternText, out beforeText, out afterText);
@@ -719,7 +719,7 @@
 
         private static bool ParsePattern(ICommandInstruction node, string patternText, out string beforeText, out string afterText)
         {
-            Debug.Assert(node.Command.Path.Count > 0);
+            Debug.Assert(node.Command.Path.Count > 0, "The parsed node has a valid path");
 
             string Text = node.Command.Path[0].Text;
             return ParsePattern(Text, patternText, out beforeText, out afterText);
@@ -743,8 +743,8 @@
         private static void CloneComplexifiedExpression(IQueryExpression node, string afterText, out IExpression rightExpression)
         {
             IQueryExpression ClonedQuery = DeepCloneNode(node, cloneCommentGuid: false) as IQueryExpression;
-            Debug.Assert(ClonedQuery.Query != null);
-            Debug.Assert(ClonedQuery.Query.Path.Count > 0);
+            Debug.Assert(ClonedQuery.Query != null, $"The clone always contains a {nameof(IQueryExpression.Query)}");
+            Debug.Assert(ClonedQuery.Query.Path.Count > 0, "The clone query path is always valid");
 
             NodeTreeHelper.SetString(ClonedQuery.Query.Path[0], "Text", afterText);
 
@@ -756,8 +756,8 @@
             leftExpression = CreateSimpleQueryExpression(beforeText);
 
             IQueryExpression ClonedQuery = DeepCloneNode(node, cloneCommentGuid: false) as IQueryExpression;
-            Debug.Assert(ClonedQuery.Query != null);
-            Debug.Assert(ClonedQuery.Query.Path.Count > 0);
+            Debug.Assert(ClonedQuery.Query != null, $"The clone always contains a {nameof(IQueryExpression.Query)}");
+            Debug.Assert(ClonedQuery.Query.Path.Count > 0, "The clone query path is always valid");
 
             NodeTreeHelper.SetString(ClonedQuery.Query.Path[0], "Text", afterText);
 
@@ -767,8 +767,8 @@
         private static void CloneComplexifiedCommand(ICommandInstruction node, string afterText, out IExpression rightExpression)
         {
             ICommandInstruction ClonedCommand = DeepCloneNode(node, cloneCommentGuid: false) as ICommandInstruction;
-            Debug.Assert(ClonedCommand.Command != null);
-            Debug.Assert(ClonedCommand.Command.Path.Count > 0);
+            Debug.Assert(ClonedCommand.Command != null, $"The clone always contains a {nameof(ICommandInstruction.Command)}");
+            Debug.Assert(ClonedCommand.Command.Path.Count > 0, "The clone command path is always valid");
 
             NodeTreeHelper.SetString(ClonedCommand.Command.Path[0], "Text", afterText);
 
@@ -780,8 +780,8 @@
             leftExpression = CreateSimpleQueryExpression(beforeText);
 
             ICommandInstruction ClonedCommand = DeepCloneNode(node, cloneCommentGuid: false) as ICommandInstruction;
-            Debug.Assert(ClonedCommand.Command != null);
-            Debug.Assert(ClonedCommand.Command.Path.Count > 0);
+            Debug.Assert(ClonedCommand.Command != null, $"The clone always contains a {nameof(ICommandInstruction.Command)}");
+            Debug.Assert(ClonedCommand.Command.Path.Count > 0, "The clone command path is always valid");
 
             NodeTreeHelper.SetString(ClonedCommand.Command.Path[0], "Text", afterText);
 
@@ -791,10 +791,10 @@
         private static void CloneComplexifiedCommand(ICommandInstruction node, string pattern, out ICommandInstruction clonedCommand)
         {
             clonedCommand = DeepCloneNode(node, cloneCommentGuid: false) as ICommandInstruction;
-            Debug.Assert(clonedCommand.Command.Path.Count > 0);
+            Debug.Assert(clonedCommand.Command.Path.Count > 0, "The clone command path is always valid");
             IIdentifier FirstIdentifier = clonedCommand.Command.Path[0];
             string Text = FirstIdentifier.Text;
-            Debug.Assert(Text.StartsWith(pattern));
+            Debug.Assert(Text.StartsWith(pattern), "The first element in the clone command path is always unchanged");
 
             if (Text.Length > pattern.Length || clonedCommand.Command.Path.Count == 1)
                 NodeTreeHelper.SetString(FirstIdentifier, nameof(IIdentifier.Text), Text.Substring(pattern.Length));
@@ -822,34 +822,6 @@
 
             value = (Keyword)(-1);
             return false;
-        }
-
-        private static bool IsNodeListSameType<T>(IList nodeList, out IList<T> result)
-            where T: INode
-        {
-            result = new List<T>();
-
-            foreach (object Node in nodeList)
-                if (Node is T AsT)
-                    result.Add(AsT);
-                else
-                    return false;
-
-            return true;
-        }
-
-        private static bool GetRenamedBinarySymbol(IIdentifier symbol, out IIdentifier renamedSymbol)
-        {
-            renamedSymbol = null;
-            bool Result = false;
-
-            if (GetRenamedBinarySymbol(symbol.Text, out string renamedSymbolText))
-            {
-                renamedSymbol = CreateSimpleIdentifier(renamedSymbolText);
-                Result = true;
-            }
-
-            return Result;
         }
 
         public static bool GetRenamedBinarySymbol(string symbol, out string renamedSymbol)
@@ -896,20 +868,6 @@
             return renamedSymbol != null;
         }
 
-        private static bool GetRenamedUnarySymbol(IIdentifier symbol, out IIdentifier renamedSymbol)
-        {
-            renamedSymbol = null;
-            bool Result = false;
-
-            if (GetRenamedUnarySymbol(symbol.Text, out string renamedSymbolText))
-            {
-                renamedSymbol = CreateSimpleIdentifier(renamedSymbolText);
-                Result = true;
-            }
-
-            return Result;
-        }
-
         public static bool GetRenamedUnarySymbol(string symbol, out string renamedSymbol)
         {
             renamedSymbol = null;
@@ -936,6 +894,48 @@
             }
 
             return renamedSymbol != null;
+        }
+
+        private static bool IsNodeListSameType<T>(IList nodeList, out IList<T> result)
+            where T : INode
+        {
+            result = new List<T>();
+
+            foreach (object Node in nodeList)
+                if (Node is T AsT)
+                    result.Add(AsT);
+                else
+                    return false;
+
+            return true;
+        }
+
+        private static bool GetRenamedBinarySymbol(IIdentifier symbol, out IIdentifier renamedSymbol)
+        {
+            renamedSymbol = null;
+            bool Result = false;
+
+            if (GetRenamedBinarySymbol(symbol.Text, out string renamedSymbolText))
+            {
+                renamedSymbol = CreateSimpleIdentifier(renamedSymbolText);
+                Result = true;
+            }
+
+            return Result;
+        }
+
+        private static bool GetRenamedUnarySymbol(IIdentifier symbol, out IIdentifier renamedSymbol)
+        {
+            renamedSymbol = null;
+            bool Result = false;
+
+            if (GetRenamedUnarySymbol(symbol.Text, out string renamedSymbolText))
+            {
+                renamedSymbol = CreateSimpleIdentifier(renamedSymbolText);
+                Result = true;
+            }
+
+            return Result;
         }
         #endregion
     }

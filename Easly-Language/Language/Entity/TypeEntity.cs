@@ -1,9 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Reflection;
-
-namespace Easly
+﻿namespace Easly
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Globalization;
+    using System.Reflection;
+
     public interface ITypeEntity
     {
         string Name { get; }
@@ -22,6 +23,7 @@ namespace Easly
             Features = new List<FeatureEntity>();
             Procedures = new SealableDictionary<string, ProcedureEntity>();
             Functions = new SealableDictionary<string, FunctionEntity>();
+
             foreach (KeyValuePair<string, MethodInfo> Item in FlattenedMethodList)
                 if (Item.Value.ReturnType == typeof(void))
                 {
@@ -35,6 +37,7 @@ namespace Easly
                     Features.Add(FeatureEntity);
                     Functions.Add(OverloadedName(Functions, Item.Key), FeatureEntity);
                 }
+
             Procedures.Seal();
             Functions.Seal();
 
@@ -44,12 +47,14 @@ namespace Easly
             RecursiveGetProperties(TypeInfo, FlattenedPropertyList);
 
             Properties = new SealableDictionary<string, PropertyEntity>();
+
             foreach (KeyValuePair<string, PropertyInfo> Item in FlattenedPropertyList)
             {
                 PropertyEntity FeatureEntity = new PropertyEntity(Item.Value);
                 Features.Add(FeatureEntity);
                 Properties.Add(OverloadedName(Properties, Item.Key), FeatureEntity);
             }
+
             Properties.Seal();
 
             Parents = new List<TypeEntity>();
@@ -96,15 +101,33 @@ namespace Easly
             if (table.ContainsKey(name))
             {
                 int i = 1;
-                while (table.ContainsKey(name + i.ToString()))
+                while (table.ContainsKey(name + i.ToString(CultureInfo.InvariantCulture)))
                     i++;
 
-                return name + i.ToString();
+                return name + i.ToString(CultureInfo.InvariantCulture);
             }
             else
                 return name;
         }
+        #endregion
 
+        #region Properties
+        public string Name
+        {
+            get { return TypeInfo.Name; }
+        }
+
+        public SealableDictionary<string, ProcedureEntity> Procedures { get; private set; }
+        public SealableDictionary<string, FunctionEntity> Functions { get; private set; }
+        public OnceReference<IndexerEntity> Indexer { get; private set; }
+        public SealableDictionary<string, PropertyEntity> Properties { get; private set; }
+        public List<FeatureEntity> Features { get; private set; }
+        public List<TypeEntity> Parents { get; private set; }
+        public List<TypeEntity> Ancestors { get; private set; }
+        public Type TypeInfo { get; private set; }
+        #endregion
+
+        #region Client Interface
         public static TypeEntity BuiltTypeEntity(Type t)
         {
             TypeEntity Result;
@@ -122,25 +145,6 @@ namespace Easly
             return Result;
         }
 
-        public Type TypeInfo { get; private set; }
-        #endregion
-
-        #region Properties
-        public string Name
-        {
-            get { return TypeInfo.Name; }
-        }
-
-        public SealableDictionary<string, ProcedureEntity> Procedures { get; private set; }
-        public SealableDictionary<string, FunctionEntity> Functions { get; private set; }
-        public OnceReference<IndexerEntity> Indexer { get; private set; }
-        public SealableDictionary<string, PropertyEntity> Properties { get; private set; }
-        public List<FeatureEntity> Features { get; private set; }
-        public List<TypeEntity> Parents { get; private set; }
-        public List<TypeEntity> Ancestors { get; private set; }
-        #endregion
-
-        #region Client Interface
         public ProcedureEntity Procedure(string name)
         {
             return Procedures[name];

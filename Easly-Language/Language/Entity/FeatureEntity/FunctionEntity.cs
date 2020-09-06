@@ -1,7 +1,7 @@
-﻿using System.Reflection;
-
-namespace Easly
+﻿namespace Easly
 {
+    using System.Reflection;
+
     public class FunctionEntity : NamedFeatureEntity
     {
         #region Init

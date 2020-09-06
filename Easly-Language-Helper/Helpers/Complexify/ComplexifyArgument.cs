@@ -25,7 +25,7 @@
                     break;
             }
 
-            Debug.Assert(IsHandled);
+            Debug.Assert(IsHandled, $"All descendants of {nameof(IArgument)} have been handled");
 
             return Result;
         }

@@ -1,7 +1,7 @@
-using Easly;
-
 namespace BaseNode
 {
+    using Easly;
+
     public interface IAsLongAsInstruction : IInstruction
     {
         IExpression ContinueCondition { get; }

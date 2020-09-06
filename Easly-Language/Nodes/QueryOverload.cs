@@ -1,7 +1,7 @@
-using Easly;
-
 namespace BaseNode
 {
+    using Easly;
+
     public interface IQueryOverload : INode
     {
         IBlockList<IEntityDeclaration, EntityDeclaration> ParameterBlocks { get; }

@@ -1,7 +1,7 @@
-using Easly;
-
 namespace BaseNode
 {
+    using Easly;
+
     public interface IAssertion : INode
     {
         IOptionalReference<IName> Tag { get; }

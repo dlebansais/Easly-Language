@@ -1,42 +1,42 @@
-﻿using BaseNode;
-using Easly;
-using System.Diagnostics;
-
-namespace BaseNodeHelper
+﻿namespace BaseNodeHelper
 {
-    public class OptionalReferenceHelper<IN>
-        where IN : class, INode
+    using System.Diagnostics;
+    using BaseNode;
+    using Easly;
+
+    public static class OptionalReferenceHelper<TNodeInterface>
+        where TNodeInterface : class, INode
     {
-        public static IOptionalReference<IN> CreateEmptyReference()
+        public static IOptionalReference<TNodeInterface> CreateEmptyReference()
         {
-            OptionalReference<IN> Result = new OptionalReference<IN>();
-            Debug.Assert(!Result.IsAssigned);
-            Debug.Assert(!Result.HasItem);
+            OptionalReference<TNodeInterface> Result = new OptionalReference<TNodeInterface>();
+            Debug.Assert(!Result.IsAssigned, "An empty reference is never assigned");
+            Debug.Assert(!Result.HasItem, "An empty reference is empty");
 
             return Result;
         }
 
-        public static IOptionalReference<IN> CreateReference(IN item)
+        public static IOptionalReference<TNodeInterface> CreateReference(TNodeInterface item)
         {
-            OptionalReference<IN> Result = new OptionalReference<IN>();
+            OptionalReference<TNodeInterface> Result = new OptionalReference<TNodeInterface>();
             Result.Item = item;
             Result.Unassign();
 
             return Result;
         }
 
-        public static IOptionalReference<IN> CreateReferenceCopy(IOptionalReference<IN> optional)
+        public static IOptionalReference<TNodeInterface> CreateReferenceCopy(IOptionalReference<TNodeInterface> optional)
         {
-            OptionalReference<IN> Result = new OptionalReference<IN>();
+            OptionalReference<TNodeInterface> Result = new OptionalReference<TNodeInterface>();
 
             if (optional != null)
             {
                 if (optional.HasItem)
                 {
-                    Debug.Assert(optional.Item != null);
+                    Debug.Assert(optional.Item != null, $"If {nameof(IOptionalReference<TNodeInterface>.HasItem)} is true, {nameof(IOptionalReference<TNodeInterface>.Item)} is never null");
 
-                    IN ClonedItem = NodeHelper.DeepCloneNode(optional.Item, cloneCommentGuid: false) as IN;
-                    Debug.Assert(ClonedItem != null);
+                    TNodeInterface ClonedItem = NodeHelper.DeepCloneNode(optional.Item, cloneCommentGuid: false) as TNodeInterface;
+                    Debug.Assert(ClonedItem != null, "A clone reference is never null");
 
                     Result.Item = ClonedItem;
                 }

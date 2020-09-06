@@ -1,10 +1,10 @@
-using Easly;
-
 namespace BaseNode
 {
+    using Easly;
+
     public interface IForLoopInstruction : IInstruction
     {
-        IBlockList<IEntityDeclaration, EntityDeclaration> EntityDeclarationBlocks { get;}
+        IBlockList<IEntityDeclaration, EntityDeclaration> EntityDeclarationBlocks { get; }
         IBlockList<IInstruction, Instruction> InitInstructionBlocks { get; }
         IExpression WhileCondition { get; }
         IBlockList<IInstruction, Instruction> LoopInstructionBlocks { get; }

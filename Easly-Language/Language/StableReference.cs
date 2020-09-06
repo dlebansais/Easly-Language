@@ -1,11 +1,12 @@
-﻿using System;
-
-namespace Easly
+﻿namespace Easly
 {
-    public class StableReference<T> where T : class
+    using System;
+
+    public class StableReference<T>
+        where T : class
     {
         #region Properties
-        public bool IsAssigned { get; private set; } = false;
+        public bool IsAssigned { get; private set; }
 
         public T Item
         {
@@ -14,7 +15,7 @@ namespace Easly
                 T Result;
 
                 if (IsAssigned)
-                    Result = _Item;
+                    Result = ItemInternal;
                 else
                     throw new InvalidOperationException();
 
@@ -24,14 +25,15 @@ namespace Easly
             {
                 if (value != null)
                 {
-                    _Item = value;
+                    ItemInternal = value;
                     IsAssigned = true;
                 }
                 else
                     throw new InvalidOperationException();
             }
         }
-        private T _Item = default(T);
+
+        private T ItemInternal;
         #endregion
     }
 }

@@ -1,16 +1,6 @@
-﻿using System;
-
-namespace Easly
+﻿namespace Easly
 {
-    class SpecializedTypeEntityInternal
-    {
-        static SpecializedTypeEntityInternal()
-        {
-            SingletonSet = new SealableDictionary<Type, TypeEntity>();
-        }
-
-        public static SealableDictionary<Type, TypeEntity> SingletonSet;
-    }
+    using System;
 
     public class SpecializedTypeEntity<T> : TypeEntity
     {

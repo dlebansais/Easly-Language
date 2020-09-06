@@ -5,6 +5,6 @@ namespace BaseNode
         Normal,
         Object,
         Processor,
-        Process
+        Process,
     }
 }

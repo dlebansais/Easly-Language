@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Reflection;
-using BaseNode;
-
-namespace BaseNodeHelper
+﻿namespace BaseNodeHelper
 {
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Reflection;
+    using BaseNode;
+
     public static class NodeTreeWalk<TContext>
         where TContext : class
     {

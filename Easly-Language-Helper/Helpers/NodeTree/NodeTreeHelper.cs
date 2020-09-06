@@ -1,13 +1,13 @@
-﻿using BaseNode;
-using Easly;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Reflection;
-
-namespace BaseNodeHelper
+﻿namespace BaseNodeHelper
 {
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Reflection;
+    using BaseNode;
+    using Easly;
+
     public static class NodeTreeHelperChild
     {
         public static bool IsChildNodeProperty(INode node, string propertyName, out Type childNodeType)
@@ -1689,53 +1689,6 @@ namespace BaseNodeHelper
             return Result;
         }
 
-        private static bool GetBaseNodeAncestor(Type nodeType, out Type ancestorType)
-        {
-            ancestorType = null;
-            bool Result = false;
-
-            string BaseNodeNamespace = typeof(INode).FullName.Substring(0, typeof(INode).FullName.IndexOf(".") + 1);
-            while (nodeType != typeof(object) && !nodeType.FullName.StartsWith(BaseNodeNamespace))
-                nodeType = nodeType.BaseType;
-            Debug.Assert(nodeType != typeof(object));
-
-            if (nodeType != typeof(INode) && nodeType != typeof(Node))
-            {
-                ancestorType = nodeType;
-                Result = true;
-            }
-
-            return Result;
-        }
-
-        // Exotic calls to get properties for interfaces? WTF Mikeysoft...
-        private static IList<PropertyInfo> GetTypeProperties(Type type)
-        {
-            PropertyInfo[] Properties = type.GetProperties();
-            List<PropertyInfo> Result = new List<PropertyInfo>(Properties);
-
-            foreach (Type Interface in type.GetInterfaces())
-            {
-                PropertyInfo[] InterfaceProperties = Interface.GetProperties();
-
-                foreach (PropertyInfo NewProperty in InterfaceProperties)
-                {
-                    bool AlreadyListed = false;
-                    foreach (PropertyInfo ExistingProperty in Result)
-                        if (NewProperty.Name == ExistingProperty.Name)
-                        {
-                            AlreadyListed = true;
-                            break;
-                        }
-
-                    if (!AlreadyListed)
-                        Result.Add(NewProperty);
-                }
-            }
-
-            return Result;
-        }
-
         // Exotic calls to get a property for interfaces? WTF Mikeysoft...
         public static PropertyInfo GetPropertyOf(Type type, string propertyName)
         {
@@ -1903,34 +1856,6 @@ namespace BaseNodeHelper
             Debug.Assert(Property.PropertyType == typeof(string));
 
             Property.SetValue(node, text);
-        }
-
-        private static void GetEnumMinMax(PropertyInfo property, out int min, out int max)
-        {
-            if (property == null) throw new ArgumentNullException(nameof(property));
-
-            Type PropertyType = property.PropertyType;
-            if (!PropertyType.IsEnum && PropertyType != typeof(bool)) throw new ArgumentException(nameof(property));
-
-            if (PropertyType == typeof(bool))
-            {
-                max = 1;
-                min = 0;
-            }
-            else
-            {
-                Array Values = property.PropertyType.GetEnumValues();
-
-                max = int.MinValue;
-                min = int.MaxValue;
-                foreach (int Value in Values)
-                {
-                    if (max < Value)
-                        max = Value;
-                    if (min > Value)
-                        min = Value;
-                }
-            }
         }
 
         public static int GetEnumValue(INode node, string propertyName)
@@ -2272,6 +2197,81 @@ namespace BaseNodeHelper
             CopyValueProperty<Guid>(sourceNode, destinationNode, propertyName);
         }
 
+        private static bool GetBaseNodeAncestor(Type nodeType, out Type ancestorType)
+        {
+            ancestorType = null;
+            bool Result = false;
+
+            string BaseNodeNamespace = typeof(INode).FullName.Substring(0, typeof(INode).FullName.IndexOf(".") + 1);
+            while (nodeType != typeof(object) && !nodeType.FullName.StartsWith(BaseNodeNamespace))
+                nodeType = nodeType.BaseType;
+            Debug.Assert(nodeType != typeof(object));
+
+            if (nodeType != typeof(INode) && nodeType != typeof(Node))
+            {
+                ancestorType = nodeType;
+                Result = true;
+            }
+
+            return Result;
+        }
+
+        // Exotic calls to get properties for interfaces? WTF Mikeysoft...
+        private static IList<PropertyInfo> GetTypeProperties(Type type)
+        {
+            PropertyInfo[] Properties = type.GetProperties();
+            List<PropertyInfo> Result = new List<PropertyInfo>(Properties);
+
+            foreach (Type Interface in type.GetInterfaces())
+            {
+                PropertyInfo[] InterfaceProperties = Interface.GetProperties();
+
+                foreach (PropertyInfo NewProperty in InterfaceProperties)
+                {
+                    bool AlreadyListed = false;
+                    foreach (PropertyInfo ExistingProperty in Result)
+                        if (NewProperty.Name == ExistingProperty.Name)
+                        {
+                            AlreadyListed = true;
+                            break;
+                        }
+
+                    if (!AlreadyListed)
+                        Result.Add(NewProperty);
+                }
+            }
+
+            return Result;
+        }
+
+        private static void GetEnumMinMax(PropertyInfo property, out int min, out int max)
+        {
+            if (property == null) throw new ArgumentNullException(nameof(property));
+
+            Type PropertyType = property.PropertyType;
+            if (!PropertyType.IsEnum && PropertyType != typeof(bool)) throw new ArgumentException(nameof(property));
+
+            if (PropertyType == typeof(bool))
+            {
+                max = 1;
+                min = 0;
+            }
+            else
+            {
+                Array Values = property.PropertyType.GetEnumValues();
+
+                max = int.MinValue;
+                min = int.MaxValue;
+                foreach (int Value in Values)
+                {
+                    if (max < Value)
+                        max = Value;
+                    if (min > Value)
+                        min = Value;
+                }
+            }
+        }
+
         private static bool IsValueProperty(INode node, string propertyName, Type type)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
@@ -2296,41 +2296,6 @@ namespace BaseNodeHelper
                 return false;
 
             return true;
-        }
-
-        private static void SetValueProperty<T>(INode node, string propertyName, T value)
-        {
-            if (node == null) throw new ArgumentNullException(nameof(node));
-            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
-            if (value == null) throw new ArgumentNullException(nameof(value));
-
-            Type NodeType = node.GetType();
-            PropertyInfo Property = NodeType.GetProperty(propertyName);
-            Debug.Assert(Property != null);
-
-            Type PropertyType = Property.PropertyType;
-            Debug.Assert(PropertyType == typeof(T));
-
-            Property.SetValue(node, value);
-        }
-
-        private static void CopyValueProperty<T>(INode sourceNode, INode destinationNode, string propertyName)
-        {
-            if (sourceNode == null) throw new ArgumentNullException(nameof(sourceNode));
-            if (destinationNode == null) throw new ArgumentNullException(nameof(destinationNode));
-            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
-
-            Type SourceNodeType = sourceNode.GetType();
-            Type DestinationNodeType = sourceNode.GetType();
-            Debug.Assert(SourceNodeType == DestinationNodeType);
-
-            PropertyInfo Property = SourceNodeType.GetProperty(propertyName);
-            Debug.Assert(Property != null);
-
-            Type PropertyType = Property.PropertyType;
-            Debug.Assert(PropertyType == typeof(T));
-
-            Property.SetValue(destinationNode, Property.GetValue(sourceNode));
         }
 
         public static bool IsEnumProperty(INode node, string propertyName)
@@ -2435,6 +2400,41 @@ namespace BaseNodeHelper
 
             Type PropertyType = Property.PropertyType;
             if (!PropertyType.IsEnum) throw new ArgumentException(nameof(propertyName));
+
+            Property.SetValue(destinationNode, Property.GetValue(sourceNode));
+        }
+
+        private static void SetValueProperty<T>(INode node, string propertyName, T value)
+        {
+            if (node == null) throw new ArgumentNullException(nameof(node));
+            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
+            if (value == null) throw new ArgumentNullException(nameof(value));
+
+            Type NodeType = node.GetType();
+            PropertyInfo Property = NodeType.GetProperty(propertyName);
+            Debug.Assert(Property != null);
+
+            Type PropertyType = Property.PropertyType;
+            Debug.Assert(PropertyType == typeof(T));
+
+            Property.SetValue(node, value);
+        }
+
+        private static void CopyValueProperty<T>(INode sourceNode, INode destinationNode, string propertyName)
+        {
+            if (sourceNode == null) throw new ArgumentNullException(nameof(sourceNode));
+            if (destinationNode == null) throw new ArgumentNullException(nameof(destinationNode));
+            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
+
+            Type SourceNodeType = sourceNode.GetType();
+            Type DestinationNodeType = sourceNode.GetType();
+            Debug.Assert(SourceNodeType == DestinationNodeType);
+
+            PropertyInfo Property = SourceNodeType.GetProperty(propertyName);
+            Debug.Assert(Property != null);
+
+            Type PropertyType = Property.PropertyType;
+            Debug.Assert(PropertyType == typeof(T));
 
             Property.SetValue(destinationNode, Property.GetValue(sourceNode));
         }

@@ -10,6 +10,6 @@ namespace BaseNode
         DiscreteClassIdentifier,
         Counter,
         Debugging,
-        RandomInteger
+        RandomInteger,
     }
 }

@@ -1,236 +1,56 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.6\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props" Condition="Exists('..\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.6\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props')" />
-  <Import Project="..\packages\Microsoft.NetFramework.Analyzers.2.9.6\build\Microsoft.NetFramework.Analyzers.props" Condition="Exists('..\packages\Microsoft.NetFramework.Analyzers.2.9.6\build\Microsoft.NetFramework.Analyzers.props')" />
-  <Import Project="..\packages\Microsoft.NetCore.Analyzers.2.9.6\build\Microsoft.NetCore.Analyzers.props" Condition="Exists('..\packages\Microsoft.NetCore.Analyzers.2.9.6\build\Microsoft.NetCore.Analyzers.props')" />
-  <Import Project="..\packages\Microsoft.CodeQuality.Analyzers.2.9.6\build\Microsoft.CodeQuality.Analyzers.props" Condition="Exists('..\packages\Microsoft.CodeQuality.Analyzers.2.9.6\build\Microsoft.CodeQuality.Analyzers.props')" />
-  <Import Project="..\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.6\build\Microsoft.CodeAnalysis.VersionCheckAnalyzer.props" Condition="Exists('..\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.6\build\Microsoft.CodeAnalysis.VersionCheckAnalyzer.props')" />
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Travis</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">x64</Platform>
-    <ProjectGuid>{4E32199D-3FAC-4C98-A335-C61065A04FAA}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BaseNode</RootNamespace>
-    <AssemblyName>Easly-Language</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
+    <TargetFrameworks>netstandard2.0;netcoreapp3.1;net48</TargetFrameworks>
+    <LangVersion>8.0</LangVersion>
+    <Platforms>x64</Platforms>
+    <Configurations>Debug;Release</Configurations>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\x64\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
-    <OutputPath>bin\x64\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Travis|x64'">
-    <OutputPath>bin\x64\Travis\</OutputPath>
-    <Optimize>true</Optimize>
-    <PlatformTarget>x64</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="stylecop.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="stylecop.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\.editorconfig" Link=".editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.3.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.CodeAnalysis.VersionCheckAnalyzer" Version="3.3.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.CodeQuality.Analyzers" Version="3.3.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="Microsoft.NetCore.Analyzers" Version="3.3.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.NetFramework.Analyzers" Version="3.3.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
   <ItemGroup>
     <Reference Include="PolySerializer-Attributes">
-      <HintPath>..\PolySerializer\$(Platform)\$(Configuration)\PolySerializer-Attributes.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\dependencies\PolySerializer\$(Platform)\$(Configuration)\netstandard2.0\PolySerializer-Attributes.dll</HintPath>
     </Reference>
-    <Reference Include="System" />
-    <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Enums\AnchorKinds.cs" />
-    <Compile Include="Enums\CloneableStatus.cs" />
-    <Compile Include="Enums\CloneType.cs" />
-    <Compile Include="Enums\ComparableStatus.cs" />
-    <Compile Include="Enums\ComparisonType.cs" />
-    <Compile Include="Enums\ConditionalTypes.cs" />
-    <Compile Include="Enums\ConformanceType.cs" />
-    <Compile Include="Enums\CopySemantic.cs" />
-    <Compile Include="Enums\EqualityType.cs" />
-    <Compile Include="Enums\EventType.cs" />
-    <Compile Include="Enums\ExportStatus.cs" />
-    <Compile Include="Enums\ImportType.cs" />
-    <Compile Include="Enums\IterationType.cs" />
-    <Compile Include="Enums\Keyword.cs" />
-    <Compile Include="Enums\OnceChoice.cs" />
-    <Compile Include="Enums\ParameterEndStatus.cs" />
-    <Compile Include="Enums\PreprocessorMacro.cs" />
-    <Compile Include="Enums\ReplicationStatus.cs" />
-    <Compile Include="Enums\SharingType.cs" />
-    <Compile Include="Enums\UtilityType.cs" />
-    <Compile Include="Language\DateAndTime.cs" />
-    <Compile Include="Language\DetachableReference.cs" />
-    <Compile Include="Language\Entity\Entity.cs" />
-    <Compile Include="Language\Entity\FeatureEntity\FeatureEntity.cs" />
-    <Compile Include="Language\Entity\FeatureEntity\FunctionEntity.cs" />
-    <Compile Include="Language\Entity\FeatureEntity\IndexerEntity.cs" />
-    <Compile Include="Language\Entity\FeatureEntity\NamedFeatureEntity.cs" />
-    <Compile Include="Language\Entity\FeatureEntity\ProcedureEntity.cs" />
-    <Compile Include="Language\Entity\FeatureEntity\PropertyEntity.cs" />
-    <Compile Include="Language\Entity\SpecializedTypeEntity.cs" />
-    <Compile Include="Language\Entity\TypeEntity.cs" />
-    <Compile Include="Language\Event.cs" />
-    <Compile Include="Language\SealableDictionary.cs" />
-    <Compile Include="Language\SealableList.cs" />
-    <Compile Include="Language\OnceReference.cs" />
-    <Compile Include="Language\OptionalReference.cs" />
-    <Compile Include="Language\StableReference.cs" />
-    <Compile Include="Nodes\Argument\Argument.cs" />
-    <Compile Include="Nodes\Argument\AssignmentArgument.cs" />
-    <Compile Include="Nodes\Argument\PositionalArgument.cs" />
-    <Compile Include="Nodes\Assertion.cs" />
-    <Compile Include="Nodes\Attachment.cs" />
-    <Compile Include="Nodes\Block\Block.cs" />
-    <Compile Include="Nodes\Block\BlockList.cs" />
-    <Compile Include="Nodes\Body\Body.cs" />
-    <Compile Include="Nodes\Body\DeferredBody.cs" />
-    <Compile Include="Nodes\Body\EffectiveBody.cs" />
-    <Compile Include="Nodes\Body\ExternBody.cs" />
-    <Compile Include="Nodes\Body\PrecursorBody.cs" />
-    <Compile Include="Nodes\Class.cs" />
-    <Compile Include="Nodes\ClassReplicate.cs" />
-    <Compile Include="Nodes\CommandOverload.cs" />
-    <Compile Include="Nodes\CommandOverloadType.cs" />
-    <Compile Include="Nodes\Conditional.cs" />
-    <Compile Include="Nodes\Constraint.cs" />
-    <Compile Include="Nodes\Continuation.cs" />
-    <Compile Include="Nodes\Discrete.cs" />
-    <Compile Include="Nodes\Document.cs" />
-    <Compile Include="Nodes\EntityDeclaration.cs" />
-    <Compile Include="Nodes\ExceptionHandler.cs" />
-    <Compile Include="Nodes\Export.cs" />
-    <Compile Include="Nodes\ExportChange.cs" />
-    <Compile Include="Nodes\Expression\AgentExpression.cs" />
-    <Compile Include="Nodes\Expression\AssertionTagExpression.cs" />
-    <Compile Include="Nodes\Expression\BinaryConditionalExpression.cs" />
-    <Compile Include="Nodes\Expression\BinaryOperatorExpression.cs" />
-    <Compile Include="Nodes\Expression\ClassConstantExpression.cs" />
-    <Compile Include="Nodes\Expression\CloneOfExpression.cs" />
-    <Compile Include="Nodes\Expression\KeywordEntityExpression.cs" />
-    <Compile Include="Nodes\Expression\EntityExpression.cs" />
-    <Compile Include="Nodes\Expression\EqualityExpression.cs" />
-    <Compile Include="Nodes\Expression\Expression.cs" />
-    <Compile Include="Nodes\Expression\IndexQueryExpression.cs" />
-    <Compile Include="Nodes\Expression\InitializedObjectExpression.cs" />
-    <Compile Include="Nodes\Expression\KeywordExpression.cs" />
-    <Compile Include="Nodes\Expression\ManifestCharacterExpression.cs" />
-    <Compile Include="Nodes\Expression\ManifestNumberExpression.cs" />
-    <Compile Include="Nodes\Expression\ManifestStringExpression.cs" />
-    <Compile Include="Nodes\Expression\NewExpression.cs" />
-    <Compile Include="Nodes\Expression\OldExpression.cs" />
-    <Compile Include="Nodes\Expression\PrecursorExpression.cs" />
-    <Compile Include="Nodes\Expression\PrecursorIndexExpression.cs" />
-    <Compile Include="Nodes\Expression\PreprocessorExpression.cs" />
-    <Compile Include="Nodes\Expression\QueryExpression.cs" />
-    <Compile Include="Nodes\Expression\ResultOfExpression.cs" />
-    <Compile Include="Nodes\Expression\UnaryNotExpression.cs" />
-    <Compile Include="Nodes\Expression\UnaryOperatorExpression.cs" />
-    <Compile Include="Nodes\Feature\Feature.cs" />
-    <Compile Include="Nodes\Feature\IndexerFeature.cs" />
-    <Compile Include="Nodes\Feature\NamedFeature\AttributeFeature.cs" />
-    <Compile Include="Nodes\Feature\NamedFeature\ConstantFeature.cs" />
-    <Compile Include="Nodes\Feature\NamedFeature\CreationFeature.cs" />
-    <Compile Include="Nodes\Feature\NamedFeature\FunctionFeature.cs" />
-    <Compile Include="Nodes\Feature\NamedFeature\NamedFeature.cs" />
-    <Compile Include="Nodes\Feature\NamedFeature\ProcedureFeature.cs" />
-    <Compile Include="Nodes\Feature\NamedFeature\PropertyFeature.cs" />
-    <Compile Include="Nodes\Generic.cs" />
-    <Compile Include="Nodes\GlobalReplicate.cs" />
-    <Compile Include="Nodes\Identifier.cs" />
-    <Compile Include="Nodes\Import.cs" />
-    <Compile Include="Nodes\Inheritance.cs" />
-    <Compile Include="Nodes\Instruction\AsLongAsInstruction.cs" />
-    <Compile Include="Nodes\Instruction\AssignmentInstruction.cs" />
-    <Compile Include="Nodes\Instruction\AttachmentInstruction.cs" />
-    <Compile Include="Nodes\Instruction\CheckInstruction.cs" />
-    <Compile Include="Nodes\Instruction\CommandInstruction.cs" />
-    <Compile Include="Nodes\Instruction\CreateInstruction.cs" />
-    <Compile Include="Nodes\Instruction\DebugInstruction.cs" />
-    <Compile Include="Nodes\Instruction\ForLoopInstruction.cs" />
-    <Compile Include="Nodes\Instruction\IfThenElseInstruction.cs" />
-    <Compile Include="Nodes\Instruction\IndexAssignmentInstruction.cs" />
-    <Compile Include="Nodes\Instruction\InspectInstruction.cs" />
-    <Compile Include="Nodes\Instruction\Instruction.cs" />
-    <Compile Include="Nodes\Instruction\KeywordAssignmentInstruction.cs" />
-    <Compile Include="Nodes\Instruction\OverLoopInstruction.cs" />
-    <Compile Include="Nodes\Instruction\PrecursorIndexAssignmentInstruction.cs" />
-    <Compile Include="Nodes\Instruction\PrecursorInstruction.cs" />
-    <Compile Include="Nodes\Instruction\RaiseEventInstruction.cs" />
-    <Compile Include="Nodes\Instruction\ReleaseInstruction.cs" />
-    <Compile Include="Nodes\Instruction\ThrowInstruction.cs" />
-    <Compile Include="Nodes\Library.cs" />
-    <Compile Include="Nodes\Name.cs" />
-    <Compile Include="Nodes\Node.cs" />
-    <Compile Include="Nodes\ObjectType\AnchoredType.cs" />
-    <Compile Include="Nodes\ObjectType\FunctionType.cs" />
-    <Compile Include="Nodes\ObjectType\IndexerType.cs" />
-    <Compile Include="Nodes\ObjectType\KeywordAnchoredType.cs" />
-    <Compile Include="Nodes\ObjectType\ObjectType.cs" />
-    <Compile Include="Nodes\ObjectType\ProcedureType.cs" />
-    <Compile Include="Nodes\ObjectType\PropertyType.cs" />
-    <Compile Include="Nodes\ObjectType\ShareableType\GenericType.cs" />
-    <Compile Include="Nodes\ObjectType\ShareableType\ShareableType.cs" />
-    <Compile Include="Nodes\ObjectType\ShareableType\SimpleType.cs" />
-    <Compile Include="Nodes\ObjectType\ShareableType\TupleType.cs" />
-    <Compile Include="Nodes\Pattern.cs" />
-    <Compile Include="Nodes\QualifiedName.cs" />
-    <Compile Include="Nodes\QueryOverload.cs" />
-    <Compile Include="Nodes\QueryOverloadType.cs" />
-    <Compile Include="Nodes\Range.cs" />
-    <Compile Include="Nodes\Rename.cs" />
-    <Compile Include="Nodes\Root.cs" />
-    <Compile Include="Nodes\Scope.cs" />
-    <Compile Include="Nodes\TypeArgument\AssignmentTypeArgument.cs" />
-    <Compile Include="Nodes\TypeArgument\PositionalTypeArgument.cs" />
-    <Compile Include="Nodes\TypeArgument\TypeArgument.cs" />
-    <Compile Include="Nodes\Typedef.cs" />
-    <Compile Include="Nodes\With.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Analyzer Include="..\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.6\analyzers\dotnet\cs\Microsoft.CodeAnalysis.VersionCheckAnalyzer.resources.dll" />
-    <Analyzer Include="..\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.6\analyzers\dotnet\Microsoft.CodeAnalysis.VersionCheckAnalyzer.dll" />
-    <Analyzer Include="..\packages\Microsoft.CodeQuality.Analyzers.2.9.6\analyzers\dotnet\cs\Humanizer.dll" />
-    <Analyzer Include="..\packages\Microsoft.CodeQuality.Analyzers.2.9.6\analyzers\dotnet\cs\Microsoft.CodeQuality.Analyzers.dll" />
-    <Analyzer Include="..\packages\Microsoft.CodeQuality.Analyzers.2.9.6\analyzers\dotnet\cs\Microsoft.CodeQuality.CSharp.Analyzers.dll" />
-    <Analyzer Include="..\packages\Microsoft.NetCore.Analyzers.2.9.6\analyzers\dotnet\cs\Microsoft.NetCore.Analyzers.dll" />
-    <Analyzer Include="..\packages\Microsoft.NetCore.Analyzers.2.9.6\analyzers\dotnet\cs\Microsoft.NetCore.CSharp.Analyzers.dll" />
-    <Analyzer Include="..\packages\Microsoft.NetFramework.Analyzers.2.9.6\analyzers\dotnet\cs\Microsoft.NetFramework.Analyzers.dll" />
-    <Analyzer Include="..\packages\Microsoft.NetFramework.Analyzers.2.9.6\analyzers\dotnet\cs\Microsoft.NetFramework.CSharp.Analyzers.dll" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
-    <PostBuildEvent>call "$(SolutionDir)updatecommit.bat" "$(SolutionDir)" "$(TargetPath)"</PostBuildEvent>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
-    <PostBuildEvent>call "$(SolutionDir)updatecommit.bat" "$(SolutionDir)" "$(TargetPath)"
-if exist "$(SolutionDir)signfile.bat" call "$(SolutionDir)signfile.bat" "$(SolutionDir)" "$(Configuration)-$(Platform)" "$(TargetPath)"</PostBuildEvent>
-  </PropertyGroup>
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.6\build\Microsoft.CodeAnalysis.VersionCheckAnalyzer.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.6\build\Microsoft.CodeAnalysis.VersionCheckAnalyzer.props'))" />
-    <Error Condition="!Exists('..\packages\Microsoft.CodeQuality.Analyzers.2.9.6\build\Microsoft.CodeQuality.Analyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeQuality.Analyzers.2.9.6\build\Microsoft.CodeQuality.Analyzers.props'))" />
-    <Error Condition="!Exists('..\packages\Microsoft.NetCore.Analyzers.2.9.6\build\Microsoft.NetCore.Analyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.NetCore.Analyzers.2.9.6\build\Microsoft.NetCore.Analyzers.props'))" />
-    <Error Condition="!Exists('..\packages\Microsoft.NetFramework.Analyzers.2.9.6\build\Microsoft.NetFramework.Analyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.NetFramework.Analyzers.2.9.6\build\Microsoft.NetFramework.Analyzers.props'))" />
-    <Error Condition="!Exists('..\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.6\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.6\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props'))" />
-  </Target>
+
 </Project>

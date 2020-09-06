@@ -116,7 +116,7 @@
                     break;
             }
 
-            Debug.Assert(IsHandled);
+            Debug.Assert(IsHandled, $"All descendants of {nameof(IExpression)} have been handled");
 
             return Result;
         }

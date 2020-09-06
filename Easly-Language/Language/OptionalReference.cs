@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Easly
+﻿namespace Easly
 {
+    using System;
+
     public interface IOptionalReference
     {
         bool IsAssigned { get; }
@@ -13,7 +13,7 @@ namespace Easly
     }
 
     public interface IOptionalReference<T>
-        where T: class
+        where T : class
     {
         bool IsAssigned { get; }
         bool HasItem { get; }
@@ -30,50 +30,51 @@ namespace Easly
         #region Init
         public OptionalReference()
         {
-            _Item = null;
+            ItemInternal = null;
         }
 
         public OptionalReference(T initialValue)
         {
-            _Item = initialValue;
+            ItemInternal = initialValue;
         }
         #endregion
 
         #region Properties
-        public bool IsAssigned { get; private set; } = false;
-        public bool HasItem { get { return _Item != null; } }
+        public bool IsAssigned { get; private set; }
+        public bool HasItem { get { return ItemInternal != null; } }
 
         [PolySerializer.Serializable(Condition = nameof(IsAssigned))]
         public T Item
         {
             get
             {
-                if (_Item == null)
+                if (ItemInternal == null)
                     throw new InvalidOperationException();
                 else
-                    return _Item;
+                    return ItemInternal;
             }
             set
             {
                 if (value != null)
                 {
-                    _Item = value;
+                    ItemInternal = value;
                     IsAssigned = true;
                 }
                 else
                     throw new InvalidOperationException();
             }
         }
+
         object IOptionalReference.Item { get { return Item; } }
 
         [PolySerializer.Serializable(Exclude = true)]
-        public T _Item;
+        public T ItemInternal;
         #endregion
 
         #region Assignment
         public void Assign()
         {
-            if (_Item == null)
+            if (ItemInternal == null)
                 throw new InvalidOperationException();
 
             IsAssigned = true;
@@ -87,7 +88,7 @@ namespace Easly
         public void Clear()
         {
             IsAssigned = false;
-            _Item = null;
+            ItemInternal = null;
         }
         #endregion
     }

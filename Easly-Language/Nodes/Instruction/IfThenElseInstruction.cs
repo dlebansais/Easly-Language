@@ -1,7 +1,7 @@
-using Easly;
-
 namespace BaseNode
 {
+    using Easly;
+
     public interface IIfThenElseInstruction : IInstruction
     {
         IBlockList<IConditional, Conditional> ConditionalBlocks { get; }

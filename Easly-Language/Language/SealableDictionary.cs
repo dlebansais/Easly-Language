@@ -43,15 +43,15 @@
 
         public void Seal()
         {
-            Debug.Assert(!IsSealed);
+            Debug.Assert(!IsSealed, "Sealing should be done only once");
 
             IsSealed = true;
         }
 
         public new void Add(TKey key, TValue value)
         {
-            Debug.Assert(!IsSealed);
-            Debug.Assert(!ContainsKey(key));
+            Debug.Assert(!IsSealed, "A sealed collection cannot be modified");
+            Debug.Assert(!ContainsKey(key), "A key must not be added more than once");
 
             base.Add(key, value);
         }
@@ -80,23 +80,23 @@
 
         public void ChangeKey(TKey oldKey, TKey newKey)
         {
-            Debug.Assert(ContainsKey(oldKey));
+            Debug.Assert(ContainsKey(oldKey), "The collection must contain the changed key");
 
             TValue EntryValue = this[oldKey];
             Remove(oldKey);
 
-            Debug.Assert(!ContainsKey(newKey));
+            Debug.Assert(!ContainsKey(newKey), "The collection must not contain the new key already");
 
             Add(newKey, EntryValue);
         }
 
         public void Merge(ISealableDictionary<TKey, TValue> other)
         {
-            Debug.Assert(!IsSealed);
+            Debug.Assert(!IsSealed, "A sealed collection cannot be modified");
 
             foreach (KeyValuePair<TKey, TValue> Item in other)
             {
-                Debug.Assert(!ContainsKey(Item.Key));
+                Debug.Assert(!ContainsKey(Item.Key), "Two merged collections must not contain the same key");
 
                 base.Add(Item.Key, Item.Value);
             }
@@ -104,7 +104,7 @@
 
         public void MergeWithConflicts(ISealableDictionary<TKey, TValue> other)
         {
-            Debug.Assert(!IsSealed);
+            Debug.Assert(!IsSealed, "A sealed collection cannot be modified");
 
             foreach (KeyValuePair<TKey, TValue> Item in other)
                 if (!ContainsKey(Item.Key))

@@ -1,11 +1,12 @@
-﻿using System;
-
-namespace Easly
+﻿namespace Easly
 {
-    public class DetachableReference<T> where T : class
+    using System;
+
+    public class DetachableReference<T>
+        where T : class
     {
         #region Properties
-        public virtual bool IsAssigned { get; protected set; } = false;
+        public virtual bool IsAssigned { get; protected set; }
 
         public virtual T Item
         {
@@ -14,7 +15,7 @@ namespace Easly
                 T Result;
 
                 if (IsAssigned)
-                    Result = _Item;
+                    Result = ItemInternal;
                 else
                     throw new InvalidOperationException();
 
@@ -24,20 +25,21 @@ namespace Easly
             {
                 if (value != null)
                 {
-                    _Item = value;
+                    ItemInternal = value;
                     IsAssigned = true;
                 }
                 else
                     throw new InvalidOperationException();
             }
         }
-        private T _Item = null;
+
+        private T ItemInternal;
         #endregion
 
         #region Detaching
         public virtual void Detach()
         {
-            _Item = null;
+            ItemInternal = null;
             IsAssigned = false;
         }
         #endregion

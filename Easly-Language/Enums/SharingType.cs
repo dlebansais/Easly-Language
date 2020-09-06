@@ -5,6 +5,6 @@ namespace BaseNode
         NotShared,
         ReadWrite,
         ReadOnly,
-        WriteOnly
+        WriteOnly,
     }
 }

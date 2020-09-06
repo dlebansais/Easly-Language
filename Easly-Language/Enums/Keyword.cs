@@ -9,6 +9,6 @@ namespace BaseNode
         Result,
         Retry,
         Exception,
-        Indexer
+        Indexer,
     }
 }

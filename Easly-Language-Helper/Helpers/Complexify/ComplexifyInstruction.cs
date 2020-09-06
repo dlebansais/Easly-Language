@@ -99,7 +99,7 @@
                     break;
             }
 
-            Debug.Assert(IsHandled);
+            Debug.Assert(IsHandled, $"All descendants of {nameof(IInstruction)} have been handled");
 
             return Result;
         }

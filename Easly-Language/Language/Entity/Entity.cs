@@ -1,9 +1,9 @@
-﻿using System;
-using System.Diagnostics;
-using System.Reflection;
-
-namespace Easly
+﻿namespace Easly
 {
+    using System;
+    using System.Diagnostics;
+    using System.Reflection;
+
     public abstract class Entity
     {
         #region Init

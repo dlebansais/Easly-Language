@@ -1,17 +1,18 @@
-﻿using System;
-
-namespace Easly
+﻿namespace Easly
 {
+    using System;
+
     public interface IOnceReference
     {
         bool IsAssigned { get; }
         object Reference { get; }
     }
 
-    public class OnceReference<T> : IOnceReference where T : class
+    public class OnceReference<T> : IOnceReference
+        where T : class
     {
         #region Properties
-        public bool IsAssigned { get; private set; } = false;
+        public bool IsAssigned { get; private set; }
 
         public T Item
         {
@@ -20,7 +21,7 @@ namespace Easly
                 T Result;
 
                 if (IsAssigned)
-                    Result = _Item;
+                    Result = ItemInternal;
                 else
                     throw new InvalidOperationException();
 
@@ -31,7 +32,7 @@ namespace Easly
                 if (!IsAssigned)
                     if (value != null)
                     {
-                        _Item = value;
+                        ItemInternal = value;
                         IsAssigned = true;
                     }
                     else
@@ -40,11 +41,13 @@ namespace Easly
                     throw new InvalidOperationException();
             }
         }
-        public object Reference 
+
+        public object Reference
         {
-            get { return _Item; }
+            get { return ItemInternal; }
         }
-        private T _Item = default(T);
+
+        private T ItemInternal;
         #endregion
     }
 }

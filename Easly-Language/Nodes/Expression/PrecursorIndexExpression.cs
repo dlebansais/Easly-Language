@@ -1,7 +1,7 @@
-using Easly;
-
 namespace BaseNode
 {
+    using Easly;
+
     public interface IPrecursorIndexExpression : IExpression
     {
         IOptionalReference<IObjectType> AncestorType { get; }

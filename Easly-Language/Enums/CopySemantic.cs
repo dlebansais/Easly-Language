@@ -4,6 +4,6 @@ namespace BaseNode
     {
         Any,
         Reference,
-        Value
+        Value,
     }
 }

@@ -1,9 +1,9 @@
-﻿using BaseNode;
-using System.Collections.Generic;
-using System.Diagnostics;
-
-namespace BaseNodeHelper
+﻿namespace BaseNodeHelper
 {
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using BaseNode;
+
     public interface INodeTreeBlock
     {
         IPattern ReplicationPattern { get; }

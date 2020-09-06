@@ -4,6 +4,6 @@ namespace BaseNode
     {
         Latest,
         Strict,
-        Stable
+        Stable,
     }
 }

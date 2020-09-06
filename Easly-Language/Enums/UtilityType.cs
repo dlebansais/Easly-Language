@@ -4,6 +4,6 @@ namespace BaseNode
     {
         ReadOnly,
         WriteOnly,
-        ReadWrite
+        ReadWrite,
     }
 }

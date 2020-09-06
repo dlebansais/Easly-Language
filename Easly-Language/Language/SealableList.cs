@@ -28,14 +28,14 @@
 
         public void Seal()
         {
-            Debug.Assert(!IsSealed);
+            Debug.Assert(!IsSealed, "Sealing should be done only once");
 
             IsSealed = true;
         }
 
         public new void Add(TItem item)
         {
-            Debug.Assert(!IsSealed);
+            Debug.Assert(!IsSealed, "A sealed collection cannot be modified");
 
             base.Add(item);
         }
@@ -52,7 +52,7 @@
 
         public void AddRange(IList<TItem> other)
         {
-            Debug.Assert(!IsSealed);
+            Debug.Assert(!IsSealed, "A sealed collection cannot be modified");
 
             base.AddRange(other);
         }

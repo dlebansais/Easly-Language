@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using BaseNode;
-
-namespace BaseNodeHelper
+﻿namespace BaseNodeHelper
 {
+    using System;
+    using System.Collections.Generic;
+    using BaseNode;
+
     public interface IWalkCallbacks<TContext>
         where TContext : class
     {

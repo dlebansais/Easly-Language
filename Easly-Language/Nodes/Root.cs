@@ -1,7 +1,7 @@
-using System.Collections.Generic;
-
 namespace BaseNode
 {
+    using System.Collections.Generic;
+
     public interface IRoot : INode
     {
         IBlockList<IClass, Class> ClassBlocks { get; }

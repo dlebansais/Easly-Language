@@ -1,7 +1,7 @@
-﻿using Easly;
-
-namespace BaseNode
+﻿namespace BaseNode
 {
+    using Easly;
+
     public interface IDocument
     {
         string Comment { get; }
