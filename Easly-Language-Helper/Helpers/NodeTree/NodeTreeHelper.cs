@@ -40,8 +40,7 @@
         // Exotic calls to get a property for interfaces? WTF Mikeysoft...
         public static PropertyInfo GetPropertyOf(Type type, string propertyName)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
+            if (type == null) throw new ArgumentNullException(nameof(type));
 
             PropertyInfo Property = type.GetProperty(propertyName);
             if (Property != null)

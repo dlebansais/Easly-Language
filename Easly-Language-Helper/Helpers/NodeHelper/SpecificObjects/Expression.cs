@@ -106,8 +106,7 @@
         public static IIndexQueryExpression CreateIndexQueryExpression(IExpression indexedExpression, List<IArgument> argumentList)
         {
             if (argumentList == null) throw new ArgumentNullException(nameof(argumentList));
-
-            Debug.Assert(argumentList.Count > 0);
+            if (argumentList.Count == 0) throw new ArgumentException($"{nameof(argumentList)} must have at least one argument");
 
             IndexQueryExpression Result = new IndexQueryExpression();
             Result.Documentation = CreateEmptyDocumentation();
@@ -119,7 +118,8 @@
 
         public static IIndexQueryExpression CreateIndexQueryExpression(IExpression indexedExpression, IBlockList<IArgument, Argument> argumentBlocks)
         {
-            Debug.Assert(!NodeTreeHelperBlockList.IsBlockListEmpty((IBlockList)argumentBlocks));
+            if (argumentBlocks == null) throw new ArgumentNullException(nameof(argumentBlocks));
+            if (NodeTreeHelperBlockList.IsBlockListEmpty((IBlockList)argumentBlocks)) throw new ArgumentException($"{nameof(argumentBlocks)} must not be empty");
 
             IndexQueryExpression Result = new IndexQueryExpression();
             Result.Documentation = CreateEmptyDocumentation();
@@ -255,6 +255,7 @@
         public static IPrecursorIndexExpression CreatePrecursorIndexExpression(List<IArgument> argumentList)
         {
             if (argumentList == null) throw new ArgumentNullException(nameof(argumentList));
+            if (argumentList.Count == 0) throw new ArgumentException($"{nameof(argumentList)} must have at least one argument");
 
             Debug.Assert(argumentList.Count > 0);
 
@@ -268,7 +269,7 @@
 
         public static IPrecursorIndexExpression CreatePrecursorIndexExpression(IBlockList<IArgument, Argument> argumentBlocks)
         {
-            Debug.Assert(!NodeTreeHelperBlockList.IsBlockListEmpty((IBlockList)argumentBlocks));
+            if (NodeTreeHelperBlockList.IsBlockListEmpty((IBlockList)argumentBlocks)) throw new ArgumentException($"{nameof(argumentBlocks)} must not be empty");
 
             PrecursorIndexExpression Result = new PrecursorIndexExpression();
             Result.Documentation = CreateEmptyDocumentation();
@@ -280,7 +281,7 @@
 
         public static IPrecursorIndexExpression CreatePrecursorIndexExpression(IBlockList<IArgument, Argument> argumentBlocks, IObjectType ancestorType)
         {
-            Debug.Assert(!NodeTreeHelperBlockList.IsBlockListEmpty((IBlockList)argumentBlocks));
+            if (NodeTreeHelperBlockList.IsBlockListEmpty((IBlockList)argumentBlocks)) throw new ArgumentException($"{nameof(argumentBlocks)} must not be empty");
 
             PrecursorIndexExpression Result = new PrecursorIndexExpression();
             Result.Documentation = CreateEmptyDocumentation();

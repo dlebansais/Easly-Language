@@ -18,7 +18,7 @@
         KeyValuePair<string, string> BlockSubstitution { get; }
     }
 
-    public struct WalkCallbacks<TContext> : IWalkCallbacks<TContext>
+    public struct WalkCallbacks<TContext> : IWalkCallbacks<TContext>, IEquatable<WalkCallbacks<TContext>>
         where TContext : class
     {
         public Func<INode, INode, string, IWalkCallbacks<TContext>, TContext, bool> HandlerNode { get; set; }
@@ -30,5 +30,30 @@
         public Func<INode, string, TContext, bool> HandlerEnum { get; set; }
         public bool IsRecursive { get; set; }
         public KeyValuePair<string, string> BlockSubstitution { get; set; }
+
+        public static bool operator ==(WalkCallbacks<TContext> obj1, WalkCallbacks<TContext> obj2)
+        {
+            return obj1.Equals(obj2);
+        }
+
+        public static bool operator !=(WalkCallbacks<TContext> obj1, WalkCallbacks<TContext> obj2)
+        {
+            return !obj1.Equals(obj2);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return base.Equals(obj);
+        }
+
+        public bool Equals(WalkCallbacks<TContext> obj)
+        {
+            return base.Equals(obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
     }
 }

@@ -26,7 +26,7 @@
                 return false;
 
             INode Node = optional.Item as INode;
-            Debug.Assert(Node != null);
+            Debug.Assert(Node != null, $"The optional item is always a {nameof(INode)}");
 
             return IsDefaultNode(Node);
         }
@@ -100,7 +100,7 @@
                     if (Path.Count == 1 && Path[0].Text.Length == 0)
                     {
                         IBlockList ArgumentBlocks = AsQueryExpression.ArgumentBlocks as IBlockList;
-                        Debug.Assert(ArgumentBlocks != null);
+                        Debug.Assert(ArgumentBlocks != null, $"ArgumentBlocks is always a {nameof(IBlockList)}");
 
                         if (NodeTreeHelperBlockList.IsBlockListEmpty(ArgumentBlocks))
                             return true;
@@ -361,7 +361,7 @@
 
         public static bool IsCollectionNeverEmpty(Type nodeType, string propertyName)
         {
-            Debug.Assert(NodeTreeHelperList.IsNodeListProperty(nodeType, propertyName, out Type ChildNodeType) || NodeTreeHelperBlockList.IsBlockListProperty(nodeType, propertyName, out Type ChildInterfaceType, out ChildNodeType));
+            if (!NodeTreeHelperList.IsNodeListProperty(nodeType, propertyName, out Type _) && !NodeTreeHelperBlockList.IsBlockListProperty(nodeType, propertyName, out Type _, out _)) throw new ArgumentException($"{nameof(propertyName)} must be a list or block list property of {nameof(nodeType)}");
 
             Type InterfaceType = NodeTreeHelper.NodeTypeToInterfaceType(nodeType);
 
@@ -384,8 +384,8 @@
 
         public static bool IsCollectionWithExpand(Type nodeType, string propertyName)
         {
-            Debug.Assert(NodeTreeHelperList.IsNodeListProperty(nodeType, propertyName, out Type ChildNodeType) || NodeTreeHelperBlockList.IsBlockListProperty(nodeType, propertyName, out Type ChildInterfaceType, out ChildNodeType));
-            Debug.Assert(!IsCollectionNeverEmpty(nodeType, propertyName));
+            if (!NodeTreeHelperList.IsNodeListProperty(nodeType, propertyName, out Type _) && !NodeTreeHelperBlockList.IsBlockListProperty(nodeType, propertyName, out Type _, out _)) throw new ArgumentException($"{nameof(propertyName)} must be a list or block list property of {nameof(nodeType)}");
+            if (IsCollectionNeverEmpty(nodeType, propertyName)) throw new ArgumentException($"{nameof(nodeType)} must be a list or block list that can be empty");
 
             Type InterfaceType = NodeTreeHelper.NodeTypeToInterfaceType(nodeType);
 
@@ -640,7 +640,7 @@
                         break;
                 }
 
-                Debug.Assert(Operator != null);
+                Debug.Assert(Operator != null, $"All values of {nameof(ConditionalTypes)} have been handled");
 
                 string SimplifiedText = LeftText + Operator + RightText;
                 simplifiedNode = CreateSimpleQueryExpression(SimplifiedText);
@@ -754,7 +754,7 @@
                     IArgument Item = Block.NodeList[Index];
                     IArgument NewItem = DeepCloneNode(Item, cloneCommentGuid: false) as IArgument;
 
-                    Debug.Assert(NewItem != null);
+                    Debug.Assert(NewItem != null, $"A cloned object is always a {nameof(IArgument)}");
                     NewNodeList.Add(NewItem);
                 }
 
@@ -801,7 +801,7 @@
         {
             IQualifiedName Query = DeepCloneNode(node.Object, cloneCommentGuid: false) as IQualifiedName;
 
-            Debug.Assert(Query.Path.Count > 0);
+            Debug.Assert(Query.Path.Count > 0, $"A cloned query is never empty");
             string Text = Query.Path[0].Text;
             Text = "new " + Text;
 
@@ -814,7 +814,7 @@
         {
             IQualifiedName Query = DeepCloneNode(node.Query, cloneCommentGuid: false) as IQualifiedName;
 
-            Debug.Assert(Query.Path.Count > 0);
+            Debug.Assert(Query.Path.Count > 0, $"A cloned query is never empty");
             string Text = Query.Path[0].Text;
             Text = "old " + Text;
 
@@ -979,7 +979,7 @@
         {
             if (node.Instructions.InstructionBlocks.NodeBlockList.Count > 0)
             {
-                Debug.Assert(node.Instructions.InstructionBlocks.NodeBlockList[0].NodeList.Count > 0);
+                Debug.Assert(node.Instructions.InstructionBlocks.NodeBlockList[0].NodeList.Count > 0, "A block in a block list always has at least one element");
                 simplifiedNode = DeepCloneNode(node.Instructions.InstructionBlocks.NodeBlockList[0].NodeList[0], cloneCommentGuid: false) as IInstruction;
             }
             else
@@ -994,17 +994,17 @@
 
             if (node.InitInstructionBlocks.NodeBlockList.Count > 0)
             {
-                Debug.Assert(node.InitInstructionBlocks.NodeBlockList[0].NodeList.Count > 0);
+                Debug.Assert(node.InitInstructionBlocks.NodeBlockList[0].NodeList.Count > 0, "A block in a block list always has at least one element");
                 SelectedInstruction = node.InitInstructionBlocks.NodeBlockList[0].NodeList[0];
             }
             else if (node.LoopInstructionBlocks.NodeBlockList.Count > 0)
             {
-                Debug.Assert(node.LoopInstructionBlocks.NodeBlockList[0].NodeList.Count > 0);
+                Debug.Assert(node.LoopInstructionBlocks.NodeBlockList[0].NodeList.Count > 0, "A block in a block list always has at least one element");
                 SelectedInstruction = node.LoopInstructionBlocks.NodeBlockList[0].NodeList[0];
             }
             else if (node.IterationInstructionBlocks.NodeBlockList.Count > 0)
             {
-                Debug.Assert(node.IterationInstructionBlocks.NodeBlockList[0].NodeList.Count > 0);
+                Debug.Assert(node.IterationInstructionBlocks.NodeBlockList[0].NodeList.Count > 0, "A block in a block list always has at least one element");
                 SelectedInstruction = node.IterationInstructionBlocks.NodeBlockList[0].NodeList[0];
             }
 
@@ -1023,12 +1023,12 @@
 
         private static bool SimplifyIfThenElseInstruction(IIfThenElseInstruction node, out INode simplifiedNode)
         {
-            Debug.Assert(node.ConditionalBlocks.NodeBlockList.Count > 0 && node.ConditionalBlocks.NodeBlockList[0].NodeList.Count > 0);
+            Debug.Assert(node.ConditionalBlocks.NodeBlockList.Count > 0 && node.ConditionalBlocks.NodeBlockList[0].NodeList.Count > 0, "There is always at least one conditional");
             IConditional FirstConditional = node.ConditionalBlocks.NodeBlockList[0].NodeList[0];
 
             if (FirstConditional.Instructions.InstructionBlocks.NodeBlockList.Count > 0)
             {
-                Debug.Assert(FirstConditional.Instructions.InstructionBlocks.NodeBlockList[0].NodeList.Count > 0);
+                Debug.Assert(FirstConditional.Instructions.InstructionBlocks.NodeBlockList[0].NodeList.Count > 0, "A block in a block list always has at least one element");
                 simplifiedNode = DeepCloneNode(FirstConditional.Instructions.InstructionBlocks.NodeBlockList[0].NodeList[0], cloneCommentGuid: false) as IInstruction;
             }
             else
@@ -1149,7 +1149,7 @@
 
         private static bool SimplifyAnchoredType(IAnchoredType node, out INode simplifiedNode)
         {
-            Debug.Assert(node.AnchoredName.Path.Count > 0);
+            Debug.Assert(node.AnchoredName.Path.Count > 0, "The path of an anchor is never empty");
             simplifiedNode = CreateSimpleSimpleType(node.AnchoredName.Path[0].Text);
             return true;
         }

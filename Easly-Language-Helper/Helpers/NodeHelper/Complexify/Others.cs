@@ -39,7 +39,7 @@
 
         private static bool ComplexifyQualifiedName(IQualifiedName node, out IQualifiedName complexifiedNode)
         {
-            Debug.Assert(node.Path.Count > 0, "A qualified name path must contain at least one element");
+            Debug.Assert(node.Path.Count > 0, $"{nameof(node)} always has at least one element");
 
             complexifiedNode = null;
             bool IsSplit = false;

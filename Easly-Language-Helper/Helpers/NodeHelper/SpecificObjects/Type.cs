@@ -45,8 +45,7 @@
         public static IGenericType CreateGenericType(IIdentifier classIdentifier, List<ITypeArgument> typeArgumentList)
         {
             if (typeArgumentList == null) throw new ArgumentNullException(nameof(typeArgumentList));
-
-            Debug.Assert(typeArgumentList.Count > 0);
+            if (typeArgumentList.Count == 0) throw new ArgumentException($"{nameof(typeArgumentList)} must have at least one type argument");
 
             GenericType Result = new GenericType();
             Result.Documentation = CreateEmptyDocumentation();
@@ -58,7 +57,9 @@
 
         public static IGenericType CreateGenericType(SharingType sharing, IIdentifier classIdentifier, IBlockList<ITypeArgument, TypeArgument> typeArgumentBlocks)
         {
-            Debug.Assert(!NodeTreeHelperBlockList.IsBlockListEmpty((IBlockList)typeArgumentBlocks));
+            if (typeArgumentBlocks == null) throw new ArgumentNullException(nameof(typeArgumentBlocks));
+            if (typeArgumentBlocks.NodeBlockList.Count == 0) throw new ArgumentException($"{nameof(typeArgumentBlocks)} must not be empty");
+            Debug.Assert(typeArgumentBlocks.NodeBlockList[0].NodeList.Count > 0, $"A block in a block list always has at least one node");
 
             GenericType Result = new GenericType();
             Result.Documentation = CreateEmptyDocumentation();

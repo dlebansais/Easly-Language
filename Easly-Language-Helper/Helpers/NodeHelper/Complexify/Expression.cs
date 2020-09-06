@@ -628,8 +628,8 @@
                 string Text = AfterText.Trim();
 
                 IQualifiedName ClonedQuery = DeepCloneNode(node.Query, cloneCommentGuid: false) as IQualifiedName;
-                Debug.Assert(ClonedQuery != null);
-                Debug.Assert(ClonedQuery.Path.Count > 0);
+                Debug.Assert(ClonedQuery != null, $"The clone is always a {nameof(IQualifiedName)}");
+                Debug.Assert(ClonedQuery.Path.Count > 0, $"The clone always has at least one element");
 
                 NodeTreeHelper.SetString(ClonedQuery.Path[0], "Text", Text);
 
@@ -793,8 +793,8 @@
             if (node.ArgumentBlocks.NodeBlockList.Count == 0 && ParsePattern(node, "new ", out string BeforeText, out string AfterText) && BeforeText.Length == 0)
             {
                 IQualifiedName ClonedQuery = DeepCloneNode(node.Query, cloneCommentGuid: false) as IQualifiedName;
-                Debug.Assert(ClonedQuery != null);
-                Debug.Assert(ClonedQuery.Path.Count > 0);
+                Debug.Assert(ClonedQuery != null, $"The clone is always a {nameof(IQualifiedName)}");
+                Debug.Assert(ClonedQuery.Path.Count > 0, $"The clone always has at least one element");
 
                 NodeTreeHelper.SetString(ClonedQuery.Path[0], "Text", AfterText);
 
@@ -811,8 +811,8 @@
             if (node.ArgumentBlocks.NodeBlockList.Count == 0 && ParsePattern(node, "old ", out string BeforeText, out string AfterText) && BeforeText.Length == 0)
             {
                 IQualifiedName ClonedQuery = DeepCloneNode(node.Query, cloneCommentGuid: false) as IQualifiedName;
-                Debug.Assert(ClonedQuery != null);
-                Debug.Assert(ClonedQuery.Path.Count > 0);
+                Debug.Assert(ClonedQuery != null, $"The clone is always a {nameof(IQualifiedName)}");
+                Debug.Assert(ClonedQuery.Path.Count > 0, $"The clone always has at least one element");
 
                 NodeTreeHelper.SetString(ClonedQuery.Path[0], "Text", AfterText);
 
@@ -904,9 +904,10 @@
 
         private static bool ComplexifyAsUnaryNotExpression(IQueryExpression node, out IUnaryNotExpression complexifiedNode)
         {
+            Debug.Assert(node.Query.Path.Count > 0, $"{nameof(node)} has at least one element in the query path");
+
             complexifiedNode = null;
 
-            Debug.Assert(node.Query.Path.Count > 0);
             string Text = node.Query.Path[0].Text;
 
             if (Text.StartsWith("not ", StringComparison.InvariantCulture))
@@ -920,11 +921,11 @@
 
         private static bool ComplexifyAsUnaryOperatorExpression(IQueryExpression node, out IUnaryOperatorExpression complexifiedNode)
         {
+            Debug.Assert(node.Query.Path.Count > 0, $"{nameof(node)} has at least one element in the query path");
+
             complexifiedNode = null;
 
-            Debug.Assert(node.Query.Path.Count > 0);
             string Text = node.Query.Path[0].Text;
-
             string Pattern = "-";
 
             if (Text.StartsWith(Pattern + " ", StringComparison.InvariantCulture))

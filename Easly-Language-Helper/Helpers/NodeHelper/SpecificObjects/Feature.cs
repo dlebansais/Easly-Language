@@ -164,17 +164,17 @@
 
         public static ICreationFeature CreateInitializedCreationFeature(IDocument documentation, IIdentifier exportIdentifier, ExportStatus export, IName entityName, IBlockList<ICommandOverload, CommandOverload> commandOverloadBlocks)
         {
+            if (commandOverloadBlocks == null) throw new ArgumentNullException(nameof(commandOverloadBlocks));
+            if (commandOverloadBlocks.NodeBlockList.Count == 0) throw new ArgumentException($"{nameof(commandOverloadBlocks)} must not be empty");
+            Debug.Assert(commandOverloadBlocks.NodeBlockList[0].NodeList.Count > 0, $"A block in a block list always has at least one node");
+
             CreationFeature Result = new CreationFeature();
             Result.Documentation = CreateDocumentationCopy(documentation);
             Result.ExportIdentifier = exportIdentifier != null ? DeepCloneNode(exportIdentifier, cloneCommentGuid: false) as IIdentifier : CreateEmptyExportIdentifier();
             Result.Export = export;
             Result.EntityName = entityName != null ? DeepCloneNode(entityName, cloneCommentGuid: false) as IName : CreateEmptyName();
             if (commandOverloadBlocks != null)
-            {
-                Debug.Assert(commandOverloadBlocks.NodeBlockList.Count > 0);
-                Debug.Assert(commandOverloadBlocks.NodeBlockList[0].NodeList.Count > 0);
                 Result.OverloadBlocks = BlockListHelper<ICommandOverload, CommandOverload>.CreateBlockListCopy(commandOverloadBlocks);
-            }
             else
                 Result.OverloadBlocks = BlockListHelper<ICommandOverload, CommandOverload>.CreateSimpleBlockList(CreateEmptyCommandOverload());
 
@@ -183,6 +183,10 @@
 
         public static IFunctionFeature CreateInitializedFunctionFeature(IDocument documentation, IIdentifier exportIdentifier, ExportStatus export, IName entityName, OnceChoice once, IBlockList<IQueryOverload, QueryOverload> queryOverloadBlocks)
         {
+            if (queryOverloadBlocks == null) throw new ArgumentNullException(nameof(queryOverloadBlocks));
+            if (queryOverloadBlocks.NodeBlockList.Count == 0) throw new ArgumentException($"{nameof(queryOverloadBlocks)} must not be empty");
+            Debug.Assert(queryOverloadBlocks.NodeBlockList[0].NodeList.Count > 0, $"A block in a block list always has at least one node");
+
             FunctionFeature Result = new FunctionFeature();
             Result.Documentation = CreateDocumentationCopy(documentation);
             Result.ExportIdentifier = exportIdentifier != null ? DeepCloneNode(exportIdentifier, cloneCommentGuid: false) as IIdentifier : CreateEmptyExportIdentifier();
@@ -190,11 +194,7 @@
             Result.EntityName = entityName != null ? DeepCloneNode(entityName, cloneCommentGuid: false) as IName : CreateEmptyName();
             Result.Once = once;
             if (queryOverloadBlocks != null)
-            {
-                Debug.Assert(queryOverloadBlocks.NodeBlockList.Count > 0);
-                Debug.Assert(queryOverloadBlocks.NodeBlockList[0].NodeList.Count > 0);
                 Result.OverloadBlocks = BlockListHelper<IQueryOverload, QueryOverload>.CreateBlockListCopy(queryOverloadBlocks);
-            }
             else
                 Result.OverloadBlocks = BlockListHelper<IQueryOverload, QueryOverload>.CreateSimpleBlockList(CreateEmptyQueryOverload());
 
@@ -203,17 +203,17 @@
 
         public static IIndexerFeature CreateInitializedIndexerFeature(IDocument documentation, IIdentifier exportIdentifier, ExportStatus export, IObjectType entityType, IBlockList<IIdentifier, Identifier> modifiedQueryBlocks, IOptionalReference<IBody> getterBody, IOptionalReference<IBody> setterBody, IBlockList<IEntityDeclaration, EntityDeclaration> indexParameterBlocks, ParameterEndStatus parameterEnd)
         {
+            if (indexParameterBlocks == null) throw new ArgumentNullException(nameof(indexParameterBlocks));
+            if (indexParameterBlocks.NodeBlockList.Count == 0) throw new ArgumentException($"{nameof(indexParameterBlocks)} must not be empty");
+            Debug.Assert(indexParameterBlocks.NodeBlockList[0].NodeList.Count > 0, $"A block in a block list always has at least one node");
+
             IndexerFeature Result = new IndexerFeature();
             Result.Documentation = CreateDocumentationCopy(documentation);
             Result.ExportIdentifier = exportIdentifier != null ? DeepCloneNode(exportIdentifier, cloneCommentGuid: false) as IIdentifier : CreateEmptyExportIdentifier();
             Result.Export = export;
             Result.EntityType = entityType != null ? DeepCloneNode(entityType, cloneCommentGuid: false) as IObjectType : CreateDefaultType();
             if (indexParameterBlocks != null)
-            {
-                Debug.Assert(indexParameterBlocks.NodeBlockList.Count > 0);
-                Debug.Assert(indexParameterBlocks.NodeBlockList[0].NodeList.Count > 0);
                 Result.IndexParameterBlocks = BlockListHelper<IEntityDeclaration, EntityDeclaration>.CreateBlockListCopy(indexParameterBlocks);
-            }
             else
                 Result.IndexParameterBlocks = BlockListHelper<IEntityDeclaration, EntityDeclaration>.CreateSimpleBlockList(CreateEmptyEntityDeclaration());
             Result.ParameterEnd = parameterEnd;
@@ -226,17 +226,17 @@
 
         public static IProcedureFeature CreateInitializedProcedureFeature(IDocument documentation, IIdentifier exportIdentifier, ExportStatus export, IName entityName, IBlockList<ICommandOverload, CommandOverload> commandOverloadBlocks)
         {
+            if (commandOverloadBlocks == null) throw new ArgumentNullException(nameof(commandOverloadBlocks));
+            if (commandOverloadBlocks.NodeBlockList.Count == 0) throw new ArgumentException($"{nameof(commandOverloadBlocks)} must not be empty");
+            Debug.Assert(commandOverloadBlocks.NodeBlockList[0].NodeList.Count > 0, $"A block in a block list always has at least one node");
+
             ProcedureFeature Result = new ProcedureFeature();
             Result.Documentation = CreateDocumentationCopy(documentation);
             Result.ExportIdentifier = exportIdentifier != null ? DeepCloneNode(exportIdentifier, cloneCommentGuid: false) as IIdentifier : CreateEmptyExportIdentifier();
             Result.Export = export;
             Result.EntityName = entityName != null ? DeepCloneNode(entityName, cloneCommentGuid: false) as IName : CreateEmptyName();
             if (commandOverloadBlocks != null)
-            {
-                Debug.Assert(commandOverloadBlocks.NodeBlockList.Count > 0);
-                Debug.Assert(commandOverloadBlocks.NodeBlockList[0].NodeList.Count > 0);
                 Result.OverloadBlocks = BlockListHelper<ICommandOverload, CommandOverload>.CreateBlockListCopy(commandOverloadBlocks);
-            }
             else
                 Result.OverloadBlocks = BlockListHelper<ICommandOverload, CommandOverload>.CreateSimpleBlockList(CreateEmptyCommandOverload());
 

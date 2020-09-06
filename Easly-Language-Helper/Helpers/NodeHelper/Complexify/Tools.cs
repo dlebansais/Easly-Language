@@ -621,7 +621,7 @@
 
         private static bool ParsePattern(IQueryExpression node, string patternText, out string beforeText, out string afterText)
         {
-            Debug.Assert(node.Query.Path.Count > 0, "The parsed node has a valid path");
+            Debug.Assert(node.Query.Path.Count > 0, $"The parsed {nameof(node)} always has a valid path");
 
             string Text = node.Query.Path[0].Text;
             return ParsePattern(Text, patternText, out beforeText, out afterText);
@@ -629,7 +629,7 @@
 
         private static bool ParsePattern(ICommandInstruction node, string patternText, out string beforeText, out string afterText)
         {
-            Debug.Assert(node.Command.Path.Count > 0, "The parsed node has a valid path");
+            Debug.Assert(node.Command.Path.Count > 0, $"The parsed {nameof(node)} always has a valid path");
 
             string Text = node.Command.Path[0].Text;
             return ParsePattern(Text, patternText, out beforeText, out afterText);

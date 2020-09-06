@@ -19,11 +19,11 @@
             return Documentation;
         }
 
-        public static IDocument CreateSimpleDocumentation(string comment, Guid guid)
+        public static IDocument CreateSimpleDocumentation(string comment, Guid uuid)
         {
             Document Documentation = new Document();
             Documentation.Comment = comment;
-            Documentation.Uuid = guid;
+            Documentation.Uuid = uuid;
 
             return Documentation;
         }
@@ -98,10 +98,8 @@
 
         public static IQualifiedName CreateQualifiedName(IList<IIdentifier> path)
         {
-            if (path == null)
-                throw new ArgumentNullException(nameof(path));
-
-            Debug.Assert(path.Count > 0);
+            if (path == null) throw new ArgumentNullException(nameof(path));
+            if (path.Count == 0) throw new ArgumentException($"{nameof(path)} must be have at least one element");
 
             QualifiedName DefaultQualifiedName = new QualifiedName();
             DefaultQualifiedName.Documentation = CreateEmptyDocumentation();

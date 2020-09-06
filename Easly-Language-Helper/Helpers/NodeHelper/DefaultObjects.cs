@@ -78,7 +78,7 @@
             else
                 Result = interfaceType;
 
-            Debug.Assert(Result != null);
+            Debug.Assert(Result != null, $"The returned value can't possibly be null");
             return Result;
         }
 
@@ -98,10 +98,10 @@
             NodeTypeName = NodeTypeName.Replace(NamePrefix + "I", NamePrefix);
 
             Type NodeType = Type.GetType(NodeTypeName);
-            Debug.Assert(!NodeType.IsAbstract);
+            Debug.Assert(!NodeType.IsAbstract, $"A default type value is never abstract");
 
             Result = CreateEmptyNode(NodeType);
-            Debug.Assert(Result != null);
+            Debug.Assert(Result != null, $"A default empty object is never null");
 
             return Result;
         }
@@ -117,12 +117,11 @@
         public static INode CreateEmptyNode(Type objectType)
         {
             if (objectType == null) throw new ArgumentNullException(nameof(objectType));
-
-            Debug.Assert(IsNodeType(objectType));
-            Debug.Assert(!objectType.IsAbstract);
+            if (!IsNodeType(objectType)) throw new ArgumentException($"{nameof(objectType)} must be a node type");
+            if (objectType.IsAbstract) throw new ArgumentException($"{nameof(objectType)} must not be an abstract node type");
 
             INode EmptyNode = objectType.Assembly.CreateInstance(objectType.FullName) as INode;
-            Debug.Assert(EmptyNode != null);
+            Debug.Assert(EmptyNode != null, $"A created instance is never null");
 
             IList<string> PropertyNames = NodeTreeHelper.EnumChildNodeProperties(EmptyNode);
 
@@ -177,7 +176,7 @@
 
         public static bool IsEmptyNode(INode node)
         {
-            Debug.Assert(node != null);
+            if (node == null) throw new ArgumentNullException(nameof(node));
 
             IList<string> PropertyNames = NodeTreeHelper.EnumChildNodeProperties(node.GetType());
 
@@ -203,7 +202,7 @@
 
                     if (IsCollectionNeverEmpty(node, PropertyName))
                     {
-                        Debug.Assert(ChildNodeList.Count > 0);
+                        Debug.Assert(ChildNodeList.Count > 0, $"A collection that is found not empty has to have an element");
 
                         if (ChildNodeList.Count != 1)
                             return false;
@@ -221,13 +220,13 @@
 
                     if (IsCollectionNeverEmpty(node, PropertyName))
                     {
-                        Debug.Assert(ChildBlockList.Count > 0);
+                        Debug.Assert(ChildBlockList.Count > 0, $"A collection that is found not empty has to have an element");
 
                         if (ChildBlockList.Count != 1)
                             return false;
 
                         INodeTreeBlock FirstBlock = ChildBlockList[0];
-                        Debug.Assert(FirstBlock.NodeList.Count > 0);
+                        Debug.Assert(FirstBlock.NodeList.Count > 0, $"Blocks in block lists always have at least one node");
 
                         if (FirstBlock.NodeList.Count != 1)
                             return false;
@@ -242,7 +241,7 @@
                 else if (NodeTreeHelper.IsStringProperty(node, PropertyName))
                 {
                     string Text = NodeTreeHelper.GetString(node, PropertyName);
-                    Debug.Assert(Text != null);
+                    Debug.Assert(Text != null, $"The content of a string property is never null");
 
                     if (Text.Length > 0)
                         return false;

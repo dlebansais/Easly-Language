@@ -17,10 +17,8 @@
         #region Init
         public NodeTreeBlock(IPattern replicationPattern, IIdentifier sourceIdentifier, IReadOnlyList<INode> nodeList)
         {
-            if (nodeList == null)
-                throw new ArgumentNullException(nameof(nodeList));
-
-            Debug.Assert(nodeList.Count > 0);
+            if (nodeList == null) throw new ArgumentNullException(nameof(nodeList));
+            if (nodeList.Count == 0) throw new ArgumentException($"{nameof(nodeList)} must have at least one node");
 
             ReplicationPattern = replicationPattern;
             SourceIdentifier = sourceIdentifier;

@@ -14,8 +14,7 @@
         {
             if (parameterList == null) throw new ArgumentNullException(nameof(parameterList));
             if (source == null) throw new ArgumentNullException(nameof(source));
-
-            Debug.Assert(parameterList.Count > 0);
+            if (parameterList.Count == 0) throw new ArgumentException($"{nameof(parameterList)} must have least one identifier");
 
             AssignmentArgument Result = new AssignmentArgument();
             Result.Documentation = CreateEmptyDocumentation();
@@ -29,8 +28,7 @@
         {
             if (parameterBlocks == null) throw new ArgumentNullException(nameof(parameterBlocks));
             if (source == null) throw new ArgumentNullException(nameof(source));
-
-            Debug.Assert(!NodeTreeHelperBlockList.IsBlockListEmpty((IBlockList)parameterBlocks));
+            if (NodeTreeHelperBlockList.IsBlockListEmpty((IBlockList)parameterBlocks)) throw new ArgumentNullException($"{nameof(parameterBlocks)} must not be empty");
 
             AssignmentArgument Result = new AssignmentArgument();
             Result.Documentation = CreateEmptyDocumentation();

@@ -4,10 +4,31 @@
     using BaseNode;
     using Easly;
 
+    public static class OptionalReferenceHelper
+    {
+        public static IOptionalReference<TNodeInterface> CreateEmptyReference<TNodeInterface>()
+            where TNodeInterface : class, INode
+        {
+            return OptionalReferenceHelper<TNodeInterface>.CreateEmptyReference();
+        }
+
+        public static IOptionalReference<TNodeInterface> CreateReference<TNodeInterface>(TNodeInterface item)
+            where TNodeInterface : class, INode
+        {
+            return OptionalReferenceHelper<TNodeInterface>.CreateReference(item);
+        }
+
+        public static IOptionalReference<TNodeInterface> CreateReferenceCopy<TNodeInterface>(IOptionalReference<TNodeInterface> optional)
+            where TNodeInterface : class, INode
+        {
+            return OptionalReferenceHelper<TNodeInterface>.CreateReferenceCopy(optional);
+        }
+    }
+
     public static class OptionalReferenceHelper<TNodeInterface>
         where TNodeInterface : class, INode
     {
-        public static IOptionalReference<TNodeInterface> CreateEmptyReference()
+        internal static IOptionalReference<TNodeInterface> CreateEmptyReference()
         {
             OptionalReference<TNodeInterface> Result = new OptionalReference<TNodeInterface>();
             Debug.Assert(!Result.IsAssigned, "An empty reference is never assigned");
@@ -16,7 +37,7 @@
             return Result;
         }
 
-        public static IOptionalReference<TNodeInterface> CreateReference(TNodeInterface item)
+        internal static IOptionalReference<TNodeInterface> CreateReference(TNodeInterface item)
         {
             OptionalReference<TNodeInterface> Result = new OptionalReference<TNodeInterface>();
             Result.Item = item;
@@ -25,7 +46,7 @@
             return Result;
         }
 
-        public static IOptionalReference<TNodeInterface> CreateReferenceCopy(IOptionalReference<TNodeInterface> optional)
+        internal static IOptionalReference<TNodeInterface> CreateReferenceCopy(IOptionalReference<TNodeInterface> optional)
         {
             OptionalReference<TNodeInterface> Result = new OptionalReference<TNodeInterface>();
 

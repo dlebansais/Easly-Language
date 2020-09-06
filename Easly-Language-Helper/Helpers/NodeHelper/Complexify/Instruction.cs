@@ -657,7 +657,7 @@
         {
             complexifiedInstructionList = null;
 
-            Debug.Assert(!NodeTreeHelperBlockList.IsBlockListEmpty((IBlockList)node.ConditionalBlocks));
+            Debug.Assert(!NodeTreeHelperBlockList.IsBlockListEmpty((IBlockList)node.ConditionalBlocks), $"The conditional of {nameof(node)} is never empty");
 
             IConditional FirstConditional = node.ConditionalBlocks.NodeBlockList[0].NodeList[0];
             if (GetComplexifiedConditional(FirstConditional, out IList<IConditional> ComplexifiedConditionalList))

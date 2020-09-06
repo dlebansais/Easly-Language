@@ -7,16 +7,22 @@
     using System.Reflection;
     using BaseNode;
 
+    public static class NodeTreeWalk
+    {
+        public static bool Walk<TContext>(INode root, IWalkCallbacks<TContext> callbacks, TContext data)
+        where TContext : class
+        {
+            return NodeTreeWalk<TContext>.Walk(root, callbacks, data);
+        }
+    }
+
     public static class NodeTreeWalk<TContext>
         where TContext : class
     {
-        public static bool Walk(INode root, IWalkCallbacks<TContext> callbacks, TContext data)
+        internal static bool Walk(INode root, IWalkCallbacks<TContext> callbacks, TContext data)
         {
-            if (root == null)
-                throw new ArgumentNullException(nameof(root));
-
-            if (callbacks == null)
-                throw new ArgumentNullException(nameof(callbacks));
+            if (root == null) throw new ArgumentNullException(nameof(root));
+            if (callbacks == null) throw new ArgumentNullException(nameof(callbacks));
 
             return Walk(root, null, null, callbacks, data);
         }

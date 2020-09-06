@@ -57,6 +57,7 @@
         public static IAssignmentInstruction CreateAssignmentInstruction(List<IQualifiedName> assignmentList, IExpression source)
         {
             if (assignmentList == null) throw new ArgumentNullException(nameof(assignmentList));
+            if (assignmentList.Count == 0) throw new ArgumentException($"{nameof(assignmentList)} must have at least one assignee");
 
             Debug.Assert(assignmentList.Count > 0);
 
@@ -71,8 +72,8 @@
         public static IAssignmentInstruction CreateAssignmentInstruction(IBlockList<IQualifiedName, QualifiedName> destinationBlocks, IExpression source)
         {
             if (destinationBlocks == null) throw new ArgumentNullException(nameof(destinationBlocks));
-
-            Debug.Assert(destinationBlocks.NodeBlockList.Count > 0 && destinationBlocks.NodeBlockList[0].NodeList.Count > 0);
+            if (destinationBlocks.NodeBlockList.Count == 0) throw new ArgumentException($"{nameof(destinationBlocks)} must not be empty");
+            Debug.Assert(destinationBlocks.NodeBlockList[0].NodeList.Count > 0, $"A block in a block list always has at least one node");
 
             AssignmentInstruction Result = new AssignmentInstruction();
             Result.Documentation = CreateEmptyDocumentation();
@@ -276,8 +277,7 @@
         public static IIndexAssignmentInstruction CreateIndexAssignmentInstruction(IQualifiedName destination, List<IArgument> argumentList, IExpression source)
         {
             if (argumentList == null) throw new ArgumentNullException(nameof(argumentList));
-
-            Debug.Assert(argumentList.Count > 0);
+            if (argumentList.Count == 0) throw new ArgumentException($"{nameof(argumentList)} must have at least one argument");
 
             IndexAssignmentInstruction Result = new IndexAssignmentInstruction();
             Result.Documentation = CreateEmptyDocumentation();
@@ -291,8 +291,8 @@
         public static IIndexAssignmentInstruction CreateIndexAssignmentInstruction(IQualifiedName destination, IBlockList<IArgument, Argument> argumentBlocks, IExpression source)
         {
             if (argumentBlocks == null) throw new ArgumentNullException(nameof(argumentBlocks));
-
-            Debug.Assert(argumentBlocks.NodeBlockList.Count > 0 && argumentBlocks.NodeBlockList[0].NodeList.Count > 0);
+            if (argumentBlocks.NodeBlockList.Count == 0) throw new ArgumentException($"{nameof(argumentBlocks)} must not be empty");
+            Debug.Assert(argumentBlocks.NodeBlockList[0].NodeList.Count > 0, $"A block in a block list always has at least one node");
 
             IndexAssignmentInstruction Result = new IndexAssignmentInstruction();
             Result.Documentation = CreateEmptyDocumentation();
@@ -364,8 +364,7 @@
         public static IOverLoopInstruction CreateOverLoopInstruction(IExpression overList, List<IName> nameList)
         {
             if (nameList == null) throw new ArgumentNullException(nameof(nameList));
-
-            Debug.Assert(nameList.Count > 0);
+            if (nameList.Count == 0) throw new ArgumentException($"{nameof(nameList)} must have at least one name");
 
             OverLoopInstruction Result = new OverLoopInstruction();
             Result.Documentation = CreateEmptyDocumentation();
@@ -382,6 +381,7 @@
         public static IOverLoopInstruction CreateOverLoopInstruction(IExpression overList, List<IName> nameList, IInstruction instruction)
         {
             if (nameList == null) throw new ArgumentNullException(nameof(nameList));
+            if (nameList.Count == 0) throw new ArgumentException($"{nameof(nameList)} must have at least one name");
 
             Debug.Assert(nameList.Count > 0);
 
@@ -399,6 +399,9 @@
 
         public static IOverLoopInstruction CreateOverLoopInstruction(IExpression overList, IBlockList<IName, Name> indexerBlocks, IterationType iteration, IScope loopInstructions, IBlockList<IAssertion, Assertion> invariantBlocks)
         {
+            if (indexerBlocks == null) throw new ArgumentNullException(nameof(indexerBlocks));
+            if (NodeTreeHelperBlockList.IsBlockListEmpty((IBlockList)indexerBlocks)) throw new ArgumentException($"{nameof(indexerBlocks)} must not be empty");
+
             Debug.Assert(!NodeTreeHelperBlockList.IsBlockListEmpty((IBlockList)indexerBlocks));
 
             OverLoopInstruction Result = new OverLoopInstruction();
@@ -415,7 +418,8 @@
 
         public static IOverLoopInstruction CreateOverLoopInstruction(IExpression overList, IBlockList<IName, Name> indexerBlocks, IterationType iteration, IScope loopInstructions, IIdentifier exitEntityName, IBlockList<IAssertion, Assertion> invariantBlocks)
         {
-            Debug.Assert(!NodeTreeHelperBlockList.IsBlockListEmpty((IBlockList)indexerBlocks));
+            if (indexerBlocks == null) throw new ArgumentNullException(nameof(indexerBlocks));
+            if (NodeTreeHelperBlockList.IsBlockListEmpty((IBlockList)indexerBlocks)) throw new ArgumentException($"{nameof(indexerBlocks)} must not be empty");
 
             OverLoopInstruction Result = new OverLoopInstruction();
             Result.Documentation = CreateEmptyDocumentation();
@@ -433,6 +437,7 @@
         public static IPrecursorIndexAssignmentInstruction CreatePrecursorIndexAssignmentInstruction(List<IArgument> argumentList, IExpression source)
         {
             if (argumentList == null) throw new ArgumentNullException(nameof(argumentList));
+            if (argumentList.Count == 0) throw new ArgumentException($"{nameof(argumentList)} must have at least one argument");
 
             Debug.Assert(argumentList.Count > 0);
 
@@ -448,8 +453,8 @@
         public static IPrecursorIndexAssignmentInstruction CreatePrecursorIndexAssignmentInstruction(IBlockList<IArgument, Argument> argumentBlocks, IExpression source)
         {
             if (argumentBlocks == null) throw new ArgumentNullException(nameof(argumentBlocks));
-
-            Debug.Assert(argumentBlocks.NodeBlockList.Count > 0 && argumentBlocks.NodeBlockList[0].NodeList.Count > 0);
+            if (argumentBlocks.NodeBlockList.Count == 0) throw new ArgumentException($"{nameof(argumentBlocks)} must not be empty");
+            Debug.Assert(argumentBlocks.NodeBlockList[0].NodeList.Count > 0, $"A block in a block list always has at least one node");
 
             PrecursorIndexAssignmentInstruction Result = new PrecursorIndexAssignmentInstruction();
             Result.Documentation = CreateEmptyDocumentation();
@@ -463,8 +468,8 @@
         public static IPrecursorIndexAssignmentInstruction CreatePrecursorIndexAssignmentInstruction(IObjectType ancestorType, IBlockList<IArgument, Argument> argumentBlocks, IExpression source)
         {
             if (argumentBlocks == null) throw new ArgumentNullException(nameof(argumentBlocks));
-
-            Debug.Assert(argumentBlocks.NodeBlockList.Count > 0 && argumentBlocks.NodeBlockList[0].NodeList.Count > 0);
+            if (argumentBlocks.NodeBlockList.Count == 0) throw new ArgumentException($"{nameof(argumentBlocks)} must not be empty");
+            Debug.Assert(argumentBlocks.NodeBlockList[0].NodeList.Count > 0, $"A block in a block list always has at least one node");
 
             PrecursorIndexAssignmentInstruction Result = new PrecursorIndexAssignmentInstruction();
             Result.Documentation = CreateEmptyDocumentation();
