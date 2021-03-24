@@ -19,8 +19,8 @@
         {
             StackTrace Trace = new StackTrace();
 
-            StackFrame Frame = Trace.GetFrame(1) !;
-            MethodBase? Method = Frame.GetMethod() !;
+            StackFrame Frame = Trace.GetFrame(1)!;
+            MethodBase? Method = Frame.GetMethod()!;
             Type? CallerType = Method.DeclaringType !;
 
             if (CallerType.IsGenericType)

@@ -26,7 +26,7 @@
         public object GetValue(object o)
         {
             PropertyInfo AsPropertyInfo = (PropertyInfo)FeatureInfo;
-            return AsPropertyInfo.GetValue(o) !;
+            return AsPropertyInfo.GetValue(o)!;
         }
 
         public void SetValue(object o, object value)

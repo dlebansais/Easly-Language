@@ -97,8 +97,8 @@
                 Type[] GenericArguments = new Type[] { t };
                 Type BoundType = typeof(SpecializedTypeEntity<>).MakeGenericType(GenericArguments);
 
-                PropertyInfo BoundTypePropertyInfo = BoundType.GetProperty(nameof(SpecializedTypeEntity<object>.Singleton)) !;
-                object BoundTypePropertyValue = BoundTypePropertyInfo.GetValue(null) !;
+                PropertyInfo BoundTypePropertyInfo = BoundType.GetProperty(nameof(SpecializedTypeEntity<object>.Singleton))!;
+                object BoundTypePropertyValue = BoundTypePropertyInfo.GetValue(null)!;
 
                 Result = (TypeEntity)BoundTypePropertyValue;
             }
@@ -126,7 +126,7 @@
         public object CreateInstance()
         {
             string FullName = TypeInfo.FullName !;
-            return TypeInfo.Assembly.CreateInstance(FullName) !;
+            return TypeInfo.Assembly.CreateInstance(FullName)!;
         }
         #endregion
 
