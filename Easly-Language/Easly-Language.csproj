@@ -1,15 +1,22 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.1;netcoreapp3.1;net48</TargetFrameworks>
+    <TargetFrameworks>netstandard2.1;netcoreapp3.1;net48;net5.0-windows</TargetFrameworks>
     <LangVersion>9.0</LangVersion>
     <Nullable>enable</Nullable>
     <Platforms>x64</Platforms>
-    <Configurations>Debug;Release</Configurations>
-  </PropertyGroup>
-
-  <PropertyGroup>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
     <RootNamespace>BaseNode</RootNamespace>
+    <Version>1.0.1</Version>
+    <Authors>David Le Bansais</Authors>
+    <Company />
+    <Product />
+    <Description>AEasly language AST description and helpers</Description>
+    <Copyright>Copyright © 2019 David Le Bansais</Copyright>
+    <AssemblyVersion>1.0.1.2</AssemblyVersion>
+    <FileVersion>1.0.1.2</FileVersion>
+    <RepositoryUrl>https://github.com/dlebansais/Easly-Language</RepositoryUrl>
+    <NeutralLanguage>en-US</NeutralLanguage>
   </PropertyGroup>
 
   <ItemGroup>
@@ -35,12 +42,20 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="System.Diagnostics.Contracts" Version="4.3.0" />
+    <PackageReference Include="PolySerializer-Debug" Version="1.2.6" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
+    <PackageReference Include="PolySerializer" Version="1.2.6" Condition="'$(Configuration)|$(Platform)'!='Debug|x64'" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="PolySerializer-Attributes">
-      <HintPath>..\dependencies\PolySerializer\$(Platform)\$(Configuration)\netstandard2.0\PolySerializer-Attributes.dll</HintPath>
-    </Reference>
-  </ItemGroup>
+  <Target Name="_ResolveCopyLocalNuGetPackagePdbsAndXml" Condition="$(CopyLocalLockFileAssemblies) == true" AfterTargets="ResolveReferences">
+    <ItemGroup>
+      <ReferenceCopyLocalPaths Include="@(ReferenceCopyLocalPaths->'%(RootDir)%(Directory)%(Filename).pdb')" Condition="'%(ReferenceCopyLocalPaths.NuGetPackageId)' != ''&#xD;&#xA;                    and Exists('%(RootDir)%(Directory)%(Filename).pdb')" />
+      <ReferenceCopyLocalPaths Include="@(ReferenceCopyLocalPaths->'%(RootDir)%(Directory)%(Filename).xml')" Condition="'%(ReferenceCopyLocalPaths.NuGetPackageId)' != ''&#xD;&#xA;                    and Exists('%(RootDir)%(Directory)%(Filename).xml')" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(SolutionDir)'!='*Undefined*'">
+    <Exec Command="if exist &quot;$(SolutionDir)updatecommit.bat&quot; call &quot;$(SolutionDir)updatecommit.bat&quot; &quot;$(SolutionDir)&quot; &quot;$(TargetPath)&quot;" />
+    <Exec Command="if exist &quot;$(SolutionDir)signfile.bat&quot; call &quot;$(SolutionDir)signfile.bat&quot; &quot;$(SolutionDir)&quot; &quot;$(Configuration)-$(Platform)&quot; &quot;$(TargetPath)&quot;" Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
+  </Target>
 
 </Project>

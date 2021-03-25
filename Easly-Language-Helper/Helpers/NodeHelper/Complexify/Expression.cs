@@ -762,8 +762,7 @@
 
                 if (Text.Length >= 1)
                 {
-                    FormattedNumber fn = new FormattedNumber(Text);
-                    if (fn.IsValid)
+                    if (Number.TryParse(Text, out Number fn))
                         complexifiedNode = CreateSimpleManifestNumberExpression(Text);
                 }
             }

@@ -1,0 +1,1112 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Easly-Number</name>
+    </assembly>
+    <members>
+        <member name="T:EaslyNumber.Number">
+            <summary>
+            Represents numbers with arbitrary precision.
+            </summary>
+            <summary>
+            Represents numbers with arbitrary precision.
+            </summary>
+            <summary>
+            Represents numbers with arbitrary precision.
+            </summary>
+            <summary>
+            Represents numbers with arbitrary precision.
+            </summary>
+            <summary>
+            Represents numbers with arbitrary precision.
+            </summary>
+            <summary>
+            Represents numbers with arbitrary precision.
+            </summary>
+            <summary>
+            Represents numbers with arbitrary precision.
+            </summary>
+            <summary>
+            Represents numbers with arbitrary precision.
+            </summary>
+        </member>
+        <member name="M:EaslyNumber.Number.Add(EaslyNumber.Number,EaslyNumber.Number,System.UInt64,EaslyNumber.Rounding)">
+            <summary>
+            Returns the sum of two numbers: x + y.
+            </summary>
+            <param name="x">The first number.</param>
+            <param name="y">The second number.</param>
+            <param name="precision">The precision to use for the result.</param>
+            <param name="rounding">The rounding mode to use when creating the result.</param>
+            <returns>The arithmetic sum of <paramref name="x"/> and <paramref name="y"/>.</returns>
+        </member>
+        <member name="M:EaslyNumber.Number.Subtract(EaslyNumber.Number,EaslyNumber.Number,System.UInt64,EaslyNumber.Rounding)">
+            <summary>
+            Returns the difference between two numbers: x - y.
+            </summary>
+            <param name="x">The first number.</param>
+            <param name="y">The second number.</param>
+            <param name="precision">The precision to use for the result.</param>
+            <param name="rounding">The rounding mode to use when creating the result.</param>
+            <returns>The arithmetic difference of <paramref name="x"/> and <paramref name="y"/>.</returns>
+        </member>
+        <member name="M:EaslyNumber.Number.Multiply(EaslyNumber.Number,EaslyNumber.Number,System.UInt64,EaslyNumber.Rounding)">
+            <summary>
+            Returns the product of two numbers: x * y.
+            </summary>
+            <param name="x">The first number.</param>
+            <param name="y">The second number.</param>
+            <param name="precision">The precision to use for the result.</param>
+            <param name="rounding">The rounding mode to use when creating the result.</param>
+            <returns>The arithmetic product of <paramref name="x"/> and <paramref name="y"/>.</returns>
+        </member>
+        <member name="M:EaslyNumber.Number.Divide(EaslyNumber.Number,EaslyNumber.Number,System.UInt64,EaslyNumber.Rounding)">
+            <summary>
+            Returns the ratio of two numbers: x / y.
+            </summary>
+            <param name="x">The first number.</param>
+            <param name="y">The second number.</param>
+            <param name="precision">The precision to use for the result.</param>
+            <param name="rounding">The rounding mode to use when creating the result.</param>
+            <returns>The arithmetic ratio of <paramref name="x"/> and <paramref name="y"/>.</returns>
+        </member>
+        <member name="M:EaslyNumber.Number.Negate(EaslyNumber.Number,System.UInt64,EaslyNumber.Rounding)">
+            <summary>
+            Returns the negation of a number: -x.
+            </summary>
+            <param name="x">The number.</param>
+            <param name="precision">The precision to use for the result.</param>
+            <param name="rounding">The rounding mode to use when creating the result.</param>
+            <returns>The arithmetic negation of <paramref name="x"/>.</returns>
+        </member>
+        <member name="M:EaslyNumber.Number.Abs(System.UInt64,EaslyNumber.Rounding)">
+            <summary>
+            Returns the absolute value.
+            </summary>
+            <param name="precision">The precision to use for the result.</param>
+            <param name="rounding">The rounding mode to use when creating the result.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.Exp(System.UInt64,EaslyNumber.Rounding)">
+            <summary>
+            Returns e (the base of natural logarithms) raised to the power of this object's value.
+            </summary>
+            <param name="precision">The precision to use for the result.</param>
+            <param name="rounding">The rounding mode to use when creating the result.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.Log(System.UInt64,EaslyNumber.Rounding)">
+            <summary>
+            Returns the natural logarithms of this object's value.
+            </summary>
+            <param name="precision">The precision to use for the result.</param>
+            <param name="rounding">The rounding mode to use when creating the result.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.Log10(System.UInt64,EaslyNumber.Rounding)">
+            <summary>
+            Returns the base-10 logarithms of this object's value.
+            </summary>
+            <param name="precision">The precision to use for the result.</param>
+            <param name="rounding">The rounding mode to use when creating the result.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.Pow(EaslyNumber.Number,System.UInt64,EaslyNumber.Rounding)">
+            <summary>
+            Returns this object's value raised to the power x.
+            </summary>
+            <param name="x">The number.</param>
+            <param name="precision">The precision to use for the result.</param>
+            <param name="rounding">The rounding mode to use when creating the result.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.Sqrt(System.UInt64,EaslyNumber.Rounding)">
+            <summary>
+            Returns the square root of this object's value.
+            </summary>
+            <param name="precision">The precision to use for the result.</param>
+            <param name="rounding">The rounding mode to use when creating the result.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.ShiftLeft(EaslyNumber.Number,System.Int32,System.UInt64,EaslyNumber.Rounding)">
+            <summary>
+            Returns x multiplied by a specified power of two.
+            </summary>
+            <param name="x">The first number.</param>
+            <param name="shift">The power of two.</param>
+            <param name="precision">The precision to use for the result.</param>
+            <param name="rounding">The rounding mode to use when creating the result.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.ShiftRight(EaslyNumber.Number,System.Int32,System.UInt64,EaslyNumber.Rounding)">
+            <summary>
+            Returns this object's value divided by a specified power of two.
+            </summary>
+            <param name="x">The first number.</param>
+            <param name="shift">The power of two.</param>
+            <param name="precision">The precision to use for the result.</param>
+            <param name="rounding">The rounding mode to use when creating the result.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.Remainder(EaslyNumber.Number,System.UInt64,EaslyNumber.Rounding)">
+            <summary>
+            Returns the remainder when this object's value is divided by x.
+            </summary>
+            <param name="x">The number.</param>
+            <param name="precision">The precision to use for the result.</param>
+            <param name="rounding">The rounding mode to use when creating the result.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.BitwiseAnd(EaslyNumber.Number,System.UInt64,EaslyNumber.Rounding)">
+            <summary>
+            Returns the bitwise AND of this object's value and another.
+            </summary>
+            <param name="other">The other number.</param>
+            <param name="precision">The precision to use for the result.</param>
+            <param name="rounding">The rounding mode to use when creating the result.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.BitwiseOr(EaslyNumber.Number,System.UInt64,EaslyNumber.Rounding)">
+            <summary>
+            Returns the bitwise OR of this object's value and another.
+            </summary>
+            <param name="other">The other number.</param>
+            <param name="precision">The precision to use for the result.</param>
+            <param name="rounding">The rounding mode to use when creating the result.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.BitwiseXor(EaslyNumber.Number,System.UInt64,EaslyNumber.Rounding)">
+            <summary>
+            Returns the bitwise OR of this object's value and another.
+            </summary>
+            <param name="other">The other number.</param>
+            <param name="precision">The precision to use for the result.</param>
+            <param name="rounding">The rounding mode to use when creating the result.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.CompareTo(EaslyNumber.Number)">
+            <summary>
+            Compares two instances.
+            </summary>
+            <param name="other">The other instance.</param>
+            <returns>Negative value if the current instance is less then <paramref name="other"/>, positive value if the current instance is greated then <paramref name="other"/>; otherwise, zero.</returns>
+        </member>
+        <member name="M:EaslyNumber.Number.CompareTo(System.UInt64)">
+            <summary>
+            Compares two values.
+            </summary>
+            <param name="other">The other value.</param>
+            <returns>Negative value if the current instance is less then <paramref name="other"/>, positive value if the current instance is greated then <paramref name="other"/>; otherwise, zero.</returns>
+        </member>
+        <member name="M:EaslyNumber.Number.CompareTo(System.Int64)">
+            <summary>
+            Compares two values.
+            </summary>
+            <param name="other">The other value.</param>
+            <returns>Negative value if the current instance is less then <paramref name="other"/>, positive value if the current instance is greated then <paramref name="other"/>; otherwise, zero.</returns>
+        </member>
+        <member name="M:EaslyNumber.Number.CompareTo(System.Double)">
+            <summary>
+            Compares two values.
+            </summary>
+            <param name="other">The other value.</param>
+            <returns>Negative value if the current instance is less then <paramref name="other"/>, positive value if the current instance is greated then <paramref name="other"/>; otherwise, zero.</returns>
+        </member>
+        <member name="M:EaslyNumber.Number.Equals(System.Object)">
+            <summary>
+            Indicates whether this instance and a specified object are equal.
+            </summary>
+            <param name="obj">The object to compare with the current instance.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.GetHashCode">
+            <summary>
+            Returns the hash code for this instance.
+            </summary>
+            <returns>A 32-bit signed integer that is the hash code for this instance.</returns>
+        </member>
+        <member name="M:EaslyNumber.Number.TryParseInt(System.Int32@)">
+            <summary>
+            Gets the value if it can be represented with a <see cref="T:System.Int32"/>.
+            </summary>
+            <param name="value">The value upon return.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.TryParseUInt(System.UInt32@)">
+            <summary>
+            Gets the value if it can be represented with a <see cref="T:System.UInt32"/>.
+            </summary>
+            <param name="value">The value upon return.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.TryParseLong(System.Int64@)">
+            <summary>
+            Gets the value if it can be represented with a <see cref="T:System.Int64"/>.
+            </summary>
+            <param name="value">The value upon return.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.TryParseULong(System.UInt64@)">
+            <summary>
+            Gets the value if it can be represented with a <see cref="T:System.UInt64"/>.
+            </summary>
+            <param name="value">The value upon return.</param>
+        </member>
+        <member name="F:EaslyNumber.Number.NaN">
+            <summary>
+            The special value for not-a-number.
+            </summary>
+        </member>
+        <member name="F:EaslyNumber.Number.PositiveInfinity">
+            <summary>
+            The special value for positive infinity.
+            </summary>
+        </member>
+        <member name="F:EaslyNumber.Number.NegativeInfinity">
+            <summary>
+            The special value for negative infinity.
+            </summary>
+        </member>
+        <member name="F:EaslyNumber.Number.Zero">
+            <summary>
+            The special value zero.
+            </summary>
+        </member>
+        <member name="F:EaslyNumber.Number.LongMinValue">
+            <summary>
+            The special min value for long.
+            </summary>
+        </member>
+        <member name="F:EaslyNumber.Number.LongMaxValue">
+            <summary>
+            The special max value for long.
+            </summary>
+        </member>
+        <member name="F:EaslyNumber.Number.ULongMaxValue">
+            <summary>
+            The special max value for ulong.
+            </summary>
+        </member>
+        <member name="M:EaslyNumber.Number.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:EaslyNumber.Number"/> struct.
+            This contructor creates the number from plain text.
+            </summary>
+            <param name="text">The number in plain text.</param>
+            <exception cref="T:System.ArgumentException">The text is not a valid number.</exception>
+        </member>
+        <member name="M:EaslyNumber.Number.TryParse(System.String,EaslyNumber.Number@,System.UInt64,EaslyNumber.Rounding)">
+            <summary>
+            Tries to create a number from plain text.
+            </summary>
+            <param name="text">The number in plain text.</param>
+            <param name="number">The new instance upon return if successful.</param>
+            <param name="precision">The optional precision.</param>
+            <param name="rounding">The optional rounding mode.</param>
+            <returns>True if successful; otherwise, false.</returns>
+        </member>
+        <member name="M:EaslyNumber.Number.#ctor(System.Single)">
+            <summary>
+            Initializes a new instance of the <see cref="T:EaslyNumber.Number"/> struct.
+            This contructor creates the number from a C# float.
+            </summary>
+            <param name="value">The number value.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.#ctor(System.Double)">
+            <summary>
+            Initializes a new instance of the <see cref="T:EaslyNumber.Number"/> struct.
+            This contructor creates the number from a C# double.
+            </summary>
+            <param name="value">The number value.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.#ctor(System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:EaslyNumber.Number"/> struct.
+            This contructor creates the number from a C# int.
+            </summary>
+            <param name="value">The number value.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.#ctor(System.UInt32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:EaslyNumber.Number"/> struct.
+            This contructor creates the number from a C# unsigned int.
+            </summary>
+            <param name="value">The number value.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.#ctor(System.Int64)">
+            <summary>
+            Initializes a new instance of the <see cref="T:EaslyNumber.Number"/> struct.
+            This contructor creates the number from a C# long.
+            </summary>
+            <param name="value">The number value.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.#ctor(System.UInt64)">
+            <summary>
+            Initializes a new instance of the <see cref="T:EaslyNumber.Number"/> struct.
+            This contructor creates the number from a C# unsigned long.
+            </summary>
+            <param name="value">The number value.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.#ctor(System.String,System.UInt32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:EaslyNumber.Number"/> struct.
+            </summary>
+            <param name="text">The number in plain text.</param>
+            <param name="textBase">The digit base for <paramref name="text"/>.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.#ctor(System.UInt64,EaslyNumber.Rounding)">
+            <summary>
+            Initializes a new instance of the <see cref="T:EaslyNumber.Number"/> struct.
+            </summary>
+            <param name="precision">The precision.</param>
+            <param name="rounding">The rounding.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.#ctor(System.Boolean,System.Boolean,System.Boolean)">
+            <summary>
+            Initializes a new instance of the <see cref="T:EaslyNumber.Number"/> struct.
+            </summary>
+            <param name="isNaN">Value of the special NaN flag.</param>
+            <param name="isPositiveInfinity">Value of the special positive infinity flag.</param>
+            <param name="isNegativeInfinity">Value of the special negative infinity flag.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.ResetDefaultPrecision">
+            <summary>
+            Resets the default precision to its initial value.
+            </summary>
+        </member>
+        <member name="P:EaslyNumber.Number.DefaultPrecision">
+            <summary>
+            Gets or sets the default precision, used when creating new numbers.
+            </summary>
+        </member>
+        <member name="P:EaslyNumber.Number.Precision">
+            <summary>
+            Gets or sets the precision.
+            </summary>
+        </member>
+        <member name="P:EaslyNumber.Number.Rounding">
+            <summary>
+            Gets or sets the precision.
+            </summary>
+        </member>
+        <member name="P:EaslyNumber.Number.IsSpecial">
+            <summary>
+            Gets a value indicating whether the number is one of the special numbers.
+            </summary>
+        </member>
+        <member name="P:EaslyNumber.Number.IsNaN">
+            <summary>
+            Gets a value indicating whether the number is a NaN.
+            </summary>
+        </member>
+        <member name="P:EaslyNumber.Number.IsInfinite">
+            <summary>
+            Gets a value indicating whether the number is one of the infinite values.
+            </summary>
+        </member>
+        <member name="P:EaslyNumber.Number.IsPositiveInfinity">
+            <summary>
+            Gets a value indicating whether the number is the positive infinite value.
+            </summary>
+        </member>
+        <member name="P:EaslyNumber.Number.IsNegativeInfinity">
+            <summary>
+            Gets a value indicating whether the number is the negative infinite value.
+            </summary>
+        </member>
+        <member name="P:EaslyNumber.Number.IsZero">
+            <summary>
+            Gets a value indicating whether the number is 0.
+            </summary>
+        </member>
+        <member name="P:EaslyNumber.Number.Sign">
+            <summary>
+            Gets the number sign.
+            </summary>
+        </member>
+        <member name="P:EaslyNumber.Number.IsInteger">
+            <summary>
+            Gets a value indicating whether the number is an integer.
+            </summary>
+        </member>
+        <member name="M:EaslyNumber.Number.op_Addition(EaslyNumber.Number,EaslyNumber.Number)">
+            <summary>
+            Return x + y.
+            </summary>
+            <param name="x">The first operand.</param>
+            <param name="y">The second operand.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.op_Addition(EaslyNumber.Number,System.UInt64)">
+            <summary>
+            Return x + y.
+            </summary>
+            <param name="x">The first operand.</param>
+            <param name="y">The second operand.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.op_Addition(System.UInt64,EaslyNumber.Number)">
+            <summary>
+            Return x + y.
+            </summary>
+            <param name="x">The first operand.</param>
+            <param name="y">The second operand.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.op_Addition(EaslyNumber.Number,System.Int64)">
+            <summary>
+            Return x + y.
+            </summary>
+            <param name="x">The first operand.</param>
+            <param name="y">The second operand.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.op_Addition(System.Int64,EaslyNumber.Number)">
+            <summary>
+            Return x + y.
+            </summary>
+            <param name="x">The first operand.</param>
+            <param name="y">The second operand.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.op_Addition(EaslyNumber.Number,System.Double)">
+            <summary>
+            Return x + y.
+            </summary>
+            <param name="x">The first operand.</param>
+            <param name="y">The second operand.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.op_Addition(System.Double,EaslyNumber.Number)">
+            <summary>
+            Return x + y.
+            </summary>
+            <param name="x">The first operand.</param>
+            <param name="y">The second operand.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.op_Subtraction(EaslyNumber.Number,EaslyNumber.Number)">
+            <summary>
+            Return x - y.
+            </summary>
+            <param name="x">The first operand.</param>
+            <param name="y">The second operand.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.op_Subtraction(EaslyNumber.Number,System.UInt64)">
+            <summary>
+            Return x - y.
+            </summary>
+            <param name="x">The first operand.</param>
+            <param name="y">The second operand.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.op_Subtraction(System.UInt64,EaslyNumber.Number)">
+            <summary>
+            Return x - y.
+            </summary>
+            <param name="x">The first operand.</param>
+            <param name="y">The second operand.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.op_Subtraction(EaslyNumber.Number,System.Int64)">
+            <summary>
+            Return x - y.
+            </summary>
+            <param name="x">The first operand.</param>
+            <param name="y">The second operand.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.op_Subtraction(System.Int64,EaslyNumber.Number)">
+            <summary>
+            Return x - y.
+            </summary>
+            <param name="x">The first operand.</param>
+            <param name="y">The second operand.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.op_Subtraction(EaslyNumber.Number,System.Double)">
+            <summary>
+            Return x - y.
+            </summary>
+            <param name="x">The first operand.</param>
+            <param name="y">The second operand.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.op_Subtraction(System.Double,EaslyNumber.Number)">
+            <summary>
+            Return x - y.
+            </summary>
+            <param name="x">The first operand.</param>
+            <param name="y">The second operand.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.op_Multiply(EaslyNumber.Number,EaslyNumber.Number)">
+            <summary>
+            Return x * y.
+            </summary>
+            <param name="x">The first operand.</param>
+            <param name="y">The second operand.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.op_Multiply(EaslyNumber.Number,System.UInt64)">
+            <summary>
+            Return x * y.
+            </summary>
+            <param name="x">The first operand.</param>
+            <param name="y">The second operand.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.op_Multiply(System.UInt64,EaslyNumber.Number)">
+            <summary>
+            Return x * y.
+            </summary>
+            <param name="x">The first operand.</param>
+            <param name="y">The second operand.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.op_Multiply(EaslyNumber.Number,System.Int64)">
+            <summary>
+            Return x * y.
+            </summary>
+            <param name="x">The first operand.</param>
+            <param name="y">The second operand.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.op_Multiply(System.Int64,EaslyNumber.Number)">
+            <summary>
+            Return x * y.
+            </summary>
+            <param name="x">The first operand.</param>
+            <param name="y">The second operand.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.op_Multiply(EaslyNumber.Number,System.Double)">
+            <summary>
+            Return x * y.
+            </summary>
+            <param name="x">The first operand.</param>
+            <param name="y">The second operand.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.op_Multiply(System.Double,EaslyNumber.Number)">
+            <summary>
+            Return x * y.
+            </summary>
+            <param name="x">The first operand.</param>
+            <param name="y">The second operand.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.op_Division(EaslyNumber.Number,EaslyNumber.Number)">
+            <summary>
+            Return x / y.
+            </summary>
+            <param name="x">The first operand.</param>
+            <param name="y">The second operand.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.op_Division(EaslyNumber.Number,System.UInt64)">
+            <summary>
+            Return x / y.
+            </summary>
+            <param name="x">The first operand.</param>
+            <param name="y">The second operand.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.op_Division(System.UInt64,EaslyNumber.Number)">
+            <summary>
+            Return x / y.
+            </summary>
+            <param name="x">The first operand.</param>
+            <param name="y">The second operand.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.op_Division(EaslyNumber.Number,System.Int64)">
+            <summary>
+            Return x / y.
+            </summary>
+            <param name="x">The first operand.</param>
+            <param name="y">The second operand.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.op_Division(System.Int64,EaslyNumber.Number)">
+            <summary>
+            Return x / y.
+            </summary>
+            <param name="x">The first operand.</param>
+            <param name="y">The second operand.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.op_Division(EaslyNumber.Number,System.Double)">
+            <summary>
+            Return x / y.
+            </summary>
+            <param name="x">The first operand.</param>
+            <param name="y">The second operand.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.op_Division(System.Double,EaslyNumber.Number)">
+            <summary>
+            Return x / y.
+            </summary>
+            <param name="x">The first operand.</param>
+            <param name="y">The second operand.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.op_LeftShift(EaslyNumber.Number,System.Int32)">
+            <summary>
+            Return x &lt;&lt; y.
+            </summary>
+            <param name="x">The first operand.</param>
+            <param name="y">The second operand.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.op_RightShift(EaslyNumber.Number,System.Int32)">
+            <summary>
+            Return x &gt;&gt; y.
+            </summary>
+            <param name="x">The first operand.</param>
+            <param name="y">The second operand.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.op_UnaryNegation(EaslyNumber.Number)">
+            <summary>
+            Return -1.
+            </summary>
+            <param name="x">The operand.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.op_BitwiseAnd(EaslyNumber.Number,EaslyNumber.Number)">
+            <summary>
+            Return x &amp; y.
+            </summary>
+            <param name="x">The first operand.</param>
+            <param name="y">The second operand.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.op_BitwiseOr(EaslyNumber.Number,EaslyNumber.Number)">
+            <summary>
+            Return x | y.
+            </summary>
+            <param name="x">The first operand.</param>
+            <param name="y">The second operand.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.op_ExclusiveOr(EaslyNumber.Number,EaslyNumber.Number)">
+            <summary>
+            Return x ^ y.
+            </summary>
+            <param name="x">The first operand.</param>
+            <param name="y">The second operand.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.op_GreaterThan(EaslyNumber.Number,EaslyNumber.Number)">
+            <summary>
+            Return whether x > y.
+            </summary>
+            <param name="x">The first operand.</param>
+            <param name="y">The second operand.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.op_GreaterThan(EaslyNumber.Number,System.UInt64)">
+            <summary>
+            Return whether x > y.
+            </summary>
+            <param name="x">The first operand.</param>
+            <param name="y">The second operand.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.op_GreaterThan(System.UInt64,EaslyNumber.Number)">
+            <summary>
+            Return whether x > y.
+            </summary>
+            <param name="x">The first operand.</param>
+            <param name="y">The second operand.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.op_GreaterThan(EaslyNumber.Number,System.Int64)">
+            <summary>
+            Return whether x > y.
+            </summary>
+            <param name="x">The first operand.</param>
+            <param name="y">The second operand.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.op_GreaterThan(System.Int64,EaslyNumber.Number)">
+            <summary>
+            Return whether x > y.
+            </summary>
+            <param name="x">The first operand.</param>
+            <param name="y">The second operand.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.op_GreaterThan(EaslyNumber.Number,System.Double)">
+            <summary>
+            Return whether x > y.
+            </summary>
+            <param name="x">The first operand.</param>
+            <param name="y">The second operand.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.op_GreaterThan(System.Double,EaslyNumber.Number)">
+            <summary>
+            Return whether x > y.
+            </summary>
+            <param name="x">The first operand.</param>
+            <param name="y">The second operand.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.op_GreaterThanOrEqual(EaslyNumber.Number,EaslyNumber.Number)">
+            <summary>
+            Return whether x >= y.
+            </summary>
+            <param name="x">The first operand.</param>
+            <param name="y">The second operand.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.op_GreaterThanOrEqual(EaslyNumber.Number,System.UInt64)">
+            <summary>
+            Return whether x >= y.
+            </summary>
+            <param name="x">The first operand.</param>
+            <param name="y">The second operand.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.op_GreaterThanOrEqual(System.UInt64,EaslyNumber.Number)">
+            <summary>
+            Return whether x >= y.
+            </summary>
+            <param name="x">The first operand.</param>
+            <param name="y">The second operand.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.op_GreaterThanOrEqual(EaslyNumber.Number,System.Int64)">
+            <summary>
+            Return whether x >= y.
+            </summary>
+            <param name="x">The first operand.</param>
+            <param name="y">The second operand.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.op_GreaterThanOrEqual(System.Int64,EaslyNumber.Number)">
+            <summary>
+            Return whether x >= y.
+            </summary>
+            <param name="x">The first operand.</param>
+            <param name="y">The second operand.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.op_GreaterThanOrEqual(EaslyNumber.Number,System.Double)">
+            <summary>
+            Return whether x >= y.
+            </summary>
+            <param name="x">The first operand.</param>
+            <param name="y">The second operand.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.op_GreaterThanOrEqual(System.Double,EaslyNumber.Number)">
+            <summary>
+            Return whether x >= y.
+            </summary>
+            <param name="x">The first operand.</param>
+            <param name="y">The second operand.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.op_LessThan(EaslyNumber.Number,EaslyNumber.Number)">
+            <summary>
+            Return whether x &lt; y.
+            </summary>
+            <param name="x">The first operand.</param>
+            <param name="y">The second operand.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.op_LessThan(EaslyNumber.Number,System.UInt64)">
+            <summary>
+            Return whether x &lt; y.
+            </summary>
+            <param name="x">The first operand.</param>
+            <param name="y">The second operand.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.op_LessThan(System.UInt64,EaslyNumber.Number)">
+            <summary>
+            Return whether x &lt; y.
+            </summary>
+            <param name="x">The first operand.</param>
+            <param name="y">The second operand.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.op_LessThan(EaslyNumber.Number,System.Int64)">
+            <summary>
+            Return whether x &lt; y.
+            </summary>
+            <param name="x">The first operand.</param>
+            <param name="y">The second operand.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.op_LessThan(System.Int64,EaslyNumber.Number)">
+            <summary>
+            Return whether x &lt; y.
+            </summary>
+            <param name="x">The first operand.</param>
+            <param name="y">The second operand.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.op_LessThan(EaslyNumber.Number,System.Double)">
+            <summary>
+            Return whether x &lt; y.
+            </summary>
+            <param name="x">The first operand.</param>
+            <param name="y">The second operand.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.op_LessThan(System.Double,EaslyNumber.Number)">
+            <summary>
+            Return whether x &lt; y.
+            </summary>
+            <param name="x">The first operand.</param>
+            <param name="y">The second operand.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.op_LessThanOrEqual(EaslyNumber.Number,EaslyNumber.Number)">
+            <summary>
+            Return whether x &lt;= y.
+            </summary>
+            <param name="x">The first operand.</param>
+            <param name="y">The second operand.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.op_LessThanOrEqual(EaslyNumber.Number,System.UInt64)">
+            <summary>
+            Return whether x &lt;= y.
+            </summary>
+            <param name="x">The first operand.</param>
+            <param name="y">The second operand.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.op_LessThanOrEqual(System.UInt64,EaslyNumber.Number)">
+            <summary>
+            Return whether x &lt;= y.
+            </summary>
+            <param name="x">The first operand.</param>
+            <param name="y">The second operand.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.op_LessThanOrEqual(EaslyNumber.Number,System.Int64)">
+            <summary>
+            Return whether x &lt;= y.
+            </summary>
+            <param name="x">The first operand.</param>
+            <param name="y">The second operand.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.op_LessThanOrEqual(System.Int64,EaslyNumber.Number)">
+            <summary>
+            Return whether x &lt;= y.
+            </summary>
+            <param name="x">The first operand.</param>
+            <param name="y">The second operand.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.op_LessThanOrEqual(EaslyNumber.Number,System.Double)">
+            <summary>
+            Return whether x &lt;= y.
+            </summary>
+            <param name="x">The first operand.</param>
+            <param name="y">The second operand.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.op_LessThanOrEqual(System.Double,EaslyNumber.Number)">
+            <summary>
+            Return whether x &lt;= y.
+            </summary>
+            <param name="x">The first operand.</param>
+            <param name="y">The second operand.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.op_Equality(EaslyNumber.Number,EaslyNumber.Number)">
+            <summary>
+            Return whether x and y are equal.
+            </summary>
+            <param name="x">The first operand.</param>
+            <param name="y">The second operand.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.op_Equality(EaslyNumber.Number,System.UInt64)">
+            <summary>
+            Return whether x and y are equal.
+            </summary>
+            <param name="x">The first operand.</param>
+            <param name="y">The second operand.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.op_Equality(System.UInt64,EaslyNumber.Number)">
+            <summary>
+            Return whether x and y are equal.
+            </summary>
+            <param name="x">The first operand.</param>
+            <param name="y">The second operand.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.op_Equality(EaslyNumber.Number,System.Int64)">
+            <summary>
+            Return whether x and y are equal.
+            </summary>
+            <param name="x">The first operand.</param>
+            <param name="y">The second operand.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.op_Equality(System.Int64,EaslyNumber.Number)">
+            <summary>
+            Return whether x and y are equal.
+            </summary>
+            <param name="x">The first operand.</param>
+            <param name="y">The second operand.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.op_Equality(EaslyNumber.Number,System.Double)">
+            <summary>
+            Return whether x and y are equal.
+            </summary>
+            <param name="x">The first operand.</param>
+            <param name="y">The second operand.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.op_Equality(System.Double,EaslyNumber.Number)">
+            <summary>
+            Return whether x and y are equal.
+            </summary>
+            <param name="x">The first operand.</param>
+            <param name="y">The second operand.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.op_Inequality(EaslyNumber.Number,EaslyNumber.Number)">
+            <summary>
+            Return whether x and y are different.
+            </summary>
+            <param name="x">The first operand.</param>
+            <param name="y">The second operand.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.op_Inequality(EaslyNumber.Number,System.UInt64)">
+            <summary>
+            Return whether x and y are different.
+            </summary>
+            <param name="x">The first operand.</param>
+            <param name="y">The second operand.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.op_Inequality(System.UInt64,EaslyNumber.Number)">
+            <summary>
+            Return whether x and y are different.
+            </summary>
+            <param name="x">The first operand.</param>
+            <param name="y">The second operand.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.op_Inequality(EaslyNumber.Number,System.Int64)">
+            <summary>
+            Return whether x and y are different.
+            </summary>
+            <param name="x">The first operand.</param>
+            <param name="y">The second operand.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.op_Inequality(System.Int64,EaslyNumber.Number)">
+            <summary>
+            Return whether x and y are different.
+            </summary>
+            <param name="x">The first operand.</param>
+            <param name="y">The second operand.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.op_Inequality(EaslyNumber.Number,System.Double)">
+            <summary>
+            Return whether x and y are different.
+            </summary>
+            <param name="x">The first operand.</param>
+            <param name="y">The second operand.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.op_Inequality(System.Double,EaslyNumber.Number)">
+            <summary>
+            Return whether x and y are different.
+            </summary>
+            <param name="x">The first operand.</param>
+            <param name="y">The second operand.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.Round(EaslyNumber.Rounding)">
+            <summary>
+            Returns the number rounded using <paramref name="rounding"/> mode.
+            </summary>
+            <param name="rounding">The rounding mode.</param>
+        </member>
+        <member name="M:EaslyNumber.Number.Ceil">
+            <summary>
+            Returns the next higher or equal representable integer.
+            </summary>
+        </member>
+        <member name="M:EaslyNumber.Number.Floor">
+            <summary>
+            Returns the next lower or equal representable integer.
+            </summary>
+        </member>
+        <member name="M:EaslyNumber.Number.Round">
+            <summary>
+            Returns the nearest representable integer, rounding halfway cases away from zero.
+            </summary>
+        </member>
+        <member name="M:EaslyNumber.Number.RoundEven">
+            <summary>
+            Returns the nearest representable integer, rounding halfway cases with the even-rounding rule.
+            </summary>
+        </member>
+        <member name="M:EaslyNumber.Number.Trunc">
+            <summary>
+            Returns the nearest representable integer, rounding toward zero.
+            </summary>
+        </member>
+        <member name="M:EaslyNumber.Number.ToString">
+            <summary>
+            Converts the numeric value of this instance to its equivalent string representation.
+            </summary>
+            <returns>The string representation of the value of this instance.</returns>
+        </member>
+        <member name="M:EaslyNumber.Number.ToString(System.IFormatProvider)">
+            <summary>
+            Converts the numeric value of this instance to its equivalent string representation using the specified culture-specific format information.
+            </summary>
+            <param name="provider">An object that supplies culture-specific formatting information.</param>
+            <returns>The string representation of the value of this instance as specified by provider.</returns>
+        </member>
+        <member name="M:EaslyNumber.Number.ToString(System.String)">
+            <summary>
+            Converts the numeric value of this instance to its equivalent string representation, using the specified format.
+            </summary>
+            <param name="format">A numeric format string.</param>
+            <returns>The string representation of the value of this instance as specified by format.</returns>
+        </member>
+        <member name="M:EaslyNumber.Number.ToString(System.String,System.IFormatProvider)">
+            <summary>
+            Converts the numeric value of this instance to its equivalent string representation using the specified format and culture-specific format information.
+            </summary>
+            <param name="format">A numeric format string.</param>
+            <param name="provider">An object that supplies culture-specific formatting information.</param>
+            <returns>The string representation of the value of this instance as specified by format and provider.</returns>
+        </member>
+        <member name="T:EaslyNumber.NumericFormat">
+            <summary>
+            Format used to create a string representation of an instance of <see cref="T:EaslyNumber.Number"/>.
+            </summary>
+        </member>
+        <member name="F:EaslyNumber.NumericFormat.Default">
+            <summary>
+            The default "G" format.
+            </summary>
+        </member>
+        <member name="F:EaslyNumber.NumericFormat.Exponential">
+            <summary>
+            The scientific "E" format.
+            </summary>
+        </member>
+        <member name="F:EaslyNumber.NumericFormat.FixedPoint">
+            <summary>
+            The fixed point "F" format.
+            </summary>
+        </member>
+        <member name="T:EaslyNumber.Rounding">
+            <summary>
+            Rounding mode for operations on numbers.
+            </summary>
+        </member>
+        <member name="F:EaslyNumber.Rounding.NearestAwayFromZero">
+            <summary>
+            Round to nearest, with ties away from zero (mpfr_round).
+            </summary>
+        </member>
+        <member name="F:EaslyNumber.Rounding.Nearest">
+            <summary>
+            Round to nearest, with ties to even.
+            </summary>
+        </member>
+        <member name="F:EaslyNumber.Rounding.TowardZero">
+            <summary>
+            Round toward zero.
+            </summary>
+        </member>
+        <member name="F:EaslyNumber.Rounding.TowardPositiveInfinity">
+            <summary>
+            Round toward +Inf.
+            </summary>
+        </member>
+        <member name="F:EaslyNumber.Rounding.TowardNegativeInfinity">
+            <summary>
+            Round toward -Inf.
+            </summary>
+        </member>
+        <member name="F:EaslyNumber.Rounding.AwayFromZero">
+            <summary>
+            Round away from zero.
+            </summary>
+        </member>
+        <member name="F:EaslyNumber.Rounding.Faithful">
+            <summary>
+            Faithful rounding.
+            </summary>
+        </member>
+        <member name="F:EaslyNumber.Rounding.Default">
+            <summary>
+            Use rounding from another source.
+            </summary>
+        </member>
+        <member name="T:Interop.Mpfr.mpfr_rnd_t">
+            <summary>
+            Rounding mode for operations on numbers.
+            </summary>
+        </member>
+        <member name="F:Interop.Mpfr.mpfr_rnd_t.MPFR_RNDNA">
+            <summary>
+            Round to nearest, with ties away from zero (mpfr_round).
+            </summary>
+        </member>
+        <member name="F:Interop.Mpfr.mpfr_rnd_t.MPFR_RNDN">
+            <summary>
+            Round to nearest, with ties to even.
+            </summary>
+        </member>
+        <member name="F:Interop.Mpfr.mpfr_rnd_t.MPFR_RNDZ">
+            <summary>
+            Round toward zero.
+            </summary>
+        </member>
+        <member name="F:Interop.Mpfr.mpfr_rnd_t.MPFR_RNDU">
+            <summary>
+            Round toward +Inf.
+            </summary>
+        </member>
+        <member name="F:Interop.Mpfr.mpfr_rnd_t.MPFR_RNDD">
+            <summary>
+            Round toward -Inf.
+            </summary>
+        </member>
+        <member name="F:Interop.Mpfr.mpfr_rnd_t.MPFR_RNDA">
+            <summary>
+            Round away from zero.
+            </summary>
+        </member>
+        <member name="F:Interop.Mpfr.mpfr_rnd_t.MPFR_RNDF">
+            <summary>
+            Faithful rounding.
+            </summary>
+        </member>
+    </members>
+</doc>
