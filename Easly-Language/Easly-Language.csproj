@@ -7,14 +7,14 @@
     <Platforms>x64</Platforms>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
     <RootNamespace>BaseNode</RootNamespace>
-    <Version>1.0.2</Version>
+    <Version>1.0.3</Version>
     <Authors>David Le Bansais</Authors>
     <Company />
     <Product />
     <Description>Easly language AST description and helpers</Description>
     <Copyright>Copyright © 2019 David Le Bansais</Copyright>
-    <AssemblyVersion>1.0.2.3</AssemblyVersion>
-    <FileVersion>1.0.2.3</FileVersion>
+    <AssemblyVersion>1.0.3.3</AssemblyVersion>
+    <FileVersion>1.0.3.3</FileVersion>
     <RepositoryUrl>https://github.com/dlebansais/Easly-Language</RepositoryUrl>
     <NeutralLanguage>en-US</NeutralLanguage>
   </PropertyGroup>
