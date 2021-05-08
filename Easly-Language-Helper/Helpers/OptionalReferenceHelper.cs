@@ -25,7 +25,9 @@
         }
     }
 
+#pragma warning disable SA1402 // File may only contain a single type
     public static class OptionalReferenceHelper<TNodeInterface>
+#pragma warning restore SA1402 // File may only contain a single type
         where TNodeInterface : class, INode
     {
         internal static IOptionalReference<TNodeInterface> CreateEmptyReference()

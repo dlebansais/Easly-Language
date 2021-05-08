@@ -64,7 +64,9 @@
         }
     }
 
+#pragma warning disable SA1402 // File may only contain a single type
     public static class BlockListHelper<TNodeInterface, TNode>
+#pragma warning restore SA1402 // File may only contain a single type
         where TNodeInterface : class, INode
         where TNode : Node, TNodeInterface
     {

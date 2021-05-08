@@ -6,11 +6,16 @@
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <UseWPF>true</UseWPF>
     <LangVersion>9.0</LangVersion>
+    <Nullable>disable</Nullable>
     <Platforms>x64</Platforms>
     <NeutralLanguage>en-US</NeutralLanguage>
     <RootNamespace>TestEaslyLanguage</RootNamespace>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\.editorconfig" Link=".editorconfig" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="5.0.3">

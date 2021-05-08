@@ -16,7 +16,9 @@
         }
     }
 
+#pragma warning disable SA1402 // File may only contain a single type
     public static class NodeTreeWalk<TContext>
+#pragma warning restore SA1402 // File may only contain a single type
         where TContext : class
     {
         internal static bool Walk(INode root, IWalkCallbacks<TContext> callbacks, TContext data)

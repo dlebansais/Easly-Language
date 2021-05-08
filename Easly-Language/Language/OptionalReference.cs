@@ -68,7 +68,9 @@
         object IOptionalReference.Item { get { return Item; } }
 
         [PolySerializer.Serializable(Exclude = true)]
+#pragma warning disable SA1401 // Fields should be private
         public T? ItemInternal;
+#pragma warning restore SA1401 // Fields should be private
         #endregion
 
         #region Assignment
