@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
@@ -7,8 +7,9 @@
     <UseWPF>true</UseWPF>
     <LangVersion>9.0</LangVersion>
     <Platforms>x64</Platforms>
-    <RootNamespace>TestEaslyLanguage</RootNamespace>
     <NeutralLanguage>en-US</NeutralLanguage>
+    <RootNamespace>TestEaslyLanguage</RootNamespace>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
   <ItemGroup>

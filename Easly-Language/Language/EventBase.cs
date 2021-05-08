@@ -55,7 +55,12 @@
 
         public static EventBase BitwiseAnd(EventBase event1, EventBase event2)
         {
-            return new EventBase(event1, event2, () => { event1.Evaluate(); event2.Evaluate(); return event1.IsSignaled && event2.IsSignaled; });
+            return new EventBase(event1, event2, () =>
+            {
+                event1.Evaluate();
+                event2.Evaluate();
+                return event1.IsSignaled && event2.IsSignaled;
+            });
         }
 
         public static EventBase operator |(EventBase event1, EventBase event2)
@@ -65,7 +70,12 @@
 
         public static EventBase BitwiseOr(EventBase event1, EventBase event2)
         {
-            return new EventBase(event1, event2, () => { event1.Evaluate(); event2.Evaluate(); return event1.IsSignaled || event2.IsSignaled; });
+            return new EventBase(event1, event2, () =>
+            {
+                event1.Evaluate();
+                event2.Evaluate();
+                return event1.IsSignaled || event2.IsSignaled;
+            });
         }
 
         public static EventBase operator ^(EventBase event1, EventBase event2)
@@ -75,7 +85,12 @@
 
         public static EventBase Xor(EventBase event1, EventBase event2)
         {
-            return new EventBase(event1, event2, () => { event1.Evaluate(); event2.Evaluate(); return event1.IsSignaled ^ event2.IsSignaled; });
+            return new EventBase(event1, event2, () =>
+            {
+                event1.Evaluate();
+                event2.Evaluate();
+                return event1.IsSignaled ^ event2.IsSignaled;
+            });
         }
 
         public static EventBase operator /(EventBase event1, EventBase event2)
@@ -85,7 +100,12 @@
 
         public static EventBase Implies(EventBase event1, EventBase event2)
         {
-            return new EventBase(event1, event2, () => { event1.Evaluate(); event2.Evaluate(); return !event1.IsSignaled || event2.IsSignaled; });
+            return new EventBase(event1, event2, () =>
+            {
+                event1.Evaluate();
+                event2.Evaluate();
+                return !event1.IsSignaled || event2.IsSignaled;
+            });
         }
 
         public static bool operator true(EventBase event1)
