@@ -3,12 +3,22 @@
     using System;
     using System.Diagnostics;
 
+    /// <summary>
+    /// A detachable reference of type <typeparamref name="T"/>.
+    /// </summary>
+    /// <typeparam name="T">The type of the object.</typeparam>
     public class DetachableReference<T>
         where T : class
     {
         #region Properties
+        /// <summary>
+        /// Gets or sets a value indicating whether the reference is assigned.
+        /// </summary>
         public virtual bool IsAssigned { get; protected set; }
 
+        /// <summary>
+        /// Gets or sets the reference.
+        /// </summary>
         public virtual T Item
         {
             get
@@ -40,6 +50,9 @@
         #endregion
 
         #region Detaching
+        /// <summary>
+        /// Detaches the reference.
+        /// </summary>
         public virtual void Detach()
         {
             ItemInternal = null;

@@ -3,12 +3,22 @@
     using System;
     using System.Diagnostics;
 
+    /// <summary>
+    /// Represents a stable object reference of type <typeparamref name="T"/>.
+    /// </summary>
+    /// <typeparam name="T">The type of the object.</typeparam>
     public class StableReference<T>
         where T : class
     {
         #region Properties
+        /// <summary>
+        /// Gets a value indicating whether the reference is assigned.
+        /// </summary>
         public bool IsAssigned { get; private set; }
 
+        /// <summary>
+        /// Gets or sets the item.
+        /// </summary>
         public T Item
         {
             get

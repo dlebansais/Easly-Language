@@ -5,15 +5,15 @@
     <LangVersion>9.0</LangVersion>
     <Nullable>disable</Nullable>
     <Platforms>x64</Platforms>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <Version>1.0.3</Version>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <Version>1.0.4</Version>
     <Authors>David Le Bansais</Authors>
     <Company />
     <Product />
     <Description>Easly language AST description and helpers</Description>
     <Copyright>Copyright © 2019 David Le Bansais</Copyright>
-    <AssemblyVersion>1.0.3.3</AssemblyVersion>
-    <FileVersion>1.0.3.3</FileVersion>
+    <AssemblyVersion>1.0.4.4</AssemblyVersion>
+    <FileVersion>1.0.4.4</FileVersion>
     <RepositoryUrl>https://github.com/dlebansais/Easly-Language</RepositoryUrl>
     <NeutralLanguage>en-US</NeutralLanguage>
     <RootNamespace>BaseNodeHelper</RootNamespace>
@@ -57,16 +57,12 @@
     <Exec Command="if exist &quot;$(SolutionDir)updatecommit.bat&quot; call &quot;$(SolutionDir)updatecommit.bat&quot; &quot;$(SolutionDir)&quot; &quot;$(TargetPath)&quot;" />
     <Exec Command="if exist &quot;$(SolutionDir)signfile.bat&quot; call &quot;$(SolutionDir)signfile.bat&quot; &quot;$(SolutionDir)&quot; &quot;$(Configuration)-$(Platform)&quot; &quot;$(TargetPath)&quot;" Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
     <Exec Command="if exist &quot;$(TargetPath)&quot; copy &quot;$(TargetDir)$(TargetName).dll&quot; &quot;$(SolutionDir)nuget-debug\lib\net5.0\&quot; &gt; nul" Condition="'$(Configuration)|$(Platform)'=='Debug|x64' And '$(TargetFramework)'=='net5.0-windows'" />
-    <Exec Command="if exist &quot;$(TargetPath)&quot; copy &quot;$(TargetDir)$(TargetName).xml&quot; &quot;$(SolutionDir)nuget-debug\lib\net5.0\&quot; &gt; nul" Condition="'$(Configuration)|$(Platform)'=='Debug|x64' And '$(TargetFramework)'=='net5.0-windows'" />
     <Exec Command="if exist &quot;$(TargetPath)&quot; copy &quot;$(TargetDir)$(TargetName).pdb&quot; &quot;$(SolutionDir)nuget-debug\lib\net5.0\&quot; &gt; nul" Condition="'$(Configuration)|$(Platform)'=='Debug|x64' And '$(TargetFramework)'=='net5.0-windows'" />
     <Exec Command="if exist &quot;$(TargetPath)&quot; copy &quot;$(TargetDir)$(TargetName).dll&quot; &quot;$(SolutionDir)nuget-debug\lib\$(TargetFramework)\&quot; &gt; nul" Condition="'$(Configuration)|$(Platform)'=='Debug|x64' And '$(TargetFramework)'!='net5.0-windows'" />
-    <Exec Command="if exist &quot;$(TargetPath)&quot; copy &quot;$(TargetDir)$(TargetName).xml&quot; &quot;$(SolutionDir)nuget-debug\lib\$(TargetFramework)\&quot; &gt; nul" Condition="'$(Configuration)|$(Platform)'=='Debug|x64' And '$(TargetFramework)'!='net5.0-windows'" />
     <Exec Command="if exist &quot;$(TargetPath)&quot; copy &quot;$(TargetDir)$(TargetName).pdb&quot; &quot;$(SolutionDir)nuget-debug\lib\$(TargetFramework)\&quot; &gt; nul" Condition="'$(Configuration)|$(Platform)'=='Debug|x64' And '$(TargetFramework)'!='net5.0-windows'" />
     <Exec Command="copy &quot;$(ProjectDir)main.ico&quot; &quot;$(SolutionDir)nuget-debug&quot; /Y &gt; nul" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
     <Exec Command="if exist &quot;$(TargetPath)&quot; copy &quot;$(TargetDir)$(TargetName).dll&quot; &quot;$(SolutionDir)nuget\lib\net5.0\&quot; &gt; nul" Condition="'$(Configuration)|$(Platform)'=='Release|x64' And '$(TargetFramework)'=='net5.0-windows'" />
-    <Exec Command="if exist &quot;$(TargetPath)&quot; copy &quot;$(TargetDir)$(TargetName).xml&quot; &quot;$(SolutionDir)nuget\lib\net5.0\&quot; &gt; nul" Condition="'$(Configuration)|$(Platform)'=='Release|x64' And '$(TargetFramework)'=='net5.0-windows'" />
     <Exec Command="if exist &quot;$(TargetPath)&quot; copy &quot;$(TargetDir)$(TargetName).dll&quot; &quot;$(SolutionDir)nuget\lib\$(TargetFramework)\&quot; &gt; nul" Condition="'$(Configuration)|$(Platform)'=='Release|x64' And '$(TargetFramework)'!='net5.0-windows'" />
-    <Exec Command="if exist &quot;$(TargetPath)&quot; copy &quot;$(TargetDir)$(TargetName).xml&quot; &quot;$(SolutionDir)nuget\lib\$(TargetFramework)\&quot; &gt; nul" Condition="'$(Configuration)|$(Platform)'=='Release|x64' And '$(TargetFramework)'!='net5.0-windows'" />
     <Exec Command="copy &quot;$(ProjectDir)main.ico&quot; &quot;$(SolutionDir)nuget&quot; /Y &gt; nul" Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
   </Target>
 

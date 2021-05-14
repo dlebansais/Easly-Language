@@ -5,14 +5,27 @@
     using System.Globalization;
     using System.Reflection;
 
+    /// <summary>
+    /// Represents the entity of a type.
+    /// </summary>
     public interface ITypeEntity
     {
+        /// <summary>
+        /// Gets the type name.
+        /// </summary>
         string Name { get; }
     }
 
+    /// <summary>
+    /// Represents the entity of a type.
+    /// </summary>
     public abstract class TypeEntity : Entity, ITypeEntity
     {
         #region Init
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TypeEntity"/> class.
+        /// </summary>
+        /// <param name="typeInfo">The type information from reflection.</param>
         public TypeEntity(Type typeInfo)
         {
             TypeInfo = typeInfo;
@@ -72,22 +85,61 @@
         #endregion
 
         #region Properties
+        /// <summary>
+        /// Gets the type name.
+        /// </summary>
         public string Name
         {
             get { return TypeInfo.Name; }
         }
 
+        /// <summary>
+        /// Gets the table of procedures of the type.
+        /// </summary>
         public SealableDictionary<string, ProcedureEntity> Procedures { get; private set; }
+
+        /// <summary>
+        /// Gets the table of functions of the type.
+        /// </summary>
         public SealableDictionary<string, FunctionEntity> Functions { get; private set; }
+
+        /// <summary>
+        /// Gets the indexer of the type.
+        /// </summary>
         public OnceReference<IndexerEntity> Indexer { get; private set; }
+
+        /// <summary>
+        /// Gets the table of properties of the type.
+        /// </summary>
         public SealableDictionary<string, PropertyEntity> Properties { get; private set; }
+
+        /// <summary>
+        /// Gets the list of features of the type.
+        /// </summary>
         public List<FeatureEntity> Features { get; private set; }
+
+        /// <summary>
+        /// Gets the list of parents of the type.
+        /// </summary>
         public List<TypeEntity> Parents { get; private set; }
+
+        /// <summary>
+        /// Gets the list of ancestors of the type.
+        /// </summary>
         public List<TypeEntity> Ancestors { get; private set; }
+
+        /// <summary>
+        /// Gets the type information from reflection.
+        /// </summary>
         public Type TypeInfo { get; private set; }
         #endregion
 
         #region Client Interface
+        /// <summary>
+        /// Gets the entity from a given type <paramref name="t"/>.
+        /// </summary>
+        /// <param name="t">The type.</param>
+        /// <returns>The entity of the type <paramref name="t"/>.</returns>
         public static TypeEntity BuiltTypeEntity(Type t)
         {
             TypeEntity Result;
@@ -108,21 +160,40 @@
             return Result;
         }
 
+        /// <summary>
+        /// Gets the entity of the given procedure.
+        /// </summary>
+        /// <param name="name">The procedure name.</param>
+        /// <returns>The entity of the procedure.</returns>
         public ProcedureEntity Procedure(string name)
         {
             return Procedures[name];
         }
 
+        /// <summary>
+        /// Gets the entity of the given function.
+        /// </summary>
+        /// <param name="name">The function name.</param>
+        /// <returns>The entity of the function.</returns>
         public FunctionEntity Function(string name)
         {
             return Functions[name];
         }
 
+        /// <summary>
+        /// Gets the entity of the given property.
+        /// </summary>
+        /// <param name="name">The property name.</param>
+        /// <returns>The entity of the property.</returns>
         public PropertyEntity Property(string name)
         {
             return Properties[name];
         }
 
+        /// <summary>
+        /// Creates an object of the type associated to this entity.
+        /// </summary>
+        /// <returns>The created object.</returns>
         public object CreateInstance()
         {
             string FullName = TypeInfo.FullName !;
