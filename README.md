@@ -2,7 +2,7 @@
 
 Easly language AST description and helpers.
 
-[![Easly](https://www.easly.org/images/16.png)](https://www.easly.org) [![Build status](https://ci.appveyor.com/api/projects/status/4m9q4r5b6hxd7imp?svg=true)](https://ci.appveyor.com/project/dlebansais/easly-language)
+<img src="https://github.com/dlebansais/Easly-Draw/blob/master/Easly-Draw/Resources/icon.png?raw=true" width="16" height="16"/> [![Build status](https://ci.appveyor.com/api/projects/status/4m9q4r5b6hxd7imp?svg=true)](https://ci.appveyor.com/project/dlebansais/easly-language)
 
 This assembly contains definitions for all nodes of the [Easly](https://www.easly.org) language, as well as helper classes to create these nodes.
 
