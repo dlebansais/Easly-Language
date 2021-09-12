@@ -5,18 +5,7 @@
     /// <summary>
     /// Represents an entity for named features.
     /// </summary>
-    public interface INamedFeatureEntity
-    {
-        /// <summary>
-        /// Gets the feature name.
-        /// </summary>
-        string Name { get; }
-    }
-
-    /// <summary>
-    /// Represents an entity for named features.
-    /// </summary>
-    public class NamedFeatureEntity : FeatureEntity, INamedFeatureEntity
+    public class NamedFeatureEntity : FeatureEntity
     {
         #region Init
         /// <summary>

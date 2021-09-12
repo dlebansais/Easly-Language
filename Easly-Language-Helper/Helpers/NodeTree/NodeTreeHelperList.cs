@@ -1,4 +1,6 @@
-﻿namespace BaseNodeHelper
+﻿#pragma warning disable SA1600 // Elements should be documented
+
+namespace BaseNodeHelper
 {
     using System;
     using System.Collections;
@@ -10,7 +12,7 @@
 
     public static class NodeTreeHelperList
     {
-        public static bool IsNodeListProperty(INode node, string propertyName, out Type childNodeType)
+        public static bool IsNodeListProperty(Node node, string propertyName, out Type childNodeType)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
@@ -50,10 +52,11 @@
             Debug.Assert(GenericArguments.Length == 1);
             childNodeType = GenericArguments[0];
 
-            return NodeTreeHelper.IsNodeInterfaceType(childNodeType);
+            // return NodeTreeHelper.IsNodeInterfaceType(childNodeType);
+            return NodeTreeHelper.IsNodeDescendantType(childNodeType);
         }
 
-        public static void GetChildNodeList(INode node, string propertyName, out IReadOnlyList<INode> childNodeList)
+        public static void GetChildNodeList(Node node, string propertyName, out IReadOnlyList<Node> childNodeList)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
@@ -70,10 +73,10 @@
                 childNodeList = null;
             else
             {
-                List<INode> NodeList = new List<INode>();
+                List<Node> NodeList = new List<Node>();
                 foreach (object Item in Collection)
                 {
-                    INode NodeItem = Item as INode;
+                    Node NodeItem = Item as Node;
                     NodeList.Add(NodeItem);
                 }
 
@@ -81,7 +84,7 @@
             }
         }
 
-        public static void ClearChildNodeList(INode node, string propertyName)
+        public static void ClearChildNodeList(Node node, string propertyName)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
@@ -99,7 +102,7 @@
             Collection.Clear();
         }
 
-        public static bool IsListChildNode(INode node, string propertyName, int index, INode childNode)
+        public static bool IsListChildNode(Node node, string propertyName, int index, Node childNode)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
@@ -119,13 +122,13 @@
             Debug.Assert(index < Collection.Count);
             if (index >= Collection.Count) throw new ArgumentOutOfRangeException(nameof(index));
 
-            INode NodeItem = Collection[index] as INode;
+            Node NodeItem = Collection[index] as Node;
             Debug.Assert(NodeItem != null);
 
             return NodeItem == childNode;
         }
 
-        public static Type ListInterfaceType(INode node, string propertyName)
+        public static Type ListInterfaceType(Node node, string propertyName)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
@@ -146,12 +149,14 @@
             Debug.Assert(GenericArguments.Length == 1);
 
             Type InterfaceType = GenericArguments[0];
-            Debug.Assert(NodeTreeHelper.IsNodeInterfaceType(InterfaceType));
+
+            // Debug.Assert(NodeTreeHelper.IsNodeInterfaceType(InterfaceType));
+            Debug.Assert(NodeTreeHelper.IsNodeDescendantType(InterfaceType));
 
             return InterfaceType;
         }
 
-        public static bool GetLastListIndex(INode node, string propertyName, out int lastIndex)
+        public static bool GetLastListIndex(Node node, string propertyName, out int lastIndex)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
@@ -172,7 +177,7 @@
             return true;
         }
 
-        public static void SetChildNodeList(INode node, string propertyName, IList childNodeList)
+        public static void SetChildNodeList(Node node, string propertyName, IList childNodeList)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
@@ -189,7 +194,7 @@
             Property.SetValue(node, childNodeList);
         }
 
-        public static void InsertIntoList(INode node, string propertyName, int index, INode childNode)
+        public static void InsertIntoList(Node node, string propertyName, int index, Node childNode)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
@@ -212,7 +217,7 @@
             Collection.Insert(index, childNode);
         }
 
-        public static void RemoveFromList(INode node, string propertyName, int index)
+        public static void RemoveFromList(Node node, string propertyName, int index)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
@@ -233,7 +238,7 @@
             Collection.RemoveAt(index);
         }
 
-        public static void ReplaceNode(INode node, string propertyName, int index, INode childNode)
+        public static void ReplaceNode(Node node, string propertyName, int index, Node childNode)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
@@ -255,7 +260,7 @@
             Collection[index] = childNode;
         }
 
-        public static void MoveNode(INode node, string propertyName, int index, int direction)
+        public static void MoveNode(Node node, string propertyName, int index, int direction)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
@@ -277,7 +282,7 @@
             Debug.Assert(index + direction < Collection.Count);
             if (index + direction >= Collection.Count) throw new ArgumentOutOfRangeException(nameof(direction));
 
-            INode ChildNode = Collection[index] as INode;
+            Node ChildNode = Collection[index] as Node;
             Debug.Assert(ChildNode != null);
 
             Collection.RemoveAt(index);

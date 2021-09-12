@@ -4,14 +4,9 @@
 
 namespace BaseNode
 {
-    public interface IPositionalArgument : IArgument
-    {
-        IExpression Source { get; }
-    }
-
     [System.Serializable]
-    public class PositionalArgument : Argument, IPositionalArgument
+    public class PositionalArgument : Argument
     {
-        public virtual IExpression Source { get; set; }
+        public virtual Expression Source { get; set; }
     }
 }

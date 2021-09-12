@@ -4,14 +4,9 @@
 
 namespace BaseNode
 {
-    public interface ISimpleType : IShareableType
-    {
-        IIdentifier ClassIdentifier { get; }
-    }
-
     [System.Serializable]
-    public class SimpleType : ShareableType, ISimpleType
+    public class SimpleType : ShareableType
     {
-        public virtual IIdentifier ClassIdentifier { get; set; }
+        public virtual Identifier ClassIdentifier { get; set; }
     }
 }

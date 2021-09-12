@@ -9,26 +9,17 @@ namespace BaseNode
 
     public interface IBlockList
     {
-        IDocument Documentation { get; }
+        Document Documentation { get; }
         IList NodeBlockList { get; }
     }
 
-    public interface IBlockList<TNodeInterface, TNode>
-        where TNodeInterface : class, INode
-        where TNode : Node, TNodeInterface
-    {
-        IDocument Documentation { get; }
-        IList<IBlock<TNodeInterface, TNode>> NodeBlockList { get; }
-    }
-
     [System.Serializable]
-    public class BlockList<TNodeInterface, TNode> : IBlockList<TNodeInterface, TNode>, IBlockList
-        where TNodeInterface : class, INode
-        where TNode : Node, TNodeInterface
+    public class BlockList<TNode> : IBlockList
+        where TNode : Node
     {
-        public virtual IDocument Documentation { get; set; }
-        IDocument IBlockList.Documentation { get { return Documentation; } }
-        public virtual IList<IBlock<TNodeInterface, TNode>> NodeBlockList { get; set; }
+        public virtual Document Documentation { get; set; }
+        Document IBlockList.Documentation { get { return Documentation; } }
+        public virtual IList<Block<TNode>> NodeBlockList { get; set; }
         IList IBlockList.NodeBlockList { get { return (IList)NodeBlockList; } }
     }
 }

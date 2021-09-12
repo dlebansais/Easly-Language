@@ -4,14 +4,9 @@
 
 namespace BaseNode
 {
-    public interface IUnaryNotExpression : IExpression
-    {
-        IExpression RightExpression { get; }
-    }
-
     [System.Serializable]
-    public class UnaryNotExpression : Expression, IUnaryNotExpression
+    public class UnaryNotExpression : Expression
     {
-        public virtual IExpression RightExpression { get; set; }
+        public virtual Expression RightExpression { get; set; }
     }
 }

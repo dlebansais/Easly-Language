@@ -1,4 +1,7 @@
-﻿namespace BaseNodeHelper
+﻿#pragma warning disable SA1600 // Elements should be documented
+#pragma warning disable SA1601 // Partial elements should be documented
+
+namespace BaseNodeHelper
 {
     using System;
     using System.Collections;
@@ -10,28 +13,28 @@
 
     public static partial class NodeHelper
     {
-        public static IAgentExpression CreateAgentExpression(IIdentifier delegated)
+        public static AgentExpression CreateAgentExpression(Identifier delegated)
         {
             AgentExpression Result = new AgentExpression();
             Result.Documentation = CreateEmptyDocumentation();
             Result.Delegated = delegated;
-            Result.BaseType = OptionalReferenceHelper<IObjectType>.CreateReference(CreateDefaultType());
+            Result.BaseType = OptionalReferenceHelper<ObjectType>.CreateReference(CreateDefaultType());
 
             return Result;
         }
 
-        public static IAgentExpression CreateAgentExpression(IIdentifier delegated, IObjectType baseType)
+        public static AgentExpression CreateAgentExpression(Identifier delegated, ObjectType baseType)
         {
             AgentExpression Result = new AgentExpression();
             Result.Documentation = CreateEmptyDocumentation();
             Result.Delegated = delegated;
-            Result.BaseType = OptionalReferenceHelper<IObjectType>.CreateReference(baseType);
+            Result.BaseType = OptionalReferenceHelper<ObjectType>.CreateReference(baseType);
             Result.BaseType.Assign();
 
             return Result;
         }
 
-        public static IAssertionTagExpression CreateAssertionTagExpression(IIdentifier tagIdentifier)
+        public static AssertionTagExpression CreateAssertionTagExpression(Identifier tagIdentifier)
         {
             AssertionTagExpression Result = new AssertionTagExpression();
             Result.Documentation = CreateEmptyDocumentation();
@@ -40,7 +43,7 @@
             return Result;
         }
 
-        public static IBinaryConditionalExpression CreateBinaryConditionalExpression(IExpression leftExpression, ConditionalTypes conditional, IExpression rightExpression)
+        public static BinaryConditionalExpression CreateBinaryConditionalExpression(Expression leftExpression, ConditionalTypes conditional, Expression rightExpression)
         {
             BinaryConditionalExpression Result = new BinaryConditionalExpression();
             Result.Documentation = CreateEmptyDocumentation();
@@ -51,7 +54,7 @@
             return Result;
         }
 
-        public static IBinaryOperatorExpression CreateBinaryOperatorExpression(IExpression leftExpression, IIdentifier operatorName, IExpression rightExpression)
+        public static BinaryOperatorExpression CreateBinaryOperatorExpression(Expression leftExpression, Identifier operatorName, Expression rightExpression)
         {
             BinaryOperatorExpression Result = new BinaryOperatorExpression();
             Result.Documentation = CreateEmptyDocumentation();
@@ -62,7 +65,7 @@
             return Result;
         }
 
-        public static IClassConstantExpression CreateClassConstantExpression(IIdentifier classIdentifier, IIdentifier constantIdentifier)
+        public static ClassConstantExpression CreateClassConstantExpression(Identifier classIdentifier, Identifier constantIdentifier)
         {
             ClassConstantExpression Result = new ClassConstantExpression();
             Result.Documentation = CreateEmptyDocumentation();
@@ -72,7 +75,7 @@
             return Result;
         }
 
-        public static ICloneOfExpression CreateCloneOfExpression(CloneType type, IExpression source)
+        public static CloneOfExpression CreateCloneOfExpression(CloneType type, Expression source)
         {
             CloneOfExpression Result = new CloneOfExpression();
             Result.Documentation = CreateEmptyDocumentation();
@@ -82,7 +85,7 @@
             return Result;
         }
 
-        public static IEntityExpression CreateEntityExpression(IQualifiedName query)
+        public static EntityExpression CreateEntityExpression(QualifiedName query)
         {
             EntityExpression Result = new EntityExpression();
             Result.Documentation = CreateEmptyDocumentation();
@@ -91,7 +94,7 @@
             return Result;
         }
 
-        public static IEqualityExpression CreateEqualityExpression(IExpression leftExpression, ComparisonType comparison, EqualityType equality, IExpression rightExpression)
+        public static EqualityExpression CreateEqualityExpression(Expression leftExpression, ComparisonType comparison, EqualityType equality, Expression rightExpression)
         {
             EqualityExpression Result = new EqualityExpression();
             Result.Documentation = CreateEmptyDocumentation();
@@ -103,7 +106,7 @@
             return Result;
         }
 
-        public static IIndexQueryExpression CreateIndexQueryExpression(IExpression indexedExpression, List<IArgument> argumentList)
+        public static IndexQueryExpression CreateIndexQueryExpression(Expression indexedExpression, List<Argument> argumentList)
         {
             if (argumentList == null) throw new ArgumentNullException(nameof(argumentList));
             if (argumentList.Count == 0) throw new ArgumentException($"{nameof(argumentList)} must have at least one argument");
@@ -111,12 +114,12 @@
             IndexQueryExpression Result = new IndexQueryExpression();
             Result.Documentation = CreateEmptyDocumentation();
             Result.IndexedExpression = indexedExpression;
-            Result.ArgumentBlocks = BlockListHelper<IArgument, Argument>.CreateBlockList(argumentList);
+            Result.ArgumentBlocks = BlockListHelper<Argument>.CreateBlockList(argumentList);
 
             return Result;
         }
 
-        public static IIndexQueryExpression CreateIndexQueryExpression(IExpression indexedExpression, IBlockList<IArgument, Argument> argumentBlocks)
+        public static IndexQueryExpression CreateIndexQueryExpression(Expression indexedExpression, BlockList<Argument> argumentBlocks)
         {
             if (argumentBlocks == null) throw new ArgumentNullException(nameof(argumentBlocks));
             if (NodeTreeHelperBlockList.IsBlockListEmpty((IBlockList)argumentBlocks)) throw new ArgumentException($"{nameof(argumentBlocks)} must not be empty");
@@ -129,17 +132,17 @@
             return Result;
         }
 
-        public static IInitializedObjectExpression CreateInitializedObjectExpression(IIdentifier classIdentifier, List<IAssignmentArgument> assignmentArgumentList)
+        public static InitializedObjectExpression CreateInitializedObjectExpression(Identifier classIdentifier, List<AssignmentArgument> assignmentArgumentList)
         {
             InitializedObjectExpression Result = new InitializedObjectExpression();
             Result.Documentation = CreateEmptyDocumentation();
             Result.ClassIdentifier = classIdentifier;
-            Result.AssignmentBlocks = BlockListHelper<IAssignmentArgument, AssignmentArgument>.CreateBlockList(assignmentArgumentList);
+            Result.AssignmentBlocks = BlockListHelper<AssignmentArgument>.CreateBlockList(assignmentArgumentList);
 
             return Result;
         }
 
-        public static IInitializedObjectExpression CreateInitializedObjectExpression(IIdentifier classIdentifier, IBlockList<IAssignmentArgument, AssignmentArgument> assignmentBlocks)
+        public static InitializedObjectExpression CreateInitializedObjectExpression(Identifier classIdentifier, BlockList<AssignmentArgument> assignmentBlocks)
         {
             InitializedObjectExpression Result = new InitializedObjectExpression();
             Result.Documentation = CreateEmptyDocumentation();
@@ -149,7 +152,7 @@
             return Result;
         }
 
-        public static IKeywordEntityExpression CreateKeywordEntityExpression(Keyword value)
+        public static KeywordEntityExpression CreateKeywordEntityExpression(Keyword value)
         {
             KeywordEntityExpression Result = new KeywordEntityExpression();
             Result.Documentation = CreateEmptyDocumentation();
@@ -158,7 +161,7 @@
             return Result;
         }
 
-        public static IKeywordExpression CreateKeywordExpression(Keyword value)
+        public static KeywordExpression CreateKeywordExpression(Keyword value)
         {
             KeywordExpression Result = new KeywordExpression();
             Result.Documentation = CreateEmptyDocumentation();
@@ -167,7 +170,7 @@
             return Result;
         }
 
-        public static IManifestCharacterExpression CreateManifestCharacterExpression(string text)
+        public static ManifestCharacterExpression CreateManifestCharacterExpression(string text)
         {
             ManifestCharacterExpression Result = new ManifestCharacterExpression();
             Result.Documentation = CreateEmptyDocumentation();
@@ -176,7 +179,7 @@
             return Result;
         }
 
-        public static IManifestNumberExpression CreateDefaultManifestNumberExpression()
+        public static ManifestNumberExpression CreateDefaultManifestNumberExpression()
         {
             ManifestNumberExpression Result = new ManifestNumberExpression();
             Result.Documentation = CreateEmptyDocumentation();
@@ -185,7 +188,7 @@
             return Result;
         }
 
-        public static IManifestNumberExpression CreateSimpleManifestNumberExpression(string numberText)
+        public static ManifestNumberExpression CreateSimpleManifestNumberExpression(string numberText)
         {
             ManifestNumberExpression Result = new ManifestNumberExpression();
             Result.Documentation = CreateEmptyDocumentation();
@@ -194,7 +197,7 @@
             return Result;
         }
 
-        public static IManifestStringExpression CreateManifestStringExpression(string text)
+        public static ManifestStringExpression CreateManifestStringExpression(string text)
         {
             ManifestStringExpression Result = new ManifestStringExpression();
             Result.Documentation = CreateEmptyDocumentation();
@@ -203,7 +206,7 @@
             return Result;
         }
 
-        public static INewExpression CreateNewExpression(IQualifiedName objectName)
+        public static NewExpression CreateNewExpression(QualifiedName objectName)
         {
             NewExpression Result = new NewExpression();
             Result.Documentation = CreateEmptyDocumentation();
@@ -212,7 +215,7 @@
             return Result;
         }
 
-        public static IOldExpression CreateOldExpression(IQualifiedName query)
+        public static OldExpression CreateOldExpression(QualifiedName query)
         {
             OldExpression Result = new OldExpression();
             Result.Documentation = CreateEmptyDocumentation();
@@ -221,38 +224,38 @@
             return Result;
         }
 
-        public static IPrecursorExpression CreatePrecursorExpression(List<IArgument> argumentList)
+        public static PrecursorExpression CreatePrecursorExpression(List<Argument> argumentList)
         {
             PrecursorExpression Result = new PrecursorExpression();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.AncestorType = OptionalReferenceHelper<IObjectType>.CreateReference(CreateDefaultType());
-            Result.ArgumentBlocks = BlockListHelper<IArgument, Argument>.CreateBlockList(argumentList);
+            Result.AncestorType = OptionalReferenceHelper<ObjectType>.CreateReference(CreateDefaultType());
+            Result.ArgumentBlocks = BlockListHelper<Argument>.CreateBlockList(argumentList);
 
             return Result;
         }
 
-        public static IPrecursorExpression CreatePrecursorExpression(IBlockList<IArgument, Argument> argumentBlocks)
+        public static PrecursorExpression CreatePrecursorExpression(BlockList<Argument> argumentBlocks)
         {
             PrecursorExpression Result = new PrecursorExpression();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.AncestorType = OptionalReferenceHelper<IObjectType>.CreateReference(CreateDefaultType());
+            Result.AncestorType = OptionalReferenceHelper<ObjectType>.CreateReference(CreateDefaultType());
             Result.ArgumentBlocks = argumentBlocks;
 
             return Result;
         }
 
-        public static IPrecursorExpression CreatePrecursorExpression(IBlockList<IArgument, Argument> argumentBlocks, IObjectType ancestorType)
+        public static PrecursorExpression CreatePrecursorExpression(BlockList<Argument> argumentBlocks, ObjectType ancestorType)
         {
             PrecursorExpression Result = new PrecursorExpression();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.AncestorType = OptionalReferenceHelper<IObjectType>.CreateReference(ancestorType);
+            Result.AncestorType = OptionalReferenceHelper<ObjectType>.CreateReference(ancestorType);
             Result.AncestorType.Assign();
             Result.ArgumentBlocks = argumentBlocks;
 
             return Result;
         }
 
-        public static IPrecursorIndexExpression CreatePrecursorIndexExpression(List<IArgument> argumentList)
+        public static PrecursorIndexExpression CreatePrecursorIndexExpression(List<Argument> argumentList)
         {
             if (argumentList == null) throw new ArgumentNullException(nameof(argumentList));
             if (argumentList.Count == 0) throw new ArgumentException($"{nameof(argumentList)} must have at least one argument");
@@ -261,38 +264,38 @@
 
             PrecursorIndexExpression Result = new PrecursorIndexExpression();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.AncestorType = OptionalReferenceHelper<IObjectType>.CreateReference(CreateDefaultType());
-            Result.ArgumentBlocks = BlockListHelper<IArgument, Argument>.CreateBlockList(argumentList);
+            Result.AncestorType = OptionalReferenceHelper<ObjectType>.CreateReference(CreateDefaultType());
+            Result.ArgumentBlocks = BlockListHelper<Argument>.CreateBlockList(argumentList);
 
             return Result;
         }
 
-        public static IPrecursorIndexExpression CreatePrecursorIndexExpression(IBlockList<IArgument, Argument> argumentBlocks)
+        public static PrecursorIndexExpression CreatePrecursorIndexExpression(BlockList<Argument> argumentBlocks)
         {
             if (NodeTreeHelperBlockList.IsBlockListEmpty((IBlockList)argumentBlocks)) throw new ArgumentException($"{nameof(argumentBlocks)} must not be empty");
 
             PrecursorIndexExpression Result = new PrecursorIndexExpression();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.AncestorType = OptionalReferenceHelper<IObjectType>.CreateReference(CreateDefaultType());
+            Result.AncestorType = OptionalReferenceHelper<ObjectType>.CreateReference(CreateDefaultType());
             Result.ArgumentBlocks = argumentBlocks;
 
             return Result;
         }
 
-        public static IPrecursorIndexExpression CreatePrecursorIndexExpression(IBlockList<IArgument, Argument> argumentBlocks, IObjectType ancestorType)
+        public static PrecursorIndexExpression CreatePrecursorIndexExpression(BlockList<Argument> argumentBlocks, ObjectType ancestorType)
         {
             if (NodeTreeHelperBlockList.IsBlockListEmpty((IBlockList)argumentBlocks)) throw new ArgumentException($"{nameof(argumentBlocks)} must not be empty");
 
             PrecursorIndexExpression Result = new PrecursorIndexExpression();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.AncestorType = OptionalReferenceHelper<IObjectType>.CreateReference(ancestorType);
+            Result.AncestorType = OptionalReferenceHelper<ObjectType>.CreateReference(ancestorType);
             Result.AncestorType.Assign();
             Result.ArgumentBlocks = argumentBlocks;
 
             return Result;
         }
 
-        public static IPreprocessorExpression CreatePreprocessorExpression(PreprocessorMacro value)
+        public static PreprocessorExpression CreatePreprocessorExpression(PreprocessorMacro value)
         {
             PreprocessorExpression Result = new PreprocessorExpression();
             Result.Documentation = CreateEmptyDocumentation();
@@ -301,17 +304,17 @@
             return Result;
         }
 
-        public static IQueryExpression CreateQueryExpression(IQualifiedName query, List<IArgument> argumentList)
+        public static QueryExpression CreateQueryExpression(QualifiedName query, List<Argument> argumentList)
         {
             QueryExpression SimpleQueryExpression = new QueryExpression();
             SimpleQueryExpression.Documentation = CreateEmptyDocumentation();
             SimpleQueryExpression.Query = query;
-            SimpleQueryExpression.ArgumentBlocks = BlockListHelper<IArgument, Argument>.CreateBlockList(argumentList);
+            SimpleQueryExpression.ArgumentBlocks = BlockListHelper<Argument>.CreateBlockList(argumentList);
 
             return SimpleQueryExpression;
         }
 
-        public static IQueryExpression CreateQueryExpression(IQualifiedName query, IBlockList<IArgument, Argument> argumentBlocks)
+        public static QueryExpression CreateQueryExpression(QualifiedName query, BlockList<Argument> argumentBlocks)
         {
             QueryExpression SimpleQueryExpression = new QueryExpression();
             SimpleQueryExpression.Documentation = CreateEmptyDocumentation();
@@ -321,7 +324,7 @@
             return SimpleQueryExpression;
         }
 
-        public static IResultOfExpression CreateResultOfExpression(IExpression source)
+        public static ResultOfExpression CreateResultOfExpression(Expression source)
         {
             ResultOfExpression Result = new ResultOfExpression();
             Result.Documentation = CreateEmptyDocumentation();
@@ -330,7 +333,7 @@
             return Result;
         }
 
-        public static IUnaryNotExpression CreateUnaryNotExpression(IExpression rightExpression)
+        public static UnaryNotExpression CreateUnaryNotExpression(Expression rightExpression)
         {
             UnaryNotExpression Result = new UnaryNotExpression();
             Result.Documentation = CreateEmptyDocumentation();
@@ -339,7 +342,7 @@
             return Result;
         }
 
-        public static IUnaryOperatorExpression CreateUnaryOperatorExpression(IIdentifier operatorName, IExpression rightExpression)
+        public static UnaryOperatorExpression CreateUnaryOperatorExpression(Identifier operatorName, Expression rightExpression)
         {
             UnaryOperatorExpression Result = new UnaryOperatorExpression();
             Result.Documentation = CreateEmptyDocumentation();

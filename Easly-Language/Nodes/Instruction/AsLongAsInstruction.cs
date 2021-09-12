@@ -6,18 +6,11 @@ namespace BaseNode
 {
     using Easly;
 
-    public interface IAsLongAsInstruction : IInstruction
-    {
-        IExpression ContinueCondition { get; }
-        IBlockList<IContinuation, Continuation> ContinuationBlocks { get; }
-        IOptionalReference<IScope> ElseInstructions { get; }
-    }
-
     [System.Serializable]
-    public class AsLongAsInstruction : Instruction, IAsLongAsInstruction
+    public class AsLongAsInstruction : Instruction
     {
-        public virtual IExpression ContinueCondition { get; set; }
-        public virtual IBlockList<IContinuation, Continuation> ContinuationBlocks { get; set; }
-        public virtual IOptionalReference<IScope> ElseInstructions { get; set; }
+        public virtual Expression ContinueCondition { get; set; }
+        public virtual BlockList<Continuation> ContinuationBlocks { get; set; }
+        public virtual OptionalReference<Scope> ElseInstructions { get; set; }
     }
 }

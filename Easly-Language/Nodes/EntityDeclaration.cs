@@ -6,18 +6,11 @@ namespace BaseNode
 {
     using Easly;
 
-    public interface IEntityDeclaration : INode
-    {
-        IName EntityName { get; }
-        IObjectType EntityType { get; }
-        IOptionalReference<IExpression> DefaultValue { get; }
-    }
-
     [System.Serializable]
-    public class EntityDeclaration : Node, IEntityDeclaration
+    public class EntityDeclaration : Node
     {
-        public virtual IName EntityName { get; set; }
-        public virtual IObjectType EntityType { get; set; }
-        public virtual IOptionalReference<IExpression> DefaultValue { get; set; }
+        public virtual Name EntityName { get; set; }
+        public virtual ObjectType EntityType { get; set; }
+        public virtual OptionalReference<Expression> DefaultValue { get; set; }
     }
 }

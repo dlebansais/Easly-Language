@@ -1,4 +1,6 @@
-﻿namespace BaseNodeHelper
+﻿#pragma warning disable SA1600 // Elements should be documented
+
+namespace BaseNodeHelper
 {
     using System.Diagnostics;
     using BaseNode;
@@ -6,59 +8,59 @@
 
     public static class OptionalReferenceHelper
     {
-        public static IOptionalReference<TNodeInterface> CreateEmptyReference<TNodeInterface>()
-            where TNodeInterface : class, INode
+        public static OptionalReference<TNode> CreateEmptyReference<TNode>()
+            where TNode : Node
         {
-            return OptionalReferenceHelper<TNodeInterface>.CreateEmptyReference();
+            return OptionalReferenceHelper<TNode>.CreateEmptyReference();
         }
 
-        public static IOptionalReference<TNodeInterface> CreateReference<TNodeInterface>(TNodeInterface item)
-            where TNodeInterface : class, INode
+        public static OptionalReference<TNode> CreateReference<TNode>(TNode item)
+            where TNode : Node
         {
-            return OptionalReferenceHelper<TNodeInterface>.CreateReference(item);
+            return OptionalReferenceHelper<TNode>.CreateReference(item);
         }
 
-        public static IOptionalReference<TNodeInterface> CreateReferenceCopy<TNodeInterface>(IOptionalReference<TNodeInterface> optional)
-            where TNodeInterface : class, INode
+        public static OptionalReference<TNode> CreateReferenceCopy<TNode>(OptionalReference<TNode> optional)
+            where TNode : Node
         {
-            return OptionalReferenceHelper<TNodeInterface>.CreateReferenceCopy(optional);
+            return OptionalReferenceHelper<TNode>.CreateReferenceCopy(optional);
         }
     }
 
 #pragma warning disable SA1402 // File may only contain a single type
-    public static class OptionalReferenceHelper<TNodeInterface>
+    public static class OptionalReferenceHelper<TNode>
 #pragma warning restore SA1402 // File may only contain a single type
-        where TNodeInterface : class, INode
+        where TNode : Node
     {
-        internal static IOptionalReference<TNodeInterface> CreateEmptyReference()
+        internal static OptionalReference<TNode> CreateEmptyReference()
         {
-            OptionalReference<TNodeInterface> Result = new OptionalReference<TNodeInterface>();
+            OptionalReference<TNode> Result = new OptionalReference<TNode>();
             Debug.Assert(!Result.IsAssigned, "An empty reference is never assigned");
             Debug.Assert(!Result.HasItem, "An empty reference is empty");
 
             return Result;
         }
 
-        internal static IOptionalReference<TNodeInterface> CreateReference(TNodeInterface item)
+        internal static OptionalReference<TNode> CreateReference(TNode item)
         {
-            OptionalReference<TNodeInterface> Result = new OptionalReference<TNodeInterface>();
+            OptionalReference<TNode> Result = new OptionalReference<TNode>();
             Result.Item = item;
             Result.Unassign();
 
             return Result;
         }
 
-        internal static IOptionalReference<TNodeInterface> CreateReferenceCopy(IOptionalReference<TNodeInterface> optional)
+        internal static OptionalReference<TNode> CreateReferenceCopy(OptionalReference<TNode> optional)
         {
-            OptionalReference<TNodeInterface> Result = new OptionalReference<TNodeInterface>();
+            OptionalReference<TNode> Result = new OptionalReference<TNode>();
 
             if (optional != null)
             {
                 if (optional.HasItem)
                 {
-                    Debug.Assert(optional.Item != null, $"If {nameof(IOptionalReference<TNodeInterface>.HasItem)} is true, {nameof(IOptionalReference<TNodeInterface>.Item)} is never null");
+                    Debug.Assert(optional.Item != null, $"If {nameof(OptionalReference<TNode>.HasItem)} is true, {nameof(OptionalReference<TNode>.Item)} is never null");
 
-                    TNodeInterface ClonedItem = NodeHelper.DeepCloneNode(optional.Item, cloneCommentGuid: false) as TNodeInterface;
+                    TNode ClonedItem = NodeHelper.DeepCloneNode(optional.Item, cloneCommentGuid: false) as TNode;
                     Debug.Assert(ClonedItem != null, "A clone reference is never null");
 
                     Result.Item = ClonedItem;

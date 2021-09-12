@@ -5,29 +5,7 @@
     /// <summary>
     /// Represents an event.
     /// </summary>
-    public interface IEvent
-    {
-        /// <summary>
-        /// Gets a value indicating whether event is signaled.
-        /// </summary>
-        bool IsSignaled { get; }
-
-        /// <summary>
-        /// Raises the event, setting its state to signaled.
-        /// </summary>
-        void Raise();
-
-        /// <summary>
-        /// Wait for the event to be signaled.
-        /// </summary>
-        /// <returns>True.</returns>
-        bool Wait();
-    }
-
-    /// <summary>
-    /// Represents an event.
-    /// </summary>
-    public class Event : EventBase, IEvent
+    public class Event : EventBase
     {
         #region Init
         /// <summary>

@@ -4,14 +4,9 @@
 
 namespace BaseNode
 {
-    public interface IReleaseInstruction : IInstruction
-    {
-        IQualifiedName EntityName { get; }
-    }
-
     [System.Serializable]
-    public class ReleaseInstruction : Instruction, IReleaseInstruction
+    public class ReleaseInstruction : Instruction
     {
-        public virtual IQualifiedName EntityName { get; set; }
+        public virtual QualifiedName EntityName { get; set; }
     }
 }

@@ -4,14 +4,9 @@
 
 namespace BaseNode
 {
-    public interface IDebugInstruction : IInstruction
-    {
-        IScope Instructions { get; }
-    }
-
     [System.Serializable]
-    public class DebugInstruction : Instruction, IDebugInstruction
+    public class DebugInstruction : Instruction
     {
-        public virtual IScope Instructions { get; set; }
+        public virtual Scope Instructions { get; set; }
     }
 }

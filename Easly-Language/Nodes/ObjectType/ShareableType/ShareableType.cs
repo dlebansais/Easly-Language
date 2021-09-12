@@ -4,12 +4,7 @@
 
 namespace BaseNode
 {
-    public interface IShareableType : IObjectType
-    {
-        SharingType Sharing { get; }
-    }
-
-    public abstract class ShareableType : ObjectType, IShareableType
+    public abstract class ShareableType : ObjectType
     {
         public virtual SharingType Sharing { get; set; }
     }

@@ -4,16 +4,10 @@
 
 namespace BaseNode
 {
-    public interface IContinuation : INode
-    {
-        IScope Instructions { get; }
-        IBlockList<IInstruction, Instruction> CleanupBlocks { get; }
-    }
-
     [System.Serializable]
-    public class Continuation : Node, IContinuation
+    public class Continuation : Node
     {
-        public virtual IScope Instructions { get; set; }
-        public virtual IBlockList<IInstruction, Instruction> CleanupBlocks { get; set; }
+        public virtual Scope Instructions { get; set; }
+        public virtual BlockList<Instruction> CleanupBlocks { get; set; }
     }
 }

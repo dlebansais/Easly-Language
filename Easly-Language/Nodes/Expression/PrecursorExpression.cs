@@ -6,16 +6,10 @@ namespace BaseNode
 {
     using Easly;
 
-    public interface IPrecursorExpression : IExpression
-    {
-        IOptionalReference<IObjectType> AncestorType { get; }
-        IBlockList<IArgument, Argument> ArgumentBlocks { get; }
-    }
-
     [System.Serializable]
-    public class PrecursorExpression : Expression, IPrecursorExpression
+    public class PrecursorExpression : Expression
     {
-        public virtual IOptionalReference<IObjectType> AncestorType { get; set; }
-        public virtual IBlockList<IArgument, Argument> ArgumentBlocks { get; set; }
+        public virtual OptionalReference<ObjectType> AncestorType { get; set; }
+        public virtual BlockList<Argument> ArgumentBlocks { get; set; }
     }
 }

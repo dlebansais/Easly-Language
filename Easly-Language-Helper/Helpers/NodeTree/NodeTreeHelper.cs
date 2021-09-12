@@ -1,4 +1,6 @@
-﻿namespace BaseNodeHelper
+﻿#pragma warning disable SA1600 // Elements should be documented
+
+namespace BaseNodeHelper
 {
     using System;
     using System.Collections;
@@ -10,7 +12,7 @@
 
     public static class NodeTreeHelper
     {
-        public static IList<string> EnumChildNodeProperties(INode node)
+        public static IList<string> EnumChildNodeProperties(Node node)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
 
@@ -21,7 +23,7 @@
         public static IList<string> EnumChildNodeProperties(Type nodeType)
         {
             if (nodeType == null) throw new ArgumentNullException(nameof(nodeType));
-            if (nodeType.GetInterface(typeof(INode).FullName) == null) throw new ArgumentException($"{nameof(nodeType)} must inherit from {nameof(INode)}"); // TODO: use 'is INode'?
+            if (!IsNodeDescendantType(nodeType)) throw new ArgumentException($"{nameof(nodeType)} must inherit from {nameof(Node)}");
 
             if (GetBaseNodeAncestor(nodeType, out Type AncestorType))
                 nodeType = AncestorType;
@@ -60,7 +62,14 @@
         {
             if (type == null) throw new ArgumentNullException(nameof(type));
 
-            return type.IsInterface && type.GetInterface(typeof(INode).FullName) != null;
+            return type.IsInterface && type.GetInterface(typeof(Node).FullName) != null;
+        }
+
+        public static bool IsNodeDescendantType(Type type)
+        {
+            if (type == null) throw new ArgumentNullException(nameof(type));
+
+            return type.IsSubclassOf(typeof(Node));
         }
 
         public static Type NodeTypeToInterfaceType(Type type)
@@ -117,14 +126,32 @@
         {
             if (type == null) throw new ArgumentNullException(nameof(type));
 
-            if (!type.IsInterface || !type.IsGenericType || type.GetGenericTypeDefinition() != typeof(IOptionalReference<>))
+            if (!type.IsInterface || !type.IsGenericType || type.GetGenericTypeDefinition() != typeof(OptionalReference<>))
                 return false;
 
             Type[] GenericArguments = type.GetGenericArguments();
             Debug.Assert(GenericArguments != null);
             Debug.Assert(GenericArguments.Length == 1);
 
-            return IsNodeInterfaceType(GenericArguments[0]);
+            Type GenericType = GenericArguments[0];
+
+            return IsNodeInterfaceType(GenericType);
+        }
+
+        public static bool IsOptionalDescendantType(Type type)
+        {
+            if (type == null) throw new ArgumentNullException(nameof(type));
+
+            if (type.IsInterface || !type.IsGenericType || type.GetGenericTypeDefinition() != typeof(OptionalReference<>))
+                return false;
+
+            Type[] GenericArguments = type.GetGenericArguments();
+            Debug.Assert(GenericArguments != null);
+            Debug.Assert(GenericArguments.Length == 1);
+
+            Type GenericType = GenericArguments[0];
+
+            return IsNodeDescendantType(GenericType);
         }
 
         public static bool IsNodeListType(Type type)
@@ -138,48 +165,63 @@
             Debug.Assert(GenericArguments != null);
             Debug.Assert(GenericArguments.Length == 1);
 
-            return IsNodeInterfaceType(GenericArguments[0]);
+            Type GenericType = GenericArguments[0];
+
+            // return IsNodeInterfaceType(GenericType);
+            return IsNodeDescendantType(GenericType);
         }
 
         public static bool IsBlockListType(Type type)
         {
             if (type == null) throw new ArgumentNullException(nameof(type));
 
-            if (!type.IsInterface || !type.IsGenericType || type.GetGenericTypeDefinition() != typeof(IBlockList<,>))
+            // if (!type.IsInterface || !type.IsGenericType || type.GetGenericTypeDefinition() != typeof(BlockList<>))
+            if (type.IsInterface || !type.IsGenericType || type.GetGenericTypeDefinition() != typeof(BlockList<>))
                 return false;
 
             Type[] GenericArguments = type.GetGenericArguments();
             Debug.Assert(GenericArguments != null);
-            Debug.Assert(GenericArguments.Length == 2);
 
-            return IsNodeInterfaceType(GenericArguments[0]);
+            // Debug.Assert(GenericArguments.Length == 2);
+            Debug.Assert(GenericArguments.Length == 1);
+
+            Type GenericType = GenericArguments[0];
+
+            // return IsNodeInterfaceType(GenericType);
+            return IsNodeDescendantType(GenericType);
         }
 
         public static bool IsBlockType(Type type)
         {
             if (type == null) throw new ArgumentNullException(nameof(type));
 
-            if (!type.IsInterface || !type.IsGenericType || type.GetGenericTypeDefinition() != typeof(IBlock<,>))
+            // if (!type.IsInterface || !type.IsGenericType || type.GetGenericTypeDefinition() != typeof(Block<>))
+            if (type.IsInterface || !type.IsGenericType || type.GetGenericTypeDefinition() != typeof(Block<>))
                 return false;
 
             Type[] GenericArguments = type.GetGenericArguments();
             Debug.Assert(GenericArguments != null);
-            Debug.Assert(GenericArguments.Length == 2);
 
-            return IsNodeInterfaceType(GenericArguments[0]);
+            // Debug.Assert(GenericArguments.Length == 2);
+            Debug.Assert(GenericArguments.Length == 1);
+
+            Type GenericType = GenericArguments[0];
+
+            // return IsNodeInterfaceType(GenericType);
+            return IsNodeDescendantType(GenericType);
         }
 
-        public static bool IsTextNode(INode node)
+        public static bool IsTextNode(Node node)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
 
             Type NodeType = node.GetType();
-            PropertyInfo Property = NodeType.GetProperty(nameof(IIdentifier.Text));
+            PropertyInfo Property = NodeType.GetProperty(nameof(Identifier.Text));
 
             return Property != null;
         }
 
-        public static string GetString(INode node, string propertyName)
+        public static string GetString(Node node, string propertyName)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
@@ -194,7 +236,7 @@
             return Text;
         }
 
-        public static void SetString(INode node, string propertyName, string text)
+        public static void SetString(Node node, string propertyName, string text)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
@@ -208,12 +250,12 @@
             Property.SetValue(node, text);
         }
 
-        public static int GetEnumValue(INode node, string propertyName)
+        public static int GetEnumValue(Node node, string propertyName)
         {
             return GetEnumValueAndRange(node, propertyName, out int Min, out int Max);
         }
 
-        public static int GetEnumValueAndRange(INode node, string propertyName, out int min, out int max)
+        public static int GetEnumValueAndRange(Node node, string propertyName, out int min, out int max)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
@@ -241,7 +283,7 @@
             return Result;
         }
 
-        public static void SetEnumValue(INode node, string propertyName, int value)
+        public static void SetEnumValue(Node node, string propertyName, int value)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
@@ -276,7 +318,7 @@
             GetEnumMinMax(Property, out min, out max);
         }
 
-        public static Guid GetGuid(INode node, string propertyName)
+        public static Guid GetGuid(Node node, string propertyName)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
@@ -293,7 +335,7 @@
             return Result;
         }
 
-        public static string GetCommentText(INode node)
+        public static string GetCommentText(Node node)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
 
@@ -302,7 +344,7 @@
             return GetCommentText(node.Documentation);
         }
 
-        public static string GetCommentText(IDocument documentation)
+        public static string GetCommentText(Document documentation)
         {
             if (documentation == null) throw new ArgumentNullException(nameof(documentation));
 
@@ -312,7 +354,7 @@
             return Text;
         }
 
-        public static void SetCommentText(INode node, string text)
+        public static void SetCommentText(Node node, string text)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
             if (text == null) throw new ArgumentNullException(nameof(text));
@@ -322,16 +364,16 @@
             SetCommentText(node.Documentation, text);
         }
 
-        public static void SetCommentText(IDocument documentation, string text)
+        public static void SetCommentText(Document documentation, string text)
         {
             if (documentation == null) throw new ArgumentNullException(nameof(documentation));
 
             Type DocumentationType = documentation.GetType();
-            PropertyInfo CommentProperty = DocumentationType.GetProperty(nameof(IDocument.Comment));
+            PropertyInfo CommentProperty = DocumentationType.GetProperty(nameof(Document.Comment));
             CommentProperty.SetValue(documentation, text);
         }
 
-        public static void GetOptionalNodes(INode node, out IDictionary<string, IOptionalReference> optionalNodesTable)
+        public static void GetOptionalNodes(Node node, out IDictionary<string, IOptionalReference> optionalNodesTable)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
 
@@ -346,7 +388,8 @@
                 Type PropertyType = Property.PropertyType;
                 string PropertyName = Property.Name;
 
-                if (IsOptionalReferenceType(PropertyType))
+                // if (IsOptionalReferenceType(PropertyType))
+                if (IsOptionalDescendantType(PropertyType))
                 {
                     IOptionalReference Optional = Property.GetValue(node) as IOptionalReference;
                     Debug.Assert(Optional != null);
@@ -356,11 +399,11 @@
             }
         }
 
-        public static void GetArgumentBlocks(INode node, out IDictionary<string, IBlockList<IArgument, Argument>> argumentBlocksTable)
+        public static void GetArgumentBlocks(Node node, out IDictionary<string, BlockList<Argument>> argumentBlocksTable)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
 
-            argumentBlocksTable = new Dictionary<string, IBlockList<IArgument, Argument>>();
+            argumentBlocksTable = new Dictionary<string, BlockList<Argument>>();
 
             Type NodeType = node.GetType();
             IList<PropertyInfo> Properties = GetTypeProperties(NodeType);
@@ -376,11 +419,13 @@
                     Debug.Assert(PropertyType.IsGenericType);
                     Type[] GenericArguments = PropertyType.GetGenericArguments();
                     Debug.Assert(GenericArguments != null);
-                    Debug.Assert(GenericArguments.Length == 2);
 
-                    if (GenericArguments[0] == typeof(IArgument))
+                    // Debug.Assert(GenericArguments.Length == 2);
+                    Debug.Assert(GenericArguments.Length == 1);
+
+                    if (GenericArguments[0] == typeof(Argument))
                     {
-                        IBlockList<IArgument, Argument> ArgumentBlocks = Property.GetValue(node) as IBlockList<IArgument, Argument>;
+                        BlockList<Argument> ArgumentBlocks = Property.GetValue(node) as BlockList<Argument>;
                         Debug.Assert(ArgumentBlocks != null);
 
                         argumentBlocksTable.Add(PropertyName, ArgumentBlocks);
@@ -389,7 +434,7 @@
             }
         }
 
-        public static bool IsDocumentProperty(INode node, string propertyName)
+        public static bool IsDocumentProperty(Node node, string propertyName)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
@@ -408,25 +453,25 @@
                 return false;
 
             Type PropertyType = Property.PropertyType;
-            return PropertyType == typeof(IDocument);
+            return PropertyType == typeof(Document);
         }
 
-        public static void SetDocumentation(INode node, IDocument document)
+        public static void SetDocumentation(Node node, Document document)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
             if (document == null) throw new ArgumentNullException(nameof(document));
 
             Type NodeType = node.GetType();
-            PropertyInfo Property = NodeType.GetProperty(nameof(INode.Documentation));
+            PropertyInfo Property = NodeType.GetProperty(nameof(Node.Documentation));
             Debug.Assert(Property != null);
 
             Type PropertyType = Property.PropertyType;
-            Debug.Assert(PropertyType == typeof(IDocument));
+            Debug.Assert(PropertyType == typeof(Document));
 
             Property.SetValue(node, document);
         }
 
-        public static void CopyDocumentation(INode sourceNode, INode destinationNode, bool cloneCommentGuid)
+        public static void CopyDocumentation(Node sourceNode, Node destinationNode, bool cloneCommentGuid)
         {
             if (sourceNode == null) throw new ArgumentNullException(nameof(sourceNode));
             if (destinationNode == null) throw new ArgumentNullException(nameof(destinationNode));
@@ -436,14 +481,14 @@
 
             if (SourceNodeType != DestinationNodeType) throw new ArgumentException($"{nameof(sourceNode)} and {nameof(destinationNode)} must be of the same type");
 
-            PropertyInfo Property = SourceNodeType.GetProperty(nameof(INode.Documentation));
+            PropertyInfo Property = SourceNodeType.GetProperty(nameof(Node.Documentation));
             Debug.Assert(Property != null);
 
             Type PropertyType = Property.PropertyType;
-            Debug.Assert(PropertyType == typeof(IDocument));
+            Debug.Assert(PropertyType == typeof(Document));
 
             Guid GuidCopy = cloneCommentGuid ? sourceNode.Documentation.Uuid : Guid.NewGuid();
-            IDocument DocumentCopy = NodeHelper.CreateSimpleDocumentation(sourceNode.Documentation.Comment, GuidCopy);
+            Document DocumentCopy = NodeHelper.CreateSimpleDocumentation(sourceNode.Documentation.Comment, GuidCopy);
             Property.SetValue(destinationNode, DocumentCopy);
         }
 
@@ -460,10 +505,10 @@
             Debug.Assert(Property != null);
 
             Type PropertyType = Property.PropertyType;
-            Debug.Assert(PropertyType == typeof(IDocument));
+            Debug.Assert(PropertyType == typeof(Document));
 
             Guid GuidCopy = cloneCommentGuid ? sourceBlock.Documentation.Uuid : Guid.NewGuid();
-            IDocument DocumentCopy = NodeHelper.CreateSimpleDocumentation(sourceBlock.Documentation.Comment, GuidCopy);
+            Document DocumentCopy = NodeHelper.CreateSimpleDocumentation(sourceBlock.Documentation.Comment, GuidCopy);
             Property.SetValue(destinationBlock, DocumentCopy);
         }
 
@@ -480,14 +525,14 @@
             Debug.Assert(Property != null);
 
             Type PropertyType = Property.PropertyType;
-            Debug.Assert(PropertyType == typeof(IDocument));
+            Debug.Assert(PropertyType == typeof(Document));
 
             Guid GuidCopy = cloneCommentGuid ? sourceBlockList.Documentation.Uuid : Guid.NewGuid();
-            IDocument DocumentCopy = NodeHelper.CreateSimpleDocumentation(sourceBlockList.Documentation.Comment, GuidCopy);
+            Document DocumentCopy = NodeHelper.CreateSimpleDocumentation(sourceBlockList.Documentation.Comment, GuidCopy);
             Property.SetValue(destinationBlockList, DocumentCopy);
         }
 
-        public static bool IsBooleanProperty(INode parentNode, string propertyName)
+        public static bool IsBooleanProperty(Node parentNode, string propertyName)
         {
             return IsValueProperty(parentNode, propertyName, typeof(bool));
         }
@@ -497,17 +542,17 @@
             return IsValueProperty(nodeType, propertyName, typeof(bool));
         }
 
-        public static void SetBooleanProperty(INode parentNode, string propertyName, bool value)
+        public static void SetBooleanProperty(Node parentNode, string propertyName, bool value)
         {
             SetValueProperty(parentNode, propertyName, value);
         }
 
-        public static void CopyBooleanProperty(INode sourceNode, INode destinationNode, string propertyName)
+        public static void CopyBooleanProperty(Node sourceNode, Node destinationNode, string propertyName)
         {
             CopyValueProperty<bool>(sourceNode, destinationNode, propertyName);
         }
 
-        public static bool IsStringProperty(INode parentNode, string propertyName)
+        public static bool IsStringProperty(Node parentNode, string propertyName)
         {
             return IsValueProperty(parentNode, propertyName, typeof(string));
         }
@@ -517,17 +562,17 @@
             return IsValueProperty(nodeType, propertyName, typeof(string));
         }
 
-        public static void SetStringProperty(INode parentNode, string propertyName, string value)
+        public static void SetStringProperty(Node parentNode, string propertyName, string value)
         {
             SetValueProperty(parentNode, propertyName, value);
         }
 
-        public static void CopyStringProperty(INode sourceNode, INode destinationNode, string propertyName)
+        public static void CopyStringProperty(Node sourceNode, Node destinationNode, string propertyName)
         {
             CopyValueProperty<string>(sourceNode, destinationNode, propertyName);
         }
 
-        public static bool IsGuidProperty(INode parentNode, string propertyName)
+        public static bool IsGuidProperty(Node parentNode, string propertyName)
         {
             return IsValueProperty(parentNode, propertyName, typeof(Guid));
         }
@@ -537,17 +582,17 @@
             return IsValueProperty(nodeType, propertyName, typeof(Guid));
         }
 
-        public static void SetGuidProperty(INode parentNode, string propertyName, Guid value)
+        public static void SetGuidProperty(Node parentNode, string propertyName, Guid value)
         {
             SetValueProperty(parentNode, propertyName, value);
         }
 
-        public static void CopyGuidProperty(INode sourceNode, INode destinationNode, string propertyName)
+        public static void CopyGuidProperty(Node sourceNode, Node destinationNode, string propertyName)
         {
             CopyValueProperty<Guid>(sourceNode, destinationNode, propertyName);
         }
 
-        public static bool IsEnumProperty(INode node, string propertyName)
+        public static bool IsEnumProperty(Node node, string propertyName)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
@@ -568,7 +613,7 @@
             return PropertyType.IsEnum;
         }
 
-        public static void SetEnumProperty(INode node, string propertyName, object value)
+        public static void SetEnumProperty(Node node, string propertyName, object value)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
@@ -583,7 +628,7 @@
             Property.SetValue(node, value);
         }
 
-        public static bool IsAssignable(INode node, string propertyName, INode childNode)
+        public static bool IsAssignable(Node node, string propertyName, Node childNode)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
@@ -598,14 +643,16 @@
 
             Type AssignedType = null;
 
-            if (IsNodeInterfaceType(PropertyType))
+            // if (IsNodeInterfaceType(PropertyType))
+            if (IsNodeDescendantType(PropertyType))
                 AssignedType = PropertyType;
             else if (PropertyType.IsGenericType)
             {
                 Type[] GenericArguments = PropertyType.GetGenericArguments();
                 Debug.Assert(GenericArguments != null);
 
-                if (IsOptionalReferenceType(PropertyType))
+                // if (IsOptionalReferenceType(PropertyType))
+                if (IsOptionalDescendantType(PropertyType))
                 {
                     Debug.Assert(GenericArguments.Length == 1);
                     AssignedType = GenericArguments[0];
@@ -617,7 +664,8 @@
                 }
                 else if (IsBlockListType(PropertyType))
                 {
-                    Debug.Assert(GenericArguments.Length == 2);
+                    // Debug.Assert(GenericArguments.Length == 2);
+                    Debug.Assert(GenericArguments.Length == 1);
                     AssignedType = GenericArguments[0];
                 }
             }
@@ -631,7 +679,7 @@
             return true;
         }
 
-        public static void CopyEnumProperty(INode sourceNode, INode destinationNode, string propertyName)
+        public static void CopyEnumProperty(Node sourceNode, Node destinationNode, string propertyName)
         {
             if (sourceNode == null) throw new ArgumentNullException(nameof(sourceNode));
             if (destinationNode == null) throw new ArgumentNullException(nameof(destinationNode));
@@ -655,12 +703,12 @@
             ancestorType = null;
             bool Result = false;
 
-            string BaseNodeNamespace = typeof(INode).FullName.Substring(0, typeof(INode).FullName.IndexOf(".", StringComparison.InvariantCulture) + 1);
+            string BaseNodeNamespace = typeof(Node).FullName.Substring(0, typeof(Node).FullName.IndexOf(".", StringComparison.InvariantCulture) + 1);
             while (nodeType != typeof(object) && !nodeType.FullName.StartsWith(BaseNodeNamespace, StringComparison.InvariantCulture))
                 nodeType = nodeType.BaseType;
             Debug.Assert(nodeType != typeof(object));
 
-            if (nodeType != typeof(INode) && nodeType != typeof(Node))
+            if (nodeType != typeof(Node) && nodeType != typeof(Node))
             {
                 ancestorType = nodeType;
                 Result = true;
@@ -725,7 +773,7 @@
             }
         }
 
-        private static bool IsValueProperty(INode node, string propertyName, Type type)
+        private static bool IsValueProperty(Node node, string propertyName, Type type)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
@@ -751,7 +799,7 @@
             return true;
         }
 
-        private static void SetValueProperty<T>(INode node, string propertyName, T value)
+        private static void SetValueProperty<T>(Node node, string propertyName, T value)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
@@ -767,7 +815,7 @@
             Property.SetValue(node, value);
         }
 
-        private static void CopyValueProperty<T>(INode sourceNode, INode destinationNode, string propertyName)
+        private static void CopyValueProperty<T>(Node sourceNode, Node destinationNode, string propertyName)
         {
             if (sourceNode == null) throw new ArgumentNullException(nameof(sourceNode));
             if (destinationNode == null) throw new ArgumentNullException(nameof(destinationNode));

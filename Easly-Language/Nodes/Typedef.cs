@@ -4,16 +4,10 @@
 
 namespace BaseNode
 {
-    public interface ITypedef : INode
-    {
-        IName EntityName { get; }
-        IObjectType DefinedType { get; }
-    }
-
     [System.Serializable]
-    public class Typedef : Node, ITypedef
+    public class Typedef : Node
     {
-        public virtual IName EntityName { get; set; }
-        public virtual IObjectType DefinedType { get; set; }
+        public virtual Name EntityName { get; set; }
+        public virtual ObjectType DefinedType { get; set; }
     }
 }

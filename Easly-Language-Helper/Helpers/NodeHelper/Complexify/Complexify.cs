@@ -1,4 +1,6 @@
-﻿namespace BaseNodeHelper
+﻿#pragma warning disable SA1600 // Elements should be documented
+
+namespace BaseNodeHelper
 {
     using System;
     using System.Collections;
@@ -8,21 +10,21 @@
 
     public static partial class NodeHelper
     {
-        public static bool GetComplexifiedNode(INode node, out IList<INode> complexifiedNodeList)
+        public static bool GetComplexifiedNode(Node node, out IList<Node> complexifiedNodeList)
         {
-            complexifiedNodeList = new List<INode>();
+            complexifiedNodeList = new List<Node>();
             GetComplexifiedNodeRecursive(node, complexifiedNodeList);
 
             return complexifiedNodeList.Count > 0;
         }
 
-        private static void GetComplexifiedNodeRecursive(INode node, IList<INode> complexifiedNodeList)
+        private static void GetComplexifiedNodeRecursive(Node node, IList<Node> complexifiedNodeList)
         {
             if (GetComplexifiedNodeNotRecursive(node, out IList ComplexifiedList))
             {
                 int OldCount = complexifiedNodeList.Count;
 
-                foreach (INode Node in ComplexifiedList)
+                foreach (Node Node in ComplexifiedList)
                     complexifiedNodeList.Add(Node);
 
                 int NewCount = complexifiedNodeList.Count;
@@ -32,50 +34,50 @@
             }
         }
 
-        private static bool GetComplexifiedNodeNotRecursive(INode node, out IList complexifiedNodeList)
+        private static bool GetComplexifiedNodeNotRecursive(Node node, out IList complexifiedNodeList)
         {
             bool Result = false;
             complexifiedNodeList = null;
 
             switch (node)
             {
-                case IArgument AsArgument:
-                    Result = GetComplexifiedArgument(AsArgument, out IList<IArgument> ComplexifiedArgumentList);
+                case Argument AsArgument:
+                    Result = GetComplexifiedArgument(AsArgument, out IList<Argument> ComplexifiedArgumentList);
                     complexifiedNodeList = (IList)ComplexifiedArgumentList;
                     break;
 
-                case IAttachment AsAttachment:
-                    Result = GetComplexifiedAttachment(AsAttachment, out IList<IAttachment> ComplexifiedAttachmentList);
+                case Attachment AsAttachment:
+                    Result = GetComplexifiedAttachment(AsAttachment, out IList<Attachment> ComplexifiedAttachmentList);
                     complexifiedNodeList = (IList)ComplexifiedAttachmentList;
                     break;
 
-                case IExpression AsExpression:
-                    Result = GetComplexifiedExpression(AsExpression, out IList<IExpression> ComplexifiedExpressionList);
+                case Expression AsExpression:
+                    Result = GetComplexifiedExpression(AsExpression, out IList<Expression> ComplexifiedExpressionList);
                     complexifiedNodeList = (IList)ComplexifiedExpressionList;
                     break;
 
-                case IInstruction AsInstruction:
-                    Result = GetComplexifiedInstruction(AsInstruction, out IList<IInstruction> ComplexifiedInstructionList);
+                case Instruction AsInstruction:
+                    Result = GetComplexifiedInstruction(AsInstruction, out IList<Instruction> ComplexifiedInstructionList);
                     complexifiedNodeList = (IList)ComplexifiedInstructionList;
                     break;
 
-                case IObjectType AsObjectType:
-                    Result = GetComplexifiedObjectType(AsObjectType, out IList<IObjectType> ComplexifiedObjectTypeList);
+                case ObjectType AsObjectType:
+                    Result = GetComplexifiedObjectType(AsObjectType, out IList<ObjectType> ComplexifiedObjectTypeList);
                     complexifiedNodeList = (IList)ComplexifiedObjectTypeList;
                     break;
 
-                case ITypeArgument AsTypeArgument:
-                    Result = GetComplexifiedTypeArgument(AsTypeArgument, out IList<ITypeArgument> ComplexifiedTypeArgumentList);
+                case TypeArgument AsTypeArgument:
+                    Result = GetComplexifiedTypeArgument(AsTypeArgument, out IList<TypeArgument> ComplexifiedTypeArgumentList);
                     complexifiedNodeList = (IList)ComplexifiedTypeArgumentList;
                     break;
 
-                case IQualifiedName AsQualifiedName:
-                    Result = GetComplexifiedQualifiedName(AsQualifiedName, out IList<IQualifiedName> ComplexifiedQualifiedNameList);
+                case QualifiedName AsQualifiedName:
+                    Result = GetComplexifiedQualifiedName(AsQualifiedName, out IList<QualifiedName> ComplexifiedQualifiedNameList);
                     complexifiedNodeList = (IList)ComplexifiedQualifiedNameList;
                     break;
 
-                case IConditional AsConditional:
-                    Result = GetComplexifiedConditional(AsConditional, out IList<IConditional> ComplexifiedConditionalList);
+                case Conditional AsConditional:
+                    Result = GetComplexifiedConditional(AsConditional, out IList<Conditional> ComplexifiedConditionalList);
                     complexifiedNodeList = (IList)ComplexifiedConditionalList;
                     break;
 

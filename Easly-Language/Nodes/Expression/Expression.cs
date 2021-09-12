@@ -4,11 +4,7 @@
 
 namespace BaseNode
 {
-    public interface IExpression : INode
-    {
-    }
-
-    public abstract class Expression : Node, IExpression
+    public abstract class Expression : Node
     {
     }
 }

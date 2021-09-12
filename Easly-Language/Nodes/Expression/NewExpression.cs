@@ -4,14 +4,9 @@
 
 namespace BaseNode
 {
-    public interface INewExpression : IExpression
-    {
-        IQualifiedName Object { get; }
-    }
-
     [System.Serializable]
-    public class NewExpression : Expression, INewExpression
+    public class NewExpression : Expression
     {
-        public virtual IQualifiedName Object { get; set; }
+        public virtual QualifiedName Object { get; set; }
     }
 }

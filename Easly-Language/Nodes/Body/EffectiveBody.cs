@@ -4,18 +4,11 @@
 
 namespace BaseNode
 {
-    public interface IEffectiveBody : IBody
-    {
-        IBlockList<IEntityDeclaration, EntityDeclaration> EntityDeclarationBlocks { get; }
-        IBlockList<IInstruction, Instruction> BodyInstructionBlocks { get; }
-        IBlockList<IExceptionHandler, ExceptionHandler> ExceptionHandlerBlocks { get; }
-    }
-
     [System.Serializable]
-    public class EffectiveBody : Body, IEffectiveBody
+    public class EffectiveBody : Body
     {
-        public virtual IBlockList<IEntityDeclaration, EntityDeclaration> EntityDeclarationBlocks { get; set; }
-        public virtual IBlockList<IInstruction, Instruction> BodyInstructionBlocks { get; set; }
-        public virtual IBlockList<IExceptionHandler, ExceptionHandler> ExceptionHandlerBlocks { get; set; }
+        public virtual BlockList<EntityDeclaration> EntityDeclarationBlocks { get; set; }
+        public virtual BlockList<Instruction> BodyInstructionBlocks { get; set; }
+        public virtual BlockList<ExceptionHandler> ExceptionHandlerBlocks { get; set; }
     }
 }

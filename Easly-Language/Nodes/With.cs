@@ -4,16 +4,10 @@
 
 namespace BaseNode
 {
-    public interface IWith : INode
-    {
-        IBlockList<IRange, Range> RangeBlocks { get; }
-        IScope Instructions { get; }
-    }
-
     [System.Serializable]
-    public class With : Node, IWith
+    public class With : Node
     {
-        public virtual IBlockList<IRange, Range> RangeBlocks { get; set; }
-        public virtual IScope Instructions { get; set; }
+        public virtual BlockList<Range> RangeBlocks { get; set; }
+        public virtual Scope Instructions { get; set; }
     }
 }

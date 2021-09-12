@@ -42,46 +42,8 @@
     /// Representes an optional reference to an object of type <typeparamref name="T"/>.
     /// </summary>
     /// <typeparam name="T">The type of the object.</typeparam>
-    public interface IOptionalReference<T>
-        where T : class
-    {
-        /// <summary>
-        /// Gets a value indicating whether the reference is assigned.
-        /// </summary>
-        bool IsAssigned { get; }
-
-        /// <summary>
-        /// Gets a value indicating whether there is object reference to assign.
-        /// </summary>
-        bool HasItem { get; }
-
-        /// <summary>
-        /// Gets or sets the object.
-        /// </summary>
-        T Item { get; set; }
-
-        /// <summary>
-        /// Assigns the object.
-        /// </summary>
-        void Assign();
-
-        /// <summary>
-        /// Unassigns the object.
-        /// </summary>
-        void Unassign();
-
-        /// <summary>
-        /// Clears the object reference.
-        /// </summary>
-        void Clear();
-    }
-
-    /// <summary>
-    /// Representes an optional reference to an object of type <typeparamref name="T"/>.
-    /// </summary>
-    /// <typeparam name="T">The type of the object.</typeparam>
     [PolySerializer.Serializable]
-    public class OptionalReference<T> : IOptionalReference<T>, IOptionalReference
+    public class OptionalReference<T> : IOptionalReference
         where T : class
     {
         #region Init

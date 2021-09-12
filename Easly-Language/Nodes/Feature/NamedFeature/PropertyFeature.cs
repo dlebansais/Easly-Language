@@ -6,22 +6,13 @@ namespace BaseNode
 {
     using Easly;
 
-    public interface IPropertyFeature : INamedFeature
-    {
-        IObjectType EntityType { get; }
-        UtilityType PropertyKind { get; }
-        IBlockList<IIdentifier, Identifier> ModifiedQueryBlocks { get; }
-        IOptionalReference<IBody> GetterBody { get; }
-        IOptionalReference<IBody> SetterBody { get; }
-    }
-
     [System.Serializable]
-    public class PropertyFeature : NamedFeature, IPropertyFeature
+    public class PropertyFeature : NamedFeature
     {
-        public virtual IObjectType EntityType { get; set; }
+        public virtual ObjectType EntityType { get; set; }
         public virtual UtilityType PropertyKind { get; set; }
-        public virtual IBlockList<IIdentifier, Identifier> ModifiedQueryBlocks { get; set; }
-        public virtual IOptionalReference<IBody> GetterBody { get; set; }
-        public virtual IOptionalReference<IBody> SetterBody { get; set; }
+        public virtual BlockList<Identifier> ModifiedQueryBlocks { get; set; }
+        public virtual OptionalReference<Body> GetterBody { get; set; }
+        public virtual OptionalReference<Body> SetterBody { get; set; }
     }
 }

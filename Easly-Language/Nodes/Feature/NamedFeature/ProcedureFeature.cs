@@ -4,14 +4,9 @@
 
 namespace BaseNode
 {
-    public interface IProcedureFeature : INamedFeature
-    {
-        IBlockList<ICommandOverload, CommandOverload> OverloadBlocks { get; }
-    }
-
     [System.Serializable]
-    public class ProcedureFeature : NamedFeature, IProcedureFeature
+    public class ProcedureFeature : NamedFeature
     {
-        public virtual IBlockList<ICommandOverload, CommandOverload> OverloadBlocks { get; set; }
+        public virtual BlockList<CommandOverload> OverloadBlocks { get; set; }
     }
 }

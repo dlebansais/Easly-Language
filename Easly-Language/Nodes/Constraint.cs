@@ -4,16 +4,10 @@
 
 namespace BaseNode
 {
-    public interface IConstraint : INode
-    {
-        IObjectType ParentType { get; }
-        IBlockList<IRename, Rename> RenameBlocks { get; }
-    }
-
     [System.Serializable]
-    public class Constraint : Node, IConstraint
+    public class Constraint : Node
     {
-        public virtual IObjectType ParentType { get; set; }
-        public virtual IBlockList<IRename, Rename> RenameBlocks { get; set; }
+        public virtual ObjectType ParentType { get; set; }
+        public virtual BlockList<Rename> RenameBlocks { get; set; }
     }
 }

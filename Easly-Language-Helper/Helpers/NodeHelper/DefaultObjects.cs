@@ -1,4 +1,7 @@
-﻿namespace BaseNodeHelper
+﻿#pragma warning disable SA1600 // Elements should be documented
+#pragma warning disable SA1601 // Partial elements should be documented
+
+namespace BaseNodeHelper
 {
     using System;
     using System.Collections;
@@ -10,46 +13,46 @@
 
     public static partial class NodeHelper
     {
-        public static IArgument CreateDefaultArgument()
+        public static Argument CreateDefaultArgument()
         {
             return CreateEmptyPositionalArgument();
         }
 
-        public static ITypeArgument CreateDefaultTypeArgument()
+        public static TypeArgument CreateDefaultTypeArgument()
         {
             return CreateEmptyPositionalTypeArgument();
         }
 
-        public static IBody CreateDefaultBody()
+        public static Body CreateDefaultBody()
         {
             return CreateEmptyEffectiveBody();
         }
 
-        public static IExpression CreateDefaultExpression()
+        public static Expression CreateDefaultExpression()
         {
             return CreateEmptyQueryExpression();
         }
 
-        public static IInstruction CreateDefaultInstruction()
+        public static Instruction CreateDefaultInstruction()
         {
             return CreateEmptyCommandInstruction();
         }
 
-        public static IFeature CreateDefaultFeature()
+        public static Feature CreateDefaultFeature()
         {
             return CreateEmptyAttributeFeature();
         }
 
-        public static IObjectType CreateDefaultType()
+        public static ObjectType CreateDefaultType()
         {
             return CreateEmptySimpleType();
         }
 
-        public static INode CreateDefault(Type interfaceType)
+        public static Node CreateDefault(Type interfaceType)
         {
             if (interfaceType == null) throw new ArgumentNullException(nameof(interfaceType));
 
-            INode Result = CreateDefaultNoCheck(interfaceType);
+            Node Result = CreateDefaultNoCheck(interfaceType);
 
             if (Result != null)
                 return Result;
@@ -61,20 +64,20 @@
         {
             Type Result;
 
-            if (interfaceType == typeof(IArgument))
-                Result = typeof(IPositionalArgument);
-            else if (interfaceType == typeof(ITypeArgument))
-                Result = typeof(IPositionalTypeArgument);
-            else if (interfaceType == typeof(IBody))
-                Result = typeof(IEffectiveBody);
-            else if (interfaceType == typeof(IExpression))
-                Result = typeof(IQueryExpression);
-            else if (interfaceType == typeof(IInstruction))
-                Result = typeof(ICommandInstruction);
-            else if (interfaceType == typeof(IFeature))
-                Result = typeof(IAttributeFeature);
-            else if (interfaceType == typeof(IObjectType))
-                Result = typeof(ISimpleType);
+            if (interfaceType == typeof(Argument))
+                Result = typeof(PositionalArgument);
+            else if (interfaceType == typeof(TypeArgument))
+                Result = typeof(PositionalTypeArgument);
+            else if (interfaceType == typeof(Body))
+                Result = typeof(EffectiveBody);
+            else if (interfaceType == typeof(Expression))
+                Result = typeof(QueryExpression);
+            else if (interfaceType == typeof(Instruction))
+                Result = typeof(CommandInstruction);
+            else if (interfaceType == typeof(Feature))
+                Result = typeof(AttributeFeature);
+            else if (interfaceType == typeof(ObjectType))
+                Result = typeof(SimpleType);
             else
                 Result = interfaceType;
 
@@ -82,11 +85,11 @@
             return Result;
         }
 
-        public static INode CreateDefaultFromInterface(Type interfaceType)
+        public static Node CreateDefaultFromInterface(Type interfaceType)
         {
             if (interfaceType == null) throw new ArgumentNullException(nameof(interfaceType));
 
-            INode Result = CreateDefaultNoCheck(interfaceType);
+            Node Result = CreateDefaultNoCheck(interfaceType);
 
             if (Result != null)
                 return Result;
@@ -114,20 +117,20 @@
             return type != null;
         }
 
-        public static INode CreateEmptyNode(Type objectType)
+        public static Node CreateEmptyNode(Type objectType)
         {
             if (objectType == null) throw new ArgumentNullException(nameof(objectType));
             if (!IsNodeType(objectType)) throw new ArgumentException($"{nameof(objectType)} must be a node type");
             if (objectType.IsAbstract) throw new ArgumentException($"{nameof(objectType)} must not be an abstract node type");
 
-            INode EmptyNode = objectType.Assembly.CreateInstance(objectType.FullName) as INode;
+            Node EmptyNode = objectType.Assembly.CreateInstance(objectType.FullName) as Node;
             Debug.Assert(EmptyNode != null, $"A created instance is never null");
 
             IList<string> PropertyNames = NodeTreeHelper.EnumChildNodeProperties(EmptyNode);
 
             foreach (string PropertyName in PropertyNames)
             {
-                Type ChildInterfaceType, ChildNodeType;
+                Type /*ChildInterfaceType,*/ ChildNodeType;
 
                 if (NodeTreeHelperChild.IsChildNodeProperty(EmptyNode, PropertyName, out ChildNodeType))
                     InitializeChildNode(EmptyNode, PropertyName, CreateDefaultFromInterface(ChildNodeType));
@@ -138,7 +141,7 @@
                     {
                         Type NodeType = NodeTreeHelper.InterfaceTypeToNodeType(ChildNodeType);
 
-                        INode FirstNode;
+                        Node FirstNode;
                         if (NodeType.IsAbstract)
                             FirstNode = CreateDefault(ChildNodeType);
                         else
@@ -148,21 +151,22 @@
                     }
                     else
                         InitializeEmptyNodeList(EmptyNode, PropertyName, ChildNodeType);
-                else if (NodeTreeHelperBlockList.IsBlockListProperty(EmptyNode, PropertyName, out ChildInterfaceType, out ChildNodeType))
+                else if (NodeTreeHelperBlockList.IsBlockListProperty(EmptyNode, PropertyName, /*out ChildInterfaceType,*/ out ChildNodeType))
                     if (IsCollectionNeverEmpty(EmptyNode, PropertyName))
                     {
-                        Type NodeType = NodeTreeHelper.InterfaceTypeToNodeType(ChildInterfaceType);
+                        // Type NodeType = NodeTreeHelper.InterfaceTypeToNodeType(ChildInterfaceType);
+                        Type NodeType = ChildNodeType;
 
-                        INode FirstNode;
+                        Node FirstNode;
                         if (NodeType.IsAbstract)
-                            FirstNode = CreateDefault(ChildInterfaceType);
+                            FirstNode = /*CreateDefault(ChildInterfaceType)*/CreateDefault(NodeType);
                         else
                             FirstNode = CreateEmptyNode(NodeType);
 
-                        InitializeSimpleBlockList(EmptyNode, PropertyName, ChildInterfaceType, ChildNodeType, FirstNode);
+                        InitializeSimpleBlockList(EmptyNode, PropertyName, /*ChildInterfaceType,*/ ChildNodeType, FirstNode);
                     }
                     else
-                        InitializeEmptyBlockList(EmptyNode, PropertyName, ChildInterfaceType, ChildNodeType);
+                        InitializeEmptyBlockList(EmptyNode, PropertyName, /*ChildInterfaceType,*/ ChildNodeType);
                 else if (NodeTreeHelper.IsStringProperty(EmptyNode, PropertyName))
                     NodeTreeHelper.SetStringProperty(EmptyNode, PropertyName, string.Empty);
                 else if (NodeTreeHelper.IsGuidProperty(EmptyNode, PropertyName))
@@ -174,7 +178,7 @@
             return EmptyNode;
         }
 
-        public static bool IsEmptyNode(INode node)
+        public static bool IsEmptyNode(Node node)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
 
@@ -182,23 +186,23 @@
 
             foreach (string PropertyName in PropertyNames)
             {
-                Type ChildInterfaceType, ChildNodeType;
+                Type /*ChildInterfaceType,*/ ChildNodeType;
 
                 if (NodeTreeHelperChild.IsChildNodeProperty(node, PropertyName, out ChildNodeType))
                 {
-                    NodeTreeHelperChild.GetChildNode(node, PropertyName, out INode ChildNode);
+                    NodeTreeHelperChild.GetChildNode(node, PropertyName, out Node ChildNode);
                     if (!IsEmptyNode(ChildNode))
                         return false;
                 }
                 else if (NodeTreeHelperOptional.IsOptionalChildNodeProperty(node, PropertyName, out ChildNodeType))
                 {
-                    NodeTreeHelperOptional.GetChildNode(node, PropertyName, out bool IsAssigned, out INode ChildNode);
+                    NodeTreeHelperOptional.GetChildNode(node, PropertyName, out bool IsAssigned, out Node ChildNode);
                     if (IsAssigned)
                         return false;
                 }
                 else if (NodeTreeHelperList.IsNodeListProperty(node, PropertyName, out ChildNodeType))
                 {
-                    NodeTreeHelperList.GetChildNodeList(node, PropertyName, out IReadOnlyList<INode> ChildNodeList);
+                    NodeTreeHelperList.GetChildNodeList(node, PropertyName, out IReadOnlyList<Node> ChildNodeList);
 
                     if (IsCollectionNeverEmpty(node, PropertyName))
                     {
@@ -207,16 +211,16 @@
                         if (ChildNodeList.Count != 1)
                             return false;
 
-                        INode ChildNode = ChildNodeList[0];
+                        Node ChildNode = ChildNodeList[0];
                         if (!IsEmptyNode(ChildNode))
                             return false;
                     }
                     else if (ChildNodeList.Count > 0)
                         return false;
                 }
-                else if (NodeTreeHelperBlockList.IsBlockListProperty(node, PropertyName, out ChildInterfaceType, out ChildNodeType))
+                else if (NodeTreeHelperBlockList.IsBlockListProperty(node, PropertyName, /*out ChildInterfaceType,*/ out ChildNodeType))
                 {
-                    NodeTreeHelperBlockList.GetChildBlockList(node, PropertyName, out IReadOnlyList<INodeTreeBlock> ChildBlockList);
+                    NodeTreeHelperBlockList.GetChildBlockList(node, PropertyName, out IReadOnlyList<NodeTreeBlock> ChildBlockList);
 
                     if (IsCollectionNeverEmpty(node, PropertyName))
                     {
@@ -225,13 +229,13 @@
                         if (ChildBlockList.Count != 1)
                             return false;
 
-                        INodeTreeBlock FirstBlock = ChildBlockList[0];
+                        NodeTreeBlock FirstBlock = ChildBlockList[0];
                         Debug.Assert(FirstBlock.NodeList.Count > 0, $"Blocks in block lists always have at least one node");
 
                         if (FirstBlock.NodeList.Count != 1)
                             return false;
 
-                        INode ChildNode = FirstBlock.NodeList[0];
+                        Node ChildNode = FirstBlock.NodeList[0];
                         if (!IsEmptyNode(ChildNode))
                             return false;
                     }
@@ -259,33 +263,33 @@
             return true;
         }
 
-        private static INode CreateDefaultNoCheck(Type interfaceType)
+        private static Node CreateDefaultNoCheck(Type interfaceType)
         {
-            INode Result;
+            Node Result;
 
-            if (interfaceType == typeof(IArgument) || interfaceType == typeof(IPositionalArgument))
+            if (interfaceType == typeof(Argument) || interfaceType == typeof(PositionalArgument))
                 Result = CreateDefaultArgument();
-            else if (interfaceType == typeof(ITypeArgument) || interfaceType == typeof(IPositionalTypeArgument))
+            else if (interfaceType == typeof(TypeArgument) || interfaceType == typeof(PositionalTypeArgument))
                 Result = CreateDefaultTypeArgument();
-            else if (interfaceType == typeof(IBody) || interfaceType == typeof(IEffectiveBody))
+            else if (interfaceType == typeof(Body) || interfaceType == typeof(EffectiveBody))
                 Result = CreateDefaultBody();
-            else if (interfaceType == typeof(IExpression) || interfaceType == typeof(IQueryExpression))
+            else if (interfaceType == typeof(Expression) || interfaceType == typeof(QueryExpression))
                 Result = CreateDefaultExpression();
-            else if (interfaceType == typeof(IInstruction) || interfaceType == typeof(ICommandInstruction))
+            else if (interfaceType == typeof(Instruction) || interfaceType == typeof(CommandInstruction))
                 Result = CreateDefaultInstruction();
-            else if (interfaceType == typeof(IFeature) || interfaceType == typeof(IAttributeFeature))
+            else if (interfaceType == typeof(Feature) || interfaceType == typeof(AttributeFeature))
                 Result = CreateDefaultFeature();
-            else if (interfaceType == typeof(IObjectType) || interfaceType == typeof(ISimpleType))
+            else if (interfaceType == typeof(ObjectType) || interfaceType == typeof(SimpleType))
                 Result = CreateDefaultType();
-            else if (interfaceType == typeof(IName))
+            else if (interfaceType == typeof(Name))
                 Result = CreateEmptyName();
-            else if (interfaceType == typeof(IIdentifier))
+            else if (interfaceType == typeof(Identifier))
                 Result = CreateEmptyIdentifier();
-            else if (interfaceType == typeof(IQualifiedName))
+            else if (interfaceType == typeof(QualifiedName))
                 Result = CreateEmptyQualifiedName();
-            else if (interfaceType == typeof(IScope))
+            else if (interfaceType == typeof(Scope))
                 Result = CreateEmptyScope();
-            else if (interfaceType == typeof(IImport))
+            else if (interfaceType == typeof(Import))
                 Result = CreateSimpleImport(string.Empty, string.Empty, ImportType.Latest);
             else
                 Result = null;

@@ -1,4 +1,7 @@
-﻿namespace BaseNodeHelper
+﻿#pragma warning disable SA1600 // Elements should be documented
+#pragma warning disable SA1601 // Partial elements should be documented
+
+namespace BaseNodeHelper
 {
     using System;
     using System.Collections;
@@ -10,7 +13,7 @@
 
     public static partial class NodeHelper
     {
-        public static IAssignmentArgument CreateAssignmentArgument(List<IIdentifier> parameterList, IExpression source)
+        public static AssignmentArgument CreateAssignmentArgument(List<Identifier> parameterList, Expression source)
         {
             if (parameterList == null) throw new ArgumentNullException(nameof(parameterList));
             if (source == null) throw new ArgumentNullException(nameof(source));
@@ -18,13 +21,13 @@
 
             AssignmentArgument Result = new AssignmentArgument();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.ParameterBlocks = BlockListHelper<IIdentifier, Identifier>.CreateBlockList(parameterList);
+            Result.ParameterBlocks = BlockListHelper<Identifier>.CreateBlockList(parameterList);
             Result.Source = source;
 
             return Result;
         }
 
-        public static IAssignmentArgument CreateAssignmentArgument(IBlockList<IIdentifier, Identifier> parameterBlocks, IExpression source)
+        public static AssignmentArgument CreateAssignmentArgument(BlockList<Identifier> parameterBlocks, Expression source)
         {
             if (parameterBlocks == null) throw new ArgumentNullException(nameof(parameterBlocks));
             if (source == null) throw new ArgumentNullException(nameof(source));
@@ -38,7 +41,7 @@
             return Result;
         }
 
-        public static IPositionalArgument CreatePositionalArgument(IExpression source)
+        public static PositionalArgument CreatePositionalArgument(Expression source)
         {
             if (source == null) throw new ArgumentNullException(nameof(source));
 

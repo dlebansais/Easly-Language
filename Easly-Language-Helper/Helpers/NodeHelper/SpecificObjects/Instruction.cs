@@ -1,4 +1,7 @@
-﻿namespace BaseNodeHelper
+﻿#pragma warning disable SA1600 // Elements should be documented
+#pragma warning disable SA1601 // Partial elements should be documented
+
+namespace BaseNodeHelper
 {
     using System;
     using System.Collections;
@@ -10,51 +13,51 @@
 
     public static partial class NodeHelper
     {
-        public static IAsLongAsInstruction CreateAsLongAsInstruction(IExpression continueCondition, IContinuation continuation)
+        public static AsLongAsInstruction CreateAsLongAsInstruction(Expression continueCondition, Continuation continuation)
         {
             AsLongAsInstruction Result = new AsLongAsInstruction();
             Result.Documentation = CreateEmptyDocumentation();
             Result.ContinueCondition = continueCondition;
-            Result.ContinuationBlocks = BlockListHelper<IContinuation, Continuation>.CreateSimpleBlockList(continuation);
-            Result.ElseInstructions = OptionalReferenceHelper<IScope>.CreateReference(CreateEmptyScope());
+            Result.ContinuationBlocks = BlockListHelper<Continuation>.CreateSimpleBlockList(continuation);
+            Result.ElseInstructions = OptionalReferenceHelper<Scope>.CreateReference(CreateEmptyScope());
 
             return Result;
         }
 
-        public static IAsLongAsInstruction CreateAsLongAsInstruction(IExpression continueCondition, IBlockList<IContinuation, Continuation> continuationBlocks)
+        public static AsLongAsInstruction CreateAsLongAsInstruction(Expression continueCondition, BlockList<Continuation> continuationBlocks)
         {
             AsLongAsInstruction Result = new AsLongAsInstruction();
             Result.Documentation = CreateEmptyDocumentation();
             Result.ContinueCondition = continueCondition;
             Result.ContinuationBlocks = continuationBlocks;
-            Result.ElseInstructions = OptionalReferenceHelper<IScope>.CreateReference(CreateEmptyScope());
+            Result.ElseInstructions = OptionalReferenceHelper<Scope>.CreateReference(CreateEmptyScope());
 
             return Result;
         }
 
-        public static IAsLongAsInstruction CreateAsLongAsInstruction(IExpression continueCondition, IBlockList<IContinuation, Continuation> continuationBlocks, IScope elseInstructions)
+        public static AsLongAsInstruction CreateAsLongAsInstruction(Expression continueCondition, BlockList<Continuation> continuationBlocks, Scope elseInstructions)
         {
             AsLongAsInstruction Result = new AsLongAsInstruction();
             Result.Documentation = CreateEmptyDocumentation();
             Result.ContinueCondition = continueCondition;
             Result.ContinuationBlocks = continuationBlocks;
-            Result.ElseInstructions = OptionalReferenceHelper<IScope>.CreateReference(elseInstructions);
+            Result.ElseInstructions = OptionalReferenceHelper<Scope>.CreateReference(elseInstructions);
             Result.ElseInstructions.Assign();
 
             return Result;
         }
 
-        public static IContinuation CreateEmptyContinuation()
+        public static Continuation CreateEmptyContinuation()
         {
             Continuation Result = new Continuation();
             Result.Documentation = CreateEmptyDocumentation();
             Result.Instructions = CreateEmptyScope();
-            Result.CleanupBlocks = BlockListHelper<IInstruction, Instruction>.CreateEmptyBlockList();
+            Result.CleanupBlocks = BlockListHelper<Instruction>.CreateEmptyBlockList();
 
             return Result;
         }
 
-        public static IAssignmentInstruction CreateAssignmentInstruction(List<IQualifiedName> assignmentList, IExpression source)
+        public static AssignmentInstruction CreateAssignmentInstruction(List<QualifiedName> assignmentList, Expression source)
         {
             if (assignmentList == null) throw new ArgumentNullException(nameof(assignmentList));
             if (assignmentList.Count == 0) throw new ArgumentException($"{nameof(assignmentList)} must have at least one assignee");
@@ -63,13 +66,13 @@
 
             AssignmentInstruction Result = new AssignmentInstruction();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.DestinationBlocks = BlockListHelper<IQualifiedName, QualifiedName>.CreateBlockList(assignmentList);
+            Result.DestinationBlocks = BlockListHelper<QualifiedName>.CreateBlockList(assignmentList);
             Result.Source = source;
 
             return Result;
         }
 
-        public static IAssignmentInstruction CreateAssignmentInstruction(IBlockList<IQualifiedName, QualifiedName> destinationBlocks, IExpression source)
+        public static AssignmentInstruction CreateAssignmentInstruction(BlockList<QualifiedName> destinationBlocks, Expression source)
         {
             if (destinationBlocks == null) throw new ArgumentNullException(nameof(destinationBlocks));
             if (destinationBlocks.NodeBlockList.Count == 0) throw new ArgumentException($"{nameof(destinationBlocks)} must not be empty");
@@ -83,53 +86,53 @@
             return Result;
         }
 
-        public static IAttachmentInstruction CreateAttachmentInstruction(IExpression source, List<IName> nameList)
+        public static AttachmentInstruction CreateAttachmentInstruction(Expression source, List<Name> nameList)
         {
-            IObjectType AttachType = CreateDefaultType();
-            IAttachment FirstAttachment = CreateAttachment(AttachType);
+            ObjectType AttachType = CreateDefaultType();
+            Attachment FirstAttachment = CreateAttachment(AttachType);
 
             AttachmentInstruction Result = new AttachmentInstruction();
             Result.Documentation = CreateEmptyDocumentation();
             Result.Source = source;
-            Result.EntityNameBlocks = BlockListHelper<IName, Name>.CreateBlockList(nameList);
-            Result.AttachmentBlocks = BlockListHelper<IAttachment, Attachment>.CreateSimpleBlockList(FirstAttachment);
-            Result.ElseInstructions = OptionalReferenceHelper<IScope>.CreateReference(CreateEmptyScope());
+            Result.EntityNameBlocks = BlockListHelper<Name>.CreateBlockList(nameList);
+            Result.AttachmentBlocks = BlockListHelper<Attachment>.CreateSimpleBlockList(FirstAttachment);
+            Result.ElseInstructions = OptionalReferenceHelper<Scope>.CreateReference(CreateEmptyScope());
 
             return Result;
         }
 
-        public static IAttachmentInstruction CreateAttachmentInstruction(IExpression source, IBlockList<IName, Name> entityNameBlocks, IBlockList<IAttachment, Attachment> attachmentBlocks)
+        public static AttachmentInstruction CreateAttachmentInstruction(Expression source, BlockList<Name> entityNameBlocks, BlockList<Attachment> attachmentBlocks)
         {
-            IObjectType AttachType = CreateDefaultType();
-            IAttachment FirstAttachment = CreateAttachment(AttachType);
+            ObjectType AttachType = CreateDefaultType();
+            Attachment FirstAttachment = CreateAttachment(AttachType);
 
             AttachmentInstruction Result = new AttachmentInstruction();
             Result.Documentation = CreateEmptyDocumentation();
             Result.Source = source;
             Result.EntityNameBlocks = entityNameBlocks;
             Result.AttachmentBlocks = attachmentBlocks;
-            Result.ElseInstructions = OptionalReferenceHelper<IScope>.CreateReference(CreateEmptyScope());
+            Result.ElseInstructions = OptionalReferenceHelper<Scope>.CreateReference(CreateEmptyScope());
 
             return Result;
         }
 
-        public static IAttachmentInstruction CreateAttachmentInstruction(IExpression source, IBlockList<IName, Name> entityNameBlocks, IBlockList<IAttachment, Attachment> attachmentBlocks, IScope elseInstructions)
+        public static AttachmentInstruction CreateAttachmentInstruction(Expression source, BlockList<Name> entityNameBlocks, BlockList<Attachment> attachmentBlocks, Scope elseInstructions)
         {
-            IObjectType AttachType = CreateDefaultType();
-            IAttachment FirstAttachment = CreateAttachment(AttachType);
+            ObjectType AttachType = CreateDefaultType();
+            Attachment FirstAttachment = CreateAttachment(AttachType);
 
             AttachmentInstruction Result = new AttachmentInstruction();
             Result.Documentation = CreateEmptyDocumentation();
             Result.Source = source;
             Result.EntityNameBlocks = entityNameBlocks;
             Result.AttachmentBlocks = attachmentBlocks;
-            Result.ElseInstructions = OptionalReferenceHelper<IScope>.CreateReference(elseInstructions);
+            Result.ElseInstructions = OptionalReferenceHelper<Scope>.CreateReference(elseInstructions);
             Result.ElseInstructions.Assign();
 
             return Result;
         }
 
-        public static ICheckInstruction CreateCheckInstruction(IExpression booleanExpression)
+        public static CheckInstruction CreateCheckInstruction(Expression booleanExpression)
         {
             CheckInstruction Result = new CheckInstruction();
             Result.Documentation = CreateEmptyDocumentation();
@@ -138,17 +141,17 @@
             return Result;
         }
 
-        public static ICommandInstruction CreateCommandInstruction(IQualifiedName command, List<IArgument> argumentList)
+        public static CommandInstruction CreateCommandInstruction(QualifiedName command, List<Argument> argumentList)
         {
             CommandInstruction Result = new CommandInstruction();
             Result.Documentation = CreateEmptyDocumentation();
             Result.Command = command;
-            Result.ArgumentBlocks = BlockListHelper<IArgument, Argument>.CreateBlockList(argumentList);
+            Result.ArgumentBlocks = BlockListHelper<Argument>.CreateBlockList(argumentList);
 
             return Result;
         }
 
-        public static ICommandInstruction CreateCommandInstruction(IQualifiedName command, IBlockList<IArgument, Argument> argumentBlocks)
+        public static CommandInstruction CreateCommandInstruction(QualifiedName command, BlockList<Argument> argumentBlocks)
         {
             CommandInstruction Result = new CommandInstruction();
             Result.Documentation = CreateEmptyDocumentation();
@@ -158,44 +161,44 @@
             return Result;
         }
 
-        public static ICreateInstruction CreateCreateInstruction(IIdentifier entityIdentifier, IIdentifier creationRoutineIdentifier, List<IArgument> argumentList)
+        public static CreateInstruction CreateCreateInstruction(Identifier entityIdentifier, Identifier creationRoutineIdentifier, List<Argument> argumentList)
         {
             CreateInstruction Result = new CreateInstruction();
             Result.Documentation = CreateEmptyDocumentation();
             Result.EntityIdentifier = entityIdentifier;
             Result.CreationRoutineIdentifier = creationRoutineIdentifier;
-            Result.ArgumentBlocks = BlockListHelper<IArgument, Argument>.CreateBlockList(argumentList);
-            Result.Processor = OptionalReferenceHelper<IQualifiedName>.CreateReference(CreateEmptyQualifiedName());
+            Result.ArgumentBlocks = BlockListHelper<Argument>.CreateBlockList(argumentList);
+            Result.Processor = OptionalReferenceHelper<QualifiedName>.CreateReference(CreateEmptyQualifiedName());
 
             return Result;
         }
 
-        public static ICreateInstruction CreateCreateInstruction(IIdentifier entityIdentifier, IIdentifier creationRoutineIdentifier, IBlockList<IArgument, Argument> argumentBlocks)
+        public static CreateInstruction CreateCreateInstruction(Identifier entityIdentifier, Identifier creationRoutineIdentifier, BlockList<Argument> argumentBlocks)
         {
             CreateInstruction Result = new CreateInstruction();
             Result.Documentation = CreateEmptyDocumentation();
             Result.EntityIdentifier = entityIdentifier;
             Result.CreationRoutineIdentifier = creationRoutineIdentifier;
             Result.ArgumentBlocks = argumentBlocks;
-            Result.Processor = OptionalReferenceHelper<IQualifiedName>.CreateReference(CreateEmptyQualifiedName());
+            Result.Processor = OptionalReferenceHelper<QualifiedName>.CreateReference(CreateEmptyQualifiedName());
 
             return Result;
         }
 
-        public static ICreateInstruction CreateCreateInstruction(IIdentifier entityIdentifier, IIdentifier creationRoutineIdentifier, IBlockList<IArgument, Argument> argumentBlocks, IQualifiedName processor)
+        public static CreateInstruction CreateCreateInstruction(Identifier entityIdentifier, Identifier creationRoutineIdentifier, BlockList<Argument> argumentBlocks, QualifiedName processor)
         {
             CreateInstruction Result = new CreateInstruction();
             Result.Documentation = CreateEmptyDocumentation();
             Result.EntityIdentifier = entityIdentifier;
             Result.CreationRoutineIdentifier = creationRoutineIdentifier;
             Result.ArgumentBlocks = argumentBlocks;
-            Result.Processor = OptionalReferenceHelper<IQualifiedName>.CreateReference(processor);
+            Result.Processor = OptionalReferenceHelper<QualifiedName>.CreateReference(processor);
             Result.Processor.Assign();
 
             return Result;
         }
 
-        public static IDebugInstruction CreateEmptyDebugInstruction()
+        public static DebugInstruction CreateEmptyDebugInstruction()
         {
             DebugInstruction Result = new DebugInstruction();
             Result.Documentation = CreateEmptyDocumentation();
@@ -204,7 +207,7 @@
             return Result;
         }
 
-        public static IDebugInstruction CreateSimpleDebugInstruction(IInstruction instruction)
+        public static DebugInstruction CreateSimpleDebugInstruction(Instruction instruction)
         {
             DebugInstruction Result = new DebugInstruction();
             Result.Documentation = CreateEmptyDocumentation();
@@ -213,68 +216,68 @@
             return Result;
         }
 
-        public static IForLoopInstruction CreateForLoopInstruction(IExpression whileCondition)
+        public static ForLoopInstruction CreateForLoopInstruction(Expression whileCondition)
         {
             ForLoopInstruction Result = new ForLoopInstruction();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.EntityDeclarationBlocks = BlockListHelper<IEntityDeclaration, EntityDeclaration>.CreateEmptyBlockList();
-            Result.InitInstructionBlocks = BlockListHelper<IInstruction, Instruction>.CreateEmptyBlockList();
+            Result.EntityDeclarationBlocks = BlockListHelper<EntityDeclaration>.CreateEmptyBlockList();
+            Result.InitInstructionBlocks = BlockListHelper<Instruction>.CreateEmptyBlockList();
             Result.WhileCondition = whileCondition;
-            Result.LoopInstructionBlocks = BlockListHelper<IInstruction, Instruction>.CreateEmptyBlockList();
-            Result.IterationInstructionBlocks = BlockListHelper<IInstruction, Instruction>.CreateEmptyBlockList();
-            Result.InvariantBlocks = BlockListHelper<IAssertion, Assertion>.CreateEmptyBlockList();
-            Result.Variant = OptionalReferenceHelper<IExpression>.CreateReference(CreateDefaultExpression());
+            Result.LoopInstructionBlocks = BlockListHelper<Instruction>.CreateEmptyBlockList();
+            Result.IterationInstructionBlocks = BlockListHelper<Instruction>.CreateEmptyBlockList();
+            Result.InvariantBlocks = BlockListHelper<Assertion>.CreateEmptyBlockList();
+            Result.Variant = OptionalReferenceHelper<Expression>.CreateReference(CreateDefaultExpression());
 
             return Result;
         }
 
-        public static IForLoopInstruction CreateForLoopInstruction(IInstruction instruction)
+        public static ForLoopInstruction CreateForLoopInstruction(Instruction instruction)
         {
             ForLoopInstruction Result = new ForLoopInstruction();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.EntityDeclarationBlocks = BlockListHelper<IEntityDeclaration, EntityDeclaration>.CreateEmptyBlockList();
-            Result.InitInstructionBlocks = BlockListHelper<IInstruction, Instruction>.CreateEmptyBlockList();
+            Result.EntityDeclarationBlocks = BlockListHelper<EntityDeclaration>.CreateEmptyBlockList();
+            Result.InitInstructionBlocks = BlockListHelper<Instruction>.CreateEmptyBlockList();
             Result.WhileCondition = CreateEmptyQueryExpression();
-            Result.LoopInstructionBlocks = BlockListHelper<IInstruction, Instruction>.CreateSimpleBlockList(instruction);
-            Result.IterationInstructionBlocks = BlockListHelper<IInstruction, Instruction>.CreateEmptyBlockList();
-            Result.InvariantBlocks = BlockListHelper<IAssertion, Assertion>.CreateEmptyBlockList();
-            Result.Variant = OptionalReferenceHelper<IExpression>.CreateReference(CreateDefaultExpression());
+            Result.LoopInstructionBlocks = BlockListHelper<Instruction>.CreateSimpleBlockList(instruction);
+            Result.IterationInstructionBlocks = BlockListHelper<Instruction>.CreateEmptyBlockList();
+            Result.InvariantBlocks = BlockListHelper<Assertion>.CreateEmptyBlockList();
+            Result.Variant = OptionalReferenceHelper<Expression>.CreateReference(CreateDefaultExpression());
 
             return Result;
         }
 
-        public static IIfThenElseInstruction CreateIfThenElseInstruction(IConditional firstConditional)
+        public static IfThenElseInstruction CreateIfThenElseInstruction(Conditional firstConditional)
         {
             IfThenElseInstruction Result = new IfThenElseInstruction();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.ConditionalBlocks = BlockListHelper<IConditional, Conditional>.CreateSimpleBlockList(firstConditional);
-            Result.ElseInstructions = OptionalReferenceHelper<IScope>.CreateReference(CreateEmptyScope());
+            Result.ConditionalBlocks = BlockListHelper<Conditional>.CreateSimpleBlockList(firstConditional);
+            Result.ElseInstructions = OptionalReferenceHelper<Scope>.CreateReference(CreateEmptyScope());
 
             return Result;
         }
 
-        public static IIfThenElseInstruction CreateIfThenElseInstruction(IBlockList<IConditional, Conditional> conditionalBlocks)
-        {
-            IfThenElseInstruction Result = new IfThenElseInstruction();
-            Result.Documentation = CreateEmptyDocumentation();
-            Result.ConditionalBlocks = conditionalBlocks;
-            Result.ElseInstructions = OptionalReferenceHelper<IScope>.CreateReference(CreateEmptyScope());
-
-            return Result;
-        }
-
-        public static IIfThenElseInstruction CreateIfThenElseInstruction(IBlockList<IConditional, Conditional> conditionalBlocks, IScope elseInstructions)
+        public static IfThenElseInstruction CreateIfThenElseInstruction(BlockList<Conditional> conditionalBlocks)
         {
             IfThenElseInstruction Result = new IfThenElseInstruction();
             Result.Documentation = CreateEmptyDocumentation();
             Result.ConditionalBlocks = conditionalBlocks;
-            Result.ElseInstructions = OptionalReferenceHelper<IScope>.CreateReference(elseInstructions);
+            Result.ElseInstructions = OptionalReferenceHelper<Scope>.CreateReference(CreateEmptyScope());
+
+            return Result;
+        }
+
+        public static IfThenElseInstruction CreateIfThenElseInstruction(BlockList<Conditional> conditionalBlocks, Scope elseInstructions)
+        {
+            IfThenElseInstruction Result = new IfThenElseInstruction();
+            Result.Documentation = CreateEmptyDocumentation();
+            Result.ConditionalBlocks = conditionalBlocks;
+            Result.ElseInstructions = OptionalReferenceHelper<Scope>.CreateReference(elseInstructions);
             Result.ElseInstructions.Assign();
 
             return Result;
         }
 
-        public static IIndexAssignmentInstruction CreateIndexAssignmentInstruction(IQualifiedName destination, List<IArgument> argumentList, IExpression source)
+        public static IndexAssignmentInstruction CreateIndexAssignmentInstruction(QualifiedName destination, List<Argument> argumentList, Expression source)
         {
             if (argumentList == null) throw new ArgumentNullException(nameof(argumentList));
             if (argumentList.Count == 0) throw new ArgumentException($"{nameof(argumentList)} must have at least one argument");
@@ -282,13 +285,13 @@
             IndexAssignmentInstruction Result = new IndexAssignmentInstruction();
             Result.Documentation = CreateEmptyDocumentation();
             Result.Destination = destination;
-            Result.ArgumentBlocks = BlockListHelper<IArgument, Argument>.CreateBlockList(argumentList);
+            Result.ArgumentBlocks = BlockListHelper<Argument>.CreateBlockList(argumentList);
             Result.Source = source;
 
             return Result;
         }
 
-        public static IIndexAssignmentInstruction CreateIndexAssignmentInstruction(IQualifiedName destination, IBlockList<IArgument, Argument> argumentBlocks, IExpression source)
+        public static IndexAssignmentInstruction CreateIndexAssignmentInstruction(QualifiedName destination, BlockList<Argument> argumentBlocks, Expression source)
         {
             if (argumentBlocks == null) throw new ArgumentNullException(nameof(argumentBlocks));
             if (argumentBlocks.NodeBlockList.Count == 0) throw new ArgumentException($"{nameof(argumentBlocks)} must not be empty");
@@ -303,55 +306,55 @@
             return Result;
         }
 
-        public static IInspectInstruction CreateInspectInstruction(IExpression source)
+        public static InspectInstruction CreateInspectInstruction(Expression source)
         {
-            IExpression FirstExpression = CreateDefaultManifestNumberExpression();
-            IWith FirstWith = CreateWith(FirstExpression);
+            Expression FirstExpression = CreateDefaultManifestNumberExpression();
+            With FirstWith = CreateWith(FirstExpression);
 
             InspectInstruction Result = new InspectInstruction();
             Result.Documentation = CreateEmptyDocumentation();
             Result.Source = source;
-            Result.WithBlocks = BlockListHelper<IWith, With>.CreateSimpleBlockList(FirstWith);
-            Result.ElseInstructions = OptionalReferenceHelper<IScope>.CreateReference(CreateEmptyScope());
+            Result.WithBlocks = BlockListHelper<With>.CreateSimpleBlockList(FirstWith);
+            Result.ElseInstructions = OptionalReferenceHelper<Scope>.CreateReference(CreateEmptyScope());
 
             return Result;
         }
 
-        public static IInspectInstruction CreateInspectInstruction(IExpression source, IWith with)
+        public static InspectInstruction CreateInspectInstruction(Expression source, With with)
         {
             InspectInstruction Result = new InspectInstruction();
             Result.Documentation = CreateEmptyDocumentation();
             Result.Source = source;
-            Result.WithBlocks = BlockListHelper<IWith, With>.CreateSimpleBlockList(with);
-            Result.ElseInstructions = OptionalReferenceHelper<IScope>.CreateReference(CreateEmptyScope());
+            Result.WithBlocks = BlockListHelper<With>.CreateSimpleBlockList(with);
+            Result.ElseInstructions = OptionalReferenceHelper<Scope>.CreateReference(CreateEmptyScope());
 
             return Result;
         }
 
-        public static IInspectInstruction CreateInspectInstruction(IExpression source, IBlockList<IWith, With> withBlocks)
+        public static InspectInstruction CreateInspectInstruction(Expression source, BlockList<With> withBlocks)
         {
             InspectInstruction Result = new InspectInstruction();
             Result.Documentation = CreateEmptyDocumentation();
             Result.Source = source;
             Result.WithBlocks = withBlocks;
-            Result.ElseInstructions = OptionalReferenceHelper<IScope>.CreateReference(CreateEmptyScope());
+            Result.ElseInstructions = OptionalReferenceHelper<Scope>.CreateReference(CreateEmptyScope());
 
             return Result;
         }
 
-        public static IInspectInstruction CreateInspectInstruction(IExpression source, IBlockList<IWith, With> withBlocks, IScope elseInstructions)
+        public static InspectInstruction CreateInspectInstruction(Expression source, BlockList<With> withBlocks, Scope elseInstructions)
         {
             InspectInstruction Result = new InspectInstruction();
             Result.Documentation = CreateEmptyDocumentation();
             Result.Source = source;
             Result.WithBlocks = withBlocks;
-            Result.ElseInstructions = OptionalReferenceHelper<IScope>.CreateReference(elseInstructions);
+            Result.ElseInstructions = OptionalReferenceHelper<Scope>.CreateReference(elseInstructions);
             Result.ElseInstructions.Assign();
 
             return Result;
         }
 
-        public static IKeywordAssignmentInstruction CreateKeywordAssignmentInstruction(Keyword destination, IExpression source)
+        public static KeywordAssignmentInstruction CreateKeywordAssignmentInstruction(Keyword destination, Expression source)
         {
             KeywordAssignmentInstruction Result = new KeywordAssignmentInstruction();
             Result.Documentation = CreateEmptyDocumentation();
@@ -361,7 +364,7 @@
             return Result;
         }
 
-        public static IOverLoopInstruction CreateOverLoopInstruction(IExpression overList, List<IName> nameList)
+        public static OverLoopInstruction CreateOverLoopInstruction(Expression overList, List<Name> nameList)
         {
             if (nameList == null) throw new ArgumentNullException(nameof(nameList));
             if (nameList.Count == 0) throw new ArgumentException($"{nameof(nameList)} must have at least one name");
@@ -369,16 +372,16 @@
             OverLoopInstruction Result = new OverLoopInstruction();
             Result.Documentation = CreateEmptyDocumentation();
             Result.OverList = overList;
-            Result.IndexerBlocks = BlockListHelper<IName, Name>.CreateBlockList(nameList);
+            Result.IndexerBlocks = BlockListHelper<Name>.CreateBlockList(nameList);
             Result.Iteration = IterationType.Single;
             Result.LoopInstructions = CreateEmptyScope();
-            Result.ExitEntityName = OptionalReferenceHelper<IIdentifier>.CreateReference(CreateEmptyIdentifier());
-            Result.InvariantBlocks = BlockListHelper<IAssertion, Assertion>.CreateEmptyBlockList();
+            Result.ExitEntityName = OptionalReferenceHelper<Identifier>.CreateReference(CreateEmptyIdentifier());
+            Result.InvariantBlocks = BlockListHelper<Assertion>.CreateEmptyBlockList();
 
             return Result;
         }
 
-        public static IOverLoopInstruction CreateOverLoopInstruction(IExpression overList, List<IName> nameList, IInstruction instruction)
+        public static OverLoopInstruction CreateOverLoopInstruction(Expression overList, List<Name> nameList, Instruction instruction)
         {
             if (nameList == null) throw new ArgumentNullException(nameof(nameList));
             if (nameList.Count == 0) throw new ArgumentException($"{nameof(nameList)} must have at least one name");
@@ -388,16 +391,16 @@
             OverLoopInstruction Result = new OverLoopInstruction();
             Result.Documentation = CreateEmptyDocumentation();
             Result.OverList = overList;
-            Result.IndexerBlocks = BlockListHelper<IName, Name>.CreateBlockList(nameList);
+            Result.IndexerBlocks = BlockListHelper<Name>.CreateBlockList(nameList);
             Result.Iteration = IterationType.Single;
             Result.LoopInstructions = CreateSimpleScope(instruction);
-            Result.ExitEntityName = OptionalReferenceHelper<IIdentifier>.CreateReference(CreateEmptyIdentifier());
-            Result.InvariantBlocks = BlockListHelper<IAssertion, Assertion>.CreateEmptyBlockList();
+            Result.ExitEntityName = OptionalReferenceHelper<Identifier>.CreateReference(CreateEmptyIdentifier());
+            Result.InvariantBlocks = BlockListHelper<Assertion>.CreateEmptyBlockList();
 
             return Result;
         }
 
-        public static IOverLoopInstruction CreateOverLoopInstruction(IExpression overList, IBlockList<IName, Name> indexerBlocks, IterationType iteration, IScope loopInstructions, IBlockList<IAssertion, Assertion> invariantBlocks)
+        public static OverLoopInstruction CreateOverLoopInstruction(Expression overList, BlockList<Name> indexerBlocks, IterationType iteration, Scope loopInstructions, BlockList<Assertion> invariantBlocks)
         {
             if (indexerBlocks == null) throw new ArgumentNullException(nameof(indexerBlocks));
             if (NodeTreeHelperBlockList.IsBlockListEmpty((IBlockList)indexerBlocks)) throw new ArgumentException($"{nameof(indexerBlocks)} must not be empty");
@@ -410,13 +413,13 @@
             Result.IndexerBlocks = indexerBlocks;
             Result.Iteration = iteration;
             Result.LoopInstructions = loopInstructions;
-            Result.ExitEntityName = OptionalReferenceHelper<IIdentifier>.CreateReference(CreateEmptyIdentifier());
+            Result.ExitEntityName = OptionalReferenceHelper<Identifier>.CreateReference(CreateEmptyIdentifier());
             Result.InvariantBlocks = invariantBlocks;
 
             return Result;
         }
 
-        public static IOverLoopInstruction CreateOverLoopInstruction(IExpression overList, IBlockList<IName, Name> indexerBlocks, IterationType iteration, IScope loopInstructions, IIdentifier exitEntityName, IBlockList<IAssertion, Assertion> invariantBlocks)
+        public static OverLoopInstruction CreateOverLoopInstruction(Expression overList, BlockList<Name> indexerBlocks, IterationType iteration, Scope loopInstructions, Identifier exitEntityName, BlockList<Assertion> invariantBlocks)
         {
             if (indexerBlocks == null) throw new ArgumentNullException(nameof(indexerBlocks));
             if (NodeTreeHelperBlockList.IsBlockListEmpty((IBlockList)indexerBlocks)) throw new ArgumentException($"{nameof(indexerBlocks)} must not be empty");
@@ -427,14 +430,14 @@
             Result.IndexerBlocks = indexerBlocks;
             Result.Iteration = iteration;
             Result.LoopInstructions = loopInstructions;
-            Result.ExitEntityName = OptionalReferenceHelper<IIdentifier>.CreateReference(exitEntityName);
+            Result.ExitEntityName = OptionalReferenceHelper<Identifier>.CreateReference(exitEntityName);
             Result.ExitEntityName.Assign();
             Result.InvariantBlocks = invariantBlocks;
 
             return Result;
         }
 
-        public static IPrecursorIndexAssignmentInstruction CreatePrecursorIndexAssignmentInstruction(List<IArgument> argumentList, IExpression source)
+        public static PrecursorIndexAssignmentInstruction CreatePrecursorIndexAssignmentInstruction(List<Argument> argumentList, Expression source)
         {
             if (argumentList == null) throw new ArgumentNullException(nameof(argumentList));
             if (argumentList.Count == 0) throw new ArgumentException($"{nameof(argumentList)} must have at least one argument");
@@ -443,14 +446,14 @@
 
             PrecursorIndexAssignmentInstruction Result = new PrecursorIndexAssignmentInstruction();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.AncestorType = OptionalReferenceHelper<IObjectType>.CreateReference(CreateDefaultType());
-            Result.ArgumentBlocks = BlockListHelper<IArgument, Argument>.CreateBlockList(argumentList);
+            Result.AncestorType = OptionalReferenceHelper<ObjectType>.CreateReference(CreateDefaultType());
+            Result.ArgumentBlocks = BlockListHelper<Argument>.CreateBlockList(argumentList);
             Result.Source = source;
 
             return Result;
         }
 
-        public static IPrecursorIndexAssignmentInstruction CreatePrecursorIndexAssignmentInstruction(IBlockList<IArgument, Argument> argumentBlocks, IExpression source)
+        public static PrecursorIndexAssignmentInstruction CreatePrecursorIndexAssignmentInstruction(BlockList<Argument> argumentBlocks, Expression source)
         {
             if (argumentBlocks == null) throw new ArgumentNullException(nameof(argumentBlocks));
             if (argumentBlocks.NodeBlockList.Count == 0) throw new ArgumentException($"{nameof(argumentBlocks)} must not be empty");
@@ -458,14 +461,14 @@
 
             PrecursorIndexAssignmentInstruction Result = new PrecursorIndexAssignmentInstruction();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.AncestorType = OptionalReferenceHelper<IObjectType>.CreateReference(CreateDefaultType());
+            Result.AncestorType = OptionalReferenceHelper<ObjectType>.CreateReference(CreateDefaultType());
             Result.ArgumentBlocks = argumentBlocks;
             Result.Source = source;
 
             return Result;
         }
 
-        public static IPrecursorIndexAssignmentInstruction CreatePrecursorIndexAssignmentInstruction(IObjectType ancestorType, IBlockList<IArgument, Argument> argumentBlocks, IExpression source)
+        public static PrecursorIndexAssignmentInstruction CreatePrecursorIndexAssignmentInstruction(ObjectType ancestorType, BlockList<Argument> argumentBlocks, Expression source)
         {
             if (argumentBlocks == null) throw new ArgumentNullException(nameof(argumentBlocks));
             if (argumentBlocks.NodeBlockList.Count == 0) throw new ArgumentException($"{nameof(argumentBlocks)} must not be empty");
@@ -473,7 +476,7 @@
 
             PrecursorIndexAssignmentInstruction Result = new PrecursorIndexAssignmentInstruction();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.AncestorType = OptionalReferenceHelper<IObjectType>.CreateReference(ancestorType);
+            Result.AncestorType = OptionalReferenceHelper<ObjectType>.CreateReference(ancestorType);
             Result.AncestorType.Assign();
             Result.ArgumentBlocks = argumentBlocks;
             Result.Source = source;
@@ -481,38 +484,38 @@
             return Result;
         }
 
-        public static IPrecursorInstruction CreatePrecursorInstruction(List<IArgument> argumentList)
+        public static PrecursorInstruction CreatePrecursorInstruction(List<Argument> argumentList)
         {
             PrecursorInstruction Result = new PrecursorInstruction();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.AncestorType = OptionalReferenceHelper<IObjectType>.CreateReference(CreateDefaultType());
-            Result.ArgumentBlocks = BlockListHelper<IArgument, Argument>.CreateBlockList(argumentList);
+            Result.AncestorType = OptionalReferenceHelper<ObjectType>.CreateReference(CreateDefaultType());
+            Result.ArgumentBlocks = BlockListHelper<Argument>.CreateBlockList(argumentList);
 
             return Result;
         }
 
-        public static IPrecursorInstruction CreatePrecursorInstruction(IBlockList<IArgument, Argument> argumentBlocks)
+        public static PrecursorInstruction CreatePrecursorInstruction(BlockList<Argument> argumentBlocks)
         {
             PrecursorInstruction Result = new PrecursorInstruction();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.AncestorType = OptionalReferenceHelper<IObjectType>.CreateReference(CreateDefaultType());
+            Result.AncestorType = OptionalReferenceHelper<ObjectType>.CreateReference(CreateDefaultType());
             Result.ArgumentBlocks = argumentBlocks;
 
             return Result;
         }
 
-        public static IPrecursorInstruction CreatePrecursorInstruction(IObjectType ancestorType, IBlockList<IArgument, Argument> argumentBlocks)
+        public static PrecursorInstruction CreatePrecursorInstruction(ObjectType ancestorType, BlockList<Argument> argumentBlocks)
         {
             PrecursorInstruction Result = new PrecursorInstruction();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.AncestorType = OptionalReferenceHelper<IObjectType>.CreateReference(ancestorType);
+            Result.AncestorType = OptionalReferenceHelper<ObjectType>.CreateReference(ancestorType);
             Result.AncestorType.Assign();
             Result.ArgumentBlocks = argumentBlocks;
 
             return Result;
         }
 
-        public static IRaiseEventInstruction CreateRaiseEventInstruction(IIdentifier queryIdentifier)
+        public static RaiseEventInstruction CreateRaiseEventInstruction(Identifier queryIdentifier)
         {
             RaiseEventInstruction Result = new RaiseEventInstruction();
             Result.Documentation = CreateEmptyDocumentation();
@@ -522,7 +525,7 @@
             return Result;
         }
 
-        public static IReleaseInstruction CreateReleaseInstruction(IQualifiedName entityName)
+        public static ReleaseInstruction CreateReleaseInstruction(QualifiedName entityName)
         {
             ReleaseInstruction Result = new ReleaseInstruction();
             Result.Documentation = CreateEmptyDocumentation();
@@ -531,18 +534,18 @@
             return Result;
         }
 
-        public static IThrowInstruction CreateThrowInstruction(IObjectType exceptionType, IIdentifier creationRoutineIdentifier, List<IArgument> argumentList)
+        public static ThrowInstruction CreateThrowInstruction(ObjectType exceptionType, Identifier creationRoutineIdentifier, List<Argument> argumentList)
         {
             ThrowInstruction Result = new ThrowInstruction();
             Result.Documentation = CreateEmptyDocumentation();
             Result.ExceptionType = exceptionType;
             Result.CreationRoutine = creationRoutineIdentifier;
-            Result.ArgumentBlocks = BlockListHelper<IArgument, Argument>.CreateBlockList(argumentList);
+            Result.ArgumentBlocks = BlockListHelper<Argument>.CreateBlockList(argumentList);
 
             return Result;
         }
 
-        public static IThrowInstruction CreateThrowInstruction(IObjectType exceptionType, IIdentifier creationRoutineIdentifier, IBlockList<IArgument, Argument> argumentBlocks)
+        public static ThrowInstruction CreateThrowInstruction(ObjectType exceptionType, Identifier creationRoutineIdentifier, BlockList<Argument> argumentBlocks)
         {
             ThrowInstruction Result = new ThrowInstruction();
             Result.Documentation = CreateEmptyDocumentation();

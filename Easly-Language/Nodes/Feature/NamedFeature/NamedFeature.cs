@@ -4,13 +4,8 @@
 
 namespace BaseNode
 {
-    public interface INamedFeature : IFeature
+    public abstract class NamedFeature : Feature
     {
-        IName EntityName { get; }
-    }
-
-    public abstract class NamedFeature : Feature, INamedFeature
-    {
-        public virtual IName EntityName { get; set; }
+        public virtual Name EntityName { get; set; }
     }
 }

@@ -4,14 +4,9 @@
 
 namespace BaseNode
 {
-    public interface IPositionalTypeArgument : ITypeArgument
-    {
-        IObjectType Source { get; }
-    }
-
     [System.Serializable]
-    public class PositionalTypeArgument : TypeArgument, IPositionalTypeArgument
+    public class PositionalTypeArgument : TypeArgument
     {
-        public virtual IObjectType Source { get; set; }
+        public virtual ObjectType Source { get; set; }
     }
 }

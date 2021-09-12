@@ -4,16 +4,10 @@
 
 namespace BaseNode
 {
-    public interface ICommandInstruction : IInstruction
-    {
-        IQualifiedName Command { get; }
-        IBlockList<IArgument, Argument> ArgumentBlocks { get; }
-    }
-
     [System.Serializable]
-    public class CommandInstruction : Instruction, ICommandInstruction
+    public class CommandInstruction : Instruction
     {
-        public virtual IQualifiedName Command { get; set; }
-        public virtual IBlockList<IArgument, Argument> ArgumentBlocks { get; set; }
+        public virtual QualifiedName Command { get; set; }
+        public virtual BlockList<Argument> ArgumentBlocks { get; set; }
     }
 }

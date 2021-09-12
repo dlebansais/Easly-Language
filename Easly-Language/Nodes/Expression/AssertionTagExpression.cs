@@ -4,14 +4,9 @@
 
 namespace BaseNode
 {
-    public interface IAssertionTagExpression : IExpression
-    {
-        IIdentifier TagIdentifier { get; }
-    }
-
     [System.Serializable]
-    public class AssertionTagExpression : Expression, IAssertionTagExpression
+    public class AssertionTagExpression : Expression
     {
-        public virtual IIdentifier TagIdentifier { get; set; }
+        public virtual Identifier TagIdentifier { get; set; }
     }
 }

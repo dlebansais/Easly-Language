@@ -4,18 +4,11 @@
 
 namespace BaseNode
 {
-    public interface IIndexAssignmentInstruction : IInstruction
-    {
-        IQualifiedName Destination { get; }
-        IBlockList<IArgument, Argument> ArgumentBlocks { get; }
-        IExpression Source { get; }
-    }
-
     [System.Serializable]
-    public class IndexAssignmentInstruction : Instruction, IIndexAssignmentInstruction
+    public class IndexAssignmentInstruction : Instruction
     {
-        public virtual IQualifiedName Destination { get; set; }
-        public virtual IBlockList<IArgument, Argument> ArgumentBlocks { get; set; }
-        public virtual IExpression Source { get; set; }
+        public virtual QualifiedName Destination { get; set; }
+        public virtual BlockList<Argument> ArgumentBlocks { get; set; }
+        public virtual Expression Source { get; set; }
     }
 }

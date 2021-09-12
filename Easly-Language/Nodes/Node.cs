@@ -4,14 +4,9 @@
 
 namespace BaseNode
 {
-    public interface INode
-    {
-        IDocument Documentation { get; }
-    }
-
     [System.Serializable]
-    public abstract class Node : INode
+    public abstract class Node
     {
-        public virtual IDocument Documentation { get; set; }
+        public virtual Document Documentation { get; set; }
     }
 }

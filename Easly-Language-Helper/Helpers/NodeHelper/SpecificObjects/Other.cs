@@ -1,4 +1,7 @@
-﻿namespace BaseNodeHelper
+﻿#pragma warning disable SA1600 // Elements should be documented
+#pragma warning disable SA1601 // Partial elements should be documented
+
+namespace BaseNodeHelper
 {
     using System;
     using System.Collections;
@@ -10,17 +13,17 @@
 
     public static partial class NodeHelper
     {
-        public static IAttachment CreateAttachment(IObjectType attachType)
+        public static Attachment CreateAttachment(ObjectType attachType)
         {
             Attachment Result = new Attachment();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.AttachTypeBlocks = BlockListHelper<IObjectType, ObjectType>.CreateSimpleBlockList(attachType);
+            Result.AttachTypeBlocks = BlockListHelper<ObjectType>.CreateSimpleBlockList(attachType);
             Result.Instructions = CreateEmptyScope();
 
             return Result;
         }
 
-        public static IAttachment CreateAttachment(IBlockList<IObjectType, ObjectType> attachTypeBlocks, IScope instructions)
+        public static Attachment CreateAttachment(BlockList<ObjectType> attachTypeBlocks, Scope instructions)
         {
             Attachment Result = new Attachment();
             Result.Documentation = CreateEmptyDocumentation();
@@ -30,7 +33,7 @@
             return Result;
         }
 
-        public static IConditional CreateConditional(IExpression booleanExpression)
+        public static Conditional CreateConditional(Expression booleanExpression)
         {
             Conditional SimpleConditional = new Conditional();
             SimpleConditional.Documentation = CreateEmptyDocumentation();
@@ -40,7 +43,7 @@
             return SimpleConditional;
         }
 
-        public static IConditional CreateConditional(IExpression booleanExpression, IInstruction instruction)
+        public static Conditional CreateConditional(Expression booleanExpression, Instruction instruction)
         {
             Conditional SimpleConditional = new Conditional();
             SimpleConditional.Documentation = CreateEmptyDocumentation();
@@ -50,7 +53,7 @@
             return SimpleConditional;
         }
 
-        public static IConditional CreateConditional(IExpression booleanExpression, IScope instructions)
+        public static Conditional CreateConditional(Expression booleanExpression, Scope instructions)
         {
             Conditional SimpleConditional = new Conditional();
             SimpleConditional.Documentation = CreateEmptyDocumentation();
@@ -60,148 +63,148 @@
             return SimpleConditional;
         }
 
-        public static IWith CreateWith(IExpression firstExpression)
+        public static With CreateWith(Expression firstExpression)
         {
-            IRange FirstRange = CreateRange(firstExpression);
+            BaseNode.Range FirstRange = CreateRange(firstExpression);
 
             With Result = new With();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.RangeBlocks = BlockListHelper<BaseNode.IRange, BaseNode.Range>.CreateSimpleBlockList(FirstRange);
+            Result.RangeBlocks = BlockListHelper<BaseNode.Range>.CreateSimpleBlockList(FirstRange);
             Result.Instructions = CreateEmptyScope();
 
             return Result;
         }
 
-        public static IWith CreateWith(IExpression firstExpression, IInstruction instruction)
+        public static With CreateWith(Expression firstExpression, Instruction instruction)
         {
-            IRange FirstRange = CreateRange(firstExpression);
+            BaseNode.Range FirstRange = CreateRange(firstExpression);
 
             With Result = new With();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.RangeBlocks = BlockListHelper<BaseNode.IRange, BaseNode.Range>.CreateSimpleBlockList(FirstRange);
+            Result.RangeBlocks = BlockListHelper<BaseNode.Range>.CreateSimpleBlockList(FirstRange);
             Result.Instructions = CreateSimpleScope(instruction);
 
             return Result;
         }
 
-        public static IRange CreateRange(IExpression leftExpression)
+        public static BaseNode.Range CreateRange(Expression leftExpression)
         {
             BaseNode.Range Result = new BaseNode.Range();
             Result.Documentation = CreateEmptyDocumentation();
             Result.LeftExpression = leftExpression;
-            Result.RightExpression = OptionalReferenceHelper<IExpression>.CreateReference(CreateDefaultExpression());
+            Result.RightExpression = OptionalReferenceHelper<Expression>.CreateReference(CreateDefaultExpression());
 
             return Result;
         }
 
-        public static IEntityDeclaration CreateEntityDeclaration(IName entityName, IObjectType entityType)
+        public static EntityDeclaration CreateEntityDeclaration(Name entityName, ObjectType entityType)
         {
             EntityDeclaration SimpleEntityDeclaration = new EntityDeclaration();
             SimpleEntityDeclaration.Documentation = CreateEmptyDocumentation();
             SimpleEntityDeclaration.EntityName = entityName;
             SimpleEntityDeclaration.EntityType = entityType;
-            SimpleEntityDeclaration.DefaultValue = OptionalReferenceHelper<IExpression>.CreateReference(CreateDefaultExpression());
+            SimpleEntityDeclaration.DefaultValue = OptionalReferenceHelper<Expression>.CreateReference(CreateDefaultExpression());
 
             return SimpleEntityDeclaration;
         }
 
-        public static IIdentifier CreateEmptyExportIdentifier()
+        public static Identifier CreateEmptyExportIdentifier()
         {
             return CreateSimpleIdentifier("All");
         }
 
-        public static IExport CreateSimpleExport(string nameText)
+        public static Export CreateSimpleExport(string nameText)
         {
             Export SimpleExport = new Export();
             SimpleExport.Documentation = CreateEmptyDocumentation();
             SimpleExport.EntityName = CreateSimpleName(nameText);
-            SimpleExport.ClassIdentifierBlocks = BlockListHelper<IIdentifier, Identifier>.CreateEmptyBlockList();
+            SimpleExport.ClassIdentifierBlocks = BlockListHelper<Identifier>.CreateEmptyBlockList();
 
             return SimpleExport;
         }
 
-        public static IClass CreateSimpleClass(string nameText)
+        public static Class CreateSimpleClass(string nameText)
         {
             Guid ClassGuid = Guid.NewGuid();
 
             Class SimpleClass = new Class();
             SimpleClass.Documentation = CreateEmptyDocumentation();
             SimpleClass.EntityName = CreateSimpleName(nameText);
-            SimpleClass.FromIdentifier = OptionalReferenceHelper<IIdentifier>.CreateReference(CreateEmptyIdentifier());
+            SimpleClass.FromIdentifier = OptionalReferenceHelper<Identifier>.CreateReference(CreateEmptyIdentifier());
             SimpleClass.CopySpecification = CopySemantic.Reference;
             SimpleClass.Cloneable = CloneableStatus.Cloneable;
             SimpleClass.Comparable = ComparableStatus.Comparable;
             SimpleClass.IsAbstract = false;
-            SimpleClass.ImportBlocks = BlockListHelper<IImport, Import>.CreateEmptyBlockList();
-            SimpleClass.GenericBlocks = BlockListHelper<IGeneric, Generic>.CreateEmptyBlockList();
-            SimpleClass.ExportBlocks = BlockListHelper<IExport, Export>.CreateEmptyBlockList();
-            SimpleClass.TypedefBlocks = BlockListHelper<ITypedef, Typedef>.CreateEmptyBlockList();
-            SimpleClass.InheritanceBlocks = BlockListHelper<IInheritance, Inheritance>.CreateEmptyBlockList();
-            SimpleClass.DiscreteBlocks = BlockListHelper<IDiscrete, Discrete>.CreateEmptyBlockList();
-            SimpleClass.ClassReplicateBlocks = BlockListHelper<IClassReplicate, ClassReplicate>.CreateEmptyBlockList();
-            SimpleClass.FeatureBlocks = BlockListHelper<IFeature, Feature>.CreateEmptyBlockList();
-            SimpleClass.ConversionBlocks = BlockListHelper<IIdentifier, Identifier>.CreateEmptyBlockList();
-            SimpleClass.InvariantBlocks = BlockListHelper<IAssertion, Assertion>.CreateEmptyBlockList();
+            SimpleClass.ImportBlocks = BlockListHelper<Import>.CreateEmptyBlockList();
+            SimpleClass.GenericBlocks = BlockListHelper<Generic>.CreateEmptyBlockList();
+            SimpleClass.ExportBlocks = BlockListHelper<Export>.CreateEmptyBlockList();
+            SimpleClass.TypedefBlocks = BlockListHelper<Typedef>.CreateEmptyBlockList();
+            SimpleClass.InheritanceBlocks = BlockListHelper<Inheritance>.CreateEmptyBlockList();
+            SimpleClass.DiscreteBlocks = BlockListHelper<Discrete>.CreateEmptyBlockList();
+            SimpleClass.ClassReplicateBlocks = BlockListHelper<ClassReplicate>.CreateEmptyBlockList();
+            SimpleClass.FeatureBlocks = BlockListHelper<Feature>.CreateEmptyBlockList();
+            SimpleClass.ConversionBlocks = BlockListHelper<Identifier>.CreateEmptyBlockList();
+            SimpleClass.InvariantBlocks = BlockListHelper<Assertion>.CreateEmptyBlockList();
             SimpleClass.ClassGuid = ClassGuid;
             SimpleClass.ClassPath = string.Empty;
 
             return SimpleClass;
         }
 
-        public static ILibrary CreateSimpleLibrary(string nameText)
+        public static Library CreateSimpleLibrary(string nameText)
         {
             Library SimpleLibrary = new Library();
             SimpleLibrary.Documentation = CreateEmptyDocumentation();
             SimpleLibrary.EntityName = CreateSimpleName(nameText);
-            SimpleLibrary.FromIdentifier = OptionalReferenceHelper<IIdentifier>.CreateReference(CreateEmptyIdentifier());
-            SimpleLibrary.ImportBlocks = BlockListHelper<IImport, Import>.CreateEmptyBlockList();
-            SimpleLibrary.ClassIdentifierBlocks = BlockListHelper<IIdentifier, Identifier>.CreateEmptyBlockList();
+            SimpleLibrary.FromIdentifier = OptionalReferenceHelper<Identifier>.CreateReference(CreateEmptyIdentifier());
+            SimpleLibrary.ImportBlocks = BlockListHelper<Import>.CreateEmptyBlockList();
+            SimpleLibrary.ClassIdentifierBlocks = BlockListHelper<Identifier>.CreateEmptyBlockList();
 
             return SimpleLibrary;
         }
 
-        public static IGlobalReplicate CreateSimpleGlobalReplicate(string nameText)
+        public static GlobalReplicate CreateSimpleGlobalReplicate(string nameText)
         {
             GlobalReplicate SimpleGlobalReplicate = new GlobalReplicate();
             SimpleGlobalReplicate.Documentation = CreateEmptyDocumentation();
             SimpleGlobalReplicate.ReplicateName = CreateSimpleName(nameText);
-            SimpleGlobalReplicate.Patterns = new List<IPattern>();
+            SimpleGlobalReplicate.Patterns = new List<Pattern>();
 
-            IPattern FirstPattern = CreateEmptyPattern();
+            Pattern FirstPattern = CreateEmptyPattern();
             SimpleGlobalReplicate.Patterns.Add(FirstPattern);
 
             return SimpleGlobalReplicate;
         }
 
-        public static IImport CreateSimpleImport(string identifierText, string fromText, ImportType type)
+        public static Import CreateSimpleImport(string identifierText, string fromText, ImportType type)
         {
             Import SimpleImport = new Import();
             SimpleImport.Documentation = CreateEmptyDocumentation();
             SimpleImport.LibraryIdentifier = CreateSimpleIdentifier(identifierText);
-            SimpleImport.FromIdentifier = OptionalReferenceHelper<IIdentifier>.CreateReference(CreateSimpleIdentifier(fromText));
+            SimpleImport.FromIdentifier = OptionalReferenceHelper<Identifier>.CreateReference(CreateSimpleIdentifier(fromText));
             SimpleImport.Type = type;
-            SimpleImport.RenameBlocks = BlockListHelper<IRename, Rename>.CreateEmptyBlockList();
+            SimpleImport.RenameBlocks = BlockListHelper<Rename>.CreateEmptyBlockList();
 
             return SimpleImport;
         }
 
-        public static IRoot CreateRoot(IList<IClass> classList, IList<ILibrary> libraryList, IList<IGlobalReplicate> globalReplicateList)
+        public static Root CreateRoot(IList<Class> classList, IList<Library> libraryList, IList<GlobalReplicate> globalReplicateList)
         {
             Root EmptyRoot = new Root();
             EmptyRoot.Documentation = CreateEmptyDocumentation();
-            EmptyRoot.ClassBlocks = BlockListHelper<IClass, Class>.CreateBlockList(classList);
-            EmptyRoot.LibraryBlocks = BlockListHelper<ILibrary, Library>.CreateBlockList(libraryList);
+            EmptyRoot.ClassBlocks = BlockListHelper<Class>.CreateBlockList(classList);
+            EmptyRoot.LibraryBlocks = BlockListHelper<Library>.CreateBlockList(libraryList);
             EmptyRoot.Replicates = globalReplicateList;
 
             return EmptyRoot;
         }
 
-        public static IRoot CreateRoot(IList<IBlock<IClass, Class>> classBlockList, IList<IBlock<ILibrary, Library>> libraryBlockList, IList<IGlobalReplicate> globalReplicateList)
+        public static Root CreateRoot(IList<Block<Class>> classBlockList, IList<Block<Library>> libraryBlockList, IList<GlobalReplicate> globalReplicateList)
         {
             Root EmptyRoot = new Root();
             EmptyRoot.Documentation = CreateEmptyDocumentation();
-            EmptyRoot.ClassBlocks = BlockListHelper<IClass, Class>.CreateBlockList(classBlockList);
-            EmptyRoot.LibraryBlocks = BlockListHelper<ILibrary, Library>.CreateBlockList(libraryBlockList);
+            EmptyRoot.ClassBlocks = BlockListHelper<Class>.CreateBlockList(classBlockList);
+            EmptyRoot.LibraryBlocks = BlockListHelper<Library>.CreateBlockList(libraryBlockList);
             EmptyRoot.Replicates = globalReplicateList;
 
             return EmptyRoot;

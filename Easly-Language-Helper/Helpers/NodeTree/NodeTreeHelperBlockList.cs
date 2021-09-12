@@ -1,4 +1,6 @@
-﻿namespace BaseNodeHelper
+﻿#pragma warning disable SA1600 // Elements should be documented
+
+namespace BaseNodeHelper
 {
     using System;
     using System.Collections;
@@ -10,13 +12,13 @@
 
     public static class NodeTreeHelperBlockList
     {
-        public static bool IsBlockListProperty(INode node, string propertyName, out Type childInterfaceType, out Type childNodeType)
+        public static bool IsBlockListProperty(Node node, string propertyName, /*out Type childInterfaceType,*/ out Type childNodeType)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
 
             Type NodeType = node.GetType();
-            if (!IsBlockListProperty(NodeType, propertyName, out childInterfaceType, out childNodeType))
+            if (!IsBlockListProperty(NodeType, propertyName, /*out childInterfaceType,*/ out childNodeType))
                 return false;
 
             PropertyInfo Property = NodeType.GetProperty(propertyName);
@@ -28,12 +30,12 @@
             return true;
         }
 
-        public static bool IsBlockListProperty(Type nodeType, string propertyName, out Type childInterfaceType, out Type childNodeType)
+        public static bool IsBlockListProperty(Type nodeType, string propertyName, /*out Type childInterfaceType,*/ out Type childNodeType)
         {
             if (nodeType == null) throw new ArgumentNullException(nameof(nodeType));
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
 
-            childInterfaceType = null;
+            // childInterfaceType = null;
             childNodeType = null;
 
             PropertyInfo Property = NodeTreeHelper.GetPropertyOf(nodeType, propertyName);
@@ -47,6 +49,8 @@
             Debug.Assert(PropertyType.IsGenericType);
             Type[] GenericArguments = PropertyType.GetGenericArguments();
             Debug.Assert(GenericArguments != null);
+
+            /*
             Debug.Assert(GenericArguments.Length == 2);
 
             childInterfaceType = GenericArguments[0];
@@ -56,11 +60,18 @@
             childNodeType = GenericArguments[1];
             Debug.Assert(childNodeType != null);
             Debug.Assert(!childNodeType.IsInterface);
+            */
+
+            Debug.Assert(GenericArguments.Length == 1);
+
+            childNodeType = GenericArguments[0];
+            Debug.Assert(childNodeType != null);
+            Debug.Assert(!childNodeType.IsInterface);
 
             return true;
         }
 
-        public static void GetBlockType(IBlock block, out Type childInterfaceType, out Type childNodeType)
+        public static void GetBlockType(IBlock block, /*out Type childInterfaceType,*/ out Type childNodeType)
         {
             if (block == null) throw new ArgumentNullException(nameof(block));
 
@@ -69,6 +80,8 @@
 
             Type[] GenericArguments = BlockType.GetGenericArguments();
             Debug.Assert(GenericArguments != null);
+
+            /*
             Debug.Assert(GenericArguments.Length == 2);
 
             childInterfaceType = GenericArguments[0];
@@ -78,9 +91,16 @@
             childNodeType = GenericArguments[1];
             Debug.Assert(childNodeType != null);
             Debug.Assert(!childNodeType.IsInterface);
+            */
+
+            Debug.Assert(GenericArguments.Length == 1);
+
+            childNodeType = GenericArguments[0];
+            Debug.Assert(childNodeType != null);
+            Debug.Assert(!childNodeType.IsInterface);
         }
 
-        public static IBlockList GetBlockList(INode node, string propertyName)
+        public static IBlockList GetBlockList(Node node, string propertyName)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
@@ -96,7 +116,7 @@
             return BlockList;
         }
 
-        public static void GetChildBlockList(INode node, string propertyName, out IReadOnlyList<INodeTreeBlock> childBlockList)
+        public static void GetChildBlockList(Node node, string propertyName, out IReadOnlyList<NodeTreeBlock> childBlockList)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
@@ -117,23 +137,23 @@
                 IList NodeBlockList = BlockList.NodeBlockList;
                 Debug.Assert(NodeBlockList != null);
 
-                List<INodeTreeBlock> Result = new List<INodeTreeBlock>();
+                List<NodeTreeBlock> Result = new List<NodeTreeBlock>();
 
                 foreach (object Item in NodeBlockList)
                 {
                     IBlock Block = Item as IBlock;
                     Debug.Assert(Block != null);
 
-                    IPattern ReplicationPattern = Block.ReplicationPattern;
+                    Pattern ReplicationPattern = Block.ReplicationPattern;
                     Debug.Assert(ReplicationPattern != null);
-                    IIdentifier SourceIdentifier = Block.SourceIdentifier;
+                    Identifier SourceIdentifier = Block.SourceIdentifier;
                     Debug.Assert(SourceIdentifier != null);
                     IList NodeList = Block.NodeList;
                     Debug.Assert(NodeList != null);
                     Debug.Assert(NodeList.Count > 0);
 
-                    List<INode> ResultNodeList = new List<INode>();
-                    foreach (INode ChildNode in NodeList)
+                    List<Node> ResultNodeList = new List<Node>();
+                    foreach (Node ChildNode in NodeList)
                         ResultNodeList.Add(ChildNode);
 
                     Result.Add(new NodeTreeBlock(ReplicationPattern, SourceIdentifier, ResultNodeList));
@@ -143,7 +163,7 @@
             }
         }
 
-        public static void ClearChildBlockList(INode node, string propertyName)
+        public static void ClearChildBlockList(Node node, string propertyName)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
@@ -162,7 +182,7 @@
             NodeBlockList.Clear();
         }
 
-        public static Type BlockListInterfaceType(INode node, string propertyName)
+        public static Type BlockListInterfaceType(Node node, string propertyName)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
@@ -185,16 +205,20 @@
             Debug.Assert(PropertyType.IsGenericType);
             Type[] GenericArguments = PropertyType.GetGenericArguments();
             Debug.Assert(GenericArguments != null);
-            Debug.Assert(GenericArguments.Length == 2);
+
+            // Debug.Assert(GenericArguments.Length == 2);
+            Debug.Assert(GenericArguments.Length == 1);
 
             Type InterfaceType = GenericArguments[0];
             Debug.Assert(InterfaceType != null);
-            Debug.Assert(InterfaceType.IsInterface);
+
+            // Debug.Assert(InterfaceType.IsInterface);
+            Debug.Assert(!InterfaceType.IsInterface);
 
             return InterfaceType;
         }
 
-        public static Type BlockListItemType(INode node, string propertyName)
+        public static Type BlockListItemType(Node node, string propertyName)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
@@ -217,7 +241,9 @@
             Debug.Assert(PropertyType.IsGenericType);
             Type[] GenericArguments = PropertyType.GetGenericArguments();
             Debug.Assert(GenericArguments != null);
-            Debug.Assert(GenericArguments.Length == 2);
+
+            // Debug.Assert(GenericArguments.Length == 2);
+            Debug.Assert(GenericArguments.Length == 1);
 
             Type ItemType = GenericArguments[1];
             Debug.Assert(ItemType != null);
@@ -226,7 +252,7 @@
             return ItemType;
         }
 
-        public static Type BlockListBlockType(INode node, string propertyName)
+        public static Type BlockListBlockType(Node node, string propertyName)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
@@ -246,7 +272,7 @@
             Type PropertyType = Property.PropertyType;
             Debug.Assert(NodeTreeHelper.IsBlockListType(Property.PropertyType));
 
-            PropertyInfo NodeListProperty = PropertyType.GetProperty(nameof(IBlockList<INode, Node>.NodeBlockList));
+            PropertyInfo NodeListProperty = PropertyType.GetProperty(nameof(BlockList<Node>.NodeBlockList));
             Debug.Assert(NodeListProperty != null);
 
             Type NodeListType = NodeListProperty.PropertyType;
@@ -258,12 +284,14 @@
 
             Type BlockType = GenericArguments[0];
             Debug.Assert(BlockType != null);
-            Debug.Assert(BlockType.IsInterface);
+
+            // Debug.Assert(BlockType.IsInterface);
+            Debug.Assert(!BlockType.IsInterface);
 
             return BlockType;
         }
 
-        public static bool GetLastBlockIndex(INode node, string propertyName, out int blockIndex)
+        public static bool GetLastBlockIndex(Node node, string propertyName, out int blockIndex)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
@@ -289,7 +317,7 @@
             return true;
         }
 
-        public static bool GetLastBlockChildIndex(INode node, string propertyName, int blockIndex, out int index)
+        public static bool GetLastBlockChildIndex(Node node, string propertyName, int blockIndex, out int index)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
@@ -325,7 +353,7 @@
             return true;
         }
 
-        public static bool IsBlockChildNode(INode node, string propertyName, int blockIndex, int index, INode childNode)
+        public static bool IsBlockChildNode(Node node, string propertyName, int blockIndex, int index, Node childNode)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
@@ -354,7 +382,7 @@
             return IsChildNode(Block, index, childNode);
         }
 
-        public static bool IsChildNode(IBlock block, int index, INode childNode)
+        public static bool IsChildNode(IBlock block, int index, Node childNode)
         {
             if (block == null) throw new ArgumentNullException(nameof(block));
             if (index < 0) throw new ArgumentOutOfRangeException(nameof(index));
@@ -366,7 +394,7 @@
             Debug.Assert(index < NodeList.Count);
             if (index >= NodeList.Count) throw new ArgumentOutOfRangeException(nameof(index));
 
-            INode NodeItem = NodeList[index] as INode;
+            Node NodeItem = NodeList[index] as Node;
             Debug.Assert(NodeItem != null);
 
             if (NodeItem != childNode)
@@ -375,7 +403,7 @@
             return true;
         }
 
-        public static void GetChildBlock(INode node, string propertyName, int blockIndex, out IBlock childBlock)
+        public static void GetChildBlock(Node node, string propertyName, int blockIndex, out IBlock childBlock)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
@@ -401,7 +429,7 @@
             Debug.Assert(childBlock != null);
         }
 
-        public static void GetChildNode(INode node, string propertyName, int blockIndex, int index, out INode childNode)
+        public static void GetChildNode(Node node, string propertyName, int blockIndex, int index, out Node childNode)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
@@ -433,13 +461,13 @@
             Debug.Assert(index < NodeList.Count);
             if (index >= NodeList.Count) throw new ArgumentOutOfRangeException(nameof(index));
 
-            INode NodeItem = NodeList[index] as INode;
+            Node NodeItem = NodeList[index] as Node;
             Debug.Assert(NodeItem != null);
 
             childNode = NodeItem;
         }
 
-        public static void GetChildNode(IBlock block, int index, out INode childNode)
+        public static void GetChildNode(IBlock block, int index, out Node childNode)
         {
             if (block == null) throw new ArgumentNullException(nameof(block));
             if (index < 0) throw new ArgumentOutOfRangeException(nameof(index));
@@ -450,13 +478,13 @@
             Debug.Assert(index < NodeList.Count);
             if (index >= NodeList.Count) throw new ArgumentOutOfRangeException(nameof(index));
 
-            INode NodeItem = NodeList[index] as INode;
+            Node NodeItem = NodeList[index] as Node;
             Debug.Assert(NodeItem != null);
 
             childNode = NodeItem;
         }
 
-        public static void SetBlockList(INode node, string propertyName, IBlockList blockList)
+        public static void SetBlockList(Node node, string propertyName, IBlockList blockList)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
@@ -472,7 +500,7 @@
             Property.SetValue(node, blockList);
         }
 
-        public static bool IsBlockPatternNode(INode node, string propertyName, int blockIndex, IPattern replicationPattern)
+        public static bool IsBlockPatternNode(Node node, string propertyName, int blockIndex, Pattern replicationPattern)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
@@ -501,7 +529,7 @@
             return IsPatternNode(Block, replicationPattern);
         }
 
-        public static bool IsPatternNode(IBlock block, IPattern replicationPattern)
+        public static bool IsPatternNode(IBlock block, Pattern replicationPattern)
         {
             if (block == null) throw new ArgumentNullException(nameof(block));
             if (replicationPattern == null) throw new ArgumentNullException(nameof(replicationPattern));
@@ -513,10 +541,10 @@
         {
             if (block == null) throw new ArgumentNullException(nameof(block));
 
-            IPattern ReplicationPattern = block.ReplicationPattern;
+            Pattern ReplicationPattern = block.ReplicationPattern;
             Debug.Assert(ReplicationPattern != null);
 
-            return NodeTreeHelper.GetString(ReplicationPattern, nameof(IPattern.Text));
+            return NodeTreeHelper.GetString(ReplicationPattern, nameof(Pattern.Text));
         }
 
         public static void SetPattern(IBlock block, string text)
@@ -524,13 +552,13 @@
             if (block == null) throw new ArgumentNullException(nameof(block));
             if (text == null) throw new ArgumentNullException(nameof(text));
 
-            IPattern ReplicationPattern = block.ReplicationPattern;
+            Pattern ReplicationPattern = block.ReplicationPattern;
             Debug.Assert(ReplicationPattern != null);
 
-            NodeTreeHelper.SetString(ReplicationPattern, nameof(IPattern.Text), text);
+            NodeTreeHelper.SetString(ReplicationPattern, nameof(Pattern.Text), text);
         }
 
-        public static bool IsBlockSourceNode(INode node, string propertyName, int blockIndex, IIdentifier sourceIdentifier)
+        public static bool IsBlockSourceNode(Node node, string propertyName, int blockIndex, Identifier sourceIdentifier)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
@@ -559,7 +587,7 @@
             return IsSourceNode(Block, sourceIdentifier);
         }
 
-        public static bool IsSourceNode(IBlock block, IIdentifier sourceIdentifier)
+        public static bool IsSourceNode(IBlock block, Identifier sourceIdentifier)
         {
             if (block == null) throw new ArgumentNullException(nameof(block));
             if (sourceIdentifier == null) throw new ArgumentNullException(nameof(sourceIdentifier));
@@ -571,10 +599,10 @@
         {
             if (block == null) throw new ArgumentNullException(nameof(block));
 
-            IIdentifier SourceIdentifier = block.SourceIdentifier;
+            Identifier SourceIdentifier = block.SourceIdentifier;
             Debug.Assert(SourceIdentifier != null);
 
-            return NodeTreeHelper.GetString(SourceIdentifier, nameof(IIdentifier.Text));
+            return NodeTreeHelper.GetString(SourceIdentifier, nameof(Identifier.Text));
         }
 
         public static void SetSource(IBlock block, string text)
@@ -582,10 +610,10 @@
             if (block == null) throw new ArgumentNullException(nameof(block));
             if (text == null) throw new ArgumentNullException(nameof(text));
 
-            IIdentifier SourceIdentifier = block.SourceIdentifier;
+            Identifier SourceIdentifier = block.SourceIdentifier;
             Debug.Assert(SourceIdentifier != null);
 
-            NodeTreeHelper.SetString(SourceIdentifier, nameof(IIdentifier.Text), text);
+            NodeTreeHelper.SetString(SourceIdentifier, nameof(Identifier.Text), text);
         }
 
         public static void SetReplication(IBlock block, ReplicationStatus replication)
@@ -595,7 +623,7 @@
             block.GetType().GetProperty(nameof(IBlock.Replication)).SetValue(block, replication);
         }
 
-        public static void InsertIntoBlock(INode node, string propertyName, int blockIndex, int index, INode childNode)
+        public static void InsertIntoBlock(Node node, string propertyName, int blockIndex, int index, Node childNode)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
@@ -631,7 +659,7 @@
             NodeList.Insert(index, childNode);
         }
 
-        public static void InsertIntoBlock(IBlock block, int index, INode childNode)
+        public static void InsertIntoBlock(IBlock block, int index, Node childNode)
         {
             if (block == null) throw new ArgumentNullException(nameof(block));
             if (index < 0) throw new ArgumentOutOfRangeException(nameof(index));
@@ -646,7 +674,7 @@
             NodeList.Insert(index, childNode);
         }
 
-        public static void RemoveFromBlock(INode node, string propertyName, int blockIndex, int index, out bool isBlockRemoved)
+        public static void RemoveFromBlock(Node node, string propertyName, int blockIndex, int index, out bool isBlockRemoved)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
@@ -689,7 +717,7 @@
                 isBlockRemoved = false;
         }
 
-        public static void ReplaceNode(INode node, string propertyName, int blockIndex, int index, INode newChildNode)
+        public static void ReplaceNode(Node node, string propertyName, int blockIndex, int index, Node newChildNode)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
@@ -725,7 +753,7 @@
             NodeList[index] = newChildNode;
         }
 
-        public static void ReplaceInBlock(IBlock block, int index, INode newChildNode)
+        public static void ReplaceInBlock(IBlock block, int index, Node newChildNode)
         {
             if (block == null) throw new ArgumentNullException(nameof(block));
             if (index < 0) throw new ArgumentOutOfRangeException(nameof(index));
@@ -770,7 +798,7 @@
             return NodeList.Count == 1;
         }
 
-        public static IBlock CreateBlock(INode node, string propertyName, ReplicationStatus replication, IPattern replicationPattern, IIdentifier sourceIdentifier)
+        public static IBlock CreateBlock(Node node, string propertyName, ReplicationStatus replication, Pattern replicationPattern, Identifier sourceIdentifier)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
@@ -787,7 +815,7 @@
             return CreateBlock(PropertyType, replication, replicationPattern, sourceIdentifier);
         }
 
-        public static IBlock CreateBlock(IBlockList blockList, ReplicationStatus replication, IPattern replicationPattern, IIdentifier sourceIdentifier)
+        public static IBlock CreateBlock(IBlockList blockList, ReplicationStatus replication, Pattern replicationPattern, Identifier sourceIdentifier)
         {
             if (blockList == null) throw new ArgumentNullException(nameof(blockList));
             if (replicationPattern == null) throw new ArgumentNullException(nameof(replicationPattern));
@@ -796,23 +824,23 @@
             return CreateBlock(blockList.GetType(), replication, replicationPattern, sourceIdentifier);
         }
 
-        public static IBlock CreateBlock(Type propertyType, ReplicationStatus replication, IPattern replicationPattern, IIdentifier sourceIdentifier)
+        public static IBlock CreateBlock(Type propertyType, ReplicationStatus replication, Pattern replicationPattern, Identifier sourceIdentifier)
         {
             if (propertyType == null) throw new ArgumentNullException(nameof(propertyType));
             if (!propertyType.IsGenericType) throw new ArgumentException($"{nameof(propertyType)} must be a generic type");
             Type GenericTypeDefinition = propertyType.GetGenericTypeDefinition();
-            if (GenericTypeDefinition != typeof(IBlockList<,>) && GenericTypeDefinition != typeof(BlockList<,>) && GenericTypeDefinition != typeof(IBlock<,>) && GenericTypeDefinition != typeof(Block<,>)) throw new ArgumentException($"{nameof(propertyType)} must be a block or block list type");
+            if (GenericTypeDefinition != typeof(BlockList<>) && GenericTypeDefinition != typeof(BlockList<>) && GenericTypeDefinition != typeof(Block<>) && GenericTypeDefinition != typeof(Block<>)) throw new ArgumentException($"{nameof(propertyType)} must be a block or block list type");
             if (replicationPattern == null) throw new ArgumentNullException(nameof(replicationPattern));
             if (sourceIdentifier == null) throw new ArgumentNullException(nameof(sourceIdentifier));
 
             Type[] TypeArguments = propertyType.GetGenericArguments();
 
-            Type BlockType = typeof(Block<,>).MakeGenericType(TypeArguments);
+            Type BlockType = typeof(Block<>).MakeGenericType(TypeArguments);
             IBlock NewBlock = BlockType.Assembly.CreateInstance(BlockType.FullName) as IBlock;
             Debug.Assert(NewBlock != null);
 
-            IDocument EmptyComment = NodeHelper.CreateEmptyDocumentation();
-            BlockType.GetProperty(nameof(INode.Documentation)).SetValue(NewBlock, EmptyComment);
+            Document EmptyComment = NodeHelper.CreateEmptyDocumentation();
+            BlockType.GetProperty(nameof(Node.Documentation)).SetValue(NewBlock, EmptyComment);
 
             Type NodeListType = typeof(List<>).MakeGenericType(new Type[] { TypeArguments[0] });
             IList NewNodeList = NodeListType.Assembly.CreateInstance(NodeListType.FullName) as IList;
@@ -826,7 +854,7 @@
             return NewBlock;
         }
 
-        public static void InsertIntoBlockList(INode node, string propertyName, int blockIndex, IBlock childBlock)
+        public static void InsertIntoBlockList(Node node, string propertyName, int blockIndex, IBlock childBlock)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
@@ -852,7 +880,7 @@
             NodeBlockList.Insert(blockIndex, childBlock);
         }
 
-        public static void RemoveFromBlockList(INode node, string propertyName, int blockIndex)
+        public static void RemoveFromBlockList(Node node, string propertyName, int blockIndex)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
@@ -877,7 +905,7 @@
             NodeBlockList.RemoveAt(blockIndex);
         }
 
-        public static void SplitBlock(INode node, string propertyName, int blockIndex, int index, IBlock newChildBlock)
+        public static void SplitBlock(Node node, string propertyName, int blockIndex, int index, IBlock newChildBlock)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
@@ -919,7 +947,7 @@
 
             for (int i = 0; i < index; i++)
             {
-                INode ChildNode = CurrentNodeList[0] as INode;
+                Node ChildNode = CurrentNodeList[0] as Node;
                 Debug.Assert(ChildNode != null);
 
                 CurrentNodeList.RemoveAt(0);
@@ -930,7 +958,7 @@
             Debug.Assert(NewNodeList.Count > 0);
         }
 
-        public static void MergeBlocks(INode node, string propertyName, int blockIndex, out IBlock mergedBlock)
+        public static void MergeBlocks(Node node, string propertyName, int blockIndex, out IBlock mergedBlock)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
@@ -966,7 +994,7 @@
 
             for (int i = 0; MergedNodeList.Count > 0; i++)
             {
-                INode ChildNode = MergedNodeList[0] as INode;
+                Node ChildNode = MergedNodeList[0] as Node;
                 Debug.Assert(ChildNode != null);
 
                 CurrentNodeList.Insert(i, ChildNode);
@@ -990,14 +1018,14 @@
             Debug.Assert(index + direction < NodeList.Count);
             if (index + direction >= NodeList.Count) throw new ArgumentException($"The sum of {nameof(index)} and {nameof(direction)} must not equal or exceed the collection count");
 
-            INode ChildNode = NodeList[index] as INode;
+            Node ChildNode = NodeList[index] as Node;
             Debug.Assert(ChildNode != null);
 
             NodeList.RemoveAt(index);
             NodeList.Insert(index + direction, ChildNode);
         }
 
-        public static void MoveBlock(INode node, string propertyName, int blockIndex, int direction)
+        public static void MoveBlock(Node node, string propertyName, int blockIndex, int direction)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));

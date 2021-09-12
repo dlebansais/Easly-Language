@@ -4,13 +4,8 @@
 
 namespace BaseNode
 {
-    public interface IPattern : INode
-    {
-        string Text { get; }
-    }
-
     [System.Serializable]
-    public class Pattern : Node, IPattern
+    public class Pattern : Node
     {
         public virtual string Text { get; set; }
     }

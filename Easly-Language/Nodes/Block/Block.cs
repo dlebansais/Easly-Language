@@ -9,34 +9,22 @@ namespace BaseNode
 
     public interface IBlock
     {
-        IDocument Documentation { get; }
+        Document Documentation { get; }
         IList NodeList { get; }
         ReplicationStatus Replication { get; }
-        IPattern ReplicationPattern { get; }
-        IIdentifier SourceIdentifier { get; }
-    }
-
-    public interface IBlock<TNodeInterface, TNode>
-        where TNodeInterface : class, INode
-        where TNode : Node, TNodeInterface
-    {
-        IDocument Documentation { get; }
-        IList<TNodeInterface> NodeList { get; }
-        ReplicationStatus Replication { get; }
-        IPattern ReplicationPattern { get; }
-        IIdentifier SourceIdentifier { get; }
+        Pattern ReplicationPattern { get; }
+        Identifier SourceIdentifier { get; }
     }
 
     [System.Serializable]
-    public class Block<TNodeInterface, TNode> : IBlock<TNodeInterface, TNode>, IBlock
-        where TNodeInterface : class, INode
-        where TNode : Node, TNodeInterface
+    public class Block<TNode> : IBlock
+        where TNode : Node
     {
-        public virtual IDocument Documentation { get; set; }
-        public virtual IList<TNodeInterface> NodeList { get; set; }
+        public virtual Document Documentation { get; set; }
+        public virtual IList<TNode> NodeList { get; set; }
         IList IBlock.NodeList { get { return (IList)NodeList; } }
         public virtual ReplicationStatus Replication { get; set; }
-        public virtual IPattern ReplicationPattern { get; set; }
-        public virtual IIdentifier SourceIdentifier { get; set; }
+        public virtual Pattern ReplicationPattern { get; set; }
+        public virtual Identifier SourceIdentifier { get; set; }
     }
 }

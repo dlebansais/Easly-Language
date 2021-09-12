@@ -6,20 +6,12 @@ namespace BaseNode
 {
     using Easly;
 
-    public interface ICreateInstruction : IInstruction
-    {
-        IIdentifier EntityIdentifier { get; }
-        IIdentifier CreationRoutineIdentifier { get; }
-        IBlockList<IArgument, Argument> ArgumentBlocks { get; }
-        IOptionalReference<IQualifiedName> Processor { get; }
-    }
-
     [System.Serializable]
-    public class CreateInstruction : Instruction, ICreateInstruction
+    public class CreateInstruction : Instruction
     {
-        public virtual IIdentifier EntityIdentifier { get; set; }
-        public virtual IIdentifier CreationRoutineIdentifier { get; set; }
-        public virtual IBlockList<IArgument, Argument> ArgumentBlocks { get; set; }
-        public virtual IOptionalReference<IQualifiedName> Processor { get; set; }
+        public virtual Identifier EntityIdentifier { get; set; }
+        public virtual Identifier CreationRoutineIdentifier { get; set; }
+        public virtual BlockList<Argument> ArgumentBlocks { get; set; }
+        public virtual OptionalReference<QualifiedName> Processor { get; set; }
     }
 }

@@ -6,16 +6,10 @@ namespace BaseNode
 {
     using Easly;
 
-    public interface IAssertion : INode
-    {
-        IOptionalReference<IName> Tag { get; }
-        IExpression BooleanExpression { get; }
-    }
-
     [System.Serializable]
-    public class Assertion : Node, IAssertion
+    public class Assertion : Node
     {
-        public virtual IOptionalReference<IName> Tag { get; set; }
-        public virtual IExpression BooleanExpression { get; set; }
+        public virtual OptionalReference<Name> Tag { get; set; }
+        public virtual Expression BooleanExpression { get; set; }
     }
 }

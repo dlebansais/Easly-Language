@@ -4,16 +4,10 @@
 
 namespace BaseNode
 {
-    public interface IQueryExpression : IExpression
-    {
-        IQualifiedName Query { get; }
-        IBlockList<IArgument, Argument> ArgumentBlocks { get; }
-    }
-
     [System.Serializable]
-    public class QueryExpression : Expression, IQueryExpression
+    public class QueryExpression : Expression
     {
-        public virtual IQualifiedName Query { get; set; }
-        public virtual IBlockList<IArgument, Argument> ArgumentBlocks { get; set; }
+        public virtual QualifiedName Query { get; set; }
+        public virtual BlockList<Argument> ArgumentBlocks { get; set; }
     }
 }

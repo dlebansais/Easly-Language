@@ -24,33 +24,7 @@
     /// Represents a list ofitem type <typeparamref name="TItem"/> that can be sealed.
     /// </summary>
     /// <typeparam name="TItem">The type of the item.</typeparam>
-    public interface ISealableList<TItem> : IList<TItem>, ISealableList
-    {
-        /// <summary>
-        /// Adds a range of items to the list.
-        /// </summary>
-        /// <param name="other">The items to add.</param>
-        void AddRange(IList<TItem> other);
-
-        /// <summary>
-        /// Checks whether the list contains some items.
-        /// </summary>
-        /// <param name="match">The predicate for matching items.</param>
-        /// <returns>True if the list contains items as per <paramref name="match"/>.</returns>
-        bool Exists(Predicate<TItem> match);
-
-        /// <summary>
-        /// Clones the list, return an unsealed copy.
-        /// </summary>
-        /// <returns>The unsealed copy.</returns>
-        SealableList<TItem> CloneUnsealed();
-    }
-
-    /// <summary>
-    /// Represents a list ofitem type <typeparamref name="TItem"/> that can be sealed.
-    /// </summary>
-    /// <typeparam name="TItem">The type of the item.</typeparam>
-    public class SealableList<TItem> : List<TItem>, ISealableList<TItem>
+    public class SealableList<TItem> : List<TItem>, ISealableList
     {
         #region Init
         /// <summary>

@@ -4,16 +4,10 @@
 
 namespace BaseNode
 {
-    public interface IAnchoredType : IObjectType
-    {
-        IQualifiedName AnchoredName { get; }
-        AnchorKinds AnchorKind { get; }
-    }
-
     [System.Serializable]
-    public class AnchoredType : ObjectType, IAnchoredType
+    public class AnchoredType : ObjectType
     {
-        public virtual IQualifiedName AnchoredName { get; set; }
+        public virtual QualifiedName AnchoredName { get; set; }
         public virtual AnchorKinds AnchorKind { get; set; }
     }
 }

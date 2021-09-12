@@ -1,4 +1,6 @@
-﻿namespace BaseNodeHelper
+﻿#pragma warning disable SA1600 // Elements should be documented
+
+namespace BaseNodeHelper
 {
     using System;
     using System.Collections;
@@ -10,7 +12,7 @@
 
     public static class NodeTreeHelperChild
     {
-        public static bool IsChildNodeProperty(INode node, string propertyName, out Type childNodeType)
+        public static bool IsChildNodeProperty(Node node, string propertyName, out Type childNodeType)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
@@ -30,14 +32,16 @@
                 return false;
 
             Type PropertyType = Property.PropertyType;
-            if (!NodeTreeHelper.IsNodeInterfaceType(PropertyType))
+
+            // if (!NodeTreeHelper.IsNodeInterfaceType(PropertyType))
+            if (!NodeTreeHelper.IsNodeDescendantType(PropertyType))
                 return false;
 
             childNodeType = PropertyType;
             return true;
         }
 
-        public static bool IsChildNode(INode node, string propertyName, INode childNode)
+        public static bool IsChildNode(Node node, string propertyName, Node childNode)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
@@ -49,7 +53,9 @@
                 return false;
 
             Type PropertyType = Property.PropertyType;
-            if (!NodeTreeHelper.IsNodeInterfaceType(PropertyType))
+
+            // if (!NodeTreeHelper.IsNodeInterfaceType(PropertyType))
+            if (!NodeTreeHelper.IsNodeDescendantType(PropertyType))
                 return false;
 
             if (Property.GetValue(node) != childNode)
@@ -58,7 +64,7 @@
             return true;
         }
 
-        public static void GetChildNode(INode node, string propertyName, out INode childNode)
+        public static void GetChildNode(Node node, string propertyName, out Node childNode)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
@@ -67,12 +73,14 @@
             PropertyInfo Property = NodeType.GetProperty(propertyName);
 
             Debug.Assert(Property != null);
-            Debug.Assert(NodeTreeHelper.IsNodeInterfaceType(Property.PropertyType));
 
-            childNode = Property.GetValue(node) as INode;
+            // Debug.Assert(NodeTreeHelper.IsNodeInterfaceType(Property.PropertyType));
+            Debug.Assert(NodeTreeHelper.IsNodeDescendantType(Property.PropertyType));
+
+            childNode = Property.GetValue(node) as Node;
         }
 
-        public static Type ChildInterfaceType(INode node, string propertyName)
+        public static Type ChildInterfaceType(Node node, string propertyName)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
@@ -82,12 +90,14 @@
             Debug.Assert(Property != null);
 
             Type InterfaceType = Property.PropertyType;
-            Debug.Assert(NodeTreeHelper.IsNodeInterfaceType(InterfaceType));
+
+            // Debug.Assert(NodeTreeHelper.IsNodeInterfaceType(InterfaceType));
+            Debug.Assert(NodeTreeHelper.IsNodeDescendantType(InterfaceType));
 
             return InterfaceType;
         }
 
-        public static void SetChildNode(INode node, string propertyName, INode newChildNode)
+        public static void SetChildNode(Node node, string propertyName, Node newChildNode)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
@@ -96,10 +106,14 @@
             Type NodeType = node.GetType();
             PropertyInfo Property = NodeType.GetProperty(propertyName);
             Debug.Assert(Property != null);
-            Debug.Assert(NodeTreeHelper.IsNodeInterfaceType(Property.PropertyType));
+
+            // Debug.Assert(NodeTreeHelper.IsNodeInterfaceType(Property.PropertyType));
+            Debug.Assert(NodeTreeHelper.IsNodeDescendantType(Property.PropertyType));
 
             Type ChildNodeType = newChildNode.GetType();
-            Debug.Assert(ChildNodeType.GetInterface(Property.PropertyType.FullName) != null);
+
+            // Debug.Assert(ChildNodeType.GetInterface(Property.PropertyType.FullName) != null);
+            Debug.Assert(Property.PropertyType.IsAssignableFrom(ChildNodeType));
 
             Property.SetValue(node, newChildNode);
         }

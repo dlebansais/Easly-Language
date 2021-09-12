@@ -6,16 +6,10 @@ namespace BaseNode
 {
     using System.Collections.Generic;
 
-    public interface IGlobalReplicate : INode
-    {
-        IName ReplicateName { get; }
-        IList<IPattern> Patterns { get; }
-    }
-
     [System.Serializable]
-    public class GlobalReplicate : Node, IGlobalReplicate
+    public class GlobalReplicate : Node
     {
-        public virtual IName ReplicateName { get; set; }
-        public virtual IList<IPattern> Patterns { get; set; }
+        public virtual Name ReplicateName { get; set; }
+        public virtual IList<Pattern> Patterns { get; set; }
     }
 }

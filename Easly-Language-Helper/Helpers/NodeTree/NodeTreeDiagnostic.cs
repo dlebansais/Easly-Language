@@ -1,4 +1,6 @@
-﻿namespace BaseNodeHelper
+﻿#pragma warning disable SA1600 // Elements should be documented
+
+namespace BaseNodeHelper
 {
     using System;
     using System.Collections.Generic;
@@ -8,9 +10,9 @@
 
     public static class NodeTreeDiagnostic
     {
-        public static bool IsValid(INode root, bool assertValid = true)
+        public static bool IsValid(Node root, bool assertValid = true)
         {
-            List<INode> NodeList = new List<INode>();
+            List<Node> NodeList = new List<Node>();
             List<Guid> GuidList = new List<Guid>();
             return IsValid(NodeList, GuidList, root, assertValid);
         }
@@ -23,7 +25,7 @@
             return false;
         }
 
-        private static bool IsValid(List<INode> nodeList, List<Guid> guidList, INode root, bool assertValid)
+        private static bool IsValid(List<Node> nodeList, List<Guid> guidList, Node root, bool assertValid)
         {
             Debug.Assert(nodeList != null);
             Debug.Assert(guidList != null);
@@ -53,17 +55,17 @@
 
             foreach (string PropertyName in PropertyNames)
             {
-                Type ChildInterfaceType, ChildNodeType;
+                Type /*ChildInterfaceType,*/ ChildNodeType;
 
                 if (NodeTreeHelperChild.IsChildNodeProperty(root, PropertyName, out ChildNodeType))
                 {
-                    NodeTreeHelperChild.GetChildNode(root, PropertyName, out INode ChildNode);
+                    NodeTreeHelperChild.GetChildNode(root, PropertyName, out Node ChildNode);
                     if (!IsValid(nodeList, guidList, ChildNode, assertValid))
                         return FailIsValidCheck(assertValid);
                 }
                 else if (NodeTreeHelperOptional.IsOptionalChildNodeProperty(root, PropertyName, out ChildNodeType))
                 {
-                    NodeTreeHelperOptional.GetChildNode(root, PropertyName, out bool IsAssigned, out INode ChildNode);
+                    NodeTreeHelperOptional.GetChildNode(root, PropertyName, out bool IsAssigned, out Node ChildNode);
 
                     if (ChildNode != null)
                     {
@@ -73,13 +75,13 @@
                 }
                 else if (NodeTreeHelperList.IsNodeListProperty(root, PropertyName, out ChildNodeType))
                 {
-                    NodeTreeHelperList.GetChildNodeList(root, PropertyName, out IReadOnlyList<INode> ChildNodeList);
+                    NodeTreeHelperList.GetChildNodeList(root, PropertyName, out IReadOnlyList<Node> ChildNodeList);
                     if (ChildNodeList == null)
                         return FailIsValidCheck(assertValid);
 
                     for (int Index = 0; Index < ChildNodeList.Count; Index++)
                     {
-                        INode ChildNode = ChildNodeList[Index];
+                        Node ChildNode = ChildNodeList[Index];
                         if (!IsValid(nodeList, guidList, ChildNode, assertValid))
                             return FailIsValidCheck(assertValid);
                     }
@@ -87,7 +89,7 @@
                     if (ChildNodeList.Count == 0 && NodeHelper.IsCollectionNeverEmpty(root, PropertyName))
                         return FailIsValidCheck(assertValid);
                 }
-                else if (NodeTreeHelperBlockList.IsBlockListProperty(root, PropertyName, out ChildInterfaceType, out ChildNodeType))
+                else if (NodeTreeHelperBlockList.IsBlockListProperty(root, PropertyName, /*out ChildInterfaceType,*/ out ChildNodeType))
                 {
                     IBlockList BlockList = NodeTreeHelperBlockList.GetBlockList(root, PropertyName);
                     if (!IsValidBlockList(nodeList, guidList, BlockList, assertValid))
@@ -101,7 +103,7 @@
 
                         for (int Index = 0; Index < Block.NodeList.Count; Index++)
                         {
-                            INode ChildNode = Block.NodeList[Index] as INode;
+                            Node ChildNode = Block.NodeList[Index] as Node;
                             if (!IsValid(nodeList, guidList, ChildNode, assertValid))
                                 return FailIsValidCheck(assertValid);
                         }
@@ -147,7 +149,7 @@
             return true;
         }
 
-        private static bool IsValidBlockList(List<INode> nodeList, List<Guid> guidList, IBlockList blockList, bool assertValid)
+        private static bool IsValidBlockList(List<Node> nodeList, List<Guid> guidList, IBlockList blockList, bool assertValid)
         {
             Debug.Assert(nodeList != null);
             Debug.Assert(guidList != null);
@@ -175,7 +177,7 @@
             return true;
         }
 
-        private static bool IsValidBlock(List<INode> nodeList, List<Guid> guidList, IBlock block, bool assertValid)
+        private static bool IsValidBlock(List<Node> nodeList, List<Guid> guidList, IBlock block, bool assertValid)
         {
             Debug.Assert(nodeList != null);
             Debug.Assert(guidList != null);

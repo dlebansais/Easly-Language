@@ -4,17 +4,10 @@
 
 namespace BaseNode
 {
-    public interface IBody : INode
+    public abstract class Body : Node
     {
-        IBlockList<IAssertion, Assertion> RequireBlocks { get; }
-        IBlockList<IAssertion, Assertion> EnsureBlocks { get; }
-        IBlockList<IIdentifier, Identifier> ExceptionIdentifierBlocks { get; }
-    }
-
-    public abstract class Body : Node, IBody
-    {
-        public virtual IBlockList<IAssertion, Assertion> RequireBlocks { get; set; }
-        public virtual IBlockList<IAssertion, Assertion> EnsureBlocks { get; set; }
-        public virtual IBlockList<IIdentifier, Identifier> ExceptionIdentifierBlocks { get; set; }
+        public virtual BlockList<Assertion> RequireBlocks { get; set; }
+        public virtual BlockList<Assertion> EnsureBlocks { get; set; }
+        public virtual BlockList<Identifier> ExceptionIdentifierBlocks { get; set; }
     }
 }

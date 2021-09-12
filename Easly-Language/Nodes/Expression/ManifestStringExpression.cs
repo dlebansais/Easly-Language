@@ -4,13 +4,8 @@
 
 namespace BaseNode
 {
-    public interface IManifestStringExpression : IExpression
-    {
-        string Text { get; }
-    }
-
     [System.Serializable]
-    public class ManifestStringExpression : Expression, IManifestStringExpression
+    public class ManifestStringExpression : Expression
     {
         public virtual string Text { get; set; }
     }

@@ -6,14 +6,9 @@ namespace BaseNode
 {
     using System.Collections.Generic;
 
-    public interface IQualifiedName : INode
-    {
-        IList<IIdentifier> Path { get; }
-    }
-
     [System.Serializable]
-    public class QualifiedName : Node, IQualifiedName
+    public class QualifiedName : Node
     {
-        public virtual IList<IIdentifier> Path { get; set; }
+        public virtual IList<Identifier> Path { get; set; }
     }
 }

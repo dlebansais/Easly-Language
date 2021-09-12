@@ -4,14 +4,9 @@
 
 namespace BaseNode
 {
-    public interface ICheckInstruction : IInstruction
-    {
-        IExpression BooleanExpression { get; }
-    }
-
     [System.Serializable]
-    public class CheckInstruction : Instruction, ICheckInstruction
+    public class CheckInstruction : Instruction
     {
-        public virtual IExpression BooleanExpression { get; set; }
+        public virtual Expression BooleanExpression { get; set; }
     }
 }

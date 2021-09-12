@@ -4,16 +4,10 @@
 
 namespace BaseNode
 {
-    public interface IAssignmentInstruction : IInstruction
-    {
-        IBlockList<IQualifiedName, QualifiedName> DestinationBlocks { get; }
-        IExpression Source { get; }
-    }
-
     [System.Serializable]
-    public class AssignmentInstruction : Instruction, IAssignmentInstruction
+    public class AssignmentInstruction : Instruction
     {
-        public virtual IBlockList<IQualifiedName, QualifiedName> DestinationBlocks { get; set; }
-        public virtual IExpression Source { get; set; }
+        public virtual BlockList<QualifiedName> DestinationBlocks { get; set; }
+        public virtual Expression Source { get; set; }
     }
 }

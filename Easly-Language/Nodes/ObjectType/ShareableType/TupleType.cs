@@ -4,14 +4,9 @@
 
 namespace BaseNode
 {
-    public interface ITupleType : IShareableType
-    {
-        IBlockList<IEntityDeclaration, EntityDeclaration> EntityDeclarationBlocks { get; }
-    }
-
     [System.Serializable]
-    public class TupleType : ShareableType, ITupleType
+    public class TupleType : ShareableType
     {
-        public virtual IBlockList<IEntityDeclaration, EntityDeclaration> EntityDeclarationBlocks { get; set; }
+        public virtual BlockList<EntityDeclaration> EntityDeclarationBlocks { get; set; }
     }
 }

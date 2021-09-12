@@ -1,4 +1,7 @@
-﻿namespace BaseNodeHelper
+﻿#pragma warning disable SA1600 // Elements should be documented
+#pragma warning disable SA1601 // Partial elements should be documented
+
+namespace BaseNodeHelper
 {
     using System;
     using System.Collections;
@@ -10,7 +13,7 @@
 
     public static partial class NodeHelper
     {
-        public static IAnchoredType CreateAnchoredType(IQualifiedName anchoredName, AnchorKinds anchorKinds)
+        public static AnchoredType CreateAnchoredType(QualifiedName anchoredName, AnchorKinds anchorKinds)
         {
             AnchoredType Result = new AnchoredType();
             Result.Documentation = CreateEmptyDocumentation();
@@ -20,19 +23,19 @@
             return Result;
         }
 
-        public static IFunctionType CreateFunctionType(IObjectType baseType, IObjectType returnType)
+        public static FunctionType CreateFunctionType(ObjectType baseType, ObjectType returnType)
         {
-            IQueryOverloadType FirstOverload = CreateEmptyQueryOverloadType(returnType);
+            QueryOverloadType FirstOverload = CreateEmptyQueryOverloadType(returnType);
 
             FunctionType Result = new FunctionType();
             Result.Documentation = CreateEmptyDocumentation();
             Result.BaseType = baseType;
-            Result.OverloadBlocks = BlockListHelper<IQueryOverloadType, QueryOverloadType>.CreateSimpleBlockList(FirstOverload);
+            Result.OverloadBlocks = BlockListHelper<QueryOverloadType>.CreateSimpleBlockList(FirstOverload);
 
             return Result;
         }
 
-        public static IFunctionType CreateFunctionType(IObjectType baseType, IBlockList<IQueryOverloadType, QueryOverloadType> overloadBlocks)
+        public static FunctionType CreateFunctionType(ObjectType baseType, BlockList<QueryOverloadType> overloadBlocks)
         {
             FunctionType Result = new FunctionType();
             Result.Documentation = CreateEmptyDocumentation();
@@ -42,7 +45,7 @@
             return Result;
         }
 
-        public static IGenericType CreateGenericType(IIdentifier classIdentifier, List<ITypeArgument> typeArgumentList)
+        public static GenericType CreateGenericType(Identifier classIdentifier, List<TypeArgument> typeArgumentList)
         {
             if (typeArgumentList == null) throw new ArgumentNullException(nameof(typeArgumentList));
             if (typeArgumentList.Count == 0) throw new ArgumentException($"{nameof(typeArgumentList)} must have at least one type argument");
@@ -50,12 +53,12 @@
             GenericType Result = new GenericType();
             Result.Documentation = CreateEmptyDocumentation();
             Result.ClassIdentifier = classIdentifier;
-            Result.TypeArgumentBlocks = BlockListHelper<ITypeArgument, TypeArgument>.CreateBlockList(typeArgumentList);
+            Result.TypeArgumentBlocks = BlockListHelper<TypeArgument>.CreateBlockList(typeArgumentList);
 
             return Result;
         }
 
-        public static IGenericType CreateGenericType(SharingType sharing, IIdentifier classIdentifier, IBlockList<ITypeArgument, TypeArgument> typeArgumentBlocks)
+        public static GenericType CreateGenericType(SharingType sharing, Identifier classIdentifier, BlockList<TypeArgument> typeArgumentBlocks)
         {
             if (typeArgumentBlocks == null) throw new ArgumentNullException(nameof(typeArgumentBlocks));
             if (typeArgumentBlocks.NodeBlockList.Count == 0) throw new ArgumentException($"{nameof(typeArgumentBlocks)} must not be empty");
@@ -70,26 +73,26 @@
             return Result;
         }
 
-        public static IIndexerType CreateIndexerType(IObjectType baseType, IObjectType entityType, IEntityDeclaration parameter)
+        public static IndexerType CreateIndexerType(ObjectType baseType, ObjectType entityType, EntityDeclaration parameter)
         {
             IndexerType Result = new IndexerType();
             Result.Documentation = CreateEmptyDocumentation();
             Result.BaseType = baseType;
             Result.EntityType = entityType;
-            Result.IndexParameterBlocks = BlockListHelper<IEntityDeclaration, EntityDeclaration>.CreateSimpleBlockList(parameter);
+            Result.IndexParameterBlocks = BlockListHelper<EntityDeclaration>.CreateSimpleBlockList(parameter);
             Result.ParameterEnd = ParameterEndStatus.Closed;
             Result.IndexerKind = UtilityType.ReadWrite;
-            Result.GetRequireBlocks = BlockListHelper<IAssertion, Assertion>.CreateEmptyBlockList();
-            Result.GetEnsureBlocks = BlockListHelper<IAssertion, Assertion>.CreateEmptyBlockList();
-            Result.GetExceptionIdentifierBlocks = BlockListHelper<IIdentifier, Identifier>.CreateEmptyBlockList();
-            Result.SetRequireBlocks = BlockListHelper<IAssertion, Assertion>.CreateEmptyBlockList();
-            Result.SetEnsureBlocks = BlockListHelper<IAssertion, Assertion>.CreateEmptyBlockList();
-            Result.SetExceptionIdentifierBlocks = BlockListHelper<IIdentifier, Identifier>.CreateEmptyBlockList();
+            Result.GetRequireBlocks = BlockListHelper<Assertion>.CreateEmptyBlockList();
+            Result.GetEnsureBlocks = BlockListHelper<Assertion>.CreateEmptyBlockList();
+            Result.GetExceptionIdentifierBlocks = BlockListHelper<Identifier>.CreateEmptyBlockList();
+            Result.SetRequireBlocks = BlockListHelper<Assertion>.CreateEmptyBlockList();
+            Result.SetEnsureBlocks = BlockListHelper<Assertion>.CreateEmptyBlockList();
+            Result.SetExceptionIdentifierBlocks = BlockListHelper<Identifier>.CreateEmptyBlockList();
 
             return Result;
         }
 
-        public static IIndexerType CreateIndexerType(IObjectType baseType, IObjectType entityType, IBlockList<IEntityDeclaration, EntityDeclaration> indexParameterBlocks, ParameterEndStatus parameterEnd, UtilityType indexerKind, IBlockList<IAssertion, Assertion> getRequireBlocks, IBlockList<IAssertion, Assertion> getEnsureBlocks, IBlockList<IIdentifier, Identifier> getExceptionIdentifierBlocks, IBlockList<IAssertion, Assertion> setRequireBlocks, IBlockList<IAssertion, Assertion> setEnsureBlocks, IBlockList<IIdentifier, Identifier> setExceptionIdentifierBlocks)
+        public static IndexerType CreateIndexerType(ObjectType baseType, ObjectType entityType, BlockList<EntityDeclaration> indexParameterBlocks, ParameterEndStatus parameterEnd, UtilityType indexerKind, BlockList<Assertion> getRequireBlocks, BlockList<Assertion> getEnsureBlocks, BlockList<Identifier> getExceptionIdentifierBlocks, BlockList<Assertion> setRequireBlocks, BlockList<Assertion> setEnsureBlocks, BlockList<Identifier> setExceptionIdentifierBlocks)
         {
             IndexerType Result = new IndexerType();
             Result.Documentation = CreateEmptyDocumentation();
@@ -108,7 +111,7 @@
             return Result;
         }
 
-        public static IKeywordAnchoredType CreateKeywordAnchoredType(Keyword anchor)
+        public static KeywordAnchoredType CreateKeywordAnchoredType(Keyword anchor)
         {
             KeywordAnchoredType Result = new KeywordAnchoredType();
             Result.Documentation = CreateEmptyDocumentation();
@@ -117,21 +120,21 @@
             return Result;
         }
 
-        public static IProcedureType CreateProcedureType(IObjectType baseType)
+        public static ProcedureType CreateProcedureType(ObjectType baseType)
         {
-            ICommandOverloadType FirstOverload = CreateEmptyCommandOverloadType();
+            CommandOverloadType FirstOverload = CreateEmptyCommandOverloadType();
 
             ProcedureType Result = new ProcedureType();
             Result.Documentation = CreateEmptyDocumentation();
             Result.BaseType = baseType;
-            Result.OverloadBlocks = BlockListHelper<ICommandOverloadType, CommandOverloadType>.CreateSimpleBlockList(FirstOverload);
+            Result.OverloadBlocks = BlockListHelper<CommandOverloadType>.CreateSimpleBlockList(FirstOverload);
 
             return Result;
         }
 
-        public static IProcedureType CreateProcedureType(IObjectType baseType, IBlockList<ICommandOverloadType, CommandOverloadType> overloadBlocks)
+        public static ProcedureType CreateProcedureType(ObjectType baseType, BlockList<CommandOverloadType> overloadBlocks)
         {
-            ICommandOverloadType FirstOverload = CreateEmptyCommandOverloadType();
+            CommandOverloadType FirstOverload = CreateEmptyCommandOverloadType();
 
             ProcedureType Result = new ProcedureType();
             Result.Documentation = CreateEmptyDocumentation();
@@ -141,22 +144,22 @@
             return Result;
         }
 
-        public static IPropertyType CreatePropertyType(IObjectType baseType, IObjectType entityType)
+        public static PropertyType CreatePropertyType(ObjectType baseType, ObjectType entityType)
         {
             PropertyType Result = new PropertyType();
             Result.Documentation = CreateEmptyDocumentation();
             Result.BaseType = baseType;
             Result.EntityType = entityType;
             Result.PropertyKind = UtilityType.ReadWrite;
-            Result.GetEnsureBlocks = BlockListHelper<IAssertion, Assertion>.CreateEmptyBlockList();
-            Result.GetExceptionIdentifierBlocks = BlockListHelper<IIdentifier, Identifier>.CreateEmptyBlockList();
-            Result.SetRequireBlocks = BlockListHelper<IAssertion, Assertion>.CreateEmptyBlockList();
-            Result.SetExceptionIdentifierBlocks = BlockListHelper<IIdentifier, Identifier>.CreateEmptyBlockList();
+            Result.GetEnsureBlocks = BlockListHelper<Assertion>.CreateEmptyBlockList();
+            Result.GetExceptionIdentifierBlocks = BlockListHelper<Identifier>.CreateEmptyBlockList();
+            Result.SetRequireBlocks = BlockListHelper<Assertion>.CreateEmptyBlockList();
+            Result.SetExceptionIdentifierBlocks = BlockListHelper<Identifier>.CreateEmptyBlockList();
 
             return Result;
         }
 
-        public static IPropertyType CreatePropertyType(IObjectType baseType, IObjectType entityType, UtilityType propertyKind, IBlockList<IAssertion, Assertion> getEnsureBlocks, IBlockList<IIdentifier, Identifier> getExceptionIdentifierBlocks, IBlockList<IAssertion, Assertion> setRequireBlocks, IBlockList<IIdentifier, Identifier> setExceptionIdentifierBlocks)
+        public static PropertyType CreatePropertyType(ObjectType baseType, ObjectType entityType, UtilityType propertyKind, BlockList<Assertion> getEnsureBlocks, BlockList<Identifier> getExceptionIdentifierBlocks, BlockList<Assertion> setRequireBlocks, BlockList<Identifier> setExceptionIdentifierBlocks)
         {
             PropertyType Result = new PropertyType();
             Result.Documentation = CreateEmptyDocumentation();
@@ -171,7 +174,7 @@
             return Result;
         }
 
-        public static ISimpleType CreateSimpleType(SharingType sharing, IIdentifier classIdentifier)
+        public static SimpleType CreateSimpleType(SharingType sharing, Identifier classIdentifier)
         {
             SimpleType SimpleSimpleType = new SimpleType();
             SimpleSimpleType.Documentation = CreateEmptyDocumentation();
@@ -181,16 +184,16 @@
             return SimpleSimpleType;
         }
 
-        public static ITupleType CreateTupleType(IEntityDeclaration firstEntityDeclaration)
+        public static TupleType CreateTupleType(EntityDeclaration firstEntityDeclaration)
         {
             TupleType Result = new TupleType();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.EntityDeclarationBlocks = BlockListHelper<IEntityDeclaration, EntityDeclaration>.CreateSimpleBlockList(firstEntityDeclaration);
+            Result.EntityDeclarationBlocks = BlockListHelper<EntityDeclaration>.CreateSimpleBlockList(firstEntityDeclaration);
 
             return Result;
         }
 
-        public static ITupleType CreateTupleType(SharingType sharing, IBlockList<IEntityDeclaration, EntityDeclaration> entityDeclarationBlocks)
+        public static TupleType CreateTupleType(SharingType sharing, BlockList<EntityDeclaration> entityDeclarationBlocks)
         {
             TupleType Result = new TupleType();
             Result.Documentation = CreateEmptyDocumentation();

@@ -4,14 +4,9 @@
 
 namespace BaseNode
 {
-    public interface IResultOfExpression : IExpression
-    {
-        IExpression Source { get; }
-    }
-
     [System.Serializable]
-    public class ResultOfExpression : Expression, IResultOfExpression
+    public class ResultOfExpression : Expression
     {
-        public virtual IExpression Source { get; set; }
+        public virtual Expression Source { get; set; }
     }
 }

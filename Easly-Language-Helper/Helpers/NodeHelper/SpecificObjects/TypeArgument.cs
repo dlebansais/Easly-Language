@@ -1,4 +1,7 @@
-﻿namespace BaseNodeHelper
+﻿#pragma warning disable SA1600 // Elements should be documented
+#pragma warning disable SA1601 // Partial elements should be documented
+
+namespace BaseNodeHelper
 {
     using System;
     using System.Collections;
@@ -10,7 +13,7 @@
 
     public static partial class NodeHelper
     {
-        public static IAssignmentTypeArgument CreateAssignmentTypeArgument(IIdentifier parameterIdentifier, IObjectType source)
+        public static AssignmentTypeArgument CreateAssignmentTypeArgument(Identifier parameterIdentifier, ObjectType source)
         {
             AssignmentTypeArgument Result = new AssignmentTypeArgument();
             Result.Documentation = CreateEmptyDocumentation();
@@ -20,7 +23,7 @@
             return Result;
         }
 
-        public static IPositionalTypeArgument CreatePositionalTypeArgument(IObjectType source)
+        public static PositionalTypeArgument CreatePositionalTypeArgument(ObjectType source)
         {
             PositionalTypeArgument Result = new PositionalTypeArgument();
             Result.Documentation = CreateEmptyDocumentation();

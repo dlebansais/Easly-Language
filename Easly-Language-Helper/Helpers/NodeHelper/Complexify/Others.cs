@@ -1,4 +1,6 @@
-﻿namespace BaseNodeHelper
+﻿#pragma warning disable SA1600 // Elements should be documented
+
+namespace BaseNodeHelper
 {
     using System;
     using System.Collections;
@@ -9,16 +11,16 @@
     public static partial class NodeHelper
     {
         #region Others
-        private static bool GetComplexifiedAttachment(IAttachment node, out IList<IAttachment> complexifiedAttachmentList)
+        private static bool GetComplexifiedAttachment(Attachment node, out IList<Attachment> complexifiedAttachmentList)
         {
             complexifiedAttachmentList = null;
 
-            if (GetComplexifiedObjectTypeBlockList(node.AttachTypeBlocks, out IBlockList<IObjectType, ObjectType> ComplexifiedAttachTypeBlocks))
+            if (GetComplexifiedObjectTypeBlockList(node.AttachTypeBlocks, out BlockList<ObjectType> ComplexifiedAttachTypeBlocks))
             {
-                IScope ClonedInstructions = (IScope)DeepCloneNode(node.Instructions, cloneCommentGuid: false);
-                IAttachment ComplexifiedAttachment = CreateAttachment(ComplexifiedAttachTypeBlocks, ClonedInstructions);
+                Scope ClonedInstructions = (Scope)DeepCloneNode(node.Instructions, cloneCommentGuid: false);
+                Attachment ComplexifiedAttachment = CreateAttachment(ComplexifiedAttachTypeBlocks, ClonedInstructions);
 
-                complexifiedAttachmentList = new List<IAttachment>() { ComplexifiedAttachment };
+                complexifiedAttachmentList = new List<Attachment>() { ComplexifiedAttachment };
 
                 return true;
             }
@@ -27,33 +29,33 @@
             return false;
         }
 
-        private static bool GetComplexifiedQualifiedName(IQualifiedName node, out IList<IQualifiedName> complexifiedQualifiedNameList)
+        private static bool GetComplexifiedQualifiedName(QualifiedName node, out IList<QualifiedName> complexifiedQualifiedNameList)
         {
             complexifiedQualifiedNameList = null;
 
-            if (ComplexifyQualifiedName(node, out IQualifiedName ComplexifiedQualifiedName))
-                complexifiedQualifiedNameList = new List<IQualifiedName>() { ComplexifiedQualifiedName };
+            if (ComplexifyQualifiedName(node, out QualifiedName ComplexifiedQualifiedName))
+                complexifiedQualifiedNameList = new List<QualifiedName>() { ComplexifiedQualifiedName };
 
             return complexifiedQualifiedNameList != null;
         }
 
-        private static bool ComplexifyQualifiedName(IQualifiedName node, out IQualifiedName complexifiedNode)
+        private static bool ComplexifyQualifiedName(QualifiedName node, out QualifiedName complexifiedNode)
         {
             Debug.Assert(node.Path.Count > 0, $"{nameof(node)} always has at least one element");
 
             complexifiedNode = null;
             bool IsSplit = false;
 
-            IList<IIdentifier> Path = new List<IIdentifier>();
+            IList<Identifier> Path = new List<Identifier>();
 
-            foreach (IIdentifier Item in node.Path)
+            foreach (Identifier Item in node.Path)
             {
                 string[] SplitText = Item.Text.Split('.');
                 IsSplit |= SplitText.Length > 1;
 
                 for (int i = 0; i < SplitText.Length; i++)
                 {
-                    IIdentifier Identifier = CreateSimpleIdentifier(SplitText[i]);
+                    Identifier Identifier = CreateSimpleIdentifier(SplitText[i]);
                     Path.Add(Identifier);
                 }
             }
@@ -66,18 +68,18 @@
             return complexifiedNode != null;
         }
 
-        private static bool GetComplexifiedConditional(IConditional node, out IList<IConditional> complexifiedConditionalList)
+        private static bool GetComplexifiedConditional(Conditional node, out IList<Conditional> complexifiedConditionalList)
         {
             complexifiedConditionalList = null;
 
-            if (GetComplexifiedExpression(node.BooleanExpression, out IList<IExpression> ComplexifiedBooleanExpressionList))
+            if (GetComplexifiedExpression(node.BooleanExpression, out IList<Expression> ComplexifiedBooleanExpressionList))
             {
-                complexifiedConditionalList = new List<IConditional>();
+                complexifiedConditionalList = new List<Conditional>();
 
-                foreach (IExpression ComplexifiedBooleanExpression in ComplexifiedBooleanExpressionList)
+                foreach (Expression ComplexifiedBooleanExpression in ComplexifiedBooleanExpressionList)
                 {
-                    IScope ClonedInstructions = (IScope)DeepCloneNode(node.Instructions, cloneCommentGuid: false);
-                    IConditional ComplexifiedNode = CreateConditional(ComplexifiedBooleanExpression, ClonedInstructions);
+                    Scope ClonedInstructions = (Scope)DeepCloneNode(node.Instructions, cloneCommentGuid: false);
+                    Conditional ComplexifiedNode = CreateConditional(ComplexifiedBooleanExpression, ClonedInstructions);
                     complexifiedConditionalList.Add(ComplexifiedNode);
                 }
 

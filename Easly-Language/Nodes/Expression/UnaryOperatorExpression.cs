@@ -4,16 +4,10 @@
 
 namespace BaseNode
 {
-    public interface IUnaryOperatorExpression : IExpression
-    {
-        IIdentifier Operator { get; }
-        IExpression RightExpression { get; }
-    }
-
     [System.Serializable]
-    public class UnaryOperatorExpression : Expression, IUnaryOperatorExpression
+    public class UnaryOperatorExpression : Expression
     {
-        public virtual IIdentifier Operator { get; set; }
-        public virtual IExpression RightExpression { get; set; }
+        public virtual Identifier Operator { get; set; }
+        public virtual Expression RightExpression { get; set; }
     }
 }

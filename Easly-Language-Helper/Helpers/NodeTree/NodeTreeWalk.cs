@@ -1,4 +1,6 @@
-﻿namespace BaseNodeHelper
+﻿#pragma warning disable SA1600 // Elements should be documented
+
+namespace BaseNodeHelper
 {
     using System;
     using System.Collections;
@@ -9,7 +11,7 @@
 
     public static class NodeTreeWalk
     {
-        public static bool Walk<TContext>(INode root, IWalkCallbacks<TContext> callbacks, TContext data)
+        public static bool Walk<TContext>(Node root, WalkCallbacks<TContext> callbacks, TContext data)
         where TContext : class
         {
             return NodeTreeWalk<TContext>.Walk(root, callbacks, data);
@@ -21,15 +23,14 @@
 #pragma warning restore SA1402 // File may only contain a single type
         where TContext : class
     {
-        internal static bool Walk(INode root, IWalkCallbacks<TContext> callbacks, TContext data)
+        internal static bool Walk(Node root, WalkCallbacks<TContext> callbacks, TContext data)
         {
             if (root == null) throw new ArgumentNullException(nameof(root));
-            if (callbacks == null) throw new ArgumentNullException(nameof(callbacks));
 
             return Walk(root, null, null, callbacks, data);
         }
 
-        private static bool Walk(INode node, INode parentNode, string propertyName, IWalkCallbacks<TContext> callbacks, TContext data)
+        private static bool Walk(Node node, Node parentNode, string propertyName, WalkCallbacks<TContext> callbacks, TContext data)
         {
             Debug.Assert((parentNode == null && propertyName == null) || (parentNode != null && propertyName != null));
 
@@ -43,17 +44,17 @@
 
             foreach (string NodePropertyName in PropertyNames)
             {
-                Type ChildInterfaceType, ChildNodeType;
+                Type /*ChildInterfaceType,*/ ChildNodeType;
 
                 if (NodeTreeHelperChild.IsChildNodeProperty(node, NodePropertyName, out ChildNodeType))
                 {
-                    NodeTreeHelperChild.GetChildNode(node, NodePropertyName, out INode ChildNode);
+                    NodeTreeHelperChild.GetChildNode(node, NodePropertyName, out Node ChildNode);
                     if (!Walk(ChildNode, node, NodePropertyName, callbacks, data))
                         return false;
                 }
                 else if (NodeTreeHelperOptional.IsOptionalChildNodeProperty(node, NodePropertyName, out ChildNodeType))
                 {
-                    NodeTreeHelperOptional.GetChildNode(node, NodePropertyName, out bool IsAssigned, out INode ChildNode);
+                    NodeTreeHelperOptional.GetChildNode(node, NodePropertyName, out bool IsAssigned, out Node ChildNode);
                     if (IsAssigned)
                     {
                         Debug.Assert(ChildNode != null);
@@ -64,7 +65,7 @@
                 }
                 else if (NodeTreeHelperList.IsNodeListProperty(node, NodePropertyName, out ChildNodeType))
                 {
-                    NodeTreeHelperList.GetChildNodeList(node, NodePropertyName, out IReadOnlyList<INode> ChildNodeList);
+                    NodeTreeHelperList.GetChildNodeList(node, NodePropertyName, out IReadOnlyList<Node> ChildNodeList);
                     Debug.Assert(ChildNodeList != null);
 
                     if (callbacks.HandlerList != null && !callbacks.HandlerList(node, NodePropertyName, ChildNodeList, callbacks, data))
@@ -74,13 +75,13 @@
                     {
                         for (int Index = 0; Index < ChildNodeList.Count; Index++)
                         {
-                            INode ChildNode = ChildNodeList[Index];
+                            Node ChildNode = ChildNodeList[Index];
                             if (!Walk(ChildNode, node, NodePropertyName, callbacks, data))
                                 return false;
                         }
                     }
                 }
-                else if (NodeTreeHelperBlockList.IsBlockListProperty(node, NodePropertyName, out ChildInterfaceType, out ChildNodeType))
+                else if (NodeTreeHelperBlockList.IsBlockListProperty(node, NodePropertyName, /*out ChildInterfaceType,*/ out ChildNodeType))
                 {
                     IBlockList BlockList = NodeTreeHelperBlockList.GetBlockList(node, NodePropertyName);
                     Debug.Assert(BlockList.NodeBlockList != null);
@@ -108,7 +109,7 @@
 
                             for (int Index = 0; Index < NodeList.Count; Index++)
                             {
-                                INode ChildNode = NodeList[Index] as INode;
+                                Node ChildNode = NodeList[Index] as Node;
                                 Debug.Assert(ChildNode != null);
 
                                 if (!Walk(ChildNode, node, NodePropertyName, callbacks, data))
@@ -127,7 +128,7 @@
 
                                 for (int Index = 0; Index < Block.NodeList.Count; Index++)
                                 {
-                                    INode ChildNode = Block.NodeList[Index] as INode;
+                                    Node ChildNode = Block.NodeList[Index] as Node;
                                     if (!Walk(ChildNode, node, NodePropertyName, callbacks, data))
                                         return false;
                                 }

@@ -1,4 +1,7 @@
-﻿namespace BaseNodeHelper
+﻿#pragma warning disable SA1600 // Elements should be documented
+#pragma warning disable SA1601 // Partial elements should be documented
+
+namespace BaseNodeHelper
 {
     using System;
     using System.Collections;
@@ -80,18 +83,18 @@
             return renamedSymbol != null;
         }
 
-        private static bool GetComplexifiedIdentifierBlockList(IBlockList<IIdentifier, Identifier> identifierBlockList, out IBlockList<IIdentifier, Identifier> newBlockList)
+        private static bool GetComplexifiedIdentifierBlockList(BlockList<Identifier> identifierBlockList, out BlockList<Identifier> newBlockList)
         {
             for (int BlockIndex = 0; BlockIndex < identifierBlockList.NodeBlockList.Count; BlockIndex++)
             {
-                IBlock<IIdentifier, Identifier> Block = identifierBlockList.NodeBlockList[BlockIndex];
+                Block<Identifier> Block = identifierBlockList.NodeBlockList[BlockIndex];
 
                 for (int NodeIndex = 0; NodeIndex < Block.NodeList.Count; NodeIndex++)
                 {
-                    IIdentifier Identifier = Block.NodeList[NodeIndex];
-                    if (SplitIdentifier(Identifier, ',', ',', out IList<IIdentifier> Split))
+                    Identifier Identifier = Block.NodeList[NodeIndex];
+                    if (SplitIdentifier(Identifier, ',', ',', out IList<Identifier> Split))
                     {
-                        newBlockList = (IBlockList<IIdentifier, Identifier>)DeepCloneBlockList((IBlockList)identifierBlockList, cloneCommentGuid: false);
+                        newBlockList = (BlockList<Identifier>)DeepCloneBlockList((IBlockList)identifierBlockList, cloneCommentGuid: false);
 
                         newBlockList.NodeBlockList[BlockIndex].NodeList.RemoveAt(NodeIndex);
                         for (int i = 0; i < Split.Count; i++)
@@ -106,17 +109,17 @@
             return false;
         }
 
-        private static bool SplitIdentifier(IIdentifier identifier, char startTag, char endTag, out IList<IIdentifier> split)
+        private static bool SplitIdentifier(Identifier identifier, char startTag, char endTag, out IList<Identifier> split)
         {
             IList<string> SplitList = SplitString(identifier.Text, startTag, endTag);
 
             if (SplitList.Count > 1)
             {
-                split = new List<IIdentifier>();
+                split = new List<Identifier>();
 
                 foreach (string Item in SplitList)
                 {
-                    IIdentifier NewIdentifier = CreateSimpleIdentifier(Item.Trim());
+                    Identifier NewIdentifier = CreateSimpleIdentifier(Item.Trim());
                     split.Add(NewIdentifier);
                 }
 
@@ -127,18 +130,18 @@
             return false;
         }
 
-        private static bool GetComplexifiedNameBlockList(IBlockList<IName, Name> nameBlockList, out IBlockList<IName, Name> newBlockList)
+        private static bool GetComplexifiedNameBlockList(BlockList<Name> nameBlockList, out BlockList<Name> newBlockList)
         {
             for (int BlockIndex = 0; BlockIndex < nameBlockList.NodeBlockList.Count; BlockIndex++)
             {
-                IBlock<IName, Name> Block = nameBlockList.NodeBlockList[BlockIndex];
+                Block<Name> Block = nameBlockList.NodeBlockList[BlockIndex];
 
                 for (int NodeIndex = 0; NodeIndex < Block.NodeList.Count; NodeIndex++)
                 {
-                    IName Name = Block.NodeList[NodeIndex];
-                    if (SplitName(Name, ',', ',', out IList<IName> Split))
+                    Name Name = Block.NodeList[NodeIndex];
+                    if (SplitName(Name, ',', ',', out IList<Name> Split))
                     {
-                        newBlockList = (IBlockList<IName, Name>)DeepCloneBlockList((IBlockList)nameBlockList, cloneCommentGuid: false);
+                        newBlockList = (BlockList<Name>)DeepCloneBlockList((IBlockList)nameBlockList, cloneCommentGuid: false);
 
                         newBlockList.NodeBlockList[BlockIndex].NodeList.RemoveAt(NodeIndex);
                         for (int i = 0; i < Split.Count; i++)
@@ -153,17 +156,17 @@
             return false;
         }
 
-        private static bool SplitName(IName name, char startTag, char endTag, out IList<IName> split)
+        private static bool SplitName(Name name, char startTag, char endTag, out IList<Name> split)
         {
             IList<string> SplitList = SplitString(name.Text, startTag, endTag);
 
             if (SplitList.Count > 1)
             {
-                split = new List<IName>();
+                split = new List<Name>();
 
                 foreach (string Item in SplitList)
                 {
-                    IName NewName = CreateSimpleName(Item.Trim());
+                    Name NewName = CreateSimpleName(Item.Trim());
                     split.Add(NewName);
                 }
 
@@ -208,19 +211,19 @@
             return SplitList;
         }
 
-        private static bool GetComplexifiedArgumentBlockList(IBlockList<IArgument, Argument> argumentBlocks, out IBlockList<IArgument, Argument> newArgumentBlocks)
+        private static bool GetComplexifiedArgumentBlockList(BlockList<Argument> argumentBlocks, out BlockList<Argument> newArgumentBlocks)
         {
             for (int BlockIndex = 0; BlockIndex < argumentBlocks.NodeBlockList.Count; BlockIndex++)
             {
-                IBlock<IArgument, Argument> Block = argumentBlocks.NodeBlockList[BlockIndex];
+                Block<Argument> Block = argumentBlocks.NodeBlockList[BlockIndex];
 
                 for (int NodeIndex = 0; NodeIndex < Block.NodeList.Count; NodeIndex++)
                 {
-                    IArgument Argument = Block.NodeList[NodeIndex];
+                    Argument Argument = Block.NodeList[NodeIndex];
 
-                    if (SplitArgument(Argument, out IList<IArgument> SplitArgumentList))
+                    if (SplitArgument(Argument, out IList<Argument> SplitArgumentList))
                     {
-                        newArgumentBlocks = (IBlockList<IArgument, Argument>)DeepCloneBlockList((IBlockList)argumentBlocks, cloneCommentGuid: false);
+                        newArgumentBlocks = (BlockList<Argument>)DeepCloneBlockList((IBlockList)argumentBlocks, cloneCommentGuid: false);
 
                         Block = newArgumentBlocks.NodeBlockList[BlockIndex];
                         Block.NodeList.RemoveAt(NodeIndex);
@@ -234,16 +237,16 @@
 
             for (int BlockIndex = 0; BlockIndex < argumentBlocks.NodeBlockList.Count; BlockIndex++)
             {
-                IBlock<IArgument, Argument> Block = argumentBlocks.NodeBlockList[BlockIndex];
+                Block<Argument> Block = argumentBlocks.NodeBlockList[BlockIndex];
 
                 for (int NodeIndex = 0; NodeIndex < Block.NodeList.Count; NodeIndex++)
                 {
-                    IArgument Argument = Block.NodeList[NodeIndex];
+                    Argument Argument = Block.NodeList[NodeIndex];
 
-                    if (GetComplexifiedArgument(Argument, out IList<IArgument> ComplexifiedArgumentList))
+                    if (GetComplexifiedArgument(Argument, out IList<Argument> ComplexifiedArgumentList))
                     {
-                        IArgument ComplexifiedArgument = ComplexifiedArgumentList[0];
-                        newArgumentBlocks = (IBlockList<IArgument, Argument>)DeepCloneBlockList((IBlockList)argumentBlocks, cloneCommentGuid: false);
+                        Argument ComplexifiedArgument = ComplexifiedArgumentList[0];
+                        newArgumentBlocks = (BlockList<Argument>)DeepCloneBlockList((IBlockList)argumentBlocks, cloneCommentGuid: false);
 
                         Block = newArgumentBlocks.NodeBlockList[BlockIndex];
                         Block.NodeList[NodeIndex] = ComplexifiedArgument;
@@ -256,18 +259,18 @@
             return false;
         }
 
-        private static bool SplitArgument(IArgument argument, out IList<IArgument> split)
+        private static bool SplitArgument(Argument argument, out IList<Argument> split)
         {
-            if (argument is IPositionalArgument AsPositionalArgument && AsPositionalArgument.Source is IQueryExpression AsQueryExpression && IsQuerySimple(AsQueryExpression))
+            if (argument is PositionalArgument AsPositionalArgument && AsPositionalArgument.Source is QueryExpression AsQueryExpression && IsQuerySimple(AsQueryExpression))
             {
-                IIdentifier QueryIdentifier = AsQueryExpression.Query.Path[0];
-                if (SplitIdentifier(QueryIdentifier, '(', ')', out IList<IIdentifier> SplitIdentifierList))
+                Identifier QueryIdentifier = AsQueryExpression.Query.Path[0];
+                if (SplitIdentifier(QueryIdentifier, '(', ')', out IList<Identifier> SplitIdentifierList))
                 {
-                    split = new List<IArgument>();
+                    split = new List<Argument>();
 
-                    foreach (IIdentifier Item in SplitIdentifierList)
+                    foreach (Identifier Item in SplitIdentifierList)
                     {
-                        IArgument NewArgument = CreateSimplePositionalArgument(Item.Text);
+                        Argument NewArgument = CreateSimplePositionalArgument(Item.Text);
                         split.Add(NewArgument);
                     }
 
@@ -279,22 +282,22 @@
             return false;
         }
 
-        private static bool GetComplexifiedAssignmentArgumentBlockList(IBlockList<IAssignmentArgument, AssignmentArgument> argumentBlocks, out IBlockList<IAssignmentArgument, AssignmentArgument> newAssignmentArgumentBlocks)
+        private static bool GetComplexifiedAssignmentArgumentBlockList(BlockList<AssignmentArgument> argumentBlocks, out BlockList<AssignmentArgument> newAssignmentArgumentBlocks)
         {
             for (int BlockIndex = 0; BlockIndex < argumentBlocks.NodeBlockList.Count; BlockIndex++)
             {
-                IBlock<IAssignmentArgument, AssignmentArgument> Block = argumentBlocks.NodeBlockList[BlockIndex];
+                Block<AssignmentArgument> Block = argumentBlocks.NodeBlockList[BlockIndex];
 
                 for (int NodeIndex = 0; NodeIndex < Block.NodeList.Count; NodeIndex++)
                 {
-                    IAssignmentArgument AssignmentArgument = Block.NodeList[NodeIndex];
+                    AssignmentArgument AssignmentArgument = Block.NodeList[NodeIndex];
 
-                    if (GetComplexifiedAssignmentArgument(AssignmentArgument, out IList<IArgument> ComplexifiedAssignmentArgumentList))
+                    if (GetComplexifiedAssignmentArgument(AssignmentArgument, out IList<Argument> ComplexifiedAssignmentArgumentList))
                     {
-                        IAssignmentArgument ComplexifiedAssignmentArgument = ComplexifiedAssignmentArgumentList[0] as IAssignmentArgument;
-                        Debug.Assert(ComplexifiedAssignmentArgument != null, $"The list can't contain anything else than {nameof(IAssignmentArgument)} elements");
+                        AssignmentArgument ComplexifiedAssignmentArgument = ComplexifiedAssignmentArgumentList[0] as AssignmentArgument;
+                        Debug.Assert(ComplexifiedAssignmentArgument != null, $"The list can't contain anything else than {nameof(AssignmentArgument)} elements");
 
-                        newAssignmentArgumentBlocks = (IBlockList<IAssignmentArgument, AssignmentArgument>)DeepCloneBlockList((IBlockList)argumentBlocks, cloneCommentGuid: false);
+                        newAssignmentArgumentBlocks = (BlockList<AssignmentArgument>)DeepCloneBlockList((IBlockList)argumentBlocks, cloneCommentGuid: false);
 
                         Block = newAssignmentArgumentBlocks.NodeBlockList[BlockIndex];
                         Block.NodeList[NodeIndex] = ComplexifiedAssignmentArgument;
@@ -307,20 +310,20 @@
             return false;
         }
 
-        private static bool GetComplexifiedQualifiedNameBlockList(IBlockList<IQualifiedName, QualifiedName> argumentBlocks, out IBlockList<IQualifiedName, QualifiedName> newQualifiedNameBlocks)
+        private static bool GetComplexifiedQualifiedNameBlockList(BlockList<QualifiedName> argumentBlocks, out BlockList<QualifiedName> newQualifiedNameBlocks)
         {
             for (int BlockIndex = 0; BlockIndex < argumentBlocks.NodeBlockList.Count; BlockIndex++)
             {
-                IBlock<IQualifiedName, QualifiedName> Block = argumentBlocks.NodeBlockList[BlockIndex];
+                Block<QualifiedName> Block = argumentBlocks.NodeBlockList[BlockIndex];
 
                 for (int NodeIndex = 0; NodeIndex < Block.NodeList.Count; NodeIndex++)
                 {
-                    IQualifiedName QualifiedName = Block.NodeList[NodeIndex];
+                    QualifiedName QualifiedName = Block.NodeList[NodeIndex];
 
-                    if (GetComplexifiedQualifiedName(QualifiedName, out IList<IQualifiedName> ComplexifiedQualifiedNameList))
+                    if (GetComplexifiedQualifiedName(QualifiedName, out IList<QualifiedName> ComplexifiedQualifiedNameList))
                     {
-                        IQualifiedName ComplexifiedQualifiedName = ComplexifiedQualifiedNameList[0];
-                        newQualifiedNameBlocks = (IBlockList<IQualifiedName, QualifiedName>)DeepCloneBlockList((IBlockList)argumentBlocks, cloneCommentGuid: false);
+                        QualifiedName ComplexifiedQualifiedName = ComplexifiedQualifiedNameList[0];
+                        newQualifiedNameBlocks = (BlockList<QualifiedName>)DeepCloneBlockList((IBlockList)argumentBlocks, cloneCommentGuid: false);
 
                         Block = newQualifiedNameBlocks.NodeBlockList[BlockIndex];
                         Block.NodeList[NodeIndex] = ComplexifiedQualifiedName;
@@ -333,12 +336,12 @@
             return false;
         }
 
-        private static bool ComplexifyWithArguments(IQualifiedName qualifiedName, out IQualifiedName newQualifiedName, out List<IArgument> argumentList)
+        private static bool ComplexifyWithArguments(QualifiedName qualifiedName, out QualifiedName newQualifiedName, out List<Argument> argumentList)
         {
             return ComplexifyWithArguments(qualifiedName, '(', ')', out newQualifiedName, out argumentList);
         }
 
-        private static bool ComplexifyWithArguments(IQualifiedName qualifiedName, char leftSymbol, char rightSymbol, out IQualifiedName newQualifiedName, out List<IArgument> argumentList)
+        private static bool ComplexifyWithArguments(QualifiedName qualifiedName, char leftSymbol, char rightSymbol, out QualifiedName newQualifiedName, out List<Argument> argumentList)
         {
             newQualifiedName = null;
             argumentList = null;
@@ -366,14 +369,14 @@
 
                 if (Text.EndsWith(rightSymbol.ToString(), StringComparison.InvariantCulture))
                 {
-                    List<IIdentifier> CommandIdentifierList = new List<IIdentifier>();
+                    List<Identifier> CommandIdentifierList = new List<Identifier>();
                     for (int i = 0; i < BreakPathIndex; i++)
                         CommandIdentifierList.Add(CreateSimpleIdentifier(qualifiedName.Path[i].Text));
                     CommandIdentifierList.Add(CreateSimpleIdentifier(BeforeText));
 
                     newQualifiedName = CreateQualifiedName(CommandIdentifierList);
 
-                    List<IIdentifier> ArgumentIdentifierList = new List<IIdentifier>();
+                    List<Identifier> ArgumentIdentifierList = new List<Identifier>();
 
                     if (BreakPathIndex + 1 < qualifiedName.Path.Count)
                     {
@@ -385,11 +388,11 @@
                     else
                         ArgumentIdentifierList.Add(CreateSimpleIdentifier(AfterText.Substring(0, AfterText.Length - 1)));
 
-                    IQualifiedName ArgumentQuery = CreateQualifiedName(ArgumentIdentifierList);
-                    IExpression ArgumentExpression = CreateQueryExpression(ArgumentQuery, new List<IArgument>());
+                    QualifiedName ArgumentQuery = CreateQualifiedName(ArgumentIdentifierList);
+                    Expression ArgumentExpression = CreateQueryExpression(ArgumentQuery, new List<Argument>());
 
-                    argumentList = new List<IArgument>();
-                    IPositionalArgument FirstArgument = CreatePositionalArgument(ArgumentExpression);
+                    argumentList = new List<Argument>();
+                    PositionalArgument FirstArgument = CreatePositionalArgument(ArgumentExpression);
                     argumentList.Add(FirstArgument);
 
                     return true;
@@ -399,18 +402,18 @@
             return false;
         }
 
-        private static bool GetComplexifiedEntityDeclarationBlockList(IBlockList<IEntityDeclaration, EntityDeclaration> identifierBlockList, out IBlockList<IEntityDeclaration, EntityDeclaration> newBlockList)
+        private static bool GetComplexifiedEntityDeclarationBlockList(BlockList<EntityDeclaration> identifierBlockList, out BlockList<EntityDeclaration> newBlockList)
         {
             for (int BlockIndex = 0; BlockIndex < identifierBlockList.NodeBlockList.Count; BlockIndex++)
             {
-                IBlock<IEntityDeclaration, EntityDeclaration> Block = identifierBlockList.NodeBlockList[BlockIndex];
+                Block<EntityDeclaration> Block = identifierBlockList.NodeBlockList[BlockIndex];
 
                 for (int NodeIndex = 0; NodeIndex < Block.NodeList.Count; NodeIndex++)
                 {
-                    IEntityDeclaration EntityDeclaration = Block.NodeList[NodeIndex];
-                    if (SplitEntityDeclaration(EntityDeclaration, out IList<IEntityDeclaration> Split))
+                    EntityDeclaration EntityDeclaration = Block.NodeList[NodeIndex];
+                    if (SplitEntityDeclaration(EntityDeclaration, out IList<EntityDeclaration> Split))
                     {
-                        newBlockList = (IBlockList<IEntityDeclaration, EntityDeclaration>)DeepCloneBlockList((IBlockList)identifierBlockList, cloneCommentGuid: false);
+                        newBlockList = (BlockList<EntityDeclaration>)DeepCloneBlockList((IBlockList)identifierBlockList, cloneCommentGuid: false);
 
                         newBlockList.NodeBlockList[BlockIndex].NodeList.RemoveAt(NodeIndex);
                         for (int i = 0; i < Split.Count; i++)
@@ -425,14 +428,14 @@
             return false;
         }
 
-        private static bool SplitEntityDeclaration(IEntityDeclaration entityDeclaration, out IList<IEntityDeclaration> split)
+        private static bool SplitEntityDeclaration(EntityDeclaration entityDeclaration, out IList<EntityDeclaration> split)
         {
-            if (entityDeclaration.EntityType is ISimpleType AsSimpleType && AsSimpleType.Sharing == SharingType.NotShared && !entityDeclaration.DefaultValue.IsAssigned)
+            if (entityDeclaration.EntityType is SimpleType AsSimpleType && AsSimpleType.Sharing == SharingType.NotShared && !entityDeclaration.DefaultValue.IsAssigned)
             {
                 int ColonIndex;
                 int CommaIndex;
-                IEntityDeclaration FirstEntityDeclaration = null;
-                IEntityDeclaration SecondEntityDeclaration = null;
+                EntityDeclaration FirstEntityDeclaration = null;
+                EntityDeclaration SecondEntityDeclaration = null;
 
                 if ((ColonIndex = entityDeclaration.EntityName.Text.IndexOf(":", StringComparison.InvariantCulture)) >= 0)
                 {
@@ -441,27 +444,27 @@
 
                     FirstEntityDeclaration = CreateEntityDeclaration(CreateSimpleName(FirstName), CreateSimpleType(SharingType.NotShared, CreateSimpleIdentifier(FirstType)));
 
-                    IName SecondName = CreateEmptyName();
-                    IObjectType SecondType = (IObjectType)DeepCloneNode(AsSimpleType, cloneCommentGuid: false);
+                    Name SecondName = CreateEmptyName();
+                    ObjectType SecondType = (ObjectType)DeepCloneNode(AsSimpleType, cloneCommentGuid: false);
 
                     SecondEntityDeclaration = CreateEntityDeclaration(SecondName, SecondType);
                 }
                 else if ((CommaIndex = AsSimpleType.ClassIdentifier.Text.IndexOf(",", StringComparison.InvariantCulture)) >= 0)
                 {
-                    IName FirstName = (IName)DeepCloneNode(entityDeclaration.EntityName, cloneCommentGuid: false);
+                    Name FirstName = (Name)DeepCloneNode(entityDeclaration.EntityName, cloneCommentGuid: false);
                     string FirstType = AsSimpleType.ClassIdentifier.Text.Substring(0, CommaIndex);
 
                     FirstEntityDeclaration = CreateEntityDeclaration(FirstName, CreateSimpleType(SharingType.NotShared, CreateSimpleIdentifier(FirstType)));
 
                     string SecondName = AsSimpleType.ClassIdentifier.Text.Substring(CommaIndex + 1);
-                    IObjectType SecondType = CreateEmptySimpleType();
+                    ObjectType SecondType = CreateEmptySimpleType();
 
                     SecondEntityDeclaration = CreateEntityDeclaration(CreateSimpleName(SecondName), SecondType);
                 }
 
                 if (FirstEntityDeclaration != null && SecondEntityDeclaration != null)
                 {
-                    split = new List<IEntityDeclaration>();
+                    split = new List<EntityDeclaration>();
                     split.Add(FirstEntityDeclaration);
                     split.Add(SecondEntityDeclaration);
                     return true;
@@ -472,19 +475,19 @@
             return false;
         }
 
-        private static bool GetComplexifiedTypeArgumentBlockList(IBlockList<ITypeArgument, TypeArgument> typeArgumentBlocks, out IBlockList<ITypeArgument, TypeArgument> newTypeArgumentBlocks)
+        private static bool GetComplexifiedTypeArgumentBlockList(BlockList<TypeArgument> typeArgumentBlocks, out BlockList<TypeArgument> newTypeArgumentBlocks)
         {
             for (int BlockIndex = 0; BlockIndex < typeArgumentBlocks.NodeBlockList.Count; BlockIndex++)
             {
-                IBlock<ITypeArgument, TypeArgument> Block = typeArgumentBlocks.NodeBlockList[BlockIndex];
+                Block<TypeArgument> Block = typeArgumentBlocks.NodeBlockList[BlockIndex];
 
                 for (int NodeIndex = 0; NodeIndex < Block.NodeList.Count; NodeIndex++)
                 {
-                    ITypeArgument TypeArgument = Block.NodeList[NodeIndex];
+                    TypeArgument TypeArgument = Block.NodeList[NodeIndex];
 
-                    if (SplitTypeArgument(TypeArgument, out IList<ITypeArgument> SplitTypeArgumentList))
+                    if (SplitTypeArgument(TypeArgument, out IList<TypeArgument> SplitTypeArgumentList))
                     {
-                        newTypeArgumentBlocks = (IBlockList<ITypeArgument, TypeArgument>)DeepCloneBlockList((IBlockList)typeArgumentBlocks, cloneCommentGuid: false);
+                        newTypeArgumentBlocks = (BlockList<TypeArgument>)DeepCloneBlockList((IBlockList)typeArgumentBlocks, cloneCommentGuid: false);
 
                         Block = newTypeArgumentBlocks.NodeBlockList[BlockIndex];
                         Block.NodeList.RemoveAt(NodeIndex);
@@ -498,16 +501,16 @@
 
             for (int BlockIndex = 0; BlockIndex < typeArgumentBlocks.NodeBlockList.Count; BlockIndex++)
             {
-                IBlock<ITypeArgument, TypeArgument> Block = typeArgumentBlocks.NodeBlockList[BlockIndex];
+                Block<TypeArgument> Block = typeArgumentBlocks.NodeBlockList[BlockIndex];
 
                 for (int NodeIndex = 0; NodeIndex < Block.NodeList.Count; NodeIndex++)
                 {
-                    ITypeArgument TypeArgument = Block.NodeList[NodeIndex];
+                    TypeArgument TypeArgument = Block.NodeList[NodeIndex];
 
-                    if (GetComplexifiedTypeArgument(TypeArgument, out IList<ITypeArgument> ComplexifiedTypeArgumentList))
+                    if (GetComplexifiedTypeArgument(TypeArgument, out IList<TypeArgument> ComplexifiedTypeArgumentList))
                     {
-                        ITypeArgument ComplexifiedTypeArgument = ComplexifiedTypeArgumentList[0];
-                        newTypeArgumentBlocks = (IBlockList<ITypeArgument, TypeArgument>)DeepCloneBlockList((IBlockList)typeArgumentBlocks, cloneCommentGuid: false);
+                        TypeArgument ComplexifiedTypeArgument = ComplexifiedTypeArgumentList[0];
+                        newTypeArgumentBlocks = (BlockList<TypeArgument>)DeepCloneBlockList((IBlockList)typeArgumentBlocks, cloneCommentGuid: false);
 
                         Block = newTypeArgumentBlocks.NodeBlockList[BlockIndex];
                         Block.NodeList[NodeIndex] = ComplexifiedTypeArgument;
@@ -520,18 +523,18 @@
             return false;
         }
 
-        private static bool SplitTypeArgument(ITypeArgument typeArgument, out IList<ITypeArgument> split)
+        private static bool SplitTypeArgument(TypeArgument typeArgument, out IList<TypeArgument> split)
         {
-            if (typeArgument is IPositionalTypeArgument AsPositionalTypeArgument && AsPositionalTypeArgument.Source is ISimpleType AsSimpleType)
+            if (typeArgument is PositionalTypeArgument AsPositionalTypeArgument && AsPositionalTypeArgument.Source is SimpleType AsSimpleType)
             {
-                IIdentifier ClassIdentifier = AsSimpleType.ClassIdentifier;
-                if (SplitIdentifier(ClassIdentifier, '[', ']', out IList<IIdentifier> SplitIdentifierList))
+                Identifier ClassIdentifier = AsSimpleType.ClassIdentifier;
+                if (SplitIdentifier(ClassIdentifier, '[', ']', out IList<Identifier> SplitIdentifierList))
                 {
-                    split = new List<ITypeArgument>();
+                    split = new List<TypeArgument>();
 
-                    foreach (IIdentifier Item in SplitIdentifierList)
+                    foreach (Identifier Item in SplitIdentifierList)
                     {
-                        ITypeArgument NewTypeArgument = CreateSimplePositionalTypeArgument(Item.Text);
+                        TypeArgument NewTypeArgument = CreateSimplePositionalTypeArgument(Item.Text);
                         split.Add(NewTypeArgument);
                     }
 
@@ -543,19 +546,19 @@
             return false;
         }
 
-        private static bool GetComplexifiedObjectTypeBlockList(IBlockList<IObjectType, ObjectType> objectTypeBlocks, out IBlockList<IObjectType, ObjectType> newObjectTypeBlocks)
+        private static bool GetComplexifiedObjectTypeBlockList(BlockList<ObjectType> objectTypeBlocks, out BlockList<ObjectType> newObjectTypeBlocks)
         {
             for (int BlockIndex = 0; BlockIndex < objectTypeBlocks.NodeBlockList.Count; BlockIndex++)
             {
-                IBlock<IObjectType, ObjectType> Block = objectTypeBlocks.NodeBlockList[BlockIndex];
+                Block<ObjectType> Block = objectTypeBlocks.NodeBlockList[BlockIndex];
 
                 for (int NodeIndex = 0; NodeIndex < Block.NodeList.Count; NodeIndex++)
                 {
-                    IObjectType ObjectType = Block.NodeList[NodeIndex];
+                    ObjectType ObjectType = Block.NodeList[NodeIndex];
 
-                    if (SplitObjectType(ObjectType, out IList<IObjectType> SplitObjectTypeList))
+                    if (SplitObjectType(ObjectType, out IList<ObjectType> SplitObjectTypeList))
                     {
-                        newObjectTypeBlocks = (IBlockList<IObjectType, ObjectType>)DeepCloneBlockList((IBlockList)objectTypeBlocks, cloneCommentGuid: false);
+                        newObjectTypeBlocks = (BlockList<ObjectType>)DeepCloneBlockList((IBlockList)objectTypeBlocks, cloneCommentGuid: false);
 
                         Block = newObjectTypeBlocks.NodeBlockList[BlockIndex];
                         Block.NodeList.RemoveAt(NodeIndex);
@@ -569,16 +572,16 @@
 
             for (int BlockIndex = 0; BlockIndex < objectTypeBlocks.NodeBlockList.Count; BlockIndex++)
             {
-                IBlock<IObjectType, ObjectType> Block = objectTypeBlocks.NodeBlockList[BlockIndex];
+                Block<ObjectType> Block = objectTypeBlocks.NodeBlockList[BlockIndex];
 
                 for (int NodeIndex = 0; NodeIndex < Block.NodeList.Count; NodeIndex++)
                 {
-                    IObjectType ObjectType = Block.NodeList[NodeIndex];
+                    ObjectType ObjectType = Block.NodeList[NodeIndex];
 
-                    if (GetComplexifiedObjectType(ObjectType, out IList<IObjectType> ComplexifiedObjectTypeList))
+                    if (GetComplexifiedObjectType(ObjectType, out IList<ObjectType> ComplexifiedObjectTypeList))
                     {
-                        IObjectType ComplexifiedObjectType = ComplexifiedObjectTypeList[0];
-                        newObjectTypeBlocks = (IBlockList<IObjectType, ObjectType>)DeepCloneBlockList((IBlockList)objectTypeBlocks, cloneCommentGuid: false);
+                        ObjectType ComplexifiedObjectType = ComplexifiedObjectTypeList[0];
+                        newObjectTypeBlocks = (BlockList<ObjectType>)DeepCloneBlockList((IBlockList)objectTypeBlocks, cloneCommentGuid: false);
 
                         Block = newObjectTypeBlocks.NodeBlockList[BlockIndex];
                         Block.NodeList[NodeIndex] = ComplexifiedObjectType;
@@ -591,18 +594,18 @@
             return false;
         }
 
-        private static bool SplitObjectType(IObjectType objectType, out IList<IObjectType> split)
+        private static bool SplitObjectType(ObjectType objectType, out IList<ObjectType> split)
         {
-            if (objectType is ISimpleType AsSimpleType)
+            if (objectType is SimpleType AsSimpleType)
             {
-                IIdentifier ClassIdentifier = AsSimpleType.ClassIdentifier;
-                if (SplitIdentifier(ClassIdentifier, ',', ',', out IList<IIdentifier> SplitIdentifierList))
+                Identifier ClassIdentifier = AsSimpleType.ClassIdentifier;
+                if (SplitIdentifier(ClassIdentifier, ',', ',', out IList<Identifier> SplitIdentifierList))
                 {
-                    split = new List<IObjectType>();
+                    split = new List<ObjectType>();
 
-                    foreach (IIdentifier Item in SplitIdentifierList)
+                    foreach (Identifier Item in SplitIdentifierList)
                     {
-                        IObjectType NewObjectType = CreateSimpleSimpleType(Item.Text);
+                        ObjectType NewObjectType = CreateSimpleSimpleType(Item.Text);
                         split.Add(NewObjectType);
                     }
 
@@ -614,12 +617,12 @@
             return false;
         }
 
-        private static bool IsQuerySimple(IQueryExpression node)
+        private static bool IsQuerySimple(QueryExpression node)
         {
             return node.Query.Path.Count == 1 && node.ArgumentBlocks.NodeBlockList.Count == 0;
         }
 
-        private static bool ParsePattern(IQueryExpression node, string patternText, out string beforeText, out string afterText)
+        private static bool ParsePattern(QueryExpression node, string patternText, out string beforeText, out string afterText)
         {
             Debug.Assert(node.Query.Path.Count > 0, $"The parsed {nameof(node)} always has a valid path");
 
@@ -627,7 +630,7 @@
             return ParsePattern(Text, patternText, out beforeText, out afterText);
         }
 
-        private static bool ParsePattern(ICommandInstruction node, string patternText, out string beforeText, out string afterText)
+        private static bool ParsePattern(CommandInstruction node, string patternText, out string beforeText, out string afterText)
         {
             Debug.Assert(node.Command.Path.Count > 0, $"The parsed {nameof(node)} always has a valid path");
 
@@ -650,10 +653,10 @@
             return beforeText != null || afterText != null;
         }
 
-        private static void CloneComplexifiedExpression(IQueryExpression node, string afterText, out IExpression rightExpression)
+        private static void CloneComplexifiedExpression(QueryExpression node, string afterText, out Expression rightExpression)
         {
-            IQueryExpression ClonedQuery = DeepCloneNode(node, cloneCommentGuid: false) as IQueryExpression;
-            Debug.Assert(ClonedQuery.Query != null, $"The clone always contains a {nameof(IQueryExpression.Query)}");
+            QueryExpression ClonedQuery = DeepCloneNode(node, cloneCommentGuid: false) as QueryExpression;
+            Debug.Assert(ClonedQuery.Query != null, $"The clone always contains a {nameof(QueryExpression.Query)}");
             Debug.Assert(ClonedQuery.Query.Path.Count > 0, "The clone query path is always valid");
 
             NodeTreeHelper.SetString(ClonedQuery.Query.Path[0], "Text", afterText);
@@ -661,12 +664,12 @@
             rightExpression = ClonedQuery;
         }
 
-        private static void CloneComplexifiedExpression(IQueryExpression node, string beforeText, string afterText, out IExpression leftExpression, out IExpression rightExpression)
+        private static void CloneComplexifiedExpression(QueryExpression node, string beforeText, string afterText, out Expression leftExpression, out Expression rightExpression)
         {
             leftExpression = CreateSimpleQueryExpression(beforeText);
 
-            IQueryExpression ClonedQuery = DeepCloneNode(node, cloneCommentGuid: false) as IQueryExpression;
-            Debug.Assert(ClonedQuery.Query != null, $"The clone always contains a {nameof(IQueryExpression.Query)}");
+            QueryExpression ClonedQuery = DeepCloneNode(node, cloneCommentGuid: false) as QueryExpression;
+            Debug.Assert(ClonedQuery.Query != null, $"The clone always contains a {nameof(QueryExpression.Query)}");
             Debug.Assert(ClonedQuery.Query.Path.Count > 0, "The clone query path is always valid");
 
             NodeTreeHelper.SetString(ClonedQuery.Query.Path[0], "Text", afterText);
@@ -674,10 +677,10 @@
             rightExpression = ClonedQuery;
         }
 
-        private static void CloneComplexifiedCommand(ICommandInstruction node, string afterText, out IExpression rightExpression)
+        private static void CloneComplexifiedCommand(CommandInstruction node, string afterText, out Expression rightExpression)
         {
-            ICommandInstruction ClonedCommand = DeepCloneNode(node, cloneCommentGuid: false) as ICommandInstruction;
-            Debug.Assert(ClonedCommand.Command != null, $"The clone always contains a {nameof(ICommandInstruction.Command)}");
+            CommandInstruction ClonedCommand = DeepCloneNode(node, cloneCommentGuid: false) as CommandInstruction;
+            Debug.Assert(ClonedCommand.Command != null, $"The clone always contains a {nameof(CommandInstruction.Command)}");
             Debug.Assert(ClonedCommand.Command.Path.Count > 0, "The clone command path is always valid");
 
             NodeTreeHelper.SetString(ClonedCommand.Command.Path[0], "Text", afterText);
@@ -685,12 +688,12 @@
             rightExpression = CreateQueryExpression(ClonedCommand.Command, ClonedCommand.ArgumentBlocks);
         }
 
-        private static void CloneComplexifiedCommand(ICommandInstruction node, string beforeText, string afterText, out IExpression leftExpression, out IExpression rightExpression)
+        private static void CloneComplexifiedCommand(CommandInstruction node, string beforeText, string afterText, out Expression leftExpression, out Expression rightExpression)
         {
             leftExpression = CreateSimpleQueryExpression(beforeText);
 
-            ICommandInstruction ClonedCommand = DeepCloneNode(node, cloneCommentGuid: false) as ICommandInstruction;
-            Debug.Assert(ClonedCommand.Command != null, $"The clone always contains a {nameof(ICommandInstruction.Command)}");
+            CommandInstruction ClonedCommand = DeepCloneNode(node, cloneCommentGuid: false) as CommandInstruction;
+            Debug.Assert(ClonedCommand.Command != null, $"The clone always contains a {nameof(CommandInstruction.Command)}");
             Debug.Assert(ClonedCommand.Command.Path.Count > 0, "The clone command path is always valid");
 
             NodeTreeHelper.SetString(ClonedCommand.Command.Path[0], "Text", afterText);
@@ -698,16 +701,16 @@
             rightExpression = CreateQueryExpression(ClonedCommand.Command, ClonedCommand.ArgumentBlocks);
         }
 
-        private static void CloneComplexifiedCommand(ICommandInstruction node, string pattern, out ICommandInstruction clonedCommand)
+        private static void CloneComplexifiedCommand(CommandInstruction node, string pattern, out CommandInstruction clonedCommand)
         {
-            clonedCommand = DeepCloneNode(node, cloneCommentGuid: false) as ICommandInstruction;
+            clonedCommand = DeepCloneNode(node, cloneCommentGuid: false) as CommandInstruction;
             Debug.Assert(clonedCommand.Command.Path.Count > 0, "The clone command path is always valid");
-            IIdentifier FirstIdentifier = clonedCommand.Command.Path[0];
+            Identifier FirstIdentifier = clonedCommand.Command.Path[0];
             string Text = FirstIdentifier.Text;
             Debug.Assert(Text.StartsWith(pattern, StringComparison.InvariantCulture), "The first element in the clone command path is always unchanged");
 
             if (Text.Length > pattern.Length || clonedCommand.Command.Path.Count == 1)
-                NodeTreeHelper.SetString(FirstIdentifier, nameof(IIdentifier.Text), Text.Substring(pattern.Length));
+                NodeTreeHelper.SetString(FirstIdentifier, nameof(Identifier.Text), Text.Substring(pattern.Length));
             else
                 clonedCommand.Command.Path.RemoveAt(0);
         }
@@ -735,7 +738,7 @@
         }
 
         private static bool IsNodeListSameType<T>(IList nodeList, out IList<T> result)
-            where T : INode
+            where T : Node
         {
             result = new List<T>();
 
@@ -748,7 +751,7 @@
             return true;
         }
 
-        private static bool GetRenamedBinarySymbol(IIdentifier symbol, out IIdentifier renamedSymbol)
+        private static bool GetRenamedBinarySymbol(Identifier symbol, out Identifier renamedSymbol)
         {
             renamedSymbol = null;
             bool Result = false;
@@ -762,7 +765,7 @@
             return Result;
         }
 
-        private static bool GetRenamedUnarySymbol(IIdentifier symbol, out IIdentifier renamedSymbol)
+        private static bool GetRenamedUnarySymbol(Identifier symbol, out Identifier renamedSymbol)
         {
             renamedSymbol = null;
             bool Result = false;

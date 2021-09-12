@@ -8,18 +8,7 @@
     /// <summary>
     /// Represents the entity of a type.
     /// </summary>
-    public interface ITypeEntity
-    {
-        /// <summary>
-        /// Gets the type name.
-        /// </summary>
-        string Name { get; }
-    }
-
-    /// <summary>
-    /// Represents the entity of a type.
-    /// </summary>
-    public abstract class TypeEntity : Entity, ITypeEntity
+    public abstract class TypeEntity : Entity
     {
         #region Init
         /// <summary>

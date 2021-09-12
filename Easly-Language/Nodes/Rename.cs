@@ -4,16 +4,10 @@
 
 namespace BaseNode
 {
-    public interface IRename : INode
-    {
-        IIdentifier SourceIdentifier { get; }
-        IIdentifier DestinationIdentifier { get; }
-    }
-
     [System.Serializable]
-    public class Rename : Node, IRename
+    public class Rename : Node
     {
-        public virtual IIdentifier SourceIdentifier { get; set; }
-        public virtual IIdentifier DestinationIdentifier { get; set; }
+        public virtual Identifier SourceIdentifier { get; set; }
+        public virtual Identifier DestinationIdentifier { get; set; }
     }
 }

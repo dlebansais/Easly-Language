@@ -4,13 +4,8 @@
 
 namespace BaseNode
 {
-    public interface IIdentifier : INode
-    {
-        string Text { get; }
-    }
-
     [System.Serializable]
-    public class Identifier : Node, IIdentifier
+    public class Identifier : Node
     {
         public virtual string Text { get; set; }
     }

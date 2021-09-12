@@ -4,16 +4,10 @@
 
 namespace BaseNode
 {
-    public interface IExceptionHandler : INode
-    {
-        IIdentifier ExceptionIdentifier { get; }
-        IScope Instructions { get; }
-    }
-
     [System.Serializable]
-    public class ExceptionHandler : Node, IExceptionHandler
+    public class ExceptionHandler : Node
     {
-        public virtual IIdentifier ExceptionIdentifier { get; set; }
-        public virtual IScope Instructions { get; set; }
+        public virtual Identifier ExceptionIdentifier { get; set; }
+        public virtual Scope Instructions { get; set; }
     }
 }

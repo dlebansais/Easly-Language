@@ -1,4 +1,7 @@
-﻿namespace BaseNodeHelper
+﻿#pragma warning disable SA1600 // Elements should be documented
+#pragma warning disable SA1601 // Partial elements should be documented
+
+namespace BaseNodeHelper
 {
     using System;
     using System.Collections;
@@ -10,55 +13,55 @@
 
     public static partial class NodeHelper
     {
-        public static IDeferredBody CreateEmptyDeferredBody()
+        public static DeferredBody CreateEmptyDeferredBody()
         {
             DeferredBody Result = new DeferredBody();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.RequireBlocks = BlockListHelper<IAssertion, Assertion>.CreateEmptyBlockList();
-            Result.EnsureBlocks = BlockListHelper<IAssertion, Assertion>.CreateEmptyBlockList();
-            Result.ExceptionIdentifierBlocks = BlockListHelper<IIdentifier, Identifier>.CreateEmptyBlockList();
+            Result.RequireBlocks = BlockListHelper<Assertion>.CreateEmptyBlockList();
+            Result.EnsureBlocks = BlockListHelper<Assertion>.CreateEmptyBlockList();
+            Result.ExceptionIdentifierBlocks = BlockListHelper<Identifier>.CreateEmptyBlockList();
 
             return Result;
         }
 
-        public static IEffectiveBody CreateEmptyEffectiveBody()
+        public static EffectiveBody CreateEmptyEffectiveBody()
         {
             EffectiveBody Result = new EffectiveBody();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.RequireBlocks = BlockListHelper<IAssertion, Assertion>.CreateEmptyBlockList();
-            Result.EnsureBlocks = BlockListHelper<IAssertion, Assertion>.CreateEmptyBlockList();
-            Result.ExceptionIdentifierBlocks = BlockListHelper<IIdentifier, Identifier>.CreateEmptyBlockList();
-            Result.EntityDeclarationBlocks = BlockListHelper<IEntityDeclaration, EntityDeclaration>.CreateEmptyBlockList();
-            Result.BodyInstructionBlocks = BlockListHelper<IInstruction, Instruction>.CreateEmptyBlockList();
-            Result.ExceptionHandlerBlocks = BlockListHelper<IExceptionHandler, ExceptionHandler>.CreateEmptyBlockList();
+            Result.RequireBlocks = BlockListHelper<Assertion>.CreateEmptyBlockList();
+            Result.EnsureBlocks = BlockListHelper<Assertion>.CreateEmptyBlockList();
+            Result.ExceptionIdentifierBlocks = BlockListHelper<Identifier>.CreateEmptyBlockList();
+            Result.EntityDeclarationBlocks = BlockListHelper<EntityDeclaration>.CreateEmptyBlockList();
+            Result.BodyInstructionBlocks = BlockListHelper<Instruction>.CreateEmptyBlockList();
+            Result.ExceptionHandlerBlocks = BlockListHelper<ExceptionHandler>.CreateEmptyBlockList();
 
             return Result;
         }
 
-        public static IExternBody CreateEmptyExternBody()
+        public static ExternBody CreateEmptyExternBody()
         {
             ExternBody Result = new ExternBody();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.RequireBlocks = BlockListHelper<IAssertion, Assertion>.CreateEmptyBlockList();
-            Result.EnsureBlocks = BlockListHelper<IAssertion, Assertion>.CreateEmptyBlockList();
-            Result.ExceptionIdentifierBlocks = BlockListHelper<IIdentifier, Identifier>.CreateEmptyBlockList();
+            Result.RequireBlocks = BlockListHelper<Assertion>.CreateEmptyBlockList();
+            Result.EnsureBlocks = BlockListHelper<Assertion>.CreateEmptyBlockList();
+            Result.ExceptionIdentifierBlocks = BlockListHelper<Identifier>.CreateEmptyBlockList();
 
             return Result;
         }
 
-        public static IPrecursorBody CreateEmptyPrecursorBody()
+        public static PrecursorBody CreateEmptyPrecursorBody()
         {
             PrecursorBody Result = new PrecursorBody();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.RequireBlocks = BlockListHelper<IAssertion, Assertion>.CreateEmptyBlockList();
-            Result.EnsureBlocks = BlockListHelper<IAssertion, Assertion>.CreateEmptyBlockList();
-            Result.ExceptionIdentifierBlocks = BlockListHelper<IIdentifier, Identifier>.CreateEmptyBlockList();
-            Result.AncestorType = OptionalReferenceHelper<IObjectType>.CreateReference(CreateDefaultType());
+            Result.RequireBlocks = BlockListHelper<Assertion>.CreateEmptyBlockList();
+            Result.EnsureBlocks = BlockListHelper<Assertion>.CreateEmptyBlockList();
+            Result.ExceptionIdentifierBlocks = BlockListHelper<Identifier>.CreateEmptyBlockList();
+            Result.AncestorType = OptionalReferenceHelper<ObjectType>.CreateReference(CreateDefaultType());
 
             return Result;
         }
 
-        public static IBody CreateInitializedBody(Type nodeType, IDocument documentation, IBlockList<IAssertion, Assertion> requireBlocks, IBlockList<IAssertion, Assertion> ensureBlocks, IBlockList<IIdentifier, Identifier> exceptionIdentifierBlocks, IBlockList<IEntityDeclaration, EntityDeclaration> entityDeclarationBlocks, IBlockList<IInstruction, Instruction> bodyInstructionBlocks, IBlockList<IExceptionHandler, ExceptionHandler> exceptionHandlerBlocks, IOptionalReference<IObjectType> ancestorType)
+        public static Body CreateInitializedBody(Type nodeType, Document documentation, BlockList<Assertion> requireBlocks, BlockList<Assertion> ensureBlocks, BlockList<Identifier> exceptionIdentifierBlocks, BlockList<EntityDeclaration> entityDeclarationBlocks, BlockList<Instruction> bodyInstructionBlocks, BlockList<ExceptionHandler> exceptionHandlerBlocks, OptionalReference<ObjectType> ancestorType)
         {
             if (nodeType == null) throw new ArgumentNullException(nameof(nodeType));
 
@@ -74,50 +77,50 @@
                 throw new ArgumentOutOfRangeException($"{nameof(nodeType)}: {nodeType.FullName}");
         }
 
-        public static IDeferredBody CreateInitializedDeferredBody(IDocument documentation, IBlockList<IAssertion, Assertion> requireBlocks, IBlockList<IAssertion, Assertion> ensureBlocks, IBlockList<IIdentifier, Identifier> exceptionIdentifierBlocks)
+        public static DeferredBody CreateInitializedDeferredBody(Document documentation, BlockList<Assertion> requireBlocks, BlockList<Assertion> ensureBlocks, BlockList<Identifier> exceptionIdentifierBlocks)
         {
             DeferredBody Result = new DeferredBody();
             Result.Documentation = CreateDocumentationCopy(documentation);
-            Result.RequireBlocks = BlockListHelper<IAssertion, Assertion>.CreateBlockListCopy(requireBlocks);
-            Result.EnsureBlocks = BlockListHelper<IAssertion, Assertion>.CreateBlockListCopy(ensureBlocks);
-            Result.ExceptionIdentifierBlocks = BlockListHelper<IIdentifier, Identifier>.CreateBlockListCopy(exceptionIdentifierBlocks);
+            Result.RequireBlocks = BlockListHelper<Assertion>.CreateBlockListCopy(requireBlocks);
+            Result.EnsureBlocks = BlockListHelper<Assertion>.CreateBlockListCopy(ensureBlocks);
+            Result.ExceptionIdentifierBlocks = BlockListHelper<Identifier>.CreateBlockListCopy(exceptionIdentifierBlocks);
 
             return Result;
         }
 
-        public static IEffectiveBody CreateInitializedEffectiveBody(IDocument documentation, IBlockList<IAssertion, Assertion> requireBlocks, IBlockList<IAssertion, Assertion> ensureBlocks, IBlockList<IIdentifier, Identifier> exceptionIdentifierBlocks, IBlockList<IEntityDeclaration, EntityDeclaration> entityDeclarationBlocks, IBlockList<IInstruction, Instruction> bodyInstructionBlocks, IBlockList<IExceptionHandler, ExceptionHandler> exceptionHandlerBlocks)
+        public static EffectiveBody CreateInitializedEffectiveBody(Document documentation, BlockList<Assertion> requireBlocks, BlockList<Assertion> ensureBlocks, BlockList<Identifier> exceptionIdentifierBlocks, BlockList<EntityDeclaration> entityDeclarationBlocks, BlockList<Instruction> bodyInstructionBlocks, BlockList<ExceptionHandler> exceptionHandlerBlocks)
         {
             EffectiveBody Result = new EffectiveBody();
             Result.Documentation = CreateDocumentationCopy(documentation);
-            Result.RequireBlocks = BlockListHelper<IAssertion, Assertion>.CreateBlockListCopy(requireBlocks);
-            Result.EnsureBlocks = BlockListHelper<IAssertion, Assertion>.CreateBlockListCopy(ensureBlocks);
-            Result.ExceptionIdentifierBlocks = BlockListHelper<IIdentifier, Identifier>.CreateBlockListCopy(exceptionIdentifierBlocks);
-            Result.EntityDeclarationBlocks = BlockListHelper<IEntityDeclaration, EntityDeclaration>.CreateBlockListCopy(entityDeclarationBlocks);
-            Result.BodyInstructionBlocks = BlockListHelper<IInstruction, Instruction>.CreateBlockListCopy(bodyInstructionBlocks);
-            Result.ExceptionHandlerBlocks = BlockListHelper<IExceptionHandler, ExceptionHandler>.CreateBlockListCopy(exceptionHandlerBlocks);
+            Result.RequireBlocks = BlockListHelper<Assertion>.CreateBlockListCopy(requireBlocks);
+            Result.EnsureBlocks = BlockListHelper<Assertion>.CreateBlockListCopy(ensureBlocks);
+            Result.ExceptionIdentifierBlocks = BlockListHelper<Identifier>.CreateBlockListCopy(exceptionIdentifierBlocks);
+            Result.EntityDeclarationBlocks = BlockListHelper<EntityDeclaration>.CreateBlockListCopy(entityDeclarationBlocks);
+            Result.BodyInstructionBlocks = BlockListHelper<Instruction>.CreateBlockListCopy(bodyInstructionBlocks);
+            Result.ExceptionHandlerBlocks = BlockListHelper<ExceptionHandler>.CreateBlockListCopy(exceptionHandlerBlocks);
 
             return Result;
         }
 
-        public static IExternBody CreateInitializedExternBody(IDocument documentation, IBlockList<IAssertion, Assertion> requireBlocks, IBlockList<IAssertion, Assertion> ensureBlocks, IBlockList<IIdentifier, Identifier> exceptionIdentifierBlocks)
+        public static ExternBody CreateInitializedExternBody(Document documentation, BlockList<Assertion> requireBlocks, BlockList<Assertion> ensureBlocks, BlockList<Identifier> exceptionIdentifierBlocks)
         {
             ExternBody Result = new ExternBody();
             Result.Documentation = CreateDocumentationCopy(documentation);
-            Result.RequireBlocks = BlockListHelper<IAssertion, Assertion>.CreateBlockListCopy(requireBlocks);
-            Result.EnsureBlocks = BlockListHelper<IAssertion, Assertion>.CreateBlockListCopy(ensureBlocks);
-            Result.ExceptionIdentifierBlocks = BlockListHelper<IIdentifier, Identifier>.CreateBlockListCopy(exceptionIdentifierBlocks);
+            Result.RequireBlocks = BlockListHelper<Assertion>.CreateBlockListCopy(requireBlocks);
+            Result.EnsureBlocks = BlockListHelper<Assertion>.CreateBlockListCopy(ensureBlocks);
+            Result.ExceptionIdentifierBlocks = BlockListHelper<Identifier>.CreateBlockListCopy(exceptionIdentifierBlocks);
 
             return Result;
         }
 
-        public static IPrecursorBody CreateInitializedPrecursorBody(IDocument documentation, IBlockList<IAssertion, Assertion> requireBlocks, IBlockList<IAssertion, Assertion> ensureBlocks, IBlockList<IIdentifier, Identifier> exceptionIdentifierBlocks, IOptionalReference<IObjectType> ancestorType)
+        public static PrecursorBody CreateInitializedPrecursorBody(Document documentation, BlockList<Assertion> requireBlocks, BlockList<Assertion> ensureBlocks, BlockList<Identifier> exceptionIdentifierBlocks, OptionalReference<ObjectType> ancestorType)
         {
             PrecursorBody Result = new PrecursorBody();
             Result.Documentation = CreateDocumentationCopy(documentation);
-            Result.RequireBlocks = BlockListHelper<IAssertion, Assertion>.CreateBlockListCopy(requireBlocks);
-            Result.EnsureBlocks = BlockListHelper<IAssertion, Assertion>.CreateBlockListCopy(ensureBlocks);
-            Result.ExceptionIdentifierBlocks = BlockListHelper<IIdentifier, Identifier>.CreateBlockListCopy(exceptionIdentifierBlocks);
-            Result.AncestorType = OptionalReferenceHelper<IObjectType>.CreateReferenceCopy(ancestorType);
+            Result.RequireBlocks = BlockListHelper<Assertion>.CreateBlockListCopy(requireBlocks);
+            Result.EnsureBlocks = BlockListHelper<Assertion>.CreateBlockListCopy(ensureBlocks);
+            Result.ExceptionIdentifierBlocks = BlockListHelper<Identifier>.CreateBlockListCopy(exceptionIdentifierBlocks);
+            Result.AncestorType = OptionalReferenceHelper<ObjectType>.CreateReferenceCopy(ancestorType);
 
             return Result;
         }

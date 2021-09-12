@@ -4,16 +4,10 @@
 
 namespace BaseNode
 {
-    public interface IRaiseEventInstruction : IInstruction
-    {
-        IIdentifier QueryIdentifier { get; }
-        EventType Event { get; }
-    }
-
     [System.Serializable]
-    public class RaiseEventInstruction : Instruction, IRaiseEventInstruction
+    public class RaiseEventInstruction : Instruction
     {
-        public virtual IIdentifier QueryIdentifier { get; set; }
+        public virtual Identifier QueryIdentifier { get; set; }
         public virtual EventType Event { get; set; }
     }
 }

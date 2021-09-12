@@ -4,16 +4,10 @@
 
 namespace BaseNode
 {
-    public interface IConstantFeature : INamedFeature
-    {
-        IObjectType EntityType { get; }
-        IExpression ConstantValue { get; }
-    }
-
     [System.Serializable]
-    public class ConstantFeature : NamedFeature, IConstantFeature
+    public class ConstantFeature : NamedFeature
     {
-        public virtual IObjectType EntityType { get; set; }
-        public virtual IExpression ConstantValue { get; set; }
+        public virtual ObjectType EntityType { get; set; }
+        public virtual Expression ConstantValue { get; set; }
     }
 }

@@ -4,14 +4,9 @@
 
 namespace BaseNode
 {
-    public interface ICreationFeature : INamedFeature
-    {
-        IBlockList<ICommandOverload, CommandOverload> OverloadBlocks { get; }
-    }
-
     [System.Serializable]
-    public class CreationFeature : NamedFeature, ICreationFeature
+    public class CreationFeature : NamedFeature
     {
-        public virtual IBlockList<ICommandOverload, CommandOverload> OverloadBlocks { get; set; }
+        public virtual BlockList<CommandOverload> OverloadBlocks { get; set; }
     }
 }

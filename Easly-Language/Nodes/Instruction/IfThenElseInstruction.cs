@@ -6,16 +6,10 @@ namespace BaseNode
 {
     using Easly;
 
-    public interface IIfThenElseInstruction : IInstruction
-    {
-        IBlockList<IConditional, Conditional> ConditionalBlocks { get; }
-        IOptionalReference<IScope> ElseInstructions { get; }
-    }
-
     [System.Serializable]
-    public class IfThenElseInstruction : Instruction, IIfThenElseInstruction
+    public class IfThenElseInstruction : Instruction
     {
-        public virtual IBlockList<IConditional, Conditional> ConditionalBlocks { get; set; }
-        public virtual IOptionalReference<IScope> ElseInstructions { get; set; }
+        public virtual BlockList<Conditional> ConditionalBlocks { get; set; }
+        public virtual OptionalReference<Scope> ElseInstructions { get; set; }
     }
 }
