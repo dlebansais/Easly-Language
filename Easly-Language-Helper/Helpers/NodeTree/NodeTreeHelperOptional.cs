@@ -228,7 +228,7 @@ namespace BaseNodeHelper
             Type InterfaceType = GenericArguments[0];
 
             // Debug.Assert(ChildNodeType.GetInterface(InterfaceType.FullName) != null);
-            Debug.Assert(ChildNodeType.IsAssignableFrom(InterfaceType));
+            Debug.Assert(InterfaceType.IsAssignableFrom(ChildNodeType));
 
             IOptionalReference Optional = Property.GetValue(node) as IOptionalReference;
             Debug.Assert(Optional != null);

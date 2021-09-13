@@ -365,7 +365,8 @@ namespace BaseNodeHelper
         {
             if (!NodeTreeHelperList.IsNodeListProperty(nodeType, propertyName, out Type _) && !NodeTreeHelperBlockList.IsBlockListProperty(nodeType, propertyName, /*out Type _,*/ out _)) throw new ArgumentException($"{nameof(propertyName)} must be a list or block list property of {nameof(nodeType)}");
 
-            Type InterfaceType = NodeTreeHelper.NodeTypeToInterfaceType(nodeType);
+            // Type InterfaceType = NodeTreeHelper.NodeTypeToInterfaceType(nodeType);
+            Type InterfaceType = nodeType;
 
             if (NeverEmptyCollectionTable.ContainsKey(InterfaceType))
             {
@@ -389,7 +390,8 @@ namespace BaseNodeHelper
             if (!NodeTreeHelperList.IsNodeListProperty(nodeType, propertyName, out Type _) && !NodeTreeHelperBlockList.IsBlockListProperty(nodeType, propertyName, /*out Type _,*/ out _)) throw new ArgumentException($"{nameof(propertyName)} must be a list or block list property of {nameof(nodeType)}");
             if (IsCollectionNeverEmpty(nodeType, propertyName)) throw new ArgumentException($"{nameof(nodeType)} must be a list or block list that can be empty");
 
-            Type InterfaceType = NodeTreeHelper.NodeTypeToInterfaceType(nodeType);
+            // Type InterfaceType = NodeTreeHelper.NodeTypeToInterfaceType(nodeType);
+            Type InterfaceType = nodeType;
 
             if (WithExpandCollectionTable.ContainsKey(InterfaceType))
             {

@@ -98,9 +98,11 @@ namespace BaseNodeHelper
             NamePrefix = NamePrefix.Substring(0, NamePrefix.IndexOf(".", StringComparison.InvariantCulture) + 1);
 
             string NodeTypeName = interfaceType.AssemblyQualifiedName;
-            NodeTypeName = NodeTypeName.Replace(NamePrefix + "I", NamePrefix);
 
+            // NodeTypeName = NodeTypeName.Replace(NamePrefix + "I", NamePrefix);
             Type NodeType = Type.GetType(NodeTypeName);
+
+            Debug.Assert(NodeType != null);
             Debug.Assert(!NodeType.IsAbstract, $"A default type value is never abstract");
 
             Result = CreateEmptyNode(NodeType);
@@ -139,7 +141,8 @@ namespace BaseNodeHelper
                 else if (NodeTreeHelperList.IsNodeListProperty(EmptyNode, PropertyName, out ChildNodeType))
                     if (IsCollectionNeverEmpty(EmptyNode, PropertyName))
                     {
-                        Type NodeType = NodeTreeHelper.InterfaceTypeToNodeType(ChildNodeType);
+                        // Type NodeType = NodeTreeHelper.InterfaceTypeToNodeType(ChildNodeType);
+                        Type NodeType = ChildNodeType;
 
                         Node FirstNode;
                         if (NodeType.IsAbstract)

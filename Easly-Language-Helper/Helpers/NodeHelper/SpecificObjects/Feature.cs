@@ -167,17 +167,18 @@ namespace BaseNodeHelper
 
         public static CreationFeature CreateInitializedCreationFeature(Document documentation, Identifier exportIdentifier, ExportStatus export, Name entityName, BlockList<CommandOverload> commandOverloadBlocks)
         {
-            if (commandOverloadBlocks == null) throw new ArgumentNullException(nameof(commandOverloadBlocks));
-            if (commandOverloadBlocks.NodeBlockList.Count == 0) throw new ArgumentException($"{nameof(commandOverloadBlocks)} must not be empty");
-            Debug.Assert(commandOverloadBlocks.NodeBlockList[0].NodeList.Count > 0, $"A block in a block list always has at least one node");
-
             CreationFeature Result = new CreationFeature();
             Result.Documentation = CreateDocumentationCopy(documentation);
             Result.ExportIdentifier = exportIdentifier != null ? DeepCloneNode(exportIdentifier, cloneCommentGuid: false) as Identifier : CreateEmptyExportIdentifier();
             Result.Export = export;
             Result.EntityName = entityName != null ? DeepCloneNode(entityName, cloneCommentGuid: false) as Name : CreateEmptyName();
             if (commandOverloadBlocks != null)
+            {
+                if (commandOverloadBlocks.NodeBlockList.Count == 0) throw new ArgumentException($"{nameof(commandOverloadBlocks)} must not be empty");
+                Debug.Assert(commandOverloadBlocks.NodeBlockList[0].NodeList.Count > 0, $"A block in a block list always has at least one node");
+
                 Result.OverloadBlocks = BlockListHelper<CommandOverload>.CreateBlockListCopy(commandOverloadBlocks);
+            }
             else
                 Result.OverloadBlocks = BlockListHelper<CommandOverload>.CreateSimpleBlockList(CreateEmptyCommandOverload());
 
@@ -186,10 +187,6 @@ namespace BaseNodeHelper
 
         public static FunctionFeature CreateInitializedFunctionFeature(Document documentation, Identifier exportIdentifier, ExportStatus export, Name entityName, OnceChoice once, BlockList<QueryOverload> queryOverloadBlocks)
         {
-            if (queryOverloadBlocks == null) throw new ArgumentNullException(nameof(queryOverloadBlocks));
-            if (queryOverloadBlocks.NodeBlockList.Count == 0) throw new ArgumentException($"{nameof(queryOverloadBlocks)} must not be empty");
-            Debug.Assert(queryOverloadBlocks.NodeBlockList[0].NodeList.Count > 0, $"A block in a block list always has at least one node");
-
             FunctionFeature Result = new FunctionFeature();
             Result.Documentation = CreateDocumentationCopy(documentation);
             Result.ExportIdentifier = exportIdentifier != null ? DeepCloneNode(exportIdentifier, cloneCommentGuid: false) as Identifier : CreateEmptyExportIdentifier();
@@ -197,7 +194,11 @@ namespace BaseNodeHelper
             Result.EntityName = entityName != null ? DeepCloneNode(entityName, cloneCommentGuid: false) as Name : CreateEmptyName();
             Result.Once = once;
             if (queryOverloadBlocks != null)
+            {
+                if (queryOverloadBlocks.NodeBlockList.Count == 0) throw new ArgumentException($"{nameof(queryOverloadBlocks)} must not be empty");
+                Debug.Assert(queryOverloadBlocks.NodeBlockList[0].NodeList.Count > 0, $"A block in a block list always has at least one node");
                 Result.OverloadBlocks = BlockListHelper<QueryOverload>.CreateBlockListCopy(queryOverloadBlocks);
+            }
             else
                 Result.OverloadBlocks = BlockListHelper<QueryOverload>.CreateSimpleBlockList(CreateEmptyQueryOverload());
 
@@ -206,17 +207,18 @@ namespace BaseNodeHelper
 
         public static IndexerFeature CreateInitializedIndexerFeature(Document documentation, Identifier exportIdentifier, ExportStatus export, ObjectType entityType, BlockList<Identifier> modifiedQueryBlocks, OptionalReference<Body> getterBody, OptionalReference<Body> setterBody, BlockList<EntityDeclaration> indexParameterBlocks, ParameterEndStatus parameterEnd)
         {
-            if (indexParameterBlocks == null) throw new ArgumentNullException(nameof(indexParameterBlocks));
-            if (indexParameterBlocks.NodeBlockList.Count == 0) throw new ArgumentException($"{nameof(indexParameterBlocks)} must not be empty");
-            Debug.Assert(indexParameterBlocks.NodeBlockList[0].NodeList.Count > 0, $"A block in a block list always has at least one node");
-
             IndexerFeature Result = new IndexerFeature();
             Result.Documentation = CreateDocumentationCopy(documentation);
             Result.ExportIdentifier = exportIdentifier != null ? DeepCloneNode(exportIdentifier, cloneCommentGuid: false) as Identifier : CreateEmptyExportIdentifier();
             Result.Export = export;
             Result.EntityType = entityType != null ? DeepCloneNode(entityType, cloneCommentGuid: false) as ObjectType : CreateDefaultType();
             if (indexParameterBlocks != null)
+            {
+                if (indexParameterBlocks.NodeBlockList.Count == 0) throw new ArgumentException($"{nameof(indexParameterBlocks)} must not be empty");
+                Debug.Assert(indexParameterBlocks.NodeBlockList[0].NodeList.Count > 0, $"A block in a block list always has at least one node");
+
                 Result.IndexParameterBlocks = BlockListHelper<EntityDeclaration>.CreateBlockListCopy(indexParameterBlocks);
+            }
             else
                 Result.IndexParameterBlocks = BlockListHelper<EntityDeclaration>.CreateSimpleBlockList(CreateEmptyEntityDeclaration());
             Result.ParameterEnd = parameterEnd;
@@ -229,17 +231,17 @@ namespace BaseNodeHelper
 
         public static ProcedureFeature CreateInitializedProcedureFeature(Document documentation, Identifier exportIdentifier, ExportStatus export, Name entityName, BlockList<CommandOverload> commandOverloadBlocks)
         {
-            if (commandOverloadBlocks == null) throw new ArgumentNullException(nameof(commandOverloadBlocks));
-            if (commandOverloadBlocks.NodeBlockList.Count == 0) throw new ArgumentException($"{nameof(commandOverloadBlocks)} must not be empty");
-            Debug.Assert(commandOverloadBlocks.NodeBlockList[0].NodeList.Count > 0, $"A block in a block list always has at least one node");
-
             ProcedureFeature Result = new ProcedureFeature();
             Result.Documentation = CreateDocumentationCopy(documentation);
             Result.ExportIdentifier = exportIdentifier != null ? DeepCloneNode(exportIdentifier, cloneCommentGuid: false) as Identifier : CreateEmptyExportIdentifier();
             Result.Export = export;
             Result.EntityName = entityName != null ? DeepCloneNode(entityName, cloneCommentGuid: false) as Name : CreateEmptyName();
             if (commandOverloadBlocks != null)
+            {
+                if (commandOverloadBlocks.NodeBlockList.Count == 0) throw new ArgumentException($"{nameof(commandOverloadBlocks)} must not be empty");
+                Debug.Assert(commandOverloadBlocks.NodeBlockList[0].NodeList.Count > 0, $"A block in a block list always has at least one node");
                 Result.OverloadBlocks = BlockListHelper<CommandOverload>.CreateBlockListCopy(commandOverloadBlocks);
+            }
             else
                 Result.OverloadBlocks = BlockListHelper<CommandOverload>.CreateSimpleBlockList(CreateEmptyCommandOverload());
 

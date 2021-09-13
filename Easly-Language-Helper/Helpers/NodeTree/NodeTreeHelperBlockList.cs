@@ -245,7 +245,9 @@ namespace BaseNodeHelper
             // Debug.Assert(GenericArguments.Length == 2);
             Debug.Assert(GenericArguments.Length == 1);
 
-            Type ItemType = GenericArguments[1];
+            // Type ItemType = GenericArguments[1];
+            Type ItemType = GenericArguments[0];
+
             Debug.Assert(ItemType != null);
             Debug.Assert(!ItemType.IsInterface);
 
