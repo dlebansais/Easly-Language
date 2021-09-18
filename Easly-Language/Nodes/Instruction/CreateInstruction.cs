@@ -1,17 +1,32 @@
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-#pragma warning disable SA1600 // Elements should be documented
-
 namespace BaseNode
 {
     using Easly;
 
+    /// <summary>
+    /// Represents an object creation instruction.
+    /// /Doc/Nodes/Instruction/CreateInstruction.md explains the semantic.
+    /// </summary>
     [System.Serializable]
     public class CreateInstruction : Instruction
     {
-        public virtual Identifier EntityIdentifier { get; set; }
-        public virtual Identifier CreationRoutineIdentifier { get; set; }
-        public virtual IBlockList<Argument> ArgumentBlocks { get; set; }
-        public virtual IOptionalReference<QualifiedName> Processor { get; set; }
+        /// <summary>
+        /// Gets or sets the created object.
+        /// </summary>
+        public virtual Identifier EntityIdentifier { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets the routine to call when creating.
+        /// </summary>
+        public virtual Identifier CreationRoutineIdentifier { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets call arguments.
+        /// </summary>
+        public virtual IBlockList<Argument> ArgumentBlocks { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets the target processor.
+        /// </summary>
+        public virtual IOptionalReference<QualifiedName> Processor { get; set; } = null!;
     }
 }

@@ -830,7 +830,7 @@ namespace BaseNodeHelper
             if (propertyType == null) throw new ArgumentNullException(nameof(propertyType));
             if (!propertyType.IsGenericType) throw new ArgumentException($"{nameof(propertyType)} must be a generic type");
             Type GenericTypeDefinition = propertyType.GetGenericTypeDefinition();
-            if (GenericTypeDefinition != typeof(BlockList<>) && GenericTypeDefinition != typeof(BlockList<>) && GenericTypeDefinition != typeof(Block<>) && GenericTypeDefinition != typeof(Block<>)) throw new ArgumentException($"{nameof(propertyType)} must be a block or block list type");
+            if (GenericTypeDefinition != typeof(IBlockList<>) && GenericTypeDefinition != typeof(BlockList<>) && GenericTypeDefinition != typeof(IBlock<>) && GenericTypeDefinition != typeof(Block<>)) throw new ArgumentException($"{nameof(propertyType)} must be a block or block list type");
             if (replicationPattern == null) throw new ArgumentNullException(nameof(replicationPattern));
             if (sourceIdentifier == null) throw new ArgumentNullException(nameof(sourceIdentifier));
 

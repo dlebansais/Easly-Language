@@ -1,14 +1,25 @@
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-#pragma warning disable SA1600 // Elements should be documented
-
 namespace BaseNode
 {
+    /// <summary>
+    /// Represents the instruction throwing an exception.
+    /// /Doc/Nodes/Instruction/ThrowInstruction.md explains the semantic.
+    /// </summary>
     [System.Serializable]
     public class ThrowInstruction : Instruction
     {
-        public virtual ObjectType ExceptionType { get; set; }
-        public virtual Identifier CreationRoutine { get; set; }
-        public virtual IBlockList<Argument> ArgumentBlocks { get; set; }
+        /// <summary>
+        /// Gets or sets the type of the exception.
+        /// </summary>
+        public virtual ObjectType ExceptionType { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets the creation routine to use.
+        /// </summary>
+        public virtual Identifier CreationRoutine { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets call arguments.
+        /// </summary>
+        public virtual IBlockList<Argument> ArgumentBlocks { get; set; } = null!;
     }
 }

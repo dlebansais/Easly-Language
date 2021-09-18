@@ -1,13 +1,20 @@
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-#pragma warning disable SA1600 // Elements should be documented
-
 namespace BaseNode
 {
+    /// <summary>
+    /// Represents an anchored type.
+    /// /Doc/Nodes/Type/AnchoredType.md explains the semantic.
+    /// </summary>
     [System.Serializable]
     public class AnchoredType : ObjectType
     {
-        public virtual QualifiedName AnchoredName { get; set; }
+        /// <summary>
+        /// Gets or sets the variable the type is anchored to.
+        /// </summary>
+        public virtual QualifiedName AnchoredName { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets whether the anchor is at declaration or creation.
+        /// </summary>
         public virtual AnchorKinds AnchorKind { get; set; }
     }
 }

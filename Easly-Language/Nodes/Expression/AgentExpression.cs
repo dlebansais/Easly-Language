@@ -1,15 +1,22 @@
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-#pragma warning disable SA1600 // Elements should be documented
-
 namespace BaseNode
 {
     using Easly;
 
+    /// <summary>
+    /// Represents an agent expression.
+    /// /Doc/Nodes/Expression/AgentExpression.md explains the semantic.
+    /// </summary>
     [System.Serializable]
     public class AgentExpression : Expression
     {
-        public virtual Identifier Delegated { get; set; }
-        public virtual IOptionalReference<ObjectType> BaseType { get; set; }
+        /// <summary>
+        /// Gets or sets the feature this agent represents.
+        /// </summary>
+        public virtual Identifier Delegated { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets the type where to find the feature.
+        /// </summary>
+        public virtual IOptionalReference<ObjectType> BaseType { get; set; } = null!;
     }
 }

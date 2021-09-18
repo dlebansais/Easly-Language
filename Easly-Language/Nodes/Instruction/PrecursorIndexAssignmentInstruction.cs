@@ -1,16 +1,27 @@
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-#pragma warning disable SA1600 // Elements should be documented
-
 namespace BaseNode
 {
     using Easly;
 
+    /// <summary>
+    /// Represents the assigment of the precursor of an indexer.
+    /// /Doc/Nodes/Instruction/PrecursorIndexAssignmentInstruction.md explains the semantic.
+    /// </summary>
     [System.Serializable]
     public class PrecursorIndexAssignmentInstruction : Instruction
     {
-        public virtual IOptionalReference<ObjectType> AncestorType { get; set; }
-        public virtual IBlockList<Argument> ArgumentBlocks { get; set; }
-        public virtual Expression Source { get; set; }
+        /// <summary>
+        /// Gets or sets the type where to find the precursor.
+        /// </summary>
+        public virtual IOptionalReference<ObjectType> AncestorType { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets call arguments.
+        /// </summary>
+        public virtual IBlockList<Argument> ArgumentBlocks { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets the value to assign.
+        /// </summary>
+        public virtual Expression Source { get; set; } = null!;
     }
 }

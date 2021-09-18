@@ -1,19 +1,42 @@
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-#pragma warning disable SA1600 // Elements should be documented
-
 namespace BaseNode
 {
     using Easly;
 
+    /// <summary>
+    /// Represents a query overload in a feature.
+    /// /Doc/Nodes/QueryOverload.md explains the semantic.
+    /// </summary>
     [System.Serializable]
     public class QueryOverload : Node
     {
-        public virtual IBlockList<EntityDeclaration> ParameterBlocks { get; set; }
+        /// <summary>
+        /// Gets or sets the list of parameters.
+        /// </summary>
+        public virtual IBlockList<EntityDeclaration> ParameterBlocks { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets whether the query accepts extra parameters.
+        /// </summary>
         public virtual ParameterEndStatus ParameterEnd { get; set; }
-        public virtual IBlockList<EntityDeclaration> ResultBlocks { get; set; }
-        public virtual IBlockList<Identifier> ModifiedQueryBlocks { get; set; }
-        public virtual IOptionalReference<Expression> Variant { get; set; }
-        public virtual Body QueryBody { get; set; }
+
+        /// <summary>
+        /// Gets or sets the list of results.
+        /// </summary>
+        public virtual IBlockList<EntityDeclaration> ResultBlocks { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets the list of other features this query modifies.
+        /// </summary>
+        public virtual IBlockList<Identifier> ModifiedQueryBlocks { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets the query variant.
+        /// </summary>
+        public virtual IOptionalReference<Expression> Variant { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets the query body.
+        /// </summary>
+        public virtual Body QueryBody { get; set; } = null!;
     }
 }

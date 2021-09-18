@@ -35,67 +35,115 @@ namespace BaseNodeHelper
 
         public static bool IsDefaultNode(Node node)
         {
-            IList<Identifier> Path;
-
             switch (node)
             {
                 case Name AsName:
-                    return AsName.Text.Length == 0;
+                    return IsDefaultName(AsName);
 
                 case Identifier AsIdentifier:
-                    return AsIdentifier.Text.Length == 0;
+                    return IsDefaultIdentifier(AsIdentifier);
 
                 case Scope AsScope:
-                    return AsScope.EntityDeclarationBlocks.NodeBlockList.Count == 0 && AsScope.InstructionBlocks.NodeBlockList.Count == 0;
+                    return IsDefaultScope(AsScope);
 
                 case QualifiedName AsQualifiedName:
-                    Path = AsQualifiedName.Path; // Debug.Assert(Path.Count > 0);
-                    return Path.Count == 1 && Path[0].Text.Length == 0;
+                    return IsDefaultQualifiedName(AsQualifiedName);
 
                 case SimpleType AsSimpleType:
-                    return AsSimpleType.Sharing == SharingType.NotShared && AsSimpleType.ClassIdentifier.Text.Length == 0;
+                    return IsDefaultSimpleType(AsSimpleType);
 
-                case ObjectType AsObjectType: // Fallback for other IObjectType.
+                case ObjectType _: // Fallback for other IObjectType.
                     return false;
 
                 case QueryExpression AsQueryExpression:
-                    Path = AsQueryExpression.Query.Path; // Debug.Assert(Path.Count > 0);
-                    return AsQueryExpression.ArgumentBlocks.NodeBlockList.Count == 0 && Path.Count == 1 && Path[0].Text.Length == 0;
+                    return IsDefaultQueryExpression(AsQueryExpression);
 
                 case ManifestCharacterExpression AsManifestCharacterExpression:
-                    return AsManifestCharacterExpression.Text.Length == 0;
+                    return IsDefaultManifestCharacterExpression(AsManifestCharacterExpression);
 
                 case ManifestNumberExpression AsManifestNumberExpression:
-                    return AsManifestNumberExpression.Text.Length == 0;
+                    return IsDefaultManifestNumberExpression(AsManifestNumberExpression);
 
                 case ManifestStringExpression AsManifestStringExpression:
-                    return AsManifestStringExpression.Text.Length == 0;
+                    return IsDefaultManifestStringExpression(AsManifestStringExpression);
 
-                case Expression AsExpression: // Fallback for other IExpression.
+                case Expression _: // Fallback for other IExpression.
                     return false;
 
                 case EffectiveBody AsEffectiveBody:
-                    return AsEffectiveBody.RequireBlocks.NodeBlockList.Count == 0 &&
-                           AsEffectiveBody.EnsureBlocks.NodeBlockList.Count == 0 &&
-                           AsEffectiveBody.ExceptionIdentifierBlocks.NodeBlockList.Count == 0 &&
-                           AsEffectiveBody.EntityDeclarationBlocks.NodeBlockList.Count == 0 &&
-                           AsEffectiveBody.BodyInstructionBlocks.NodeBlockList.Count == 0 &&
-                           AsEffectiveBody.ExceptionHandlerBlocks.NodeBlockList.Count == 0;
+                    return IsDefaultEffectiveBody(AsEffectiveBody);
 
-                case Body AsBody: // Fallback for other IBody.
+                case Body _: // Fallback for other IBody.
                     return false;
 
                 case Argument AsArgument:
-                    return IsDefaultArgument(node);
+                    return IsDefaultArgument(AsArgument);
 
                 default:
                     return IsEmptyNode(node);
             }
         }
 
-        public static bool IsDefaultArgument(Node node)
+        public static bool IsDefaultName(Name nodeName)
         {
-            if (node is PositionalArgument AsPositional)
+            return nodeName.Text.Length == 0;
+        }
+
+        public static bool IsDefaultIdentifier(Identifier nodeIdentifier)
+        {
+            return nodeIdentifier.Text.Length == 0;
+        }
+
+        public static bool IsDefaultScope(Scope nodeScope)
+        {
+            return nodeScope.EntityDeclarationBlocks.NodeBlockList.Count == 0 && nodeScope.InstructionBlocks.NodeBlockList.Count == 0;
+        }
+
+        public static bool IsDefaultQualifiedName(QualifiedName nodeQualifiedName)
+        {
+            IList<Identifier> Path = nodeQualifiedName.Path; // Debug.Assert(Path.Count > 0);
+            return Path.Count == 1 && Path[0].Text.Length == 0;
+        }
+
+        public static bool IsDefaultSimpleType(SimpleType nodeSimpleType)
+        {
+            return nodeSimpleType.Sharing == SharingType.NotShared && nodeSimpleType.ClassIdentifier.Text.Length == 0;
+        }
+
+        public static bool IsDefaultQueryExpression(QueryExpression nodeQueryExpression)
+        {
+            IList<Identifier> Path = nodeQueryExpression.Query.Path; // Debug.Assert(Path.Count > 0);
+            return nodeQueryExpression.ArgumentBlocks.NodeBlockList.Count == 0 && Path.Count == 1 && Path[0].Text.Length == 0;
+        }
+
+        public static bool IsDefaultManifestCharacterExpression(ManifestCharacterExpression nodeManifestCharacterExpression)
+        {
+            return nodeManifestCharacterExpression.Text.Length == 0;
+        }
+
+        public static bool IsDefaultManifestNumberExpression(ManifestNumberExpression nodeManifestNumberExpression)
+        {
+            return nodeManifestNumberExpression.Text.Length == 0;
+        }
+
+        public static bool IsDefaultManifestStringExpression(ManifestStringExpression nodeManifestStringExpression)
+        {
+            return nodeManifestStringExpression.Text.Length == 0;
+        }
+
+        public static bool IsDefaultEffectiveBody(EffectiveBody nodeEffectiveBody)
+        {
+            return nodeEffectiveBody.RequireBlocks.NodeBlockList.Count == 0 &&
+                   nodeEffectiveBody.EnsureBlocks.NodeBlockList.Count == 0 &&
+                   nodeEffectiveBody.ExceptionIdentifierBlocks.NodeBlockList.Count == 0 &&
+                   nodeEffectiveBody.EntityDeclarationBlocks.NodeBlockList.Count == 0 &&
+                   nodeEffectiveBody.BodyInstructionBlocks.NodeBlockList.Count == 0 &&
+                   nodeEffectiveBody.ExceptionHandlerBlocks.NodeBlockList.Count == 0;
+        }
+
+        public static bool IsDefaultArgument(Argument nodeArgument)
+        {
+            if (nodeArgument is PositionalArgument AsPositional)
                 if (AsPositional.Source is QueryExpression AsQueryExpression)
                 {
                     IList<Identifier> Path = AsQueryExpression.Query.Path;
@@ -115,72 +163,94 @@ namespace BaseNodeHelper
         public static ulong NodeHash(Node node)
         {
             IList<string> PropertyNames = NodeTreeHelper.EnumChildNodeProperties(node);
-            Type ChildNodeType;
             ulong Hash = 0;
 
             foreach (string PropertyName in PropertyNames)
-            {
-                if (NodeTreeHelperChild.IsChildNodeProperty(node, PropertyName, out ChildNodeType))
-                {
-                    NodeTreeHelperChild.GetChildNode(node, PropertyName, out Node ChildNode);
-                    MergeHash(ref Hash, NodeHash(ChildNode));
-                }
-                else if (NodeTreeHelperOptional.IsOptionalChildNodeProperty(node, PropertyName, out ChildNodeType))
-                {
-                    NodeTreeHelperOptional.GetChildNode(node, PropertyName, out bool IsAssigned, out Node ChildNode);
-                    MergeHash(ref Hash, IsAssigned ? 1UL : 0);
-                    if (IsAssigned)
-                        MergeHash(ref Hash, NodeHash(ChildNode));
-                }
-                else if (NodeTreeHelperList.IsNodeListProperty(node, PropertyName, out ChildNodeType))
-                {
-                    NodeTreeHelperList.GetChildNodeList(node, PropertyName, out IReadOnlyList<Node> ChildNodeList);
-                    foreach (Node ChildNode in ChildNodeList)
-                        MergeHash(ref Hash, NodeHash(ChildNode));
-                }
-                else if (NodeTreeHelperBlockList.IsBlockListProperty(node, PropertyName, /*out Type ChildInterfaceType,*/ out ChildNodeType))
-                {
-                    NodeTreeHelperBlockList.GetChildBlockList(node, PropertyName, out IReadOnlyList<NodeTreeBlock> ChildBlockList);
-                    for (int i = 0; i < ChildBlockList.Count; i++)
-                    {
-                        NodeTreeHelperBlockList.GetChildBlock(node, PropertyName, i, out IBlock ChildBlock);
-                        IReadOnlyList<Node> NodeList = ChildBlockList[i].NodeList;
-
-                        MergeHash(ref Hash, ValueHash(ChildBlock.Documentation.Comment));
-                        MergeHash(ref Hash, ValueHash(ChildBlock.Documentation.Uuid));
-                        MergeHash(ref Hash, ValueHash((int)ChildBlock.Replication));
-                        MergeHash(ref Hash, NodeHash(ChildBlock.ReplicationPattern));
-                        MergeHash(ref Hash, NodeHash(ChildBlock.SourceIdentifier));
-
-                        foreach (Node ChildNode in NodeList)
-                            MergeHash(ref Hash, NodeHash(ChildNode));
-                    }
-                }
-                else
-                {
-                    Type NodeType = node.GetType();
-                    PropertyInfo Info = NodeType.GetProperty(PropertyName);
-
-                    if (Info.PropertyType == typeof(Document))
-                    {
-                        Document Documentation = Info.GetValue(node) as Document;
-                        MergeHash(ref Hash, ValueHash(Documentation.Comment));
-                        MergeHash(ref Hash, ValueHash(Documentation.Uuid));
-                    }
-                    else if (Info.PropertyType == typeof(bool))
-                        MergeHash(ref Hash, ValueHash((bool)Info.GetValue(node)));
-                    else if (Info.PropertyType.IsEnum)
-                        MergeHash(ref Hash, ValueHash((int)Info.GetValue(node)));
-                    else if (Info.PropertyType == typeof(string))
-                        MergeHash(ref Hash, ValueHash((string)Info.GetValue(node)));
-                    else if (Info.PropertyType == typeof(Guid))
-                        MergeHash(ref Hash, ValueHash((Guid)Info.GetValue(node)));
-                    else
-                        throw new ArgumentOutOfRangeException($"{nameof(NodeType)}: {NodeType.FullName}");
-                }
-            }
+                NodeHashPropertyName(node, PropertyName, ref Hash);
 
             return Hash;
+        }
+
+        public static void NodeHashPropertyName(Node node, string propertyName, ref ulong hash)
+        {
+            if (NodeTreeHelperChild.IsChildNodeProperty(node, propertyName, out _))
+                NodeHashChildNode(node, propertyName, ref hash);
+            else if (NodeTreeHelperOptional.IsOptionalChildNodeProperty(node, propertyName, out _))
+                NodeHashOptionalChildNode(node, propertyName, ref hash);
+            else if (NodeTreeHelperList.IsNodeListProperty(node, propertyName, out _))
+                NodeHashNodeList(node, propertyName, ref hash);
+            else if (NodeTreeHelperBlockList.IsBlockListProperty(node, propertyName, /*out Type ChildInterfaceType,*/ out _))
+                NodeHashBlockList(node, propertyName, ref hash);
+            else
+                NodeHashOther(node, propertyName, ref hash);
+        }
+
+        public static void NodeHashChildNode(Node node, string propertyName, ref ulong hash)
+        {
+            NodeTreeHelperChild.GetChildNode(node, propertyName, out Node ChildNode);
+
+            MergeHash(ref hash, NodeHash(ChildNode));
+        }
+
+        public static void NodeHashOptionalChildNode(Node node, string propertyName, ref ulong hash)
+        {
+            NodeTreeHelperOptional.GetChildNode(node, propertyName, out bool IsAssigned, out Node ChildNode);
+
+            MergeHash(ref hash, IsAssigned ? 1UL : 0);
+
+            if (IsAssigned)
+                MergeHash(ref hash, NodeHash(ChildNode));
+        }
+
+        public static void NodeHashNodeList(Node node, string propertyName, ref ulong hash)
+        {
+            NodeTreeHelperList.GetChildNodeList(node, propertyName, out IReadOnlyList<Node> ChildNodeList);
+
+            foreach (Node ChildNode in ChildNodeList)
+                MergeHash(ref hash, NodeHash(ChildNode));
+        }
+
+        public static void NodeHashBlockList(Node node, string propertyName, ref ulong hash)
+        {
+            NodeTreeHelperBlockList.GetChildBlockList(node, propertyName, out IReadOnlyList<NodeTreeBlock> ChildBlockList);
+
+            for (int i = 0; i < ChildBlockList.Count; i++)
+            {
+                NodeTreeHelperBlockList.GetChildBlock(node, propertyName, i, out IBlock ChildBlock);
+                IReadOnlyList<Node> NodeList = ChildBlockList[i].NodeList;
+
+                MergeHash(ref hash, ValueHash(ChildBlock.Documentation.Comment));
+                MergeHash(ref hash, ValueHash(ChildBlock.Documentation.Uuid));
+                MergeHash(ref hash, ValueHash((int)ChildBlock.Replication));
+                MergeHash(ref hash, NodeHash(ChildBlock.ReplicationPattern));
+                MergeHash(ref hash, NodeHash(ChildBlock.SourceIdentifier));
+
+                foreach (Node ChildNode in NodeList)
+                    MergeHash(ref hash, NodeHash(ChildNode));
+            }
+        }
+
+        public static void NodeHashOther(Node node, string propertyName, ref ulong hash)
+        {
+            Type NodeType = node.GetType();
+            PropertyInfo Info = NodeType.GetProperty(propertyName);
+
+            if (Info.PropertyType == typeof(Document))
+            {
+                Document Documentation = Info.GetValue(node) as Document;
+                MergeHash(ref hash, ValueHash(Documentation.Comment));
+                MergeHash(ref hash, ValueHash(Documentation.Uuid));
+            }
+            else if (Info.PropertyType == typeof(bool))
+                MergeHash(ref hash, ValueHash((bool)Info.GetValue(node)));
+            else if (Info.PropertyType.IsEnum)
+                MergeHash(ref hash, ValueHash((int)Info.GetValue(node)));
+            else if (Info.PropertyType == typeof(string))
+                MergeHash(ref hash, ValueHash((string)Info.GetValue(node)));
+            else if (Info.PropertyType == typeof(Guid))
+                MergeHash(ref hash, ValueHash((Guid)Info.GetValue(node)));
+            else
+                throw new ArgumentOutOfRangeException($"{nameof(NodeType)}: {NodeType.FullName}");
         }
 
         public static Node DeepCloneNode(Node root, bool cloneCommentGuid)
@@ -270,7 +340,7 @@ namespace BaseNodeHelper
             {
                 Type BlockType = Block.GetType();
                 Type[] GenericArguments = BlockType.GetGenericArguments();
-                BlockType = typeof(Block<>).MakeGenericType(GenericArguments);
+                BlockType = typeof(IBlock<>).MakeGenericType(GenericArguments);
 
                 Pattern ClonedPattern = (Pattern)DeepCloneNode(Block.ReplicationPattern, cloneCommentGuid);
                 Identifier ClonedSource = (Identifier)DeepCloneNode(Block.SourceIdentifier, cloneCommentGuid);
@@ -297,7 +367,7 @@ namespace BaseNodeHelper
 
             Type BlockListType = rootBlockList.GetType();
             Type[] GenericArguments = BlockListType.GetGenericArguments();
-            BlockListType = typeof(IBlockList<>).MakeGenericType(GenericArguments);
+            BlockListType = typeof(BlockList<>).MakeGenericType(GenericArguments);
 
             IBlockList ClonedBlockList = (IBlockList)BlockListType.Assembly.CreateInstance(BlockListType.FullName);
 

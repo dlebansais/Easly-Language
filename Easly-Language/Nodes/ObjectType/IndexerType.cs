@@ -1,22 +1,65 @@
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-#pragma warning disable SA1600 // Elements should be documented
-
 namespace BaseNode
 {
+    /// <summary>
+    /// Represents an indexer type.
+    /// /Doc/Nodes/Type/IndexerType.md explains the semantic.
+    /// </summary>
     [System.Serializable]
     public class IndexerType : ObjectType
     {
-        public virtual ObjectType BaseType { get; set; }
-        public virtual ObjectType EntityType { get; set; }
-        public virtual IBlockList<EntityDeclaration> IndexParameterBlocks { get; set; }
+        /// <summary>
+        /// Gets or sets the base type.
+        /// </summary>
+        public virtual ObjectType BaseType { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets the index type.
+        /// </summary>
+        public virtual ObjectType EntityType { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets the list of parameters.
+        /// </summary>
+        public virtual IBlockList<EntityDeclaration> IndexParameterBlocks { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets whether the command accepts extra parameters.
+        /// </summary>
         public virtual ParameterEndStatus ParameterEnd { get; set; }
+
+        /// <summary>
+        /// Gets or sets how this indexer can be used.
+        /// </summary>
         public virtual UtilityType IndexerKind { get; set; }
-        public virtual IBlockList<Assertion> GetRequireBlocks { get; set; }
-        public virtual IBlockList<Assertion> GetEnsureBlocks { get; set; }
-        public virtual IBlockList<Identifier> GetExceptionIdentifierBlocks { get; set; }
-        public virtual IBlockList<Assertion> SetRequireBlocks { get; set; }
-        public virtual IBlockList<Assertion> SetEnsureBlocks { get; set; }
-        public virtual IBlockList<Identifier> SetExceptionIdentifierBlocks { get; set; }
+
+        /// <summary>
+        /// Gets or sets getter requirements.
+        /// </summary>
+        public virtual IBlockList<Assertion> GetRequireBlocks { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets getter guaranties.
+        /// </summary>
+        public virtual IBlockList<Assertion> GetEnsureBlocks { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets getter exception handlers.
+        /// </summary>
+        public virtual IBlockList<Identifier> GetExceptionIdentifierBlocks { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets setter requirements.
+        /// </summary>
+        public virtual IBlockList<Assertion> SetRequireBlocks { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets setter guaranties.
+        /// </summary>
+        public virtual IBlockList<Assertion> SetEnsureBlocks { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets setter exception handlers.
+        /// </summary>
+        public virtual IBlockList<Identifier> SetExceptionIdentifierBlocks { get; set; } = null!;
     }
 }

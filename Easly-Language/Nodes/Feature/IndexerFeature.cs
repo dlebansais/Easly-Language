@@ -1,19 +1,42 @@
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-#pragma warning disable SA1600 // Elements should be documented
-
 namespace BaseNode
 {
     using Easly;
 
+    /// <summary>
+    /// Represents an indexer feature.
+    /// /Doc/Nodes/Feature/IndexerFeature.md explains the semantic.
+    /// </summary>
     [System.Serializable]
     public class IndexerFeature : Feature
     {
-        public virtual ObjectType EntityType { get; set; }
-        public virtual IBlockList<EntityDeclaration> IndexParameterBlocks { get; set; }
+        /// <summary>
+        /// Gets or sets the indexed value type.
+        /// </summary>
+        public virtual ObjectType EntityType { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets parameters.
+        /// </summary>
+        public virtual IBlockList<EntityDeclaration> IndexParameterBlocks { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets whether the index accepts extra parameters.
+        /// </summary>
         public virtual ParameterEndStatus ParameterEnd { get; set; }
-        public virtual IBlockList<Identifier> ModifiedQueryBlocks { get; set; }
-        public virtual IOptionalReference<Body> GetterBody { get; set; }
-        public virtual IOptionalReference<Body> SetterBody { get; set; }
+
+        /// <summary>
+        /// Gets or sets the list of other features this indexer modifies.
+        /// </summary>
+        public virtual IBlockList<Identifier> ModifiedQueryBlocks { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets the getter body.
+        /// </summary>
+        public virtual IOptionalReference<Body> GetterBody { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets the setter body.
+        /// </summary>
+        public virtual IOptionalReference<Body> SetterBody { get; set; } = null!;
     }
 }

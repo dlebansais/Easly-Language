@@ -1,13 +1,20 @@
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-#pragma warning disable SA1600 // Elements should be documented
-
 namespace BaseNode
 {
+    /// <summary>
+    /// Represents an expression initializing an object.
+    /// /Doc/Nodes/Expression/InitializedObjectExpression.md explains the semantic.
+    /// </summary>
     [System.Serializable]
     public class InitializedObjectExpression : Expression
     {
-        public virtual Identifier ClassIdentifier { get; set; }
-        public virtual IBlockList<AssignmentArgument> AssignmentBlocks { get; set; }
+        /// <summary>
+        /// Gets or sets the class name.
+        /// </summary>
+        public virtual Identifier ClassIdentifier { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets initialization values.
+        /// </summary>
+        public virtual IBlockList<AssignmentArgument> AssignmentBlocks { get; set; } = null!;
     }
 }

@@ -1,13 +1,20 @@
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-#pragma warning disable SA1600 // Elements should be documented
-
 namespace BaseNode
 {
+    /// <summary>
+    /// Represents a query expression using an indexer.
+    /// /Doc/Nodes/Expression/IndexQueryExpression.md explains the semantic.
+    /// </summary>
     [System.Serializable]
     public class IndexQueryExpression : Expression
     {
-        public virtual Expression IndexedExpression { get; set; }
-        public virtual IBlockList<Argument> ArgumentBlocks { get; set; }
+        /// <summary>
+        /// Gets or sets the indexed expression.
+        /// </summary>
+        public virtual Expression IndexedExpression { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets query parameters.
+        /// </summary>
+        public virtual IBlockList<Argument> ArgumentBlocks { get; set; } = null!;
     }
 }

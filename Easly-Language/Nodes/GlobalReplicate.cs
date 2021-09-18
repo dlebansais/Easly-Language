@@ -1,15 +1,22 @@
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-#pragma warning disable SA1600 // Elements should be documented
-
 namespace BaseNode
 {
     using System.Collections.Generic;
 
+    /// <summary>
+    /// Represents a global replicate definition.
+    /// /Doc/Nodes/GlobalReplicate.md explains the semantic.
+    /// </summary>
     [System.Serializable]
     public class GlobalReplicate : Node
     {
-        public virtual Name ReplicateName { get; set; }
-        public virtual IList<Pattern> Patterns { get; set; }
+        /// <summary>
+        /// Gets or sets the replicate name.
+        /// </summary>
+        public virtual Name ReplicateName { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets patterns to use in the replication.
+        /// </summary>
+        public virtual IList<Pattern> Patterns { get; set; } = null!;
     }
 }

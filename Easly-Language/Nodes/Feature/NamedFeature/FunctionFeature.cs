@@ -1,13 +1,20 @@
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-#pragma warning disable SA1600 // Elements should be documented
-
 namespace BaseNode
 {
+    /// <summary>
+    /// Represents a function feature.
+    /// /Doc/Nodes/Feature/FunctionFeature.md explains the semantic.
+    /// </summary>
     [System.Serializable]
     public class FunctionFeature : NamedFeature
     {
+        /// <summary>
+        /// Gets or sets whether this function is executed only once.
+        /// </summary>
         public virtual OnceChoice Once { get; set; }
-        public virtual IBlockList<QueryOverload> OverloadBlocks { get; set; }
+
+        /// <summary>
+        /// Gets or sets the list of overloads.
+        /// </summary>
+        public virtual IBlockList<QueryOverload> OverloadBlocks { get; set; } = null!;
     }
 }

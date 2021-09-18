@@ -1,18 +1,45 @@
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-#pragma warning disable SA1600 // Elements should be documented
-
 namespace BaseNode
 {
+    /// <summary>
+    /// Represents a property type.
+    /// /Doc/Nodes/Type/PropertyType.md explains the semantic.
+    /// </summary>
     [System.Serializable]
     public class PropertyType : ObjectType
     {
-        public virtual ObjectType BaseType { get; set; }
-        public virtual ObjectType EntityType { get; set; }
+        /// <summary>
+        /// Gets or sets the base type.
+        /// </summary>
+        public virtual ObjectType BaseType { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets the property type.
+        /// </summary>
+        public virtual ObjectType EntityType { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets how this property can be used.
+        /// </summary>
         public virtual UtilityType PropertyKind { get; set; }
-        public virtual IBlockList<Assertion> GetEnsureBlocks { get; set; }
-        public virtual IBlockList<Identifier> GetExceptionIdentifierBlocks { get; set; }
-        public virtual IBlockList<Assertion> SetRequireBlocks { get; set; }
-        public virtual IBlockList<Identifier> SetExceptionIdentifierBlocks { get; set; }
+
+        /// <summary>
+        /// Gets or sets getter guaranties.
+        /// </summary>
+        public virtual IBlockList<Assertion> GetEnsureBlocks { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets getter exception handlers.
+        /// </summary>
+        public virtual IBlockList<Identifier> GetExceptionIdentifierBlocks { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets setter requirements.
+        /// </summary>
+        public virtual IBlockList<Assertion> SetRequireBlocks { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets setter exception handlers.
+        /// </summary>
+        public virtual IBlockList<Identifier> SetExceptionIdentifierBlocks { get; set; } = null!;
     }
 }

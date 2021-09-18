@@ -1,13 +1,20 @@
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-#pragma warning disable SA1600 // Elements should be documented
-
 namespace BaseNode
 {
+    /// <summary>
+    /// Represents the 'with' part of the 'inspect' instruction.
+    /// /Doc/Nodes/With.md explains the semantic.
+    /// </summary>
     [System.Serializable]
     public class With : Node
     {
-        public virtual IBlockList<Range> RangeBlocks { get; set; }
-        public virtual Scope Instructions { get; set; }
+        /// <summary>
+        /// Gets or sets range blocks.
+        /// </summary>
+        public virtual IBlockList<Range> RangeBlocks { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets instructions for this case.
+        /// </summary>
+        public virtual Scope Instructions { get; set; } = null!;
     }
 }

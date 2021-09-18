@@ -1,13 +1,20 @@
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-#pragma warning disable SA1600 // Elements should be documented
-
 namespace BaseNode
 {
+    /// <summary>
+    /// Represents a command instruction.
+    /// /Doc/Nodes/Instruction/CommandInstruction.md explains the semantic.
+    /// </summary>
     [System.Serializable]
     public class CommandInstruction : Instruction
     {
-        public virtual QualifiedName Command { get; set; }
-        public virtual IBlockList<Argument> ArgumentBlocks { get; set; }
+        /// <summary>
+        /// Gets or sets the feature to call.
+        /// </summary>
+        public virtual QualifiedName Command { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets call arguments.
+        /// </summary>
+        public virtual IBlockList<Argument> ArgumentBlocks { get; set; } = null!;
     }
 }

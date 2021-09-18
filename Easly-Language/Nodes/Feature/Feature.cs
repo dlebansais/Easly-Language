@@ -1,12 +1,18 @@
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-#pragma warning disable SA1600 // Elements should be documented
-
 namespace BaseNode
 {
+    /// <summary>
+    /// Represents any feature.
+    /// </summary>
     public abstract class Feature : Node
     {
-        public virtual Identifier ExportIdentifier { get; set; }
+        /// <summary>
+        /// Gets or sets the export to which this feature belongs.
+        /// </summary>
+        public virtual Identifier ExportIdentifier { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets the export type.
+        /// </summary>
         public virtual ExportStatus Export { get; set; }
     }
 }

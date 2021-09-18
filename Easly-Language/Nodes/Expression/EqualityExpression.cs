@@ -1,15 +1,30 @@
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-#pragma warning disable SA1600 // Elements should be documented
-
 namespace BaseNode
 {
+    /// <summary>
+    /// Represents an equality expression.
+    /// /Doc/Nodes/Expression/EqualityExpression.md explains the semantic.
+    /// </summary>
     [System.Serializable]
     public class EqualityExpression : Expression
     {
-        public virtual Expression LeftExpression { get; set; }
+        /// <summary>
+        /// Gets or sets the left operand.
+        /// </summary>
+        public virtual Expression LeftExpression { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets the comparison type.
+        /// </summary>
         public virtual ComparisonType Comparison { get; set; }
+
+        /// <summary>
+        /// Gets or sets the equality type.
+        /// </summary>
         public virtual EqualityType Equality { get; set; }
-        public virtual Expression RightExpression { get; set; }
+
+        /// <summary>
+        /// Gets or sets the right operand.
+        /// </summary>
+        public virtual Expression RightExpression { get; set; } = null!;
     }
 }

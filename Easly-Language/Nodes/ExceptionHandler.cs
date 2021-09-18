@@ -1,13 +1,20 @@
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-#pragma warning disable SA1600 // Elements should be documented
-
 namespace BaseNode
 {
+    /// <summary>
+    /// Represents an exception handler.
+    /// /Doc/Nodes/ExceptionHandler.md explains the semantic.
+    /// </summary>
     [System.Serializable]
     public class ExceptionHandler : Node
     {
-        public virtual Identifier ExceptionIdentifier { get; set; }
-        public virtual Scope Instructions { get; set; }
+        /// <summary>
+        /// Gets or sets the identifier of the handled exception.
+        /// </summary>
+        public virtual Identifier ExceptionIdentifier { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets instructions to execute.
+        /// </summary>
+        public virtual Scope Instructions { get; set; } = null!;
     }
 }

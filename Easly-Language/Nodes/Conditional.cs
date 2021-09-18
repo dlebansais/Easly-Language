@@ -1,13 +1,20 @@
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-#pragma warning disable SA1600 // Elements should be documented
-
 namespace BaseNode
 {
+    /// <summary>
+    /// Represents a conditional in a 'if' instruction.
+    /// /Doc/Nodes/Conditional.md explains the semantic.
+    /// </summary>
     [System.Serializable]
     public class Conditional : Node
     {
-        public virtual Expression BooleanExpression { get; set; }
-        public virtual Scope Instructions { get; set; }
+        /// <summary>
+        /// Gets or sets the condition.
+        /// </summary>
+        public virtual Expression BooleanExpression { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets instructions to execute if the condition is true.
+        /// </summary>
+        public virtual Scope Instructions { get; set; } = null!;
     }
 }

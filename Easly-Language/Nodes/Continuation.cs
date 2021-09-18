@@ -1,13 +1,20 @@
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-#pragma warning disable SA1600 // Elements should be documented
-
 namespace BaseNode
 {
+    /// <summary>
+    /// Represents a continuation in a 'as long as' instruction.
+    /// /Doc/Nodes/Continuation.md explains the semantic.
+    /// </summary>
     [System.Serializable]
     public class Continuation : Node
     {
-        public virtual Scope Instructions { get; set; }
-        public virtual IBlockList<Instruction> CleanupBlocks { get; set; }
+        /// <summary>
+        /// Gets or sets instructions in this continuation.
+        /// </summary>
+        public virtual Scope Instructions { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets cleanup instructions.
+        /// </summary>
+        public virtual IBlockList<Instruction> CleanupBlocks { get; set; } = null!;
     }
 }

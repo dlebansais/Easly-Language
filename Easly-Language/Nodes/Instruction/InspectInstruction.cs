@@ -1,16 +1,27 @@
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-#pragma warning disable SA1600 // Elements should be documented
-
 namespace BaseNode
 {
     using Easly;
 
+    /// <summary>
+    /// Represents an expression inspection instruction.
+    /// /Doc/Nodes/Instruction/InspectInstruction.md explains the semantic.
+    /// </summary>
     [System.Serializable]
     public class InspectInstruction : Instruction
     {
-        public virtual Expression Source { get; set; }
-        public virtual IBlockList<With> WithBlocks { get; set; }
-        public virtual IOptionalReference<Scope> ElseInstructions { get; set; }
+        /// <summary>
+        /// Gets or sets the inspected expression.
+        /// </summary>
+        public virtual Expression Source { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets the list of cases.
+        /// </summary>
+        public virtual IBlockList<With> WithBlocks { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets instructions to execute if none of the cases matched.
+        /// </summary>
+        public virtual IOptionalReference<Scope> ElseInstructions { get; set; } = null!;
     }
 }

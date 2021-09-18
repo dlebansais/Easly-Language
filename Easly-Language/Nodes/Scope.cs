@@ -1,13 +1,20 @@
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-#pragma warning disable SA1600 // Elements should be documented
-
 namespace BaseNode
 {
+    /// <summary>
+    /// Represents the scope of a set of instructions.
+    /// /Doc/Nodes/Scope.md explains the semantic.
+    /// </summary>
     [System.Serializable]
     public class Scope : Node
     {
-        public virtual IBlockList<EntityDeclaration> EntityDeclarationBlocks { get; set; }
-        public virtual IBlockList<Instruction> InstructionBlocks { get; set; }
+        /// <summary>
+        /// Gets or sets the scope variables.
+        /// </summary>
+        public virtual IBlockList<EntityDeclaration> EntityDeclarationBlocks { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets the list of instructions.
+        /// </summary>
+        public virtual IBlockList<Instruction> InstructionBlocks { get; set; } = null!;
     }
 }

@@ -1,14 +1,25 @@
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-#pragma warning disable SA1600 // Elements should be documented
-
 namespace BaseNode
 {
+    /// <summary>
+    /// Represents an effective body.
+    /// /Doc/Nodes/Body/EffectiveBody.md explains the semantic.
+    /// </summary>
     [System.Serializable]
     public class EffectiveBody : Body
     {
-        public virtual IBlockList<EntityDeclaration> EntityDeclarationBlocks { get; set; }
-        public virtual IBlockList<Instruction> BodyInstructionBlocks { get; set; }
-        public virtual IBlockList<ExceptionHandler> ExceptionHandlerBlocks { get; set; }
+        /// <summary>
+        /// Gets or sets the body local variables.
+        /// </summary>
+        public virtual IBlockList<EntityDeclaration> EntityDeclarationBlocks { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets the body instructions.
+        /// </summary>
+        public virtual IBlockList<Instruction> BodyInstructionBlocks { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets the body exception handlers.
+        /// </summary>
+        public virtual IBlockList<ExceptionHandler> ExceptionHandlerBlocks { get; set; } = null!;
     }
 }

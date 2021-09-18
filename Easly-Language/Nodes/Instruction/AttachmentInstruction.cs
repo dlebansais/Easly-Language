@@ -1,17 +1,32 @@
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-#pragma warning disable SA1600 // Elements should be documented
-
 namespace BaseNode
 {
     using Easly;
 
+    /// <summary>
+    /// Represents an attachment instruction.
+    /// /Doc/Nodes/Instruction/AttachmentInstruction.md explains the semantic.
+    /// </summary>
     [System.Serializable]
     public class AttachmentInstruction : Instruction
     {
-        public virtual Expression Source { get; set; }
-        public virtual IBlockList<Name> EntityNameBlocks { get; set; }
-        public virtual IBlockList<Attachment> AttachmentBlocks { get; set; }
-        public virtual IOptionalReference<Scope> ElseInstructions { get; set; }
+        /// <summary>
+        /// Gets or sets the value to attach.
+        /// </summary>
+        public virtual Expression Source { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets the list of variables created upon attachment.
+        /// </summary>
+        public virtual IBlockList<Name> EntityNameBlocks { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets the list of possible attachments.
+        /// </summary>
+        public virtual IBlockList<Attachment> AttachmentBlocks { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets instructions to execute when not attaching.
+        /// </summary>
+        public virtual IOptionalReference<Scope> ElseInstructions { get; set; } = null!;
     }
 }

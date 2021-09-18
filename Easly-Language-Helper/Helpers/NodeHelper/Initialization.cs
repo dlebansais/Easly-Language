@@ -72,14 +72,13 @@ namespace BaseNodeHelper
         {
             Type[] Generics = new Type[] { /*childInterfaceType,*/ childNodeType };
             Type BlockListType = typeof(BlockList<>).MakeGenericType(Generics);
-            Type BlockType = typeof(Block<>).MakeGenericType(Generics);
 
             IBlockList EmptyBlockList = (IBlockList)BlockListType.Assembly.CreateInstance(BlockListType.FullName);
 
             Document EmptyEmptyDocumentation = CreateEmptyDocumentation();
             EmptyBlockList.GetType().GetProperty(nameof(Node.Documentation)).SetValue(EmptyBlockList, EmptyEmptyDocumentation);
 
-            Type ListOfBlockType = typeof(List<>).MakeGenericType(new Type[] { typeof(Block<>).MakeGenericType(Generics) });
+            Type ListOfBlockType = typeof(List<>).MakeGenericType(new Type[] { typeof(IBlock<>).MakeGenericType(Generics) });
             IList EmptyListOfBlock = (IList)ListOfBlockType.Assembly.CreateInstance(ListOfBlockType.FullName);
             EmptyBlockList.GetType().GetProperty(nameof(BlockList<Node>.NodeBlockList)).SetValue(EmptyBlockList, EmptyListOfBlock);
 
