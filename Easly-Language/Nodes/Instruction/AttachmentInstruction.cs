@@ -10,8 +10,8 @@ namespace BaseNode
     public class AttachmentInstruction : Instruction
     {
         public virtual Expression Source { get; set; }
-        public virtual BlockList<Name> EntityNameBlocks { get; set; }
-        public virtual BlockList<Attachment> AttachmentBlocks { get; set; }
-        public virtual OptionalReference<Scope> ElseInstructions { get; set; }
+        public virtual IBlockList<Name> EntityNameBlocks { get; set; }
+        public virtual IBlockList<Attachment> AttachmentBlocks { get; set; }
+        public virtual IOptionalReference<Scope> ElseInstructions { get; set; }
     }
 }

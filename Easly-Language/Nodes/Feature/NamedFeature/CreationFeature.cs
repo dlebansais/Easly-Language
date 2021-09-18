@@ -7,6 +7,6 @@ namespace BaseNode
     [System.Serializable]
     public class CreationFeature : NamedFeature
     {
-        public virtual BlockList<CommandOverload> OverloadBlocks { get; set; }
+        public virtual IBlockList<CommandOverload> OverloadBlocks { get; set; }
     }
 }

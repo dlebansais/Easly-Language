@@ -7,7 +7,7 @@ namespace BaseNode
     [System.Serializable]
     public class Attachment : Node
     {
-        public virtual BlockList<ObjectType> AttachTypeBlocks { get; set; }
+        public virtual IBlockList<ObjectType> AttachTypeBlocks { get; set; }
         public virtual Scope Instructions { get; set; }
     }
 }

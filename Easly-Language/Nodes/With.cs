@@ -7,7 +7,7 @@ namespace BaseNode
     [System.Serializable]
     public class With : Node
     {
-        public virtual BlockList<Range> RangeBlocks { get; set; }
+        public virtual IBlockList<Range> RangeBlocks { get; set; }
         public virtual Scope Instructions { get; set; }
     }
 }

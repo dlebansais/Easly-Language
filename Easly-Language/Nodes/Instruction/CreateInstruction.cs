@@ -11,7 +11,7 @@ namespace BaseNode
     {
         public virtual Identifier EntityIdentifier { get; set; }
         public virtual Identifier CreationRoutineIdentifier { get; set; }
-        public virtual BlockList<Argument> ArgumentBlocks { get; set; }
-        public virtual OptionalReference<QualifiedName> Processor { get; set; }
+        public virtual IBlockList<Argument> ArgumentBlocks { get; set; }
+        public virtual IOptionalReference<QualifiedName> Processor { get; set; }
     }
 }

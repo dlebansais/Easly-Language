@@ -7,7 +7,7 @@ namespace BaseNode
     [System.Serializable]
     public class CommandOverload : Node
     {
-        public virtual BlockList<EntityDeclaration> ParameterBlocks { get; set; }
+        public virtual IBlockList<EntityDeclaration> ParameterBlocks { get; set; }
         public virtual ParameterEndStatus ParameterEnd { get; set; }
         public virtual Body CommandBody { get; set; }
     }

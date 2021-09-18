@@ -8,6 +8,6 @@ namespace BaseNode
     public class CommandInstruction : Instruction
     {
         public virtual QualifiedName Command { get; set; }
-        public virtual BlockList<Argument> ArgumentBlocks { get; set; }
+        public virtual IBlockList<Argument> ArgumentBlocks { get; set; }
     }
 }

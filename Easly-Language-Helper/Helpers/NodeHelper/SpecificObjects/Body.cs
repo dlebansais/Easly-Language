@@ -61,7 +61,7 @@ namespace BaseNodeHelper
             return Result;
         }
 
-        public static Body CreateInitializedBody(Type nodeType, Document documentation, BlockList<Assertion> requireBlocks, BlockList<Assertion> ensureBlocks, BlockList<Identifier> exceptionIdentifierBlocks, BlockList<EntityDeclaration> entityDeclarationBlocks, BlockList<Instruction> bodyInstructionBlocks, BlockList<ExceptionHandler> exceptionHandlerBlocks, OptionalReference<ObjectType> ancestorType)
+        public static Body CreateInitializedBody(Type nodeType, Document documentation, IBlockList<Assertion> requireBlocks, IBlockList<Assertion> ensureBlocks, IBlockList<Identifier> exceptionIdentifierBlocks, IBlockList<EntityDeclaration> entityDeclarationBlocks, IBlockList<Instruction> bodyInstructionBlocks, IBlockList<ExceptionHandler> exceptionHandlerBlocks, IOptionalReference<ObjectType> ancestorType)
         {
             if (nodeType == null) throw new ArgumentNullException(nameof(nodeType));
 
@@ -77,7 +77,7 @@ namespace BaseNodeHelper
                 throw new ArgumentOutOfRangeException($"{nameof(nodeType)}: {nodeType.FullName}");
         }
 
-        public static DeferredBody CreateInitializedDeferredBody(Document documentation, BlockList<Assertion> requireBlocks, BlockList<Assertion> ensureBlocks, BlockList<Identifier> exceptionIdentifierBlocks)
+        public static DeferredBody CreateInitializedDeferredBody(Document documentation, IBlockList<Assertion> requireBlocks, IBlockList<Assertion> ensureBlocks, IBlockList<Identifier> exceptionIdentifierBlocks)
         {
             DeferredBody Result = new DeferredBody();
             Result.Documentation = CreateDocumentationCopy(documentation);
@@ -88,7 +88,7 @@ namespace BaseNodeHelper
             return Result;
         }
 
-        public static EffectiveBody CreateInitializedEffectiveBody(Document documentation, BlockList<Assertion> requireBlocks, BlockList<Assertion> ensureBlocks, BlockList<Identifier> exceptionIdentifierBlocks, BlockList<EntityDeclaration> entityDeclarationBlocks, BlockList<Instruction> bodyInstructionBlocks, BlockList<ExceptionHandler> exceptionHandlerBlocks)
+        public static EffectiveBody CreateInitializedEffectiveBody(Document documentation, IBlockList<Assertion> requireBlocks, IBlockList<Assertion> ensureBlocks, IBlockList<Identifier> exceptionIdentifierBlocks, IBlockList<EntityDeclaration> entityDeclarationBlocks, IBlockList<Instruction> bodyInstructionBlocks, IBlockList<ExceptionHandler> exceptionHandlerBlocks)
         {
             EffectiveBody Result = new EffectiveBody();
             Result.Documentation = CreateDocumentationCopy(documentation);
@@ -102,7 +102,7 @@ namespace BaseNodeHelper
             return Result;
         }
 
-        public static ExternBody CreateInitializedExternBody(Document documentation, BlockList<Assertion> requireBlocks, BlockList<Assertion> ensureBlocks, BlockList<Identifier> exceptionIdentifierBlocks)
+        public static ExternBody CreateInitializedExternBody(Document documentation, IBlockList<Assertion> requireBlocks, IBlockList<Assertion> ensureBlocks, IBlockList<Identifier> exceptionIdentifierBlocks)
         {
             ExternBody Result = new ExternBody();
             Result.Documentation = CreateDocumentationCopy(documentation);
@@ -113,7 +113,7 @@ namespace BaseNodeHelper
             return Result;
         }
 
-        public static PrecursorBody CreateInitializedPrecursorBody(Document documentation, BlockList<Assertion> requireBlocks, BlockList<Assertion> ensureBlocks, BlockList<Identifier> exceptionIdentifierBlocks, OptionalReference<ObjectType> ancestorType)
+        public static PrecursorBody CreateInitializedPrecursorBody(Document documentation, IBlockList<Assertion> requireBlocks, IBlockList<Assertion> ensureBlocks, IBlockList<Identifier> exceptionIdentifierBlocks, IOptionalReference<ObjectType> ancestorType)
         {
             PrecursorBody Result = new PrecursorBody();
             Result.Documentation = CreateDocumentationCopy(documentation);

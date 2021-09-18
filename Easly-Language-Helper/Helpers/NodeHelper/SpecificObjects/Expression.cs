@@ -119,7 +119,7 @@ namespace BaseNodeHelper
             return Result;
         }
 
-        public static IndexQueryExpression CreateIndexQueryExpression(Expression indexedExpression, BlockList<Argument> argumentBlocks)
+        public static IndexQueryExpression CreateIndexQueryExpression(Expression indexedExpression, IBlockList<Argument> argumentBlocks)
         {
             if (argumentBlocks == null) throw new ArgumentNullException(nameof(argumentBlocks));
             if (NodeTreeHelperBlockList.IsBlockListEmpty((IBlockList)argumentBlocks)) throw new ArgumentException($"{nameof(argumentBlocks)} must not be empty");
@@ -142,7 +142,7 @@ namespace BaseNodeHelper
             return Result;
         }
 
-        public static InitializedObjectExpression CreateInitializedObjectExpression(Identifier classIdentifier, BlockList<AssignmentArgument> assignmentBlocks)
+        public static InitializedObjectExpression CreateInitializedObjectExpression(Identifier classIdentifier, IBlockList<AssignmentArgument> assignmentBlocks)
         {
             InitializedObjectExpression Result = new InitializedObjectExpression();
             Result.Documentation = CreateEmptyDocumentation();
@@ -234,7 +234,7 @@ namespace BaseNodeHelper
             return Result;
         }
 
-        public static PrecursorExpression CreatePrecursorExpression(BlockList<Argument> argumentBlocks)
+        public static PrecursorExpression CreatePrecursorExpression(IBlockList<Argument> argumentBlocks)
         {
             PrecursorExpression Result = new PrecursorExpression();
             Result.Documentation = CreateEmptyDocumentation();
@@ -244,7 +244,7 @@ namespace BaseNodeHelper
             return Result;
         }
 
-        public static PrecursorExpression CreatePrecursorExpression(BlockList<Argument> argumentBlocks, ObjectType ancestorType)
+        public static PrecursorExpression CreatePrecursorExpression(IBlockList<Argument> argumentBlocks, ObjectType ancestorType)
         {
             PrecursorExpression Result = new PrecursorExpression();
             Result.Documentation = CreateEmptyDocumentation();
@@ -270,7 +270,7 @@ namespace BaseNodeHelper
             return Result;
         }
 
-        public static PrecursorIndexExpression CreatePrecursorIndexExpression(BlockList<Argument> argumentBlocks)
+        public static PrecursorIndexExpression CreatePrecursorIndexExpression(IBlockList<Argument> argumentBlocks)
         {
             if (NodeTreeHelperBlockList.IsBlockListEmpty((IBlockList)argumentBlocks)) throw new ArgumentException($"{nameof(argumentBlocks)} must not be empty");
 
@@ -282,7 +282,7 @@ namespace BaseNodeHelper
             return Result;
         }
 
-        public static PrecursorIndexExpression CreatePrecursorIndexExpression(BlockList<Argument> argumentBlocks, ObjectType ancestorType)
+        public static PrecursorIndexExpression CreatePrecursorIndexExpression(IBlockList<Argument> argumentBlocks, ObjectType ancestorType)
         {
             if (NodeTreeHelperBlockList.IsBlockListEmpty((IBlockList)argumentBlocks)) throw new ArgumentException($"{nameof(argumentBlocks)} must not be empty");
 
@@ -314,7 +314,7 @@ namespace BaseNodeHelper
             return SimpleQueryExpression;
         }
 
-        public static QueryExpression CreateQueryExpression(QualifiedName query, BlockList<Argument> argumentBlocks)
+        public static QueryExpression CreateQueryExpression(QualifiedName query, IBlockList<Argument> argumentBlocks)
         {
             QueryExpression SimpleQueryExpression = new QueryExpression();
             SimpleQueryExpression.Documentation = CreateEmptyDocumentation();

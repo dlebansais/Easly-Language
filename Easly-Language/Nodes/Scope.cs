@@ -7,7 +7,7 @@ namespace BaseNode
     [System.Serializable]
     public class Scope : Node
     {
-        public virtual BlockList<EntityDeclaration> EntityDeclarationBlocks { get; set; }
-        public virtual BlockList<Instruction> InstructionBlocks { get; set; }
+        public virtual IBlockList<EntityDeclaration> EntityDeclarationBlocks { get; set; }
+        public virtual IBlockList<Instruction> InstructionBlocks { get; set; }
     }
 }

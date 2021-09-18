@@ -8,6 +8,6 @@ namespace BaseNode
     public class FunctionFeature : NamedFeature
     {
         public virtual OnceChoice Once { get; set; }
-        public virtual BlockList<QueryOverload> OverloadBlocks { get; set; }
+        public virtual IBlockList<QueryOverload> OverloadBlocks { get; set; }
     }
 }

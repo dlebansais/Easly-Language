@@ -8,6 +8,6 @@ namespace BaseNode
     public class InitializedObjectExpression : Expression
     {
         public virtual Identifier ClassIdentifier { get; set; }
-        public virtual BlockList<AssignmentArgument> AssignmentBlocks { get; set; }
+        public virtual IBlockList<AssignmentArgument> AssignmentBlocks { get; set; }
     }
 }

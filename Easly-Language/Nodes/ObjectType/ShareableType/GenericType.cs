@@ -8,6 +8,6 @@ namespace BaseNode
     public class GenericType : ShareableType
     {
         public virtual Identifier ClassIdentifier { get; set; }
-        public virtual BlockList<TypeArgument> TypeArgumentBlocks { get; set; }
+        public virtual IBlockList<TypeArgument> TypeArgumentBlocks { get; set; }
     }
 }

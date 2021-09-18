@@ -35,7 +35,7 @@ namespace BaseNodeHelper
             return Result;
         }
 
-        public static FunctionType CreateFunctionType(ObjectType baseType, BlockList<QueryOverloadType> overloadBlocks)
+        public static FunctionType CreateFunctionType(ObjectType baseType, IBlockList<QueryOverloadType> overloadBlocks)
         {
             FunctionType Result = new FunctionType();
             Result.Documentation = CreateEmptyDocumentation();
@@ -58,7 +58,7 @@ namespace BaseNodeHelper
             return Result;
         }
 
-        public static GenericType CreateGenericType(SharingType sharing, Identifier classIdentifier, BlockList<TypeArgument> typeArgumentBlocks)
+        public static GenericType CreateGenericType(SharingType sharing, Identifier classIdentifier, IBlockList<TypeArgument> typeArgumentBlocks)
         {
             if (typeArgumentBlocks == null) throw new ArgumentNullException(nameof(typeArgumentBlocks));
             if (typeArgumentBlocks.NodeBlockList.Count == 0) throw new ArgumentException($"{nameof(typeArgumentBlocks)} must not be empty");
@@ -92,7 +92,7 @@ namespace BaseNodeHelper
             return Result;
         }
 
-        public static IndexerType CreateIndexerType(ObjectType baseType, ObjectType entityType, BlockList<EntityDeclaration> indexParameterBlocks, ParameterEndStatus parameterEnd, UtilityType indexerKind, BlockList<Assertion> getRequireBlocks, BlockList<Assertion> getEnsureBlocks, BlockList<Identifier> getExceptionIdentifierBlocks, BlockList<Assertion> setRequireBlocks, BlockList<Assertion> setEnsureBlocks, BlockList<Identifier> setExceptionIdentifierBlocks)
+        public static IndexerType CreateIndexerType(ObjectType baseType, ObjectType entityType, IBlockList<EntityDeclaration> indexParameterBlocks, ParameterEndStatus parameterEnd, UtilityType indexerKind, IBlockList<Assertion> getRequireBlocks, IBlockList<Assertion> getEnsureBlocks, IBlockList<Identifier> getExceptionIdentifierBlocks, IBlockList<Assertion> setRequireBlocks, IBlockList<Assertion> setEnsureBlocks, IBlockList<Identifier> setExceptionIdentifierBlocks)
         {
             IndexerType Result = new IndexerType();
             Result.Documentation = CreateEmptyDocumentation();
@@ -132,7 +132,7 @@ namespace BaseNodeHelper
             return Result;
         }
 
-        public static ProcedureType CreateProcedureType(ObjectType baseType, BlockList<CommandOverloadType> overloadBlocks)
+        public static ProcedureType CreateProcedureType(ObjectType baseType, IBlockList<CommandOverloadType> overloadBlocks)
         {
             CommandOverloadType FirstOverload = CreateEmptyCommandOverloadType();
 
@@ -159,7 +159,7 @@ namespace BaseNodeHelper
             return Result;
         }
 
-        public static PropertyType CreatePropertyType(ObjectType baseType, ObjectType entityType, UtilityType propertyKind, BlockList<Assertion> getEnsureBlocks, BlockList<Identifier> getExceptionIdentifierBlocks, BlockList<Assertion> setRequireBlocks, BlockList<Identifier> setExceptionIdentifierBlocks)
+        public static PropertyType CreatePropertyType(ObjectType baseType, ObjectType entityType, UtilityType propertyKind, IBlockList<Assertion> getEnsureBlocks, IBlockList<Identifier> getExceptionIdentifierBlocks, IBlockList<Assertion> setRequireBlocks, IBlockList<Identifier> setExceptionIdentifierBlocks)
         {
             PropertyType Result = new PropertyType();
             Result.Documentation = CreateEmptyDocumentation();
@@ -193,7 +193,7 @@ namespace BaseNodeHelper
             return Result;
         }
 
-        public static TupleType CreateTupleType(SharingType sharing, BlockList<EntityDeclaration> entityDeclarationBlocks)
+        public static TupleType CreateTupleType(SharingType sharing, IBlockList<EntityDeclaration> entityDeclarationBlocks)
         {
             TupleType Result = new TupleType();
             Result.Documentation = CreateEmptyDocumentation();

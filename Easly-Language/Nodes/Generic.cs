@@ -10,7 +10,7 @@ namespace BaseNode
     public class Generic : Node
     {
         public virtual Name EntityName { get; set; }
-        public virtual OptionalReference<ObjectType> DefaultValue { get; set; }
-        public virtual BlockList<Constraint> ConstraintBlocks { get; set; }
+        public virtual IOptionalReference<ObjectType> DefaultValue { get; set; }
+        public virtual IBlockList<Constraint> ConstraintBlocks { get; set; }
     }
 }

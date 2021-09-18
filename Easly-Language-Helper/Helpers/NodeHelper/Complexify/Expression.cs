@@ -324,13 +324,13 @@ namespace BaseNodeHelper
 
                 foreach (Expression ComplexifiedIndexedExpression in ComplexifiedIndexedExpressionList)
                 {
-                    BlockList<Argument> ClonedArgumentBlocks = (BlockList<Argument>)DeepCloneBlockList((IBlockList)node.ArgumentBlocks, cloneCommentGuid: false);
+                    IBlockList<Argument> ClonedArgumentBlocks = (IBlockList<Argument>)DeepCloneBlockList((IBlockList)node.ArgumentBlocks, cloneCommentGuid: false);
                     IndexQueryExpression NewIndexQueryExpression = CreateIndexQueryExpression(ComplexifiedIndexedExpression, ClonedArgumentBlocks);
                     complexifiedExpressionList.Add(NewIndexQueryExpression);
                 }
             }
 
-            if (GetComplexifiedArgumentBlockList(node.ArgumentBlocks, out BlockList<Argument> ComplexifiedArgumentBlocks))
+            if (GetComplexifiedArgumentBlockList(node.ArgumentBlocks, out IBlockList<Argument> ComplexifiedArgumentBlocks))
             {
                 if (complexifiedExpressionList == null)
                     complexifiedExpressionList = new List<Expression>();
@@ -347,7 +347,7 @@ namespace BaseNodeHelper
         {
             complexifiedExpressionList = null;
 
-            if (GetComplexifiedAssignmentArgumentBlockList(node.AssignmentBlocks, out BlockList<AssignmentArgument> ComplexifiedAssignmentBlocks))
+            if (GetComplexifiedAssignmentArgumentBlockList(node.AssignmentBlocks, out IBlockList<AssignmentArgument> ComplexifiedAssignmentBlocks))
             {
                 Identifier ClonedClassIdentifier = (Identifier)DeepCloneNode(node.ClassIdentifier, cloneCommentGuid: false);
                 InitializedObjectExpression NewInitializedObjectExpression = CreateInitializedObjectExpression(ClonedClassIdentifier, ComplexifiedAssignmentBlocks);
@@ -393,7 +393,7 @@ namespace BaseNodeHelper
 
                 foreach (ObjectType ComplexifiedAncestorType in ComplexifiedAncestorTypeList)
                 {
-                    BlockList<Argument> ClonedArgumentBlocks = (BlockList<Argument>)DeepCloneBlockList((IBlockList)node.ArgumentBlocks, cloneCommentGuid: false);
+                    IBlockList<Argument> ClonedArgumentBlocks = (IBlockList<Argument>)DeepCloneBlockList((IBlockList)node.ArgumentBlocks, cloneCommentGuid: false);
                     PrecursorExpression NewPrecursorExpression = CreatePrecursorExpression(ClonedArgumentBlocks, ComplexifiedAncestorType);
                     complexifiedExpressionList.Add(NewPrecursorExpression);
                 }
@@ -412,7 +412,7 @@ namespace BaseNodeHelper
 
                 foreach (ObjectType ComplexifiedAncestorType in ComplexifiedAncestorTypeList)
                 {
-                    BlockList<Argument> ClonedArgumentBlocks = (BlockList<Argument>)DeepCloneBlockList((IBlockList)node.ArgumentBlocks, cloneCommentGuid: false);
+                    IBlockList<Argument> ClonedArgumentBlocks = (IBlockList<Argument>)DeepCloneBlockList((IBlockList)node.ArgumentBlocks, cloneCommentGuid: false);
                     PrecursorIndexExpression NewPrecursorIndexExpression = CreatePrecursorIndexExpression(ClonedArgumentBlocks, ComplexifiedAncestorType);
                     complexifiedExpressionList.Add(NewPrecursorIndexExpression);
                 }
@@ -429,11 +429,11 @@ namespace BaseNodeHelper
                 complexifiedExpressionList = new List<Expression>() { ComplexifiedManifestNumberExpression };
             else if (GetComplexifiedNode(node.Query, out IList<Node> ComplexifiedQueryList) && ComplexifiedQueryList[0] is QualifiedName AsComplexifiedQuery)
             {
-                BlockList<Argument> ClonedArgumentBlocks = (BlockList<Argument>)DeepCloneBlockList((IBlockList)node.ArgumentBlocks, cloneCommentGuid: false);
+                IBlockList<Argument> ClonedArgumentBlocks = (IBlockList<Argument>)DeepCloneBlockList((IBlockList)node.ArgumentBlocks, cloneCommentGuid: false);
                 QueryExpression NewQueryExpression = CreateQueryExpression(AsComplexifiedQuery, ClonedArgumentBlocks);
                 complexifiedExpressionList = new List<Expression>() { NewQueryExpression };
             }
-            else if (GetComplexifiedArgumentBlockList(node.ArgumentBlocks, out BlockList<Argument> ComplexifiedArgumentBlocks))
+            else if (GetComplexifiedArgumentBlockList(node.ArgumentBlocks, out IBlockList<Argument> ComplexifiedArgumentBlocks))
             {
                 QualifiedName ClonedQuery = (QualifiedName)DeepCloneNode(node.Query, cloneCommentGuid: false);
                 QueryExpression NewQueryExpression = CreateQueryExpression(ClonedQuery, ComplexifiedArgumentBlocks);

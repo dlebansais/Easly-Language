@@ -9,7 +9,7 @@ namespace BaseNode
     [System.Serializable]
     public class Assertion : Node
     {
-        public virtual OptionalReference<Name> Tag { get; set; }
+        public virtual IOptionalReference<Name> Tag { get; set; }
         public virtual Expression BooleanExpression { get; set; }
     }
 }

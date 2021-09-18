@@ -297,7 +297,7 @@ namespace BaseNodeHelper
 
             Type BlockListType = rootBlockList.GetType();
             Type[] GenericArguments = BlockListType.GetGenericArguments();
-            BlockListType = typeof(BlockList<>).MakeGenericType(GenericArguments);
+            BlockListType = typeof(IBlockList<>).MakeGenericType(GenericArguments);
 
             IBlockList ClonedBlockList = (IBlockList)BlockListType.Assembly.CreateInstance(BlockListType.FullName);
 
@@ -729,14 +729,14 @@ namespace BaseNodeHelper
         {
             QualifiedName Query = StringToQualifiedName(node.ClassIdentifier.Text);
 
-            BlockList<AssignmentArgument> ObjectBlockList = node.AssignmentBlocks;
+            IBlockList<AssignmentArgument> ObjectBlockList = node.AssignmentBlocks;
             BlockList<Argument> ArgumentBlocks = new BlockList<Argument>();
             ArgumentBlocks.Documentation = NodeHelper.CreateDocumentationCopy(ObjectBlockList.Documentation);
-            ArgumentBlocks.NodeBlockList = new List<Block<Argument>>();
+            ArgumentBlocks.NodeBlockList = new List<IBlock<Argument>>();
 
             for (int BlockIndex = 0; BlockIndex < ObjectBlockList.NodeBlockList.Count; BlockIndex++)
             {
-                Block<AssignmentArgument> Block = ObjectBlockList.NodeBlockList[BlockIndex];
+                IBlock<AssignmentArgument> Block = ObjectBlockList.NodeBlockList[BlockIndex];
 
                 Block<Argument> NewBlock = new Block<Argument>();
                 NewBlock.Documentation = CreateDocumentationCopy(Block.Documentation);
@@ -973,7 +973,7 @@ namespace BaseNodeHelper
         {
             QualifiedName Command = CreateSimpleQualifiedName(node.CreationRoutineIdentifier.Text);
 
-            BlockList<Argument> ArgumentCopy = BlockListHelper<Argument>.CreateBlockListCopy(node.ArgumentBlocks);
+            IBlockList<Argument> ArgumentCopy = BlockListHelper<Argument>.CreateBlockListCopy(node.ArgumentBlocks);
             simplifiedNode = CreateCommandInstruction(Command, ArgumentCopy);
 
             return true;
@@ -1074,7 +1074,7 @@ namespace BaseNodeHelper
             IdentifierList.Add(KeywordIdentifier);
 
             List<Argument> ArgumentList = new List<Argument>();
-            BlockList<Argument> ArgumentBlocks;
+            IBlockList<Argument> ArgumentBlocks;
 
             if (node.Source is QueryExpression AsQueryExpression)
             {
@@ -1119,7 +1119,7 @@ namespace BaseNodeHelper
         private static bool SimplifyPrecursorInstruction(PrecursorInstruction node, out Node simplifiedNode)
         {
             QualifiedName Command = CreateSimpleQualifiedName("precursor");
-            BlockList<Argument> ClonedArgumentBlocks = BlockListHelper<Argument>.CreateBlockListCopy(node.ArgumentBlocks);
+            IBlockList<Argument> ClonedArgumentBlocks = BlockListHelper<Argument>.CreateBlockListCopy(node.ArgumentBlocks);
 
             simplifiedNode = CreateCommandInstruction(Command, ClonedArgumentBlocks);
 
@@ -1144,7 +1144,7 @@ namespace BaseNodeHelper
         private static bool SimplifyThrowInstruction(ThrowInstruction node, out Node simplifiedNode)
         {
             QualifiedName Command = CreateSimpleQualifiedName("precursor");
-            BlockList<Argument> ClonedArgumentBlocks = BlockListHelper<Argument>.CreateBlockListCopy(node.ArgumentBlocks);
+            IBlockList<Argument> ClonedArgumentBlocks = BlockListHelper<Argument>.CreateBlockListCopy(node.ArgumentBlocks);
 
             simplifiedNode = CreateCommandInstruction(Command, ClonedArgumentBlocks);
 

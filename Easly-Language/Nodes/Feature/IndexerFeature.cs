@@ -10,10 +10,10 @@ namespace BaseNode
     public class IndexerFeature : Feature
     {
         public virtual ObjectType EntityType { get; set; }
-        public virtual BlockList<EntityDeclaration> IndexParameterBlocks { get; set; }
+        public virtual IBlockList<EntityDeclaration> IndexParameterBlocks { get; set; }
         public virtual ParameterEndStatus ParameterEnd { get; set; }
-        public virtual BlockList<Identifier> ModifiedQueryBlocks { get; set; }
-        public virtual OptionalReference<Body> GetterBody { get; set; }
-        public virtual OptionalReference<Body> SetterBody { get; set; }
+        public virtual IBlockList<Identifier> ModifiedQueryBlocks { get; set; }
+        public virtual IOptionalReference<Body> GetterBody { get; set; }
+        public virtual IOptionalReference<Body> SetterBody { get; set; }
     }
 }

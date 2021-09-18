@@ -8,6 +8,6 @@ namespace BaseNode
     public class ProcedureType : ObjectType
     {
         public virtual ObjectType BaseType { get; set; }
-        public virtual BlockList<CommandOverloadType> OverloadBlocks { get; set; }
+        public virtual IBlockList<CommandOverloadType> OverloadBlocks { get; set; }
     }
 }

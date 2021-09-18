@@ -9,7 +9,7 @@ namespace BaseNode
     [System.Serializable]
     public class IfThenElseInstruction : Instruction
     {
-        public virtual BlockList<Conditional> ConditionalBlocks { get; set; }
-        public virtual OptionalReference<Scope> ElseInstructions { get; set; }
+        public virtual IBlockList<Conditional> ConditionalBlocks { get; set; }
+        public virtual IOptionalReference<Scope> ElseInstructions { get; set; }
     }
 }

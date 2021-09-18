@@ -4,10 +4,54 @@
     using System.Diagnostics;
 
     /// <summary>
-    /// A detachable reference of type <typeparamref name="T"/>.
+    /// Represents a detachable reference.
+    /// </summary>
+    public interface IDetachableReference
+    {
+        /// <summary>
+        /// Gets a value indicating whether the reference is assigned.
+        /// </summary>
+        bool IsAssigned { get; }
+
+        /// <summary>
+        /// Gets or sets the reference.
+        /// </summary>
+        object Item { get; set; }
+
+        /// <summary>
+        /// Detaches the reference.
+        /// </summary>
+        void Detach();
+    }
+
+    /// <summary>
+    /// Represents a detachable reference to an object of type <typeparamref name="T"/>.
     /// </summary>
     /// <typeparam name="T">The type of the object.</typeparam>
-    public class DetachableReference<T>
+    public interface IDetachableReference<T>
+        where T : class
+    {
+        /// <summary>
+        /// Gets a value indicating whether the reference is assigned.
+        /// </summary>
+        bool IsAssigned { get; }
+
+        /// <summary>
+        /// Gets or sets the reference.
+        /// </summary>
+        T Item { get; set; }
+
+        /// <summary>
+        /// Detaches the reference.
+        /// </summary>
+        void Detach();
+    }
+
+    /// <summary>
+    /// Represents a detachable reference to an object of type <typeparamref name="T"/>.
+    /// </summary>
+    /// <typeparam name="T">The type of the object.</typeparam>
+    public class DetachableReference<T> : IDetachableReference<T>, IDetachableReference
         where T : class
     {
         #region Properties
@@ -45,6 +89,9 @@
                     throw new InvalidOperationException();
             }
         }
+
+        /// <inheritdoc/>
+        object IDetachableReference.Item { get { return Item; } set { ItemInternal = (T)value; } }
 
         private T? ItemInternal;
         #endregion

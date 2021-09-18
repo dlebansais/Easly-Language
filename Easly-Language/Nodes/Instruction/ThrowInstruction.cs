@@ -9,6 +9,6 @@ namespace BaseNode
     {
         public virtual ObjectType ExceptionType { get; set; }
         public virtual Identifier CreationRoutine { get; set; }
-        public virtual BlockList<Argument> ArgumentBlocks { get; set; }
+        public virtual IBlockList<Argument> ArgumentBlocks { get; set; }
     }
 }

@@ -8,19 +8,19 @@ namespace BaseNodeHelper
 
     public static class OptionalReferenceHelper
     {
-        public static OptionalReference<TNode> CreateEmptyReference<TNode>()
+        public static IOptionalReference<TNode> CreateEmptyReference<TNode>()
             where TNode : Node
         {
             return OptionalReferenceHelper<TNode>.CreateEmptyReference();
         }
 
-        public static OptionalReference<TNode> CreateReference<TNode>(TNode item)
+        public static IOptionalReference<TNode> CreateReference<TNode>(TNode item)
             where TNode : Node
         {
             return OptionalReferenceHelper<TNode>.CreateReference(item);
         }
 
-        public static OptionalReference<TNode> CreateReferenceCopy<TNode>(OptionalReference<TNode> optional)
+        public static IOptionalReference<TNode> CreateReferenceCopy<TNode>(IOptionalReference<TNode> optional)
             where TNode : Node
         {
             return OptionalReferenceHelper<TNode>.CreateReferenceCopy(optional);
@@ -32,7 +32,7 @@ namespace BaseNodeHelper
 #pragma warning restore SA1402 // File may only contain a single type
         where TNode : Node
     {
-        internal static OptionalReference<TNode> CreateEmptyReference()
+        internal static IOptionalReference<TNode> CreateEmptyReference()
         {
             OptionalReference<TNode> Result = new OptionalReference<TNode>();
             Debug.Assert(!Result.IsAssigned, "An empty reference is never assigned");
@@ -41,7 +41,7 @@ namespace BaseNodeHelper
             return Result;
         }
 
-        internal static OptionalReference<TNode> CreateReference(TNode item)
+        internal static IOptionalReference<TNode> CreateReference(TNode item)
         {
             OptionalReference<TNode> Result = new OptionalReference<TNode>();
             Result.Item = item;
@@ -50,7 +50,7 @@ namespace BaseNodeHelper
             return Result;
         }
 
-        internal static OptionalReference<TNode> CreateReferenceCopy(OptionalReference<TNode> optional)
+        internal static IOptionalReference<TNode> CreateReferenceCopy(IOptionalReference<TNode> optional)
         {
             OptionalReference<TNode> Result = new OptionalReference<TNode>();
 

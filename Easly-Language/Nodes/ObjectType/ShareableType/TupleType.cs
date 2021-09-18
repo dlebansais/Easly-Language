@@ -7,6 +7,6 @@ namespace BaseNode
     [System.Serializable]
     public class TupleType : ShareableType
     {
-        public virtual BlockList<EntityDeclaration> EntityDeclarationBlocks { get; set; }
+        public virtual IBlockList<EntityDeclaration> EntityDeclarationBlocks { get; set; }
     }
 }

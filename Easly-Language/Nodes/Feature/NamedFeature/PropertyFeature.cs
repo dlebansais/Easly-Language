@@ -11,8 +11,8 @@ namespace BaseNode
     {
         public virtual ObjectType EntityType { get; set; }
         public virtual UtilityType PropertyKind { get; set; }
-        public virtual BlockList<Identifier> ModifiedQueryBlocks { get; set; }
-        public virtual OptionalReference<Body> GetterBody { get; set; }
-        public virtual OptionalReference<Body> SetterBody { get; set; }
+        public virtual IBlockList<Identifier> ModifiedQueryBlocks { get; set; }
+        public virtual IOptionalReference<Body> GetterBody { get; set; }
+        public virtual IOptionalReference<Body> SetterBody { get; set; }
     }
 }

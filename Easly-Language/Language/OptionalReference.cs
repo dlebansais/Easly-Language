@@ -13,37 +13,75 @@
         bool IsAssigned { get; }
 
         /// <summary>
-        /// Gets a value indicating whether there is object reference to assign.
+        /// Gets a value indicating whether there is a reference to assign.
         /// </summary>
         bool HasItem { get; }
 
         /// <summary>
-        /// Gets the object.
+        /// Gets or sets the reference.
         /// </summary>
-        object Item { get; }
+        object Item { get; set; }
 
         /// <summary>
-        /// Assigns the object.
+        /// Assigns the reference.
         /// </summary>
         void Assign();
 
         /// <summary>
-        /// Unassigns the object.
+        /// Unassigns the reference.
         /// </summary>
         void Unassign();
 
         /// <summary>
-        /// Clears the object reference.
+        /// Clears the reference.
         /// </summary>
         void Clear();
     }
 
     /// <summary>
-    /// Representes an optional reference to an object of type <typeparamref name="T"/>.
+    /// Represents an optional reference to an object of type <typeparamref name="T"/>.
+    /// </summary>
+    /// <typeparam name="T">The type of the object.</typeparam>
+    public interface IOptionalReference<T>
+        where T : class
+    {
+        /// <summary>
+        /// Gets a value indicating whether the reference is assigned.
+        /// </summary>
+        bool IsAssigned { get; }
+
+        /// <summary>
+        /// Gets a value indicating whether there is a reference to assign.
+        /// </summary>
+        bool HasItem { get; }
+
+        /// <summary>
+        /// Gets or sets the reference.
+        /// </summary>
+        T Item { get; set; }
+
+        /// <summary>
+        /// Assigns the reference.
+        /// </summary>
+        void Assign();
+
+        /// <summary>
+        /// Unassigns the reference.
+        /// </summary>
+        void Unassign();
+
+        /// <summary>
+        /// Clears the reference.
+        /// </summary>
+        void Clear();
+    }
+
+    /// <summary>
+    /// Represents an optional reference to an object of type <typeparamref name="T"/>.
     /// </summary>
     /// <typeparam name="T">The type of the object.</typeparam>
     [PolySerializer.Serializable]
-    public class OptionalReference<T> : IOptionalReference
+    public class OptionalReference<T> : IOptionalReference<T>, IOptionalReference
         where T : class
     {
         #region Init
@@ -77,7 +115,7 @@
         public bool HasItem { get { return ItemInternal != null; } }
 
         /// <summary>
-        /// Gets or sets the object.
+        /// Gets or sets the reference.
         /// </summary>
         [PolySerializer.Serializable(Condition = nameof(IsAssigned))]
         public T Item
@@ -101,24 +139,16 @@
             }
         }
 
-        /// <summary>
-        /// Gets the object.
-        /// </summary>
-        object IOptionalReference.Item { get { return Item; } }
+        /// <inheritdoc/>
+        object IOptionalReference.Item { get { return Item; } set { ItemInternal = (T)value; } }
 
         [PolySerializer.Serializable(Exclude = true)]
-#pragma warning disable SA1401 // Fields should be private
-#pragma warning disable SA1600 // Elements should be documented
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-        public T? ItemInternal;
-#pragma warning restore SA1401 // Fields should be private
-#pragma warning restore SA1600 // Elements should be documented
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+        private T? ItemInternal;
         #endregion
 
         #region Assignment
         /// <summary>
-        /// Assigns the object.
+        /// Assigns the reference.
         /// </summary>
         public void Assign()
         {
@@ -129,7 +159,7 @@
         }
 
         /// <summary>
-        /// Unassigns the object.
+        /// Unassigns the reference.
         /// </summary>
         public void Unassign()
         {
@@ -137,7 +167,7 @@
         }
 
         /// <summary>
-        /// Clears the object reference.
+        /// Clears the reference.
         /// </summary>
         public void Clear()
         {

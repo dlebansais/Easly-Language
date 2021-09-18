@@ -10,7 +10,7 @@ namespace BaseNode
     public class InspectInstruction : Instruction
     {
         public virtual Expression Source { get; set; }
-        public virtual BlockList<With> WithBlocks { get; set; }
-        public virtual OptionalReference<Scope> ElseInstructions { get; set; }
+        public virtual IBlockList<With> WithBlocks { get; set; }
+        public virtual IOptionalReference<Scope> ElseInstructions { get; set; }
     }
 }

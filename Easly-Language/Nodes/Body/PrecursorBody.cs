@@ -9,6 +9,6 @@ namespace BaseNode
     [System.Serializable]
     public class PrecursorBody : Body
     {
-        public virtual OptionalReference<ObjectType> AncestorType { get; set; }
+        public virtual IOptionalReference<ObjectType> AncestorType { get; set; }
     }
 }

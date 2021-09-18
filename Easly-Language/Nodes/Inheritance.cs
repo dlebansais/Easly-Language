@@ -9,13 +9,13 @@ namespace BaseNode
     {
         public virtual ObjectType ParentType { get; set; }
         public virtual ConformanceType Conformance { get; set; }
-        public virtual BlockList<Rename> RenameBlocks { get; set; }
+        public virtual IBlockList<Rename> RenameBlocks { get; set; }
         public virtual bool ForgetIndexer { get; set; }
-        public virtual BlockList<Identifier> ForgetBlocks { get; set; }
+        public virtual IBlockList<Identifier> ForgetBlocks { get; set; }
         public virtual bool KeepIndexer { get; set; }
-        public virtual BlockList<Identifier> KeepBlocks { get; set; }
+        public virtual IBlockList<Identifier> KeepBlocks { get; set; }
         public virtual bool DiscontinueIndexer { get; set; }
-        public virtual BlockList<Identifier> DiscontinueBlocks { get; set; }
-        public virtual BlockList<ExportChange> ExportChangeBlocks { get; set; }
+        public virtual IBlockList<Identifier> DiscontinueBlocks { get; set; }
+        public virtual IBlockList<ExportChange> ExportChangeBlocks { get; set; }
     }
 }

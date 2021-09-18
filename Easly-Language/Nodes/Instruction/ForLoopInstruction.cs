@@ -9,12 +9,12 @@ namespace BaseNode
     [System.Serializable]
     public class ForLoopInstruction : Instruction
     {
-        public virtual BlockList<EntityDeclaration> EntityDeclarationBlocks { get; set; }
-        public virtual BlockList<Instruction> InitInstructionBlocks { get; set; }
+        public virtual IBlockList<EntityDeclaration> EntityDeclarationBlocks { get; set; }
+        public virtual IBlockList<Instruction> InitInstructionBlocks { get; set; }
         public virtual Expression WhileCondition { get; set; }
-        public virtual BlockList<Instruction> LoopInstructionBlocks { get; set; }
-        public virtual BlockList<Instruction> IterationInstructionBlocks { get; set; }
-        public virtual BlockList<Assertion> InvariantBlocks { get; set; }
-        public virtual OptionalReference<Expression> Variant { get; set; }
+        public virtual IBlockList<Instruction> LoopInstructionBlocks { get; set; }
+        public virtual IBlockList<Instruction> IterationInstructionBlocks { get; set; }
+        public virtual IBlockList<Assertion> InvariantBlocks { get; set; }
+        public virtual IOptionalReference<Expression> Variant { get; set; }
     }
 }

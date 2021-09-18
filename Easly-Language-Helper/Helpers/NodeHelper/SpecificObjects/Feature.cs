@@ -117,7 +117,7 @@ namespace BaseNodeHelper
             return Result;
         }
 
-        public static Feature CreateInitializedFeature(Type nodeType, Document documentation, Identifier exportIdentifier, ExportStatus export, Name entityName, ObjectType entityType, BlockList<Assertion> ensureBlocks, Expression constantValue, BlockList<CommandOverload> commandOverloadBlocks, OnceChoice once, BlockList<QueryOverload> queryOverloadBlocks, UtilityType propertyKind, BlockList<Identifier> modifiedQueryBlocks, OptionalReference<Body> getterBody, OptionalReference<Body> setterBody, BlockList<EntityDeclaration> indexParameterBlocks, ParameterEndStatus parameterEnd)
+        public static Feature CreateInitializedFeature(Type nodeType, Document documentation, Identifier exportIdentifier, ExportStatus export, Name entityName, ObjectType entityType, IBlockList<Assertion> ensureBlocks, Expression constantValue, IBlockList<CommandOverload> commandOverloadBlocks, OnceChoice once, IBlockList<QueryOverload> queryOverloadBlocks, UtilityType propertyKind, IBlockList<Identifier> modifiedQueryBlocks, IOptionalReference<Body> getterBody, IOptionalReference<Body> setterBody, IBlockList<EntityDeclaration> indexParameterBlocks, ParameterEndStatus parameterEnd)
         {
             if (nodeType == null) throw new ArgumentNullException(nameof(nodeType));
 
@@ -139,7 +139,7 @@ namespace BaseNodeHelper
                 throw new ArgumentOutOfRangeException($"{nameof(nodeType)}: {nodeType.FullName}");
         }
 
-        public static AttributeFeature CreateInitializedAttributeFeature(Document documentation, Identifier exportIdentifier, ExportStatus export, Name entityName, ObjectType entityType, BlockList<Assertion> ensureBlocks)
+        public static AttributeFeature CreateInitializedAttributeFeature(Document documentation, Identifier exportIdentifier, ExportStatus export, Name entityName, ObjectType entityType, IBlockList<Assertion> ensureBlocks)
         {
             AttributeFeature Result = new AttributeFeature();
             Result.Documentation = CreateDocumentationCopy(documentation);
@@ -165,7 +165,7 @@ namespace BaseNodeHelper
             return Result;
         }
 
-        public static CreationFeature CreateInitializedCreationFeature(Document documentation, Identifier exportIdentifier, ExportStatus export, Name entityName, BlockList<CommandOverload> commandOverloadBlocks)
+        public static CreationFeature CreateInitializedCreationFeature(Document documentation, Identifier exportIdentifier, ExportStatus export, Name entityName, IBlockList<CommandOverload> commandOverloadBlocks)
         {
             CreationFeature Result = new CreationFeature();
             Result.Documentation = CreateDocumentationCopy(documentation);
@@ -185,7 +185,7 @@ namespace BaseNodeHelper
             return Result;
         }
 
-        public static FunctionFeature CreateInitializedFunctionFeature(Document documentation, Identifier exportIdentifier, ExportStatus export, Name entityName, OnceChoice once, BlockList<QueryOverload> queryOverloadBlocks)
+        public static FunctionFeature CreateInitializedFunctionFeature(Document documentation, Identifier exportIdentifier, ExportStatus export, Name entityName, OnceChoice once, IBlockList<QueryOverload> queryOverloadBlocks)
         {
             FunctionFeature Result = new FunctionFeature();
             Result.Documentation = CreateDocumentationCopy(documentation);
@@ -205,7 +205,7 @@ namespace BaseNodeHelper
             return Result;
         }
 
-        public static IndexerFeature CreateInitializedIndexerFeature(Document documentation, Identifier exportIdentifier, ExportStatus export, ObjectType entityType, BlockList<Identifier> modifiedQueryBlocks, OptionalReference<Body> getterBody, OptionalReference<Body> setterBody, BlockList<EntityDeclaration> indexParameterBlocks, ParameterEndStatus parameterEnd)
+        public static IndexerFeature CreateInitializedIndexerFeature(Document documentation, Identifier exportIdentifier, ExportStatus export, ObjectType entityType, IBlockList<Identifier> modifiedQueryBlocks, IOptionalReference<Body> getterBody, IOptionalReference<Body> setterBody, IBlockList<EntityDeclaration> indexParameterBlocks, ParameterEndStatus parameterEnd)
         {
             IndexerFeature Result = new IndexerFeature();
             Result.Documentation = CreateDocumentationCopy(documentation);
@@ -229,7 +229,7 @@ namespace BaseNodeHelper
             return Result;
         }
 
-        public static ProcedureFeature CreateInitializedProcedureFeature(Document documentation, Identifier exportIdentifier, ExportStatus export, Name entityName, BlockList<CommandOverload> commandOverloadBlocks)
+        public static ProcedureFeature CreateInitializedProcedureFeature(Document documentation, Identifier exportIdentifier, ExportStatus export, Name entityName, IBlockList<CommandOverload> commandOverloadBlocks)
         {
             ProcedureFeature Result = new ProcedureFeature();
             Result.Documentation = CreateDocumentationCopy(documentation);
@@ -248,7 +248,7 @@ namespace BaseNodeHelper
             return Result;
         }
 
-        public static PropertyFeature CreateInitializedPropertyFeature(Document documentation, Identifier exportIdentifier, ExportStatus export, Name entityName, ObjectType entityType, UtilityType propertyKind, BlockList<Identifier> modifiedQueryBlocks, OptionalReference<Body> getterBody, OptionalReference<Body> setterBody)
+        public static PropertyFeature CreateInitializedPropertyFeature(Document documentation, Identifier exportIdentifier, ExportStatus export, Name entityName, ObjectType entityType, UtilityType propertyKind, IBlockList<Identifier> modifiedQueryBlocks, IOptionalReference<Body> getterBody, IOptionalReference<Body> setterBody)
         {
             PropertyFeature Result = new PropertyFeature();
             Result.Documentation = CreateDocumentationCopy(documentation);

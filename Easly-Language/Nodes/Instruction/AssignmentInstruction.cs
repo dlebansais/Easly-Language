@@ -7,7 +7,7 @@ namespace BaseNode
     [System.Serializable]
     public class AssignmentInstruction : Instruction
     {
-        public virtual BlockList<QualifiedName> DestinationBlocks { get; set; }
+        public virtual IBlockList<QualifiedName> DestinationBlocks { get; set; }
         public virtual Expression Source { get; set; }
     }
 }

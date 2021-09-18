@@ -9,8 +9,8 @@ namespace BaseNode
     [System.Serializable]
     public class Root : Node
     {
-        public virtual BlockList<Class> ClassBlocks { get; set; }
-        public virtual BlockList<Library> LibraryBlocks { get; set; }
+        public virtual IBlockList<Class> ClassBlocks { get; set; }
+        public virtual IBlockList<Library> LibraryBlocks { get; set; }
         public virtual IList<GlobalReplicate> Replicates { get; set; }
     }
 }

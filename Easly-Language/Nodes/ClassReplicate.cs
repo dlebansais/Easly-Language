@@ -8,6 +8,6 @@ namespace BaseNode
     public class ClassReplicate : Node
     {
         public virtual Name ReplicateName { get; set; }
-        public virtual BlockList<Pattern> PatternBlocks { get; set; }
+        public virtual IBlockList<Pattern> PatternBlocks { get; set; }
     }
 }

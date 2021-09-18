@@ -10,21 +10,21 @@ namespace BaseNode
     public class Class : Node
     {
         public virtual Name EntityName { get; set; }
-        public virtual OptionalReference<Identifier> FromIdentifier { get; set; }
+        public virtual IOptionalReference<Identifier> FromIdentifier { get; set; }
         public virtual CopySemantic CopySpecification { get; set; }
         public virtual CloneableStatus Cloneable { get; set; }
         public virtual ComparableStatus Comparable { get; set; }
         public virtual bool IsAbstract { get; set; }
-        public virtual BlockList<Import> ImportBlocks { get; set; }
-        public virtual BlockList<Generic> GenericBlocks { get; set; }
-        public virtual BlockList<Export> ExportBlocks { get; set; }
-        public virtual BlockList<Typedef> TypedefBlocks { get; set; }
-        public virtual BlockList<Inheritance> InheritanceBlocks { get; set; }
-        public virtual BlockList<Discrete> DiscreteBlocks { get; set; }
-        public virtual BlockList<ClassReplicate> ClassReplicateBlocks { get; set; }
-        public virtual BlockList<Feature> FeatureBlocks { get; set; }
-        public virtual BlockList<Identifier> ConversionBlocks { get; set; }
-        public virtual BlockList<Assertion> InvariantBlocks { get; set; }
+        public virtual IBlockList<Import> ImportBlocks { get; set; }
+        public virtual IBlockList<Generic> GenericBlocks { get; set; }
+        public virtual IBlockList<Export> ExportBlocks { get; set; }
+        public virtual IBlockList<Typedef> TypedefBlocks { get; set; }
+        public virtual IBlockList<Inheritance> InheritanceBlocks { get; set; }
+        public virtual IBlockList<Discrete> DiscreteBlocks { get; set; }
+        public virtual IBlockList<ClassReplicate> ClassReplicateBlocks { get; set; }
+        public virtual IBlockList<Feature> FeatureBlocks { get; set; }
+        public virtual IBlockList<Identifier> ConversionBlocks { get; set; }
+        public virtual IBlockList<Assertion> InvariantBlocks { get; set; }
         public virtual System.Guid ClassGuid { get; set; }
         public virtual string ClassPath { get; set; }
     }

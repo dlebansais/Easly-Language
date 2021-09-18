@@ -4,7 +4,7 @@
     using System.Diagnostics;
 
     /// <summary>
-    /// Representes a once reference.
+    /// Represents a once reference.
     /// </summary>
     public interface IOnceReference
     {
@@ -14,16 +14,34 @@
         bool IsAssigned { get; }
 
         /// <summary>
-        /// Gets the object reference.
+        /// Gets or sets the reference.
         /// </summary>
-        object? Reference { get; }
+        object Item { get; set; }
     }
 
     /// <summary>
-    /// Representes a once reference to a <typeparamref name="T"/> object.
+    /// Represents a once reference to an object of type <typeparamref name="T"/>.
     /// </summary>
     /// <typeparam name="T">The type of the object.</typeparam>
-    public class OnceReference<T> : IOnceReference
+    public interface IOnceReference<T>
+        where T : class
+    {
+        /// <summary>
+        /// Gets a value indicating whether the reference is assigned.
+        /// </summary>
+        bool IsAssigned { get; }
+
+        /// <summary>
+        /// Gets or sets the reference.
+        /// </summary>
+        T Item { get; set; }
+    }
+
+    /// <summary>
+    /// Represents a once reference to an object of type <typeparamref name="T"/>.
+    /// </summary>
+    /// <typeparam name="T">The type of the object.</typeparam>
+    public class OnceReference<T> : IOnceReference<T>, IOnceReference
         where T : class
     {
         #region Properties
@@ -33,7 +51,7 @@
         public bool IsAssigned { get; private set; }
 
         /// <summary>
-        /// Gets or sets the object.
+        /// Gets or sets the reference.
         /// </summary>
         public T Item
         {
@@ -65,16 +83,8 @@
             }
         }
 
-        /// <summary>
-        /// Gets the object reference.
-        /// </summary>
-        public object? Reference
-        {
-            get
-            {
-                return ItemInternal;
-            }
-        }
+        /// <inheritdoc/>
+        object IOnceReference.Item { get { return Item; } set { ItemInternal = (T)value; } }
 
         private T? ItemInternal;
         #endregion

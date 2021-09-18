@@ -8,6 +8,6 @@ namespace BaseNode
     public class Constraint : Node
     {
         public virtual ObjectType ParentType { get; set; }
-        public virtual BlockList<Rename> RenameBlocks { get; set; }
+        public virtual IBlockList<Rename> RenameBlocks { get; set; }
     }
 }

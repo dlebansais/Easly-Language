@@ -9,7 +9,7 @@ namespace BaseNode
     [System.Serializable]
     public class PrecursorIndexExpression : Expression
     {
-        public virtual OptionalReference<ObjectType> AncestorType { get; set; }
-        public virtual BlockList<Argument> ArgumentBlocks { get; set; }
+        public virtual IOptionalReference<ObjectType> AncestorType { get; set; }
+        public virtual IBlockList<Argument> ArgumentBlocks { get; set; }
     }
 }

@@ -10,9 +10,9 @@ namespace BaseNode
         public virtual ObjectType BaseType { get; set; }
         public virtual ObjectType EntityType { get; set; }
         public virtual UtilityType PropertyKind { get; set; }
-        public virtual BlockList<Assertion> GetEnsureBlocks { get; set; }
-        public virtual BlockList<Identifier> GetExceptionIdentifierBlocks { get; set; }
-        public virtual BlockList<Assertion> SetRequireBlocks { get; set; }
-        public virtual BlockList<Identifier> SetExceptionIdentifierBlocks { get; set; }
+        public virtual IBlockList<Assertion> GetEnsureBlocks { get; set; }
+        public virtual IBlockList<Identifier> GetExceptionIdentifierBlocks { get; set; }
+        public virtual IBlockList<Assertion> SetRequireBlocks { get; set; }
+        public virtual IBlockList<Identifier> SetExceptionIdentifierBlocks { get; set; }
     }
 }

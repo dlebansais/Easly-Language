@@ -96,7 +96,7 @@ namespace BaseNodeHelper
 
                 foreach (ObjectType ComplexifiedBaseType in ComplexifiedBaseTypeList)
                 {
-                    BlockList<QueryOverloadType> ClonedOverloadBlocks = (BlockList<QueryOverloadType>)DeepCloneBlockList((IBlockList)node.OverloadBlocks, cloneCommentGuid: false);
+                    IBlockList<QueryOverloadType> ClonedOverloadBlocks = (IBlockList<QueryOverloadType>)DeepCloneBlockList((IBlockList)node.OverloadBlocks, cloneCommentGuid: false);
                     FunctionType NewFunctionType = CreateFunctionType(ComplexifiedBaseType, ClonedOverloadBlocks);
                     complexifiedObjectTypeList.Add(NewFunctionType);
                 }
@@ -109,7 +109,7 @@ namespace BaseNodeHelper
         {
             complexifiedObjectTypeList = null;
 
-            if (GetComplexifiedTypeArgumentBlockList(node.TypeArgumentBlocks, out BlockList<TypeArgument> ComplexifiedTypeArgumentBlocks))
+            if (GetComplexifiedTypeArgumentBlockList(node.TypeArgumentBlocks, out IBlockList<TypeArgument> ComplexifiedTypeArgumentBlocks))
             {
                 Identifier ClonedClassIdentifier = (Identifier)DeepCloneNode(node.ClassIdentifier, cloneCommentGuid: false);
 
@@ -131,13 +131,13 @@ namespace BaseNodeHelper
                 foreach (ObjectType ComplexifiedBaseType in ComplexifiedBaseTypeList)
                 {
                     ObjectType ClonedEntityType = (ObjectType)DeepCloneNode(node.EntityType, cloneCommentGuid: false);
-                    BlockList<EntityDeclaration> ClonedIndexParameterBlocks = (BlockList<EntityDeclaration>)DeepCloneBlockList((IBlockList)node.IndexParameterBlocks, cloneCommentGuid: false);
-                    BlockList<Assertion> ClonedGetRequireBlocks = (BlockList<Assertion>)DeepCloneBlockList((IBlockList)node.GetRequireBlocks, cloneCommentGuid: false);
-                    BlockList<Assertion> ClonedGetEnsureBlocks = (BlockList<Assertion>)DeepCloneBlockList((IBlockList)node.GetEnsureBlocks, cloneCommentGuid: false);
-                    BlockList<Identifier> ClonedGetExceptionIdentifierBlocks = (BlockList<Identifier>)DeepCloneBlockList((IBlockList)node.GetExceptionIdentifierBlocks, cloneCommentGuid: false);
-                    BlockList<Assertion> ClonedSetRequireBlocks = (BlockList<Assertion>)DeepCloneBlockList((IBlockList)node.SetRequireBlocks, cloneCommentGuid: false);
-                    BlockList<Assertion> ClonedSetEnsureBlocks = (BlockList<Assertion>)DeepCloneBlockList((IBlockList)node.SetEnsureBlocks, cloneCommentGuid: false);
-                    BlockList<Identifier> ClonedSetExceptionIdentifierBlocks = (BlockList<Identifier>)DeepCloneBlockList((IBlockList)node.SetExceptionIdentifierBlocks, cloneCommentGuid: false);
+                    IBlockList<EntityDeclaration> ClonedIndexParameterBlocks = (IBlockList<EntityDeclaration>)DeepCloneBlockList((IBlockList)node.IndexParameterBlocks, cloneCommentGuid: false);
+                    IBlockList<Assertion> ClonedGetRequireBlocks = (IBlockList<Assertion>)DeepCloneBlockList((IBlockList)node.GetRequireBlocks, cloneCommentGuid: false);
+                    IBlockList<Assertion> ClonedGetEnsureBlocks = (IBlockList<Assertion>)DeepCloneBlockList((IBlockList)node.GetEnsureBlocks, cloneCommentGuid: false);
+                    IBlockList<Identifier> ClonedGetExceptionIdentifierBlocks = (IBlockList<Identifier>)DeepCloneBlockList((IBlockList)node.GetExceptionIdentifierBlocks, cloneCommentGuid: false);
+                    IBlockList<Assertion> ClonedSetRequireBlocks = (IBlockList<Assertion>)DeepCloneBlockList((IBlockList)node.SetRequireBlocks, cloneCommentGuid: false);
+                    IBlockList<Assertion> ClonedSetEnsureBlocks = (IBlockList<Assertion>)DeepCloneBlockList((IBlockList)node.SetEnsureBlocks, cloneCommentGuid: false);
+                    IBlockList<Identifier> ClonedSetExceptionIdentifierBlocks = (IBlockList<Identifier>)DeepCloneBlockList((IBlockList)node.SetExceptionIdentifierBlocks, cloneCommentGuid: false);
 
                     IndexerType NewIndexerType = CreateIndexerType(ComplexifiedBaseType, ClonedEntityType, ClonedIndexParameterBlocks, node.ParameterEnd, node.IndexerKind, ClonedGetRequireBlocks, ClonedGetEnsureBlocks, ClonedGetExceptionIdentifierBlocks, ClonedSetRequireBlocks, ClonedSetEnsureBlocks, ClonedSetExceptionIdentifierBlocks);
                     complexifiedObjectTypeList.Add(NewIndexerType);
@@ -150,13 +150,13 @@ namespace BaseNodeHelper
                 foreach (ObjectType ComplexifiedEntityType in ComplexifiedEntityTypeList)
                 {
                     ObjectType ClonedBaseType = (ObjectType)DeepCloneNode(node.BaseType, cloneCommentGuid: false);
-                    BlockList<EntityDeclaration> ClonedIndexParameterBlocks = (BlockList<EntityDeclaration>)DeepCloneBlockList((IBlockList)node.IndexParameterBlocks, cloneCommentGuid: false);
-                    BlockList<Assertion> ClonedGetRequireBlocks = (BlockList<Assertion>)DeepCloneBlockList((IBlockList)node.GetRequireBlocks, cloneCommentGuid: false);
-                    BlockList<Assertion> ClonedGetEnsureBlocks = (BlockList<Assertion>)DeepCloneBlockList((IBlockList)node.GetEnsureBlocks, cloneCommentGuid: false);
-                    BlockList<Identifier> ClonedGetExceptionIdentifierBlocks = (BlockList<Identifier>)DeepCloneBlockList((IBlockList)node.GetExceptionIdentifierBlocks, cloneCommentGuid: false);
-                    BlockList<Assertion> ClonedSetRequireBlocks = (BlockList<Assertion>)DeepCloneBlockList((IBlockList)node.SetRequireBlocks, cloneCommentGuid: false);
-                    BlockList<Assertion> ClonedSetEnsureBlocks = (BlockList<Assertion>)DeepCloneBlockList((IBlockList)node.SetEnsureBlocks, cloneCommentGuid: false);
-                    BlockList<Identifier> ClonedSetExceptionIdentifierBlocks = (BlockList<Identifier>)DeepCloneBlockList((IBlockList)node.SetExceptionIdentifierBlocks, cloneCommentGuid: false);
+                    IBlockList<EntityDeclaration> ClonedIndexParameterBlocks = (IBlockList<EntityDeclaration>)DeepCloneBlockList((IBlockList)node.IndexParameterBlocks, cloneCommentGuid: false);
+                    IBlockList<Assertion> ClonedGetRequireBlocks = (IBlockList<Assertion>)DeepCloneBlockList((IBlockList)node.GetRequireBlocks, cloneCommentGuid: false);
+                    IBlockList<Assertion> ClonedGetEnsureBlocks = (IBlockList<Assertion>)DeepCloneBlockList((IBlockList)node.GetEnsureBlocks, cloneCommentGuid: false);
+                    IBlockList<Identifier> ClonedGetExceptionIdentifierBlocks = (IBlockList<Identifier>)DeepCloneBlockList((IBlockList)node.GetExceptionIdentifierBlocks, cloneCommentGuid: false);
+                    IBlockList<Assertion> ClonedSetRequireBlocks = (IBlockList<Assertion>)DeepCloneBlockList((IBlockList)node.SetRequireBlocks, cloneCommentGuid: false);
+                    IBlockList<Assertion> ClonedSetEnsureBlocks = (IBlockList<Assertion>)DeepCloneBlockList((IBlockList)node.SetEnsureBlocks, cloneCommentGuid: false);
+                    IBlockList<Identifier> ClonedSetExceptionIdentifierBlocks = (IBlockList<Identifier>)DeepCloneBlockList((IBlockList)node.SetExceptionIdentifierBlocks, cloneCommentGuid: false);
 
                     IndexerType NewIndexerType = CreateIndexerType(ClonedBaseType, ComplexifiedEntityType, ClonedIndexParameterBlocks, node.ParameterEnd, node.IndexerKind, ClonedGetRequireBlocks, ClonedGetEnsureBlocks, ClonedGetExceptionIdentifierBlocks, ClonedSetRequireBlocks, ClonedSetEnsureBlocks, ClonedSetExceptionIdentifierBlocks);
                     complexifiedObjectTypeList.Add(NewIndexerType);
@@ -176,7 +176,7 @@ namespace BaseNodeHelper
 
                 foreach (ObjectType ComplexifiedBaseType in ComplexifiedBaseTypeList)
                 {
-                    BlockList<CommandOverloadType> ClonedOverloadBlocks = (BlockList<CommandOverloadType>)DeepCloneBlockList((IBlockList)node.OverloadBlocks, cloneCommentGuid: false);
+                    IBlockList<CommandOverloadType> ClonedOverloadBlocks = (IBlockList<CommandOverloadType>)DeepCloneBlockList((IBlockList)node.OverloadBlocks, cloneCommentGuid: false);
                     ProcedureType NewProcedureType = CreateProcedureType(ComplexifiedBaseType, ClonedOverloadBlocks);
                     complexifiedObjectTypeList.Add(NewProcedureType);
                 }
@@ -196,10 +196,10 @@ namespace BaseNodeHelper
                 foreach (ObjectType ComplexifiedBaseType in ComplexifiedBaseTypeList)
                 {
                     ObjectType ClonedEntityType = (ObjectType)DeepCloneNode(node.EntityType, cloneCommentGuid: false);
-                    BlockList<Assertion> ClonedGetEnsureBlocks = (BlockList<Assertion>)DeepCloneBlockList((IBlockList)node.GetEnsureBlocks, cloneCommentGuid: false);
-                    BlockList<Identifier> ClonedGetExceptionIdentifierBlocks = (BlockList<Identifier>)DeepCloneBlockList((IBlockList)node.GetExceptionIdentifierBlocks, cloneCommentGuid: false);
-                    BlockList<Assertion> ClonedSetRequireBlocks = (BlockList<Assertion>)DeepCloneBlockList((IBlockList)node.SetRequireBlocks, cloneCommentGuid: false);
-                    BlockList<Identifier> ClonedSetExceptionIdentifierBlocks = (BlockList<Identifier>)DeepCloneBlockList((IBlockList)node.SetExceptionIdentifierBlocks, cloneCommentGuid: false);
+                    IBlockList<Assertion> ClonedGetEnsureBlocks = (IBlockList<Assertion>)DeepCloneBlockList((IBlockList)node.GetEnsureBlocks, cloneCommentGuid: false);
+                    IBlockList<Identifier> ClonedGetExceptionIdentifierBlocks = (IBlockList<Identifier>)DeepCloneBlockList((IBlockList)node.GetExceptionIdentifierBlocks, cloneCommentGuid: false);
+                    IBlockList<Assertion> ClonedSetRequireBlocks = (IBlockList<Assertion>)DeepCloneBlockList((IBlockList)node.SetRequireBlocks, cloneCommentGuid: false);
+                    IBlockList<Identifier> ClonedSetExceptionIdentifierBlocks = (IBlockList<Identifier>)DeepCloneBlockList((IBlockList)node.SetExceptionIdentifierBlocks, cloneCommentGuid: false);
 
                     PropertyType NewPropertyType = CreatePropertyType(ComplexifiedBaseType, ClonedEntityType, node.PropertyKind, ClonedGetEnsureBlocks, ClonedGetExceptionIdentifierBlocks, ClonedSetRequireBlocks, ClonedSetExceptionIdentifierBlocks);
                     complexifiedObjectTypeList.Add(NewPropertyType);
@@ -212,10 +212,10 @@ namespace BaseNodeHelper
                 foreach (ObjectType ComplexifiedEntityType in ComplexifiedEntityTypeList)
                 {
                     ObjectType ClonedBaseType = (ObjectType)DeepCloneNode(node.BaseType, cloneCommentGuid: false);
-                    BlockList<Assertion> ClonedGetEnsureBlocks = (BlockList<Assertion>)DeepCloneBlockList((IBlockList)node.GetEnsureBlocks, cloneCommentGuid: false);
-                    BlockList<Identifier> ClonedGetExceptionIdentifierBlocks = (BlockList<Identifier>)DeepCloneBlockList((IBlockList)node.GetExceptionIdentifierBlocks, cloneCommentGuid: false);
-                    BlockList<Assertion> ClonedSetRequireBlocks = (BlockList<Assertion>)DeepCloneBlockList((IBlockList)node.SetRequireBlocks, cloneCommentGuid: false);
-                    BlockList<Identifier> ClonedSetExceptionIdentifierBlocks = (BlockList<Identifier>)DeepCloneBlockList((IBlockList)node.SetExceptionIdentifierBlocks, cloneCommentGuid: false);
+                    IBlockList<Assertion> ClonedGetEnsureBlocks = (IBlockList<Assertion>)DeepCloneBlockList((IBlockList)node.GetEnsureBlocks, cloneCommentGuid: false);
+                    IBlockList<Identifier> ClonedGetExceptionIdentifierBlocks = (IBlockList<Identifier>)DeepCloneBlockList((IBlockList)node.GetExceptionIdentifierBlocks, cloneCommentGuid: false);
+                    IBlockList<Assertion> ClonedSetRequireBlocks = (IBlockList<Assertion>)DeepCloneBlockList((IBlockList)node.SetRequireBlocks, cloneCommentGuid: false);
+                    IBlockList<Identifier> ClonedSetExceptionIdentifierBlocks = (IBlockList<Identifier>)DeepCloneBlockList((IBlockList)node.SetExceptionIdentifierBlocks, cloneCommentGuid: false);
 
                     PropertyType NewPropertyType = CreatePropertyType(ClonedBaseType, ComplexifiedEntityType, node.PropertyKind, ClonedGetEnsureBlocks, ClonedGetExceptionIdentifierBlocks, ClonedSetRequireBlocks, ClonedSetExceptionIdentifierBlocks);
                     complexifiedObjectTypeList.Add(NewPropertyType);
@@ -369,7 +369,7 @@ namespace BaseNodeHelper
         {
             complexifiedObjectTypeList = null;
 
-            if (GetComplexifiedEntityDeclarationBlockList(node.EntityDeclarationBlocks, out BlockList<EntityDeclaration> ComplexifiedEntityDeclarationBlocks))
+            if (GetComplexifiedEntityDeclarationBlockList(node.EntityDeclarationBlocks, out IBlockList<EntityDeclaration> ComplexifiedEntityDeclarationBlocks))
             {
                 TupleType NewTupleType = CreateTupleType(node.Sharing, ComplexifiedEntityDeclarationBlocks);
                 complexifiedObjectTypeList = new List<ObjectType>() { NewTupleType };

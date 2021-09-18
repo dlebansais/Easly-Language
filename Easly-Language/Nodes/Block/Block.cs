@@ -16,8 +16,18 @@ namespace BaseNode
         Identifier SourceIdentifier { get; }
     }
 
+    public interface IBlock<TNode>
+        where TNode : Node
+    {
+        Document Documentation { get; }
+        IList<TNode> NodeList { get; }
+        ReplicationStatus Replication { get; }
+        Pattern ReplicationPattern { get; }
+        Identifier SourceIdentifier { get; }
+    }
+
     [System.Serializable]
-    public class Block<TNode> : IBlock
+    public class Block<TNode> : IBlock<TNode>, IBlock
         where TNode : Node
     {
         public virtual Document Documentation { get; set; }

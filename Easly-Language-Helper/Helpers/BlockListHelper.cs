@@ -9,49 +9,49 @@ namespace BaseNodeHelper
 
     public static class BlockListHelper
     {
-        public static BlockList<TNode> CreateEmptyBlockList<TNode>()
+        public static IBlockList<TNode> CreateEmptyBlockList<TNode>()
             where TNode : Node
         {
             return BlockListHelper<TNode>.CreateEmptyBlockList();
         }
 
-        public static BlockList<TNode> CreateSimpleBlockList<TNode>(TNode node)
+        public static IBlockList<TNode> CreateSimpleBlockList<TNode>(TNode node)
             where TNode : Node
         {
             return BlockListHelper<TNode>.CreateSimpleBlockList(node);
         }
 
-        public static BlockList<TNode> CreateBlockList<TNode>(IList<TNode> nodeList)
+        public static IBlockList<TNode> CreateBlockList<TNode>(IList<TNode> nodeList)
             where TNode : Node
         {
             return BlockListHelper<TNode>.CreateBlockList(nodeList);
         }
 
-        public static BlockList<TNode> CreateBlockList<TNode>(IList<Block<TNode>> nodeBlockList)
+        public static IBlockList<TNode> CreateBlockList<TNode>(IList<IBlock<TNode>> nodeBlockList)
             where TNode : Node
         {
             return BlockListHelper<TNode>.CreateBlockList(nodeBlockList);
         }
 
-        public static BlockList<TNode> CreateBlockListCopy<TNode>(BlockList<TNode> blockList)
+        public static IBlockList<TNode> CreateBlockListCopy<TNode>(IBlockList<TNode> blockList)
             where TNode : Node
         {
             return BlockListHelper<TNode>.CreateBlockListCopy(blockList);
         }
 
-        public static Block<TNode> CreateBlock<TNode>(IList<TNode> nodeList)
+        public static IBlock<TNode> CreateBlock<TNode>(IList<TNode> nodeList)
             where TNode : Node
         {
             return BlockListHelper<TNode>.CreateBlock(nodeList);
         }
 
-        public static Block<TNode> CreateBlock<TNode>(IList<TNode> nodeList, ReplicationStatus replication, Pattern replicationPattern, Identifier sourceIdentifier)
+        public static IBlock<TNode> CreateBlock<TNode>(IList<TNode> nodeList, ReplicationStatus replication, Pattern replicationPattern, Identifier sourceIdentifier)
             where TNode : Node
         {
             return BlockListHelper<TNode>.CreateBlock(nodeList, replication, replicationPattern, sourceIdentifier);
         }
 
-        public static bool IsSimple<TNode>(BlockList<TNode> blockList)
+        public static bool IsSimple<TNode>(IBlockList<TNode> blockList)
             where TNode : Node
         {
             return BlockListHelper<TNode>.IsSimple(blockList);
@@ -63,42 +63,42 @@ namespace BaseNodeHelper
 #pragma warning restore SA1402 // File may only contain a single type
         where TNode : Node
     {
-        internal static BlockList<TNode> CreateEmptyBlockList()
+        internal static IBlockList<TNode> CreateEmptyBlockList()
         {
             return CreateBlockList(new List<TNode>());
         }
 
-        internal static BlockList<TNode> CreateSimpleBlockList(TNode node)
+        internal static IBlockList<TNode> CreateSimpleBlockList(TNode node)
         {
-            List<TNode> NodeList = new List<TNode>();
+            IList<TNode> NodeList = new List<TNode>();
             NodeList.Add(node);
 
             return CreateBlockList(NodeList);
         }
 
-        internal static BlockList<TNode> CreateBlockList(IList<TNode> nodeList)
+        internal static IBlockList<TNode> CreateBlockList(IList<TNode> nodeList)
         {
             if (nodeList == null) throw new ArgumentNullException(nameof(nodeList));
 
             BlockList<TNode> Blocks = new BlockList<TNode>();
             Blocks.Documentation = NodeHelper.CreateEmptyDocumentation();
-            Blocks.NodeBlockList = new List<Block<TNode>>();
+            Blocks.NodeBlockList = new List<IBlock<TNode>>();
 
             if (nodeList.Count > 0)
             {
-                Block<TNode> Block = CreateBlock(nodeList);
+                IBlock<TNode> Block = CreateBlock(nodeList);
                 Blocks.NodeBlockList.Add(Block);
             }
 
             return Blocks;
         }
 
-        internal static BlockList<TNode> CreateBlockList(IList<Block<TNode>> nodeBlockList)
+        internal static IBlockList<TNode> CreateBlockList(IList<IBlock<TNode>> nodeBlockList)
         {
             if (nodeBlockList == null) throw new ArgumentNullException(nameof(nodeBlockList));
             if (nodeBlockList.Count == 0) throw new ArgumentException($"{nameof(nodeBlockList)} must have at least one block");
 
-            foreach (Block<TNode> Block in nodeBlockList)
+            foreach (IBlock<TNode> Block in nodeBlockList)
                 if (Block.NodeList.Count == 0) throw new ArgumentException($"All blocks in {nameof(nodeBlockList)} must have at least one node");
 
             BlockList<TNode> Blocks = new BlockList<TNode>();
@@ -108,18 +108,18 @@ namespace BaseNodeHelper
             return Blocks;
         }
 
-        internal static BlockList<TNode> CreateBlockListCopy(BlockList<TNode> blockList)
+        internal static IBlockList<TNode> CreateBlockListCopy(IBlockList<TNode> blockList)
         {
             if (blockList == null)
                 return CreateEmptyBlockList();
 
             BlockList<TNode> Result = new BlockList<TNode>();
             Result.Documentation = NodeHelper.CreateDocumentationCopy(blockList.Documentation);
-            Result.NodeBlockList = new List<Block<TNode>>();
+            Result.NodeBlockList = new List<IBlock<TNode>>();
 
             for (int BlockIndex = 0; BlockIndex < blockList.NodeBlockList.Count; BlockIndex++)
             {
-                Block<TNode> Block = blockList.NodeBlockList[BlockIndex];
+                IBlock<TNode> Block = blockList.NodeBlockList[BlockIndex];
 
                 Block<TNode> NewBlock = new Block<TNode>();
                 NewBlock.Documentation = NodeHelper.CreateDocumentationCopy(Block.Documentation);
@@ -153,7 +153,7 @@ namespace BaseNodeHelper
             return Result;
         }
 
-        internal static Block<TNode> CreateBlock(IList<TNode> nodeList)
+        internal static IBlock<TNode> CreateBlock(IList<TNode> nodeList)
         {
             if (nodeList == null) throw new ArgumentNullException(nameof(nodeList));
             if (nodeList.Count == 0) throw new ArgumentException($"{nameof(nodeList)} must be have at least one node");
@@ -161,7 +161,7 @@ namespace BaseNodeHelper
             return CreateBlock(nodeList, ReplicationStatus.Normal, NodeHelper.CreateEmptyPattern(), NodeHelper.CreateEmptyIdentifier());
         }
 
-        internal static Block<TNode> CreateBlock(IList<TNode> nodeList, ReplicationStatus replication, Pattern replicationPattern, Identifier sourceIdentifier)
+        internal static IBlock<TNode> CreateBlock(IList<TNode> nodeList, ReplicationStatus replication, Pattern replicationPattern, Identifier sourceIdentifier)
         {
             if (nodeList == null) throw new ArgumentNullException(nameof(nodeList));
             if (nodeList.Count == 0) throw new ArgumentException($"{nameof(nodeList)} must be have at least one node");
@@ -176,7 +176,7 @@ namespace BaseNodeHelper
             return Block;
         }
 
-        internal static bool IsSimple(BlockList<TNode> blockList)
+        internal static bool IsSimple(IBlockList<TNode> blockList)
         {
             if (blockList == null) throw new ArgumentNullException(nameof(blockList));
 

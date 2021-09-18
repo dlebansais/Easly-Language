@@ -34,7 +34,7 @@ namespace BaseNodeHelper
 
         private static bool GetComplexifiedAssignmentArgument(AssignmentArgument node, out IList<Argument> complexifiedArgumentList)
         {
-            if (GetComplexifiedIdentifierBlockList(node.ParameterBlocks, out BlockList<Identifier> ComplexifiedParameterBlocks))
+            if (GetComplexifiedIdentifierBlockList(node.ParameterBlocks, out IBlockList<Identifier> ComplexifiedParameterBlocks))
             {
                 complexifiedArgumentList = new List<Argument>();
 
@@ -50,7 +50,7 @@ namespace BaseNodeHelper
 
                 foreach (Expression ComplexifiedSource in ComplexifiedSourceList)
                 {
-                    BlockList<Identifier> ClonedParameterBlocks = (BlockList<Identifier>)DeepCloneBlockList((IBlockList)node.ParameterBlocks, cloneCommentGuid: false);
+                    IBlockList<Identifier> ClonedParameterBlocks = (IBlockList<Identifier>)DeepCloneBlockList((IBlockList)node.ParameterBlocks, cloneCommentGuid: false);
                     AssignmentArgument NewAssignmentArgument = CreateAssignmentArgument(ClonedParameterBlocks, ComplexifiedSource);
                     complexifiedArgumentList.Add(NewAssignmentArgument);
                 }

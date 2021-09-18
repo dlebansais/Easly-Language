@@ -8,6 +8,6 @@ namespace BaseNode
     public class Export : Node
     {
         public virtual Name EntityName { get; set; }
-        public virtual BlockList<Identifier> ClassIdentifierBlocks { get; set; }
+        public virtual IBlockList<Identifier> ClassIdentifierBlocks { get; set; }
     }
 }

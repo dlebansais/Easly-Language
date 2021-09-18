@@ -24,7 +24,7 @@ namespace BaseNodeHelper
             return Result;
         }
 
-        public static AsLongAsInstruction CreateAsLongAsInstruction(Expression continueCondition, BlockList<Continuation> continuationBlocks)
+        public static AsLongAsInstruction CreateAsLongAsInstruction(Expression continueCondition, IBlockList<Continuation> continuationBlocks)
         {
             AsLongAsInstruction Result = new AsLongAsInstruction();
             Result.Documentation = CreateEmptyDocumentation();
@@ -35,7 +35,7 @@ namespace BaseNodeHelper
             return Result;
         }
 
-        public static AsLongAsInstruction CreateAsLongAsInstruction(Expression continueCondition, BlockList<Continuation> continuationBlocks, Scope elseInstructions)
+        public static AsLongAsInstruction CreateAsLongAsInstruction(Expression continueCondition, IBlockList<Continuation> continuationBlocks, Scope elseInstructions)
         {
             AsLongAsInstruction Result = new AsLongAsInstruction();
             Result.Documentation = CreateEmptyDocumentation();
@@ -72,7 +72,7 @@ namespace BaseNodeHelper
             return Result;
         }
 
-        public static AssignmentInstruction CreateAssignmentInstruction(BlockList<QualifiedName> destinationBlocks, Expression source)
+        public static AssignmentInstruction CreateAssignmentInstruction(IBlockList<QualifiedName> destinationBlocks, Expression source)
         {
             if (destinationBlocks == null) throw new ArgumentNullException(nameof(destinationBlocks));
             if (destinationBlocks.NodeBlockList.Count == 0) throw new ArgumentException($"{nameof(destinationBlocks)} must not be empty");
@@ -101,7 +101,7 @@ namespace BaseNodeHelper
             return Result;
         }
 
-        public static AttachmentInstruction CreateAttachmentInstruction(Expression source, BlockList<Name> entityNameBlocks, BlockList<Attachment> attachmentBlocks)
+        public static AttachmentInstruction CreateAttachmentInstruction(Expression source, IBlockList<Name> entityNameBlocks, IBlockList<Attachment> attachmentBlocks)
         {
             ObjectType AttachType = CreateDefaultType();
             Attachment FirstAttachment = CreateAttachment(AttachType);
@@ -116,7 +116,7 @@ namespace BaseNodeHelper
             return Result;
         }
 
-        public static AttachmentInstruction CreateAttachmentInstruction(Expression source, BlockList<Name> entityNameBlocks, BlockList<Attachment> attachmentBlocks, Scope elseInstructions)
+        public static AttachmentInstruction CreateAttachmentInstruction(Expression source, IBlockList<Name> entityNameBlocks, IBlockList<Attachment> attachmentBlocks, Scope elseInstructions)
         {
             ObjectType AttachType = CreateDefaultType();
             Attachment FirstAttachment = CreateAttachment(AttachType);
@@ -151,7 +151,7 @@ namespace BaseNodeHelper
             return Result;
         }
 
-        public static CommandInstruction CreateCommandInstruction(QualifiedName command, BlockList<Argument> argumentBlocks)
+        public static CommandInstruction CreateCommandInstruction(QualifiedName command, IBlockList<Argument> argumentBlocks)
         {
             CommandInstruction Result = new CommandInstruction();
             Result.Documentation = CreateEmptyDocumentation();
@@ -173,7 +173,7 @@ namespace BaseNodeHelper
             return Result;
         }
 
-        public static CreateInstruction CreateCreateInstruction(Identifier entityIdentifier, Identifier creationRoutineIdentifier, BlockList<Argument> argumentBlocks)
+        public static CreateInstruction CreateCreateInstruction(Identifier entityIdentifier, Identifier creationRoutineIdentifier, IBlockList<Argument> argumentBlocks)
         {
             CreateInstruction Result = new CreateInstruction();
             Result.Documentation = CreateEmptyDocumentation();
@@ -185,7 +185,7 @@ namespace BaseNodeHelper
             return Result;
         }
 
-        public static CreateInstruction CreateCreateInstruction(Identifier entityIdentifier, Identifier creationRoutineIdentifier, BlockList<Argument> argumentBlocks, QualifiedName processor)
+        public static CreateInstruction CreateCreateInstruction(Identifier entityIdentifier, Identifier creationRoutineIdentifier, IBlockList<Argument> argumentBlocks, QualifiedName processor)
         {
             CreateInstruction Result = new CreateInstruction();
             Result.Documentation = CreateEmptyDocumentation();
@@ -256,7 +256,7 @@ namespace BaseNodeHelper
             return Result;
         }
 
-        public static IfThenElseInstruction CreateIfThenElseInstruction(BlockList<Conditional> conditionalBlocks)
+        public static IfThenElseInstruction CreateIfThenElseInstruction(IBlockList<Conditional> conditionalBlocks)
         {
             IfThenElseInstruction Result = new IfThenElseInstruction();
             Result.Documentation = CreateEmptyDocumentation();
@@ -266,7 +266,7 @@ namespace BaseNodeHelper
             return Result;
         }
 
-        public static IfThenElseInstruction CreateIfThenElseInstruction(BlockList<Conditional> conditionalBlocks, Scope elseInstructions)
+        public static IfThenElseInstruction CreateIfThenElseInstruction(IBlockList<Conditional> conditionalBlocks, Scope elseInstructions)
         {
             IfThenElseInstruction Result = new IfThenElseInstruction();
             Result.Documentation = CreateEmptyDocumentation();
@@ -291,7 +291,7 @@ namespace BaseNodeHelper
             return Result;
         }
 
-        public static IndexAssignmentInstruction CreateIndexAssignmentInstruction(QualifiedName destination, BlockList<Argument> argumentBlocks, Expression source)
+        public static IndexAssignmentInstruction CreateIndexAssignmentInstruction(QualifiedName destination, IBlockList<Argument> argumentBlocks, Expression source)
         {
             if (argumentBlocks == null) throw new ArgumentNullException(nameof(argumentBlocks));
             if (argumentBlocks.NodeBlockList.Count == 0) throw new ArgumentException($"{nameof(argumentBlocks)} must not be empty");
@@ -331,7 +331,7 @@ namespace BaseNodeHelper
             return Result;
         }
 
-        public static InspectInstruction CreateInspectInstruction(Expression source, BlockList<With> withBlocks)
+        public static InspectInstruction CreateInspectInstruction(Expression source, IBlockList<With> withBlocks)
         {
             InspectInstruction Result = new InspectInstruction();
             Result.Documentation = CreateEmptyDocumentation();
@@ -342,7 +342,7 @@ namespace BaseNodeHelper
             return Result;
         }
 
-        public static InspectInstruction CreateInspectInstruction(Expression source, BlockList<With> withBlocks, Scope elseInstructions)
+        public static InspectInstruction CreateInspectInstruction(Expression source, IBlockList<With> withBlocks, Scope elseInstructions)
         {
             InspectInstruction Result = new InspectInstruction();
             Result.Documentation = CreateEmptyDocumentation();
@@ -400,7 +400,7 @@ namespace BaseNodeHelper
             return Result;
         }
 
-        public static OverLoopInstruction CreateOverLoopInstruction(Expression overList, BlockList<Name> indexerBlocks, IterationType iteration, Scope loopInstructions, BlockList<Assertion> invariantBlocks)
+        public static OverLoopInstruction CreateOverLoopInstruction(Expression overList, IBlockList<Name> indexerBlocks, IterationType iteration, Scope loopInstructions, IBlockList<Assertion> invariantBlocks)
         {
             if (indexerBlocks == null) throw new ArgumentNullException(nameof(indexerBlocks));
             if (NodeTreeHelperBlockList.IsBlockListEmpty((IBlockList)indexerBlocks)) throw new ArgumentException($"{nameof(indexerBlocks)} must not be empty");
@@ -419,7 +419,7 @@ namespace BaseNodeHelper
             return Result;
         }
 
-        public static OverLoopInstruction CreateOverLoopInstruction(Expression overList, BlockList<Name> indexerBlocks, IterationType iteration, Scope loopInstructions, Identifier exitEntityName, BlockList<Assertion> invariantBlocks)
+        public static OverLoopInstruction CreateOverLoopInstruction(Expression overList, IBlockList<Name> indexerBlocks, IterationType iteration, Scope loopInstructions, Identifier exitEntityName, IBlockList<Assertion> invariantBlocks)
         {
             if (indexerBlocks == null) throw new ArgumentNullException(nameof(indexerBlocks));
             if (NodeTreeHelperBlockList.IsBlockListEmpty((IBlockList)indexerBlocks)) throw new ArgumentException($"{nameof(indexerBlocks)} must not be empty");
@@ -453,7 +453,7 @@ namespace BaseNodeHelper
             return Result;
         }
 
-        public static PrecursorIndexAssignmentInstruction CreatePrecursorIndexAssignmentInstruction(BlockList<Argument> argumentBlocks, Expression source)
+        public static PrecursorIndexAssignmentInstruction CreatePrecursorIndexAssignmentInstruction(IBlockList<Argument> argumentBlocks, Expression source)
         {
             if (argumentBlocks == null) throw new ArgumentNullException(nameof(argumentBlocks));
             if (argumentBlocks.NodeBlockList.Count == 0) throw new ArgumentException($"{nameof(argumentBlocks)} must not be empty");
@@ -468,7 +468,7 @@ namespace BaseNodeHelper
             return Result;
         }
 
-        public static PrecursorIndexAssignmentInstruction CreatePrecursorIndexAssignmentInstruction(ObjectType ancestorType, BlockList<Argument> argumentBlocks, Expression source)
+        public static PrecursorIndexAssignmentInstruction CreatePrecursorIndexAssignmentInstruction(ObjectType ancestorType, IBlockList<Argument> argumentBlocks, Expression source)
         {
             if (argumentBlocks == null) throw new ArgumentNullException(nameof(argumentBlocks));
             if (argumentBlocks.NodeBlockList.Count == 0) throw new ArgumentException($"{nameof(argumentBlocks)} must not be empty");
@@ -494,7 +494,7 @@ namespace BaseNodeHelper
             return Result;
         }
 
-        public static PrecursorInstruction CreatePrecursorInstruction(BlockList<Argument> argumentBlocks)
+        public static PrecursorInstruction CreatePrecursorInstruction(IBlockList<Argument> argumentBlocks)
         {
             PrecursorInstruction Result = new PrecursorInstruction();
             Result.Documentation = CreateEmptyDocumentation();
@@ -504,7 +504,7 @@ namespace BaseNodeHelper
             return Result;
         }
 
-        public static PrecursorInstruction CreatePrecursorInstruction(ObjectType ancestorType, BlockList<Argument> argumentBlocks)
+        public static PrecursorInstruction CreatePrecursorInstruction(ObjectType ancestorType, IBlockList<Argument> argumentBlocks)
         {
             PrecursorInstruction Result = new PrecursorInstruction();
             Result.Documentation = CreateEmptyDocumentation();
@@ -545,7 +545,7 @@ namespace BaseNodeHelper
             return Result;
         }
 
-        public static ThrowInstruction CreateThrowInstruction(ObjectType exceptionType, Identifier creationRoutineIdentifier, BlockList<Argument> argumentBlocks)
+        public static ThrowInstruction CreateThrowInstruction(ObjectType exceptionType, Identifier creationRoutineIdentifier, IBlockList<Argument> argumentBlocks)
         {
             ThrowInstruction Result = new ThrowInstruction();
             Result.Documentation = CreateEmptyDocumentation();

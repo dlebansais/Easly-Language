@@ -10,8 +10,8 @@ namespace BaseNode
     public class Library : Node
     {
         public virtual Name EntityName { get; set; }
-        public virtual OptionalReference<Identifier> FromIdentifier { get; set; }
-        public virtual BlockList<Import> ImportBlocks { get; set; }
-        public virtual BlockList<Identifier> ClassIdentifierBlocks { get; set; }
+        public virtual IOptionalReference<Identifier> FromIdentifier { get; set; }
+        public virtual IBlockList<Import> ImportBlocks { get; set; }
+        public virtual IBlockList<Identifier> ClassIdentifierBlocks { get; set; }
     }
 }

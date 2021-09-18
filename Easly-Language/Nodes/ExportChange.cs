@@ -8,6 +8,6 @@ namespace BaseNode
     public class ExportChange : Node
     {
         public virtual Identifier ExportIdentifier { get; set; }
-        public virtual BlockList<Identifier> IdentifierBlocks { get; set; }
+        public virtual IBlockList<Identifier> IdentifierBlocks { get; set; }
     }
 }

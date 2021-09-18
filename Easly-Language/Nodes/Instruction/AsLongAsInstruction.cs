@@ -10,7 +10,7 @@ namespace BaseNode
     public class AsLongAsInstruction : Instruction
     {
         public virtual Expression ContinueCondition { get; set; }
-        public virtual BlockList<Continuation> ContinuationBlocks { get; set; }
-        public virtual OptionalReference<Scope> ElseInstructions { get; set; }
+        public virtual IBlockList<Continuation> ContinuationBlocks { get; set; }
+        public virtual IOptionalReference<Scope> ElseInstructions { get; set; }
     }
 }

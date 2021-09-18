@@ -287,8 +287,7 @@ namespace BaseNodeHelper
             Type BlockType = GenericArguments[0];
             Debug.Assert(BlockType != null);
 
-            // Debug.Assert(BlockType.IsInterface);
-            Debug.Assert(!BlockType.IsInterface);
+            Debug.Assert(BlockType.IsInterface);
 
             return BlockType;
         }

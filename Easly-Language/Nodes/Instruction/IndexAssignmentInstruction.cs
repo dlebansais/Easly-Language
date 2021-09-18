@@ -8,7 +8,7 @@ namespace BaseNode
     public class IndexAssignmentInstruction : Instruction
     {
         public virtual QualifiedName Destination { get; set; }
-        public virtual BlockList<Argument> ArgumentBlocks { get; set; }
+        public virtual IBlockList<Argument> ArgumentBlocks { get; set; }
         public virtual Expression Source { get; set; }
     }
 }

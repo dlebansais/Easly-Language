@@ -23,7 +23,7 @@ namespace BaseNodeHelper
             return Result;
         }
 
-        public static Attachment CreateAttachment(BlockList<ObjectType> attachTypeBlocks, Scope instructions)
+        public static Attachment CreateAttachment(IBlockList<ObjectType> attachTypeBlocks, Scope instructions)
         {
             Attachment Result = new Attachment();
             Result.Documentation = CreateEmptyDocumentation();
@@ -199,7 +199,7 @@ namespace BaseNodeHelper
             return EmptyRoot;
         }
 
-        public static Root CreateRoot(IList<Block<Class>> classBlockList, IList<Block<Library>> libraryBlockList, IList<GlobalReplicate> globalReplicateList)
+        public static Root CreateRoot(IList<IBlock<Class>> classBlockList, IList<IBlock<Library>> libraryBlockList, IList<GlobalReplicate> globalReplicateList)
         {
             Root EmptyRoot = new Root();
             EmptyRoot.Documentation = CreateEmptyDocumentation();

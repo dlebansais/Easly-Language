@@ -13,13 +13,20 @@ namespace BaseNode
         IList NodeBlockList { get; }
     }
 
+    public interface IBlockList<TNode>
+        where TNode : Node
+    {
+        Document Documentation { get; }
+        IList<IBlock<TNode>> NodeBlockList { get; }
+    }
+
     [System.Serializable]
-    public class BlockList<TNode> : IBlockList
+    public class BlockList<TNode> : IBlockList<TNode>, IBlockList
         where TNode : Node
     {
         public virtual Document Documentation { get; set; }
         Document IBlockList.Documentation { get { return Documentation; } }
-        public virtual IList<Block<TNode>> NodeBlockList { get; set; }
+        public virtual IList<IBlock<TNode>> NodeBlockList { get; set; }
         IList IBlockList.NodeBlockList { get { return (IList)NodeBlockList; } }
     }
 }

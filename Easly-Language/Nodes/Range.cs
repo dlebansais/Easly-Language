@@ -10,6 +10,6 @@ namespace BaseNode
     public class Range : Node
     {
         public virtual Expression LeftExpression { get; set; }
-        public virtual OptionalReference<Expression> RightExpression { get; set; }
+        public virtual IOptionalReference<Expression> RightExpression { get; set; }
     }
 }

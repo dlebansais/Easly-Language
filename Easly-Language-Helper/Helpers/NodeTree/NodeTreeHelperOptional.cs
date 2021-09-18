@@ -33,8 +33,7 @@ namespace BaseNodeHelper
 
             Type PropertyType = Property.PropertyType;
 
-            // if (!NodeTreeHelper.IsOptionalReferenceType(PropertyType))
-            if (!NodeTreeHelper.IsOptionalDescendantType(PropertyType))
+            if (!NodeTreeHelper.IsOptionalReferenceType(PropertyType))
                 return false;
 
             Debug.Assert(PropertyType.IsGenericType);
@@ -60,8 +59,7 @@ namespace BaseNodeHelper
 
             Type PropertyType = Property.PropertyType;
 
-            // if (!NodeTreeHelper.IsOptionalReferenceType(PropertyType))
-            if (!NodeTreeHelper.IsOptionalDescendantType(PropertyType))
+            if (!NodeTreeHelper.IsOptionalReferenceType(PropertyType))
                 return false;
 
             IOptionalReference Optional = Property.GetValue(node) as IOptionalReference;
@@ -92,8 +90,7 @@ namespace BaseNodeHelper
 
             Type PropertyType = Property.PropertyType;
 
-            // Debug.Assert(NodeTreeHelper.IsOptionalReferenceType(PropertyType));
-            Debug.Assert(NodeTreeHelper.IsOptionalDescendantType(PropertyType));
+            Debug.Assert(NodeTreeHelper.IsOptionalReferenceType(PropertyType));
 
             IOptionalReference Optional = Property.GetValue(node) as IOptionalReference;
             Debug.Assert(Optional != null);
@@ -136,8 +133,7 @@ namespace BaseNodeHelper
 
             Type PropertyType = Property.PropertyType;
 
-            // Debug.Assert(NodeTreeHelper.IsOptionalReferenceType(PropertyType));
-            Debug.Assert(NodeTreeHelper.IsOptionalDescendantType(PropertyType));
+            Debug.Assert(NodeTreeHelper.IsOptionalReferenceType(PropertyType));
 
             Debug.Assert(PropertyType.IsGenericType);
             Type[] GenericArguments = PropertyType.GetGenericArguments();
@@ -178,8 +174,7 @@ namespace BaseNodeHelper
             PropertyInfo Property = NodeType.GetProperty(propertyName);
             Debug.Assert(Property != null);
 
-            // Debug.Assert(NodeTreeHelper.IsOptionalReferenceType(Property.PropertyType));
-            Debug.Assert(NodeTreeHelper.IsOptionalDescendantType(Property.PropertyType));
+            Debug.Assert(NodeTreeHelper.IsOptionalReferenceType(Property.PropertyType));
 
             IOptionalReference Optional = Property.GetValue(node) as IOptionalReference;
             Debug.Assert(Optional != null);
@@ -197,8 +192,7 @@ namespace BaseNodeHelper
             PropertyInfo Property = NodeType.GetProperty(propertyName);
             Debug.Assert(Property != null);
 
-            // Debug.Assert(NodeTreeHelper.IsOptionalReferenceType(Property.PropertyType));
-            Debug.Assert(NodeTreeHelper.IsOptionalDescendantType(Property.PropertyType));
+            Debug.Assert(NodeTreeHelper.IsOptionalReferenceType(Property.PropertyType));
 
             Property.SetValue(node, optional);
         }
@@ -217,8 +211,7 @@ namespace BaseNodeHelper
 
             Type PropertyType = Property.PropertyType;
 
-            // Debug.Assert(NodeTreeHelper.IsOptionalReferenceType(PropertyType));
-            Debug.Assert(NodeTreeHelper.IsOptionalDescendantType(PropertyType));
+            Debug.Assert(NodeTreeHelper.IsOptionalReferenceType(PropertyType));
 
             Debug.Assert(PropertyType.IsGenericType);
             Type[] GenericArguments = PropertyType.GetGenericArguments();
@@ -249,8 +242,7 @@ namespace BaseNodeHelper
 
             Type PropertyType = Property.PropertyType;
 
-            // Debug.Assert(NodeTreeHelper.IsOptionalReferenceType(PropertyType));
-            Debug.Assert(NodeTreeHelper.IsOptionalDescendantType(PropertyType));
+            Debug.Assert(NodeTreeHelper.IsOptionalReferenceType(PropertyType));
 
             Debug.Assert(PropertyType.IsGenericType);
             Type[] GenericArguments = PropertyType.GetGenericArguments();

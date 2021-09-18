@@ -27,7 +27,7 @@ namespace BaseNodeHelper
             return Result;
         }
 
-        public static AssignmentArgument CreateAssignmentArgument(BlockList<Identifier> parameterBlocks, Expression source)
+        public static AssignmentArgument CreateAssignmentArgument(IBlockList<Identifier> parameterBlocks, Expression source)
         {
             if (parameterBlocks == null) throw new ArgumentNullException(nameof(parameterBlocks));
             if (source == null) throw new ArgumentNullException(nameof(source));

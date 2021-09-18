@@ -96,7 +96,7 @@ namespace BaseNodeHelper
                 {
                     Identifier AssignmentTarget = CreateSimpleIdentifier(BeforeText);
                     Identifier NewClassIdentifier = CreateSimpleIdentifier(AfterText);
-                    BlockList<TypeArgument> ClonedTypeArgumentBlocks = (BlockList<TypeArgument>)DeepCloneBlockList((IBlockList)AsGenericType.TypeArgumentBlocks, cloneCommentGuid: false);
+                    IBlockList<TypeArgument> ClonedTypeArgumentBlocks = (IBlockList<TypeArgument>)DeepCloneBlockList((IBlockList)AsGenericType.TypeArgumentBlocks, cloneCommentGuid: false);
                     GenericType NewGenericType = CreateGenericType(SharingType.NotShared, NewClassIdentifier, ClonedTypeArgumentBlocks);
 
                     complexifiedNode = CreateAssignmentTypeArgument(AssignmentTarget, NewGenericType);

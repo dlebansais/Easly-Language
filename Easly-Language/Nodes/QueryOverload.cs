@@ -9,11 +9,11 @@ namespace BaseNode
     [System.Serializable]
     public class QueryOverload : Node
     {
-        public virtual BlockList<EntityDeclaration> ParameterBlocks { get; set; }
+        public virtual IBlockList<EntityDeclaration> ParameterBlocks { get; set; }
         public virtual ParameterEndStatus ParameterEnd { get; set; }
-        public virtual BlockList<EntityDeclaration> ResultBlocks { get; set; }
-        public virtual BlockList<Identifier> ModifiedQueryBlocks { get; set; }
-        public virtual OptionalReference<Expression> Variant { get; set; }
+        public virtual IBlockList<EntityDeclaration> ResultBlocks { get; set; }
+        public virtual IBlockList<Identifier> ModifiedQueryBlocks { get; set; }
+        public virtual IOptionalReference<Expression> Variant { get; set; }
         public virtual Body QueryBody { get; set; }
     }
 }

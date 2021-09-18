@@ -10,8 +10,8 @@ namespace BaseNode
     public class Import : Node
     {
         public virtual Identifier LibraryIdentifier { get; set; }
-        public virtual OptionalReference<Identifier> FromIdentifier { get; set; }
+        public virtual IOptionalReference<Identifier> FromIdentifier { get; set; }
         public virtual ImportType Type { get; set; }
-        public virtual BlockList<Rename> RenameBlocks { get; set; }
+        public virtual IBlockList<Rename> RenameBlocks { get; set; }
     }
 }

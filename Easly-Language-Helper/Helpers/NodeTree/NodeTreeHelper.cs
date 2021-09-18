@@ -126,7 +126,7 @@ namespace BaseNodeHelper
         {
             if (type == null) throw new ArgumentNullException(nameof(type));
 
-            if (!type.IsInterface || !type.IsGenericType || type.GetGenericTypeDefinition() != typeof(OptionalReference<>))
+            if (!type.IsInterface || !type.IsGenericType || type.GetGenericTypeDefinition() != typeof(IOptionalReference<>))
                 return false;
 
             Type[] GenericArguments = type.GetGenericArguments();
@@ -135,7 +135,8 @@ namespace BaseNodeHelper
 
             Type GenericType = GenericArguments[0];
 
-            return IsNodeInterfaceType(GenericType);
+            // return IsNodeInterfaceType(GenericType);
+            return IsNodeDescendantType(GenericType);
         }
 
         public static bool IsOptionalDescendantType(Type type)
@@ -175,8 +176,7 @@ namespace BaseNodeHelper
         {
             if (type == null) throw new ArgumentNullException(nameof(type));
 
-            // if (!type.IsInterface || !type.IsGenericType || type.GetGenericTypeDefinition() != typeof(BlockList<>))
-            if (type.IsInterface || !type.IsGenericType || type.GetGenericTypeDefinition() != typeof(BlockList<>))
+            if (!type.IsInterface || !type.IsGenericType || type.GetGenericTypeDefinition() != typeof(IBlockList<>))
                 return false;
 
             Type[] GenericArguments = type.GetGenericArguments();
@@ -195,8 +195,7 @@ namespace BaseNodeHelper
         {
             if (type == null) throw new ArgumentNullException(nameof(type));
 
-            // if (!type.IsInterface || !type.IsGenericType || type.GetGenericTypeDefinition() != typeof(Block<>))
-            if (type.IsInterface || !type.IsGenericType || type.GetGenericTypeDefinition() != typeof(Block<>))
+            if (!type.IsInterface || !type.IsGenericType || type.GetGenericTypeDefinition() != typeof(IBlock<>))
                 return false;
 
             Type[] GenericArguments = type.GetGenericArguments();
@@ -388,8 +387,7 @@ namespace BaseNodeHelper
                 Type PropertyType = Property.PropertyType;
                 string PropertyName = Property.Name;
 
-                // if (IsOptionalReferenceType(PropertyType))
-                if (IsOptionalDescendantType(PropertyType))
+                if (IsOptionalReferenceType(PropertyType))
                 {
                     IOptionalReference Optional = Property.GetValue(node) as IOptionalReference;
                     Debug.Assert(Optional != null);
@@ -399,11 +397,11 @@ namespace BaseNodeHelper
             }
         }
 
-        public static void GetArgumentBlocks(Node node, out IDictionary<string, BlockList<Argument>> argumentBlocksTable)
+        public static void GetArgumentBlocks(Node node, out IDictionary<string, IBlockList<Argument>> argumentBlocksTable)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
 
-            argumentBlocksTable = new Dictionary<string, BlockList<Argument>>();
+            argumentBlocksTable = new Dictionary<string, IBlockList<Argument>>();
 
             Type NodeType = node.GetType();
             IList<PropertyInfo> Properties = GetTypeProperties(NodeType);
@@ -425,7 +423,7 @@ namespace BaseNodeHelper
 
                     if (GenericArguments[0] == typeof(Argument))
                     {
-                        BlockList<Argument> ArgumentBlocks = Property.GetValue(node) as BlockList<Argument>;
+                        IBlockList<Argument> ArgumentBlocks = Property.GetValue(node) as IBlockList<Argument>;
                         Debug.Assert(ArgumentBlocks != null);
 
                         argumentBlocksTable.Add(PropertyName, ArgumentBlocks);
@@ -651,8 +649,7 @@ namespace BaseNodeHelper
                 Type[] GenericArguments = PropertyType.GetGenericArguments();
                 Debug.Assert(GenericArguments != null);
 
-                // if (IsOptionalReferenceType(PropertyType))
-                if (IsOptionalDescendantType(PropertyType))
+                if (IsOptionalReferenceType(PropertyType))
                 {
                     Debug.Assert(GenericArguments.Length == 1);
                     AssignedType = GenericArguments[0];

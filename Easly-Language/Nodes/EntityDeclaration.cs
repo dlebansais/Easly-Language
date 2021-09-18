@@ -11,6 +11,6 @@ namespace BaseNode
     {
         public virtual Name EntityName { get; set; }
         public virtual ObjectType EntityType { get; set; }
-        public virtual OptionalReference<Expression> DefaultValue { get; set; }
+        public virtual IOptionalReference<Expression> DefaultValue { get; set; }
     }
 }

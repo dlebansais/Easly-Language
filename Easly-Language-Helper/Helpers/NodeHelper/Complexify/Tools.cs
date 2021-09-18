@@ -83,18 +83,18 @@ namespace BaseNodeHelper
             return renamedSymbol != null;
         }
 
-        private static bool GetComplexifiedIdentifierBlockList(BlockList<Identifier> identifierBlockList, out BlockList<Identifier> newBlockList)
+        private static bool GetComplexifiedIdentifierBlockList(IBlockList<Identifier> identifierBlockList, out IBlockList<Identifier> newBlockList)
         {
             for (int BlockIndex = 0; BlockIndex < identifierBlockList.NodeBlockList.Count; BlockIndex++)
             {
-                Block<Identifier> Block = identifierBlockList.NodeBlockList[BlockIndex];
+                IBlock<Identifier> Block = identifierBlockList.NodeBlockList[BlockIndex];
 
                 for (int NodeIndex = 0; NodeIndex < Block.NodeList.Count; NodeIndex++)
                 {
                     Identifier Identifier = Block.NodeList[NodeIndex];
                     if (SplitIdentifier(Identifier, ',', ',', out IList<Identifier> Split))
                     {
-                        newBlockList = (BlockList<Identifier>)DeepCloneBlockList((IBlockList)identifierBlockList, cloneCommentGuid: false);
+                        newBlockList = (IBlockList<Identifier>)DeepCloneBlockList((IBlockList)identifierBlockList, cloneCommentGuid: false);
 
                         newBlockList.NodeBlockList[BlockIndex].NodeList.RemoveAt(NodeIndex);
                         for (int i = 0; i < Split.Count; i++)
@@ -130,18 +130,18 @@ namespace BaseNodeHelper
             return false;
         }
 
-        private static bool GetComplexifiedNameBlockList(BlockList<Name> nameBlockList, out BlockList<Name> newBlockList)
+        private static bool GetComplexifiedNameBlockList(IBlockList<Name> nameBlockList, out IBlockList<Name> newBlockList)
         {
             for (int BlockIndex = 0; BlockIndex < nameBlockList.NodeBlockList.Count; BlockIndex++)
             {
-                Block<Name> Block = nameBlockList.NodeBlockList[BlockIndex];
+                IBlock<Name> Block = nameBlockList.NodeBlockList[BlockIndex];
 
                 for (int NodeIndex = 0; NodeIndex < Block.NodeList.Count; NodeIndex++)
                 {
                     Name Name = Block.NodeList[NodeIndex];
                     if (SplitName(Name, ',', ',', out IList<Name> Split))
                     {
-                        newBlockList = (BlockList<Name>)DeepCloneBlockList((IBlockList)nameBlockList, cloneCommentGuid: false);
+                        newBlockList = (IBlockList<Name>)DeepCloneBlockList((IBlockList)nameBlockList, cloneCommentGuid: false);
 
                         newBlockList.NodeBlockList[BlockIndex].NodeList.RemoveAt(NodeIndex);
                         for (int i = 0; i < Split.Count; i++)
@@ -211,11 +211,11 @@ namespace BaseNodeHelper
             return SplitList;
         }
 
-        private static bool GetComplexifiedArgumentBlockList(BlockList<Argument> argumentBlocks, out BlockList<Argument> newArgumentBlocks)
+        private static bool GetComplexifiedArgumentBlockList(IBlockList<Argument> argumentBlocks, out IBlockList<Argument> newArgumentBlocks)
         {
             for (int BlockIndex = 0; BlockIndex < argumentBlocks.NodeBlockList.Count; BlockIndex++)
             {
-                Block<Argument> Block = argumentBlocks.NodeBlockList[BlockIndex];
+                IBlock<Argument> Block = argumentBlocks.NodeBlockList[BlockIndex];
 
                 for (int NodeIndex = 0; NodeIndex < Block.NodeList.Count; NodeIndex++)
                 {
@@ -223,7 +223,7 @@ namespace BaseNodeHelper
 
                     if (SplitArgument(Argument, out IList<Argument> SplitArgumentList))
                     {
-                        newArgumentBlocks = (BlockList<Argument>)DeepCloneBlockList((IBlockList)argumentBlocks, cloneCommentGuid: false);
+                        newArgumentBlocks = (IBlockList<Argument>)DeepCloneBlockList((IBlockList)argumentBlocks, cloneCommentGuid: false);
 
                         Block = newArgumentBlocks.NodeBlockList[BlockIndex];
                         Block.NodeList.RemoveAt(NodeIndex);
@@ -237,7 +237,7 @@ namespace BaseNodeHelper
 
             for (int BlockIndex = 0; BlockIndex < argumentBlocks.NodeBlockList.Count; BlockIndex++)
             {
-                Block<Argument> Block = argumentBlocks.NodeBlockList[BlockIndex];
+                IBlock<Argument> Block = argumentBlocks.NodeBlockList[BlockIndex];
 
                 for (int NodeIndex = 0; NodeIndex < Block.NodeList.Count; NodeIndex++)
                 {
@@ -246,7 +246,7 @@ namespace BaseNodeHelper
                     if (GetComplexifiedArgument(Argument, out IList<Argument> ComplexifiedArgumentList))
                     {
                         Argument ComplexifiedArgument = ComplexifiedArgumentList[0];
-                        newArgumentBlocks = (BlockList<Argument>)DeepCloneBlockList((IBlockList)argumentBlocks, cloneCommentGuid: false);
+                        newArgumentBlocks = (IBlockList<Argument>)DeepCloneBlockList((IBlockList)argumentBlocks, cloneCommentGuid: false);
 
                         Block = newArgumentBlocks.NodeBlockList[BlockIndex];
                         Block.NodeList[NodeIndex] = ComplexifiedArgument;
@@ -282,11 +282,11 @@ namespace BaseNodeHelper
             return false;
         }
 
-        private static bool GetComplexifiedAssignmentArgumentBlockList(BlockList<AssignmentArgument> argumentBlocks, out BlockList<AssignmentArgument> newAssignmentArgumentBlocks)
+        private static bool GetComplexifiedAssignmentArgumentBlockList(IBlockList<AssignmentArgument> argumentBlocks, out IBlockList<AssignmentArgument> newAssignmentArgumentBlocks)
         {
             for (int BlockIndex = 0; BlockIndex < argumentBlocks.NodeBlockList.Count; BlockIndex++)
             {
-                Block<AssignmentArgument> Block = argumentBlocks.NodeBlockList[BlockIndex];
+                IBlock<AssignmentArgument> Block = argumentBlocks.NodeBlockList[BlockIndex];
 
                 for (int NodeIndex = 0; NodeIndex < Block.NodeList.Count; NodeIndex++)
                 {
@@ -297,7 +297,7 @@ namespace BaseNodeHelper
                         AssignmentArgument ComplexifiedAssignmentArgument = ComplexifiedAssignmentArgumentList[0] as AssignmentArgument;
                         Debug.Assert(ComplexifiedAssignmentArgument != null, $"The list can't contain anything else than {nameof(AssignmentArgument)} elements");
 
-                        newAssignmentArgumentBlocks = (BlockList<AssignmentArgument>)DeepCloneBlockList((IBlockList)argumentBlocks, cloneCommentGuid: false);
+                        newAssignmentArgumentBlocks = (IBlockList<AssignmentArgument>)DeepCloneBlockList((IBlockList)argumentBlocks, cloneCommentGuid: false);
 
                         Block = newAssignmentArgumentBlocks.NodeBlockList[BlockIndex];
                         Block.NodeList[NodeIndex] = ComplexifiedAssignmentArgument;
@@ -310,11 +310,11 @@ namespace BaseNodeHelper
             return false;
         }
 
-        private static bool GetComplexifiedQualifiedNameBlockList(BlockList<QualifiedName> argumentBlocks, out BlockList<QualifiedName> newQualifiedNameBlocks)
+        private static bool GetComplexifiedQualifiedNameBlockList(IBlockList<QualifiedName> argumentBlocks, out IBlockList<QualifiedName> newQualifiedNameBlocks)
         {
             for (int BlockIndex = 0; BlockIndex < argumentBlocks.NodeBlockList.Count; BlockIndex++)
             {
-                Block<QualifiedName> Block = argumentBlocks.NodeBlockList[BlockIndex];
+                IBlock<QualifiedName> Block = argumentBlocks.NodeBlockList[BlockIndex];
 
                 for (int NodeIndex = 0; NodeIndex < Block.NodeList.Count; NodeIndex++)
                 {
@@ -323,7 +323,7 @@ namespace BaseNodeHelper
                     if (GetComplexifiedQualifiedName(QualifiedName, out IList<QualifiedName> ComplexifiedQualifiedNameList))
                     {
                         QualifiedName ComplexifiedQualifiedName = ComplexifiedQualifiedNameList[0];
-                        newQualifiedNameBlocks = (BlockList<QualifiedName>)DeepCloneBlockList((IBlockList)argumentBlocks, cloneCommentGuid: false);
+                        newQualifiedNameBlocks = (IBlockList<QualifiedName>)DeepCloneBlockList((IBlockList)argumentBlocks, cloneCommentGuid: false);
 
                         Block = newQualifiedNameBlocks.NodeBlockList[BlockIndex];
                         Block.NodeList[NodeIndex] = ComplexifiedQualifiedName;
@@ -402,18 +402,18 @@ namespace BaseNodeHelper
             return false;
         }
 
-        private static bool GetComplexifiedEntityDeclarationBlockList(BlockList<EntityDeclaration> identifierBlockList, out BlockList<EntityDeclaration> newBlockList)
+        private static bool GetComplexifiedEntityDeclarationBlockList(IBlockList<EntityDeclaration> identifierBlockList, out IBlockList<EntityDeclaration> newBlockList)
         {
             for (int BlockIndex = 0; BlockIndex < identifierBlockList.NodeBlockList.Count; BlockIndex++)
             {
-                Block<EntityDeclaration> Block = identifierBlockList.NodeBlockList[BlockIndex];
+                IBlock<EntityDeclaration> Block = identifierBlockList.NodeBlockList[BlockIndex];
 
                 for (int NodeIndex = 0; NodeIndex < Block.NodeList.Count; NodeIndex++)
                 {
                     EntityDeclaration EntityDeclaration = Block.NodeList[NodeIndex];
                     if (SplitEntityDeclaration(EntityDeclaration, out IList<EntityDeclaration> Split))
                     {
-                        newBlockList = (BlockList<EntityDeclaration>)DeepCloneBlockList((IBlockList)identifierBlockList, cloneCommentGuid: false);
+                        newBlockList = (IBlockList<EntityDeclaration>)DeepCloneBlockList((IBlockList)identifierBlockList, cloneCommentGuid: false);
 
                         newBlockList.NodeBlockList[BlockIndex].NodeList.RemoveAt(NodeIndex);
                         for (int i = 0; i < Split.Count; i++)
@@ -475,11 +475,11 @@ namespace BaseNodeHelper
             return false;
         }
 
-        private static bool GetComplexifiedTypeArgumentBlockList(BlockList<TypeArgument> typeArgumentBlocks, out BlockList<TypeArgument> newTypeArgumentBlocks)
+        private static bool GetComplexifiedTypeArgumentBlockList(IBlockList<TypeArgument> typeArgumentBlocks, out IBlockList<TypeArgument> newTypeArgumentBlocks)
         {
             for (int BlockIndex = 0; BlockIndex < typeArgumentBlocks.NodeBlockList.Count; BlockIndex++)
             {
-                Block<TypeArgument> Block = typeArgumentBlocks.NodeBlockList[BlockIndex];
+                IBlock<TypeArgument> Block = typeArgumentBlocks.NodeBlockList[BlockIndex];
 
                 for (int NodeIndex = 0; NodeIndex < Block.NodeList.Count; NodeIndex++)
                 {
@@ -487,7 +487,7 @@ namespace BaseNodeHelper
 
                     if (SplitTypeArgument(TypeArgument, out IList<TypeArgument> SplitTypeArgumentList))
                     {
-                        newTypeArgumentBlocks = (BlockList<TypeArgument>)DeepCloneBlockList((IBlockList)typeArgumentBlocks, cloneCommentGuid: false);
+                        newTypeArgumentBlocks = (IBlockList<TypeArgument>)DeepCloneBlockList((IBlockList)typeArgumentBlocks, cloneCommentGuid: false);
 
                         Block = newTypeArgumentBlocks.NodeBlockList[BlockIndex];
                         Block.NodeList.RemoveAt(NodeIndex);
@@ -501,7 +501,7 @@ namespace BaseNodeHelper
 
             for (int BlockIndex = 0; BlockIndex < typeArgumentBlocks.NodeBlockList.Count; BlockIndex++)
             {
-                Block<TypeArgument> Block = typeArgumentBlocks.NodeBlockList[BlockIndex];
+                IBlock<TypeArgument> Block = typeArgumentBlocks.NodeBlockList[BlockIndex];
 
                 for (int NodeIndex = 0; NodeIndex < Block.NodeList.Count; NodeIndex++)
                 {
@@ -510,7 +510,7 @@ namespace BaseNodeHelper
                     if (GetComplexifiedTypeArgument(TypeArgument, out IList<TypeArgument> ComplexifiedTypeArgumentList))
                     {
                         TypeArgument ComplexifiedTypeArgument = ComplexifiedTypeArgumentList[0];
-                        newTypeArgumentBlocks = (BlockList<TypeArgument>)DeepCloneBlockList((IBlockList)typeArgumentBlocks, cloneCommentGuid: false);
+                        newTypeArgumentBlocks = (IBlockList<TypeArgument>)DeepCloneBlockList((IBlockList)typeArgumentBlocks, cloneCommentGuid: false);
 
                         Block = newTypeArgumentBlocks.NodeBlockList[BlockIndex];
                         Block.NodeList[NodeIndex] = ComplexifiedTypeArgument;
@@ -546,11 +546,11 @@ namespace BaseNodeHelper
             return false;
         }
 
-        private static bool GetComplexifiedObjectTypeBlockList(BlockList<ObjectType> objectTypeBlocks, out BlockList<ObjectType> newObjectTypeBlocks)
+        private static bool GetComplexifiedObjectTypeBlockList(IBlockList<ObjectType> objectTypeBlocks, out IBlockList<ObjectType> newObjectTypeBlocks)
         {
             for (int BlockIndex = 0; BlockIndex < objectTypeBlocks.NodeBlockList.Count; BlockIndex++)
             {
-                Block<ObjectType> Block = objectTypeBlocks.NodeBlockList[BlockIndex];
+                IBlock<ObjectType> Block = objectTypeBlocks.NodeBlockList[BlockIndex];
 
                 for (int NodeIndex = 0; NodeIndex < Block.NodeList.Count; NodeIndex++)
                 {
@@ -558,7 +558,7 @@ namespace BaseNodeHelper
 
                     if (SplitObjectType(ObjectType, out IList<ObjectType> SplitObjectTypeList))
                     {
-                        newObjectTypeBlocks = (BlockList<ObjectType>)DeepCloneBlockList((IBlockList)objectTypeBlocks, cloneCommentGuid: false);
+                        newObjectTypeBlocks = (IBlockList<ObjectType>)DeepCloneBlockList((IBlockList)objectTypeBlocks, cloneCommentGuid: false);
 
                         Block = newObjectTypeBlocks.NodeBlockList[BlockIndex];
                         Block.NodeList.RemoveAt(NodeIndex);
@@ -572,7 +572,7 @@ namespace BaseNodeHelper
 
             for (int BlockIndex = 0; BlockIndex < objectTypeBlocks.NodeBlockList.Count; BlockIndex++)
             {
-                Block<ObjectType> Block = objectTypeBlocks.NodeBlockList[BlockIndex];
+                IBlock<ObjectType> Block = objectTypeBlocks.NodeBlockList[BlockIndex];
 
                 for (int NodeIndex = 0; NodeIndex < Block.NodeList.Count; NodeIndex++)
                 {
@@ -581,7 +581,7 @@ namespace BaseNodeHelper
                     if (GetComplexifiedObjectType(ObjectType, out IList<ObjectType> ComplexifiedObjectTypeList))
                     {
                         ObjectType ComplexifiedObjectType = ComplexifiedObjectTypeList[0];
-                        newObjectTypeBlocks = (BlockList<ObjectType>)DeepCloneBlockList((IBlockList)objectTypeBlocks, cloneCommentGuid: false);
+                        newObjectTypeBlocks = (IBlockList<ObjectType>)DeepCloneBlockList((IBlockList)objectTypeBlocks, cloneCommentGuid: false);
 
                         Block = newObjectTypeBlocks.NodeBlockList[BlockIndex];
                         Block.NodeList[NodeIndex] = ComplexifiedObjectType;

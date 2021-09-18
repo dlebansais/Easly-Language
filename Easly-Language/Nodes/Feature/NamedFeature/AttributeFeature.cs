@@ -8,6 +8,6 @@ namespace BaseNode
     public class AttributeFeature : NamedFeature
     {
         public virtual ObjectType EntityType { get; set; }
-        public virtual BlockList<Assertion> EnsureBlocks { get; set; }
+        public virtual IBlockList<Assertion> EnsureBlocks { get; set; }
     }
 }

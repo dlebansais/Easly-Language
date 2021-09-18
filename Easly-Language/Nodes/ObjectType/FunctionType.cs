@@ -8,6 +8,6 @@ namespace BaseNode
     public class FunctionType : ObjectType
     {
         public virtual ObjectType BaseType { get; set; }
-        public virtual BlockList<QueryOverloadType> OverloadBlocks { get; set; }
+        public virtual IBlockList<QueryOverloadType> OverloadBlocks { get; set; }
     }
 }

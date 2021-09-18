@@ -8,6 +8,6 @@ namespace BaseNode
     public class IndexQueryExpression : Expression
     {
         public virtual Expression IndexedExpression { get; set; }
-        public virtual BlockList<Argument> ArgumentBlocks { get; set; }
+        public virtual IBlockList<Argument> ArgumentBlocks { get; set; }
     }
 }

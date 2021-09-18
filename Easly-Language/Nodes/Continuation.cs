@@ -8,6 +8,6 @@ namespace BaseNode
     public class Continuation : Node
     {
         public virtual Scope Instructions { get; set; }
-        public virtual BlockList<Instruction> CleanupBlocks { get; set; }
+        public virtual IBlockList<Instruction> CleanupBlocks { get; set; }
     }
 }

@@ -10,6 +10,6 @@ namespace BaseNode
     public class AgentExpression : Expression
     {
         public virtual Identifier Delegated { get; set; }
-        public virtual OptionalReference<ObjectType> BaseType { get; set; }
+        public virtual IOptionalReference<ObjectType> BaseType { get; set; }
     }
 }

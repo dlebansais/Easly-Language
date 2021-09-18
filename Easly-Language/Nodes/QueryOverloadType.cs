@@ -7,11 +7,11 @@ namespace BaseNode
     [System.Serializable]
     public class QueryOverloadType : Node
     {
-        public virtual BlockList<EntityDeclaration> ParameterBlocks { get; set; }
+        public virtual IBlockList<EntityDeclaration> ParameterBlocks { get; set; }
         public virtual ParameterEndStatus ParameterEnd { get; set; }
-        public virtual BlockList<EntityDeclaration> ResultBlocks { get; set; }
-        public virtual BlockList<Assertion> RequireBlocks { get; set; }
-        public virtual BlockList<Assertion> EnsureBlocks { get; set; }
-        public virtual BlockList<Identifier> ExceptionIdentifierBlocks { get; set; }
+        public virtual IBlockList<EntityDeclaration> ResultBlocks { get; set; }
+        public virtual IBlockList<Assertion> RequireBlocks { get; set; }
+        public virtual IBlockList<Assertion> EnsureBlocks { get; set; }
+        public virtual IBlockList<Identifier> ExceptionIdentifierBlocks { get; set; }
     }
 }

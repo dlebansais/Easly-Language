@@ -7,7 +7,7 @@ namespace BaseNode
     [System.Serializable]
     public class AssignmentArgument : Argument
     {
-        public virtual BlockList<Identifier> ParameterBlocks { get; set; }
+        public virtual IBlockList<Identifier> ParameterBlocks { get; set; }
         public virtual Expression Source { get; set; }
     }
 }

@@ -8,6 +8,6 @@ namespace BaseNode
     public class QueryExpression : Expression
     {
         public virtual QualifiedName Query { get; set; }
-        public virtual BlockList<Argument> ArgumentBlocks { get; set; }
+        public virtual IBlockList<Argument> ArgumentBlocks { get; set; }
     }
 }

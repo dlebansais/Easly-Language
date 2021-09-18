@@ -15,7 +15,7 @@ namespace BaseNodeHelper
         {
             complexifiedAttachmentList = null;
 
-            if (GetComplexifiedObjectTypeBlockList(node.AttachTypeBlocks, out BlockList<ObjectType> ComplexifiedAttachTypeBlocks))
+            if (GetComplexifiedObjectTypeBlockList(node.AttachTypeBlocks, out IBlockList<ObjectType> ComplexifiedAttachTypeBlocks))
             {
                 Scope ClonedInstructions = (Scope)DeepCloneNode(node.Instructions, cloneCommentGuid: false);
                 Attachment ComplexifiedAttachment = CreateAttachment(ComplexifiedAttachTypeBlocks, ClonedInstructions);

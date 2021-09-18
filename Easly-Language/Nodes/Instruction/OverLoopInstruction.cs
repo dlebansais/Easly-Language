@@ -10,10 +10,10 @@ namespace BaseNode
     public class OverLoopInstruction : Instruction
     {
         public virtual Expression OverList { get; set; }
-        public virtual BlockList<Name> IndexerBlocks { get; set; }
+        public virtual IBlockList<Name> IndexerBlocks { get; set; }
         public virtual IterationType Iteration { get; set; }
         public virtual Scope LoopInstructions { get; set; }
-        public virtual OptionalReference<Identifier> ExitEntityName { get; set; }
-        public virtual BlockList<Assertion> InvariantBlocks { get; set; }
+        public virtual IOptionalReference<Identifier> ExitEntityName { get; set; }
+        public virtual IBlockList<Assertion> InvariantBlocks { get; set; }
     }
 }
