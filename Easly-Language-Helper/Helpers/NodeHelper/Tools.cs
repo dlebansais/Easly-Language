@@ -549,26 +549,45 @@ namespace BaseNodeHelper
             {
                 case QueryExpression AsQueryExpression:
                     return SimplifyQueryExpression(AsQueryExpression, out simplifiedNode);
-                case AgentExpression AsAgentExpression:
-                    return SimplifyAgentExpression(AsAgentExpression, out simplifiedNode);
-                case AssertionTagExpression AsAssertionTagExpression:
-                    return SimplifyAssertionTagExpression(AsAssertionTagExpression, out simplifiedNode);
                 case BinaryConditionalExpression AsBinaryConditionalExpression:
                     return SimplifyBinaryConditionalExpression(AsBinaryConditionalExpression, out simplifiedNode);
                 case BinaryOperatorExpression AsBinaryOperatorExpression:
                     return SimplifyBinaryOperatorExpression(AsBinaryOperatorExpression, out simplifiedNode);
-                case ClassConstantExpression AsClassConstantExpression:
-                    return SimplifyClassConstantExpression(AsClassConstantExpression, out simplifiedNode);
-                case CloneOfExpression AsCloneOfExpression:
-                    return SimplifyCloneOfExpression(AsCloneOfExpression, out simplifiedNode);
-                case EntityExpression AsEntityExpression:
-                    return SimplifyEntityExpression(AsEntityExpression, out simplifiedNode);
                 case EqualityExpression AsEqualityExpression:
                     return SimplifyEqualityExpression(AsEqualityExpression, out simplifiedNode);
                 case IndexQueryExpression AsIndexQueryExpression:
                     return SimplifyIndexQueryExpression(AsIndexQueryExpression, out simplifiedNode);
                 case InitializedObjectExpression AsInitializedObjectExpression:
                     return SimplifyInitializedObjectExpression(AsInitializedObjectExpression, out simplifiedNode);
+                case PrecursorExpression AsPrecursorExpression:
+                    return SimplifyPrecursorExpression(AsPrecursorExpression, out simplifiedNode);
+                case PrecursorIndexExpression AsPrecursorIndexExpression:
+                    return SimplifyPrecursorIndexExpression(AsPrecursorIndexExpression, out simplifiedNode);
+                case ResultOfExpression AsResultOfExpression:
+                    return SimplifyResultOfExpression(AsResultOfExpression, out simplifiedNode);
+                case UnaryNotExpression AsUnaryNotExpression:
+                    return SimplifyUnaryNotExpression(AsUnaryNotExpression, out simplifiedNode);
+                case UnaryOperatorExpression AsUnaryOperatorExpression:
+                    return SimplifyUnaryOperatorExpression(AsUnaryOperatorExpression, out simplifiedNode);
+                default:
+                    return GetSimplifiedExpressionSingle(nodeExpression, out simplifiedNode);
+            }
+        }
+
+        public static bool GetSimplifiedExpressionSingle(Expression nodeExpression, out Node simplifiedNode)
+        {
+            switch (nodeExpression)
+            {
+                case AgentExpression AsAgentExpression:
+                    return SimplifyAgentExpression(AsAgentExpression, out simplifiedNode);
+                case AssertionTagExpression AsAssertionTagExpression:
+                    return SimplifyAssertionTagExpression(AsAssertionTagExpression, out simplifiedNode);
+                case ClassConstantExpression AsClassConstantExpression:
+                    return SimplifyClassConstantExpression(AsClassConstantExpression, out simplifiedNode);
+                case CloneOfExpression AsCloneOfExpression:
+                    return SimplifyCloneOfExpression(AsCloneOfExpression, out simplifiedNode);
+                case EntityExpression AsEntityExpression:
+                    return SimplifyEntityExpression(AsEntityExpression, out simplifiedNode);
                 case KeywordEntityExpression AsKeywordEntityExpression:
                     return SimplifyKeywordEntityExpression(AsKeywordEntityExpression, out simplifiedNode);
                 case KeywordExpression AsKeywordExpression:
@@ -583,18 +602,8 @@ namespace BaseNodeHelper
                     return SimplifyNewExpression(AsNewExpression, out simplifiedNode);
                 case OldExpression AsOldExpression:
                     return SimplifyOldExpression(AsOldExpression, out simplifiedNode);
-                case PrecursorExpression AsPrecursorExpression:
-                    return SimplifyPrecursorExpression(AsPrecursorExpression, out simplifiedNode);
-                case PrecursorIndexExpression AsPrecursorIndexExpression:
-                    return SimplifyPrecursorIndexExpression(AsPrecursorIndexExpression, out simplifiedNode);
                 case PreprocessorExpression AsPreprocessorExpression:
                     return SimplifyPreprocessorExpression(AsPreprocessorExpression, out simplifiedNode);
-                case ResultOfExpression AsResultOfExpression:
-                    return SimplifyResultOfExpression(AsResultOfExpression, out simplifiedNode);
-                case UnaryNotExpression AsUnaryNotExpression:
-                    return SimplifyUnaryNotExpression(AsUnaryNotExpression, out simplifiedNode);
-                case UnaryOperatorExpression AsUnaryOperatorExpression:
-                    return SimplifyUnaryOperatorExpression(AsUnaryOperatorExpression, out simplifiedNode);
                 default:
                     simplifiedNode = null;
                     return false;
@@ -613,12 +622,8 @@ namespace BaseNodeHelper
                     return SimplifyAssignmentInstruction(AsAssignmentInstruction, out simplifiedNode);
                 case AttachmentInstruction AsAttachmentInstruction:
                     return SimplifyAttachmentInstruction(AsAttachmentInstruction, out simplifiedNode);
-                case CheckInstruction AsCheckInstruction:
-                    return SimplifyCheckInstruction(AsCheckInstruction, out simplifiedNode);
                 case CreateInstruction AsCreateInstruction:
                     return SimplifyCreateInstruction(AsCreateInstruction, out simplifiedNode);
-                case DebugInstruction AsDebugInstruction:
-                    return SimplifyDebugInstruction(AsDebugInstruction, out simplifiedNode);
                 case ForLoopInstruction AsForLoopInstruction:
                     return SimplifyForLoopInstruction(AsForLoopInstruction, out simplifiedNode);
                 case IfThenElseInstruction AsIfThenElseInstruction:
@@ -633,6 +638,19 @@ namespace BaseNodeHelper
                     return SimplifyOverLoopInstruction(AsOverLoopInstruction, out simplifiedNode);
                 case PrecursorIndexAssignmentInstruction AsPrecursorIndexAssignmentInstruction:
                     return SimplifyPrecursorIndexAssignmentInstruction(AsPrecursorIndexAssignmentInstruction, out simplifiedNode);
+                default:
+                    return GetSimplifiedInstructionSingle(nodeInstruction, out simplifiedNode);
+            }
+        }
+
+        public static bool GetSimplifiedInstructionSingle(Instruction nodeInstruction, out Node simplifiedNode)
+        {
+            switch (nodeInstruction)
+            {
+                case CheckInstruction AsCheckInstruction:
+                    return SimplifyCheckInstruction(AsCheckInstruction, out simplifiedNode);
+                case DebugInstruction AsDebugInstruction:
+                    return SimplifyDebugInstruction(AsDebugInstruction, out simplifiedNode);
                 case PrecursorInstruction AsPrecursorInstruction:
                     return SimplifyPrecursorInstruction(AsPrecursorInstruction, out simplifiedNode);
                 case RaiseEventInstruction AsRaiseEventInstruction:

@@ -405,15 +405,13 @@ namespace BaseNodeHelper
                     complexifiedExpressionList.Add(ComplexifiedKeywordEntityExpression);
             }
             else
-                return GetComplexifiedQueryExpressionSingle(node, out complexifiedExpressionList);
+                return GetComplexifiedQueryExpressionSingle1(node, out complexifiedExpressionList);
 
             return complexifiedExpressionList != null;
         }
 
-        private static bool GetComplexifiedQueryExpressionSingle(QueryExpression node, out IList<Expression> complexifiedExpressionList)
+        private static bool GetComplexifiedQueryExpressionSingle1(QueryExpression node, out IList<Expression> complexifiedExpressionList)
         {
-            complexifiedExpressionList = null;
-
             if (ComplexifyAsManifestNumberExpression(node, out ManifestNumberExpression ComplexifiedManifestNumberExpression))
                 complexifiedExpressionList = new List<Expression>() { ComplexifiedManifestNumberExpression };
             else if (ComplexifyAsAgentExpression(node, out AgentExpression ComplexifiedAgentExpression))
@@ -432,7 +430,15 @@ namespace BaseNodeHelper
                 complexifiedExpressionList = new List<Expression>() { ComplexifiedBinaryOperatorExpression };
             else if (ComplexifyAsClassConstantExpression(node, out ClassConstantExpression ComplexifiedClassConstantExpression))
                 complexifiedExpressionList = new List<Expression>() { ComplexifiedClassConstantExpression };
-            else if (ComplexifyAsCloneOfExpression(node, out CloneOfExpression ComplexifiedCloneOfExpression))
+            else
+                return GetComplexifiedQueryExpressionSingle2(node, out complexifiedExpressionList);
+
+            return true;
+        }
+
+        private static bool GetComplexifiedQueryExpressionSingle2(QueryExpression node, out IList<Expression> complexifiedExpressionList)
+        {
+            if (ComplexifyAsCloneOfExpression(node, out CloneOfExpression ComplexifiedCloneOfExpression))
                 complexifiedExpressionList = new List<Expression>() { ComplexifiedCloneOfExpression };
             else if (ComplexifyAsEqualExpression(node, out EqualityExpression ComplexifiedEqualityExpression))
                 complexifiedExpressionList = new List<Expression>() { ComplexifiedEqualityExpression };
@@ -448,7 +454,17 @@ namespace BaseNodeHelper
                 complexifiedExpressionList = new List<Expression>() { ComplexifiedManifestCharacterExpression };
             else if (ComplexifyAsManifestStringExpression(node, out ManifestStringExpression ComplexifiedManifestStringExpression))
                 complexifiedExpressionList = new List<Expression>() { ComplexifiedManifestStringExpression };
-            else if (ComplexifyAsNewExpression(node, out NewExpression ComplexifiedNewExpression))
+            else
+                return GetComplexifiedQueryExpressionSingle3(node, out complexifiedExpressionList);
+
+            return true;
+        }
+
+        private static bool GetComplexifiedQueryExpressionSingle3(QueryExpression node, out IList<Expression> complexifiedExpressionList)
+        {
+            complexifiedExpressionList = null;
+
+            if (ComplexifyAsNewExpression(node, out NewExpression ComplexifiedNewExpression))
                 complexifiedExpressionList = new List<Expression>() { ComplexifiedNewExpression };
             else if (ComplexifyAsOldExpression(node, out OldExpression ComplexifiedOldExpression))
                 complexifiedExpressionList = new List<Expression>() { ComplexifiedOldExpression };

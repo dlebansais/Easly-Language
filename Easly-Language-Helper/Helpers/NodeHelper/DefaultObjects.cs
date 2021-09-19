@@ -131,54 +131,67 @@ namespace BaseNodeHelper
             IList<string> PropertyNames = NodeTreeHelper.EnumChildNodeProperties(EmptyNode);
 
             foreach (string PropertyName in PropertyNames)
-            {
-                Type /*ChildInterfaceType,*/ ChildNodeType;
-
-                if (NodeTreeHelperChild.IsChildNodeProperty(EmptyNode, PropertyName, out ChildNodeType))
-                    InitializeChildNode(EmptyNode, PropertyName, CreateDefaultFromInterface(ChildNodeType));
-                else if (NodeTreeHelperOptional.IsOptionalChildNodeProperty(EmptyNode, PropertyName, out ChildNodeType))
-                    InitializeUnassignedOptionalChildNode(EmptyNode, PropertyName);
-                else if (NodeTreeHelperList.IsNodeListProperty(EmptyNode, PropertyName, out ChildNodeType))
-                    if (IsCollectionNeverEmpty(EmptyNode, PropertyName))
-                    {
-                        // Type NodeType = NodeTreeHelper.InterfaceTypeToNodeType(ChildNodeType);
-                        Type NodeType = ChildNodeType;
-
-                        Node FirstNode;
-                        if (NodeType.IsAbstract)
-                            FirstNode = CreateDefault(ChildNodeType);
-                        else
-                            FirstNode = CreateEmptyNode(NodeType);
-
-                        InitializeSimpleNodeList(EmptyNode, PropertyName, ChildNodeType, FirstNode);
-                    }
-                    else
-                        InitializeEmptyNodeList(EmptyNode, PropertyName, ChildNodeType);
-                else if (NodeTreeHelperBlockList.IsBlockListProperty(EmptyNode, PropertyName, /*out ChildInterfaceType,*/ out ChildNodeType))
-                    if (IsCollectionNeverEmpty(EmptyNode, PropertyName))
-                    {
-                        // Type NodeType = NodeTreeHelper.InterfaceTypeToNodeType(ChildInterfaceType);
-                        Type NodeType = ChildNodeType;
-
-                        Node FirstNode;
-                        if (NodeType.IsAbstract)
-                            FirstNode = /*CreateDefault(ChildInterfaceType)*/CreateDefault(NodeType);
-                        else
-                            FirstNode = CreateEmptyNode(NodeType);
-
-                        InitializeSimpleBlockList(EmptyNode, PropertyName, /*ChildInterfaceType,*/ ChildNodeType, FirstNode);
-                    }
-                    else
-                        InitializeEmptyBlockList(EmptyNode, PropertyName, /*ChildInterfaceType,*/ ChildNodeType);
-                else if (NodeTreeHelper.IsStringProperty(EmptyNode, PropertyName))
-                    NodeTreeHelper.SetStringProperty(EmptyNode, PropertyName, string.Empty);
-                else if (NodeTreeHelper.IsGuidProperty(EmptyNode, PropertyName))
-                    NodeTreeHelper.SetGuidProperty(EmptyNode, PropertyName, Guid.NewGuid());
-            }
+                CreateEmptyNodePropertyName(objectType, EmptyNode, PropertyName);
 
             InitializeDocumentation(EmptyNode);
 
             return EmptyNode;
+        }
+
+        public static void CreateEmptyNodePropertyName(Type objectType, Node emptyNode, string propertyName)
+        {
+            Type /*ChildInterfaceType,*/ ChildNodeType;
+
+            if (NodeTreeHelperChild.IsChildNodeProperty(emptyNode, propertyName, out ChildNodeType))
+                InitializeChildNode(emptyNode, propertyName, CreateDefaultFromInterface(ChildNodeType));
+            else if (NodeTreeHelperOptional.IsOptionalChildNodeProperty(emptyNode, propertyName, out _))
+                InitializeUnassignedOptionalChildNode(emptyNode, propertyName);
+            else if (NodeTreeHelperList.IsNodeListProperty(emptyNode, propertyName, out ChildNodeType))
+                CreateEmptyNodeList(objectType, emptyNode, propertyName, ChildNodeType);
+            else if (NodeTreeHelperBlockList.IsBlockListProperty(emptyNode, propertyName, /*out ChildInterfaceType,*/ out ChildNodeType))
+                CreateEmptyBlockList(objectType, emptyNode, propertyName, ChildNodeType);
+            else if (NodeTreeHelper.IsStringProperty(emptyNode, propertyName))
+                NodeTreeHelper.SetStringProperty(emptyNode, propertyName, string.Empty);
+            else if (NodeTreeHelper.IsGuidProperty(emptyNode, propertyName))
+                NodeTreeHelper.SetGuidProperty(emptyNode, propertyName, Guid.NewGuid());
+        }
+
+        public static void CreateEmptyNodeList(Type objectType, Node emptyNode, string propertyName, Type childNodeType)
+        {
+            if (IsCollectionNeverEmpty(emptyNode, propertyName))
+            {
+                // Type NodeType = NodeTreeHelper.InterfaceTypeToNodeType(ChildNodeType);
+                Type NodeType = childNodeType;
+
+                Node FirstNode;
+                if (NodeType.IsAbstract)
+                    FirstNode = CreateDefault(childNodeType);
+                else
+                    FirstNode = CreateEmptyNode(NodeType);
+
+                InitializeSimpleNodeList(emptyNode, propertyName, childNodeType, FirstNode);
+            }
+            else
+                InitializeEmptyNodeList(emptyNode, propertyName, childNodeType);
+        }
+
+        public static void CreateEmptyBlockList(Type objectType, Node emptyNode, string propertyName, Type childNodeType)
+        {
+            if (IsCollectionNeverEmpty(emptyNode, propertyName))
+            {
+                // Type NodeType = NodeTreeHelper.InterfaceTypeToNodeType(ChildInterfaceType);
+                Type NodeType = childNodeType;
+
+                Node FirstNode;
+                if (NodeType.IsAbstract)
+                    FirstNode = /*CreateDefault(ChildInterfaceType)*/CreateDefault(NodeType);
+                else
+                    FirstNode = CreateEmptyNode(NodeType);
+
+                InitializeSimpleBlockList(emptyNode, propertyName, /*ChildInterfaceType,*/ childNodeType, FirstNode);
+            }
+            else
+                InitializeEmptyBlockList(emptyNode, propertyName, /*ChildInterfaceType,*/ childNodeType);
         }
 
         public static bool IsEmptyNode(Node node)
@@ -290,11 +303,7 @@ namespace BaseNodeHelper
 
         private static Node CreateDefaultNoCheck(Type interfaceType)
         {
-            if (interfaceType == typeof(Argument) || interfaceType == typeof(PositionalArgument))
-                return CreateDefaultArgument();
-            else if (interfaceType == typeof(TypeArgument) || interfaceType == typeof(PositionalTypeArgument))
-                return CreateDefaultTypeArgument();
-            else if (interfaceType == typeof(Body) || interfaceType == typeof(EffectiveBody))
+            if (interfaceType == typeof(Body) || interfaceType == typeof(EffectiveBody))
                 return CreateDefaultBody();
             else if (interfaceType == typeof(Expression) || interfaceType == typeof(QueryExpression))
                 return CreateDefaultExpression();
@@ -304,6 +313,16 @@ namespace BaseNodeHelper
                 return CreateDefaultFeature();
             else if (interfaceType == typeof(ObjectType) || interfaceType == typeof(SimpleType))
                 return CreateDefaultType();
+            else
+                return CreateDefaultNoCheckArgument(interfaceType);
+        }
+
+        private static Node CreateDefaultNoCheckArgument(Type interfaceType)
+        {
+            if (interfaceType == typeof(Argument) || interfaceType == typeof(PositionalArgument))
+                return CreateDefaultArgument();
+            else if (interfaceType == typeof(TypeArgument) || interfaceType == typeof(PositionalTypeArgument))
+                return CreateDefaultTypeArgument();
             else
                 return CreateDefaultNoCheckSingle(interfaceType);
         }

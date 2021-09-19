@@ -54,97 +54,132 @@ namespace BaseNodeHelper
             IList<string> PropertyNames = NodeTreeHelper.EnumChildNodeProperties(root);
 
             foreach (string PropertyName in PropertyNames)
-            {
-                Type /*ChildInterfaceType,*/ ChildNodeType;
+                if (!IsValidProperty(nodeList, guidList, root, assertValid, PropertyName))
+                    return false;
 
-                if (NodeTreeHelperChild.IsChildNodeProperty(root, PropertyName, out ChildNodeType))
+            return true;
+        }
+
+        private static bool IsValidProperty(List<Node> nodeList, List<Guid> guidList, Node root, bool assertValid, string propertyName)
+        {
+            if (NodeTreeHelperChild.IsChildNodeProperty(root, propertyName, out _))
+                return IsValidChildNode(nodeList, guidList, root, assertValid, propertyName);
+            else if (NodeTreeHelperOptional.IsOptionalChildNodeProperty(root, propertyName, out _))
+                return IsValidOptionalChildNode(nodeList, guidList, root, assertValid, propertyName);
+            else if (NodeTreeHelperList.IsNodeListProperty(root, propertyName, out _))
+                return IsValidNodeList(nodeList, guidList, root, assertValid, propertyName);
+            else if (NodeTreeHelperBlockList.IsBlockListProperty(root, propertyName, /*out ChildInterfaceType,*/ out _))
+                return IsValidBlockList(nodeList, guidList, root, assertValid, propertyName);
+            else if (NodeTreeHelper.IsBooleanProperty(root, propertyName))
+                return true;
+            else if (NodeTreeHelper.IsEnumProperty(root, propertyName))
+                return IsValidEnumProperty(root, assertValid, propertyName);
+            else if (NodeTreeHelper.IsStringProperty(root, propertyName))
+                return IsValidStringProperty(root, assertValid, propertyName);
+            else if (NodeTreeHelper.IsGuidProperty(root, propertyName))
+                return IsValidGuidProperty(guidList, root, assertValid, propertyName);
+            else if (NodeTreeHelper.IsDocumentProperty(root, propertyName))
+                return true;
+            else
+                return FailIsValidCheck(assertValid);
+        }
+
+        private static bool IsValidChildNode(List<Node> nodeList, List<Guid> guidList, Node root, bool assertValid, string propertyName)
+        {
+            NodeTreeHelperChild.GetChildNode(root, propertyName, out Node ChildNode);
+            if (!IsValid(nodeList, guidList, ChildNode, assertValid))
+                return FailIsValidCheck(assertValid);
+
+            return true;
+        }
+
+        private static bool IsValidOptionalChildNode(List<Node> nodeList, List<Guid> guidList, Node root, bool assertValid, string propertyName)
+        {
+            NodeTreeHelperOptional.GetChildNode(root, propertyName, out _, out Node ChildNode);
+
+            if (ChildNode != null)
+            {
+                if (!IsValid(nodeList, guidList, ChildNode, assertValid))
+                    return FailIsValidCheck(assertValid);
+            }
+
+            return true;
+        }
+
+        private static bool IsValidNodeList(List<Node> nodeList, List<Guid> guidList, Node root, bool assertValid, string propertyName)
+        {
+            NodeTreeHelperList.GetChildNodeList(root, propertyName, out IReadOnlyList<Node> ChildNodeList);
+            if (ChildNodeList == null)
+                return FailIsValidCheck(assertValid);
+
+            for (int Index = 0; Index < ChildNodeList.Count; Index++)
+            {
+                Node ChildNode = ChildNodeList[Index];
+                if (!IsValid(nodeList, guidList, ChildNode, assertValid))
+                    return FailIsValidCheck(assertValid);
+            }
+
+            if (ChildNodeList.Count == 0 && NodeHelper.IsCollectionNeverEmpty(root, propertyName))
+                return FailIsValidCheck(assertValid);
+
+            return true;
+        }
+
+        private static bool IsValidBlockList(List<Node> nodeList, List<Guid> guidList, Node root, bool assertValid, string propertyName)
+        {
+            IBlockList BlockList = NodeTreeHelperBlockList.GetBlockList(root, propertyName);
+            if (!IsValidBlockList(nodeList, guidList, BlockList, assertValid))
+                return FailIsValidCheck(assertValid);
+
+            for (int BlockIndex = 0; BlockIndex < BlockList.NodeBlockList.Count; BlockIndex++)
+            {
+                IBlock Block = BlockList.NodeBlockList[BlockIndex] as IBlock;
+                if (!IsValidBlock(nodeList, guidList, Block, assertValid))
+                    return FailIsValidCheck(assertValid);
+
+                for (int Index = 0; Index < Block.NodeList.Count; Index++)
                 {
-                    NodeTreeHelperChild.GetChildNode(root, PropertyName, out Node ChildNode);
+                    Node ChildNode = Block.NodeList[Index] as Node;
                     if (!IsValid(nodeList, guidList, ChildNode, assertValid))
                         return FailIsValidCheck(assertValid);
                 }
-                else if (NodeTreeHelperOptional.IsOptionalChildNodeProperty(root, PropertyName, out ChildNodeType))
-                {
-                    NodeTreeHelperOptional.GetChildNode(root, PropertyName, out bool IsAssigned, out Node ChildNode);
-
-                    if (ChildNode != null)
-                    {
-                        if (!IsValid(nodeList, guidList, ChildNode, assertValid))
-                            return FailIsValidCheck(assertValid);
-                    }
-                }
-                else if (NodeTreeHelperList.IsNodeListProperty(root, PropertyName, out ChildNodeType))
-                {
-                    NodeTreeHelperList.GetChildNodeList(root, PropertyName, out IReadOnlyList<Node> ChildNodeList);
-                    if (ChildNodeList == null)
-                        return FailIsValidCheck(assertValid);
-
-                    for (int Index = 0; Index < ChildNodeList.Count; Index++)
-                    {
-                        Node ChildNode = ChildNodeList[Index];
-                        if (!IsValid(nodeList, guidList, ChildNode, assertValid))
-                            return FailIsValidCheck(assertValid);
-                    }
-
-                    if (ChildNodeList.Count == 0 && NodeHelper.IsCollectionNeverEmpty(root, PropertyName))
-                        return FailIsValidCheck(assertValid);
-                }
-                else if (NodeTreeHelperBlockList.IsBlockListProperty(root, PropertyName, /*out ChildInterfaceType,*/ out ChildNodeType))
-                {
-                    IBlockList BlockList = NodeTreeHelperBlockList.GetBlockList(root, PropertyName);
-                    if (!IsValidBlockList(nodeList, guidList, BlockList, assertValid))
-                        return FailIsValidCheck(assertValid);
-
-                    for (int BlockIndex = 0; BlockIndex < BlockList.NodeBlockList.Count; BlockIndex++)
-                    {
-                        IBlock Block = BlockList.NodeBlockList[BlockIndex] as IBlock;
-                        if (!IsValidBlock(nodeList, guidList, Block, assertValid))
-                            return FailIsValidCheck(assertValid);
-
-                        for (int Index = 0; Index < Block.NodeList.Count; Index++)
-                        {
-                            Node ChildNode = Block.NodeList[Index] as Node;
-                            if (!IsValid(nodeList, guidList, ChildNode, assertValid))
-                                return FailIsValidCheck(assertValid);
-                        }
-                    }
-
-                    if (BlockList.NodeBlockList.Count == 0 && NodeHelper.IsCollectionNeverEmpty(root, PropertyName))
-                        return FailIsValidCheck(assertValid);
-                }
-                else if (NodeTreeHelper.IsBooleanProperty(root, PropertyName))
-                {
-                }
-                else if (NodeTreeHelper.IsEnumProperty(root, PropertyName))
-                {
-                    NodeTreeHelper.GetEnumRange(root.GetType(), PropertyName, out int Min, out int Max);
-                    PropertyInfo EnumPropertyInfo = NodeTreeHelper.GetPropertyOf(root.GetType(), PropertyName);
-                    int Value = (int)EnumPropertyInfo.GetValue(root);
-                    if (Value < Min || Value > Max)
-                        return FailIsValidCheck(assertValid);
-                }
-                else if (NodeTreeHelper.IsStringProperty(root, PropertyName))
-                {
-                    if (NodeTreeHelper.GetString(root, PropertyName) == null)
-                        return FailIsValidCheck(assertValid);
-                }
-                else if (NodeTreeHelper.IsGuidProperty(root, PropertyName))
-                {
-                    Guid PropertyGuid = NodeTreeHelper.GetGuid(root, PropertyName);
-                    if (PropertyGuid == Guid.Empty)
-                        return FailIsValidCheck(assertValid);
-
-                    if (guidList.Contains(PropertyGuid))
-                        return FailIsValidCheck(assertValid);
-
-                    guidList.Add(PropertyGuid);
-                }
-                else if (NodeTreeHelper.IsDocumentProperty(root, PropertyName))
-                {
-                }
-                else
-                    return FailIsValidCheck(assertValid);
             }
+
+            if (BlockList.NodeBlockList.Count == 0 && NodeHelper.IsCollectionNeverEmpty(root, propertyName))
+                return FailIsValidCheck(assertValid);
+
+            return true;
+        }
+
+        private static bool IsValidEnumProperty(Node root, bool assertValid, string propertyName)
+        {
+            NodeTreeHelper.GetEnumRange(root.GetType(), propertyName, out int Min, out int Max);
+            PropertyInfo EnumPropertyInfo = NodeTreeHelper.GetPropertyOf(root.GetType(), propertyName);
+            int Value = (int)EnumPropertyInfo.GetValue(root);
+            if (Value < Min || Value > Max)
+                return FailIsValidCheck(assertValid);
+
+            return true;
+        }
+
+        private static bool IsValidStringProperty(Node root, bool assertValid, string propertyName)
+        {
+            if (NodeTreeHelper.GetString(root, propertyName) == null)
+                return FailIsValidCheck(assertValid);
+
+            return true;
+        }
+
+        private static bool IsValidGuidProperty(List<Guid> guidList, Node root, bool assertValid, string propertyName)
+        {
+            Guid PropertyGuid = NodeTreeHelper.GetGuid(root, propertyName);
+            if (PropertyGuid == Guid.Empty)
+                return FailIsValidCheck(assertValid);
+
+            if (guidList.Contains(PropertyGuid))
+                return FailIsValidCheck(assertValid);
+
+            guidList.Add(PropertyGuid);
 
             return true;
         }

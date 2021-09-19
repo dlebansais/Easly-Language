@@ -32,122 +32,152 @@ namespace BaseNodeHelper
             IList<string> PropertyNames = NodeTreeHelper.EnumChildNodeProperties(node);
 
             foreach (string NodePropertyName in PropertyNames)
-            {
-                Type /*ChildInterfaceType,*/ ChildNodeType;
+                if (!WalkProperty(node, callbacks, data, NodePropertyName))
+                    return false;
 
-                if (NodeTreeHelperChild.IsChildNodeProperty(node, NodePropertyName, out ChildNodeType))
+            return true;
+        }
+
+        private static bool WalkProperty(Node node, WalkCallbacks<TContext> callbacks, TContext data, string nodePropertyName)
+        {
+            if (NodeTreeHelperChild.IsChildNodeProperty(node, nodePropertyName, out _))
+                return WalkChildNode(node, callbacks, data, nodePropertyName);
+            else if (NodeTreeHelperOptional.IsOptionalChildNodeProperty(node, nodePropertyName, out _))
+                return WalkOptionalChildNode(node, callbacks, data, nodePropertyName);
+            else if (NodeTreeHelperList.IsNodeListProperty(node, nodePropertyName, out _))
+                return WalkNodeList(node, callbacks, data, nodePropertyName);
+            else if (NodeTreeHelperBlockList.IsBlockListProperty(node, nodePropertyName, /*out ChildInterfaceType,*/ out _))
+                return WalkBlockList(node, callbacks, data, nodePropertyName);
+            else
+                return WalkMiscellaneousProperty(node, callbacks, data, nodePropertyName);
+        }
+
+        private static bool WalkChildNode(Node node, WalkCallbacks<TContext> callbacks, TContext data, string nodePropertyName)
+        {
+            NodeTreeHelperChild.GetChildNode(node, nodePropertyName, out Node ChildNode);
+            if (!Walk(ChildNode, node, nodePropertyName, callbacks, data))
+                return false;
+
+            return true;
+        }
+
+        private static bool WalkOptionalChildNode(Node node, WalkCallbacks<TContext> callbacks, TContext data, string nodePropertyName)
+        {
+            NodeTreeHelperOptional.GetChildNode(node, nodePropertyName, out bool IsAssigned, out Node ChildNode);
+            if (IsAssigned)
+            {
+                Debug.Assert(ChildNode != null);
+
+                if (!Walk(ChildNode, node, nodePropertyName, callbacks, data))
+                    return false;
+            }
+
+            return true;
+        }
+
+        private static bool WalkNodeList(Node node, WalkCallbacks<TContext> callbacks, TContext data, string nodePropertyName)
+        {
+            NodeTreeHelperList.GetChildNodeList(node, nodePropertyName, out IReadOnlyList<Node> ChildNodeList);
+            Debug.Assert(ChildNodeList != null);
+
+            if (callbacks.HandlerList != null && !callbacks.HandlerList(node, nodePropertyName, ChildNodeList, callbacks, data))
+                return false;
+
+            if (callbacks.IsRecursive || callbacks.HandlerList == null)
+            {
+                for (int Index = 0; Index < ChildNodeList.Count; Index++)
                 {
-                    NodeTreeHelperChild.GetChildNode(node, NodePropertyName, out Node ChildNode);
-                    if (!Walk(ChildNode, node, NodePropertyName, callbacks, data))
+                    Node ChildNode = ChildNodeList[Index];
+                    if (!Walk(ChildNode, node, nodePropertyName, callbacks, data))
                         return false;
                 }
-                else if (NodeTreeHelperOptional.IsOptionalChildNodeProperty(node, NodePropertyName, out ChildNodeType))
+            }
+
+            return true;
+        }
+
+        private static bool WalkBlockList(Node node, WalkCallbacks<TContext> callbacks, TContext data, string nodePropertyName)
+        {
+            IBlockList BlockList = NodeTreeHelperBlockList.GetBlockList(node, nodePropertyName);
+            Debug.Assert(BlockList.NodeBlockList != null);
+
+            if (callbacks.HandlerBlockList != null && !callbacks.HandlerBlockList(node, nodePropertyName, BlockList, callbacks, data))
+                return false;
+
+            if (callbacks.IsRecursive || callbacks.HandlerBlockList == null)
+            {
+                string Key = callbacks.BlockSubstitution.Key;
+
+                if (Key != null)
                 {
-                    NodeTreeHelperOptional.GetChildNode(node, NodePropertyName, out bool IsAssigned, out Node ChildNode);
-                    if (IsAssigned)
+                    string Value = callbacks.BlockSubstitution.Value;
+                    Debug.Assert(Value != null);
+
+                    string ListPropertyName = nodePropertyName.Replace(Key, Value);
+                    Debug.Assert(ListPropertyName != nodePropertyName);
+
+                    PropertyInfo Property = node.GetType().GetProperty(ListPropertyName);
+                    Debug.Assert(Property != null);
+
+                    IList NodeList = Property.GetValue(node) as IList;
+                    Debug.Assert(NodeList != null);
+
+                    for (int Index = 0; Index < NodeList.Count; Index++)
                     {
+                        Node ChildNode = NodeList[Index] as Node;
                         Debug.Assert(ChildNode != null);
 
-                        if (!Walk(ChildNode, node, NodePropertyName, callbacks, data))
+                        if (!Walk(ChildNode, node, nodePropertyName, callbacks, data))
                             return false;
                     }
                 }
-                else if (NodeTreeHelperList.IsNodeListProperty(node, NodePropertyName, out ChildNodeType))
+                else
                 {
-                    NodeTreeHelperList.GetChildNodeList(node, NodePropertyName, out IReadOnlyList<Node> ChildNodeList);
-                    Debug.Assert(ChildNodeList != null);
-
-                    if (callbacks.HandlerList != null && !callbacks.HandlerList(node, NodePropertyName, ChildNodeList, callbacks, data))
-                        return false;
-
-                    if (callbacks.IsRecursive || callbacks.HandlerList == null)
+                    for (int BlockIndex = 0; BlockIndex < BlockList.NodeBlockList.Count; BlockIndex++)
                     {
-                        for (int Index = 0; Index < ChildNodeList.Count; Index++)
+                        IBlock Block = BlockList.NodeBlockList[BlockIndex] as IBlock;
+                        Debug.Assert(Block.NodeList != null);
+
+                        if (callbacks.HandlerBlock != null && !callbacks.HandlerBlock(node, nodePropertyName, BlockList, Block, callbacks, data))
+                            return false;
+
+                        for (int Index = 0; Index < Block.NodeList.Count; Index++)
                         {
-                            Node ChildNode = ChildNodeList[Index];
-                            if (!Walk(ChildNode, node, NodePropertyName, callbacks, data))
+                            Node ChildNode = Block.NodeList[Index] as Node;
+                            if (!Walk(ChildNode, node, nodePropertyName, callbacks, data))
                                 return false;
                         }
                     }
                 }
-                else if (NodeTreeHelperBlockList.IsBlockListProperty(node, NodePropertyName, /*out ChildInterfaceType,*/ out ChildNodeType))
-                {
-                    IBlockList BlockList = NodeTreeHelperBlockList.GetBlockList(node, NodePropertyName);
-                    Debug.Assert(BlockList.NodeBlockList != null);
+            }
 
-                    if (callbacks.HandlerBlockList != null && !callbacks.HandlerBlockList(node, NodePropertyName, BlockList, callbacks, data))
-                        return false;
+            return true;
+        }
 
-                    if (callbacks.IsRecursive || callbacks.HandlerBlockList == null)
-                    {
-                        string Key = callbacks.BlockSubstitution.Key;
-
-                        if (Key != null)
-                        {
-                            string Value = callbacks.BlockSubstitution.Value;
-                            Debug.Assert(Value != null);
-
-                            string ListPropertyName = NodePropertyName.Replace(Key, Value);
-                            Debug.Assert(ListPropertyName != NodePropertyName);
-
-                            PropertyInfo Property = node.GetType().GetProperty(ListPropertyName);
-                            Debug.Assert(Property != null);
-
-                            IList NodeList = Property.GetValue(node) as IList;
-                            Debug.Assert(NodeList != null);
-
-                            for (int Index = 0; Index < NodeList.Count; Index++)
-                            {
-                                Node ChildNode = NodeList[Index] as Node;
-                                Debug.Assert(ChildNode != null);
-
-                                if (!Walk(ChildNode, node, NodePropertyName, callbacks, data))
-                                    return false;
-                            }
-                        }
-                        else
-                        {
-                            for (int BlockIndex = 0; BlockIndex < BlockList.NodeBlockList.Count; BlockIndex++)
-                            {
-                                IBlock Block = BlockList.NodeBlockList[BlockIndex] as IBlock;
-                                Debug.Assert(Block.NodeList != null);
-
-                                if (callbacks.HandlerBlock != null && !callbacks.HandlerBlock(node, NodePropertyName, BlockList, Block, callbacks, data))
-                                    return false;
-
-                                for (int Index = 0; Index < Block.NodeList.Count; Index++)
-                                {
-                                    Node ChildNode = Block.NodeList[Index] as Node;
-                                    if (!Walk(ChildNode, node, NodePropertyName, callbacks, data))
-                                        return false;
-                                }
-                            }
-                        }
-                    }
-                }
-                else if (NodeTreeHelper.IsBooleanProperty(node, NodePropertyName))
-                {
-                    if (callbacks.HandlerEnum != null && !callbacks.HandlerEnum(node, NodePropertyName, data))
-                        return false;
-                }
-                else if (NodeTreeHelper.IsEnumProperty(node, NodePropertyName))
-                {
-                    if (callbacks.HandlerEnum != null && !callbacks.HandlerEnum(node, NodePropertyName, data))
-                        return false;
-                }
-                else if (NodeTreeHelper.IsStringProperty(node, NodePropertyName))
-                {
-                    if (callbacks.HandlerString != null && !callbacks.HandlerString(node, NodePropertyName, data))
-                        return false;
-                }
-                else if (NodeTreeHelper.IsGuidProperty(node, NodePropertyName))
-                {
-                    if (callbacks.HandlerGuid != null && !callbacks.HandlerGuid(node, NodePropertyName, data))
-                        return false;
-                }
-                else if (NodeTreeHelper.IsDocumentProperty(node, NodePropertyName))
-                {
-                }
+        private static bool WalkMiscellaneousProperty(Node node, WalkCallbacks<TContext> callbacks, TContext data, string nodePropertyName)
+        {
+            if (NodeTreeHelper.IsBooleanProperty(node, nodePropertyName))
+            {
+                if (callbacks.HandlerEnum != null && !callbacks.HandlerEnum(node, nodePropertyName, data))
+                    return false;
+            }
+            else if (NodeTreeHelper.IsEnumProperty(node, nodePropertyName))
+            {
+                if (callbacks.HandlerEnum != null && !callbacks.HandlerEnum(node, nodePropertyName, data))
+                    return false;
+            }
+            else if (NodeTreeHelper.IsStringProperty(node, nodePropertyName))
+            {
+                if (callbacks.HandlerString != null && !callbacks.HandlerString(node, nodePropertyName, data))
+                    return false;
+            }
+            else if (NodeTreeHelper.IsGuidProperty(node, nodePropertyName))
+            {
+                if (callbacks.HandlerGuid != null && !callbacks.HandlerGuid(node, nodePropertyName, data))
+                    return false;
+            }
+            else if (NodeTreeHelper.IsDocumentProperty(node, nodePropertyName))
+            {
             }
 
             return true;

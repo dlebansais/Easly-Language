@@ -12,9 +12,6 @@ namespace BaseNodeHelper
     {
         private static bool GetComplexifiedInstruction(Instruction node, out IList<Instruction> complexifiedInstructionList)
         {
-            complexifiedInstructionList = null;
-            bool IsHandled = false;
-
             switch (node)
             {
                 case AsLongAsInstruction AsAsLongAsInstruction:
@@ -25,9 +22,6 @@ namespace BaseNodeHelper
 
                 case AttachmentInstruction AsAttachmentInstruction:
                     return GetComplexifiedAttachmentInstruction(AsAttachmentInstruction, out complexifiedInstructionList);
-
-                case CheckInstruction AsCheckInstruction:
-                    return GetComplexifiedCheckInstruction(AsCheckInstruction, out complexifiedInstructionList);
 
                 case CommandInstruction AsCommandInstruction:
                     return GetComplexifiedCommandInstruction(AsCommandInstruction, out complexifiedInstructionList);
@@ -44,14 +38,29 @@ namespace BaseNodeHelper
                 case InspectInstruction AsInspectInstruction:
                     return GetComplexifiedInspectInstruction(AsInspectInstruction, out complexifiedInstructionList);
 
-                case KeywordAssignmentInstruction AsKeywordAssignmentInstruction:
-                    return GetComplexifiedKeywordAssignmentInstruction(AsKeywordAssignmentInstruction, out complexifiedInstructionList);
-
                 case OverLoopInstruction AsOverLoopInstruction:
                     return GetComplexifiedOverLoopInstruction(AsOverLoopInstruction, out complexifiedInstructionList);
 
                 case PrecursorIndexAssignmentInstruction AsPrecursorIndexAssignmentInstruction:
                     return GetComplexifiedPrecursorIndexAssignmentInstruction(AsPrecursorIndexAssignmentInstruction, out complexifiedInstructionList);
+
+                default:
+                    return GetComplexifiedInstructionSingle(node, out complexifiedInstructionList);
+            }
+        }
+
+        private static bool GetComplexifiedInstructionSingle(Instruction node, out IList<Instruction> complexifiedInstructionList)
+        {
+            complexifiedInstructionList = null;
+            bool IsHandled = false;
+
+            switch (node)
+            {
+                case CheckInstruction AsCheckInstruction:
+                    return GetComplexifiedCheckInstruction(AsCheckInstruction, out complexifiedInstructionList);
+
+                case KeywordAssignmentInstruction AsKeywordAssignmentInstruction:
+                    return GetComplexifiedKeywordAssignmentInstruction(AsKeywordAssignmentInstruction, out complexifiedInstructionList);
 
                 case PrecursorInstruction AsPrecursorInstruction:
                     return GetComplexifiedPrecursorInstruction(AsPrecursorInstruction, out complexifiedInstructionList);
@@ -267,15 +276,13 @@ namespace BaseNodeHelper
                 complexifiedInstructionList = new List<Instruction>() { NewCommandInstruction };
             }
             else
-                return GetComplexifiedCommandInstructionSingle(node, out complexifiedInstructionList);
+                return GetComplexifiedCommandInstructionSingle1(node, out complexifiedInstructionList);
 
             return true;
         }
 
-        private static bool GetComplexifiedCommandInstructionSingle(CommandInstruction node, out IList<Instruction> complexifiedInstructionList)
+        private static bool GetComplexifiedCommandInstructionSingle1(CommandInstruction node, out IList<Instruction> complexifiedInstructionList)
         {
-            complexifiedInstructionList = null;
-
             if (ComplexifyAsAsLongAsInstruction(node, out AsLongAsInstruction ComplexifiedAsLongAsInstruction))
                 complexifiedInstructionList = new List<Instruction>() { ComplexifiedAsLongAsInstruction };
             else if (ComplexifyAsAssignmentInstruction(node, out AssignmentInstruction ComplexifiedAssignmentInstruction))
@@ -290,7 +297,17 @@ namespace BaseNodeHelper
                 complexifiedInstructionList = new List<Instruction>() { ComplexifieDebugInstruction };
             else if (ComplexifyAsForLoopInstruction(node, out ForLoopInstruction ComplexifiedForLoopInstruction))
                 complexifiedInstructionList = new List<Instruction>() { ComplexifiedForLoopInstruction };
-            else if (ComplexifyAsIfThenElseInstruction(node, out IfThenElseInstruction ComplexifiedIfThenElseInstruction))
+            else
+                return GetComplexifiedCommandInstructionSingle2(node, out complexifiedInstructionList);
+
+            return true;
+        }
+
+        private static bool GetComplexifiedCommandInstructionSingle2(CommandInstruction node, out IList<Instruction> complexifiedInstructionList)
+        {
+            complexifiedInstructionList = null;
+
+            if (ComplexifyAsIfThenElseInstruction(node, out IfThenElseInstruction ComplexifiedIfThenElseInstruction))
                 complexifiedInstructionList = new List<Instruction>() { ComplexifiedIfThenElseInstruction };
             else if (ComplexifyAsIndexAssignmentInstruction(node, out IndexAssignmentInstruction ComplexifiedIndexAssignmentInstruction))
                 complexifiedInstructionList = new List<Instruction>() { ComplexifiedIndexAssignmentInstruction };
