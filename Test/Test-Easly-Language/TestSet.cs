@@ -4,6 +4,7 @@
     using Easly;
     using NUnit.Framework;
     using System;
+    using System.Collections;
     using System.Reflection;
 
     [TestFixture]
@@ -124,12 +125,16 @@
         [Test]
         public static void TestLanguageInitializers()
         {
-            MemberInfo FeatureInfo = typeof(Class).GetMember("EntityName")[0];
-            FeatureEntity TestFeatureEntity = new(FeatureInfo);
-            FunctionEntity TestFunctionEntity = new(FeatureInfo);
-            IndexerEntity TestIndexerEntity = new(FeatureInfo);
-            ProcedureEntity TestProcedureEntity = new(FeatureInfo);
-            PropertyEntity TestPropertyEntity = new(FeatureInfo);
+            MemberInfo FunctionInfo = typeof(IList).GetMember("IndexOf")[0];
+            PropertyInfo IndexerInfo = typeof(IList).GetProperty("Item");
+            MemberInfo ProcedureInfo = typeof(IList).GetMember("Clear")[0];
+            PropertyInfo PropertyInfo = typeof(Name).GetProperty("Text");
+
+            FeatureEntity TestFeatureEntity = new(FunctionInfo);
+            FunctionEntity TestFunctionEntity = new(FunctionInfo);
+            IndexerEntity TestIndexerEntity = new(IndexerInfo);
+            ProcedureEntity TestProcedureEntity = new(ProcedureInfo);
+            PropertyEntity TestPropertyEntity = new(PropertyInfo);
 
             SpecializedTypeEntity<Class> TestSpecializedTypeEntity = SpecializedTypeEntity<Class>.Singleton;
             TestSpecializedTypeEntity = SpecializedTypeEntity<Class>.Singleton; // Class twice to cover different branches in the code.
@@ -153,11 +158,25 @@
         [Test]
         public static void TestLanguageClasses()
         {
-            MemberInfo FeatureInfo = typeof(Class).GetMember("EntityName")[0];
-            FunctionEntity TestFunctionEntity = new(FeatureInfo);
-            IndexerEntity TestIndexerEntity = new(FeatureInfo);
-            ProcedureEntity TestProcedureEntity = new(FeatureInfo);
-            PropertyEntity TestPropertyEntity = new(FeatureInfo);
+            MemberInfo FunctionInfo = typeof(IList).GetMember("IndexOf")[0];
+            PropertyInfo IndexerInfo = typeof(IList).GetProperty("Item");
+            MemberInfo ProcedureInfo = typeof(IList).GetMember("Clear")[0];
+            PropertyInfo PropertyInfo = typeof(Name).GetProperty("Text");
+
+            FunctionEntity TestFunctionEntity = new(FunctionInfo);
+
+            /*
+            PropertyInfo[] AllMembers = typeof(IList).GetProperties();
+            string MemberString = string.Empty;
+            foreach (PropertyInfo Item in AllMembers)
+                MemberString += "\n" + Item.Name;
+
+            System.Diagnostics.Debug.Assert(false, MemberString);
+            */
+
+            IndexerEntity TestIndexerEntity = new(IndexerInfo);
+            ProcedureEntity TestProcedureEntity = new(ProcedureInfo);
+            PropertyEntity TestPropertyEntity = new(PropertyInfo);
 
             string TestName;
             TypeEntity TestType;
@@ -168,11 +187,10 @@
             TestType = TestPropertyEntity.Type;
             TestName = TestType.Name;
 
-            PropertyFeature TestFeature = new();
-            TestFeature.EntityName = new();
+            Name TestObject = new();
 
-            var TestValue = TestPropertyEntity.GetValue(TestFeature);
-            TestPropertyEntity.SetValue(TestFeature, TestValue);
+            var TestValue = TestPropertyEntity.GetValue(TestObject);
+            TestPropertyEntity.SetValue(TestObject, TestValue);
         }
     }
 }

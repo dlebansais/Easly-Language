@@ -12,7 +12,7 @@
         /// Initializes a new instance of the <see cref="PropertyEntity"/> class.
         /// </summary>
         /// <param name="featureInfo">The feature information from reflection.</param>
-        public PropertyEntity(MemberInfo featureInfo)
+        public PropertyEntity(PropertyInfo featureInfo)
             : base(featureInfo)
         {
         }

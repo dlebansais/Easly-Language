@@ -1,5 +1,6 @@
 ﻿namespace Easly
 {
+    using System;
     using System.Reflection;
 
     /// <summary>
@@ -26,8 +27,15 @@
         {
             get
             {
-                MethodInfo AsPropertyInfo = (MethodInfo)FeatureInfo;
-                return TypeEntity.BuiltTypeEntity(AsPropertyInfo.ReturnType);
+                switch (FeatureInfo)
+                {
+                    case PropertyInfo AsPropertyInfo:
+                        return TypeEntity.BuiltTypeEntity(AsPropertyInfo.PropertyType);
+                    case MethodInfo AsMethodInfo:
+                        return TypeEntity.BuiltTypeEntity(AsMethodInfo.ReturnType);
+                    default:
+                        throw new InvalidOperationException();
+                }
             }
         }
         #endregion
