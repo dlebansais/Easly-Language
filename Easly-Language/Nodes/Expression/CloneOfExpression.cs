@@ -10,7 +10,7 @@ namespace BaseNode
         /// <summary>
         /// Gets or sets the close type.
         /// </summary>
-        public virtual CloneType Type { get; set; }
+        public virtual CloneType Type { get; set; } = CloneType.Shallow;
 
         /// <summary>
         /// Gets or sets the cloned source.

@@ -10,6 +10,6 @@ namespace BaseNode
         /// <summary>
         /// Gets or sets the keyword.
         /// </summary>
-        public virtual Keyword Value { get; set; }
+        public virtual Keyword Value { get; set; } = Keyword.True;
     }
 }

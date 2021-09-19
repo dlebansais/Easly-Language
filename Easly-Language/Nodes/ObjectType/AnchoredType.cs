@@ -15,6 +15,6 @@ namespace BaseNode
         /// <summary>
         /// Gets or sets whether the anchor is at declaration or creation.
         /// </summary>
-        public virtual AnchorKinds AnchorKind { get; set; }
+        public virtual AnchorKinds AnchorKind { get; set; } = AnchorKinds.Declaration;
     }
 }

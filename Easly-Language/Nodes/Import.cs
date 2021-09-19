@@ -22,7 +22,7 @@ namespace BaseNode
         /// <summary>
         /// Gets or sets the import type.
         /// </summary>
-        public virtual ImportType Type { get; set; }
+        public virtual ImportType Type { get; set; } = ImportType.Latest;
 
         /// <summary>
         /// Gets or sets the list of renamed features.

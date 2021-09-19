@@ -15,7 +15,7 @@ namespace BaseNode
         /// <summary>
         /// Gets or sets whether the command accepts extra parameters.
         /// </summary>
-        public virtual ParameterEndStatus ParameterEnd { get; set; }
+        public virtual ParameterEndStatus ParameterEnd { get; set; } = ParameterEndStatus.Closed;
 
         /// <summary>
         /// Gets or sets the command body.

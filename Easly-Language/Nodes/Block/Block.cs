@@ -88,7 +88,7 @@ namespace BaseNode
         /// <summary>
         /// Gets or sets how nodes are replicated.
         /// </summary>
-        public virtual ReplicationStatus Replication { get; set; }
+        public virtual ReplicationStatus Replication { get; set; } = ReplicationStatus.Normal;
 
         /// <summary>
         /// Gets or sets the pattern to use for replications.

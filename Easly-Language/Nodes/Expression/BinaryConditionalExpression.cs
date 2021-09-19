@@ -15,7 +15,7 @@
         /// <summary>
         /// Gets or sets the conditional operator.
         /// </summary>
-        public virtual ConditionalTypes Conditional { get; set; }
+        public virtual ConditionalTypes Conditional { get; set; } = ConditionalTypes.And;
 
         /// <summary>
         /// Gets or sets the right operand.

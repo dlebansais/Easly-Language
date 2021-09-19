@@ -8,6 +8,6 @@ namespace BaseNode
         /// <summary>
         /// Gets or sets how the type is shared.
         /// </summary>
-        public virtual SharingType Sharing { get; set; }
+        public virtual SharingType Sharing { get; set; } = SharingType.NotShared;
     }
 }

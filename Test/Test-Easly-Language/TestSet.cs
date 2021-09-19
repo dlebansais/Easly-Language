@@ -3,6 +3,7 @@
     using BaseNode;
     using Easly;
     using NUnit.Framework;
+    using System;
     using System.Reflection;
 
     [TestFixture]
@@ -114,6 +115,13 @@
         }
 
         [Test]
+        public static void TestBlockInitializers()
+        {
+            Block<Node> TestBlock = new();
+            BlockList<Node> TestBlockList = new();
+        }
+
+        [Test]
         public static void TestLanguageInitializers()
         {
             MemberInfo FeatureInfo = typeof(Class).GetMember("EntityName")[0];
@@ -124,6 +132,11 @@
             PropertyEntity TestPropertyEntity = new(FeatureInfo);
 
             SpecializedTypeEntity<Class> TestSpecializedTypeEntity = SpecializedTypeEntity<Class>.Singleton;
+            TestSpecializedTypeEntity = SpecializedTypeEntity<Class>.Singleton; // Class twice to cover different branches in the code.
+
+            PropertyFeature TestFeature = new();
+            Entity TestEntity = Entity.FromThis(TestFeature);
+            Entity TestStatisEntity = Entity.FromStaticConstructor();
 
             DateAndTime TestDateAndTime = new();
             Event TestEvent = new(isAutoReset: true);
@@ -135,6 +148,31 @@
 
             SealableList<Node> TestSealableList = new();
             SealableDictionary<string, Node> TestSealableDictionary = new();
+        }
+
+        [Test]
+        public static void TestLanguageClasses()
+        {
+            MemberInfo FeatureInfo = typeof(Class).GetMember("EntityName")[0];
+            FunctionEntity TestFunctionEntity = new(FeatureInfo);
+            IndexerEntity TestIndexerEntity = new(FeatureInfo);
+            ProcedureEntity TestProcedureEntity = new(FeatureInfo);
+            PropertyEntity TestPropertyEntity = new(FeatureInfo);
+
+            string TestName;
+            TypeEntity TestType;
+
+            TestName = TestFunctionEntity.Name;
+            TestType = TestFunctionEntity.Type;
+            TestType = TestIndexerEntity.Type;
+            TestType = TestPropertyEntity.Type;
+            TestName = TestType.Name;
+
+            PropertyFeature TestFeature = new();
+            TestFeature.EntityName = new();
+
+            var TestValue = TestPropertyEntity.GetValue(TestFeature);
+            TestPropertyEntity.SetValue(TestFeature, TestValue);
         }
     }
 }

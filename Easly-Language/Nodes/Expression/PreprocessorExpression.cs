@@ -10,6 +10,6 @@ namespace BaseNode
         /// <summary>
         /// Gets or sets the preprocessor to get the value from.
         /// </summary>
-        public virtual PreprocessorMacro Value { get; set; }
+        public virtual PreprocessorMacro Value { get; set; } = PreprocessorMacro.DateAndTime;
     }
 }

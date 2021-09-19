@@ -22,7 +22,7 @@ namespace BaseNode
         /// <summary>
         /// Gets or sets whether the iteration is parallel or recursive.
         /// </summary>
-        public virtual IterationType Iteration { get; set; }
+        public virtual IterationType Iteration { get; set; } = IterationType.Single;
 
         /// <summary>
         /// Gets or sets instructions within the loop.

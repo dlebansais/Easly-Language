@@ -10,7 +10,7 @@ namespace BaseNode
         /// <summary>
         /// Gets or sets whether this function is executed only once.
         /// </summary>
-        public virtual OnceChoice Once { get; set; }
+        public virtual OnceChoice Once { get; set; } = OnceChoice.Normal;
 
         /// <summary>
         /// Gets or sets the list of overloads.

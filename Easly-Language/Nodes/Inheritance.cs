@@ -15,7 +15,7 @@ namespace BaseNode
         /// <summary>
         /// Gets or sets whether the inheritance is for conformance.
         /// </summary>
-        public virtual ConformanceType Conformance { get; set; }
+        public virtual ConformanceType Conformance { get; set; } = ConformanceType.Conformant;
 
         /// <summary>
         /// Gets or sets the list of renames.
@@ -25,7 +25,7 @@ namespace BaseNode
         /// <summary>
         /// Gets or sets a value indicating whether the indexer should be overriden.
         /// </summary>
-        public virtual bool ForgetIndexer { get; set; }
+        public virtual bool ForgetIndexer { get; set; } = false;
 
         /// <summary>
         /// Gets or sets the list of overriden features.
@@ -35,7 +35,7 @@ namespace BaseNode
         /// <summary>
         /// Gets or sets a value indicating whether the indexer should be kept.
         /// </summary>
-        public virtual bool KeepIndexer { get; set; }
+        public virtual bool KeepIndexer { get; set; } = false;
 
         /// <summary>
         /// Gets or sets the list of kept features.
@@ -45,7 +45,7 @@ namespace BaseNode
         /// <summary>
         /// Gets or sets a value indicating whether the indexer should be discontinued.
         /// </summary>
-        public virtual bool DiscontinueIndexer { get; set; }
+        public virtual bool DiscontinueIndexer { get; set; } = false;
 
         /// <summary>
         /// Gets or sets the list of discontinued features.

@@ -17,6 +17,6 @@
         /// <summary>
         /// Gets or sets a unique ID.
         /// </summary>
-        public virtual System.Guid Uuid { get; set; }
+        public virtual System.Guid Uuid { get; set; } = System.Guid.Empty;
     }
 }

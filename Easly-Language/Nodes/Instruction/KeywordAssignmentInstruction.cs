@@ -10,7 +10,7 @@
         /// <summary>
         /// Gets or sets the keyword to assign.
         /// </summary>
-        public virtual Keyword Destination { get; set; }
+        public virtual Keyword Destination { get; set; } = Keyword.True;
 
         /// <summary>
         /// Gets or sets the assigned value.

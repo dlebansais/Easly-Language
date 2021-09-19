@@ -15,12 +15,12 @@ namespace BaseNode
         /// <summary>
         /// Gets or sets the comparison type.
         /// </summary>
-        public virtual ComparisonType Comparison { get; set; }
+        public virtual ComparisonType Comparison { get; set; } = ComparisonType.Equal;
 
         /// <summary>
         /// Gets or sets the equality type.
         /// </summary>
-        public virtual EqualityType Equality { get; set; }
+        public virtual EqualityType Equality { get; set; } = EqualityType.Physical;
 
         /// <summary>
         /// Gets or sets the right operand.

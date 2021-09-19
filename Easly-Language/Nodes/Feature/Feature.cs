@@ -13,6 +13,6 @@ namespace BaseNode
         /// <summary>
         /// Gets or sets the export type.
         /// </summary>
-        public virtual ExportStatus Export { get; set; }
+        public virtual ExportStatus Export { get; set; } = ExportStatus.Exported;
     }
 }

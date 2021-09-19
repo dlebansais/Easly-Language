@@ -10,6 +10,6 @@ namespace BaseNode
         /// <summary>
         /// Gets or sets the anchor.
         /// </summary>
-        public virtual Keyword Anchor { get; set; }
+        public virtual Keyword Anchor { get; set; } = Keyword.True;
     }
 }

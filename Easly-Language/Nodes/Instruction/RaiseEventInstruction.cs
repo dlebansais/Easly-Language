@@ -15,6 +15,6 @@ namespace BaseNode
         /// <summary>
         /// Gets or sets whether the event is single or forever.
         /// </summary>
-        public virtual EventType Event { get; set; }
+        public virtual EventType Event { get; set; } = EventType.Single;
     }
 }

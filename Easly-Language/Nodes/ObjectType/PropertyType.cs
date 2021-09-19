@@ -20,7 +20,7 @@ namespace BaseNode
         /// <summary>
         /// Gets or sets how this property can be used.
         /// </summary>
-        public virtual UtilityType PropertyKind { get; set; }
+        public virtual UtilityType PropertyKind { get; set; } = UtilityType.ReadOnly;
 
         /// <summary>
         /// Gets or sets getter guaranties.
