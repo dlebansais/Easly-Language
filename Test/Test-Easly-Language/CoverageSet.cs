@@ -9,7 +9,7 @@
     using System.Reflection;
 
     [TestFixture]
-    public class TestSet
+    public class CoverageSet
     {
         [Test]
         public static void TestNodeInitializers()
@@ -208,11 +208,32 @@
         [Test]
         public static void TestDetachableReference()
         {
-            Name TestObject = new();
-            DetachableReference<Name> TestDetachableReference = new();
+            Name TestObject = null;
+            bool IsAssigned;
 
-            TestDetachableReference.Item = TestObject;
-            bool IsAssigned = TestDetachableReference.IsAssigned;
+            DetachableReference<Name> TestDetachableReference = new();
+            IDetachableReference TestInterface = TestDetachableReference;
+
+            IsAssigned = TestDetachableReference.IsAssigned;
+            Assert.False(IsAssigned);
+
+            Assert.Throws<InvalidOperationException>(() => { TestObject = TestDetachableReference.Item; });
+            Assert.Throws<InvalidOperationException>(() => { TestObject = TestInterface.Item as Name; });
+
+            TestDetachableReference.Item = new Name();
+            IsAssigned = TestDetachableReference.IsAssigned;
+            Assert.True(IsAssigned);
+
+            TestObject = TestDetachableReference.Item;
+            Assert.NotNull(TestObject);
+
+            TestObject = TestInterface.Item as Name;
+            Assert.NotNull(TestObject);
+
+            Assert.Throws<InvalidOperationException>(() => { TestDetachableReference.Item = null; });
+            Assert.Throws<InvalidOperationException>(() => { TestInterface.Item = null; });
+
+            TestDetachableReference.Detach();
         }
     }
 }

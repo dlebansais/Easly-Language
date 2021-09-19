@@ -67,16 +67,12 @@
         {
             get
             {
-                T Result;
-
-                Debug.Assert(IsAssigned == (ItemInternal != null), $"{nameof(IsAssigned)} is always true if {nameof(ItemInternal)} has been assigned, and it can only be to a non-null value");
+                CheckConsistency();
 
                 if (ItemInternal != null)
-                    Result = ItemInternal;
+                    return ItemInternal;
                 else
                     throw new InvalidOperationException();
-
-                return Result;
             }
             set
             {
@@ -91,12 +87,10 @@
         }
 
         /// <inheritdoc/>
-        object IDetachableReference.Item { get { return Item; } set { ItemInternal = (T)value; } }
-
-        private T? ItemInternal;
+        object IDetachableReference.Item { get { return Item; } set { Item = (T)value; } }
         #endregion
 
-        #region Detaching
+        #region Client Interface
         /// <summary>
         /// Detaches the reference.
         /// </summary>
@@ -105,6 +99,15 @@
             ItemInternal = null;
             IsAssigned = false;
         }
+        #endregion
+
+        #region Implementation
+        private void CheckConsistency()
+        {
+            Debug.Assert(IsAssigned == (ItemInternal != null), $"{nameof(IsAssigned)} is always true if {nameof(ItemInternal)} has been assigned, and it can only be to a non-null value");
+        }
+
+        private T? ItemInternal;
         #endregion
     }
 }
