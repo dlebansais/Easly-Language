@@ -22,22 +22,22 @@ namespace BaseNode
         /// <summary>
         /// Gets or sets the class copy semantic.
         /// </summary>
-        public virtual CopySemantic CopySpecification { get; set; }
+        public virtual CopySemantic CopySpecification { get; set; } = CopySemantic.Any;
 
         /// <summary>
         /// Gets or sets whether the class is cloneable.
         /// </summary>
-        public virtual CloneableStatus Cloneable { get; set; }
+        public virtual CloneableStatus Cloneable { get; set; } = CloneableStatus.Cloneable;
 
         /// <summary>
         /// Gets or sets whether the class is comparable.
         /// </summary>
-        public virtual ComparableStatus Comparable { get; set; }
+        public virtual ComparableStatus Comparable { get; set; } = ComparableStatus.Comparable;
 
         /// <summary>
         /// Gets or sets a value indicating whether the class is abstract.
         /// </summary>
-        public virtual bool IsAbstract { get; set; }
+        public virtual bool IsAbstract { get; set; } = false;
 
         /// <summary>
         /// Gets or sets the class imports.
@@ -92,7 +92,7 @@ namespace BaseNode
         /// <summary>
         /// Gets or sets the class unique ID.
         /// </summary>
-        public virtual System.Guid ClassGuid { get; set; }
+        public virtual System.Guid ClassGuid { get; set; } = System.Guid.Empty;
 
         /// <summary>
         /// Gets or sets the class path.

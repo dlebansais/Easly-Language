@@ -1,15 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>WinExe</OutputType>
     <TargetFrameworks>net48</TargetFrameworks>
-    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
-    <UseWPF>true</UseWPF>
     <LangVersion>9.0</LangVersion>
     <Nullable>disable</Nullable>
     <Platforms>x64</Platforms>
-    <NeutralLanguage>en-US</NeutralLanguage>
     <RootNamespace>TestEaslyLanguage</RootNamespace>
+    <NeutralLanguage>en-US</NeutralLanguage>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
@@ -18,12 +15,20 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="5.0.3">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    <PackageReference Include="NUnit" Version="3.13.2">
+      <NoWarn>NU1701</NoWarn>
     </PackageReference>
-    <PackageReference Include="Easly-Number-Debug" Version="1.2.3" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
-    <PackageReference Include="Easly-Number" Version="1.2.3" Condition="'$(Configuration)|$(Platform)'!='Debug|x64'" />
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Easly-Language-Helper\Easly-Language-Helper.csproj" />
+  </ItemGroup>
+
+  <Target Name="_ResolveCopyLocalNuGetPackagePdbsAndXml" Condition="$(CopyLocalLockFileAssemblies) == true" AfterTargets="ResolveReferences">
+    <ItemGroup>
+      <ReferenceCopyLocalPaths Include="@(ReferenceCopyLocalPaths->'%(RootDir)%(Directory)%(Filename).pdb')" Condition="'%(ReferenceCopyLocalPaths.NuGetPackageId)' != '' And Exists('%(RootDir)%(Directory)%(Filename).pdb') " />
+      <ReferenceCopyLocalPaths Include="@(ReferenceCopyLocalPaths->'%(RootDir)%(Directory)%(Filename).xml')" Condition="'%(ReferenceCopyLocalPaths.NuGetPackageId)' != '' And Exists('%(RootDir)%(Directory)%(Filename).xml') " />
+    </ItemGroup>
+  </Target>
 
 </Project>
