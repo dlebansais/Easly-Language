@@ -49,32 +49,14 @@ namespace BaseNodeHelper
                 case QualifiedName AsQualifiedName:
                     return IsDefaultQualifiedName(AsQualifiedName);
 
-                case SimpleType AsSimpleType:
-                    return IsDefaultSimpleType(AsSimpleType);
+                case ObjectType AsObjectType:
+                    return IsDefaultObjectType(AsObjectType);
 
-                case ObjectType _: // Fallback for other IObjectType.
-                    return false;
+                case Expression AsExpression:
+                    return IsDefaultExpression(AsExpression);
 
-                case QueryExpression AsQueryExpression:
-                    return IsDefaultQueryExpression(AsQueryExpression);
-
-                case ManifestCharacterExpression AsManifestCharacterExpression:
-                    return IsDefaultManifestCharacterExpression(AsManifestCharacterExpression);
-
-                case ManifestNumberExpression AsManifestNumberExpression:
-                    return IsDefaultManifestNumberExpression(AsManifestNumberExpression);
-
-                case ManifestStringExpression AsManifestStringExpression:
-                    return IsDefaultManifestStringExpression(AsManifestStringExpression);
-
-                case Expression _: // Fallback for other IExpression.
-                    return false;
-
-                case EffectiveBody AsEffectiveBody:
-                    return IsDefaultEffectiveBody(AsEffectiveBody);
-
-                case Body _: // Fallback for other IBody.
-                    return false;
+                case Body AsBody:
+                    return IsDefaultBody(AsBody);
 
                 case Argument AsArgument:
                     return IsDefaultArgument(AsArgument);
@@ -105,9 +87,64 @@ namespace BaseNodeHelper
             return Path.Count == 1 && Path[0].Text.Length == 0;
         }
 
+        public static bool IsDefaultObjectType(ObjectType nodeObjectType)
+        {
+            switch (nodeObjectType)
+            {
+                case SimpleType AsSimpleType:
+                    return IsDefaultSimpleType(AsSimpleType);
+
+                default:
+                    return false;
+            }
+        }
+
         public static bool IsDefaultSimpleType(SimpleType nodeSimpleType)
         {
             return nodeSimpleType.Sharing == SharingType.NotShared && nodeSimpleType.ClassIdentifier.Text.Length == 0;
+        }
+
+        public static bool IsDefaultBody(Body nodeBody)
+        {
+            switch (nodeBody)
+            {
+                case EffectiveBody AsEffectiveBody:
+                    return IsDefaultEffectiveBody(AsEffectiveBody);
+
+                default:
+                    return false;
+            }
+        }
+
+        public static bool IsDefaultEffectiveBody(EffectiveBody nodeEffectiveBody)
+        {
+            return nodeEffectiveBody.RequireBlocks.NodeBlockList.Count == 0 &&
+                   nodeEffectiveBody.EnsureBlocks.NodeBlockList.Count == 0 &&
+                   nodeEffectiveBody.ExceptionIdentifierBlocks.NodeBlockList.Count == 0 &&
+                   nodeEffectiveBody.EntityDeclarationBlocks.NodeBlockList.Count == 0 &&
+                   nodeEffectiveBody.BodyInstructionBlocks.NodeBlockList.Count == 0 &&
+                   nodeEffectiveBody.ExceptionHandlerBlocks.NodeBlockList.Count == 0;
+        }
+
+        public static bool IsDefaultExpression(Expression nodeExpression)
+        {
+            switch (nodeExpression)
+            {
+                case QueryExpression AsQueryExpression:
+                    return IsDefaultQueryExpression(AsQueryExpression);
+
+                case ManifestCharacterExpression AsManifestCharacterExpression:
+                    return IsDefaultManifestCharacterExpression(AsManifestCharacterExpression);
+
+                case ManifestNumberExpression AsManifestNumberExpression:
+                    return IsDefaultManifestNumberExpression(AsManifestNumberExpression);
+
+                case ManifestStringExpression AsManifestStringExpression:
+                    return IsDefaultManifestStringExpression(AsManifestStringExpression);
+
+                default:
+                    return false;
+            }
         }
 
         public static bool IsDefaultQueryExpression(QueryExpression nodeQueryExpression)
@@ -129,16 +166,6 @@ namespace BaseNodeHelper
         public static bool IsDefaultManifestStringExpression(ManifestStringExpression nodeManifestStringExpression)
         {
             return nodeManifestStringExpression.Text.Length == 0;
-        }
-
-        public static bool IsDefaultEffectiveBody(EffectiveBody nodeEffectiveBody)
-        {
-            return nodeEffectiveBody.RequireBlocks.NodeBlockList.Count == 0 &&
-                   nodeEffectiveBody.EnsureBlocks.NodeBlockList.Count == 0 &&
-                   nodeEffectiveBody.ExceptionIdentifierBlocks.NodeBlockList.Count == 0 &&
-                   nodeEffectiveBody.EntityDeclarationBlocks.NodeBlockList.Count == 0 &&
-                   nodeEffectiveBody.BodyInstructionBlocks.NodeBlockList.Count == 0 &&
-                   nodeEffectiveBody.ExceptionHandlerBlocks.NodeBlockList.Count == 0;
         }
 
         public static bool IsDefaultArgument(Argument nodeArgument)
@@ -486,10 +513,40 @@ namespace BaseNodeHelper
             {
                 case QualifiedName AsQualifiedName:
                     return SimplifyQualifiedName(AsQualifiedName, out simplifiedNode);
+                case Argument AsArgument:
+                    return GetSimplifiedArgument(AsArgument, out simplifiedNode);
+                case Expression AsExpression:
+                    return GetSimplifiedExpression(AsExpression, out simplifiedNode);
+                case Instruction AsInstruction:
+                    return GetSimplifiedInstruction(AsInstruction, out simplifiedNode);
+                case ObjectType AsObjectType:
+                    return GetSimplifiedObjectType(AsObjectType, out simplifiedNode);
+                case TypeArgument AsTypeArgument:
+                    return GetSimplifiedTypeArgument(AsTypeArgument, out simplifiedNode);
+                default:
+                    simplifiedNode = null;
+                    return false;
+            }
+        }
+
+        public static bool GetSimplifiedArgument(Argument nodeArgument, out Node simplifiedNode)
+        {
+            switch (nodeArgument)
+            {
                 case AssignmentArgument AsAssignmentArgument:
                     return SimplifyAssignmentArgument(AsAssignmentArgument, out simplifiedNode);
                 case PositionalArgument AsPositionalArgument:
                     return SimplifyPositionalArgument(AsPositionalArgument, out simplifiedNode);
+                default:
+                    simplifiedNode = null;
+                    return false;
+            }
+        }
+
+        public static bool GetSimplifiedExpression(Expression nodeExpression, out Node simplifiedNode)
+        {
+            switch (nodeExpression)
+            {
                 case QueryExpression AsQueryExpression:
                     return SimplifyQueryExpression(AsQueryExpression, out simplifiedNode);
                 case AgentExpression AsAgentExpression:
@@ -538,6 +595,16 @@ namespace BaseNodeHelper
                     return SimplifyUnaryNotExpression(AsUnaryNotExpression, out simplifiedNode);
                 case UnaryOperatorExpression AsUnaryOperatorExpression:
                     return SimplifyUnaryOperatorExpression(AsUnaryOperatorExpression, out simplifiedNode);
+                default:
+                    simplifiedNode = null;
+                    return false;
+            }
+        }
+
+        public static bool GetSimplifiedInstruction(Instruction nodeInstruction, out Node simplifiedNode)
+        {
+            switch (nodeInstruction)
+            {
                 case CommandInstruction AsCommandInstruction:
                     return SimplifyCommandInstruction(AsCommandInstruction, out simplifiedNode);
                 case AsLongAsInstruction AsAsLongAsInstruction:
@@ -574,6 +641,16 @@ namespace BaseNodeHelper
                     return SimplifyReleaseInstruction(AsReleaseInstruction, out simplifiedNode);
                 case ThrowInstruction AsThrowInstruction:
                     return SimplifyThrowInstruction(AsThrowInstruction, out simplifiedNode);
+                default:
+                    simplifiedNode = null;
+                    return false;
+            }
+        }
+
+        public static bool GetSimplifiedObjectType(ObjectType nodeObjectType, out Node simplifiedNode)
+        {
+            switch (nodeObjectType)
+            {
                 case AnchoredType AsAnchoredType:
                     return SimplifyAnchoredType(AsAnchoredType, out simplifiedNode);
                 case KeywordAnchoredType AsKeywordAnchoredType:
@@ -590,6 +667,16 @@ namespace BaseNodeHelper
                     return SimplifyProcedureType(AsProcedureType, out simplifiedNode);
                 case TupleType AsTupleType:
                     return SimplifyTupleType(AsTupleType, out simplifiedNode);
+                default:
+                    simplifiedNode = null;
+                    return false;
+            }
+        }
+
+        public static bool GetSimplifiedTypeArgument(TypeArgument nodeTypeArgument, out Node simplifiedNode)
+        {
+            switch (nodeTypeArgument)
+            {
                 case AssignmentTypeArgument AsAssignmentTypeArgument:
                     return SimplifyAssignmentTypeArgument(AsAssignmentTypeArgument, out simplifiedNode);
                 case PositionalTypeArgument AsPositionalTypeArgument:

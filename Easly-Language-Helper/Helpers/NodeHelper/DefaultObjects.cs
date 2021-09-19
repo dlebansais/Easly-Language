@@ -188,116 +188,140 @@ namespace BaseNodeHelper
             IList<string> PropertyNames = NodeTreeHelper.EnumChildNodeProperties(node.GetType());
 
             foreach (string PropertyName in PropertyNames)
-            {
-                Type /*ChildInterfaceType,*/ ChildNodeType;
-
-                if (NodeTreeHelperChild.IsChildNodeProperty(node, PropertyName, out ChildNodeType))
-                {
-                    NodeTreeHelperChild.GetChildNode(node, PropertyName, out Node ChildNode);
-                    if (!IsEmptyNode(ChildNode))
-                        return false;
-                }
-                else if (NodeTreeHelperOptional.IsOptionalChildNodeProperty(node, PropertyName, out ChildNodeType))
-                {
-                    NodeTreeHelperOptional.GetChildNode(node, PropertyName, out bool IsAssigned, out Node ChildNode);
-                    if (IsAssigned)
-                        return false;
-                }
-                else if (NodeTreeHelperList.IsNodeListProperty(node, PropertyName, out ChildNodeType))
-                {
-                    NodeTreeHelperList.GetChildNodeList(node, PropertyName, out IReadOnlyList<Node> ChildNodeList);
-
-                    if (IsCollectionNeverEmpty(node, PropertyName))
-                    {
-                        Debug.Assert(ChildNodeList.Count > 0, $"A collection that is found not empty has to have an element");
-
-                        if (ChildNodeList.Count != 1)
-                            return false;
-
-                        Node ChildNode = ChildNodeList[0];
-                        if (!IsEmptyNode(ChildNode))
-                            return false;
-                    }
-                    else if (ChildNodeList.Count > 0)
-                        return false;
-                }
-                else if (NodeTreeHelperBlockList.IsBlockListProperty(node, PropertyName, /*out ChildInterfaceType,*/ out ChildNodeType))
-                {
-                    NodeTreeHelperBlockList.GetChildBlockList(node, PropertyName, out IReadOnlyList<NodeTreeBlock> ChildBlockList);
-
-                    if (IsCollectionNeverEmpty(node, PropertyName))
-                    {
-                        Debug.Assert(ChildBlockList.Count > 0, $"A collection that is found not empty has to have an element");
-
-                        if (ChildBlockList.Count != 1)
-                            return false;
-
-                        NodeTreeBlock FirstBlock = ChildBlockList[0];
-                        Debug.Assert(FirstBlock.NodeList.Count > 0, $"Blocks in block lists always have at least one node");
-
-                        if (FirstBlock.NodeList.Count != 1)
-                            return false;
-
-                        Node ChildNode = FirstBlock.NodeList[0];
-                        if (!IsEmptyNode(ChildNode))
-                            return false;
-                    }
-                    else if (ChildBlockList.Count > 0)
-                        return false;
-                }
-                else if (NodeTreeHelper.IsStringProperty(node, PropertyName))
-                {
-                    string Text = NodeTreeHelper.GetString(node, PropertyName);
-                    Debug.Assert(Text != null, $"The content of a string property is never null");
-
-                    if (Text.Length > 0)
-                        return false;
-                }
-                else if (NodeTreeHelper.IsBooleanProperty(node, PropertyName) || NodeTreeHelper.IsEnumProperty(node, PropertyName))
-                {
-                    int Value = NodeTreeHelper.GetEnumValue(node, PropertyName);
-                    NodeTreeHelper.GetEnumRange(node.GetType(), PropertyName, out int Min, out int Max);
-
-                    if (Value != Min)
-                        return false;
-                }
-            }
+                if (!IsEmptyNodePropertyName(node, PropertyName))
+                    return false;
 
             return true;
         }
 
+        public static bool IsEmptyNodePropertyName(Node node, string propertyName)
+        {
+            if (NodeTreeHelperChild.IsChildNodeProperty(node, propertyName, out _))
+                return IsEmptyChildNode(node, propertyName);
+            else if (NodeTreeHelperOptional.IsOptionalChildNodeProperty(node, propertyName, out _))
+                return IsEmptyOptionalChildNode(node, propertyName);
+            else if (NodeTreeHelperList.IsNodeListProperty(node, propertyName, out _))
+                return IsEmptyNodeList(node, propertyName);
+            else if (NodeTreeHelperBlockList.IsBlockListProperty(node, propertyName, /*out ChildInterfaceType,*/ out _))
+                return IsEmptyBlockList(node, propertyName);
+            else if (NodeTreeHelper.IsStringProperty(node, propertyName))
+                return IsEmptyStringProperty(node, propertyName);
+            else if (NodeTreeHelper.IsBooleanProperty(node, propertyName) || NodeTreeHelper.IsEnumProperty(node, propertyName))
+                return IsEmptyEnumProperty(node, propertyName);
+            else
+                return true;
+        }
+
+        public static bool IsEmptyChildNode(Node node, string propertyName)
+        {
+            NodeTreeHelperChild.GetChildNode(node, propertyName, out Node ChildNode);
+            return IsEmptyNode(ChildNode);
+        }
+
+        public static bool IsEmptyOptionalChildNode(Node node, string propertyName)
+        {
+            NodeTreeHelperOptional.GetChildNode(node, propertyName, out bool IsAssigned, out _);
+            return !IsAssigned;
+        }
+
+        public static bool IsEmptyNodeList(Node node, string propertyName)
+        {
+            NodeTreeHelperList.GetChildNodeList(node, propertyName, out IReadOnlyList<Node> ChildNodeList);
+
+            if (IsCollectionNeverEmpty(node, propertyName))
+            {
+                Debug.Assert(ChildNodeList.Count > 0, $"A collection that is found not empty has to have an element");
+
+                if (ChildNodeList.Count != 1)
+                    return false;
+
+                Node ChildNode = ChildNodeList[0];
+                if (!IsEmptyNode(ChildNode))
+                    return false;
+            }
+            else if (ChildNodeList.Count > 0)
+                return false;
+
+            return true;
+        }
+
+        public static bool IsEmptyBlockList(Node node, string propertyName)
+        {
+            NodeTreeHelperBlockList.GetChildBlockList(node, propertyName, out IReadOnlyList<NodeTreeBlock> ChildBlockList);
+
+            if (IsCollectionNeverEmpty(node, propertyName))
+            {
+                Debug.Assert(ChildBlockList.Count > 0, $"A collection that is found not empty has to have an element");
+
+                if (ChildBlockList.Count != 1)
+                    return false;
+
+                NodeTreeBlock FirstBlock = ChildBlockList[0];
+                Debug.Assert(FirstBlock.NodeList.Count > 0, $"Blocks in block lists always have at least one node");
+
+                if (FirstBlock.NodeList.Count != 1)
+                    return false;
+
+                Node ChildNode = FirstBlock.NodeList[0];
+                if (!IsEmptyNode(ChildNode))
+                    return false;
+            }
+            else if (ChildBlockList.Count > 0)
+                return false;
+
+            return true;
+        }
+
+        public static bool IsEmptyStringProperty(Node node, string propertyName)
+        {
+            string Text = NodeTreeHelper.GetString(node, propertyName);
+            Debug.Assert(Text != null, $"The content of a string property is never null");
+
+            return Text.Length == 0;
+        }
+
+        public static bool IsEmptyEnumProperty(Node node, string propertyName)
+        {
+            int Value = NodeTreeHelper.GetEnumValue(node, propertyName);
+            NodeTreeHelper.GetEnumRange(node.GetType(), propertyName, out int Min, out _);
+
+            return Value == Min;
+        }
+
         private static Node CreateDefaultNoCheck(Type interfaceType)
         {
-            Node Result;
-
             if (interfaceType == typeof(Argument) || interfaceType == typeof(PositionalArgument))
-                Result = CreateDefaultArgument();
+                return CreateDefaultArgument();
             else if (interfaceType == typeof(TypeArgument) || interfaceType == typeof(PositionalTypeArgument))
-                Result = CreateDefaultTypeArgument();
+                return CreateDefaultTypeArgument();
             else if (interfaceType == typeof(Body) || interfaceType == typeof(EffectiveBody))
-                Result = CreateDefaultBody();
+                return CreateDefaultBody();
             else if (interfaceType == typeof(Expression) || interfaceType == typeof(QueryExpression))
-                Result = CreateDefaultExpression();
+                return CreateDefaultExpression();
             else if (interfaceType == typeof(Instruction) || interfaceType == typeof(CommandInstruction))
-                Result = CreateDefaultInstruction();
+                return CreateDefaultInstruction();
             else if (interfaceType == typeof(Feature) || interfaceType == typeof(AttributeFeature))
-                Result = CreateDefaultFeature();
+                return CreateDefaultFeature();
             else if (interfaceType == typeof(ObjectType) || interfaceType == typeof(SimpleType))
-                Result = CreateDefaultType();
-            else if (interfaceType == typeof(Name))
-                Result = CreateEmptyName();
-            else if (interfaceType == typeof(Identifier))
-                Result = CreateEmptyIdentifier();
-            else if (interfaceType == typeof(QualifiedName))
-                Result = CreateEmptyQualifiedName();
-            else if (interfaceType == typeof(Scope))
-                Result = CreateEmptyScope();
-            else if (interfaceType == typeof(Import))
-                Result = CreateSimpleImport(string.Empty, string.Empty, ImportType.Latest);
+                return CreateDefaultType();
             else
-                Result = null;
+                return CreateDefaultNoCheckSingle(interfaceType);
+        }
 
-            return Result;
+        private static Node CreateDefaultNoCheckSingle(Type interfaceType)
+        {
+            if (interfaceType == typeof(Name))
+                return CreateEmptyName();
+            else if (interfaceType == typeof(Identifier))
+                return CreateEmptyIdentifier();
+            else if (interfaceType == typeof(QualifiedName))
+                return CreateEmptyQualifiedName();
+            else if (interfaceType == typeof(Scope))
+                return CreateEmptyScope();
+            else if (interfaceType == typeof(Import))
+                return CreateSimpleImport(string.Empty, string.Empty, ImportType.Latest);
+            else
+                return null;
         }
     }
 }

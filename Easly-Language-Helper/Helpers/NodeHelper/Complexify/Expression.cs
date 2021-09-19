@@ -14,115 +14,73 @@ namespace BaseNodeHelper
         private static bool GetComplexifiedExpression(Expression node, out IList<Expression> complexifiedExpressionList)
         {
             complexifiedExpressionList = null;
-            bool Result = false;
             bool IsHandled = false;
 
             switch (node)
             {
                 case AgentExpression AsAgentExpression:
-                    Result = GetComplexifiedAgentExpression(AsAgentExpression, out complexifiedExpressionList);
-                    IsHandled = true;
-                    break;
-
-                case AssertionTagExpression AsAssertionTagExpression:
-                    IsHandled = true;
-                    break;
+                    return GetComplexifiedAgentExpression(AsAgentExpression, out complexifiedExpressionList);
 
                 case BinaryConditionalExpression AsBinaryConditionalExpression:
-                    Result = GetComplexifiedBinaryConditionalExpression(AsBinaryConditionalExpression, out complexifiedExpressionList);
-                    IsHandled = true;
-                    break;
+                    return GetComplexifiedBinaryConditionalExpression(AsBinaryConditionalExpression, out complexifiedExpressionList);
 
                 case BinaryOperatorExpression AsBinaryOperatorExpression:
-                    Result = GetComplexifiedBinaryOperatorExpression(AsBinaryOperatorExpression, out complexifiedExpressionList);
-                    IsHandled = true;
-                    break;
-
-                case ClassConstantExpression AsClassConstantExpression:
-                    IsHandled = true;
-                    break;
+                    return GetComplexifiedBinaryOperatorExpression(AsBinaryOperatorExpression, out complexifiedExpressionList);
 
                 case CloneOfExpression AsCloneOfExpression:
-                    Result = GetComplexifiedCloneOfExpression(AsCloneOfExpression, out complexifiedExpressionList);
-                    IsHandled = true;
-                    break;
+                    return GetComplexifiedCloneOfExpression(AsCloneOfExpression, out complexifiedExpressionList);
 
                 case EntityExpression AsEntityExpression:
-                    Result = GetComplexifiedEntityExpression(AsEntityExpression, out complexifiedExpressionList);
-                    IsHandled = true;
-                    break;
+                    return GetComplexifiedEntityExpression(AsEntityExpression, out complexifiedExpressionList);
 
                 case EqualityExpression AsEqualityExpression:
-                    Result = GetComplexifiedEqualityExpression(AsEqualityExpression, out complexifiedExpressionList);
-                    IsHandled = true;
-                    break;
+                    return GetComplexifiedEqualityExpression(AsEqualityExpression, out complexifiedExpressionList);
 
                 case IndexQueryExpression AsIndexQueryExpression:
-                    Result = GetComplexifiedIndexQueryExpression(AsIndexQueryExpression, out complexifiedExpressionList);
-                    IsHandled = true;
-                    break;
+                    return GetComplexifiedIndexQueryExpression(AsIndexQueryExpression, out complexifiedExpressionList);
 
                 case InitializedObjectExpression AsInitializedObjectExpression:
-                    Result = GetComplexifiedInitializedObjectExpression(AsInitializedObjectExpression, out complexifiedExpressionList);
-                    IsHandled = true;
-                    break;
+                    return GetComplexifiedInitializedObjectExpression(AsInitializedObjectExpression, out complexifiedExpressionList);
 
+                case NewExpression AsNewExpression:
+                    return GetComplexifiedNewExpression(AsNewExpression, out complexifiedExpressionList);
+
+                case OldExpression AsOldExpression:
+                    return GetComplexifiedOldExpression(AsOldExpression, out complexifiedExpressionList);
+
+                case PrecursorExpression AsPrecursorExpression:
+                    return GetComplexifiedPrecursorExpression(AsPrecursorExpression, out complexifiedExpressionList);
+
+                case PrecursorIndexExpression AsPrecursorIndexExpression:
+                    return GetComplexifiedPrecursorIndexExpression(AsPrecursorIndexExpression, out complexifiedExpressionList);
+
+                case QueryExpression AsQueryExpression:
+                    return GetComplexifiedQueryExpression(AsQueryExpression, out complexifiedExpressionList);
+
+                case ResultOfExpression AsResultOfExpression:
+                    return GetComplexifiedResultOfExpression(AsResultOfExpression, out complexifiedExpressionList);
+
+                case UnaryNotExpression AsUnaryNotExpression:
+                    return GetComplexifiedUnaryNotExpression(AsUnaryNotExpression, out complexifiedExpressionList);
+
+                case UnaryOperatorExpression AsUnaryOperatorExpression:
+                    return GetComplexifiedUnaryOperatorExpression(AsUnaryOperatorExpression, out complexifiedExpressionList);
+
+                case AssertionTagExpression AsAssertionTagExpression:
+                case ClassConstantExpression AsClassConstantExpression:
                 case KeywordEntityExpression AsKeywordEntityExpression:
                 case KeywordExpression AsKeywordExpression:
                 case ManifestCharacterExpression AsManifestCharacterExpression:
                 case ManifestNumberExpression AsManifestNumberExpression:
                 case ManifestStringExpression AsManifestStringExpression:
-                    IsHandled = true;
-                    break;
-
-                case NewExpression AsNewExpression:
-                    Result = GetComplexifiedNewExpression(AsNewExpression, out complexifiedExpressionList);
-                    IsHandled = true;
-                    break;
-
-                case OldExpression AsOldExpression:
-                    Result = GetComplexifiedOldExpression(AsOldExpression, out complexifiedExpressionList);
-                    IsHandled = true;
-                    break;
-
-                case PrecursorExpression AsPrecursorExpression:
-                    Result = GetComplexifiedPrecursorExpression(AsPrecursorExpression, out complexifiedExpressionList);
-                    IsHandled = true;
-                    break;
-
-                case PrecursorIndexExpression AsPrecursorIndexExpression:
-                    Result = GetComplexifiedPrecursorIndexExpression(AsPrecursorIndexExpression, out complexifiedExpressionList);
-                    IsHandled = true;
-                    break;
-
                 case PreprocessorExpression AsPreprocessorExpression:
-                    IsHandled = true;
-                    break;
-
-                case QueryExpression AsQueryExpression:
-                    Result = GetComplexifiedQueryExpression(AsQueryExpression, out complexifiedExpressionList);
-                    IsHandled = true;
-                    break;
-
-                case ResultOfExpression AsResultOfExpression:
-                    Result = GetComplexifiedResultOfExpression(AsResultOfExpression, out complexifiedExpressionList);
-                    IsHandled = true;
-                    break;
-
-                case UnaryNotExpression AsUnaryNotExpression:
-                    Result = GetComplexifiedUnaryNotExpression(AsUnaryNotExpression, out complexifiedExpressionList);
-                    IsHandled = true;
-                    break;
-
-                case UnaryOperatorExpression AsUnaryOperatorExpression:
-                    Result = GetComplexifiedUnaryOperatorExpression(AsUnaryOperatorExpression, out complexifiedExpressionList);
                     IsHandled = true;
                     break;
             }
 
             Debug.Assert(IsHandled, $"All descendants of {nameof(Expression)} have been handled");
 
-            return Result;
+            return false;
         }
 
         private static bool GetComplexifiedAgentExpression(AgentExpression node, out IList<Expression> complexifiedExpressionList)
@@ -423,11 +381,7 @@ namespace BaseNodeHelper
 
         private static bool GetComplexifiedQueryExpression(QueryExpression node, out IList<Expression> complexifiedExpressionList)
         {
-            complexifiedExpressionList = null;
-
-            if (ComplexifyAsManifestNumberExpression(node, out ManifestNumberExpression ComplexifiedManifestNumberExpression))
-                complexifiedExpressionList = new List<Expression>() { ComplexifiedManifestNumberExpression };
-            else if (GetComplexifiedNode(node.Query, out IList<Node> ComplexifiedQueryList) && ComplexifiedQueryList[0] is QualifiedName AsComplexifiedQuery)
+            if (GetComplexifiedNode(node.Query, out IList<Node> ComplexifiedQueryList) && ComplexifiedQueryList[0] is QualifiedName AsComplexifiedQuery)
             {
                 IBlockList<Argument> ClonedArgumentBlocks = (IBlockList<Argument>)DeepCloneBlockList((IBlockList)node.ArgumentBlocks, cloneCommentGuid: false);
                 QueryExpression NewQueryExpression = CreateQueryExpression(AsComplexifiedQuery, ClonedArgumentBlocks);
@@ -444,6 +398,24 @@ namespace BaseNodeHelper
                 QueryExpression NewQueryExpression = CreateQueryExpression(NewQuery, ArgumentList);
                 complexifiedExpressionList = new List<Expression>() { NewQueryExpression };
             }
+            else if (ComplexifyAsEntityExpression(node, out EntityExpression ComplexifiedEntityExpression, out KeywordEntityExpression ComplexifiedKeywordEntityExpression))
+            {
+                complexifiedExpressionList = new List<Expression>() { ComplexifiedEntityExpression };
+                if (ComplexifiedKeywordEntityExpression != null)
+                    complexifiedExpressionList.Add(ComplexifiedKeywordEntityExpression);
+            }
+            else
+                return GetComplexifiedQueryExpressionSingle(node, out complexifiedExpressionList);
+
+            return complexifiedExpressionList != null;
+        }
+
+        private static bool GetComplexifiedQueryExpressionSingle(QueryExpression node, out IList<Expression> complexifiedExpressionList)
+        {
+            complexifiedExpressionList = null;
+
+            if (ComplexifyAsManifestNumberExpression(node, out ManifestNumberExpression ComplexifiedManifestNumberExpression))
+                complexifiedExpressionList = new List<Expression>() { ComplexifiedManifestNumberExpression };
             else if (ComplexifyAsAgentExpression(node, out AgentExpression ComplexifiedAgentExpression))
                 complexifiedExpressionList = new List<Expression>() { ComplexifiedAgentExpression };
             else if (ComplexifyAsAssertionTagExpression(node, out AssertionTagExpression ComplexifiedAssertionTagExpression))
@@ -462,12 +434,6 @@ namespace BaseNodeHelper
                 complexifiedExpressionList = new List<Expression>() { ComplexifiedClassConstantExpression };
             else if (ComplexifyAsCloneOfExpression(node, out CloneOfExpression ComplexifiedCloneOfExpression))
                 complexifiedExpressionList = new List<Expression>() { ComplexifiedCloneOfExpression };
-            else if (ComplexifyAsEntityExpression(node, out EntityExpression ComplexifiedEntityExpression, out KeywordEntityExpression ComplexifiedKeywordEntityExpression))
-            {
-                complexifiedExpressionList = new List<Expression>() { ComplexifiedEntityExpression };
-                if (ComplexifiedKeywordEntityExpression != null)
-                    complexifiedExpressionList.Add(ComplexifiedKeywordEntityExpression);
-            }
             else if (ComplexifyAsEqualExpression(node, out EqualityExpression ComplexifiedEqualityExpression))
                 complexifiedExpressionList = new List<Expression>() { ComplexifiedEqualityExpression };
             else if (ComplexifyAsDifferentExpression(node, out EqualityExpression ComplexifiedDifferentExpression))
