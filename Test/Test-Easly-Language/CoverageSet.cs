@@ -129,6 +129,7 @@
             IList<IBlock<Node>> BlockList = TestBlockList.NodeBlockList;
             IList NonGenericBlockList = ((IBlockList)TestBlockList).NodeBlockList;
             Document TestDocument = TestBlockList.Documentation;
+            TestDocument = ((IBlockList)TestBlockList).Documentation;
 
             string Comment = TestDocument.Comment;
             Guid Uuid = TestDocument.Uuid;
