@@ -5,6 +5,7 @@
     using NUnit.Framework;
     using System;
     using System.Collections;
+    using System.Collections.Generic;
     using System.Reflection;
 
     [TestFixture]
@@ -120,6 +121,17 @@
         {
             Block<Node> TestBlock = new();
             BlockList<Node> TestBlockList = new();
+            TestBlockList.Documentation = new Document();
+
+            IList<Node> NodeList = TestBlock.NodeList;
+            IList NonGenericNodeList = ((IBlock)TestBlock).NodeList;
+
+            IList<IBlock<Node>> BlockList = TestBlockList.NodeBlockList;
+            IList NonGenericBlockList = ((IBlockList)TestBlockList).NodeBlockList;
+            Document TestDocument = TestBlockList.Documentation;
+
+            string Comment = TestDocument.Comment;
+            Guid Uuid = TestDocument.Uuid;
         }
 
         [Test]
@@ -191,6 +203,16 @@
 
             var TestValue = TestPropertyEntity.GetValue(TestObject);
             TestPropertyEntity.SetValue(TestObject, TestValue);
+        }
+
+        [Test]
+        public static void TestDetachableReference()
+        {
+            Name TestObject = new();
+            DetachableReference<Name> TestDetachableReference = new();
+
+            TestDetachableReference.Item = TestObject;
+            bool IsAssigned = TestDetachableReference.IsAssigned;
         }
     }
 }

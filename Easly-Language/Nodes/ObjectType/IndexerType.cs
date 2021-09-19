@@ -30,7 +30,7 @@ namespace BaseNode
         /// <summary>
         /// Gets or sets how this indexer can be used.
         /// </summary>
-        public virtual UtilityType IndexerKind { get; set; }
+        public virtual UtilityType IndexerKind { get; set; } = UtilityType.ReadOnly;
 
         /// <summary>
         /// Gets or sets getter requirements.
