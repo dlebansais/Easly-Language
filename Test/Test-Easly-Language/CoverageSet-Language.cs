@@ -1,4 +1,4 @@
-﻿namespace Test
+﻿namespace TestEaslyLanguage
 {
     using BaseNode;
     using Easly;
@@ -28,12 +28,20 @@
             ProcedureEntity TestProcedureEntity = new(ProcedureInfo);
             PropertyEntity TestPropertyEntity = new(PropertyInfo);
 
-            SpecializedTypeEntity<Class> TestSpecializedTypeEntity = SpecializedTypeEntity<Class>.Singleton;
-            TestSpecializedTypeEntity = SpecializedTypeEntity<Class>.Singleton; // Class twice to cover different branches in the code.
+            SpecializedTypeEntity<Class> TestSpecializedTypeEntityClass = SpecializedTypeEntity<Class>.Singleton;
+            TestSpecializedTypeEntityClass = SpecializedTypeEntity<Class>.Singleton; // Class twice to cover different branches in the code.
+            Class? TestClass = TestSpecializedTypeEntityClass.CreateInstance() as Class;
+
+            SpecializedTypeEntity<string> TestSpecializedTypeEntityString = SpecializedTypeEntity<string>.Singleton;
+            TestSpecializedTypeEntityString.Procedure("CopyTo");
+            TestSpecializedTypeEntityString.Function("CompareTo");
+            TestSpecializedTypeEntityString.Property("Length");
 
             PropertyFeature TestFeature = new();
             Entity TestEntity = Entity.FromThis(TestFeature);
-            Entity TestStatisEntity = Entity.FromStaticConstructor();
+            Entity TestStaticEntity = Entity.FromStaticConstructor();
+
+            Assert.Throws<TypeInitializationException>(() => { StaticConstructorTest<string> TestObject = new(); });
 
             DateAndTime TestDateAndTime = new();
             Event TestEvent = new(isAutoReset: true);
@@ -142,12 +150,15 @@
             Assert.Throws<InvalidOperationException>(() => { TestObject = TestInterface.Item as Name; });
 
             Assert.Throws<InvalidOperationException>(() => { TestOnceReference.Item = null!; });
+            Assert.Throws<InvalidOperationException>(() => { TestInterface.Item = null!; });
 
             TestObject = new Name();
 
             TestInterface.Item = TestObject;
             IsAssigned = TestInterface.IsAssigned;
             Assert.True(IsAssigned);
+
+            Assert.Throws<InvalidOperationException>(() => { TestInterface.Item = TestObject; });
 
             TestOnceReference = new();
             TestOnceReference.Item = TestObject;
@@ -325,11 +336,11 @@
         [Test]
         public static void TestSealableDictionaryFromSerializer()
         {
-            byte[] SomeData = new byte[1] { 0 };
+            Dictionary<string, string> TestDictionary = new() { { "Test", "Test" } };
 
             MemoryStream Stream = new MemoryStream();
             BinaryFormatter Formatter = new BinaryFormatter(null, new StreamingContext());
-            Formatter.Serialize(Stream, SomeData);
+            Formatter.Serialize(Stream, TestDictionary);
 
             Stream.Seek(0, SeekOrigin.Begin);
 

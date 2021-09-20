@@ -1,4 +1,4 @@
-﻿namespace Test
+﻿namespace TestEaslyLanguage
 {
     using BaseNode;
     using Easly;
