@@ -18,11 +18,22 @@ namespace BaseNodeHelper
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
 
             Type NodeType = node.GetType();
-            PropertyInfo Property = NodeType.GetProperty(propertyName);
-            Debug.Assert(Property != null);
-            Debug.Assert(Property.PropertyType == typeof(string));
+            Debug.Assert(NodeType != null);
 
-            string Text = Property.GetValue(node) as string;
+            if (NodeType == null)
+                return null!;
+
+            PropertyInfo? Property = NodeType.GetProperty(propertyName);
+            Debug.Assert(Property != null);
+            Debug.Assert(Property != null && Property.PropertyType == typeof(string));
+
+            if (Property == null)
+                return null!;
+
+            string? Text = Property.GetValue(node) as string;
+
+            if (Text == null)
+                return null!;
 
             return Text;
         }
@@ -34,9 +45,17 @@ namespace BaseNodeHelper
             if (text == null) throw new ArgumentNullException(nameof(text));
 
             Type NodeType = node.GetType();
-            PropertyInfo Property = NodeType.GetProperty(propertyName);
+            Debug.Assert(NodeType != null);
+
+            if (NodeType == null)
+                return;
+
+            PropertyInfo? Property = NodeType.GetProperty(propertyName);
             Debug.Assert(Property != null);
-            Debug.Assert(Property.PropertyType == typeof(string));
+            Debug.Assert(Property != null && Property.PropertyType == typeof(string));
+
+            if (Property == null)
+                return;
 
             Property.SetValue(node, text);
         }
@@ -52,26 +71,54 @@ namespace BaseNodeHelper
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
 
             Type NodeType = node.GetType();
-            PropertyInfo Property = NodeType.GetProperty(propertyName);
+            Debug.Assert(NodeType != null);
+
+            if (NodeType == null)
+            {
+                min = 0;
+                max = 0;
+                return 0;
+            }
+
+            PropertyInfo? Property = NodeType.GetProperty(propertyName);
             Debug.Assert(Property != null);
+
+            if (Property == null)
+            {
+                min = 0;
+                max = 0;
+                return 0;
+            }
 
             Type PropertyType = Property.PropertyType;
             Debug.Assert(PropertyType.IsEnum || PropertyType == typeof(bool));
 
             GetEnumMinMax(Property, out min, out max);
-            int Result;
+            int? Result;
 
             if (PropertyType == typeof(bool))
             {
-                bool BoolValue = (bool)Property.GetValue(node);
-                Result = BoolValue ? 1 : 0;
+                bool? BoolValue = Property.GetValue(node) as bool?;
+                Debug.Assert(BoolValue != null);
+
+                if (BoolValue == null)
+                    return 0;
+
+                Result = BoolValue.Value ? 1 : 0;
             }
             else
-                Result = (int)Property.GetValue(node);
+                Result = Property.GetValue(node) as int?;
+
+            if (Result == null)
+            {
+                min = 0;
+                max = 0;
+                return 0;
+            }
 
             Debug.Assert(min <= Result && Result <= max);
 
-            return Result;
+            return Result.Value;
         }
 
         public static void SetEnumValue(Node node, string propertyName, int value)
@@ -80,8 +127,16 @@ namespace BaseNodeHelper
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
 
             Type NodeType = node.GetType();
-            PropertyInfo Property = NodeType.GetProperty(propertyName);
+            Debug.Assert(NodeType != null);
+
+            if (NodeType == null)
+                return;
+
+            PropertyInfo? Property = NodeType.GetProperty(propertyName);
             Debug.Assert(Property != null);
+
+            if (Property == null)
+                return;
 
             Type PropertyType = Property.PropertyType;
             Debug.Assert(PropertyType.IsEnum || PropertyType == typeof(bool));
@@ -103,6 +158,13 @@ namespace BaseNodeHelper
             PropertyInfo Property = GetPropertyOf(nodeType, propertyName);
             Debug.Assert(Property != null);
 
+            if (Property == null)
+            {
+                min = 0;
+                max = 0;
+                return;
+            }
+
             Type PropertyType = Property.PropertyType;
             Debug.Assert(PropertyType.IsEnum || PropertyType == typeof(bool));
 
@@ -115,15 +177,22 @@ namespace BaseNodeHelper
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
 
             Type NodeType = node.GetType();
-            PropertyInfo Property = NodeType.GetProperty(propertyName);
+            PropertyInfo? Property = NodeType.GetProperty(propertyName);
             Debug.Assert(Property != null);
+
+            if (Property == null)
+                return Guid.Empty;
 
             Type PropertyType = Property.PropertyType;
             Debug.Assert(PropertyType == typeof(Guid));
 
-            Guid Result = (Guid)Property.GetValue(node);
+            Guid? Result = Property.GetValue(node) as Guid?;
+            Debug.Assert(Result != null);
 
-            return Result;
+            if (Result == null)
+                return Guid.Empty;
+
+            return Result.Value;
         }
 
         public static string GetCommentText(Node node)
@@ -131,6 +200,9 @@ namespace BaseNodeHelper
             if (node == null) throw new ArgumentNullException(nameof(node));
 
             Debug.Assert(node.Documentation != null);
+
+            if (node.Documentation == null)
+                return null!;
 
             return GetCommentText(node.Documentation);
         }
@@ -142,6 +214,9 @@ namespace BaseNodeHelper
             string Text = documentation.Comment;
             Debug.Assert(Text != null);
 
+            if (Text == null)
+                return null!;
+
             return Text;
         }
 
@@ -152,6 +227,9 @@ namespace BaseNodeHelper
 
             Debug.Assert(node.Documentation != null);
 
+            if (node.Documentation == null)
+                return;
+
             SetCommentText(node.Documentation, text);
         }
 
@@ -160,7 +238,17 @@ namespace BaseNodeHelper
             if (documentation == null) throw new ArgumentNullException(nameof(documentation));
 
             Type DocumentationType = documentation.GetType();
-            PropertyInfo CommentProperty = DocumentationType.GetProperty(nameof(Document.Comment));
+            Debug.Assert(DocumentationType != null);
+
+            if (DocumentationType == null)
+                return;
+
+            PropertyInfo? CommentProperty = DocumentationType.GetProperty(nameof(Document.Comment));
+            Debug.Assert(CommentProperty != null);
+
+            if (CommentProperty == null)
+                return;
+
             CommentProperty.SetValue(documentation, text);
         }
 
@@ -192,8 +280,16 @@ namespace BaseNodeHelper
             if (document == null) throw new ArgumentNullException(nameof(document));
 
             Type NodeType = node.GetType();
-            PropertyInfo Property = NodeType.GetProperty(nameof(Node.Documentation));
+            Debug.Assert(NodeType != null);
+
+            if (NodeType == null)
+                return;
+
+            PropertyInfo? Property = NodeType.GetProperty(nameof(Node.Documentation));
             Debug.Assert(Property != null);
+
+            if (Property == null)
+                return;
 
             Type PropertyType = Property.PropertyType;
             Debug.Assert(PropertyType == typeof(Document));
@@ -207,12 +303,24 @@ namespace BaseNodeHelper
             if (destinationNode == null) throw new ArgumentNullException(nameof(destinationNode));
 
             Type SourceNodeType = sourceNode.GetType();
+            Debug.Assert(SourceNodeType != null);
+
+            if (SourceNodeType == null)
+                return;
+
             Type DestinationNodeType = sourceNode.GetType();
+            Debug.Assert(DestinationNodeType != null);
+
+            if (DestinationNodeType == null)
+                return;
 
             if (SourceNodeType != DestinationNodeType) throw new ArgumentException($"{nameof(sourceNode)} and {nameof(destinationNode)} must be of the same type");
 
-            PropertyInfo Property = SourceNodeType.GetProperty(nameof(Node.Documentation));
+            PropertyInfo? Property = SourceNodeType.GetProperty(nameof(Node.Documentation));
             Debug.Assert(Property != null);
+
+            if (Property == null)
+                return;
 
             Type PropertyType = Property.PropertyType;
             Debug.Assert(PropertyType == typeof(Document));
@@ -231,8 +339,11 @@ namespace BaseNodeHelper
             Type DestinationBlockType = sourceBlock.GetType();
             Debug.Assert(SourceBlockType == DestinationBlockType);
 
-            PropertyInfo Property = SourceBlockType.GetProperty(nameof(IBlock.Documentation));
+            PropertyInfo? Property = SourceBlockType.GetProperty(nameof(IBlock.Documentation));
             Debug.Assert(Property != null);
+
+            if (Property == null)
+                return;
 
             Type PropertyType = Property.PropertyType;
             Debug.Assert(PropertyType == typeof(Document));
@@ -251,8 +362,11 @@ namespace BaseNodeHelper
             Type DestinationBlockType = sourceBlockList.GetType();
             Debug.Assert(SourceBlockType == DestinationBlockType);
 
-            PropertyInfo Property = SourceBlockType.GetProperty(nameof(IBlock.Documentation));
+            PropertyInfo? Property = SourceBlockType.GetProperty(nameof(IBlock.Documentation));
             Debug.Assert(Property != null);
+
+            if (Property == null)
+                return;
 
             Type PropertyType = Property.PropertyType;
             Debug.Assert(PropertyType == typeof(Document));
@@ -339,6 +453,9 @@ namespace BaseNodeHelper
             PropertyInfo Property = GetPropertyOf(nodeType, propertyName);
             Debug.Assert(Property != null);
 
+            if (Property == null)
+                return false;
+
             Type PropertyType = Property.PropertyType;
             return PropertyType.IsEnum;
         }
@@ -349,8 +466,11 @@ namespace BaseNodeHelper
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
 
             Type NodeType = node.GetType();
-            PropertyInfo Property = NodeType.GetProperty(propertyName);
+            PropertyInfo? Property = NodeType.GetProperty(propertyName);
             Debug.Assert(Property != null);
+
+            if (Property == null)
+                return;
 
             Type PropertyType = Property.PropertyType;
             Debug.Assert(PropertyType.IsEnum);
@@ -368,8 +488,11 @@ namespace BaseNodeHelper
             Type DestinationNodeType = sourceNode.GetType();
             Debug.Assert(SourceNodeType == DestinationNodeType);
 
-            PropertyInfo Property = SourceNodeType.GetProperty(propertyName);
+            PropertyInfo? Property = SourceNodeType.GetProperty(propertyName);
             Debug.Assert(Property != null);
+
+            if (Property == null)
+                return;
 
             Type PropertyType = Property.PropertyType;
             if (!PropertyType.IsEnum) throw new ArgumentException($"{nameof(propertyName)} must designate an enum property");
@@ -395,12 +518,15 @@ namespace BaseNodeHelper
 
                 max = int.MinValue;
                 min = int.MaxValue;
-                foreach (int Value in Values)
+                foreach (int? Value in Values)
                 {
+                    if (Value == null)
+                        return;
+
                     if (max < Value)
-                        max = Value;
+                        max = Value.Value;
                     if (min > Value)
-                        min = Value;
+                        min = Value.Value;
                 }
             }
         }
@@ -424,6 +550,9 @@ namespace BaseNodeHelper
             PropertyInfo Property = GetPropertyOf(nodeType, propertyName);
             Debug.Assert(Property != null);
 
+            if (Property == null)
+                return false;
+
             Type PropertyType = Property.PropertyType;
             if (PropertyType != type)
                 return false;
@@ -438,8 +567,16 @@ namespace BaseNodeHelper
             if (value == null) throw new ArgumentNullException(nameof(value));
 
             Type NodeType = node.GetType();
-            PropertyInfo Property = NodeType.GetProperty(propertyName);
+            Debug.Assert(NodeType != null);
+
+            if (NodeType == null)
+                return;
+
+            PropertyInfo? Property = NodeType.GetProperty(propertyName);
             Debug.Assert(Property != null);
+
+            if (Property == null)
+                return;
 
             Type PropertyType = Property.PropertyType;
             Debug.Assert(PropertyType == typeof(T));
@@ -454,11 +591,24 @@ namespace BaseNodeHelper
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
 
             Type SourceNodeType = sourceNode.GetType();
+            Debug.Assert(SourceNodeType != null);
+
+            if (SourceNodeType == null)
+                return;
+
             Type DestinationNodeType = sourceNode.GetType();
+            Debug.Assert(DestinationNodeType != null);
+
+            if (DestinationNodeType == null)
+                return;
+
             Debug.Assert(SourceNodeType == DestinationNodeType);
 
-            PropertyInfo Property = SourceNodeType.GetProperty(propertyName);
+            PropertyInfo? Property = SourceNodeType.GetProperty(propertyName);
             Debug.Assert(Property != null);
+
+            if (Property == null)
+                return;
 
             Type PropertyType = Property.PropertyType;
             Debug.Assert(PropertyType == typeof(T));

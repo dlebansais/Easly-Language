@@ -33,7 +33,7 @@ namespace BaseNodeHelper
                 }
             }
 
-            newBlockList = null;
+            newBlockList = null!;
             return false;
         }
 
@@ -59,7 +59,7 @@ namespace BaseNodeHelper
                 }
             }
 
-            newBlockList = null;
+            newBlockList = null!;
             return false;
         }
 
@@ -80,7 +80,7 @@ namespace BaseNodeHelper
                 return true;
             }
 
-            split = null;
+            split = null!;
             return false;
         }
 
@@ -128,7 +128,7 @@ namespace BaseNodeHelper
                 }
             }
 
-            newArgumentBlocks = null;
+            newArgumentBlocks = null!;
             return false;
         }
 
@@ -144,19 +144,31 @@ namespace BaseNodeHelper
 
                     if (GetComplexifiedAssignmentArgument(AssignmentArgument, out IList<Argument> ComplexifiedAssignmentArgumentList))
                     {
-                        AssignmentArgument ComplexifiedAssignmentArgument = ComplexifiedAssignmentArgumentList[0] as AssignmentArgument;
+                        AssignmentArgument ComplexifiedAssignmentArgument = (AssignmentArgument)ComplexifiedAssignmentArgumentList[0];
                         Debug.Assert(ComplexifiedAssignmentArgument != null, $"The list can't contain anything else than {nameof(AssignmentArgument)} elements");
 
                         newAssignmentArgumentBlocks = (IBlockList<AssignmentArgument>)DeepCloneBlockList((IBlockList)argumentBlocks, cloneCommentGuid: false);
 
                         Block = newAssignmentArgumentBlocks.NodeBlockList[BlockIndex];
-                        Block.NodeList[NodeIndex] = ComplexifiedAssignmentArgument;
+                        Debug.Assert(Block != null);
+
+                        if (Block == null)
+                            return false;
+
+                        IList<AssignmentArgument> NodeList = Block.NodeList;
+
+                        Debug.Assert(ComplexifiedAssignmentArgument != null);
+
+                        if (ComplexifiedAssignmentArgument == null)
+                            return false;
+
+                        NodeList[NodeIndex] = ComplexifiedAssignmentArgument;
                         return true;
                     }
                 }
             }
 
-            newAssignmentArgumentBlocks = null;
+            newAssignmentArgumentBlocks = null!;
             return false;
         }
 
@@ -182,7 +194,7 @@ namespace BaseNodeHelper
                 }
             }
 
-            newQualifiedNameBlocks = null;
+            newQualifiedNameBlocks = null!;
             return false;
         }
 
@@ -208,7 +220,7 @@ namespace BaseNodeHelper
                 }
             }
 
-            newBlockList = null;
+            newBlockList = null!;
             return false;
         }
 
@@ -256,7 +268,7 @@ namespace BaseNodeHelper
                 }
             }
 
-            newTypeArgumentBlocks = null;
+            newTypeArgumentBlocks = null!;
             return false;
         }
 
@@ -304,7 +316,7 @@ namespace BaseNodeHelper
                 }
             }
 
-            newObjectTypeBlocks = null;
+            newObjectTypeBlocks = null!;
             return false;
         }
     }

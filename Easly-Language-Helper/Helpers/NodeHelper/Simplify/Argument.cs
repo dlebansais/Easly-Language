@@ -16,14 +16,14 @@ namespace BaseNodeHelper
                 case PositionalArgument AsPositionalArgument:
                     return SimplifyPositionalArgument(AsPositionalArgument, out simplifiedNode);
                 default:
-                    simplifiedNode = null;
+                    simplifiedNode = null!;
                     return false;
             }
         }
 
         private static bool SimplifyAssignmentArgument(AssignmentArgument node, out Node simplifiedNode)
         {
-            Expression Source = DeepCloneNode(node.Source, cloneCommentGuid: false) as Expression;
+            Expression Source = (Expression)DeepCloneNode(node.Source, cloneCommentGuid: false);
             simplifiedNode = CreatePositionalArgument(Source);
             return true;
         }
@@ -32,7 +32,7 @@ namespace BaseNodeHelper
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
 
-            simplifiedNode = null;
+            simplifiedNode = null!;
             return true;
         }
     }

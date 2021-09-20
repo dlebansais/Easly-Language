@@ -13,7 +13,7 @@ namespace BaseNodeHelper
         #region Others
         private static bool GetComplexifiedAttachment(Attachment node, out IList<Attachment> complexifiedAttachmentList)
         {
-            complexifiedAttachmentList = null;
+            complexifiedAttachmentList = null!;
 
             if (GetComplexifiedObjectTypeBlockList(node.AttachTypeBlocks, out IBlockList<ObjectType> ComplexifiedAttachTypeBlocks))
             {
@@ -25,13 +25,13 @@ namespace BaseNodeHelper
                 return true;
             }
 
-            complexifiedAttachmentList = null;
+            complexifiedAttachmentList = null!;
             return false;
         }
 
         private static bool GetComplexifiedQualifiedName(QualifiedName node, out IList<QualifiedName> complexifiedQualifiedNameList)
         {
-            complexifiedQualifiedNameList = null;
+            complexifiedQualifiedNameList = null!;
 
             if (ComplexifyQualifiedName(node, out QualifiedName ComplexifiedQualifiedName))
                 complexifiedQualifiedNameList = new List<QualifiedName>() { ComplexifiedQualifiedName };
@@ -43,7 +43,7 @@ namespace BaseNodeHelper
         {
             Debug.Assert(node.Path.Count > 0, $"{nameof(node)} always has at least one element");
 
-            complexifiedNode = null;
+            complexifiedNode = null!;
             bool IsSplit = false;
 
             IList<Identifier> Path = new List<Identifier>();
@@ -70,7 +70,7 @@ namespace BaseNodeHelper
 
         private static bool GetComplexifiedConditional(Conditional node, out IList<Conditional> complexifiedConditionalList)
         {
-            complexifiedConditionalList = null;
+            complexifiedConditionalList = null!;
 
             if (GetComplexifiedExpression(node.BooleanExpression, out IList<Expression> ComplexifiedBooleanExpressionList))
             {
@@ -86,7 +86,7 @@ namespace BaseNodeHelper
                 return true;
             }
 
-            complexifiedConditionalList = null;
+            complexifiedConditionalList = null!;
             return false;
         }
         #endregion

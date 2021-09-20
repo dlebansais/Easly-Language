@@ -94,7 +94,7 @@ namespace BaseNodeHelper
 
         private static bool GetComplexifiedQueryExpressionSingle3(QueryExpression node, out IList<Expression> complexifiedExpressionList)
         {
-            complexifiedExpressionList = null;
+            complexifiedExpressionList = null!;
 
             if (ComplexifyAsNewExpression(node, out NewExpression ComplexifiedNewExpression))
                 complexifiedExpressionList = new List<Expression>() { ComplexifiedNewExpression };
@@ -118,7 +118,7 @@ namespace BaseNodeHelper
 
         private static bool ComplexifyAsIndexQueryExpression(QueryExpression node, out IndexQueryExpression complexifiedNode)
         {
-            complexifiedNode = null;
+            complexifiedNode = null!;
 
             if (node.ArgumentBlocks.NodeBlockList.Count == 0 && ComplexifyWithArguments(node.Query, '[', ']', out QualifiedName NewQuery, out List<Argument> ArgumentList))
             {
@@ -131,7 +131,7 @@ namespace BaseNodeHelper
 
         private static bool ComplexifyAsInitializedObjectExpression(QueryExpression node, out InitializedObjectExpression complexifiedNode)
         {
-            complexifiedNode = null;
+            complexifiedNode = null!;
 
             if (IsQuerySimple(node))
             {
@@ -160,7 +160,7 @@ namespace BaseNodeHelper
 
         private static bool ComplexifyAsKeywordEntityExpression(QueryExpression node, out KeywordEntityExpression complexifiedNode)
         {
-            complexifiedNode = null;
+            complexifiedNode = null!;
 
             if (node.ArgumentBlocks.NodeBlockList.Count == 0 && ParsePattern(node, "entity ", out string BeforeText, out string AfterText) && BeforeText.Length == 0)
             {
@@ -175,7 +175,7 @@ namespace BaseNodeHelper
 
         private static bool ComplexifyAsKeywordExpression(QueryExpression node, out KeywordExpression complexifiedNode)
         {
-            complexifiedNode = null;
+            complexifiedNode = null!;
 
             if (IsQuerySimple(node))
             {
@@ -190,7 +190,7 @@ namespace BaseNodeHelper
 
         private static bool ComplexifyAsManifestCharacterExpression(QueryExpression node, out ManifestCharacterExpression complexifiedNode)
         {
-            complexifiedNode = null;
+            complexifiedNode = null!;
 
             if (IsQuerySimple(node))
             {
@@ -205,7 +205,7 @@ namespace BaseNodeHelper
 
         private static bool ComplexifyAsManifestNumberExpression(QueryExpression node, out ManifestNumberExpression complexifiedNode)
         {
-            complexifiedNode = null;
+            complexifiedNode = null!;
 
             if (IsQuerySimple(node))
             {
@@ -224,7 +224,7 @@ namespace BaseNodeHelper
 
         private static bool ComplexifyAsManifestStringExpression(QueryExpression node, out ManifestStringExpression complexifiedNode)
         {
-            complexifiedNode = null;
+            complexifiedNode = null!;
 
             if (IsQuerySimple(node))
             {
@@ -239,13 +239,16 @@ namespace BaseNodeHelper
 
         private static bool ComplexifyAsNewExpression(QueryExpression node, out NewExpression complexifiedNode)
         {
-            complexifiedNode = null;
+            complexifiedNode = null!;
 
             if (node.ArgumentBlocks.NodeBlockList.Count == 0 && ParsePattern(node, "new ", out string BeforeText, out string AfterText) && BeforeText.Length == 0)
             {
-                QualifiedName ClonedQuery = DeepCloneNode(node.Query, cloneCommentGuid: false) as QualifiedName;
+                QualifiedName ClonedQuery = (QualifiedName)DeepCloneNode(node.Query, cloneCommentGuid: false);
                 Debug.Assert(ClonedQuery != null, $"The clone is always a {nameof(QualifiedName)}");
-                Debug.Assert(ClonedQuery.Path.Count > 0, $"The clone always has at least one element");
+                Debug.Assert(ClonedQuery != null && ClonedQuery.Path.Count > 0, $"The clone always has at least one element");
+
+                if (ClonedQuery == null)
+                    return false;
 
                 NodeTreeHelper.SetString(ClonedQuery.Path[0], "Text", AfterText);
 
@@ -257,13 +260,16 @@ namespace BaseNodeHelper
 
         private static bool ComplexifyAsOldExpression(QueryExpression node, out OldExpression complexifiedNode)
         {
-            complexifiedNode = null;
+            complexifiedNode = null!;
 
             if (node.ArgumentBlocks.NodeBlockList.Count == 0 && ParsePattern(node, "old ", out string BeforeText, out string AfterText) && BeforeText.Length == 0)
             {
-                QualifiedName ClonedQuery = DeepCloneNode(node.Query, cloneCommentGuid: false) as QualifiedName;
+                QualifiedName ClonedQuery = (QualifiedName)DeepCloneNode(node.Query, cloneCommentGuid: false);
                 Debug.Assert(ClonedQuery != null, $"The clone is always a {nameof(QualifiedName)}");
-                Debug.Assert(ClonedQuery.Path.Count > 0, $"The clone always has at least one element");
+                Debug.Assert(ClonedQuery != null && ClonedQuery.Path.Count > 0, $"The clone always has at least one element");
+
+                if (ClonedQuery == null)
+                    return false;
 
                 NodeTreeHelper.SetString(ClonedQuery.Path[0], "Text", AfterText);
 
@@ -275,7 +281,7 @@ namespace BaseNodeHelper
 
         private static bool ComplexifyAsPrecursorExpression(QueryExpression node, out PrecursorExpression complexifiedNode)
         {
-            complexifiedNode = null;
+            complexifiedNode = null!;
 
             if (node.Query.Path.Count == 1)
             {
@@ -283,7 +289,7 @@ namespace BaseNodeHelper
 
                 if (Text == "precursor")
                 {
-                    QueryExpression ClonedQuery = DeepCloneNode(node, cloneCommentGuid: false) as QueryExpression;
+                    QueryExpression ClonedQuery = (QueryExpression)DeepCloneNode(node, cloneCommentGuid: false);
                     complexifiedNode = CreatePrecursorExpression(ClonedQuery.ArgumentBlocks);
                 }
             }
@@ -293,7 +299,7 @@ namespace BaseNodeHelper
 
         private static bool ComplexifyAsPrecursorIndexExpression(QueryExpression node, out PrecursorIndexExpression complexifiedNode)
         {
-            complexifiedNode = null;
+            complexifiedNode = null!;
 
             if (node.Query.Path.Count == 1 && node.ArgumentBlocks.NodeBlockList.Count > 0)
             {
@@ -301,7 +307,7 @@ namespace BaseNodeHelper
 
                 if (Text == "precursor[]")
                 {
-                    QueryExpression ClonedQuery = DeepCloneNode(node, cloneCommentGuid: false) as QueryExpression;
+                    QueryExpression ClonedQuery = (QueryExpression)DeepCloneNode(node, cloneCommentGuid: false);
                     complexifiedNode = CreatePrecursorIndexExpression(ClonedQuery.ArgumentBlocks);
                 }
             }
@@ -311,7 +317,7 @@ namespace BaseNodeHelper
 
         private static bool ComplexifyAsPreprocessorExpression(QueryExpression node, out PreprocessorExpression complexifiedNode)
         {
-            complexifiedNode = null;
+            complexifiedNode = null!;
 
             if (IsQuerySimple(node))
             {
@@ -342,7 +348,7 @@ namespace BaseNodeHelper
 
         private static bool ComplexifyAsResultOfExpression(QueryExpression node, out ResultOfExpression complexifiedNode)
         {
-            complexifiedNode = null;
+            complexifiedNode = null!;
 
             if (ParsePattern(node, "result of ", out string BeforeText, out string AfterText) && BeforeText.Length == 0)
             {
@@ -357,7 +363,7 @@ namespace BaseNodeHelper
         {
             Debug.Assert(node.Query.Path.Count > 0, $"{nameof(node)} has at least one element in the query path");
 
-            complexifiedNode = null;
+            complexifiedNode = null!;
 
             string Text = node.Query.Path[0].Text;
 
@@ -374,7 +380,7 @@ namespace BaseNodeHelper
         {
             Debug.Assert(node.Query.Path.Count > 0, $"{nameof(node)} has at least one element in the query path");
 
-            complexifiedNode = null;
+            complexifiedNode = null!;
 
             string Text = node.Query.Path[0].Text;
             string Pattern = "-";

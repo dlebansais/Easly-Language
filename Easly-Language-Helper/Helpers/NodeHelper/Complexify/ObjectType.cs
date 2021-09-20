@@ -12,7 +12,7 @@ namespace BaseNodeHelper
     {
         private static bool GetComplexifiedObjectType(ObjectType node, out IList<ObjectType> complexifiedObjectTypeList)
         {
-            complexifiedObjectTypeList = null;
+            complexifiedObjectTypeList = null!;
             bool Result = false;
             bool IsHandled = false;
 
@@ -70,7 +70,7 @@ namespace BaseNodeHelper
 
         private static bool GetComplexifiedAnchoredType(AnchoredType node, out IList<ObjectType> complexifiedObjectTypeList)
         {
-            complexifiedObjectTypeList = null;
+            complexifiedObjectTypeList = null!;
 
             if (ComplexifyQualifiedName(node.AnchoredName, out QualifiedName ComplexifiedAnchoredName))
             {
@@ -88,7 +88,7 @@ namespace BaseNodeHelper
 
         private static bool GetComplexifiedFunctionType(FunctionType node, out IList<ObjectType> complexifiedObjectTypeList)
         {
-            complexifiedObjectTypeList = null;
+            complexifiedObjectTypeList = null!;
 
             if (GetComplexifiedObjectType(node.BaseType, out IList<ObjectType> ComplexifiedBaseTypeList))
             {
@@ -107,7 +107,7 @@ namespace BaseNodeHelper
 
         private static bool GetComplexifiedGenericType(GenericType node, out IList<ObjectType> complexifiedObjectTypeList)
         {
-            complexifiedObjectTypeList = null;
+            complexifiedObjectTypeList = null!;
 
             if (GetComplexifiedTypeArgumentBlockList(node.TypeArgumentBlocks, out IBlockList<TypeArgument> ComplexifiedTypeArgumentBlocks))
             {
@@ -122,7 +122,7 @@ namespace BaseNodeHelper
 
         private static bool GetComplexifiedIndexerType(IndexerType node, out IList<ObjectType> complexifiedObjectTypeList)
         {
-            complexifiedObjectTypeList = null;
+            complexifiedObjectTypeList = null!;
 
             if (GetComplexifiedObjectType(node.BaseType, out IList<ObjectType> ComplexifiedBaseTypeList))
             {
@@ -168,7 +168,7 @@ namespace BaseNodeHelper
 
         private static bool GetComplexifiedProcedureType(ProcedureType node, out IList<ObjectType> complexifiedObjectTypeList)
         {
-            complexifiedObjectTypeList = null;
+            complexifiedObjectTypeList = null!;
 
             if (GetComplexifiedObjectType(node.BaseType, out IList<ObjectType> ComplexifiedBaseTypeList))
             {
@@ -187,7 +187,7 @@ namespace BaseNodeHelper
 
         private static bool GetComplexifiedPropertyType(PropertyType node, out IList<ObjectType> complexifiedObjectTypeList)
         {
-            complexifiedObjectTypeList = null;
+            complexifiedObjectTypeList = null!;
 
             if (GetComplexifiedObjectType(node.BaseType, out IList<ObjectType> ComplexifiedBaseTypeList))
             {
@@ -227,7 +227,7 @@ namespace BaseNodeHelper
 
         private static bool GetComplexifiedSimpleType(SimpleType node, out IList<ObjectType> complexifiedObjectTypeList)
         {
-            complexifiedObjectTypeList = null;
+            complexifiedObjectTypeList = null!;
 
             if (ComplexifyAsAnchoredType(node, out AnchoredType ComplexifiedAnchoredType))
                 complexifiedObjectTypeList = new List<ObjectType>() { ComplexifiedAnchoredType };
@@ -249,7 +249,7 @@ namespace BaseNodeHelper
 
         private static bool ComplexifyAsAnchoredType(SimpleType node, out AnchoredType complexifiedNode)
         {
-            complexifiedNode = null;
+            complexifiedNode = null!;
 
             string ClassIdentifierText = node.ClassIdentifier.Text;
 
@@ -265,7 +265,7 @@ namespace BaseNodeHelper
 
         private static bool ComplexifyAsFunctionType(SimpleType node, out FunctionType complexifiedNode)
         {
-            complexifiedNode = null;
+            complexifiedNode = null!;
 
             string Text = node.ClassIdentifier.Text;
 
@@ -281,7 +281,7 @@ namespace BaseNodeHelper
 
         private static bool ComplexifyAsGenericType(SimpleType node, out GenericType complexifiedNode)
         {
-            complexifiedNode = null;
+            complexifiedNode = null!;
 
             string Text = node.ClassIdentifier.Text;
             int GenericBeginIndex = Text.IndexOf("[", StringComparison.InvariantCulture);
@@ -300,7 +300,7 @@ namespace BaseNodeHelper
 
         private static bool ComplexifyAsIndexerType(SimpleType node, out IndexerType complexifiedNode)
         {
-            complexifiedNode = null;
+            complexifiedNode = null!;
 
             string Text = node.ClassIdentifier.Text;
 
@@ -319,7 +319,7 @@ namespace BaseNodeHelper
 
         private static bool ComplexifyAsPropertyType(SimpleType node, out PropertyType complexifiedNode)
         {
-            complexifiedNode = null;
+            complexifiedNode = null!;
 
             string Text = node.ClassIdentifier.Text;
 
@@ -335,7 +335,7 @@ namespace BaseNodeHelper
 
         private static bool ComplexifyAsProcedureType(SimpleType node, out ProcedureType complexifiedNode)
         {
-            complexifiedNode = null;
+            complexifiedNode = null!;
 
             string Text = node.ClassIdentifier.Text;
 
@@ -350,7 +350,7 @@ namespace BaseNodeHelper
 
         private static bool ComplexifyAsTupleType(SimpleType node, out TupleType complexifiedNode)
         {
-            complexifiedNode = null;
+            complexifiedNode = null!;
 
             string Text = node.ClassIdentifier.Text;
 
@@ -367,7 +367,7 @@ namespace BaseNodeHelper
 
         private static bool GetComplexifiedTupleType(TupleType node, out IList<ObjectType> complexifiedObjectTypeList)
         {
-            complexifiedObjectTypeList = null;
+            complexifiedObjectTypeList = null!;
 
             if (GetComplexifiedEntityDeclarationBlockList(node.EntityDeclarationBlocks, out IBlockList<EntityDeclaration> ComplexifiedEntityDeclarationBlocks))
             {

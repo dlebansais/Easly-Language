@@ -209,7 +209,7 @@
         [Test]
         public static void TestDetachableReference()
         {
-            Name TestObject = null;
+            Name? TestObject = null;
             bool IsAssigned;
 
             DetachableReference<Name> TestDetachableReference = new();
@@ -231,8 +231,8 @@
             TestObject = TestInterface.Item as Name;
             Assert.NotNull(TestObject);
 
-            Assert.Throws<InvalidOperationException>(() => { TestDetachableReference.Item = null; });
-            Assert.Throws<InvalidOperationException>(() => { TestInterface.Item = null; });
+            Assert.Throws<InvalidOperationException>(() => { TestDetachableReference.Item = null!; });
+            Assert.Throws<InvalidOperationException>(() => { TestInterface.Item = null!; });
 
             TestDetachableReference.Detach();
         }

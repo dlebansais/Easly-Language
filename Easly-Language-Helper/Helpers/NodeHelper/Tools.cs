@@ -14,29 +14,52 @@ namespace BaseNodeHelper
     {
         public static Type NodeType(string typeName)
         {
-            string RootName = typeof(Root).FullName;
+            string? RootName = typeof(Root).FullName;
+            Debug.Assert(RootName != null);
+
+            if (RootName == null)
+                return null!;
+
             int Index = RootName.LastIndexOf('.');
             string FullTypeName = RootName.Substring(0, Index + 1) + typeName;
-            return typeof(Root).Assembly.GetType(FullTypeName);
+
+            Assembly RootAssembly = typeof(Root).Assembly;
+
+            Type? FullType = RootAssembly.GetType(FullTypeName);
+            Debug.Assert(FullType != null);
+
+            if (FullType == null)
+                return null!;
+
+            return FullType;
         }
 
-        public static IDictionary<Type, TValue> CreateNodeDictionary<TValue>()
+        public static IDictionary<Type, TValue?> CreateNodeDictionary<TValue>()
         {
-            IDictionary<Type, TValue> Result = new Dictionary<Type, TValue>();
+            IDictionary<Type, TValue?> Result = new Dictionary<Type, TValue?>();
             Assembly LanguageAssembly = typeof(Root).Assembly;
             Type[] LanguageTypes = LanguageAssembly.GetTypes();
 
             foreach (Type Item in LanguageTypes)
             {
-                if (!Item.IsInterface && !Item.IsAbstract && Item.GetInterface(typeof(Node).FullName) != null)
+                if (!Item.IsInterface && !Item.IsAbstract)
                 {
-                    Type[] Interfaces = Item.GetInterfaces();
-                    foreach (Type InterfaceType in Interfaces)
-                        if (InterfaceType.Name == $"I{Item.Name}")
-                        {
-                            Result.Add(InterfaceType, default(TValue));
-                            break;
-                        }
+                    string? FullName = typeof(Node).FullName;
+                    Debug.Assert(FullName != null);
+
+                    if (FullName == null)
+                        return null!;
+
+                    if (Item.GetInterface(FullName) != null)
+                    {
+                        Type[] Interfaces = Item.GetInterfaces();
+                        foreach (Type InterfaceType in Interfaces)
+                            if (InterfaceType.Name == $"I{Item.Name}")
+                            {
+                                Result.Add(InterfaceType, default(TValue));
+                                break;
+                            }
+                    }
                 }
             }
 
@@ -126,22 +149,19 @@ namespace BaseNodeHelper
 
         private static bool GetExpressionText(Expression expressionNode, out string text)
         {
-            ManifestNumberExpression AsNumber;
-            QueryExpression AsQuery;
-
-            if ((AsNumber = expressionNode as ManifestNumberExpression) != null)
+            if (expressionNode is ManifestNumberExpression AsNumber)
             {
                 text = AsNumber.Text;
                 return true;
             }
-            else if ((AsQuery = expressionNode as QueryExpression) != null)
+            else if (expressionNode is QueryExpression AsQuery)
             {
                 text = AsQuery.Query.Path[0].Text;
                 return true;
             }
             else
             {
-                text = null;
+                text = null!;
                 return false;
             }
         }

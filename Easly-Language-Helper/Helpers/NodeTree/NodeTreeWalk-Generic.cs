@@ -19,7 +19,7 @@ namespace BaseNodeHelper
             return Walk(root, null, null, callbacks, data);
         }
 
-        private static bool Walk(Node node, Node parentNode, string propertyName, WalkCallbacks<TContext> callbacks, TContext data)
+        private static bool Walk(Node node, Node? parentNode, string? propertyName, WalkCallbacks<TContext> callbacks, TContext data)
         {
             Debug.Assert((parentNode == null && propertyName == null) || (parentNode != null && propertyName != null));
 
@@ -68,8 +68,11 @@ namespace BaseNodeHelper
             {
                 Debug.Assert(ChildNode != null);
 
-                if (!Walk(ChildNode, node, nodePropertyName, callbacks, data))
-                    return false;
+                if (ChildNode != null)
+                {
+                    if (!Walk(ChildNode, node, nodePropertyName, callbacks, data))
+                        return false;
+                }
             }
 
             return true;
@@ -80,16 +83,19 @@ namespace BaseNodeHelper
             NodeTreeHelperList.GetChildNodeList(node, nodePropertyName, out IReadOnlyList<Node> ChildNodeList);
             Debug.Assert(ChildNodeList != null);
 
-            if (callbacks.HandlerList != null && !callbacks.HandlerList(node, nodePropertyName, ChildNodeList, callbacks, data))
-                return false;
-
-            if (callbacks.IsRecursive || callbacks.HandlerList == null)
+            if (ChildNodeList != null)
             {
-                for (int Index = 0; Index < ChildNodeList.Count; Index++)
+                if (callbacks.HandlerList != null && !callbacks.HandlerList(node, nodePropertyName, ChildNodeList, callbacks, data))
+                    return false;
+
+                if (callbacks.IsRecursive || callbacks.HandlerList == null)
                 {
-                    Node ChildNode = ChildNodeList[Index];
-                    if (!Walk(ChildNode, node, nodePropertyName, callbacks, data))
-                        return false;
+                    for (int Index = 0; Index < ChildNodeList.Count; Index++)
+                    {
+                        Node ChildNode = ChildNodeList[Index];
+                        if (!Walk(ChildNode, node, nodePropertyName, callbacks, data))
+                            return false;
+                    }
                 }
             }
 
@@ -116,16 +122,29 @@ namespace BaseNodeHelper
                     string ListPropertyName = nodePropertyName.Replace(Key, Value);
                     Debug.Assert(ListPropertyName != nodePropertyName);
 
-                    PropertyInfo Property = node.GetType().GetProperty(ListPropertyName);
+                    Type NodeType = node.GetType();
+                    if (NodeType == null)
+                        return false;
+
+                    PropertyInfo? Property = NodeType.GetProperty(ListPropertyName);
                     Debug.Assert(Property != null);
 
-                    IList NodeList = Property.GetValue(node) as IList;
+                    if (Property == null)
+                        return false;
+
+                    IList? NodeList = Property.GetValue(node) as IList;
                     Debug.Assert(NodeList != null);
+
+                    if (NodeList == null)
+                        return false;
 
                     for (int Index = 0; Index < NodeList.Count; Index++)
                     {
-                        Node ChildNode = NodeList[Index] as Node;
+                        Node? ChildNode = NodeList[Index] as Node;
                         Debug.Assert(ChildNode != null);
+
+                        if (ChildNode == null)
+                            return false;
 
                         if (!Walk(ChildNode, node, nodePropertyName, callbacks, data))
                             return false;
@@ -133,17 +152,33 @@ namespace BaseNodeHelper
                 }
                 else
                 {
+                    if (BlockList == null || BlockList.NodeBlockList == null)
+                        return false;
+
                     for (int BlockIndex = 0; BlockIndex < BlockList.NodeBlockList.Count; BlockIndex++)
                     {
-                        IBlock Block = BlockList.NodeBlockList[BlockIndex] as IBlock;
+                        IBlock? Block = BlockList.NodeBlockList[BlockIndex] as IBlock;
+                        Debug.Assert(Block != null);
+
+                        if (Block == null)
+                            return false;
+
                         Debug.Assert(Block.NodeList != null);
 
                         if (callbacks.HandlerBlock != null && !callbacks.HandlerBlock(node, nodePropertyName, BlockList, Block, callbacks, data))
                             return false;
 
+                        if (Block == null || Block.NodeList == null)
+                            return false;
+
                         for (int Index = 0; Index < Block.NodeList.Count; Index++)
                         {
-                            Node ChildNode = Block.NodeList[Index] as Node;
+                            Node? ChildNode = Block.NodeList[Index] as Node;
+                            Debug.Assert(ChildNode != null);
+
+                            if (ChildNode == null)
+                                return false;
+
                             if (!Walk(ChildNode, node, nodePropertyName, callbacks, data))
                                 return false;
                         }

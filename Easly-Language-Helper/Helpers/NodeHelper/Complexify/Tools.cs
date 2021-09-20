@@ -13,7 +13,7 @@ namespace BaseNodeHelper
     {
         public static bool GetRenamedBinarySymbol(string symbol, out string renamedSymbol)
         {
-            renamedSymbol = null;
+            renamedSymbol = null!;
 
             switch (symbol)
             {
@@ -35,7 +35,7 @@ namespace BaseNodeHelper
 
         public static bool GetInverseRenamedBinarySymbol(string symbol, out string renamedSymbol)
         {
-            renamedSymbol = null;
+            renamedSymbol = null!;
 
             switch (symbol)
             {
@@ -57,7 +57,7 @@ namespace BaseNodeHelper
 
         public static bool GetRenamedUnarySymbol(string symbol, out string renamedSymbol)
         {
-            renamedSymbol = null;
+            renamedSymbol = null!;
 
             switch (symbol)
             {
@@ -71,7 +71,7 @@ namespace BaseNodeHelper
 
         public static bool GetInverseRenamedUnarySymbol(string symbol, out string renamedSymbol)
         {
-            renamedSymbol = null;
+            renamedSymbol = null!;
 
             switch (symbol)
             {
@@ -100,7 +100,7 @@ namespace BaseNodeHelper
                 return true;
             }
 
-            split = null;
+            split = null!;
             return false;
         }
 
@@ -157,7 +157,7 @@ namespace BaseNodeHelper
                 }
             }
 
-            split = null;
+            split = null!;
             return false;
         }
 
@@ -168,12 +168,12 @@ namespace BaseNodeHelper
 
         private static bool ComplexifyWithArguments(QualifiedName qualifiedName, char leftSymbol, char rightSymbol, out QualifiedName newQualifiedName, out List<Argument> argumentList)
         {
-            newQualifiedName = null;
-            argumentList = null;
+            newQualifiedName = null!;
+            argumentList = null!;
 
             int BreakPathIndex = -1;
-            string BeforeText = null;
-            string AfterText = null;
+            string BeforeText = null!;
+            string AfterText = null!;
 
             for (int i = 0; i < qualifiedName.Path.Count; i++)
             {
@@ -233,8 +233,8 @@ namespace BaseNodeHelper
             {
                 int ColonIndex;
                 int CommaIndex;
-                EntityDeclaration FirstEntityDeclaration = null;
-                EntityDeclaration SecondEntityDeclaration = null;
+                EntityDeclaration FirstEntityDeclaration = null!;
+                EntityDeclaration SecondEntityDeclaration = null!;
 
                 if ((ColonIndex = entityDeclaration.EntityName.Text.IndexOf(":", StringComparison.InvariantCulture)) >= 0)
                 {
@@ -270,7 +270,7 @@ namespace BaseNodeHelper
                 }
             }
 
-            split = null;
+            split = null!;
             return false;
         }
 
@@ -293,7 +293,7 @@ namespace BaseNodeHelper
                 }
             }
 
-            split = null;
+            split = null!;
             return false;
         }
 
@@ -316,7 +316,7 @@ namespace BaseNodeHelper
                 }
             }
 
-            split = null;
+            split = null!;
             return false;
         }
 
@@ -343,8 +343,8 @@ namespace BaseNodeHelper
 
         private static bool ParsePattern(string text, string patternText, out string beforeText, out string afterText)
         {
-            beforeText = null;
-            afterText = null;
+            beforeText = null!;
+            afterText = null!;
 
             int PatternIndex = text.IndexOf(patternText, StringComparison.InvariantCulture);
             if (PatternIndex >= 0)
@@ -383,7 +383,7 @@ namespace BaseNodeHelper
         {
             result = new List<T>();
 
-            foreach (object Node in nodeList)
+            foreach (object? Node in nodeList)
                 if (Node is T AsT)
                     result.Add(AsT);
                 else
@@ -394,7 +394,7 @@ namespace BaseNodeHelper
 
         private static bool GetRenamedBinarySymbol(Identifier symbol, out Identifier renamedSymbol)
         {
-            renamedSymbol = null;
+            renamedSymbol = null!;
             bool Result = false;
 
             if (GetRenamedBinarySymbol(symbol.Text, out string renamedSymbolText))
@@ -408,7 +408,7 @@ namespace BaseNodeHelper
 
         private static bool GetRenamedUnarySymbol(Identifier symbol, out Identifier renamedSymbol)
         {
-            renamedSymbol = null;
+            renamedSymbol = null!;
             bool Result = false;
 
             if (GetRenamedUnarySymbol(symbol.Text, out string renamedSymbolText))

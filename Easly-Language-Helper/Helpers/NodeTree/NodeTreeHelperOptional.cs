@@ -25,7 +25,7 @@ namespace BaseNodeHelper
             if (nodeType == null) throw new ArgumentNullException(nameof(nodeType));
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
 
-            childNodeType = null;
+            childNodeType = null!;
 
             PropertyInfo Property = NodeTreeHelper.GetPropertyOf(nodeType, propertyName);
             if (Property == null)
@@ -39,7 +39,11 @@ namespace BaseNodeHelper
             Debug.Assert(PropertyType.IsGenericType);
             Type[] GenericArguments = PropertyType.GetGenericArguments();
             Debug.Assert(GenericArguments != null);
-            Debug.Assert(GenericArguments.Length == 1);
+            Debug.Assert(GenericArguments != null && GenericArguments.Length == 1);
+
+            if (GenericArguments == null)
+                return false;
+
             childNodeType = GenericArguments[0];
 
             // return NodeTreeHelper.IsNodeInterfaceType(childNodeType);
@@ -53,7 +57,11 @@ namespace BaseNodeHelper
             if (childNode == null) throw new ArgumentNullException(nameof(childNode));
 
             Type NodeType = node.GetType();
-            PropertyInfo Property = NodeType.GetProperty(propertyName);
+
+            if (NodeType == null)
+                return false;
+
+            PropertyInfo? Property = NodeType.GetProperty(propertyName);
             if (Property == null)
                 return false;
 
@@ -62,12 +70,16 @@ namespace BaseNodeHelper
             if (!NodeTreeHelper.IsOptionalReferenceType(PropertyType))
                 return false;
 
-            IOptionalReference Optional = Property.GetValue(node) as IOptionalReference;
+            IOptionalReference? Optional = Property.GetValue(node) as IOptionalReference;
             Debug.Assert(Optional != null);
+
+            if (Optional == null)
+                return false;
+
             if (!Optional.IsAssigned)
                 return false;
 
-            Node NodeItem = Optional.Item as Node;
+            Node NodeItem = (Node)Optional.Item;
             Debug.Assert(NodeItem != null);
 
             if (NodeItem != childNode)
@@ -82,25 +94,36 @@ namespace BaseNodeHelper
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
 
             isAssigned = false;
-            childNode = null;
+            childNode = null!;
 
             Type NodeType = node.GetType();
-            PropertyInfo Property = NodeType.GetProperty(propertyName);
+            Debug.Assert(NodeType != null);
+
+            if (NodeType == null)
+                return;
+
+            PropertyInfo? Property = NodeType.GetProperty(propertyName);
             Debug.Assert(Property != null);
+
+            if (Property == null)
+                return;
 
             Type PropertyType = Property.PropertyType;
 
             Debug.Assert(NodeTreeHelper.IsOptionalReferenceType(PropertyType));
 
-            IOptionalReference Optional = Property.GetValue(node) as IOptionalReference;
+            IOptionalReference? Optional = Property.GetValue(node) as IOptionalReference;
             Debug.Assert(Optional != null);
+
+            if (Optional == null)
+                return;
 
             isAssigned = Optional.IsAssigned;
 
             if (Optional.HasItem)
-                childNode = Optional.Item as Node;
+                childNode = (Node)Optional.Item;
             else
-                childNode = null;
+                childNode = null!;
 
             Debug.Assert(!isAssigned || childNode != null);
         }
@@ -110,14 +133,14 @@ namespace BaseNodeHelper
             if (optional == null) throw new ArgumentNullException(nameof(optional));
 
             isAssigned = false;
-            childNode = null;
+            childNode = null!;
 
             isAssigned = optional.IsAssigned;
 
             if (optional.HasItem)
-                childNode = optional.Item as Node;
+                childNode = (Node)optional.Item;
             else
-                childNode = null;
+                childNode = null!;
 
             Debug.Assert(!isAssigned || childNode != null);
         }
@@ -128,8 +151,16 @@ namespace BaseNodeHelper
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
 
             Type NodeType = node.GetType();
-            PropertyInfo Property = NodeType.GetProperty(propertyName);
+            Debug.Assert(NodeType != null);
+
+            if (NodeType == null)
+                return null!;
+
+            PropertyInfo? Property = NodeType.GetProperty(propertyName);
             Debug.Assert(Property != null);
+
+            if (Property == null)
+                return null!;
 
             Type PropertyType = Property.PropertyType;
 
@@ -138,7 +169,10 @@ namespace BaseNodeHelper
             Debug.Assert(PropertyType.IsGenericType);
             Type[] GenericArguments = PropertyType.GetGenericArguments();
             Debug.Assert(GenericArguments != null);
-            Debug.Assert(GenericArguments.Length == 1);
+            Debug.Assert(GenericArguments != null && GenericArguments.Length == 1);
+
+            if (GenericArguments == null)
+                return null!;
 
             Type InterfaceType = GenericArguments[0];
 
@@ -157,7 +191,10 @@ namespace BaseNodeHelper
             Debug.Assert(OptionalType.IsGenericType);
             Type[] GenericArguments = OptionalType.GetGenericArguments();
             Debug.Assert(GenericArguments != null);
-            Debug.Assert(GenericArguments.Length == 1);
+            Debug.Assert(GenericArguments != null && GenericArguments.Length == 1);
+
+            if (GenericArguments == null)
+                return null!;
 
             Type InterfaceType = GenericArguments[0];
             Debug.Assert(NodeTreeHelper.IsNodeInterfaceType(InterfaceType));
@@ -171,13 +208,24 @@ namespace BaseNodeHelper
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
 
             Type NodeType = node.GetType();
-            PropertyInfo Property = NodeType.GetProperty(propertyName);
+            Debug.Assert(NodeType != null);
+
+            if (NodeType == null)
+                return null!;
+
+            PropertyInfo? Property = NodeType.GetProperty(propertyName);
             Debug.Assert(Property != null);
+
+            if (Property == null)
+                return null!;
 
             Debug.Assert(NodeTreeHelper.IsOptionalReferenceType(Property.PropertyType));
 
-            IOptionalReference Optional = Property.GetValue(node) as IOptionalReference;
+            IOptionalReference? Optional = Property.GetValue(node) as IOptionalReference;
             Debug.Assert(Optional != null);
+
+            if (Optional == null)
+                return null!;
 
             return Optional;
         }
@@ -189,8 +237,16 @@ namespace BaseNodeHelper
             if (optional == null) throw new ArgumentNullException(nameof(optional));
 
             Type NodeType = node.GetType();
-            PropertyInfo Property = NodeType.GetProperty(propertyName);
+            Debug.Assert(NodeType != null);
+
+            if (NodeType == null)
+                return;
+
+            PropertyInfo? Property = NodeType.GetProperty(propertyName);
             Debug.Assert(Property != null);
+
+            if (Property == null)
+                return;
 
             Debug.Assert(NodeTreeHelper.IsOptionalReferenceType(Property.PropertyType));
 
@@ -206,8 +262,16 @@ namespace BaseNodeHelper
             Type ChildNodeType = newChildNode.GetType();
 
             Type NodeType = node.GetType();
-            PropertyInfo Property = NodeType.GetProperty(propertyName);
+            Debug.Assert(NodeType != null);
+
+            if (NodeType == null)
+                return;
+
+            PropertyInfo? Property = NodeType.GetProperty(propertyName);
             Debug.Assert(Property != null);
+
+            if (Property == null)
+                return;
 
             Type PropertyType = Property.PropertyType;
 
@@ -216,17 +280,34 @@ namespace BaseNodeHelper
             Debug.Assert(PropertyType.IsGenericType);
             Type[] GenericArguments = PropertyType.GetGenericArguments();
             Debug.Assert(GenericArguments != null);
-            Debug.Assert(GenericArguments.Length == 1);
+            Debug.Assert(GenericArguments != null && GenericArguments.Length == 1);
+
+            if (GenericArguments == null)
+                return;
 
             Type InterfaceType = GenericArguments[0];
 
             // Debug.Assert(ChildNodeType.GetInterface(InterfaceType.FullName) != null);
             Debug.Assert(InterfaceType.IsAssignableFrom(ChildNodeType));
 
-            IOptionalReference Optional = Property.GetValue(node) as IOptionalReference;
+            IOptionalReference? Optional = Property.GetValue(node) as IOptionalReference;
             Debug.Assert(Optional != null);
 
-            PropertyInfo ItemProperty = Optional.GetType().GetProperty(nameof(OptionalReference<Node>.Item));
+            if (Optional == null)
+                return;
+
+            Type OptionalType = Optional.GetType();
+            Debug.Assert(OptionalType != null);
+
+            if (OptionalType == null)
+                return;
+
+            PropertyInfo? ItemProperty = OptionalType.GetProperty(nameof(OptionalReference<Node>.Item));
+            Debug.Assert(ItemProperty != null);
+
+            if (ItemProperty == null)
+                return;
+
             ItemProperty.SetValue(Optional, newChildNode);
             Optional.Assign();
         }
@@ -237,8 +318,16 @@ namespace BaseNodeHelper
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
 
             Type NodeType = node.GetType();
-            PropertyInfo Property = NodeType.GetProperty(propertyName);
+            Debug.Assert(NodeType != null);
+
+            if (NodeType == null)
+                return;
+
+            PropertyInfo? Property = NodeType.GetProperty(propertyName);
             Debug.Assert(Property != null);
+
+            if (Property == null)
+                return;
 
             Type PropertyType = Property.PropertyType;
 
@@ -247,10 +336,16 @@ namespace BaseNodeHelper
             Debug.Assert(PropertyType.IsGenericType);
             Type[] GenericArguments = PropertyType.GetGenericArguments();
             Debug.Assert(GenericArguments != null);
-            Debug.Assert(GenericArguments.Length == 1);
+            Debug.Assert(GenericArguments != null && GenericArguments.Length == 1);
 
-            IOptionalReference Optional = Property.GetValue(node) as IOptionalReference;
+            if (GenericArguments == null)
+                return;
+
+            IOptionalReference? Optional = Property.GetValue(node) as IOptionalReference;
             Debug.Assert(Optional != null);
+
+            if (Optional == null)
+                return;
 
             Optional.Clear();
 

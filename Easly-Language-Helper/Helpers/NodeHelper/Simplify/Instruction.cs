@@ -58,16 +58,16 @@ namespace BaseNodeHelper
                 case ThrowInstruction AsThrowInstruction:
                     return SimplifyThrowInstruction(AsThrowInstruction, out simplifiedNode);
                 default:
-                    simplifiedNode = null;
+                    simplifiedNode = null!;
                     return false;
             }
         }
 
         private static bool SimplifyCommandInstruction(CommandInstruction node, out Node simplifiedNode)
         {
-            simplifiedNode = null;
+            simplifiedNode = null!;
 
-            CommandInstruction ClonedCommand = DeepCloneNode(node, cloneCommentGuid: false) as CommandInstruction;
+            CommandInstruction ClonedCommand = (CommandInstruction)DeepCloneNode(node, cloneCommentGuid: false);
             if (ClonedCommand.ArgumentBlocks.NodeBlockList.Count > 0)
                 simplifiedNode = CreateCommandInstruction(ClonedCommand.Command, new List<Argument>());
 
@@ -77,7 +77,7 @@ namespace BaseNodeHelper
         private static bool SimplifyAsLongAsInstruction(AsLongAsInstruction node, out Node simplifiedNode)
         {
             QualifiedName AssignmentTarget = CreateEmptyQualifiedName();
-            Expression Source = DeepCloneNode(node.ContinueCondition, cloneCommentGuid: false) as Expression;
+            Expression Source = (Expression)DeepCloneNode(node.ContinueCondition, cloneCommentGuid: false);
 
             simplifiedNode = CreateAssignmentInstruction(new List<QualifiedName>() { AssignmentTarget }, Source);
 
@@ -88,7 +88,7 @@ namespace BaseNodeHelper
         {
             if (BlockListHelper<QualifiedName>.IsSimple(node.DestinationBlocks))
             {
-                AssignmentInstruction ClonedInstruction = DeepCloneNode(node, cloneCommentGuid: false) as AssignmentInstruction;
+                AssignmentInstruction ClonedInstruction = (AssignmentInstruction)DeepCloneNode(node, cloneCommentGuid: false);
                 QualifiedName Target = ClonedInstruction.DestinationBlocks.NodeBlockList[0].NodeList[0];
 
                 if (ClonedInstruction.Source is QueryExpression AsQueryExpression)
@@ -121,7 +121,7 @@ namespace BaseNodeHelper
         private static bool SimplifyAttachmentInstruction(AttachmentInstruction node, out Node simplifiedNode)
         {
             QualifiedName AssignmentTarget = CreateEmptyQualifiedName();
-            Expression Source = DeepCloneNode(node.Source, cloneCommentGuid: false) as Expression;
+            Expression Source = (Expression)DeepCloneNode(node.Source, cloneCommentGuid: false);
 
             simplifiedNode = CreateAssignmentInstruction(new List<QualifiedName>() { AssignmentTarget }, Source);
 
@@ -131,7 +131,7 @@ namespace BaseNodeHelper
         private static bool SimplifyCheckInstruction(CheckInstruction node, out Node simplifiedNode)
         {
             QualifiedName AssignmentTarget = CreateEmptyQualifiedName();
-            Expression Source = DeepCloneNode(node.BooleanExpression, cloneCommentGuid: false) as Expression;
+            Expression Source = (Expression)DeepCloneNode(node.BooleanExpression, cloneCommentGuid: false);
 
             simplifiedNode = CreateAssignmentInstruction(new List<QualifiedName>() { AssignmentTarget }, Source);
 
@@ -153,7 +153,7 @@ namespace BaseNodeHelper
             if (node.Instructions.InstructionBlocks.NodeBlockList.Count > 0)
             {
                 Debug.Assert(node.Instructions.InstructionBlocks.NodeBlockList[0].NodeList.Count > 0, "A block in a block list always has at least one element");
-                simplifiedNode = DeepCloneNode(node.Instructions.InstructionBlocks.NodeBlockList[0].NodeList[0], cloneCommentGuid: false) as Instruction;
+                simplifiedNode = (Instruction)DeepCloneNode(node.Instructions.InstructionBlocks.NodeBlockList[0].NodeList[0], cloneCommentGuid: false);
             }
             else
                 simplifiedNode = CreateEmptyCommandInstruction();
@@ -163,7 +163,7 @@ namespace BaseNodeHelper
 
         private static bool SimplifyForLoopInstruction(ForLoopInstruction node, out Node simplifiedNode)
         {
-            Instruction SelectedInstruction = null;
+            Instruction SelectedInstruction = null!;
 
             if (node.InitInstructionBlocks.NodeBlockList.Count > 0)
             {
@@ -182,11 +182,11 @@ namespace BaseNodeHelper
             }
 
             if (SelectedInstruction != null)
-                simplifiedNode = DeepCloneNode(SelectedInstruction, cloneCommentGuid: false) as Instruction;
+                simplifiedNode = (Instruction)DeepCloneNode(SelectedInstruction, cloneCommentGuid: false);
             else
             {
                 QualifiedName AssignmentTarget = CreateEmptyQualifiedName();
-                Expression Source = DeepCloneNode(node.WhileCondition, cloneCommentGuid: false) as Expression;
+                Expression Source = (Expression)DeepCloneNode(node.WhileCondition, cloneCommentGuid: false);
 
                 simplifiedNode = CreateAssignmentInstruction(new List<QualifiedName>() { AssignmentTarget }, Source);
             }
@@ -202,12 +202,12 @@ namespace BaseNodeHelper
             if (FirstConditional.Instructions.InstructionBlocks.NodeBlockList.Count > 0)
             {
                 Debug.Assert(FirstConditional.Instructions.InstructionBlocks.NodeBlockList[0].NodeList.Count > 0, "A block in a block list always has at least one element");
-                simplifiedNode = DeepCloneNode(FirstConditional.Instructions.InstructionBlocks.NodeBlockList[0].NodeList[0], cloneCommentGuid: false) as Instruction;
+                simplifiedNode = (Instruction)DeepCloneNode(FirstConditional.Instructions.InstructionBlocks.NodeBlockList[0].NodeList[0], cloneCommentGuid: false);
             }
             else
             {
                 QualifiedName AssignmentTarget = CreateEmptyQualifiedName();
-                Expression Source = DeepCloneNode(FirstConditional.BooleanExpression, cloneCommentGuid: false) as Expression;
+                Expression Source = (Expression)DeepCloneNode(FirstConditional.BooleanExpression, cloneCommentGuid: false);
 
                 simplifiedNode = CreateAssignmentInstruction(new List<QualifiedName>() { AssignmentTarget }, Source);
             }
@@ -217,8 +217,8 @@ namespace BaseNodeHelper
 
         private static bool SimplifyIndexAssignmentInstruction(IndexAssignmentInstruction node, out Node simplifiedNode)
         {
-            QualifiedName AssignmentTarget = DeepCloneNode(node.Destination, cloneCommentGuid: false) as QualifiedName;
-            Expression Source = DeepCloneNode(node.Source, cloneCommentGuid: false) as Expression;
+            QualifiedName AssignmentTarget = (QualifiedName)DeepCloneNode(node.Destination, cloneCommentGuid: false);
+            Expression Source = (Expression)DeepCloneNode(node.Source, cloneCommentGuid: false);
 
             simplifiedNode = CreateAssignmentInstruction(new List<QualifiedName>() { AssignmentTarget }, Source);
 
@@ -228,7 +228,7 @@ namespace BaseNodeHelper
         private static bool SimplifyInspectInstruction(InspectInstruction node, out Node simplifiedNode)
         {
             QualifiedName AssignmentTarget = CreateEmptyQualifiedName();
-            Expression Source = DeepCloneNode(node.Source, cloneCommentGuid: false) as Expression;
+            Expression Source = (Expression)DeepCloneNode(node.Source, cloneCommentGuid: false);
 
             simplifiedNode = CreateAssignmentInstruction(new List<QualifiedName>() { AssignmentTarget }, Source);
 
@@ -247,14 +247,14 @@ namespace BaseNodeHelper
 
             if (node.Source is QueryExpression AsQueryExpression)
             {
-                QueryExpression ClonedSource = DeepCloneNode(AsQueryExpression, cloneCommentGuid: false) as QueryExpression;
+                QueryExpression ClonedSource = (QueryExpression)DeepCloneNode(AsQueryExpression, cloneCommentGuid: false);
 
                 IdentifierList.AddRange(ClonedSource.Query.Path);
                 ArgumentBlocks = ClonedSource.ArgumentBlocks;
             }
             else
             {
-                Expression ClonedSource = DeepCloneNode(node.Source, cloneCommentGuid: false) as Expression;
+                Expression ClonedSource = (Expression)DeepCloneNode(node.Source, cloneCommentGuid: false);
                 Argument FirstArgument = CreatePositionalArgument(ClonedSource);
                 ArgumentBlocks = BlockListHelper<Argument>.CreateSimpleBlockList(FirstArgument);
             }
@@ -268,7 +268,7 @@ namespace BaseNodeHelper
         private static bool SimplifyOverLoopInstruction(OverLoopInstruction node, out Node simplifiedNode)
         {
             QualifiedName AssignmentTarget = CreateEmptyQualifiedName();
-            Expression Source = DeepCloneNode(node.OverList, cloneCommentGuid: false) as Expression;
+            Expression Source = (Expression)DeepCloneNode(node.OverList, cloneCommentGuid: false);
 
             simplifiedNode = CreateAssignmentInstruction(new List<QualifiedName>() { AssignmentTarget }, Source);
 
@@ -278,7 +278,7 @@ namespace BaseNodeHelper
         private static bool SimplifyPrecursorIndexAssignmentInstruction(PrecursorIndexAssignmentInstruction node, out Node simplifiedNode)
         {
             QualifiedName AssignmentTarget = CreateEmptyQualifiedName();
-            Expression Source = DeepCloneNode(node.Source, cloneCommentGuid: false) as Expression;
+            Expression Source = (Expression)DeepCloneNode(node.Source, cloneCommentGuid: false);
 
             simplifiedNode = CreateAssignmentInstruction(new List<QualifiedName>() { AssignmentTarget }, Source);
 
@@ -304,7 +304,7 @@ namespace BaseNodeHelper
 
         private static bool SimplifyReleaseInstruction(ReleaseInstruction node, out Node simplifiedNode)
         {
-            QualifiedName Command = DeepCloneNode(node.EntityName, cloneCommentGuid: false) as QualifiedName;
+            QualifiedName Command = (QualifiedName)DeepCloneNode(node.EntityName, cloneCommentGuid: false);
             simplifiedNode = CreateCommandInstruction(Command, new List<Argument>());
 
             return true;

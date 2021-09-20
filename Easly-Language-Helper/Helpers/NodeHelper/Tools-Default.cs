@@ -19,8 +19,11 @@ namespace BaseNodeHelper
             if (!optional.IsAssigned)
                 return false;
 
-            Node Node = optional.Item as Node;
+            Node Node = (Node)optional.Item;
             Debug.Assert(Node != null, $"The optional item is always a {nameof(Node)}");
+
+            if (Node == null)
+                return false;
 
             return IsDefaultNode(Node);
         }
@@ -168,8 +171,11 @@ namespace BaseNodeHelper
                     IList<Identifier> Path = AsQueryExpression.Query.Path;
                     if (Path.Count == 1 && Path[0].Text.Length == 0)
                     {
-                        IBlockList ArgumentBlocks = AsQueryExpression.ArgumentBlocks as IBlockList;
+                        IBlockList ArgumentBlocks = (IBlockList)AsQueryExpression.ArgumentBlocks;
                         Debug.Assert(ArgumentBlocks != null, $"ArgumentBlocks is always a {nameof(IBlockList)}");
+
+                        if (ArgumentBlocks == null)
+                            return false;
 
                         if (NodeTreeHelperBlockList.IsBlockListEmpty(ArgumentBlocks))
                             return true;

@@ -31,6 +31,9 @@ namespace BaseNodeHelper
             IList<PropertyInfo> Properties = GetTypeProperties(nodeType);
             Debug.Assert(Properties != null);
 
+            if (Properties == null)
+                return null!;
+
             List<string> Result = new List<string>();
             foreach (PropertyInfo Property in Properties)
                 Result.Add(Property.Name);
@@ -39,30 +42,37 @@ namespace BaseNodeHelper
             return Result;
         }
 
-        // Exotic calls to get a property for interfaces? WTF Mikeysoft...
         public static PropertyInfo GetPropertyOf(Type type, string propertyName)
         {
             if (type == null) throw new ArgumentNullException(nameof(type));
 
-            PropertyInfo Property = type.GetProperty(propertyName);
+            PropertyInfo? Property = type.GetProperty(propertyName);
+            Debug.Assert(Property != null);
+
             if (Property != null)
                 return Property;
 
             foreach (Type Interface in type.GetInterfaces())
             {
-                PropertyInfo InterfaceProperty = Interface.GetProperty(propertyName);
+                PropertyInfo? InterfaceProperty = Interface.GetProperty(propertyName);
                 if (InterfaceProperty != null)
                     return InterfaceProperty;
             }
 
-            return null;
+            return null!;
         }
 
         public static bool IsNodeInterfaceType(Type type)
         {
             if (type == null) throw new ArgumentNullException(nameof(type));
 
-            return type.IsInterface && type.GetInterface(typeof(Node).FullName) != null;
+            string? FullName = typeof(Node).FullName;
+            Debug.Assert(FullName != null);
+
+            if (FullName == null)
+                return false;
+
+            return type.IsInterface && type.GetInterface(FullName) != null;
         }
 
         public static bool IsNodeDescendantType(Type type)
@@ -82,7 +92,7 @@ namespace BaseNodeHelper
                 if (InterfaceType.Name == $"I{type.Name}")
                     return InterfaceType;
 
-            return null;
+            return null!;
         }
 
         public static Type InterfaceTypeToNodeType(Type type)
@@ -90,7 +100,12 @@ namespace BaseNodeHelper
             if (type == null) throw new ArgumentNullException(nameof(type));
             if (!type.IsInterface) throw new ArgumentException($"{nameof(type)} must be an interface");
 
-            string FullName = type.FullName;
+            string? FullName = type.FullName;
+            Debug.Assert(FullName != null);
+
+            if (FullName == null)
+                return null!;
+
             string[] Prefixes = FullName.Split('.');
             Debug.Assert(Prefixes.Length > 0);
 
@@ -116,8 +131,17 @@ namespace BaseNodeHelper
                     NodeTypeFullName += NodeTypeName;
             }
 
-            Type Result = type.Assembly.GetType(NodeTypeFullName);
+            Assembly TypeAssembly = type.Assembly;
+            Debug.Assert(TypeAssembly != null);
+
+            if (TypeAssembly == null)
+                return null!;
+
+            Type? Result = TypeAssembly.GetType(NodeTypeFullName);
             Debug.Assert(Result != null);
+
+            if (Result == null)
+                return null!;
 
             return Result;
         }
@@ -131,7 +155,10 @@ namespace BaseNodeHelper
 
             Type[] GenericArguments = type.GetGenericArguments();
             Debug.Assert(GenericArguments != null);
-            Debug.Assert(GenericArguments.Length == 1);
+            Debug.Assert(GenericArguments != null && GenericArguments.Length == 1);
+
+            if (GenericArguments == null)
+                return false;
 
             Type GenericType = GenericArguments[0];
 
@@ -148,7 +175,10 @@ namespace BaseNodeHelper
 
             Type[] GenericArguments = type.GetGenericArguments();
             Debug.Assert(GenericArguments != null);
-            Debug.Assert(GenericArguments.Length == 1);
+            Debug.Assert(GenericArguments != null && GenericArguments.Length == 1);
+
+            if (GenericArguments == null)
+                return false;
 
             Type GenericType = GenericArguments[0];
 
@@ -164,7 +194,10 @@ namespace BaseNodeHelper
 
             Type[] GenericArguments = type.GetGenericArguments();
             Debug.Assert(GenericArguments != null);
-            Debug.Assert(GenericArguments.Length == 1);
+            Debug.Assert(GenericArguments != null && GenericArguments.Length == 1);
+
+            if (GenericArguments == null)
+                return false;
 
             Type GenericType = GenericArguments[0];
 
@@ -181,6 +214,9 @@ namespace BaseNodeHelper
 
             Type[] GenericArguments = type.GetGenericArguments();
             Debug.Assert(GenericArguments != null);
+
+            if (GenericArguments == null)
+                return false;
 
             // Debug.Assert(GenericArguments.Length == 2);
             Debug.Assert(GenericArguments.Length == 1);
@@ -201,6 +237,9 @@ namespace BaseNodeHelper
             Type[] GenericArguments = type.GetGenericArguments();
             Debug.Assert(GenericArguments != null);
 
+            if (GenericArguments == null)
+                return false;
+
             // Debug.Assert(GenericArguments.Length == 2);
             Debug.Assert(GenericArguments.Length == 1);
 
@@ -215,7 +254,12 @@ namespace BaseNodeHelper
             if (node == null) throw new ArgumentNullException(nameof(node));
 
             Type NodeType = node.GetType();
-            PropertyInfo Property = NodeType.GetProperty(nameof(Identifier.Text));
+            Debug.Assert(NodeType != null);
+
+            if (NodeType == null)
+                return false;
+
+            PropertyInfo? Property = NodeType.GetProperty(nameof(Identifier.Text));
 
             return Property != null;
         }
@@ -227,13 +271,21 @@ namespace BaseNodeHelper
             if (childNode == null) throw new ArgumentNullException(nameof(childNode));
 
             Type ParentNodeType = node.GetType();
-            PropertyInfo Property = ParentNodeType.GetProperty(propertyName);
+            Debug.Assert(ParentNodeType != null);
+
+            if (ParentNodeType == null)
+                return false;
+
+            PropertyInfo? Property = ParentNodeType.GetProperty(propertyName);
             Debug.Assert(Property != null);
+
+            if (Property == null)
+                return false;
 
             Type NodeType = childNode.GetType();
             Type PropertyType = Property.PropertyType;
 
-            Type AssignedType = null;
+            Type AssignedType = null!;
 
             // if (IsNodeInterfaceType(PropertyType))
             if (IsNodeDescendantType(PropertyType))
@@ -242,6 +294,9 @@ namespace BaseNodeHelper
             {
                 Type[] GenericArguments = PropertyType.GetGenericArguments();
                 Debug.Assert(GenericArguments != null);
+
+                if (GenericArguments == null)
+                    return false;
 
                 if (IsOptionalReferenceType(PropertyType))
                 {
@@ -272,12 +327,39 @@ namespace BaseNodeHelper
 
         private static bool GetBaseNodeAncestor(Type nodeType, out Type ancestorType)
         {
-            ancestorType = null;
+            ancestorType = null!;
             bool Result = false;
 
-            string BaseNodeNamespace = typeof(Node).FullName.Substring(0, typeof(Node).FullName.IndexOf(".", StringComparison.InvariantCulture) + 1);
-            while (nodeType != typeof(object) && !nodeType.FullName.StartsWith(BaseNodeNamespace, StringComparison.InvariantCulture))
-                nodeType = nodeType.BaseType;
+            string? FullName = typeof(Node).FullName;
+            Debug.Assert(FullName != null);
+
+            if (FullName == null)
+                return false;
+
+            string? NodeFullName = nodeType.FullName;
+            Debug.Assert(NodeFullName != null);
+
+            if (NodeFullName == null)
+                return false;
+
+            string BaseNodeNamespace = FullName.Substring(0, FullName.IndexOf(".", StringComparison.InvariantCulture) + 1);
+            while (nodeType != typeof(object) && !NodeFullName.StartsWith(BaseNodeNamespace, StringComparison.InvariantCulture))
+            {
+                Type? BaseType = nodeType.BaseType;
+                Debug.Assert(BaseType != null);
+
+                if (BaseType == null)
+                    return false;
+
+                nodeType = BaseType;
+
+                NodeFullName = nodeType.FullName;
+                Debug.Assert(NodeFullName != null);
+
+                if (NodeFullName == null)
+                    return false;
+            }
+
             Debug.Assert(nodeType != typeof(object));
 
             if (nodeType != typeof(Node) && nodeType != typeof(Node))
@@ -327,6 +409,9 @@ namespace BaseNodeHelper
             IList<PropertyInfo> Properties = GetTypeProperties(NodeType);
             Debug.Assert(Properties != null);
 
+            if (Properties == null)
+                return;
+
             foreach (PropertyInfo Property in Properties)
             {
                 Type PropertyType = Property.PropertyType;
@@ -334,8 +419,11 @@ namespace BaseNodeHelper
 
                 if (IsOptionalReferenceType(PropertyType))
                 {
-                    IOptionalReference Optional = Property.GetValue(node) as IOptionalReference;
+                    IOptionalReference? Optional = Property.GetValue(node) as IOptionalReference;
                     Debug.Assert(Optional != null);
+
+                    if (Optional == null)
+                        return;
 
                     optionalNodesTable.Add(PropertyName, Optional);
                 }
@@ -352,6 +440,9 @@ namespace BaseNodeHelper
             IList<PropertyInfo> Properties = GetTypeProperties(NodeType);
             Debug.Assert(Properties != null);
 
+            if (Properties == null)
+                return;
+
             foreach (PropertyInfo Property in Properties)
             {
                 Type PropertyType = Property.PropertyType;
@@ -363,13 +454,19 @@ namespace BaseNodeHelper
                     Type[] GenericArguments = PropertyType.GetGenericArguments();
                     Debug.Assert(GenericArguments != null);
 
+                    if (GenericArguments == null)
+                        return;
+
                     // Debug.Assert(GenericArguments.Length == 2);
                     Debug.Assert(GenericArguments.Length == 1);
 
                     if (GenericArguments[0] == typeof(Argument))
                     {
-                        IBlockList<Argument> ArgumentBlocks = Property.GetValue(node) as IBlockList<Argument>;
+                        IBlockList<Argument>? ArgumentBlocks = Property.GetValue(node) as IBlockList<Argument>;
                         Debug.Assert(ArgumentBlocks != null);
+
+                        if (ArgumentBlocks == null)
+                            return;
 
                         argumentBlocksTable.Add(PropertyName, ArgumentBlocks);
                     }

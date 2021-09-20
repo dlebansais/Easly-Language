@@ -20,8 +20,16 @@ namespace BaseNodeHelper
             if (sourceIdentifier == null) throw new ArgumentNullException(nameof(sourceIdentifier));
 
             Type NodeType = node.GetType();
-            PropertyInfo Property = NodeType.GetProperty(propertyName);
+            Debug.Assert(NodeType != null);
+
+            if (NodeType == null)
+                return null!;
+
+            PropertyInfo? Property = NodeType.GetProperty(propertyName);
             Debug.Assert(Property != null);
+
+            if (Property == null)
+                return null!;
 
             Type PropertyType = Property.PropertyType;
             Debug.Assert(NodeTreeHelper.IsBlockListType(PropertyType));
@@ -50,20 +58,78 @@ namespace BaseNodeHelper
             Type[] TypeArguments = propertyType.GetGenericArguments();
 
             Type BlockType = typeof(Block<>).MakeGenericType(TypeArguments);
-            IBlock NewBlock = BlockType.Assembly.CreateInstance(BlockType.FullName) as IBlock;
+            Debug.Assert(BlockType != null);
+
+            if (BlockType == null)
+                return null!;
+
+            string? BlockTypeFullName = BlockType.FullName;
+            Debug.Assert(BlockTypeFullName != null);
+
+            if (BlockTypeFullName == null)
+                return null!;
+
+            IBlock? NewBlock = BlockType.Assembly.CreateInstance(BlockTypeFullName) as IBlock;
             Debug.Assert(NewBlock != null);
 
+            if (NewBlock == null)
+                return null!;
+
             Document EmptyComment = NodeHelper.CreateEmptyDocumentation();
-            BlockType.GetProperty(nameof(Node.Documentation)).SetValue(NewBlock, EmptyComment);
+
+            PropertyInfo? DocumentationPropertyInfo = BlockType.GetProperty(nameof(Node.Documentation));
+            Debug.Assert(DocumentationPropertyInfo != null);
+
+            if (DocumentationPropertyInfo == null)
+                return null!;
+
+            DocumentationPropertyInfo.SetValue(NewBlock, EmptyComment);
 
             Type NodeListType = typeof(List<>).MakeGenericType(new Type[] { TypeArguments[0] });
-            IList NewNodeList = NodeListType.Assembly.CreateInstance(NodeListType.FullName) as IList;
+
+            string? FullName = NodeListType.FullName;
+            Debug.Assert(FullName != null);
+
+            if (FullName == null)
+                return null!;
+
+            IList? NewNodeList = NodeListType.Assembly.CreateInstance(FullName) as IList;
             Debug.Assert(NewNodeList != null);
 
-            BlockType.GetProperty(nameof(IBlock.Replication)).SetValue(NewBlock, replication);
-            BlockType.GetProperty(nameof(IBlock.NodeList)).SetValue(NewBlock, NewNodeList);
-            BlockType.GetProperty(nameof(IBlock.ReplicationPattern)).SetValue(NewBlock, replicationPattern);
-            BlockType.GetProperty(nameof(IBlock.SourceIdentifier)).SetValue(NewBlock, sourceIdentifier);
+            if (NewNodeList == null)
+                return null!;
+
+            PropertyInfo? ReplicationPropertyInfo = BlockType.GetProperty(nameof(IBlock.Replication));
+            Debug.Assert(ReplicationPropertyInfo != null);
+
+            if (ReplicationPropertyInfo == null)
+                return null!;
+
+            ReplicationPropertyInfo.SetValue(NewBlock, replication);
+
+            PropertyInfo? NodeListPropertyInfo = BlockType.GetProperty(nameof(IBlock.NodeList));
+            Debug.Assert(NodeListPropertyInfo != null);
+
+            if (NodeListPropertyInfo == null)
+                return null!;
+
+            NodeListPropertyInfo.SetValue(NewBlock, NewNodeList);
+
+            PropertyInfo? ReplicationPatternPropertyInfo = BlockType.GetProperty(nameof(IBlock.ReplicationPattern));
+            Debug.Assert(ReplicationPatternPropertyInfo != null);
+
+            if (ReplicationPatternPropertyInfo == null)
+                return null!;
+
+            ReplicationPatternPropertyInfo.SetValue(NewBlock, replicationPattern);
+
+            PropertyInfo? SourceIdentifierPropertyInfo = BlockType.GetProperty(nameof(IBlock.SourceIdentifier));
+            Debug.Assert(SourceIdentifierPropertyInfo != null);
+
+            if (SourceIdentifierPropertyInfo == null)
+                return null!;
+
+            SourceIdentifierPropertyInfo.SetValue(NewBlock, sourceIdentifier);
 
             return NewBlock;
         }

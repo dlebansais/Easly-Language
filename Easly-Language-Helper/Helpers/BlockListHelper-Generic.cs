@@ -86,10 +86,12 @@ namespace BaseNodeHelper
                 for (int Index = 0; Index < Block.NodeList.Count; Index++)
                 {
                     TNode Item = Block.NodeList[Index];
-                    TNode NewItem = NodeHelper.DeepCloneNode(Item, cloneCommentGuid: false) as TNode;
+                    TNode NewItem = (TNode)NodeHelper.DeepCloneNode(Item, cloneCommentGuid: false);
 
                     Debug.Assert(NewItem != null, $"The clone is always a {nameof(TNode)}");
-                    NewNodeList.Add(NewItem);
+
+                    if (NewItem != null)
+                        NewNodeList.Add(NewItem);
                 }
 
                 NewBlock.NodeList = NewNodeList;

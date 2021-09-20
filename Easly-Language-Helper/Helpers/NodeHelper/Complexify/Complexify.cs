@@ -24,8 +24,15 @@ namespace BaseNodeHelper
             {
                 int OldCount = complexifiedNodeList.Count;
 
-                foreach (Node Node in ComplexifiedList)
+                foreach (Node? Node in ComplexifiedList)
+                {
+                    Debug.Assert(Node != null);
+
+                    if (Node == null)
+                        return;
+
                     complexifiedNodeList.Add(Node);
+                }
 
                 int NewCount = complexifiedNodeList.Count;
 
@@ -37,7 +44,7 @@ namespace BaseNodeHelper
         private static bool GetComplexifiedNodeNotRecursive(Node node, out IList complexifiedNodeList)
         {
             bool Result = false;
-            complexifiedNodeList = null;
+            complexifiedNodeList = null!;
 
             switch (node)
             {
@@ -82,7 +89,7 @@ namespace BaseNodeHelper
                     break;
 
                 default:
-                    complexifiedNodeList = null;
+                    complexifiedNodeList = null!;
                     return false;
             }
 

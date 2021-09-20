@@ -59,7 +59,7 @@ namespace BaseNodeHelper
 
         private static bool GetComplexifiedCommandInstructionSingle2(CommandInstruction node, out IList<Instruction> complexifiedInstructionList)
         {
-            complexifiedInstructionList = null;
+            complexifiedInstructionList = null!;
 
             if (ComplexifyAsIfThenElseInstruction(node, out IfThenElseInstruction ComplexifiedIfThenElseInstruction))
                 complexifiedInstructionList = new List<Instruction>() { ComplexifiedIfThenElseInstruction };
@@ -85,7 +85,7 @@ namespace BaseNodeHelper
 
         private static bool ComplexifyAsAsLongAsInstruction(CommandInstruction node, out AsLongAsInstruction complexifiedNode)
         {
-            complexifiedNode = null;
+            complexifiedNode = null!;
 
             if (ParsePattern(node, "as long as ", out string BeforeText, out string AfterText) && BeforeText.Length == 0)
             {
@@ -99,7 +99,7 @@ namespace BaseNodeHelper
 
         private static bool ComplexifyAsAssignmentInstruction(CommandInstruction node, out AssignmentInstruction complexifiedNode)
         {
-            complexifiedNode = null;
+            complexifiedNode = null!;
 
             int BreakIndex = -1;
             int BreakTextIndex = -1;
@@ -132,7 +132,7 @@ namespace BaseNodeHelper
 
                 QualifiedName AssignmentTarget = CreateQualifiedName(TargetIdentifierList);
 
-                CommandInstruction ClonedCommand = DeepCloneNode(node, cloneCommentGuid: false) as CommandInstruction;
+                CommandInstruction ClonedCommand = (CommandInstruction)DeepCloneNode(node, cloneCommentGuid: false);
                 QualifiedName AssignmentSource = CreateQualifiedName(SourceIdentifierList);
                 Expression Source = CreateQueryExpression(AssignmentSource, ClonedCommand.ArgumentBlocks);
 
@@ -144,7 +144,7 @@ namespace BaseNodeHelper
 
         private static bool ComplexifyAsAttachmentInstruction(CommandInstruction node, out AttachmentInstruction complexifiedNode)
         {
-            complexifiedNode = null;
+            complexifiedNode = null!;
 
             if (ParsePattern(node, "attach", out string BeforeText, out string AfterText) && BeforeText.Length == 0)
             {
@@ -174,7 +174,7 @@ namespace BaseNodeHelper
 
         private static bool ComplexifyAsCheckInstruction(CommandInstruction node, out CheckInstruction complexifiedNode)
         {
-            complexifiedNode = null;
+            complexifiedNode = null!;
 
             if (ParsePattern(node, "check ", out string BeforeText, out string AfterText) && BeforeText.Length == 0)
             {
@@ -187,7 +187,7 @@ namespace BaseNodeHelper
 
         private static bool ComplexifyAsCreateInstruction(CommandInstruction node, out CreateInstruction complexifiedNode)
         {
-            complexifiedNode = null;
+            complexifiedNode = null!;
 
             if (ParsePattern(node, "create ", out string BeforeText, out string AfterText) && BeforeText.Length == 0)
             {
@@ -201,7 +201,7 @@ namespace BaseNodeHelper
 
         private static bool ComplexifyAsDebugInstruction(CommandInstruction node, out DebugInstruction complexifiedNode)
         {
-            complexifiedNode = null;
+            complexifiedNode = null!;
             string Pattern = "debug ";
 
             if (ParsePattern(node, Pattern, out string BeforeText, out string AfterText) && BeforeText.Length == 0)
@@ -215,7 +215,7 @@ namespace BaseNodeHelper
 
         private static bool ComplexifyAsForLoopInstruction(CommandInstruction node, out ForLoopInstruction complexifiedNode)
         {
-            complexifiedNode = null;
+            complexifiedNode = null!;
             string Pattern = "for ";
 
             if (ParsePattern(node, Pattern, out string BeforeText, out string AfterText) && BeforeText.Length == 0)
@@ -229,7 +229,7 @@ namespace BaseNodeHelper
 
         private static bool ComplexifyAsIfThenElseInstruction(CommandInstruction node, out IfThenElseInstruction complexifiedNode)
         {
-            complexifiedNode = null;
+            complexifiedNode = null!;
             string Pattern = "if ";
 
             if (ParsePattern(node, Pattern, out string BeforeText, out string AfterText) && BeforeText.Length == 0)
@@ -244,11 +244,11 @@ namespace BaseNodeHelper
 
         private static bool ComplexifyAsIndexAssignmentInstruction(CommandInstruction node, out IndexAssignmentInstruction complexifiedNode)
         {
-            complexifiedNode = null;
+            complexifiedNode = null!;
 
             if (node.Command.Path.Count > 1 && node.Command.Path[node.Command.Path.Count - 1].Text == "[]:=")
             {
-                QualifiedName ClonedDestination = DeepCloneNode(node.Command, cloneCommentGuid: false) as QualifiedName;
+                QualifiedName ClonedDestination = (QualifiedName)DeepCloneNode(node.Command, cloneCommentGuid: false);
                 ClonedDestination.Path.RemoveAt(ClonedDestination.Path.Count - 1);
 
                 IBlockList<Argument> ClonedArgumentBlocks;
@@ -265,7 +265,7 @@ namespace BaseNodeHelper
 
         private static bool ComplexifyAsInspectInstruction(CommandInstruction node, out InspectInstruction complexifiedNode)
         {
-            complexifiedNode = null;
+            complexifiedNode = null!;
             string Pattern = "inspect ";
 
             if (ParsePattern(node, Pattern, out string BeforeText, out string AfterText) && BeforeText.Length == 0)
@@ -283,7 +283,7 @@ namespace BaseNodeHelper
 
         private static bool ComplexifyAsOverLoopInstruction(CommandInstruction node, out OverLoopInstruction complexifiedNode)
         {
-            complexifiedNode = null;
+            complexifiedNode = null!;
             string Pattern = "over ";
 
             if (ParsePattern(node, Pattern, out string BeforeText, out string AfterText) && BeforeText.Length == 0)
@@ -299,7 +299,7 @@ namespace BaseNodeHelper
 
         private static bool ComplexifyAsPrecursorIndexAssignmentInstruction(CommandInstruction node, out PrecursorIndexAssignmentInstruction complexifiedNode)
         {
-            complexifiedNode = null;
+            complexifiedNode = null!;
 
             if (node.Command.Path.Count == 1 && node.Command.Path[0].Text == "precursor[]:=" && node.ArgumentBlocks.NodeBlockList.Count > 0)
             {
@@ -312,7 +312,7 @@ namespace BaseNodeHelper
 
         private static bool ComplexifyAsPrecursorInstruction(CommandInstruction node, out PrecursorInstruction complexifiedNode)
         {
-            complexifiedNode = null;
+            complexifiedNode = null!;
 
             if (node.Command.Path.Count == 1 && node.Command.Path[0].Text == "precursor")
             {
@@ -325,7 +325,7 @@ namespace BaseNodeHelper
 
         private static bool ComplexifyAsRaiseEventInstruction(CommandInstruction node, out RaiseEventInstruction complexifiedNode)
         {
-            complexifiedNode = null;
+            complexifiedNode = null!;
             string Pattern = "raise ";
 
             if (ParsePattern(node, Pattern, out string BeforeText, out string AfterText) && BeforeText.Length == 0)
@@ -339,7 +339,7 @@ namespace BaseNodeHelper
 
         private static bool ComplexifyAsReleaseInstruction(CommandInstruction node, out ReleaseInstruction complexifiedNode)
         {
-            complexifiedNode = null;
+            complexifiedNode = null!;
             string Pattern = "release ";
 
             if (ParsePattern(node, Pattern, out string BeforeText, out string AfterText) && BeforeText.Length == 0)
@@ -353,7 +353,7 @@ namespace BaseNodeHelper
 
         private static bool ComplexifyAsThrowInstruction(CommandInstruction node, out ThrowInstruction complexifiedNode)
         {
-            complexifiedNode = null;
+            complexifiedNode = null!;
 
             if (ParsePattern(node, "throw ", out string BeforeText, out string AfterText) && BeforeText.Length == 0)
             {

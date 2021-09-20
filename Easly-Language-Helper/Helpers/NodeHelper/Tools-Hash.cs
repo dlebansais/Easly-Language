@@ -85,22 +85,64 @@ namespace BaseNodeHelper
         public static void NodeHashOther(Node node, string propertyName, ref ulong hash)
         {
             Type NodeType = node.GetType();
-            PropertyInfo Info = NodeType.GetProperty(propertyName);
+
+            PropertyInfo? Info = NodeType.GetProperty(propertyName);
+            Debug.Assert(Info != null);
+
+            if (Info == null)
+                return;
 
             if (Info.PropertyType == typeof(Document))
             {
-                Document Documentation = Info.GetValue(node) as Document;
+                Document? Documentation = Info.GetValue(node) as Document;
+                Debug.Assert(Documentation != null);
+
+                if (Documentation == null)
+                    return;
+
                 MergeHash(ref hash, ValueHash(Documentation.Comment));
                 MergeHash(ref hash, ValueHash(Documentation.Uuid));
             }
             else if (Info.PropertyType == typeof(bool))
-                MergeHash(ref hash, ValueHash((bool)Info.GetValue(node)));
+            {
+                bool? PropertyValue = Info.GetValue(node) as bool?;
+                Debug.Assert(PropertyValue != null);
+
+                if (PropertyValue == null)
+                    return;
+
+                MergeHash(ref hash, ValueHash(PropertyValue.Value));
+            }
             else if (Info.PropertyType.IsEnum)
-                MergeHash(ref hash, ValueHash((int)Info.GetValue(node)));
+            {
+                int? PropertyValue = Info.GetValue(node) as int?;
+                Debug.Assert(PropertyValue != null);
+
+                if (PropertyValue == null)
+                    return;
+
+                MergeHash(ref hash, ValueHash(PropertyValue.Value));
+            }
             else if (Info.PropertyType == typeof(string))
-                MergeHash(ref hash, ValueHash((string)Info.GetValue(node)));
+            {
+                string? PropertyValue = Info.GetValue(node) as string;
+                Debug.Assert(PropertyValue != null);
+
+                if (PropertyValue == null)
+                    return;
+
+                MergeHash(ref hash, ValueHash(PropertyValue));
+            }
             else if (Info.PropertyType == typeof(Guid))
-                MergeHash(ref hash, ValueHash((Guid)Info.GetValue(node)));
+            {
+                Guid? PropertyValue = Info.GetValue(node) as Guid?;
+                Debug.Assert(PropertyValue != null);
+
+                if (PropertyValue == null)
+                    return;
+
+                MergeHash(ref hash, ValueHash(PropertyValue.Value));
+            }
             else
                 throw new ArgumentOutOfRangeException($"{nameof(NodeType)}: {NodeType.FullName}");
         }

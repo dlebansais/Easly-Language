@@ -108,7 +108,12 @@ namespace BaseNodeHelper
 
                 for (int Index = 0; Index < Block.NodeList.Count; Index++)
                 {
-                    Node ChildNode = Block.NodeList[Index] as Node;
+                    Node? ChildNode = Block.NodeList[Index] as Node;
+                    Debug.Assert(ChildNode != null);
+
+                    if (ChildNode == null)
+                        return null!;
+
                     Node ClonedChildNode = DeepCloneNode(ChildNode, cloneCommentGuid);
 
                     NodeTreeHelperBlockList.InsertIntoBlock(ClonedBlock, Index, ClonedChildNode);
@@ -128,18 +133,60 @@ namespace BaseNodeHelper
             Type[] GenericArguments = BlockListType.GetGenericArguments();
             BlockListType = typeof(BlockList<>).MakeGenericType(GenericArguments);
 
-            IBlockList ClonedBlockList = (IBlockList)BlockListType.Assembly.CreateInstance(BlockListType.FullName);
+            Assembly BlockListAssembly = BlockListType.Assembly;
+            Debug.Assert(BlockListAssembly != null);
+
+            if (BlockListAssembly == null)
+                return null!;
+
+            string? BlockListFullName = BlockListType.FullName;
+            Debug.Assert(BlockListFullName != null);
+
+            if (BlockListFullName == null)
+                return null!;
+
+            IBlockList? ClonedBlockList = BlockListAssembly.CreateInstance(BlockListFullName) as IBlockList;
+            Debug.Assert(ClonedBlockList != null);
+
+            if (ClonedBlockList == null)
+                return null!;
 
             Type NodeListType = rootBlockList.NodeBlockList.GetType();
-            IList ClonedNodeBlockList = (IList)NodeListType.Assembly.CreateInstance(NodeListType.FullName);
 
-            PropertyInfo NodeBlockListProperty = BlockListType.GetProperty(nameof(IBlockList.NodeBlockList));
+            Assembly NodeListAssembly = NodeListType.Assembly;
+            Debug.Assert(NodeListAssembly != null);
+
+            if (NodeListAssembly == null)
+                return null!;
+
+            string? NodeListFullName = NodeListType.FullName;
+            Debug.Assert(NodeListFullName != null);
+
+            if (NodeListFullName == null)
+                return null!;
+
+            IList? ClonedNodeBlockList = NodeListAssembly.CreateInstance(NodeListFullName) as IList;
+            Debug.Assert(ClonedNodeBlockList != null);
+
+            if (ClonedNodeBlockList == null)
+                return null!;
+
+            PropertyInfo? NodeBlockListProperty = BlockListType.GetProperty(nameof(IBlockList.NodeBlockList));
+            Debug.Assert(NodeBlockListProperty != null);
+
+            if (NodeBlockListProperty == null)
+                return null!;
+
             NodeBlockListProperty.SetValue(ClonedBlockList, ClonedNodeBlockList);
             NodeTreeHelper.CopyDocumentation(rootBlockList, ClonedBlockList, cloneCommentGuid);
 
             for (int BlockIndex = 0; BlockIndex < rootBlockList.NodeBlockList.Count; BlockIndex++)
             {
-                IBlock Block = rootBlockList.NodeBlockList[BlockIndex] as IBlock;
+                IBlock? Block = rootBlockList.NodeBlockList[BlockIndex] as IBlock;
+                Debug.Assert(Block != null);
+
+                if (Block == null)
+                    return null!;
 
                 Pattern ClonedPattern = (Pattern)DeepCloneNode(Block.ReplicationPattern, cloneCommentGuid);
                 Identifier ClonedSource = (Identifier)DeepCloneNode(Block.SourceIdentifier, cloneCommentGuid);
@@ -148,7 +195,12 @@ namespace BaseNodeHelper
 
                 for (int Index = 0; Index < Block.NodeList.Count; Index++)
                 {
-                    Node ChildNode = Block.NodeList[Index] as Node;
+                    Node? ChildNode = Block.NodeList[Index] as Node;
+                    Debug.Assert(ChildNode != null);
+
+                    if (ChildNode == null)
+                        return null!;
+
                     Node ClonedChildNode = DeepCloneNode(ChildNode, cloneCommentGuid);
 
                     NodeTreeHelperBlockList.InsertIntoBlock(ClonedBlock, Index, ClonedChildNode);

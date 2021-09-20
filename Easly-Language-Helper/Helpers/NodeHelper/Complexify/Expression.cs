@@ -79,7 +79,7 @@ namespace BaseNodeHelper
 
         private static bool GetComplexifiedExpressionSingle2(Expression node, out IList<Expression> complexifiedExpressionList)
         {
-            complexifiedExpressionList = null;
+            complexifiedExpressionList = null!;
             bool IsHandled = false;
 
             switch (node)
@@ -103,7 +103,7 @@ namespace BaseNodeHelper
 
         private static bool GetComplexifiedAgentExpression(AgentExpression node, out IList<Expression> complexifiedExpressionList)
         {
-            complexifiedExpressionList = null;
+            complexifiedExpressionList = null!;
 
             if (node.BaseType.IsAssigned && GetComplexifiedObjectType(node.BaseType.Item, out IList<ObjectType> ComplexifiedBaseTypeList))
             {
@@ -147,7 +147,7 @@ namespace BaseNodeHelper
 
         private static bool GetComplexifiedBinaryConditionalExpression(BinaryConditionalExpression node, out IList<Expression> complexifiedExpressionList)
         {
-            complexifiedExpressionList = null;
+            complexifiedExpressionList = null!;
 
             if (GetComplexifiedExpression(node.LeftExpression, out IList<Expression> ComplexifiedLeftExpressionList))
             {
@@ -179,7 +179,7 @@ namespace BaseNodeHelper
 
         private static bool GetComplexifiedBinaryOperatorExpression(BinaryOperatorExpression node, out IList<Expression> complexifiedExpressionList)
         {
-            complexifiedExpressionList = null;
+            complexifiedExpressionList = null!;
 
             if (GetComplexifiedExpression(node.LeftExpression, out IList<Expression> ComplexifiedLeftExpressionList))
             {
@@ -224,7 +224,7 @@ namespace BaseNodeHelper
 
         private static bool GetComplexifiedCloneOfExpression(CloneOfExpression node, out IList<Expression> complexifiedExpressionList)
         {
-            complexifiedExpressionList = null;
+            complexifiedExpressionList = null!;
 
             if (GetComplexifiedExpression(node.Source, out IList<Expression> ComplexifiedSourceList))
             {
@@ -242,7 +242,7 @@ namespace BaseNodeHelper
 
         private static bool GetComplexifiedEntityExpression(EntityExpression node, out IList<Expression> complexifiedExpressionList)
         {
-            complexifiedExpressionList = null;
+            complexifiedExpressionList = null!;
 
             if (GetComplexifiedQualifiedName(node.Query, out IList<QualifiedName> ComplexifiedQueryList))
             {
@@ -260,7 +260,7 @@ namespace BaseNodeHelper
 
         private static bool GetComplexifiedEqualityExpression(EqualityExpression node, out IList<Expression> complexifiedExpressionList)
         {
-            complexifiedExpressionList = null;
+            complexifiedExpressionList = null!;
 
             if (GetComplexifiedExpression(node.LeftExpression, out IList<Expression> ComplexifiedLeftExpressionList))
             {
@@ -292,7 +292,7 @@ namespace BaseNodeHelper
 
         private static bool GetComplexifiedIndexQueryExpression(IndexQueryExpression node, out IList<Expression> complexifiedExpressionList)
         {
-            complexifiedExpressionList = null;
+            complexifiedExpressionList = null!;
 
             if (GetComplexifiedExpression(node.IndexedExpression, out IList<Expression> ComplexifiedIndexedExpressionList))
             {
@@ -321,7 +321,7 @@ namespace BaseNodeHelper
 
         private static bool GetComplexifiedInitializedObjectExpression(InitializedObjectExpression node, out IList<Expression> complexifiedExpressionList)
         {
-            complexifiedExpressionList = null;
+            complexifiedExpressionList = null!;
 
             if (GetComplexifiedAssignmentArgumentBlockList(node.AssignmentBlocks, out IBlockList<AssignmentArgument> ComplexifiedAssignmentBlocks))
             {
@@ -335,7 +335,7 @@ namespace BaseNodeHelper
 
         private static bool GetComplexifiedNewExpression(NewExpression node, out IList<Expression> complexifiedExpressionList)
         {
-            complexifiedExpressionList = null;
+            complexifiedExpressionList = null!;
 
             if (GetComplexifiedNode(node.Object, out IList<Node> ComplexifiedObjectList) && ComplexifiedObjectList[0] is QualifiedName AsComplexifiedObject)
             {
@@ -348,7 +348,7 @@ namespace BaseNodeHelper
 
         private static bool GetComplexifiedOldExpression(OldExpression node, out IList<Expression> complexifiedExpressionList)
         {
-            complexifiedExpressionList = null;
+            complexifiedExpressionList = null!;
 
             if (GetComplexifiedNode(node.Query, out IList<Node> ComplexifiedQueryList) && ComplexifiedQueryList[0] is QualifiedName AsComplexifiedQuery)
             {
@@ -361,7 +361,7 @@ namespace BaseNodeHelper
 
         private static bool GetComplexifiedPrecursorExpression(PrecursorExpression node, out IList<Expression> complexifiedExpressionList)
         {
-            complexifiedExpressionList = null;
+            complexifiedExpressionList = null!;
 
             if (node.AncestorType.IsAssigned && GetComplexifiedObjectType(node.AncestorType.Item, out IList<ObjectType> ComplexifiedAncestorTypeList))
             {
@@ -380,7 +380,7 @@ namespace BaseNodeHelper
 
         private static bool GetComplexifiedPrecursorIndexExpression(PrecursorIndexExpression node, out IList<Expression> complexifiedExpressionList)
         {
-            complexifiedExpressionList = null;
+            complexifiedExpressionList = null!;
 
             if (node.AncestorType.IsAssigned && GetComplexifiedObjectType(node.AncestorType.Item, out IList<ObjectType> ComplexifiedAncestorTypeList))
             {
@@ -399,7 +399,7 @@ namespace BaseNodeHelper
 
         private static bool ComplexifyAsAgentExpression(QueryExpression node, out AgentExpression complexifiedNode)
         {
-            complexifiedNode = null;
+            complexifiedNode = null!;
 
             if (IsQuerySimple(node) && ParsePattern(node, "agent", out string BeforeText, out string AfterText) && BeforeText.Length == 0)
             {
@@ -414,7 +414,7 @@ namespace BaseNodeHelper
 
         private static bool ComplexifyAsAssertionTagExpression(QueryExpression node, out AssertionTagExpression complexifiedNode)
         {
-            complexifiedNode = null;
+            complexifiedNode = null!;
 
             if (IsQuerySimple(node) && ParsePattern(node, "tag ", out string BeforeText, out string AfterText) && BeforeText.Length == 0)
             {
@@ -448,7 +448,7 @@ namespace BaseNodeHelper
 
         private static bool ComplexifyAsBinaryConditionalExpression(QueryExpression node, string pattern, ConditionalTypes conditionalType, out BinaryConditionalExpression complexifiedNode)
         {
-            complexifiedNode = null;
+            complexifiedNode = null!;
 
             if (ParsePattern(node, pattern, out string BeforeText, out string AfterText))
             {
@@ -461,7 +461,7 @@ namespace BaseNodeHelper
 
         private static bool ComplexifyAsBinaryOperatorExpression(QueryExpression node, out BinaryOperatorExpression complexifiedNode)
         {
-            complexifiedNode = null;
+            complexifiedNode = null!;
 
             string[] Patterns = new string[] { "+", "-", "/", "*", ">>", "<<", ">=", "<=", ">", "<" };
 
@@ -481,7 +481,7 @@ namespace BaseNodeHelper
 
         private static bool ComplexifyAsClassConstantExpression(QueryExpression node, out ClassConstantExpression complexifiedNode)
         {
-            complexifiedNode = null;
+            complexifiedNode = null!;
 
             if (IsQuerySimple(node))
             {
@@ -505,7 +505,7 @@ namespace BaseNodeHelper
 
         private static bool ComplexifyAsCloneOfExpression(QueryExpression node, out CloneOfExpression complexifiedNode)
         {
-            complexifiedNode = null;
+            complexifiedNode = null!;
 
             if (ParsePattern(node, "clone of ", out string BeforeText, out string AfterText) && BeforeText.Length == 0)
             {
@@ -518,16 +518,19 @@ namespace BaseNodeHelper
 
         private static bool ComplexifyAsEntityExpression(QueryExpression node, out EntityExpression complexifiedNode, out KeywordEntityExpression complexifiedKeywordNode)
         {
-            complexifiedNode = null;
-            complexifiedKeywordNode = null;
+            complexifiedNode = null!;
+            complexifiedKeywordNode = null!;
 
             if (node.ArgumentBlocks.NodeBlockList.Count == 0 && ParsePattern(node, "entity ", out string BeforeText, out string AfterText) && BeforeText.Length == 0)
             {
                 string Text = AfterText.Trim();
 
-                QualifiedName ClonedQuery = DeepCloneNode(node.Query, cloneCommentGuid: false) as QualifiedName;
+                QualifiedName ClonedQuery = (QualifiedName)DeepCloneNode(node.Query, cloneCommentGuid: false);
                 Debug.Assert(ClonedQuery != null, $"The clone is always a {nameof(QualifiedName)}");
-                Debug.Assert(ClonedQuery.Path.Count > 0, $"The clone always has at least one element");
+                Debug.Assert(ClonedQuery != null && ClonedQuery.Path.Count > 0, $"The clone always has at least one element");
+
+                if (ClonedQuery == null)
+                    return false;
 
                 NodeTreeHelper.SetString(ClonedQuery.Path[0], "Text", Text);
 
@@ -552,7 +555,7 @@ namespace BaseNodeHelper
 
         private static bool ComplexifyEqualityExpression(QueryExpression node, string pattern, ComparisonType comparisonType, out EqualityExpression complexifiedNode)
         {
-            complexifiedNode = null;
+            complexifiedNode = null!;
 
             if (ParsePattern(node, pattern, out string BeforeText, out string AfterText))
             {
@@ -565,7 +568,7 @@ namespace BaseNodeHelper
 
         private static bool GetComplexifiedResultOfExpression(ResultOfExpression node, out IList<Expression> complexifiedExpressionList)
         {
-            complexifiedExpressionList = null;
+            complexifiedExpressionList = null!;
 
             if (GetComplexifiedExpression(node.Source, out IList<Expression> ComplexifiedSourceList))
             {
@@ -583,7 +586,7 @@ namespace BaseNodeHelper
 
         private static bool GetComplexifiedUnaryNotExpression(UnaryNotExpression node, out IList<Expression> complexifiedExpressionList)
         {
-            complexifiedExpressionList = null;
+            complexifiedExpressionList = null!;
 
             if (GetComplexifiedExpression(node.RightExpression, out IList<Expression> ComplexifiedRightExpressionList))
             {
@@ -601,7 +604,7 @@ namespace BaseNodeHelper
 
         private static bool GetComplexifiedUnaryOperatorExpression(UnaryOperatorExpression node, out IList<Expression> complexifiedExpressionList)
         {
-            complexifiedExpressionList = null;
+            complexifiedExpressionList = null!;
 
             if (GetComplexifiedExpression(node.RightExpression, out IList<Expression> ComplexifiedRightExpressionList))
             {

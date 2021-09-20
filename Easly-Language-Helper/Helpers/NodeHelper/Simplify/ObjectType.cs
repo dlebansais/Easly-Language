@@ -28,7 +28,7 @@ namespace BaseNodeHelper
                 case TupleType AsTupleType:
                     return SimplifyTupleType(AsTupleType, out simplifiedNode);
                 default:
-                    simplifiedNode = null;
+                    simplifiedNode = null!;
                     return false;
             }
         }
@@ -48,7 +48,7 @@ namespace BaseNodeHelper
 
         private static bool SimplifyFunctionType(FunctionType node, out Node simplifiedNode)
         {
-            simplifiedNode = DeepCloneNode(node.BaseType, cloneCommentGuid: false) as ObjectType;
+            simplifiedNode = (ObjectType)DeepCloneNode(node.BaseType, cloneCommentGuid: false);
             return true;
         }
 
@@ -71,26 +71,26 @@ namespace BaseNodeHelper
 
         private static bool SimplifyIndexerType(IndexerType node, out Node simplifiedNode)
         {
-            simplifiedNode = DeepCloneNode(node.BaseType, cloneCommentGuid: false) as ObjectType;
+            simplifiedNode = (ObjectType)DeepCloneNode(node.BaseType, cloneCommentGuid: false);
             return true;
         }
 
         private static bool SimplifyPropertyType(PropertyType node, out Node simplifiedNode)
         {
-            simplifiedNode = DeepCloneNode(node.BaseType, cloneCommentGuid: false) as ObjectType;
+            simplifiedNode = (ObjectType)DeepCloneNode(node.BaseType, cloneCommentGuid: false);
             return true;
         }
 
         private static bool SimplifyProcedureType(ProcedureType node, out Node simplifiedNode)
         {
-            simplifiedNode = DeepCloneNode(node.BaseType, cloneCommentGuid: false) as ObjectType;
+            simplifiedNode = (ObjectType)DeepCloneNode(node.BaseType, cloneCommentGuid: false);
             return true;
         }
 
         private static bool SimplifyTupleType(TupleType node, out Node simplifiedNode)
         {
             EntityDeclaration FirstField = node.EntityDeclarationBlocks.NodeBlockList[0].NodeList[0];
-            simplifiedNode = DeepCloneNode(FirstField.EntityType, cloneCommentGuid: false) as ObjectType;
+            simplifiedNode = (ObjectType)DeepCloneNode(FirstField.EntityType, cloneCommentGuid: false);
             return true;
         }
     }

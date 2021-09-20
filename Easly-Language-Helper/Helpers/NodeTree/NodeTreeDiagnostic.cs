@@ -30,6 +30,9 @@ namespace BaseNodeHelper
             Debug.Assert(nodeList != null);
             Debug.Assert(guidList != null);
 
+            if (nodeList == null || guidList == null)
+                return false;
+
             if (root == null)
                 return FailIsValidCheck(assertValid);
 
@@ -133,13 +136,23 @@ namespace BaseNodeHelper
 
             for (int BlockIndex = 0; BlockIndex < BlockList.NodeBlockList.Count; BlockIndex++)
             {
-                IBlock Block = BlockList.NodeBlockList[BlockIndex] as IBlock;
+                IBlock? Block = BlockList.NodeBlockList[BlockIndex] as IBlock;
+                Debug.Assert(Block != null);
+
+                if (Block == null)
+                    return false;
+
                 if (!IsValidBlock(nodeList, guidList, Block, assertValid))
                     return FailIsValidCheck(assertValid);
 
                 for (int Index = 0; Index < Block.NodeList.Count; Index++)
                 {
-                    Node ChildNode = Block.NodeList[Index] as Node;
+                    Node? ChildNode = Block.NodeList[Index] as Node;
+                    Debug.Assert(ChildNode != null);
+
+                    if (ChildNode == null)
+                        return false;
+
                     if (!IsValid(nodeList, guidList, ChildNode, assertValid))
                         return FailIsValidCheck(assertValid);
                 }
@@ -155,7 +168,12 @@ namespace BaseNodeHelper
         {
             NodeTreeHelper.GetEnumRange(root.GetType(), propertyName, out int Min, out int Max);
             PropertyInfo EnumPropertyInfo = NodeTreeHelper.GetPropertyOf(root.GetType(), propertyName);
-            int Value = (int)EnumPropertyInfo.GetValue(root);
+            int? Value = EnumPropertyInfo.GetValue(root) as int?;
+            Debug.Assert(Value != null);
+
+            if (Value == null)
+                return false;
+
             if (Value < Min || Value > Max)
                 return FailIsValidCheck(assertValid);
 
@@ -189,6 +207,9 @@ namespace BaseNodeHelper
             Debug.Assert(nodeList != null);
             Debug.Assert(guidList != null);
 
+            if (nodeList == null || guidList == null)
+                return false;
+
             if (blockList == null)
                 return FailIsValidCheck(assertValid);
 
@@ -216,6 +237,9 @@ namespace BaseNodeHelper
         {
             Debug.Assert(nodeList != null);
             Debug.Assert(guidList != null);
+
+            if (nodeList == null || guidList == null)
+                return false;
 
             if (block == null)
                 return FailIsValidCheck(assertValid);

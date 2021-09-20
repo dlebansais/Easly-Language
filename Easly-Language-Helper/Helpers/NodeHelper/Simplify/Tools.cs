@@ -23,14 +23,14 @@ namespace BaseNodeHelper
                 case TypeArgument AsTypeArgument:
                     return GetSimplifiedTypeArgument(AsTypeArgument, out simplifiedNode);
                 default:
-                    simplifiedNode = null;
+                    simplifiedNode = null!;
                     return false;
             }
         }
 
         private static bool SimplifyQualifiedName(QualifiedName node, out Node simplifiedNode)
         {
-            simplifiedNode = null;
+            simplifiedNode = null!;
 
             if (node.Path.Count > 1)
             {

@@ -9,7 +9,7 @@ namespace BaseNodeHelper
     public struct WalkCallbacks<TContext> : IEquatable<WalkCallbacks<TContext>>
         where TContext : class
     {
-        public Func<Node, Node, string, WalkCallbacks<TContext>, TContext, bool> HandlerNode { get; set; }
+        public Func<Node, Node?, string?, WalkCallbacks<TContext>, TContext, bool> HandlerNode { get; set; }
         public Func<Node, string, IBlockList, WalkCallbacks<TContext>, TContext, bool> HandlerBlockList { get; set; }
         public Func<Node, string, IBlockList, IBlock, WalkCallbacks<TContext>, TContext, bool> HandlerBlock { get; set; }
         public Func<Node, string, IReadOnlyList<Node>, WalkCallbacks<TContext>, TContext, bool> HandlerList { get; set; }
@@ -29,7 +29,7 @@ namespace BaseNodeHelper
             return !obj1.Equals(obj2);
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             return base.Equals(obj);
         }

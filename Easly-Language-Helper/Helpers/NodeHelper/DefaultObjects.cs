@@ -82,6 +82,10 @@ namespace BaseNodeHelper
                 Result = interfaceType;
 
             Debug.Assert(Result != null, $"The returned value can't possibly be null");
+
+            if (Result == null)
+                return null!;
+
             return Result;
         }
 
@@ -94,29 +98,46 @@ namespace BaseNodeHelper
             if (Result != null)
                 return Result;
 
-            string NamePrefix = interfaceType.AssemblyQualifiedName;
+            string? NamePrefix = interfaceType.AssemblyQualifiedName;
+            Debug.Assert(NamePrefix != null);
+
+            if (NamePrefix == null)
+                return null!;
+
             NamePrefix = NamePrefix.Substring(0, NamePrefix.IndexOf(".", StringComparison.InvariantCulture) + 1);
 
-            string NodeTypeName = interfaceType.AssemblyQualifiedName;
+            string? NodeTypeName = interfaceType.AssemblyQualifiedName;
+            Debug.Assert(NodeTypeName != null);
+
+            if (NodeTypeName == null)
+                return null!;
 
             // NodeTypeName = NodeTypeName.Replace(NamePrefix + "I", NamePrefix);
-            Type NodeType = Type.GetType(NodeTypeName);
-
+            Type? NodeType = Type.GetType(NodeTypeName);
             Debug.Assert(NodeType != null);
+
+            if (NodeType == null)
+                return null!;
+
             Debug.Assert(!NodeType.IsAbstract, $"A default type value is never abstract");
 
             Result = CreateEmptyNode(NodeType);
             Debug.Assert(Result != null, $"A default empty object is never null");
+
+            if (Result == null)
+                return null!;
 
             return Result;
         }
 
         public static bool IsNodeType(Type type)
         {
-            while (type != null && type != typeof(Node))
-                type = type.BaseType;
+            Type? CurrentType = type;
 
-            return type != null;
+            while (CurrentType != null && CurrentType != typeof(Node))
+                CurrentType = CurrentType.BaseType;
+
+            return CurrentType != null;
         }
 
         public static Node CreateEmptyNode(Type objectType)
@@ -125,8 +146,17 @@ namespace BaseNodeHelper
             if (!IsNodeType(objectType)) throw new ArgumentException($"{nameof(objectType)} must be a node type");
             if (objectType.IsAbstract) throw new ArgumentException($"{nameof(objectType)} must not be an abstract node type");
 
-            Node EmptyNode = objectType.Assembly.CreateInstance(objectType.FullName) as Node;
+            string? FullName = objectType.FullName;
+            Debug.Assert(FullName != null);
+
+            if (FullName == null)
+                return null!;
+
+            Node? EmptyNode = objectType.Assembly.CreateInstance(FullName) as Node;
             Debug.Assert(EmptyNode != null, $"A created instance is never null");
+
+            if (EmptyNode == null)
+                return null!;
 
             IList<string> PropertyNames = NodeTreeHelper.EnumChildNodeProperties(EmptyNode);
 
@@ -290,6 +320,9 @@ namespace BaseNodeHelper
             string Text = NodeTreeHelper.GetString(node, propertyName);
             Debug.Assert(Text != null, $"The content of a string property is never null");
 
+            if (Text == null)
+                return false;
+
             return Text.Length == 0;
         }
 
@@ -340,7 +373,7 @@ namespace BaseNodeHelper
             else if (interfaceType == typeof(Import))
                 return CreateSimpleImport(string.Empty, string.Empty, ImportType.Latest);
             else
-                return null;
+                return null!;
         }
     }
 }

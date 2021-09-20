@@ -16,7 +16,7 @@ namespace BaseNodeHelper
                 case PositionalTypeArgument AsPositionalTypeArgument:
                     return SimplifyPositionalTypeArgument(AsPositionalTypeArgument, out simplifiedNode);
                 default:
-                    simplifiedNode = null;
+                    simplifiedNode = null!;
                     return false;
             }
         }
@@ -31,7 +31,7 @@ namespace BaseNodeHelper
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
 
-            simplifiedNode = null;
+            simplifiedNode = null!;
             return true;
         }
     }

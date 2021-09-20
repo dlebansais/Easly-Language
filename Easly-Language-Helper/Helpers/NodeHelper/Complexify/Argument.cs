@@ -10,7 +10,7 @@ namespace BaseNodeHelper
     {
         private static bool GetComplexifiedArgument(Argument node, out IList<Argument> complexifiedArgumentList)
         {
-            complexifiedArgumentList = null;
+            complexifiedArgumentList = null!;
             bool Result = false;
             bool IsHandled = false;
 
@@ -58,7 +58,7 @@ namespace BaseNodeHelper
                 return true;
             }
 
-            complexifiedArgumentList = null;
+            complexifiedArgumentList = null!;
             return false;
         }
 
@@ -82,7 +82,7 @@ namespace BaseNodeHelper
                 return true;
             }
 
-            complexifiedArgumentList = null;
+            complexifiedArgumentList = null!;
             return false;
         }
 
@@ -98,7 +98,7 @@ namespace BaseNodeHelper
                     return true;
                 }
 
-            complexifiedNode = null;
+            complexifiedNode = null!;
             return false;
         }
     }

@@ -70,16 +70,16 @@ namespace BaseNodeHelper
                 case PreprocessorExpression AsPreprocessorExpression:
                     return SimplifyPreprocessorExpression(AsPreprocessorExpression, out simplifiedNode);
                 default:
-                    simplifiedNode = null;
+                    simplifiedNode = null!;
                     return false;
             }
         }
 
         private static bool SimplifyQueryExpression(QueryExpression node, out Node simplifiedNode)
         {
-            simplifiedNode = null;
+            simplifiedNode = null!;
 
-            QueryExpression ClonedQuery = DeepCloneNode(node, cloneCommentGuid: false) as QueryExpression;
+            QueryExpression ClonedQuery = (QueryExpression)DeepCloneNode(node, cloneCommentGuid: false);
             if (ClonedQuery.ArgumentBlocks.NodeBlockList.Count > 0)
                 simplifiedNode = CreateQueryExpression(ClonedQuery.Query, new List<Argument>());
 
@@ -100,13 +100,13 @@ namespace BaseNodeHelper
 
         private static bool SimplifyBinaryConditionalExpression(BinaryConditionalExpression node, out Node simplifiedNode)
         {
-            simplifiedNode = null;
+            simplifiedNode = null!;
 
             string LeftText, RightText;
 
             if (GetExpressionText(node.LeftExpression, out LeftText) && GetExpressionText(node.RightExpression, out RightText))
             {
-                string Operator = null;
+                string Operator = null!;
 
                 switch (node.Conditional)
                 {
@@ -138,7 +138,7 @@ namespace BaseNodeHelper
 
         private static bool SimplifyBinaryOperatorExpression(BinaryOperatorExpression node, out Node simplifiedNode)
         {
-            simplifiedNode = null;
+            simplifiedNode = null!;
 
             if (GetExpressionText(node.LeftExpression, out string LeftText) && GetExpressionText(node.RightExpression, out string RightText))
             {
@@ -160,7 +160,7 @@ namespace BaseNodeHelper
 
         private static bool SimplifyCloneOfExpression(CloneOfExpression node, out Node simplifiedNode)
         {
-            simplifiedNode = null;
+            simplifiedNode = null!;
 
             string SourceText;
 
@@ -182,7 +182,7 @@ namespace BaseNodeHelper
 
         private static bool SimplifyEqualityExpression(EqualityExpression node, out Node simplifiedNode)
         {
-            simplifiedNode = null;
+            simplifiedNode = null!;
 
             if (GetExpressionText(node.LeftExpression, out string LeftText) && GetExpressionText(node.RightExpression, out string RightText))
             {
@@ -198,12 +198,12 @@ namespace BaseNodeHelper
         {
             if (node.IndexedExpression is QueryExpression AsQueryExpression && AsQueryExpression.ArgumentBlocks.NodeBlockList.Count == 0)
             {
-                QualifiedName Query = DeepCloneNode(AsQueryExpression.Query, cloneCommentGuid: false) as QualifiedName;
-                IndexQueryExpression ClonedIndexQuery = DeepCloneNode(node, cloneCommentGuid: false) as IndexQueryExpression;
+                QualifiedName Query = (QualifiedName)DeepCloneNode(AsQueryExpression.Query, cloneCommentGuid: false);
+                IndexQueryExpression ClonedIndexQuery = (IndexQueryExpression)DeepCloneNode(node, cloneCommentGuid: false);
                 simplifiedNode = CreateQueryExpression(Query, ClonedIndexQuery.ArgumentBlocks);
             }
             else
-                simplifiedNode = DeepCloneNode(node.IndexedExpression, cloneCommentGuid: false) as Expression;
+                simplifiedNode = (Expression)DeepCloneNode(node.IndexedExpression, cloneCommentGuid: false);
 
             return true;
         }
@@ -239,9 +239,14 @@ namespace BaseNodeHelper
                 for (int Index = 0; Index < Block.NodeList.Count; Index++)
                 {
                     Argument Item = Block.NodeList[Index];
-                    Argument NewItem = DeepCloneNode(Item, cloneCommentGuid: false) as Argument;
+                    Argument NewItem = (Argument)DeepCloneNode(Item, cloneCommentGuid: false);
 
                     Debug.Assert(NewItem != null, $"A cloned object is always a {nameof(Argument)}");
+
+                    simplifiedNode = null!;
+                    if (NewItem == null)
+                        return false;
+
                     NewNodeList.Add(NewItem);
                 }
 
@@ -286,7 +291,7 @@ namespace BaseNodeHelper
 
         private static bool SimplifyNewExpression(NewExpression node, out Node simplifiedNode)
         {
-            QualifiedName Query = DeepCloneNode(node.Object, cloneCommentGuid: false) as QualifiedName;
+            QualifiedName Query = (QualifiedName)DeepCloneNode(node.Object, cloneCommentGuid: false);
 
             Debug.Assert(Query.Path.Count > 0, $"A cloned query is never empty");
             string Text = Query.Path[0].Text;
@@ -299,7 +304,7 @@ namespace BaseNodeHelper
 
         private static bool SimplifyOldExpression(OldExpression node, out Node simplifiedNode)
         {
-            QualifiedName Query = DeepCloneNode(node.Query, cloneCommentGuid: false) as QualifiedName;
+            QualifiedName Query = (QualifiedName)DeepCloneNode(node.Query, cloneCommentGuid: false);
 
             Debug.Assert(Query.Path.Count > 0, $"A cloned query is never empty");
             string Text = Query.Path[0].Text;
@@ -313,7 +318,7 @@ namespace BaseNodeHelper
         private static bool SimplifyPrecursorExpression(PrecursorExpression node, out Node simplifiedNode)
         {
             QualifiedName Query = CreateSimpleQualifiedName("precursor");
-            PrecursorExpression ClonedQuery = DeepCloneNode(node, cloneCommentGuid: false) as PrecursorExpression;
+            PrecursorExpression ClonedQuery = (PrecursorExpression)DeepCloneNode(node, cloneCommentGuid: false);
             simplifiedNode = CreateQueryExpression(Query, ClonedQuery.ArgumentBlocks);
             return true;
         }
@@ -321,7 +326,7 @@ namespace BaseNodeHelper
         private static bool SimplifyPrecursorIndexExpression(PrecursorIndexExpression node, out Node simplifiedNode)
         {
             QualifiedName Query = CreateSimpleQualifiedName("precursor[]");
-            PrecursorIndexExpression ClonedQuery = DeepCloneNode(node, cloneCommentGuid: false) as PrecursorIndexExpression;
+            PrecursorIndexExpression ClonedQuery = (PrecursorIndexExpression)DeepCloneNode(node, cloneCommentGuid: false);
             simplifiedNode = CreateQueryExpression(Query, ClonedQuery.ArgumentBlocks);
             return true;
         }
@@ -334,7 +339,7 @@ namespace BaseNodeHelper
 
         private static bool SimplifyResultOfExpression(ResultOfExpression node, out Node simplifiedNode)
         {
-            simplifiedNode = null;
+            simplifiedNode = null!;
 
             string SourceText;
 
@@ -349,7 +354,7 @@ namespace BaseNodeHelper
 
         private static bool SimplifyUnaryNotExpression(UnaryNotExpression node, out Node simplifiedNode)
         {
-            simplifiedNode = null;
+            simplifiedNode = null!;
 
             string RightText;
 
@@ -364,7 +369,7 @@ namespace BaseNodeHelper
 
         private static bool SimplifyUnaryOperatorExpression(UnaryOperatorExpression node, out Node simplifiedNode)
         {
-            simplifiedNode = null;
+            simplifiedNode = null!;
 
             string RightText;
 

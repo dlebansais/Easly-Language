@@ -11,7 +11,7 @@ namespace BaseNodeHelper
     {
         private static bool GetComplexifiedTypeArgument(TypeArgument node, out IList<TypeArgument> complexifiedTypeArgumentList)
         {
-            complexifiedTypeArgumentList = null;
+            complexifiedTypeArgumentList = null!;
             bool Result = false;
             bool IsHandled = false;
 
@@ -35,7 +35,7 @@ namespace BaseNodeHelper
 
         private static bool GetComplexifiedAssignmentTypeArgument(AssignmentTypeArgument node, out IList<TypeArgument> complexifiedTypeArgumentList)
         {
-            complexifiedTypeArgumentList = null;
+            complexifiedTypeArgumentList = null!;
 
             if (GetComplexifiedObjectType(node.Source, out IList<ObjectType> ComplexifiedSourceList))
             {
@@ -54,7 +54,7 @@ namespace BaseNodeHelper
 
         private static bool GetComplexifiedPositionalTypeArgument(PositionalTypeArgument node, out IList<TypeArgument> complexifiedTypeArgumentList)
         {
-            complexifiedTypeArgumentList = null;
+            complexifiedTypeArgumentList = null!;
 
             if (GetComplexifiedObjectType(node.Source, out IList<ObjectType> ComplexifiedSourceList))
             {
@@ -74,7 +74,7 @@ namespace BaseNodeHelper
 
         private static bool ComplexifyAsAssignmentTypeArgument(PositionalTypeArgument node, out AssignmentTypeArgument complexifiedNode)
         {
-            complexifiedNode = null;
+            complexifiedNode = null!;
 
             if (node.Source is SimpleType AsSimpleType)
             {

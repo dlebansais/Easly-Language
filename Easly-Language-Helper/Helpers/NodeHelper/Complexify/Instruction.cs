@@ -51,7 +51,7 @@ namespace BaseNodeHelper
 
         private static bool GetComplexifiedInstructionSingle(Instruction node, out IList<Instruction> complexifiedInstructionList)
         {
-            complexifiedInstructionList = null;
+            complexifiedInstructionList = null!;
             bool IsHandled = false;
 
             switch (node)
@@ -85,7 +85,7 @@ namespace BaseNodeHelper
 
         private static bool GetComplexifiedAsLongAsInstruction(AsLongAsInstruction node, out IList<Instruction> complexifiedInstructionList)
         {
-            complexifiedInstructionList = null;
+            complexifiedInstructionList = null!;
 
             if (GetComplexifiedExpression(node.ContinueCondition, out IList<Expression> ComplexifiedContinueConditionList))
             {
@@ -114,7 +114,7 @@ namespace BaseNodeHelper
 
         private static bool GetComplexifiedAssignmentInstruction(AssignmentInstruction node, out IList<Instruction> complexifiedInstructionList)
         {
-            complexifiedInstructionList = null;
+            complexifiedInstructionList = null!;
 
             if (GetComplexifiedQualifiedNameBlockList(node.DestinationBlocks, out IBlockList<QualifiedName> ComplexifiedDestinationBlocks))
             {
@@ -143,7 +143,7 @@ namespace BaseNodeHelper
 
         private static bool ComplexifyAsKeywordAssignmentInstruction(AssignmentInstruction node, out KeywordAssignmentInstruction complexifiedNode)
         {
-            complexifiedNode = null;
+            complexifiedNode = null!;
 
             if (BlockListHelper<QualifiedName>.IsSimple(node.DestinationBlocks))
             {
@@ -164,7 +164,7 @@ namespace BaseNodeHelper
 
                         if (Keyword != Keyword.Current)
                         {
-                            Expression Source = DeepCloneNode(node.Source, cloneCommentGuid: false) as Expression;
+                            Expression Source = (Expression)DeepCloneNode(node.Source, cloneCommentGuid: false);
                             complexifiedNode = CreateKeywordAssignmentInstruction(Keyword, Source);
                         }
                     }
@@ -176,7 +176,7 @@ namespace BaseNodeHelper
 
         private static bool ComplexifyAsIndexAssignmentInstruction(AssignmentInstruction node, out IndexAssignmentInstruction complexifiedNode)
         {
-            complexifiedNode = null;
+            complexifiedNode = null!;
 
             if (BlockListHelper<QualifiedName>.IsSimple(node.DestinationBlocks))
             {
@@ -193,7 +193,7 @@ namespace BaseNodeHelper
 
         private static bool GetComplexifiedAttachmentInstruction(AttachmentInstruction node, out IList<Instruction> complexifiedInstructionList)
         {
-            complexifiedInstructionList = null;
+            complexifiedInstructionList = null!;
 
             if (GetComplexifiedExpression(node.Source, out IList<Expression> ComplexifiedSourceList))
             {
@@ -240,7 +240,7 @@ namespace BaseNodeHelper
 
         private static bool GetComplexifiedCheckInstruction(CheckInstruction node, out IList<Instruction> complexifiedInstructionList)
         {
-            complexifiedInstructionList = null;
+            complexifiedInstructionList = null!;
 
             if (GetComplexifiedExpression(node.BooleanExpression, out IList<Expression> ComplexifiedBooleanExpressionList))
             {
@@ -258,7 +258,7 @@ namespace BaseNodeHelper
 
         private static bool GetComplexifiedCreateInstruction(CreateInstruction node, out IList<Instruction> complexifiedInstructionList)
         {
-            complexifiedInstructionList = null;
+            complexifiedInstructionList = null!;
 
             if (GetComplexifiedArgumentBlockList(node.ArgumentBlocks, out IBlockList<Argument> ComplexifiedArgumentBlocks))
             {
@@ -292,7 +292,7 @@ namespace BaseNodeHelper
 
         private static bool GetComplexifiedIfThenElseInstruction(IfThenElseInstruction node, out IList<Instruction> complexifiedInstructionList)
         {
-            complexifiedInstructionList = null;
+            complexifiedInstructionList = null!;
 
             Debug.Assert(!NodeTreeHelperBlockList.IsBlockListEmpty((IBlockList)node.ConditionalBlocks), $"The conditional of {nameof(node)} is never empty");
 
@@ -325,7 +325,7 @@ namespace BaseNodeHelper
 
         private static bool GetComplexifiedIndexAssignmentInstruction(IndexAssignmentInstruction node, out IList<Instruction> complexifiedInstructionList)
         {
-            complexifiedInstructionList = null;
+            complexifiedInstructionList = null!;
 
             if (ComplexifyQualifiedName(node.Destination, out QualifiedName ComplexifiedDestination))
             {
@@ -359,7 +359,7 @@ namespace BaseNodeHelper
 
         private static bool GetComplexifiedInspectInstruction(InspectInstruction node, out IList<Instruction> complexifiedInstructionList)
         {
-            complexifiedInstructionList = null;
+            complexifiedInstructionList = null!;
 
             if (GetComplexifiedExpression(node.Source, out IList<Expression> ComplexifiedSourceList))
             {
@@ -387,7 +387,7 @@ namespace BaseNodeHelper
 
         private static bool GetComplexifiedKeywordAssignmentInstruction(KeywordAssignmentInstruction node, out IList<Instruction> complexifiedInstructionList)
         {
-            complexifiedInstructionList = null;
+            complexifiedInstructionList = null!;
 
             if (GetComplexifiedExpression(node.Source, out IList<Expression> ComplexifiedSourceList))
             {
@@ -405,7 +405,7 @@ namespace BaseNodeHelper
 
         private static bool GetComplexifiedOverLoopInstruction(OverLoopInstruction node, out IList<Instruction> complexifiedInstructionList)
         {
-            complexifiedInstructionList = null;
+            complexifiedInstructionList = null!;
 
             if (GetComplexifiedExpression(node.OverList, out IList<Expression> ComplexifiedOverListList))
             {
@@ -436,7 +436,7 @@ namespace BaseNodeHelper
 
         private static bool GetComplexifiedPrecursorIndexAssignmentInstruction(PrecursorIndexAssignmentInstruction node, out IList<Instruction> complexifiedInstructionList)
         {
-            complexifiedInstructionList = null;
+            complexifiedInstructionList = null!;
 
             if (node.AncestorType.IsAssigned && GetComplexifiedObjectType(node.AncestorType.Item, out IList<ObjectType> ComplexifiedAncestorTypeList))
             {
@@ -494,7 +494,7 @@ namespace BaseNodeHelper
 
         private static bool GetComplexifiedPrecursorInstruction(PrecursorInstruction node, out IList<Instruction> complexifiedInstructionList)
         {
-            complexifiedInstructionList = null;
+            complexifiedInstructionList = null!;
 
             if (node.AncestorType.IsAssigned && GetComplexifiedObjectType(node.AncestorType.Item, out IList<ObjectType> ComplexifiedAncestorTypeList))
             {
@@ -528,7 +528,7 @@ namespace BaseNodeHelper
 
         private static bool GetComplexifiedReleaseInstruction(ReleaseInstruction node, out IList<Instruction> complexifiedInstructionList)
         {
-            complexifiedInstructionList = null;
+            complexifiedInstructionList = null!;
 
             if (ComplexifyQualifiedName(node.EntityName, out QualifiedName ComplexifiedEntityName))
             {
@@ -541,7 +541,7 @@ namespace BaseNodeHelper
 
         private static bool GetComplexifiedThrowInstruction(ThrowInstruction node, out IList<Instruction> complexifiedInstructionList)
         {
-            complexifiedInstructionList = null;
+            complexifiedInstructionList = null!;
 
             if (GetComplexifiedObjectType(node.ExceptionType, out IList<ObjectType> ComplexifiedExceptionTypeList))
             {

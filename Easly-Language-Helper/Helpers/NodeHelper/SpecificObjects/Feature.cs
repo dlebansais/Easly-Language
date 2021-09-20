@@ -143,10 +143,10 @@ namespace BaseNodeHelper
         {
             AttributeFeature Result = new AttributeFeature();
             Result.Documentation = CreateDocumentationCopy(documentation);
-            Result.ExportIdentifier = exportIdentifier != null ? DeepCloneNode(exportIdentifier, cloneCommentGuid: false) as Identifier : CreateEmptyExportIdentifier();
+            Result.ExportIdentifier = exportIdentifier != null ? (Identifier)DeepCloneNode(exportIdentifier, cloneCommentGuid: false) : CreateEmptyExportIdentifier();
             Result.Export = export;
-            Result.EntityName = entityName != null ? DeepCloneNode(entityName, cloneCommentGuid: false) as Name : CreateEmptyName();
-            Result.EntityType = entityType != null ? DeepCloneNode(entityType, cloneCommentGuid: false) as ObjectType : CreateDefaultType();
+            Result.EntityName = entityName != null ? (Name)DeepCloneNode(entityName, cloneCommentGuid: false) : CreateEmptyName();
+            Result.EntityType = entityType != null ? (ObjectType)DeepCloneNode(entityType, cloneCommentGuid: false) : CreateDefaultType();
             Result.EnsureBlocks = BlockListHelper<Assertion>.CreateBlockListCopy(ensureBlocks);
 
             return Result;
@@ -156,11 +156,11 @@ namespace BaseNodeHelper
         {
             ConstantFeature Result = new ConstantFeature();
             Result.Documentation = CreateDocumentationCopy(documentation);
-            Result.ExportIdentifier = exportIdentifier != null ? DeepCloneNode(exportIdentifier, cloneCommentGuid: false) as Identifier : CreateEmptyExportIdentifier();
+            Result.ExportIdentifier = exportIdentifier != null ? (Identifier)DeepCloneNode(exportIdentifier, cloneCommentGuid: false) : CreateEmptyExportIdentifier();
             Result.Export = export;
-            Result.EntityName = entityName != null ? DeepCloneNode(entityName, cloneCommentGuid: false) as Name : CreateEmptyName();
-            Result.EntityType = entityType != null ? DeepCloneNode(entityType, cloneCommentGuid: false) as ObjectType : CreateDefaultType();
-            Result.ConstantValue = constantValue != null ? DeepCloneNode(constantValue, cloneCommentGuid: false) as Expression : CreateDefaultExpression();
+            Result.EntityName = entityName != null ? (Name)DeepCloneNode(entityName, cloneCommentGuid: false) : CreateEmptyName();
+            Result.EntityType = entityType != null ? (ObjectType)DeepCloneNode(entityType, cloneCommentGuid: false) : CreateDefaultType();
+            Result.ConstantValue = constantValue != null ? (Expression)DeepCloneNode(constantValue, cloneCommentGuid: false) : CreateDefaultExpression();
 
             return Result;
         }
@@ -169,9 +169,9 @@ namespace BaseNodeHelper
         {
             CreationFeature Result = new CreationFeature();
             Result.Documentation = CreateDocumentationCopy(documentation);
-            Result.ExportIdentifier = exportIdentifier != null ? DeepCloneNode(exportIdentifier, cloneCommentGuid: false) as Identifier : CreateEmptyExportIdentifier();
+            Result.ExportIdentifier = exportIdentifier != null ? (Identifier)DeepCloneNode(exportIdentifier, cloneCommentGuid: false) : CreateEmptyExportIdentifier();
             Result.Export = export;
-            Result.EntityName = entityName != null ? DeepCloneNode(entityName, cloneCommentGuid: false) as Name : CreateEmptyName();
+            Result.EntityName = entityName != null ? (Name)DeepCloneNode(entityName, cloneCommentGuid: false) : CreateEmptyName();
             if (commandOverloadBlocks != null)
             {
                 if (commandOverloadBlocks.NodeBlockList.Count == 0) throw new ArgumentException($"{nameof(commandOverloadBlocks)} must not be empty");
@@ -189,9 +189,9 @@ namespace BaseNodeHelper
         {
             FunctionFeature Result = new FunctionFeature();
             Result.Documentation = CreateDocumentationCopy(documentation);
-            Result.ExportIdentifier = exportIdentifier != null ? DeepCloneNode(exportIdentifier, cloneCommentGuid: false) as Identifier : CreateEmptyExportIdentifier();
+            Result.ExportIdentifier = exportIdentifier != null ? (Identifier)DeepCloneNode(exportIdentifier, cloneCommentGuid: false) : CreateEmptyExportIdentifier();
             Result.Export = export;
-            Result.EntityName = entityName != null ? DeepCloneNode(entityName, cloneCommentGuid: false) as Name : CreateEmptyName();
+            Result.EntityName = entityName != null ? (Name)DeepCloneNode(entityName, cloneCommentGuid: false) : CreateEmptyName();
             Result.Once = once;
             if (queryOverloadBlocks != null)
             {
@@ -209,9 +209,9 @@ namespace BaseNodeHelper
         {
             IndexerFeature Result = new IndexerFeature();
             Result.Documentation = CreateDocumentationCopy(documentation);
-            Result.ExportIdentifier = exportIdentifier != null ? DeepCloneNode(exportIdentifier, cloneCommentGuid: false) as Identifier : CreateEmptyExportIdentifier();
+            Result.ExportIdentifier = exportIdentifier != null ? (Identifier)DeepCloneNode(exportIdentifier, cloneCommentGuid: false) : CreateEmptyExportIdentifier();
             Result.Export = export;
-            Result.EntityType = entityType != null ? DeepCloneNode(entityType, cloneCommentGuid: false) as ObjectType : CreateDefaultType();
+            Result.EntityType = entityType != null ? (ObjectType)DeepCloneNode(entityType, cloneCommentGuid: false) : CreateDefaultType();
             if (indexParameterBlocks != null)
             {
                 if (indexParameterBlocks.NodeBlockList.Count == 0) throw new ArgumentException($"{nameof(indexParameterBlocks)} must not be empty");
@@ -233,9 +233,9 @@ namespace BaseNodeHelper
         {
             ProcedureFeature Result = new ProcedureFeature();
             Result.Documentation = CreateDocumentationCopy(documentation);
-            Result.ExportIdentifier = exportIdentifier != null ? DeepCloneNode(exportIdentifier, cloneCommentGuid: false) as Identifier : CreateEmptyExportIdentifier();
+            Result.ExportIdentifier = exportIdentifier != null ? (Identifier)DeepCloneNode(exportIdentifier, cloneCommentGuid: false) : CreateEmptyExportIdentifier();
             Result.Export = export;
-            Result.EntityName = entityName != null ? DeepCloneNode(entityName, cloneCommentGuid: false) as Name : CreateEmptyName();
+            Result.EntityName = entityName != null ? (Name)DeepCloneNode(entityName, cloneCommentGuid: false) : CreateEmptyName();
             if (commandOverloadBlocks != null)
             {
                 if (commandOverloadBlocks.NodeBlockList.Count == 0) throw new ArgumentException($"{nameof(commandOverloadBlocks)} must not be empty");
@@ -252,10 +252,10 @@ namespace BaseNodeHelper
         {
             PropertyFeature Result = new PropertyFeature();
             Result.Documentation = CreateDocumentationCopy(documentation);
-            Result.ExportIdentifier = exportIdentifier != null ? DeepCloneNode(exportIdentifier, cloneCommentGuid: false) as Identifier : CreateEmptyExportIdentifier();
+            Result.ExportIdentifier = exportIdentifier != null ? (Identifier)DeepCloneNode(exportIdentifier, cloneCommentGuid: false) : CreateEmptyExportIdentifier();
             Result.Export = export;
-            Result.EntityName = entityName != null ? DeepCloneNode(entityName, cloneCommentGuid: false) as Name : CreateEmptyName();
-            Result.EntityType = entityType != null ? DeepCloneNode(entityType, cloneCommentGuid: false) as ObjectType : CreateDefaultType();
+            Result.EntityName = entityName != null ? (Name)DeepCloneNode(entityName, cloneCommentGuid: false) : CreateEmptyName();
+            Result.EntityType = entityType != null ? (ObjectType)DeepCloneNode(entityType, cloneCommentGuid: false) : CreateDefaultType();
             Result.PropertyKind = propertyKind;
             Result.ModifiedQueryBlocks = BlockListHelper<Identifier>.CreateBlockListCopy(modifiedQueryBlocks);
             Result.GetterBody = OptionalReferenceHelper<Body>.CreateReferenceCopy(getterBody);

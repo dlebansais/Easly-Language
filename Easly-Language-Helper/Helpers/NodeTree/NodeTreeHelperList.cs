@@ -18,14 +18,22 @@ namespace BaseNodeHelper
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
 
             Type NodeType = node.GetType();
+            Debug.Assert(NodeType != null);
+
+            childNodeType = null!;
+            if (NodeType == null)
+                return false;
 
             if (!IsNodeListProperty(NodeType, propertyName, out childNodeType))
                 return false;
 
-            PropertyInfo Property = NodeType.GetProperty(propertyName);
+            PropertyInfo? Property = NodeType.GetProperty(propertyName);
             Debug.Assert(Property != null);
 
-            object Collection = Property.GetValue(node);
+            if (Property == null)
+                return false;
+
+            object? Collection = Property.GetValue(node);
             Debug.Assert(Collection == null || Collection is IList);
 
             return true;
@@ -36,7 +44,7 @@ namespace BaseNodeHelper
             if (nodeType == null) throw new ArgumentNullException(nameof(nodeType));
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
 
-            childNodeType = null;
+            childNodeType = null!;
 
             PropertyInfo Property = NodeTreeHelper.GetPropertyOf(nodeType, propertyName);
             if (Property == null)
@@ -49,7 +57,11 @@ namespace BaseNodeHelper
             Debug.Assert(PropertyType.IsGenericType);
             Type[] GenericArguments = PropertyType.GetGenericArguments();
             Debug.Assert(GenericArguments != null);
-            Debug.Assert(GenericArguments.Length == 1);
+            Debug.Assert(GenericArguments != null && GenericArguments.Length == 1);
+
+            if (GenericArguments == null)
+                return false;
+
             childNodeType = GenericArguments[0];
 
             // return NodeTreeHelper.IsNodeInterfaceType(childNodeType);
@@ -62,21 +74,37 @@ namespace BaseNodeHelper
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
 
             Type NodeType = node.GetType();
-            PropertyInfo Property = NodeType.GetProperty(propertyName);
+            Debug.Assert(NodeType != null);
+
+            childNodeList = null!;
+            if (NodeType == null)
+                return;
+
+            PropertyInfo? Property = NodeType.GetProperty(propertyName);
             Debug.Assert(Property != null);
 
+            childNodeList = null!;
+            if (Property == null)
+                return;
+
             Type PropertyType = Property.PropertyType;
+
             Debug.Assert(NodeTreeHelper.IsNodeListType(PropertyType));
 
-            IList Collection = Property.GetValue(node) as IList;
+            IList? Collection = Property.GetValue(node) as IList;
             if (Collection == null)
-                childNodeList = null;
+                childNodeList = null!;
             else
             {
                 List<Node> NodeList = new List<Node>();
-                foreach (object Item in Collection)
+                foreach (object? Item in Collection)
                 {
-                    Node NodeItem = Item as Node;
+                    Node? NodeItem = Item as Node;
+                    Debug.Assert(NodeItem != null);
+
+                    if (NodeItem == null)
+                        return;
+
                     NodeList.Add(NodeItem);
                 }
 
@@ -90,14 +118,26 @@ namespace BaseNodeHelper
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
 
             Type NodeType = node.GetType();
-            PropertyInfo Property = NodeType.GetProperty(propertyName);
+            Debug.Assert(NodeType != null);
+
+            if (NodeType == null)
+                return;
+
+            PropertyInfo? Property = NodeType.GetProperty(propertyName);
             Debug.Assert(Property != null);
 
+            if (Property == null)
+                return;
+
             Type PropertyType = Property.PropertyType;
+
             Debug.Assert(NodeTreeHelper.IsNodeListType(PropertyType));
 
-            IList Collection = Property.GetValue(node) as IList;
+            IList? Collection = Property.GetValue(node) as IList;
             Debug.Assert(Collection != null);
+
+            if (Collection == null)
+                return;
 
             Collection.Clear();
         }
@@ -110,19 +150,30 @@ namespace BaseNodeHelper
             if (childNode == null) throw new ArgumentNullException(nameof(childNode));
 
             Type NodeType = node.GetType();
-            PropertyInfo Property = NodeType.GetProperty(propertyName);
+            Debug.Assert(NodeType != null);
+
+            if (NodeType == null)
+                return false;
+
+            PropertyInfo? Property = NodeType.GetProperty(propertyName);
             Debug.Assert(Property != null);
+
+            if (Property == null)
+                return false;
 
             Type PropertyType = Property.PropertyType;
             Debug.Assert(NodeTreeHelper.IsNodeListType(PropertyType));
 
-            IList Collection = Property.GetValue(node) as IList;
+            IList? Collection = Property.GetValue(node) as IList;
             Debug.Assert(Collection != null);
+
+            if (Collection == null)
+                return false;
 
             Debug.Assert(index < Collection.Count);
             if (index >= Collection.Count) throw new ArgumentOutOfRangeException(nameof(index));
 
-            Node NodeItem = Collection[index] as Node;
+            Node? NodeItem = Collection[index] as Node;
             Debug.Assert(NodeItem != null);
 
             return NodeItem == childNode;
@@ -134,19 +185,33 @@ namespace BaseNodeHelper
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
 
             Type NodeType = node.GetType();
-            PropertyInfo Property = NodeType.GetProperty(propertyName);
+            Debug.Assert(NodeType != null);
+
+            if (NodeType == null)
+                return null!;
+
+            PropertyInfo? Property = NodeType.GetProperty(propertyName);
             Debug.Assert(Property != null);
+
+            if (Property == null)
+                return null!;
 
             Type PropertyType = Property.PropertyType;
             Debug.Assert(NodeTreeHelper.IsNodeListType(PropertyType));
 
-            IList Collection = Property.GetValue(node) as IList;
+            IList? Collection = Property.GetValue(node) as IList;
             Debug.Assert(Collection != null);
+
+            if (Collection == null)
+                return null!;
 
             Debug.Assert(PropertyType.IsGenericType);
             Type[] GenericArguments = Property.PropertyType.GetGenericArguments();
             Debug.Assert(GenericArguments != null);
-            Debug.Assert(GenericArguments.Length == 1);
+            Debug.Assert(GenericArguments != null && GenericArguments.Length == 1);
+
+            if (GenericArguments == null)
+                return null!;
 
             Type InterfaceType = GenericArguments[0];
 
@@ -164,14 +229,25 @@ namespace BaseNodeHelper
             lastIndex = -1;
 
             Type NodeType = node.GetType();
-            PropertyInfo Property = NodeType.GetProperty(propertyName);
+            Debug.Assert(NodeType != null);
+
+            if (NodeType == null)
+                return false;
+
+            PropertyInfo? Property = NodeType.GetProperty(propertyName);
             Debug.Assert(Property != null);
+
+            if (Property == null)
+                return false;
 
             Type PropertyType = Property.PropertyType;
             Debug.Assert(NodeTreeHelper.IsNodeListType(PropertyType));
 
-            IList Collection = Property.GetValue(node) as IList;
+            IList? Collection = Property.GetValue(node) as IList;
             Debug.Assert(Collection != null);
+
+            if (Collection == null)
+                return false;
 
             lastIndex = Collection.Count;
             return true;
@@ -184,8 +260,16 @@ namespace BaseNodeHelper
             if (childNodeList == null) throw new ArgumentNullException(nameof(childNodeList));
 
             Type NodeType = node.GetType();
-            PropertyInfo Property = NodeType.GetProperty(propertyName);
+            Debug.Assert(NodeType != null);
+
+            if (NodeType == null)
+                return;
+
+            PropertyInfo? Property = NodeType.GetProperty(propertyName);
             Debug.Assert(Property != null);
+
+            if (Property == null)
+                return;
 
             Type PropertyType = Property.PropertyType;
             Debug.Assert(NodeTreeHelper.IsNodeListType(PropertyType));
@@ -202,14 +286,25 @@ namespace BaseNodeHelper
             if (childNode == null) throw new ArgumentNullException(nameof(childNode));
 
             Type NodeType = node.GetType();
-            PropertyInfo Property = NodeType.GetProperty(propertyName);
+            Debug.Assert(NodeType != null);
+
+            if (NodeType == null)
+                return;
+
+            PropertyInfo? Property = NodeType.GetProperty(propertyName);
             Debug.Assert(Property != null);
+
+            if (Property == null)
+                return;
 
             Type PropertyType = Property.PropertyType;
             Debug.Assert(NodeTreeHelper.IsNodeListType(PropertyType));
 
-            IList Collection = Property.GetValue(node) as IList;
+            IList? Collection = Property.GetValue(node) as IList;
             Debug.Assert(Collection != null);
+
+            if (Collection == null)
+                return;
 
             Debug.Assert(index <= Collection.Count);
             if (index > Collection.Count) throw new ArgumentOutOfRangeException(nameof(index));
@@ -223,14 +318,25 @@ namespace BaseNodeHelper
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
 
             Type NodeType = node.GetType();
-            PropertyInfo Property = NodeType.GetProperty(propertyName);
+            Debug.Assert(NodeType != null);
+
+            if (NodeType == null)
+                return;
+
+            PropertyInfo? Property = NodeType.GetProperty(propertyName);
             Debug.Assert(Property != null);
+
+            if (Property == null)
+                return;
 
             Type PropertyType = Property.PropertyType;
             Debug.Assert(NodeTreeHelper.IsNodeListType(PropertyType));
 
-            IList Collection = Property.GetValue(node) as IList;
+            IList? Collection = Property.GetValue(node) as IList;
             Debug.Assert(Collection != null);
+
+            if (Collection == null)
+                return;
 
             Debug.Assert(index < Collection.Count);
             if (index >= Collection.Count) throw new ArgumentOutOfRangeException(nameof(index));
@@ -246,14 +352,25 @@ namespace BaseNodeHelper
             if (childNode == null) throw new ArgumentNullException(nameof(childNode));
 
             Type NodeType = node.GetType();
-            PropertyInfo Property = NodeType.GetProperty(propertyName);
+            Debug.Assert(NodeType != null);
+
+            if (NodeType == null)
+                return;
+
+            PropertyInfo? Property = NodeType.GetProperty(propertyName);
             Debug.Assert(Property != null);
+
+            if (Property == null)
+                return;
 
             Type PropertyType = Property.PropertyType;
             Debug.Assert(NodeTreeHelper.IsNodeListType(PropertyType));
 
-            IList Collection = Property.GetValue(node) as IList;
+            IList? Collection = Property.GetValue(node) as IList;
             Debug.Assert(Collection != null);
+
+            if (Collection == null)
+                return;
 
             if (index >= Collection.Count) throw new ArgumentOutOfRangeException(nameof(index));
 
@@ -268,22 +385,36 @@ namespace BaseNodeHelper
             if (index + direction < 0) throw new ArgumentOutOfRangeException(nameof(direction));
 
             Type NodeType = node.GetType();
-            PropertyInfo Property = NodeType.GetProperty(propertyName);
+            Debug.Assert(NodeType != null);
+
+            if (NodeType == null)
+                return;
+
+            PropertyInfo? Property = NodeType.GetProperty(propertyName);
             Debug.Assert(Property != null);
+
+            if (Property == null)
+                return;
 
             Type PropertyType = Property.PropertyType;
             Debug.Assert(NodeTreeHelper.IsNodeListType(PropertyType));
 
-            IList Collection = Property.GetValue(node) as IList;
+            IList? Collection = Property.GetValue(node) as IList;
             Debug.Assert(Collection != null);
+
+            if (Collection == null)
+                return;
 
             Debug.Assert(index < Collection.Count);
             if (index >= Collection.Count) throw new ArgumentOutOfRangeException(nameof(index));
             Debug.Assert(index + direction < Collection.Count);
             if (index + direction >= Collection.Count) throw new ArgumentOutOfRangeException(nameof(direction));
 
-            Node ChildNode = Collection[index] as Node;
+            Node? ChildNode = Collection[index] as Node;
             Debug.Assert(ChildNode != null);
+
+            if (ChildNode == null)
+                return;
 
             Collection.RemoveAt(index);
             Collection.Insert(index + direction, ChildNode);
