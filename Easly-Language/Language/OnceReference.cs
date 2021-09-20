@@ -57,16 +57,12 @@
         {
             get
             {
-                T Result;
-
                 Debug.Assert(IsAssigned == (ItemInternal != null), $"{nameof(IsAssigned)} is always true if {nameof(ItemInternal)} has been assigned, and it can only be to a non-null value");
 
                 if (ItemInternal != null)
-                    Result = ItemInternal;
+                    return ItemInternal;
                 else
                     throw new InvalidOperationException();
-
-                return Result;
             }
             set
             {
@@ -84,7 +80,26 @@
         }
 
         /// <inheritdoc/>
-        object IOnceReference.Item { get { return Item; } set { ItemInternal = (T)value; } }
+        object IOnceReference.Item
+        {
+            get
+            {
+                return Item;
+            }
+            set
+            {
+                if (!IsAssigned)
+                    if (value is T AsItem)
+                    {
+                        ItemInternal = AsItem;
+                        IsAssigned = true;
+                    }
+                    else
+                        throw new InvalidOperationException();
+                else
+                    throw new InvalidOperationException();
+            }
+        }
 
         private T? ItemInternal;
         #endregion

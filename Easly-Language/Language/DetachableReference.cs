@@ -87,7 +87,23 @@
         }
 
         /// <inheritdoc/>
-        object IDetachableReference.Item { get { return Item; } set { Item = (T)value; } }
+        object IDetachableReference.Item
+        {
+            get
+            {
+                return Item;
+            }
+            set
+            {
+                if (value is T AsItem)
+                {
+                    ItemInternal = AsItem;
+                    IsAssigned = true;
+                }
+                else
+                    throw new InvalidOperationException();
+            }
+        }
         #endregion
 
         #region Client Interface

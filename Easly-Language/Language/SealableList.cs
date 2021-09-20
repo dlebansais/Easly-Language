@@ -21,10 +21,33 @@
     }
 
     /// <summary>
-    /// Represents a list ofitem type <typeparamref name="TItem"/> that can be sealed.
+    /// Represents a list of item type <typeparamref name="TItem"/> that can be sealed.
     /// </summary>
     /// <typeparam name="TItem">The type of the item.</typeparam>
-    public class SealableList<TItem> : List<TItem>, ISealableList
+    public interface ISealableList<TItem> : IList<TItem>
+    {
+        /// <summary>
+        /// Gets a value indicating whether the list is sealed.
+        /// </summary>
+        bool IsSealed { get; }
+
+        /// <summary>
+        /// Seals the list.
+        /// </summary>
+        void Seal();
+
+        /// <summary>
+        /// Adds a range of items to the list.
+        /// </summary>
+        /// <param name="other">The items to add.</param>
+        void AddRange(IList<TItem> other);
+    }
+
+    /// <summary>
+    /// Represents a list of item type <typeparamref name="TItem"/> that can be sealed.
+    /// </summary>
+    /// <typeparam name="TItem">The type of the item.</typeparam>
+    public class SealableList<TItem> : List<TItem>, ISealableList<TItem>, ISealableList
     {
         #region Init
         /// <summary>
@@ -49,7 +72,8 @@
         /// </summary>
         public void Seal()
         {
-            Debug.Assert(!IsSealed, "Sealing should be done only once");
+            if (IsSealed)
+                throw new InvalidOperationException("Sealing should be done only once");
 
             IsSealed = true;
         }
@@ -60,7 +84,8 @@
         /// <param name="item">The item to add.</param>
         public new void Add(TItem item)
         {
-            Debug.Assert(!IsSealed, "A sealed collection cannot be modified");
+            if (IsSealed)
+                throw new InvalidOperationException("A sealed collection cannot be modified");
 
             base.Add(item);
         }
@@ -85,7 +110,8 @@
         /// <param name="other">The items to add.</param>
         public void AddRange(IList<TItem> other)
         {
-            Debug.Assert(!IsSealed, "A sealed collection cannot be modified");
+            if (IsSealed)
+                throw new InvalidOperationException("A sealed collection cannot be modified");
 
             base.AddRange(other);
         }

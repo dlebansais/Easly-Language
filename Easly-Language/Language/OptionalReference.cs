@@ -140,7 +140,23 @@
         }
 
         /// <inheritdoc/>
-        object IOptionalReference.Item { get { return Item; } set { ItemInternal = (T)value; } }
+        object IOptionalReference.Item
+        {
+            get
+            {
+                return Item;
+            }
+            set
+            {
+                if (value is T AsItem)
+                {
+                    ItemInternal = AsItem;
+                    IsAssigned = true;
+                }
+                else
+                    throw new InvalidOperationException();
+            }
+        }
 
         [PolySerializer.Serializable(Exclude = true)]
         private T? ItemInternal;

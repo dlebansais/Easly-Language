@@ -19,18 +19,18 @@
         public EventBase(bool isAutoReset, bool isSignaled = false)
         {
             IsSignaled = isSignaled;
-
-            EventWaitHandle Handle;
+            Signaler = () => { return IsSignaled; };
 
             if (isAutoReset)
-                Handle = new AutoResetEvent(IsSignaled);
+            {
+                HandleList = new List<EventWaitHandle>() { new AutoResetEvent(IsSignaled) };
+                Updater = () => { IsSignaled = false; };
+            }
             else
-                Handle = new ManualResetEvent(IsSignaled);
-
-            HandleList = new List<EventWaitHandle>() { Handle };
-
-            Signaler = () => { return IsSignaled; };
-            Evaluate();
+            {
+                HandleList = new List<EventWaitHandle>() { new ManualResetEvent(IsSignaled) };
+                Updater = () => { };
+            }
         }
 
         /// <summary>
@@ -39,7 +39,8 @@
         /// <param name="event1">First nested event.</param>
         /// <param name="event2">Second nested event.</param>
         /// <param name="signaler">The predicate for the signaled state.</param>
-        public EventBase(EventBase event1, EventBase event2, Func<bool> signaler)
+        /// <param name="updater">The action to take for the signaled state.</param>
+        protected EventBase(EventBase event1, EventBase event2, Func<bool> signaler, Action updater)
         {
             Contract.Requires(event1 != null);
             Contract.Requires(event2 != null);
@@ -49,6 +50,7 @@
             HandleList.AddRange(event2!.HandleList);
 
             Signaler = signaler;
+            Updater = updater;
             Evaluate();
         }
         #endregion
@@ -57,7 +59,12 @@
         /// <summary>
         /// Gets the predicate for the signaled state.
         /// </summary>
-        public Func<bool> Signaler { get; private set; }
+        protected Func<bool> Signaler { get; private set; }
+
+        /// <summary>
+        /// Gets the action to take for the signaled state.
+        /// </summary>
+        protected Action Updater { get; private set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether event is signaled.
@@ -100,12 +107,19 @@
         /// <returns>The combination of the two events.</returns>
         public static EventBase BitwiseAnd(EventBase event1, EventBase event2)
         {
-            return new EventBase(event1, event2, () =>
+            Func<bool> Signaler = () =>
             {
                 event1.Evaluate();
                 event2.Evaluate();
                 return event1.IsSignaled && event2.IsSignaled;
-            });
+            };
+            Action Updater = () =>
+            {
+                event1.Updater();
+                event2.Updater();
+            };
+
+            return new EventBase(event1, event2, Signaler, Updater);
         }
 
         /// <summary>
@@ -127,12 +141,19 @@
         /// <returns>The combination of the two events.</returns>
         public static EventBase BitwiseOr(EventBase event1, EventBase event2)
         {
-            return new EventBase(event1, event2, () =>
+            Func<bool> Signaler = () =>
             {
                 event1.Evaluate();
                 event2.Evaluate();
                 return event1.IsSignaled || event2.IsSignaled;
-            });
+            };
+            Action Updater = () =>
+            {
+                event1.Updater();
+                event2.Updater();
+            };
+
+            return new EventBase(event1, event2, Signaler, Updater);
         }
 
         /// <summary>
@@ -154,12 +175,19 @@
         /// <returns>The combination of the two events.</returns>
         public static EventBase Xor(EventBase event1, EventBase event2)
         {
-            return new EventBase(event1, event2, () =>
+            Func<bool> Signaler = () =>
             {
                 event1.Evaluate();
                 event2.Evaluate();
                 return event1.IsSignaled ^ event2.IsSignaled;
-            });
+            };
+            Action Updater = () =>
+            {
+                event1.Updater();
+                event2.Updater();
+            };
+
+            return new EventBase(event1, event2, Signaler, Updater);
         }
 
         /// <summary>
@@ -181,12 +209,19 @@
         /// <returns>The combination of the two events.</returns>
         public static EventBase Implies(EventBase event1, EventBase event2)
         {
-            return new EventBase(event1, event2, () =>
+            Func<bool> Signaler = () =>
             {
                 event1.Evaluate();
                 event2.Evaluate();
                 return !event1.IsSignaled || event2.IsSignaled;
-            });
+            };
+            Action Updater = () =>
+            {
+                event1.Updater();
+                event2.Updater();
+            };
+
+            return new EventBase(event1, event2, Signaler, Updater);
         }
 
         /// <summary>
@@ -229,13 +264,16 @@
         /// <returns>True if the event is in signaled state upon return.</returns>
         public bool Wait()
         {
-            while (!IsSignaled)
+            do
             {
                 WaitHandle.WaitAny(HandleList.ToArray());
                 Evaluate();
             }
+            while (!IsSignaled);
 
-            return IsSignaled;
+            Updater();
+
+            return true;
         }
         #endregion
     }

@@ -140,7 +140,8 @@
         /// </summary>
         public void Seal()
         {
-            Debug.Assert(!IsSealed, "Sealing should be done only once");
+            if (IsSealed)
+                throw new InvalidOperationException("Sealing should be done only once");
 
             IsSealed = true;
         }
@@ -152,8 +153,11 @@
         /// <param name="value">The value.</param>
         public new void Add(TKey key, TValue value)
         {
-            Debug.Assert(!IsSealed, "A sealed collection cannot be modified");
-            Debug.Assert(!ContainsKey(key), "A key must not be added more than once");
+            if (IsSealed)
+                throw new InvalidOperationException("A sealed collection cannot be modified");
+
+            if (ContainsKey(key))
+                throw new InvalidOperationException("A key must not be added more than once");
 
             base.Add(key, value);
         }
@@ -179,12 +183,14 @@
         /// <param name="newKey">The new key.</param>
         public void ChangeKey(TKey oldKey, TKey newKey)
         {
-            Debug.Assert(ContainsKey(oldKey), "The collection must contain the changed key");
+            if (!ContainsKey(oldKey))
+                throw new InvalidOperationException("The collection must contain the changed key");
 
             TValue EntryValue = this[oldKey];
             Remove(oldKey);
 
-            Debug.Assert(!ContainsKey(newKey), "The collection must not contain the new key already");
+            if (ContainsKey(newKey))
+                throw new InvalidOperationException("The collection must not contain the new key already");
 
             Add(newKey, EntryValue);
         }
@@ -197,11 +203,13 @@
         {
             Contract.Requires(other != null);
 
-            Debug.Assert(!IsSealed, "A sealed collection cannot be modified");
+            if (IsSealed)
+                throw new InvalidOperationException("A sealed collection cannot be modified");
 
             foreach (KeyValuePair<TKey, TValue> Item in other!)
             {
-                Debug.Assert(!ContainsKey(Item.Key), "Two merged collections must not contain the same key");
+                if (ContainsKey(Item.Key))
+                    throw new InvalidOperationException("Two merged collections must not contain the same key");
 
                 base.Add(Item.Key, Item.Value);
             }
@@ -216,7 +224,8 @@
         {
             Contract.Requires(other != null);
 
-            Debug.Assert(!IsSealed, "A sealed collection cannot be modified");
+            if (IsSealed)
+                throw new InvalidOperationException("A sealed collection cannot be modified");
 
             foreach (KeyValuePair<TKey, TValue> Item in other!)
                 if (!ContainsKey(Item.Key))

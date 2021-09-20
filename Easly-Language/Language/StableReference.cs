@@ -81,7 +81,23 @@
         }
 
         /// <inheritdoc/>
-        object IStableReference.Item { get { return Item; } set { ItemInternal = (T)value; } }
+        object IStableReference.Item
+        {
+            get
+            {
+                return Item;
+            }
+            set
+            {
+                if (value is T AsItem)
+                {
+                    ItemInternal = AsItem;
+                    IsAssigned = true;
+                }
+                else
+                    throw new InvalidOperationException();
+            }
+        }
 
         private T? ItemInternal;
         #endregion
