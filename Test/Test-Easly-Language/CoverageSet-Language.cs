@@ -100,7 +100,11 @@
             Assert.Throws<InvalidOperationException>(() => { TestObject = TestDetachableReference.Item; });
             Assert.Throws<InvalidOperationException>(() => { TestObject = TestInterface.Item as Name; });
 
-            TestDetachableReference.Item = new Name();
+            TestObject = new Name();
+
+            TestDetachableReference.Item = TestObject;
+            TestInterface.Item = TestObject;
+
             IsAssigned = TestDetachableReference.IsAssigned;
             Assert.True(IsAssigned);
 
@@ -139,7 +143,15 @@
 
             Assert.Throws<InvalidOperationException>(() => { TestOnceReference.Item = null!; });
 
-            TestOnceReference.Item = new Name();
+            TestObject = new Name();
+
+            TestInterface.Item = TestObject;
+            IsAssigned = TestInterface.IsAssigned;
+            Assert.True(IsAssigned);
+
+            TestOnceReference = new();
+            TestOnceReference.Item = TestObject;
+
             IsAssigned = TestOnceReference.IsAssigned;
             Assert.True(IsAssigned);
 
@@ -178,7 +190,10 @@
             Assert.Throws<InvalidOperationException>(() => { TestObject = TestOptionalReference.Item; });
             Assert.Throws<InvalidOperationException>(() => { TestObject = TestInterface.Item as Name; });
 
-            TestOptionalReference.Item = new Name();
+            TestObject = new Name();
+
+            TestOptionalReference.Item = TestObject;
+            TestInterface.Item = TestObject;
 
             IsAssigned = TestOptionalReference.IsAssigned;
             HasItem = TestOptionalReference.HasItem;
@@ -211,6 +226,14 @@
             HasItem = TestOptionalReference.HasItem;
             Assert.False(IsAssigned);
             Assert.False(HasItem);
+
+            TestObject = new Name();
+            TestOptionalReference = new(TestObject);
+
+            IsAssigned = TestOptionalReference.IsAssigned;
+            HasItem = TestOptionalReference.HasItem;
+            Assert.False(IsAssigned);
+            Assert.True(HasItem);
         }
 
         [Test]
@@ -228,7 +251,15 @@
             Assert.Throws<InvalidOperationException>(() => { TestObject = TestStableReference.Item; });
             Assert.Throws<InvalidOperationException>(() => { TestObject = TestInterface.Item as Name; });
 
-            TestStableReference.Item = new Name();
+            TestObject = new Name();
+
+            TestInterface.Item = TestObject;
+            IsAssigned = TestInterface.IsAssigned;
+            Assert.True(IsAssigned);
+
+            TestStableReference = new();
+            TestStableReference.Item = TestObject;
+
             IsAssigned = TestStableReference.IsAssigned;
             Assert.True(IsAssigned);
 
