@@ -13,7 +13,16 @@
         /// Initializes a new instance of the <see cref="IndexerEntity"/> class.
         /// </summary>
         /// <param name="featureInfo">The feature information from reflection.</param>
-        public IndexerEntity(MemberInfo featureInfo)
+        public IndexerEntity(MethodInfo featureInfo)
+            : base(featureInfo)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="IndexerEntity"/> class.
+        /// </summary>
+        /// <param name="featureInfo">The feature information from reflection.</param>
+        public IndexerEntity(PropertyInfo featureInfo)
             : base(featureInfo)
         {
         }

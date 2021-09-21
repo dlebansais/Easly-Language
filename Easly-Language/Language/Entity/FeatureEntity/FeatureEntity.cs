@@ -5,7 +5,7 @@
     /// <summary>
     /// Represents an entity for features.
     /// </summary>
-    public class FeatureEntity : Entity
+    public abstract class FeatureEntity : Entity
     {
         #region Init
         /// <summary>

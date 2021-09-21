@@ -12,7 +12,7 @@
         /// Initializes a new instance of the <see cref="ProcedureEntity"/> class.
         /// </summary>
         /// <param name="featureInfo">The feature information from reflection.</param>
-        public ProcedureEntity(MemberInfo featureInfo)
+        public ProcedureEntity(MethodInfo featureInfo)
             : base(featureInfo)
         {
         }

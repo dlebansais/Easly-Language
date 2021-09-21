@@ -17,21 +17,25 @@
         [Test]
         public static void TestLanguageInitializers()
         {
-            MemberInfo FunctionInfo = typeof(IList).GetMember("IndexOf")[0];
+            MethodInfo FunctionInfo = (MethodInfo)typeof(IList).GetMember("IndexOf")[0];
             PropertyInfo IndexerInfo = typeof(IList).GetProperty("Item");
-            MemberInfo ProcedureInfo = typeof(IList).GetMember("Clear")[0];
+            MethodInfo ProcedureInfo = (MethodInfo)typeof(IList).GetMember("Clear")[0];
             PropertyInfo PropertyInfo = typeof(Name).GetProperty("Text");
 
-            FeatureEntity TestFeatureEntity = new(FunctionInfo);
             FunctionEntity TestFunctionEntity = new(FunctionInfo);
             IndexerEntity TestIndexerEntity = new(IndexerInfo);
             ProcedureEntity TestProcedureEntity = new(ProcedureInfo);
             PropertyEntity TestPropertyEntity = new(PropertyInfo);
 
+            MemberInfo IndexerInfoAsMethod = typeof(IList).GetMember("get_Item")[0];
+            TestIndexerEntity = new(IndexerInfo);
+            TypeEntity ReturnType = TestIndexerEntity.Type;
+            
             SpecializedTypeEntity<Class> TestSpecializedTypeEntityClass = SpecializedTypeEntity<Class>.Singleton;
             TestSpecializedTypeEntityClass = SpecializedTypeEntity<Class>.Singleton; // Class twice to cover different branches in the code.
             Class? TestClass = TestSpecializedTypeEntityClass.CreateInstance() as Class;
 
+            //System.Diagnostics.Debug.Assert(false);
             SpecializedTypeEntity<string> TestSpecializedTypeEntityString = SpecializedTypeEntity<string>.Singleton;
             TestSpecializedTypeEntityString.Procedure("CopyTo");
             TestSpecializedTypeEntityString.Function("CompareTo");
@@ -58,9 +62,9 @@
         [Test]
         public static void TestLanguageClasses()
         {
-            MemberInfo FunctionInfo = typeof(IList).GetMember("IndexOf")[0];
+            MethodInfo FunctionInfo = (MethodInfo)typeof(IList).GetMember("IndexOf")[0];
             PropertyInfo IndexerInfo = typeof(IList).GetProperty("Item");
-            MemberInfo ProcedureInfo = typeof(IList).GetMember("Clear")[0];
+            MethodInfo ProcedureInfo = (MethodInfo)typeof(IList).GetMember("Clear")[0];
             PropertyInfo PropertyInfo = typeof(Name).GetProperty("Text");
 
             FunctionEntity TestFunctionEntity = new(FunctionInfo);
@@ -317,12 +321,13 @@
             bool IsTrue, IsSignaled;
 
             IsTrue = TestManualReset ? true : false;
-            Assert.That(!IsTrue);
+            Assert.That(!TestManualReset.IsTrue);
+            Assert.That(!TestManualReset.IsFalse);
 
-            IsTrue = TestAutoReset ? true : false;
-            Assert.That(!IsTrue);
+            Result = TestAutoReset && TestAutoReset;
+            Assert.That(!Result.IsTrue);
+            Assert.That(!Result.IsFalse);
 
-            //System.Diagnostics.Debug.Assert(false);
             TestManualReset.Wait();
             TestAutoReset.Wait();
 
@@ -379,6 +384,8 @@
             CloneDictionary.Merge(OtherDictionary);
 
             Assert.Throws<InvalidOperationException>(() => { CloneDictionary.Merge(OtherDictionary); });
+
+            OtherDictionary.Add("Key4", "Value4");
 
             CloneDictionary.MergeWithConflicts(OtherDictionary);
 

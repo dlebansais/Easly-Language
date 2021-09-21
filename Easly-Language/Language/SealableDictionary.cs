@@ -101,6 +101,7 @@
         {
         }
 
+        /*
         /// <summary>
         /// Initializes a new instance of the <see cref="SealableDictionary{TKey, TValue}"/> class.
         /// </summary>
@@ -110,6 +111,7 @@
             : base(info, context)
         {
         }
+        */
         #endregion
 
         #region Properties

@@ -12,7 +12,7 @@
         /// Initializes a new instance of the <see cref="FunctionEntity"/> class.
         /// </summary>
         /// <param name="featureInfo">The feature information from reflection.</param>
-        public FunctionEntity(MemberInfo featureInfo)
+        public FunctionEntity(MethodInfo featureInfo)
             : base(featureInfo)
         {
         }
