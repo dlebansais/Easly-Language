@@ -27,9 +27,11 @@
             ProcedureEntity TestProcedureEntity = new(ProcedureInfo);
             PropertyEntity TestPropertyEntity = new(PropertyInfo);
 
-            MemberInfo IndexerInfoAsMethod = typeof(IList).GetMember("get_Item")[0];
-            TestIndexerEntity = new(IndexerInfo);
             TypeEntity ReturnType = TestIndexerEntity.Type;
+
+            MethodInfo IndexerInfoAsMethod = (MethodInfo)typeof(IList).GetMember("get_Item")[0];
+            TestIndexerEntity = new(IndexerInfoAsMethod);
+            ReturnType = TestIndexerEntity.Type;
             
             SpecializedTypeEntity<Class> TestSpecializedTypeEntityClass = SpecializedTypeEntity<Class>.Singleton;
             TestSpecializedTypeEntityClass = SpecializedTypeEntity<Class>.Singleton; // Class twice to cover different branches in the code.
