@@ -219,7 +219,7 @@
 
         private static string OverloadedName(IDictionaryIndex<string> table, string name)
         {
-            if (table.ContainsKey(name))
+            /*if (table.ContainsKey(name))
             {
                 int i = 1;
                 while (table.ContainsKey(name + i.ToString(CultureInfo.InvariantCulture)))
@@ -227,7 +227,7 @@
 
                 return name + i.ToString(CultureInfo.InvariantCulture);
             }
-            else
+            else*/
                 return name;
         }
         #endregion

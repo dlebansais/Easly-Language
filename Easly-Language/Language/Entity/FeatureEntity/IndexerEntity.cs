@@ -36,15 +36,21 @@
         {
             get
             {
+                TypeEntity? Result = null!;
+
                 switch (FeatureInfo)
                 {
                     case PropertyInfo AsPropertyInfo:
-                        return TypeEntity.BuiltTypeEntity(AsPropertyInfo.PropertyType);
+                        Result = TypeEntity.BuiltTypeEntity(AsPropertyInfo.PropertyType);
+                        break;
                     case MethodInfo AsMethodInfo:
-                        return TypeEntity.BuiltTypeEntity(AsMethodInfo.ReturnType);
-                    default:
-                        throw new InvalidOperationException();
+                        Result = TypeEntity.BuiltTypeEntity(AsMethodInfo.ReturnType);
+                        break;
                 }
+
+                System.Diagnostics.Debug.Assert(Result != null);
+
+                return Result!;
             }
         }
         #endregion
