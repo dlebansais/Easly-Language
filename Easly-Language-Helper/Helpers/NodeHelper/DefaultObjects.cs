@@ -146,11 +146,7 @@ namespace BaseNodeHelper
             if (!IsNodeType(objectType)) throw new ArgumentException($"{nameof(objectType)} must be a node type");
             if (objectType.IsAbstract) throw new ArgumentException($"{nameof(objectType)} must not be an abstract node type");
 
-            string? FullName = objectType.FullName;
-            Debug.Assert(FullName != null);
-
-            if (FullName == null)
-                return null!;
+            string FullName = SafeType.FullName(objectType);
 
             Node? EmptyNode = objectType.Assembly.CreateInstance(FullName) as Node;
             Debug.Assert(EmptyNode != null, $"A created instance is never null");

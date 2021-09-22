@@ -139,11 +139,7 @@ namespace BaseNodeHelper
             if (BlockListAssembly == null)
                 return null!;
 
-            string? BlockListFullName = BlockListType.FullName;
-            Debug.Assert(BlockListFullName != null);
-
-            if (BlockListFullName == null)
-                return null!;
+            string BlockListFullName = SafeType.FullName(BlockListType);
 
             IBlockList? ClonedBlockList = BlockListAssembly.CreateInstance(BlockListFullName) as IBlockList;
             Debug.Assert(ClonedBlockList != null);
@@ -159,11 +155,7 @@ namespace BaseNodeHelper
             if (NodeListAssembly == null)
                 return null!;
 
-            string? NodeListFullName = NodeListType.FullName;
-            Debug.Assert(NodeListFullName != null);
-
-            if (NodeListFullName == null)
-                return null!;
+            string NodeListFullName = SafeType.FullName(NodeListType);
 
             IList? ClonedNodeBlockList = NodeListAssembly.CreateInstance(NodeListFullName) as IList;
             Debug.Assert(ClonedNodeBlockList != null);

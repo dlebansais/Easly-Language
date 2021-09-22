@@ -63,11 +63,7 @@ namespace BaseNodeHelper
             if (BlockType == null)
                 return null!;
 
-            string? BlockTypeFullName = BlockType.FullName;
-            Debug.Assert(BlockTypeFullName != null);
-
-            if (BlockTypeFullName == null)
-                return null!;
+            string BlockTypeFullName = SafeType.FullName(BlockType);
 
             IBlock? NewBlock = BlockType.Assembly.CreateInstance(BlockTypeFullName) as IBlock;
             Debug.Assert(NewBlock != null);
@@ -87,11 +83,7 @@ namespace BaseNodeHelper
 
             Type NodeListType = typeof(List<>).MakeGenericType(new Type[] { TypeArguments[0] });
 
-            string? FullName = NodeListType.FullName;
-            Debug.Assert(FullName != null);
-
-            if (FullName == null)
-                return null!;
+            string FullName = SafeType.FullName(NodeListType);
 
             IList? NewNodeList = NodeListType.Assembly.CreateInstance(FullName) as IList;
             Debug.Assert(NewNodeList != null);

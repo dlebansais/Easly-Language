@@ -66,11 +66,7 @@ namespace BaseNodeHelper
         {
             if (type == null) throw new ArgumentNullException(nameof(type));
 
-            string? FullName = typeof(Node).FullName;
-            Debug.Assert(FullName != null);
-
-            if (FullName == null)
-                return false;
+            string FullName = SafeType.FullName(typeof(Node));
 
             return type.IsInterface && type.GetInterface(FullName) != null;
         }
@@ -100,11 +96,7 @@ namespace BaseNodeHelper
             if (type == null) throw new ArgumentNullException(nameof(type));
             if (!type.IsInterface) throw new ArgumentException($"{nameof(type)} must be an interface");
 
-            string? FullName = type.FullName;
-            Debug.Assert(FullName != null);
-
-            if (FullName == null)
-                return null!;
+            string FullName = SafeType.FullName(type);
 
             string[] Prefixes = FullName.Split('.');
             Debug.Assert(Prefixes.Length > 0);
@@ -330,17 +322,9 @@ namespace BaseNodeHelper
             ancestorType = null!;
             bool Result = false;
 
-            string? FullName = typeof(Node).FullName;
-            Debug.Assert(FullName != null);
+            string FullName = SafeType.FullName(typeof(Node));
 
-            if (FullName == null)
-                return false;
-
-            string? NodeFullName = nodeType.FullName;
-            Debug.Assert(NodeFullName != null);
-
-            if (NodeFullName == null)
-                return false;
+            string NodeFullName = SafeType.FullName(nodeType);
 
             string BaseNodeNamespace = FullName.Substring(0, FullName.IndexOf(".", StringComparison.InvariantCulture) + 1);
             while (nodeType != typeof(object) && !NodeFullName.StartsWith(BaseNodeNamespace, StringComparison.InvariantCulture))
@@ -353,11 +337,7 @@ namespace BaseNodeHelper
 
                 nodeType = BaseType;
 
-                NodeFullName = nodeType.FullName;
-                Debug.Assert(NodeFullName != null);
-
-                if (NodeFullName == null)
-                    return false;
+                NodeFullName = SafeType.FullName(nodeType);
             }
 
             Debug.Assert(nodeType != typeof(object));

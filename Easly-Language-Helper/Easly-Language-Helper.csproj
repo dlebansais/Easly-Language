@@ -12,8 +12,8 @@
     <Product />
     <Description>Easly language AST description and helpers</Description>
     <Copyright>Copyright © 2019 David Le Bansais</Copyright>
-    <AssemblyVersion>1.0.5.5</AssemblyVersion>
-    <FileVersion>1.0.5.4</FileVersion>
+    <AssemblyVersion>1.0.5.8</AssemblyVersion>
+    <FileVersion>1.0.5.5</FileVersion>
     <RepositoryUrl>https://github.com/dlebansais/Easly-Language</RepositoryUrl>
     <NeutralLanguage>en-US</NeutralLanguage>
     <RootNamespace>BaseNodeHelper</RootNamespace>
@@ -40,6 +40,8 @@
     </PackageReference>
     <PackageReference Include="Easly-Number-Debug" Version="1.2.3" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
     <PackageReference Include="Easly-Number" Version="1.2.3" Condition="'$(Configuration)|$(Platform)'!='Debug|x64'" />
+    <PackageReference Include="Contracts-Debug" Version="1.0.12" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
+    <PackageReference Include="Contracts" Version="1.0.12" Condition="'$(Configuration)|$(Platform)'!='Debug|x64'" />
   </ItemGroup>
 
   <ItemGroup>

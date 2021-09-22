@@ -14,11 +14,7 @@ namespace BaseNodeHelper
     {
         public static Type NodeType(string typeName)
         {
-            string? RootName = typeof(Root).FullName;
-            Debug.Assert(RootName != null);
-
-            if (RootName == null)
-                return null!;
+            string RootName = SafeType.FullName(typeof(Root));
 
             int Index = RootName.LastIndexOf('.');
             string FullTypeName = RootName.Substring(0, Index + 1) + typeName;
@@ -44,11 +40,7 @@ namespace BaseNodeHelper
             {
                 if (!Item.IsInterface && !Item.IsAbstract)
                 {
-                    string? FullName = typeof(Node).FullName;
-                    Debug.Assert(FullName != null);
-
-                    if (FullName == null)
-                        return null!;
+                    string FullName = SafeType.FullName(typeof(Node));
 
                     if (Item.GetInterface(FullName) != null)
                     {

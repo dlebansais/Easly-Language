@@ -54,11 +54,7 @@ namespace BaseNodeHelper
             Type[] Generics = ItemType.GetGenericArguments();
 
             Type ReferenceType = typeof(OptionalReference<>).MakeGenericType(Generics);
-            string? FullName = ReferenceType.FullName;
-            Debug.Assert(FullName != null);
-
-            if (FullName == null)
-                return;
+            string FullName = SafeType.FullName(ReferenceType);
 
             Assembly ReferenceAssembly = ReferenceType.Assembly;
 
@@ -89,11 +85,7 @@ namespace BaseNodeHelper
             Type[] Generics = ItemType.GetGenericArguments();
 
             Type ReferenceType = typeof(OptionalReference<>).MakeGenericType(Generics);
-            string? FullName = ReferenceType.FullName;
-            Debug.Assert(FullName != null);
-
-            if (FullName == null)
-                return;
+            string FullName = SafeType.FullName(ReferenceType);
 
             Assembly ReferenceAssembly = ReferenceType.Assembly;
 
@@ -125,11 +117,7 @@ namespace BaseNodeHelper
             if (ListType == null)
                 return;
 
-            string? FullName = ListType.FullName;
-            Debug.Assert(FullName != null);
-
-            if (FullName == null)
-                return;
+            string FullName = SafeType.FullName(ListType);
 
             Assembly ListAssembly = ListType.Assembly;
 
@@ -183,11 +171,7 @@ namespace BaseNodeHelper
             if (BlockListType == null)
                 return;
 
-            string? FullName = BlockListType.FullName;
-            Debug.Assert(FullName != null);
-
-            if (FullName == null)
-                return;
+            string FullName = SafeType.FullName(BlockListType);
 
             Assembly BlockListAssembly = BlockListType.Assembly;
             Debug.Assert(BlockListAssembly != null);
@@ -219,11 +203,7 @@ namespace BaseNodeHelper
 
             Type ListOfBlockType = typeof(List<>).MakeGenericType(new Type[] { typeof(IBlock<>).MakeGenericType(Generics) });
 
-            FullName = ListOfBlockType.FullName;
-            Debug.Assert(FullName != null);
-
-            if (FullName == null)
-                return;
+            FullName = SafeType.FullName(ListOfBlockType);
 
             BlockListAssembly = ListOfBlockType.Assembly;
             Debug.Assert(BlockListAssembly != null);
@@ -273,11 +253,7 @@ namespace BaseNodeHelper
             if (BlockTypeAssembly == null)
                 return;
 
-            string? BlockTypeFullName = BlockType.FullName;
-            Debug.Assert(BlockTypeFullName != null);
-
-            if (BlockTypeFullName == null)
-                return;
+            string BlockTypeFullName = SafeType.FullName(BlockType);
 
             IBlock? EmptyBlock = BlockTypeAssembly.CreateInstance(BlockTypeFullName) as IBlock;
             Debug.Assert(EmptyBlock != null);
@@ -327,11 +303,7 @@ namespace BaseNodeHelper
 
             Type NodeListType = typeof(List<>).MakeGenericType(new Type[] { Generics[0] });
 
-            string? NodeListFullName = NodeListType.FullName;
-            Debug.Assert(NodeListFullName != null);
-
-            if (NodeListFullName == null)
-                return;
+            string NodeListFullName = SafeType.FullName(NodeListType);
 
             Assembly NodeListAssembly = NodeListType.Assembly;
             Debug.Assert(NodeListAssembly != null);
