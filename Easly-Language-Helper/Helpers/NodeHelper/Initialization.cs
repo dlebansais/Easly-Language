@@ -21,34 +21,15 @@ namespace BaseNodeHelper
 
         private static void InitializeChildNode(Node node, string propertyName, Node childNode)
         {
-            Type? NodeType = node.GetType();
-            Debug.Assert(NodeType != null);
-
-            if (NodeType == null)
-                return;
-
-            PropertyInfo? ItemProperty = NodeType.GetProperty(propertyName);
-            Debug.Assert(ItemProperty != null);
-
-            if (ItemProperty == null)
-                return;
-
+            Type NodeType = node.GetType();
+            PropertyInfo ItemProperty = SafeType.GetProperty(NodeType, propertyName);
             ItemProperty.SetValue(node, childNode);
         }
 
         private static void InitializeUnassignedOptionalChildNode(Node node, string propertyName)
         {
-            Type? NodeType = node.GetType();
-            Debug.Assert(NodeType != null);
-
-            if (NodeType == null)
-                return;
-
-            PropertyInfo? ItemProperty = NodeType.GetProperty(propertyName);
-            Debug.Assert(ItemProperty != null);
-
-            if (ItemProperty == null)
-                return;
+            Type NodeType = node.GetType();
+            PropertyInfo ItemProperty = SafeType.GetProperty(NodeType, propertyName);
 
             Type ItemType = ItemProperty.PropertyType;
             Type[] Generics = ItemType.GetGenericArguments();
@@ -58,28 +39,15 @@ namespace BaseNodeHelper
 
             Assembly ReferenceAssembly = ReferenceType.Assembly;
 
-            IOptionalReference? EmptyReference = ReferenceAssembly.CreateInstance(FullName) as IOptionalReference;
-            Debug.Assert(EmptyReference != null);
-
-            if (EmptyReference == null)
-                return;
+            IOptionalReference EmptyReference = SafeType.CreateInstance<IOptionalReference>(ReferenceAssembly, FullName);
 
             ItemProperty.SetValue(node, EmptyReference);
         }
 
         private static void InitializeOptionalChildNode(Node node, string propertyName, Node childNode)
         {
-            Type? NodeType = node.GetType();
-            Debug.Assert(NodeType != null);
-
-            if (NodeType == null)
-                return;
-
-            PropertyInfo? ItemProperty = NodeType.GetProperty(propertyName);
-            Debug.Assert(ItemProperty != null);
-
-            if (ItemProperty == null)
-                return;
+            Type NodeType = node.GetType();
+            PropertyInfo ItemProperty = SafeType.GetProperty(NodeType, propertyName);
 
             Type ItemType = ItemProperty.PropertyType;
             Type[] Generics = ItemType.GetGenericArguments();
@@ -89,17 +57,9 @@ namespace BaseNodeHelper
 
             Assembly ReferenceAssembly = ReferenceType.Assembly;
 
-            IOptionalReference? EmptyReference = ReferenceAssembly.CreateInstance(FullName) as IOptionalReference;
-            Debug.Assert(EmptyReference != null);
+            IOptionalReference EmptyReference = SafeType.CreateInstance<IOptionalReference>(ReferenceAssembly, FullName);
 
-            if (EmptyReference == null)
-                return;
-
-            PropertyInfo? ReferenceProperty = ReferenceType.GetProperty(nameof(OptionalReference<Node>.Item));
-            Debug.Assert(ReferenceProperty != null);
-
-            if (ReferenceProperty == null)
-                return;
+            PropertyInfo ReferenceProperty = SafeType.GetProperty(ReferenceType, nameof(OptionalReference<Node>.Item));
 
             ReferenceProperty.SetValue(EmptyReference, childNode);
 
@@ -112,27 +72,14 @@ namespace BaseNodeHelper
         {
             Type[] Generics = new Type[] { childNodeType };
             Type ListType = typeof(List<>).MakeGenericType(Generics);
-            Debug.Assert(ListType != null);
-
-            if (ListType == null)
-                return;
-
             string FullName = SafeType.FullName(ListType);
 
             Assembly ListAssembly = ListType.Assembly;
 
-            IList? EmptyList = ListAssembly.CreateInstance(FullName) as IList;
-            Debug.Assert(EmptyList != null);
-
-            if (EmptyList == null)
-                return;
+            IList EmptyList = SafeType.CreateInstance<IList>(ListAssembly, FullName);
 
             Type NodeType = node.GetType();
-            PropertyInfo? ReferenceProperty = NodeType.GetProperty(propertyName);
-            Debug.Assert(ReferenceProperty != null);
-
-            if (ReferenceProperty == null)
-                return;
+            PropertyInfo ReferenceProperty = SafeType.GetProperty(NodeType, propertyName);
 
             ReferenceProperty.SetValue(node, EmptyList);
         }
@@ -141,23 +88,10 @@ namespace BaseNodeHelper
         {
             InitializeEmptyNodeList(node, propertyName, childNodeType);
 
-            Type? NodeType = node.GetType();
-            Debug.Assert(NodeType != null);
+            Type NodeType = node.GetType();
+            PropertyInfo ItemProperty = SafeType.GetProperty(NodeType, propertyName);
 
-            if (NodeType == null)
-                return;
-
-            PropertyInfo? ItemProperty = NodeType.GetProperty(propertyName);
-            Debug.Assert(ItemProperty != null);
-
-            if (ItemProperty == null)
-                return;
-
-            IList? NodeList = ItemProperty.GetValue(node) as IList;
-            Debug.Assert(NodeList != null);
-
-            if (NodeList == null)
-                return;
+            IList NodeList = SafeType.GetPropertyValue<IList>(ItemProperty, node);
 
             NodeList.Add(firstNode);
         }
@@ -166,38 +100,15 @@ namespace BaseNodeHelper
         {
             Type[] Generics = new Type[] { /*childInterfaceType,*/ childNodeType };
             Type BlockListType = typeof(BlockList<>).MakeGenericType(Generics);
-            Debug.Assert(BlockListType != null);
-
-            if (BlockListType == null)
-                return;
-
             string FullName = SafeType.FullName(BlockListType);
 
             Assembly BlockListAssembly = BlockListType.Assembly;
-            Debug.Assert(BlockListAssembly != null);
-
-            if (BlockListAssembly == null)
-                return;
-
-            IBlockList? EmptyBlockList = BlockListAssembly.CreateInstance(FullName) as IBlockList;
-            Debug.Assert(EmptyBlockList != null);
-
-            if (EmptyBlockList == null)
-                return;
+            IBlockList EmptyBlockList = SafeType.CreateInstance<IBlockList>(BlockListAssembly, FullName);
 
             Document EmptyEmptyDocumentation = CreateEmptyDocumentation();
 
-            Type? EmptyBlockListType = EmptyBlockList.GetType();
-            Debug.Assert(EmptyBlockListType != null);
-
-            if (EmptyBlockListType == null)
-                return;
-
-            PropertyInfo? DocumentationProperty = EmptyBlockListType.GetProperty(nameof(Node.Documentation));
-            Debug.Assert(DocumentationProperty != null);
-
-            if (DocumentationProperty == null)
-                return;
+            Type EmptyBlockListType = EmptyBlockList.GetType();
+            PropertyInfo DocumentationProperty = SafeType.GetProperty(EmptyBlockListType, nameof(Node.Documentation));
 
             DocumentationProperty.SetValue(EmptyBlockList, EmptyEmptyDocumentation);
 
@@ -206,38 +117,16 @@ namespace BaseNodeHelper
             FullName = SafeType.FullName(ListOfBlockType);
 
             BlockListAssembly = ListOfBlockType.Assembly;
-            Debug.Assert(BlockListAssembly != null);
+            IList EmptyListOfBlock = SafeType.CreateInstance<IList>(BlockListAssembly, FullName);
 
-            if (BlockListAssembly == null)
-                return;
-
-            IList? EmptyListOfBlock = BlockListAssembly.CreateInstance(FullName) as IList;
-            Debug.Assert(EmptyListOfBlock != null);
-
-            if (EmptyListOfBlock == null)
-                return;
-
-            PropertyInfo? NodeBlockListProperty = EmptyBlockListType.GetProperty(nameof(BlockList<Node>.NodeBlockList));
-            Debug.Assert(NodeBlockListProperty != null);
-
-            if (NodeBlockListProperty == null)
-                return;
+            PropertyInfo NodeBlockListProperty = SafeType.GetProperty(EmptyBlockListType, nameof(BlockList<Node>.NodeBlockList));
 
             NodeBlockListProperty.SetValue(EmptyBlockList, EmptyListOfBlock);
 
             Type NodeType = node.GetType();
-            Debug.Assert(NodeType != null);
+            PropertyInfo ItemProperty = SafeType.GetProperty(NodeType, propertyName);
 
-            if (NodeType == null)
-                return;
-
-            PropertyInfo? ItemtProperty = NodeType.GetProperty(propertyName);
-            Debug.Assert(ItemtProperty != null);
-
-            if (ItemtProperty == null)
-                return;
-
-            ItemtProperty.SetValue(node, EmptyBlockList);
+            ItemProperty.SetValue(node, EmptyBlockList);
         }
 
         private static void InitializeSimpleBlockList(Node node, string propertyName, /*Type childInterfaceType,*/ Type childNodeType, Node firstNode)
@@ -248,56 +137,31 @@ namespace BaseNodeHelper
             Type BlockType = typeof(Block<>).MakeGenericType(Generics);
 
             Assembly BlockTypeAssembly = BlockType.Assembly;
-            Debug.Assert(BlockTypeAssembly != null);
-
-            if (BlockTypeAssembly == null)
-                return;
-
             string BlockTypeFullName = SafeType.FullName(BlockType);
 
-            IBlock? EmptyBlock = BlockTypeAssembly.CreateInstance(BlockTypeFullName) as IBlock;
-            Debug.Assert(EmptyBlock != null);
-
-            if (EmptyBlock == null)
-                return;
+            IBlock EmptyBlock = SafeType.CreateInstance<IBlock>(BlockTypeAssembly, BlockTypeFullName);
 
             Document EmptyEmptyDocumentation = CreateEmptyDocumentation();
 
             Type EmptyBlockType = EmptyBlock.GetType();
 
-            PropertyInfo? DocumentationProperty = EmptyBlockType.GetProperty(nameof(Node.Documentation));
-            Debug.Assert(DocumentationProperty != null);
-
-            if (DocumentationProperty == null)
-                return;
+            PropertyInfo DocumentationProperty = SafeType.GetProperty(EmptyBlockType, nameof(Node.Documentation));
 
             DocumentationProperty.SetValue(EmptyBlock, EmptyEmptyDocumentation);
 
-            PropertyInfo? ReplicationProperty = EmptyBlockType.GetProperty(nameof(IBlock.Replication));
-            Debug.Assert(ReplicationProperty != null);
-
-            if (ReplicationProperty == null)
-                return;
+            PropertyInfo ReplicationProperty = SafeType.GetProperty(EmptyBlockType, nameof(IBlock.Replication));
 
             ReplicationProperty.SetValue(EmptyBlock, ReplicationStatus.Normal);
 
             Pattern ReplicationPattern = CreateEmptyPattern();
 
-            PropertyInfo? ReplicationPatternProperty = EmptyBlockType.GetProperty(nameof(IBlock.ReplicationPattern));
-            Debug.Assert(ReplicationPatternProperty != null);
-
-            if (ReplicationPatternProperty == null)
-                return;
+            PropertyInfo ReplicationPatternProperty = SafeType.GetProperty(EmptyBlockType, nameof(IBlock.ReplicationPattern));
 
             ReplicationPatternProperty.SetValue(EmptyBlock, ReplicationPattern);
 
             Identifier SourceIdentifier = CreateEmptyIdentifier();
 
-            PropertyInfo? SourceIdentifierProperty = EmptyBlockType.GetProperty(nameof(IBlock.SourceIdentifier));
-            Debug.Assert(SourceIdentifierProperty != null);
-
-            if (SourceIdentifierProperty == null)
-                return;
+            PropertyInfo SourceIdentifierProperty = SafeType.GetProperty(EmptyBlockType, nameof(IBlock.SourceIdentifier));
 
             SourceIdentifierProperty.SetValue(EmptyBlock, SourceIdentifier);
 
@@ -306,62 +170,23 @@ namespace BaseNodeHelper
             string NodeListFullName = SafeType.FullName(NodeListType);
 
             Assembly NodeListAssembly = NodeListType.Assembly;
-            Debug.Assert(NodeListAssembly != null);
+            IList NodeList = SafeType.CreateInstance<IList>(NodeListAssembly, NodeListFullName);
 
-            if (NodeListAssembly == null)
-                return;
-
-            IList? NodeList = NodeListAssembly.CreateInstance(NodeListFullName) as IList;
-            Debug.Assert(NodeList != null);
-
-            if (NodeList == null)
-                return;
-
-            PropertyInfo? NodeListProperty = EmptyBlockType.GetProperty(nameof(Block<Node>.NodeList));
-            Debug.Assert(NodeListProperty != null);
-
-            if (NodeListProperty == null)
-                return;
+            PropertyInfo NodeListProperty = SafeType.GetProperty(EmptyBlockType, nameof(Block<Node>.NodeList));
 
             NodeListProperty.SetValue(EmptyBlock, NodeList);
 
             NodeList.Add(firstNode);
 
             Type NodeType = node.GetType();
-            Debug.Assert(NodeType != null);
+            PropertyInfo ItemProperty = SafeType.GetProperty(NodeType, propertyName);
 
-            if (NodeType == null)
-                return;
-
-            PropertyInfo? ItemProperty = NodeType.GetProperty(propertyName);
-            Debug.Assert(ItemProperty != null);
-
-            if (ItemProperty == null)
-                return;
-
-            IBlockList? BlockList = ItemProperty.GetValue(node) as IBlockList;
-            Debug.Assert(BlockList != null);
-
-            if (BlockList == null)
-                return;
+            IBlockList BlockList = SafeType.GetPropertyValue<IBlockList>(ItemProperty, node);
 
             Type BlockListType = BlockList.GetType();
-            Debug.Assert(BlockListType != null);
+            PropertyInfo NodeBlockListProperty = SafeType.GetProperty(BlockListType, nameof(BlockList<Node>.NodeBlockList));
 
-            if (BlockListType == null)
-                return;
-
-            PropertyInfo? NodeBlockListProperty = BlockListType.GetProperty(nameof(BlockList<Node>.NodeBlockList));
-            Debug.Assert(NodeBlockListProperty != null);
-
-            if (NodeBlockListProperty == null)
-                return;
-
-            IList? NodeBlockList = NodeBlockListProperty.GetValue(BlockList, null) as IList;
-            Debug.Assert(NodeBlockList != null);
-
-            if (NodeBlockList == null)
-                return;
+            IList NodeBlockList = SafeType.GetPropertyValue<IList>(NodeBlockListProperty, BlockList);
 
             NodeBlockList.Add(EmptyBlock);
         }

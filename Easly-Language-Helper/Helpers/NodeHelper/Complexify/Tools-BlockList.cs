@@ -144,25 +144,14 @@ namespace BaseNodeHelper
 
                     if (GetComplexifiedAssignmentArgument(AssignmentArgument, out IList<Argument> ComplexifiedAssignmentArgumentList))
                     {
-                        AssignmentArgument ComplexifiedAssignmentArgument = (AssignmentArgument)ComplexifiedAssignmentArgumentList[0];
-                        Debug.Assert(ComplexifiedAssignmentArgument != null, $"The list can't contain anything else than {nameof(AssignmentArgument)} elements");
+                        AssignmentArgument ComplexifiedAssignmentArgument = (AssignmentArgument)SafeType.ItemAt<Argument>(ComplexifiedAssignmentArgumentList, 0);
 
                         newAssignmentArgumentBlocks = (IBlockList<AssignmentArgument>)DeepCloneBlockList((IBlockList)argumentBlocks, cloneCommentGuid: false);
 
                         Block = newAssignmentArgumentBlocks.NodeBlockList[BlockIndex];
-                        Debug.Assert(Block != null);
-
-                        if (Block == null)
-                            return false;
-
                         IList<AssignmentArgument> NodeList = Block.NodeList;
 
-                        Debug.Assert(ComplexifiedAssignmentArgument != null);
-
-                        if (ComplexifiedAssignmentArgument == null)
-                            return false;
-
-                        NodeList[NodeIndex] = ComplexifiedAssignmentArgument;
+                        SafeType.SetAt<AssignmentArgument>(NodeList, NodeIndex, ComplexifiedAssignmentArgument);
                         return true;
                     }
                 }

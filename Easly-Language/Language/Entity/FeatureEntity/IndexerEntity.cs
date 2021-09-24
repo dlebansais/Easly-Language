@@ -1,6 +1,7 @@
 ﻿namespace Easly
 {
     using System;
+    using System.Diagnostics;
     using System.Reflection;
 
     /// <summary>
@@ -48,7 +49,7 @@
                         break;
                 }
 
-                System.Diagnostics.Debug.Assert(Result != null);
+                Debug.Assert(Result != null);
 
                 return Result!;
             }

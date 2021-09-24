@@ -27,12 +27,6 @@ namespace BaseNodeHelper
 
         private static bool IsValid(List<Node> nodeList, List<Guid> guidList, Node root, bool assertValid)
         {
-            Debug.Assert(nodeList != null);
-            Debug.Assert(guidList != null);
-
-            if (nodeList == null || guidList == null)
-                return false;
-
             if (root == null)
                 return FailIsValidCheck(assertValid);
 
@@ -136,22 +130,14 @@ namespace BaseNodeHelper
 
             for (int BlockIndex = 0; BlockIndex < BlockList.NodeBlockList.Count; BlockIndex++)
             {
-                IBlock? Block = BlockList.NodeBlockList[BlockIndex] as IBlock;
-                Debug.Assert(Block != null);
-
-                if (Block == null)
-                    return false;
+                IBlock Block = SafeType.ItemAt<IBlock>(BlockList.NodeBlockList, BlockIndex);
 
                 if (!IsValidBlock(nodeList, guidList, Block, assertValid))
                     return FailIsValidCheck(assertValid);
 
                 for (int Index = 0; Index < Block.NodeList.Count; Index++)
                 {
-                    Node? ChildNode = Block.NodeList[Index] as Node;
-                    Debug.Assert(ChildNode != null);
-
-                    if (ChildNode == null)
-                        return false;
+                    Node ChildNode = SafeType.ItemAt<Node>(Block.NodeList, Index);
 
                     if (!IsValid(nodeList, guidList, ChildNode, assertValid))
                         return FailIsValidCheck(assertValid);
@@ -166,8 +152,9 @@ namespace BaseNodeHelper
 
         private static bool IsValidEnumProperty(Node root, bool assertValid, string propertyName)
         {
-            NodeTreeHelper.GetEnumRange(root.GetType(), propertyName, out int Min, out int Max);
-            PropertyInfo EnumPropertyInfo = NodeTreeHelper.GetPropertyOf(root.GetType(), propertyName);
+            Type RootType = root.GetType();
+            NodeTreeHelper.GetEnumRange(RootType, propertyName, out int Min, out int Max);
+            PropertyInfo EnumPropertyInfo = SafeType.GetProperty(RootType, propertyName);
             int? Value = EnumPropertyInfo.GetValue(root) as int?;
             Debug.Assert(Value != null);
 
@@ -204,12 +191,6 @@ namespace BaseNodeHelper
 
         private static bool IsValidBlockList(List<Node> nodeList, List<Guid> guidList, IBlockList blockList, bool assertValid)
         {
-            Debug.Assert(nodeList != null);
-            Debug.Assert(guidList != null);
-
-            if (nodeList == null || guidList == null)
-                return false;
-
             if (blockList == null)
                 return FailIsValidCheck(assertValid);
 
@@ -235,12 +216,6 @@ namespace BaseNodeHelper
 
         private static bool IsValidBlock(List<Node> nodeList, List<Guid> guidList, IBlock block, bool assertValid)
         {
-            Debug.Assert(nodeList != null);
-            Debug.Assert(guidList != null);
-
-            if (nodeList == null || guidList == null)
-                return false;
-
             if (block == null)
                 return FailIsValidCheck(assertValid);
 

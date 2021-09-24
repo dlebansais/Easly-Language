@@ -86,19 +86,11 @@ namespace BaseNodeHelper
         {
             Type NodeType = node.GetType();
 
-            PropertyInfo? Info = NodeType.GetProperty(propertyName);
-            Debug.Assert(Info != null);
-
-            if (Info == null)
-                return;
+            PropertyInfo Info = SafeType.GetProperty(NodeType, propertyName);
 
             if (Info.PropertyType == typeof(Document))
             {
-                Document? Documentation = Info.GetValue(node) as Document;
-                Debug.Assert(Documentation != null);
-
-                if (Documentation == null)
-                    return;
+                Document? Documentation = SafeType.GetPropertyValue<Document>(Info, node);
 
                 MergeHash(ref hash, ValueHash(Documentation.Comment));
                 MergeHash(ref hash, ValueHash(Documentation.Uuid));

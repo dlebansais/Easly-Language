@@ -20,16 +20,7 @@ namespace BaseNodeHelper
             if (sourceIdentifier == null) throw new ArgumentNullException(nameof(sourceIdentifier));
 
             Type NodeType = node.GetType();
-            Debug.Assert(NodeType != null);
-
-            if (NodeType == null)
-                return null!;
-
-            PropertyInfo? Property = NodeType.GetProperty(propertyName);
-            Debug.Assert(Property != null);
-
-            if (Property == null)
-                return null!;
+            PropertyInfo Property = SafeType.GetProperty(NodeType, propertyName);
 
             Type PropertyType = Property.PropertyType;
             Debug.Assert(NodeTreeHelper.IsBlockListType(PropertyType));
@@ -58,26 +49,13 @@ namespace BaseNodeHelper
             Type[] TypeArguments = propertyType.GetGenericArguments();
 
             Type BlockType = typeof(Block<>).MakeGenericType(TypeArguments);
-            Debug.Assert(BlockType != null);
-
-            if (BlockType == null)
-                return null!;
-
             string BlockTypeFullName = SafeType.FullName(BlockType);
 
-            IBlock? NewBlock = BlockType.Assembly.CreateInstance(BlockTypeFullName) as IBlock;
-            Debug.Assert(NewBlock != null);
-
-            if (NewBlock == null)
-                return null!;
+            IBlock NewBlock = SafeType.CreateInstance<IBlock>(BlockType.Assembly, BlockTypeFullName);
 
             Document EmptyComment = NodeHelper.CreateEmptyDocumentation();
 
-            PropertyInfo? DocumentationPropertyInfo = BlockType.GetProperty(nameof(Node.Documentation));
-            Debug.Assert(DocumentationPropertyInfo != null);
-
-            if (DocumentationPropertyInfo == null)
-                return null!;
+            PropertyInfo DocumentationPropertyInfo = SafeType.GetProperty(BlockType, nameof(Node.Documentation));
 
             DocumentationPropertyInfo.SetValue(NewBlock, EmptyComment);
 
@@ -85,41 +63,21 @@ namespace BaseNodeHelper
 
             string FullName = SafeType.FullName(NodeListType);
 
-            IList? NewNodeList = NodeListType.Assembly.CreateInstance(FullName) as IList;
-            Debug.Assert(NewNodeList != null);
+            IList NewNodeList = SafeType.CreateInstance<IList>(NodeListType.Assembly, FullName);
 
-            if (NewNodeList == null)
-                return null!;
-
-            PropertyInfo? ReplicationPropertyInfo = BlockType.GetProperty(nameof(IBlock.Replication));
-            Debug.Assert(ReplicationPropertyInfo != null);
-
-            if (ReplicationPropertyInfo == null)
-                return null!;
+            PropertyInfo ReplicationPropertyInfo = SafeType.GetProperty(BlockType, nameof(IBlock.Replication));
 
             ReplicationPropertyInfo.SetValue(NewBlock, replication);
 
-            PropertyInfo? NodeListPropertyInfo = BlockType.GetProperty(nameof(IBlock.NodeList));
-            Debug.Assert(NodeListPropertyInfo != null);
-
-            if (NodeListPropertyInfo == null)
-                return null!;
+            PropertyInfo NodeListPropertyInfo = SafeType.GetProperty(BlockType, nameof(IBlock.NodeList));
 
             NodeListPropertyInfo.SetValue(NewBlock, NewNodeList);
 
-            PropertyInfo? ReplicationPatternPropertyInfo = BlockType.GetProperty(nameof(IBlock.ReplicationPattern));
-            Debug.Assert(ReplicationPatternPropertyInfo != null);
-
-            if (ReplicationPatternPropertyInfo == null)
-                return null!;
+            PropertyInfo ReplicationPatternPropertyInfo = SafeType.GetProperty(BlockType, nameof(IBlock.ReplicationPattern));
 
             ReplicationPatternPropertyInfo.SetValue(NewBlock, replicationPattern);
 
-            PropertyInfo? SourceIdentifierPropertyInfo = BlockType.GetProperty(nameof(IBlock.SourceIdentifier));
-            Debug.Assert(SourceIdentifierPropertyInfo != null);
-
-            if (SourceIdentifierPropertyInfo == null)
-                return null!;
+            PropertyInfo SourceIdentifierPropertyInfo = SafeType.GetProperty(BlockType, nameof(IBlock.SourceIdentifier));
 
             SourceIdentifierPropertyInfo.SetValue(NewBlock, sourceIdentifier);
 

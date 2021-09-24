@@ -20,45 +20,19 @@ namespace BaseNodeHelper
             if (replicationPattern == null) throw new ArgumentNullException(nameof(replicationPattern));
 
             Type NodeType = node.GetType();
-            Debug.Assert(NodeType != null);
-
-            if (NodeType == null)
-                return false;
-
-            PropertyInfo? Property = NodeType.GetProperty(propertyName);
-            Debug.Assert(Property != null);
-
-            if (Property == null)
-                return false;
+            PropertyInfo Property = SafeType.GetProperty(NodeType, propertyName);
 
             Type PropertyType = Property.PropertyType;
-            Debug.Assert(PropertyType != null);
-
-            if (PropertyType == null)
-                return false;
-
             Debug.Assert(NodeTreeHelper.IsBlockListType(PropertyType));
 
-            IBlockList? BlockList = Property.GetValue(node) as IBlockList;
-            Debug.Assert(BlockList != null);
-
-            if (BlockList == null)
-                return false;
+            IBlockList BlockList = SafeType.GetPropertyValue<IBlockList>(Property, node);
 
             IList NodeBlockList = BlockList.NodeBlockList;
-            Debug.Assert(NodeBlockList != null);
-
-            if (NodeBlockList == null)
-                return false;
 
             Debug.Assert(blockIndex < NodeBlockList.Count);
             if (blockIndex >= NodeBlockList.Count) throw new ArgumentOutOfRangeException(nameof(blockIndex));
 
-            IBlock? Block = NodeBlockList[blockIndex] as IBlock;
-            Debug.Assert(Block != null);
-
-            if (Block == null)
-                return false;
+            IBlock Block = SafeType.ItemAt<IBlock>(NodeBlockList, blockIndex);
 
             return IsPatternNode(Block, replicationPattern);
         }
@@ -76,10 +50,6 @@ namespace BaseNodeHelper
             if (block == null) throw new ArgumentNullException(nameof(block));
 
             Pattern ReplicationPattern = block.ReplicationPattern;
-            Debug.Assert(ReplicationPattern != null);
-
-            if (ReplicationPattern == null)
-                return null!;
 
             return NodeTreeHelper.GetString(ReplicationPattern, nameof(Pattern.Text));
         }
@@ -90,10 +60,6 @@ namespace BaseNodeHelper
             if (text == null) throw new ArgumentNullException(nameof(text));
 
             Pattern ReplicationPattern = block.ReplicationPattern;
-            Debug.Assert(ReplicationPattern != null);
-
-            if (ReplicationPattern == null)
-                return;
 
             NodeTreeHelper.SetString(ReplicationPattern, nameof(Pattern.Text), text);
         }
@@ -106,45 +72,19 @@ namespace BaseNodeHelper
             if (sourceIdentifier == null) throw new ArgumentNullException(nameof(sourceIdentifier));
 
             Type NodeType = node.GetType();
-            Debug.Assert(NodeType != null);
-
-            if (NodeType == null)
-                return false;
-
-            PropertyInfo? Property = NodeType.GetProperty(propertyName);
-            Debug.Assert(Property != null);
-
-            if (Property == null)
-                return false;
-
+            PropertyInfo Property = SafeType.GetProperty(NodeType, propertyName);
             Type PropertyType = Property.PropertyType;
-            Debug.Assert(PropertyType != null);
-
-            if (PropertyType == null)
-                return false;
 
             Debug.Assert(NodeTreeHelper.IsBlockListType(PropertyType));
 
-            IBlockList? BlockList = Property.GetValue(node) as IBlockList;
-            Debug.Assert(BlockList != null);
-
-            if (BlockList == null)
-                return false;
+            IBlockList BlockList = SafeType.GetPropertyValue<IBlockList>(Property, node);
 
             IList NodeBlockList = BlockList.NodeBlockList;
-            Debug.Assert(NodeBlockList != null);
-
-            if (NodeBlockList == null)
-                return false;
 
             Debug.Assert(blockIndex < NodeBlockList.Count);
             if (blockIndex >= NodeBlockList.Count) throw new ArgumentOutOfRangeException(nameof(blockIndex));
 
-            IBlock? Block = NodeBlockList[blockIndex] as IBlock;
-            Debug.Assert(Block != null);
-
-            if (Block == null)
-                return false;
+            IBlock Block = SafeType.ItemAt<IBlock>(NodeBlockList, blockIndex);
 
             return IsSourceNode(Block, sourceIdentifier);
         }
@@ -162,10 +102,6 @@ namespace BaseNodeHelper
             if (block == null) throw new ArgumentNullException(nameof(block));
 
             Identifier SourceIdentifier = block.SourceIdentifier;
-            Debug.Assert(SourceIdentifier != null);
-
-            if (SourceIdentifier == null)
-                return null!;
 
             return NodeTreeHelper.GetString(SourceIdentifier, nameof(Identifier.Text));
         }
@@ -176,10 +112,6 @@ namespace BaseNodeHelper
             if (text == null) throw new ArgumentNullException(nameof(text));
 
             Identifier SourceIdentifier = block.SourceIdentifier;
-            Debug.Assert(SourceIdentifier != null);
-
-            if (SourceIdentifier == null)
-                return;
 
             NodeTreeHelper.SetString(SourceIdentifier, nameof(Identifier.Text), text);
         }
@@ -189,16 +121,8 @@ namespace BaseNodeHelper
             if (block == null) throw new ArgumentNullException(nameof(block));
 
             Type BlockType = block.GetType();
-            Debug.Assert(BlockType != null);
 
-            if (BlockType == null)
-                return;
-
-            PropertyInfo? ReplicationPropertyInfo = BlockType.GetProperty(nameof(IBlock.Replication));
-            Debug.Assert(ReplicationPropertyInfo != null);
-
-            if (ReplicationPropertyInfo == null)
-                return;
+            PropertyInfo ReplicationPropertyInfo = SafeType.GetProperty(BlockType, nameof(IBlock.Replication));
 
             ReplicationPropertyInfo.SetValue(block, replication);
         }

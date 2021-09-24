@@ -27,8 +27,7 @@ namespace BaseNodeHelper
 
             childNodeType = null!;
 
-            PropertyInfo Property = NodeTreeHelper.GetPropertyOf(nodeType, propertyName);
-            if (Property == null)
+            if (!SafeType.CheckAndGetPropertyOf(nodeType, propertyName, out PropertyInfo Property))
                 return false;
 
             Type PropertyType = Property.PropertyType;
@@ -48,10 +47,6 @@ namespace BaseNodeHelper
             if (childNode == null) throw new ArgumentNullException(nameof(childNode));
 
             Type ParentNodeType = node.GetType();
-            Debug.Assert(ParentNodeType != null);
-
-            if (ParentNodeType == null)
-                return false;
 
             PropertyInfo? Property = ParentNodeType.GetProperty(propertyName);
             if (Property == null)
@@ -75,29 +70,14 @@ namespace BaseNodeHelper
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
 
             Type NodeType = node.GetType();
-            Debug.Assert(NodeType != null);
-
-            childNode = null!;
-            if (NodeType == null)
-                return;
-
-            PropertyInfo? Property = NodeType.GetProperty(propertyName);
-
-            Debug.Assert(Property != null);
-
-            if (Property == null)
-                return;
+            PropertyInfo Property = SafeType.GetProperty(NodeType, propertyName);
 
             Type PropertyType = Property.PropertyType;
 
             // Debug.Assert(NodeTreeHelper.IsNodeInterfaceType(PropertyType));
             Debug.Assert(NodeTreeHelper.IsNodeDescendantType(PropertyType));
 
-            Node? Result = Property.GetValue(node) as Node;
-            Debug.Assert(Result != null);
-
-            if (Result == null)
-                return;
+            Node Result = SafeType.GetPropertyValue<Node>(Property, node);
 
             childNode = Result;
         }
@@ -108,16 +88,7 @@ namespace BaseNodeHelper
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
 
             Type NodeType = node.GetType();
-            Debug.Assert(NodeType != null);
-
-            if (NodeType == null)
-                return null!;
-
-            PropertyInfo? Property = NodeType.GetProperty(propertyName);
-            Debug.Assert(Property != null);
-
-            if (Property == null)
-                return null!;
+            PropertyInfo Property = SafeType.GetProperty(NodeType, propertyName);
 
             Type InterfaceType = Property.PropertyType;
 
@@ -134,16 +105,7 @@ namespace BaseNodeHelper
             if (newChildNode == null) throw new ArgumentNullException(nameof(newChildNode));
 
             Type NodeType = node.GetType();
-            Debug.Assert(NodeType != null);
-
-            if (NodeType == null)
-                return;
-
-            PropertyInfo? Property = NodeType.GetProperty(propertyName);
-            Debug.Assert(Property != null);
-
-            if (Property == null)
-                return;
+            PropertyInfo Property = SafeType.GetProperty(NodeType, propertyName);
 
             Type PropertyType = Property.PropertyType;
 

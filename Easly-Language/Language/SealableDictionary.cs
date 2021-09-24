@@ -2,9 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Diagnostics.Contracts;
-    using System.Runtime.Serialization;
+    using Contracts;
 
     /// <summary>
     /// Represents a dictionary that can be sealed.
@@ -203,12 +201,12 @@
         /// <param name="other">The other dictionary.</param>
         public void Merge(ISealableDictionary<TKey, TValue> other)
         {
-            Contract.Requires(other != null);
+            Contract.RequireNotNull(other, out ISealableDictionary<TKey, TValue> Other);
 
             if (IsSealed)
                 throw new InvalidOperationException("A sealed collection cannot be modified");
 
-            foreach (KeyValuePair<TKey, TValue> Item in other!)
+            foreach (KeyValuePair<TKey, TValue> Item in Other)
             {
                 if (ContainsKey(Item.Key))
                     throw new InvalidOperationException("Two merged collections must not contain the same key");
@@ -224,12 +222,12 @@
         /// <param name="other">The other dictionary.</param>
         public void MergeWithConflicts(ISealableDictionary<TKey, TValue> other)
         {
-            Contract.Requires(other != null);
+            Contract.RequireNotNull(other, out ISealableDictionary<TKey, TValue> Other);
 
             if (IsSealed)
                 throw new InvalidOperationException("A sealed collection cannot be modified");
 
-            foreach (KeyValuePair<TKey, TValue> Item in other!)
+            foreach (KeyValuePair<TKey, TValue> Item in Other)
                 if (!ContainsKey(Item.Key))
                     base.Add(Item.Key, Item.Value);
         }

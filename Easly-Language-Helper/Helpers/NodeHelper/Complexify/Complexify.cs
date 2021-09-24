@@ -24,15 +24,8 @@ namespace BaseNodeHelper
             {
                 int OldCount = complexifiedNodeList.Count;
 
-                foreach (Node? Node in ComplexifiedList)
-                {
-                    Debug.Assert(Node != null);
-
-                    if (Node == null)
-                        return;
-
+                foreach (Node Node in SafeType.Items<Node>(ComplexifiedList))
                     complexifiedNodeList.Add(Node);
-                }
 
                 int NewCount = complexifiedNodeList.Count;
 

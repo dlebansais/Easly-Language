@@ -29,10 +29,6 @@ namespace BaseNodeHelper
                 nodeType = AncestorType;
 
             IList<PropertyInfo> Properties = GetTypeProperties(nodeType);
-            Debug.Assert(Properties != null);
-
-            if (Properties == null)
-                return null!;
 
             List<string> Result = new List<string>();
             foreach (PropertyInfo Property in Properties)
@@ -46,11 +42,7 @@ namespace BaseNodeHelper
         {
             if (type == null) throw new ArgumentNullException(nameof(type));
 
-            PropertyInfo? Property = type.GetProperty(propertyName);
-            Debug.Assert(Property != null);
-
-            if (Property != null)
-                return Property;
+            PropertyInfo Property = SafeType.GetProperty(type, propertyName);
 
             foreach (Type Interface in type.GetInterfaces())
             {
@@ -124,16 +116,7 @@ namespace BaseNodeHelper
             }
 
             Assembly TypeAssembly = type.Assembly;
-            Debug.Assert(TypeAssembly != null);
-
-            if (TypeAssembly == null)
-                return null!;
-
-            Type? Result = TypeAssembly.GetType(NodeTypeFullName);
-            Debug.Assert(Result != null);
-
-            if (Result == null)
-                return null!;
+            Type Result = SafeType.GetType(TypeAssembly, NodeTypeFullName);
 
             return Result;
         }
@@ -146,11 +129,7 @@ namespace BaseNodeHelper
                 return false;
 
             Type[] GenericArguments = type.GetGenericArguments();
-            Debug.Assert(GenericArguments != null);
-            Debug.Assert(GenericArguments != null && GenericArguments.Length == 1);
-
-            if (GenericArguments == null)
-                return false;
+            Debug.Assert(GenericArguments.Length == 1);
 
             Type GenericType = GenericArguments[0];
 
@@ -166,11 +145,7 @@ namespace BaseNodeHelper
                 return false;
 
             Type[] GenericArguments = type.GetGenericArguments();
-            Debug.Assert(GenericArguments != null);
-            Debug.Assert(GenericArguments != null && GenericArguments.Length == 1);
-
-            if (GenericArguments == null)
-                return false;
+            Debug.Assert(GenericArguments.Length == 1);
 
             Type GenericType = GenericArguments[0];
 
@@ -185,11 +160,7 @@ namespace BaseNodeHelper
                 return false;
 
             Type[] GenericArguments = type.GetGenericArguments();
-            Debug.Assert(GenericArguments != null);
-            Debug.Assert(GenericArguments != null && GenericArguments.Length == 1);
-
-            if (GenericArguments == null)
-                return false;
+            Debug.Assert(GenericArguments.Length == 1);
 
             Type GenericType = GenericArguments[0];
 
@@ -205,10 +176,6 @@ namespace BaseNodeHelper
                 return false;
 
             Type[] GenericArguments = type.GetGenericArguments();
-            Debug.Assert(GenericArguments != null);
-
-            if (GenericArguments == null)
-                return false;
 
             // Debug.Assert(GenericArguments.Length == 2);
             Debug.Assert(GenericArguments.Length == 1);
@@ -227,10 +194,6 @@ namespace BaseNodeHelper
                 return false;
 
             Type[] GenericArguments = type.GetGenericArguments();
-            Debug.Assert(GenericArguments != null);
-
-            if (GenericArguments == null)
-                return false;
 
             // Debug.Assert(GenericArguments.Length == 2);
             Debug.Assert(GenericArguments.Length == 1);
@@ -246,11 +209,6 @@ namespace BaseNodeHelper
             if (node == null) throw new ArgumentNullException(nameof(node));
 
             Type NodeType = node.GetType();
-            Debug.Assert(NodeType != null);
-
-            if (NodeType == null)
-                return false;
-
             PropertyInfo? Property = NodeType.GetProperty(nameof(Identifier.Text));
 
             return Property != null;
@@ -263,16 +221,7 @@ namespace BaseNodeHelper
             if (childNode == null) throw new ArgumentNullException(nameof(childNode));
 
             Type ParentNodeType = node.GetType();
-            Debug.Assert(ParentNodeType != null);
-
-            if (ParentNodeType == null)
-                return false;
-
-            PropertyInfo? Property = ParentNodeType.GetProperty(propertyName);
-            Debug.Assert(Property != null);
-
-            if (Property == null)
-                return false;
+            PropertyInfo Property = SafeType.GetProperty(ParentNodeType, propertyName);
 
             Type NodeType = childNode.GetType();
             Type PropertyType = Property.PropertyType;
@@ -285,10 +234,6 @@ namespace BaseNodeHelper
             else if (PropertyType.IsGenericType)
             {
                 Type[] GenericArguments = PropertyType.GetGenericArguments();
-                Debug.Assert(GenericArguments != null);
-
-                if (GenericArguments == null)
-                    return false;
 
                 if (IsOptionalReferenceType(PropertyType))
                 {
@@ -323,20 +268,12 @@ namespace BaseNodeHelper
             bool Result = false;
 
             string FullName = SafeType.FullName(typeof(Node));
-
             string NodeFullName = SafeType.FullName(nodeType);
-
             string BaseNodeNamespace = FullName.Substring(0, FullName.IndexOf(".", StringComparison.InvariantCulture) + 1);
+
             while (nodeType != typeof(object) && !NodeFullName.StartsWith(BaseNodeNamespace, StringComparison.InvariantCulture))
             {
-                Type? BaseType = nodeType.BaseType;
-                Debug.Assert(BaseType != null);
-
-                if (BaseType == null)
-                    return false;
-
-                nodeType = BaseType;
-
+                nodeType = SafeType.GetBaseType(nodeType);
                 NodeFullName = SafeType.FullName(nodeType);
             }
 
@@ -351,7 +288,6 @@ namespace BaseNodeHelper
             return Result;
         }
 
-        // Exotic calls to get properties for interfaces? WTF Mikeysoft...
         private static IList<PropertyInfo> GetTypeProperties(Type type)
         {
             PropertyInfo[] Properties = type.GetProperties();
@@ -387,10 +323,6 @@ namespace BaseNodeHelper
 
             Type NodeType = node.GetType();
             IList<PropertyInfo> Properties = GetTypeProperties(NodeType);
-            Debug.Assert(Properties != null);
-
-            if (Properties == null)
-                return;
 
             foreach (PropertyInfo Property in Properties)
             {
@@ -399,12 +331,7 @@ namespace BaseNodeHelper
 
                 if (IsOptionalReferenceType(PropertyType))
                 {
-                    IOptionalReference? Optional = Property.GetValue(node) as IOptionalReference;
-                    Debug.Assert(Optional != null);
-
-                    if (Optional == null)
-                        return;
-
+                    IOptionalReference Optional = SafeType.GetPropertyValue<IOptionalReference>(Property, node);
                     optionalNodesTable.Add(PropertyName, Optional);
                 }
             }
@@ -418,10 +345,6 @@ namespace BaseNodeHelper
 
             Type NodeType = node.GetType();
             IList<PropertyInfo> Properties = GetTypeProperties(NodeType);
-            Debug.Assert(Properties != null);
-
-            if (Properties == null)
-                return;
 
             foreach (PropertyInfo Property in Properties)
             {
@@ -432,21 +355,13 @@ namespace BaseNodeHelper
                 {
                     Debug.Assert(PropertyType.IsGenericType);
                     Type[] GenericArguments = PropertyType.GetGenericArguments();
-                    Debug.Assert(GenericArguments != null);
-
-                    if (GenericArguments == null)
-                        return;
 
                     // Debug.Assert(GenericArguments.Length == 2);
                     Debug.Assert(GenericArguments.Length == 1);
 
                     if (GenericArguments[0] == typeof(Argument))
                     {
-                        IBlockList<Argument>? ArgumentBlocks = Property.GetValue(node) as IBlockList<Argument>;
-                        Debug.Assert(ArgumentBlocks != null);
-
-                        if (ArgumentBlocks == null)
-                            return;
+                        IBlockList<Argument>? ArgumentBlocks = SafeType.GetPropertyValue<IBlockList<Argument>>(Property, node);
 
                         argumentBlocksTable.Add(PropertyName, ArgumentBlocks);
                     }

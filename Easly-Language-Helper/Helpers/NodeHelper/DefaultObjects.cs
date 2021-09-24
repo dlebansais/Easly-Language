@@ -98,26 +98,14 @@ namespace BaseNodeHelper
             if (Result != null)
                 return Result;
 
-            string? NamePrefix = interfaceType.AssemblyQualifiedName;
-            Debug.Assert(NamePrefix != null);
-
-            if (NamePrefix == null)
-                return null!;
+            string NamePrefix = SafeType.AssemblyQualifiedName(interfaceType);
 
             NamePrefix = NamePrefix.Substring(0, NamePrefix.IndexOf(".", StringComparison.InvariantCulture) + 1);
 
-            string? NodeTypeName = interfaceType.AssemblyQualifiedName;
-            Debug.Assert(NodeTypeName != null);
-
-            if (NodeTypeName == null)
-                return null!;
+            string NodeTypeName = SafeType.AssemblyQualifiedName(interfaceType);
 
             // NodeTypeName = NodeTypeName.Replace(NamePrefix + "I", NamePrefix);
-            Type? NodeType = Type.GetType(NodeTypeName);
-            Debug.Assert(NodeType != null);
-
-            if (NodeType == null)
-                return null!;
+            Type NodeType = SafeType.GetType(NodeTypeName);
 
             Debug.Assert(!NodeType.IsAbstract, $"A default type value is never abstract");
 
@@ -148,11 +136,7 @@ namespace BaseNodeHelper
 
             string FullName = SafeType.FullName(objectType);
 
-            Node? EmptyNode = objectType.Assembly.CreateInstance(FullName) as Node;
-            Debug.Assert(EmptyNode != null, $"A created instance is never null");
-
-            if (EmptyNode == null)
-                return null!;
+            Node EmptyNode = SafeType.CreateInstance<Node>(objectType.Assembly, FullName);
 
             IList<string> PropertyNames = NodeTreeHelper.EnumChildNodeProperties(EmptyNode);
 

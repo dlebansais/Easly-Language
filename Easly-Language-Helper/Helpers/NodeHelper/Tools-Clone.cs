@@ -108,14 +108,8 @@ namespace BaseNodeHelper
 
                 for (int Index = 0; Index < Block.NodeList.Count; Index++)
                 {
-                    Node? ChildNode = Block.NodeList[Index] as Node;
-                    Debug.Assert(ChildNode != null);
-
-                    if (ChildNode == null)
-                        return null!;
-
+                    Node ChildNode = SafeType.ItemAt<Node>(Block.NodeList, Index);
                     Node ClonedChildNode = DeepCloneNode(ChildNode, cloneCommentGuid);
-
                     NodeTreeHelperBlockList.InsertIntoBlock(ClonedBlock, Index, ClonedChildNode);
                 }
 
@@ -134,51 +128,25 @@ namespace BaseNodeHelper
             BlockListType = typeof(BlockList<>).MakeGenericType(GenericArguments);
 
             Assembly BlockListAssembly = BlockListType.Assembly;
-            Debug.Assert(BlockListAssembly != null);
-
-            if (BlockListAssembly == null)
-                return null!;
-
             string BlockListFullName = SafeType.FullName(BlockListType);
 
-            IBlockList? ClonedBlockList = BlockListAssembly.CreateInstance(BlockListFullName) as IBlockList;
-            Debug.Assert(ClonedBlockList != null);
-
-            if (ClonedBlockList == null)
-                return null!;
+            IBlockList ClonedBlockList = SafeType.CreateInstance<IBlockList>(BlockListAssembly, BlockListFullName);
 
             Type NodeListType = rootBlockList.NodeBlockList.GetType();
 
             Assembly NodeListAssembly = NodeListType.Assembly;
-            Debug.Assert(NodeListAssembly != null);
-
-            if (NodeListAssembly == null)
-                return null!;
-
             string NodeListFullName = SafeType.FullName(NodeListType);
 
-            IList? ClonedNodeBlockList = NodeListAssembly.CreateInstance(NodeListFullName) as IList;
-            Debug.Assert(ClonedNodeBlockList != null);
+            IList ClonedNodeBlockList = SafeType.CreateInstance<IList>(NodeListAssembly, NodeListFullName);
 
-            if (ClonedNodeBlockList == null)
-                return null!;
-
-            PropertyInfo? NodeBlockListProperty = BlockListType.GetProperty(nameof(IBlockList.NodeBlockList));
-            Debug.Assert(NodeBlockListProperty != null);
-
-            if (NodeBlockListProperty == null)
-                return null!;
+            PropertyInfo NodeBlockListProperty = SafeType.GetProperty(BlockListType, nameof(IBlockList.NodeBlockList));
 
             NodeBlockListProperty.SetValue(ClonedBlockList, ClonedNodeBlockList);
             NodeTreeHelper.CopyDocumentation(rootBlockList, ClonedBlockList, cloneCommentGuid);
 
             for (int BlockIndex = 0; BlockIndex < rootBlockList.NodeBlockList.Count; BlockIndex++)
             {
-                IBlock? Block = rootBlockList.NodeBlockList[BlockIndex] as IBlock;
-                Debug.Assert(Block != null);
-
-                if (Block == null)
-                    return null!;
+                IBlock Block = SafeType.ItemAt<IBlock>(rootBlockList.NodeBlockList, BlockIndex);
 
                 Pattern ClonedPattern = (Pattern)DeepCloneNode(Block.ReplicationPattern, cloneCommentGuid);
                 Identifier ClonedSource = (Identifier)DeepCloneNode(Block.SourceIdentifier, cloneCommentGuid);
@@ -187,12 +155,7 @@ namespace BaseNodeHelper
 
                 for (int Index = 0; Index < Block.NodeList.Count; Index++)
                 {
-                    Node? ChildNode = Block.NodeList[Index] as Node;
-                    Debug.Assert(ChildNode != null);
-
-                    if (ChildNode == null)
-                        return null!;
-
+                    Node ChildNode = SafeType.ItemAt<Node>(Block.NodeList, Index);
                     Node ClonedChildNode = DeepCloneNode(ChildNode, cloneCommentGuid);
 
                     NodeTreeHelperBlockList.InsertIntoBlock(ClonedBlock, Index, ClonedChildNode);

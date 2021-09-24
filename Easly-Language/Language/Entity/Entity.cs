@@ -2,8 +2,8 @@
 {
     using System;
     using System.Diagnostics;
-    using System.Diagnostics.Contracts;
     using System.Reflection;
+    using Contracts;
 
     /// <summary>
     /// The base class for entities.
@@ -15,13 +15,13 @@
         /// Gets the entity of a provided object.
         /// See entityof().
         /// </summary>
-        /// <param name="o">The object.</param>
-        /// <returns>The entity of a provided object <paramref name="o"/>.</returns>
-        public static TypeEntity FromThis(object o)
+        /// <param name="obj">The object.</param>
+        /// <returns>The entity of a provided object <paramref name="obj"/>.</returns>
+        public static TypeEntity FromThis(object obj)
         {
-            Contract.Requires(o != null);
+            Contract.RequireNotNull(obj, out object o);
 
-            return TypeEntity.BuiltTypeEntity(o!.GetType());
+            return TypeEntity.BuiltTypeEntity(o.GetType());
         }
 
         /// <summary>

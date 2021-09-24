@@ -2,8 +2,8 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics.Contracts;
     using System.Threading;
+    using Contracts;
 
     /// <summary>
     /// Represents an event.
@@ -42,12 +42,12 @@
         /// <param name="updater">The action to take for the signaled state.</param>
         protected EventBase(EventBase event1, EventBase event2, Func<bool> signaler, Action updater)
         {
-            Contract.Requires(event1 != null);
-            Contract.Requires(event2 != null);
+            Contract.RequireNotNull(event1, out EventBase Event1);
+            Contract.RequireNotNull(event2, out EventBase Event2);
 
             HandleList = new List<EventWaitHandle>();
-            HandleList.AddRange(event1!.HandleList);
-            HandleList.AddRange(event2!.HandleList);
+            HandleList.AddRange(Event1.HandleList);
+            HandleList.AddRange(Event2.HandleList);
 
             Signaler = signaler;
             Updater = updater;
@@ -231,9 +231,9 @@
         /// <returns>The signaled state.</returns>
         public static bool operator true(EventBase event1)
         {
-            Contract.Requires(event1 != null);
+            Contract.RequireNotNull(event1, out EventBase Event1);
 
-            return event1!.IsTrue;
+            return Event1.IsTrue;
         }
 
         /// <summary>
@@ -243,9 +243,9 @@
         /// <returns>The unsignaled state.</returns>
         public static bool operator false(EventBase event1)
         {
-            Contract.Requires(event1 != null);
+            Contract.RequireNotNull(event1, out EventBase Event1);
 
-            return event1!.IsFalse;
+            return Event1.IsFalse;
         }
         #endregion
 

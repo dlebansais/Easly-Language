@@ -105,7 +105,6 @@ namespace BaseNodeHelper
         private static bool WalkBlockList(Node node, WalkCallbacks<TContext> callbacks, TContext data, string nodePropertyName)
         {
             IBlockList BlockList = NodeTreeHelperBlockList.GetBlockList(node, nodePropertyName);
-            Debug.Assert(BlockList.NodeBlockList != null);
 
             if (callbacks.HandlerBlockList != null && !callbacks.HandlerBlockList(node, nodePropertyName, BlockList, callbacks, data))
                 return false;
@@ -117,7 +116,6 @@ namespace BaseNodeHelper
                 if (Key != null)
                 {
                     string Value = callbacks.BlockSubstitution.Value;
-                    Debug.Assert(Value != null);
 
                     string ListPropertyName = nodePropertyName.Replace(Key, Value);
                     Debug.Assert(ListPropertyName != nodePropertyName);
@@ -126,25 +124,13 @@ namespace BaseNodeHelper
                     if (NodeType == null)
                         return false;
 
-                    PropertyInfo? Property = NodeType.GetProperty(ListPropertyName);
-                    Debug.Assert(Property != null);
+                    PropertyInfo Property = SafeType.GetProperty(NodeType, ListPropertyName);
 
-                    if (Property == null)
-                        return false;
-
-                    IList? NodeList = Property.GetValue(node) as IList;
-                    Debug.Assert(NodeList != null);
-
-                    if (NodeList == null)
-                        return false;
+                    IList NodeList = SafeType.GetPropertyValue<IList>(Property, node);
 
                     for (int Index = 0; Index < NodeList.Count; Index++)
                     {
-                        Node? ChildNode = NodeList[Index] as Node;
-                        Debug.Assert(ChildNode != null);
-
-                        if (ChildNode == null)
-                            return false;
+                        Node ChildNode = SafeType.ItemAt<Node>(NodeList, Index);
 
                         if (!Walk(ChildNode, node, nodePropertyName, callbacks, data))
                             return false;
@@ -157,13 +143,7 @@ namespace BaseNodeHelper
 
                     for (int BlockIndex = 0; BlockIndex < BlockList.NodeBlockList.Count; BlockIndex++)
                     {
-                        IBlock? Block = BlockList.NodeBlockList[BlockIndex] as IBlock;
-                        Debug.Assert(Block != null);
-
-                        if (Block == null)
-                            return false;
-
-                        Debug.Assert(Block.NodeList != null);
+                        IBlock Block = SafeType.ItemAt<IBlock>(BlockList.NodeBlockList, BlockIndex);
 
                         if (callbacks.HandlerBlock != null && !callbacks.HandlerBlock(node, nodePropertyName, BlockList, Block, callbacks, data))
                             return false;
@@ -173,11 +153,7 @@ namespace BaseNodeHelper
 
                         for (int Index = 0; Index < Block.NodeList.Count; Index++)
                         {
-                            Node? ChildNode = Block.NodeList[Index] as Node;
-                            Debug.Assert(ChildNode != null);
-
-                            if (ChildNode == null)
-                                return false;
+                            Node ChildNode = SafeType.ItemAt<Node>(Block.NodeList, Index);
 
                             if (!Walk(ChildNode, node, nodePropertyName, callbacks, data))
                                 return false;
