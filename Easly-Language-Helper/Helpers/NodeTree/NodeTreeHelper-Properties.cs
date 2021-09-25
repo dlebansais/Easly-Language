@@ -1,17 +1,21 @@
-﻿#pragma warning disable SA1600 // Elements should be documented
-
-namespace BaseNodeHelper
+﻿namespace BaseNodeHelper
 {
     using System;
-    using System.Collections;
-    using System.Collections.Generic;
     using System.Diagnostics;
     using System.Reflection;
     using BaseNode;
-    using Easly;
 
+    /// <summary>
+    /// Provides methods to manipulate a tree of nodes.
+    /// </summary>
     public static partial class NodeTreeHelper
     {
+        /// <summary>
+        /// Gets the content of a string property of a node.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <returns>The string content.</returns>
         public static string GetString(Node node, string propertyName)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
@@ -26,6 +30,12 @@ namespace BaseNodeHelper
             return Text;
         }
 
+        /// <summary>
+        /// Sets the content of a string property of a node.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <param name="text">The string content to set.</param>
         public static void SetString(Node node, string propertyName, string text)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
@@ -39,11 +49,25 @@ namespace BaseNodeHelper
             Property.SetValue(node, text);
         }
 
+        /// <summary>
+        /// Gets the content of an enum property of a node.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <returns>The enum content.</returns>
         public static int GetEnumValue(Node node, string propertyName)
         {
             return GetEnumValueAndRange(node, propertyName, out int Min, out int Max);
         }
 
+        /// <summary>
+        /// Gets the content of an enum property of a node, as well as the min and max value.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <param name="min">The min value upon return.</param>
+        /// <param name="max">The max value upon return.</param>
+        /// <returns>The enum content.</returns>
         public static int GetEnumValueAndRange(Node node, string propertyName, out int min, out int max)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
@@ -83,6 +107,12 @@ namespace BaseNodeHelper
             return Result.Value;
         }
 
+        /// <summary>
+        /// Sets the content of an enum property of a node.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <param name="value">The enum content.</param>
         public static void SetEnumValue(Node node, string propertyName, int value)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
@@ -103,6 +133,13 @@ namespace BaseNodeHelper
                 Property.SetValue(node, value);
         }
 
+        /// <summary>
+        /// Gets the range of values of an enum property of a node type.
+        /// </summary>
+        /// <param name="nodeType">The node type.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <param name="min">The min value upon return.</param>
+        /// <param name="max">The max value upon return.</param>
         public static void GetEnumRange(Type nodeType, string propertyName, out int min, out int max)
         {
             if (nodeType == null) throw new ArgumentNullException(nameof(nodeType));
@@ -115,6 +152,12 @@ namespace BaseNodeHelper
             GetEnumMinMax(Property, out min, out max);
         }
 
+        /// <summary>
+        /// Gets the value of a <see cref="Guid"/> property of a node.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <returns>The property value.</returns>
         public static Guid GetGuid(Node node, string propertyName)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
@@ -135,21 +178,41 @@ namespace BaseNodeHelper
             return Result.Value;
         }
 
+        /// <summary>
+        /// Gets the comment text of a node.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <returns>The comment text.</returns>
         public static string GetCommentText(Node node)
         {
             return GetCommentText(node.Documentation);
         }
 
+        /// <summary>
+        /// Gets the comment text of a node.
+        /// </summary>
+        /// <param name="documentation">The node documentation.</param>
+        /// <returns>The comment text.</returns>
         public static string GetCommentText(Document documentation)
         {
             return documentation.Comment;
         }
 
+        /// <summary>
+        /// Sets the comment text of a node.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <param name="text">The comment text.</param>
         public static void SetCommentText(Node node, string text)
         {
             SetCommentText(node.Documentation, text);
         }
 
+        /// <summary>
+        /// Sets the comment text of a node.
+        /// </summary>
+        /// <param name="documentation">The node documentation.</param>
+        /// <param name="text">The comment text.</param>
         public static void SetCommentText(Document documentation, string text)
         {
             Type DocumentationType = documentation.GetType();
@@ -158,6 +221,12 @@ namespace BaseNodeHelper
             CommentProperty.SetValue(documentation, text);
         }
 
+        /// <summary>
+        /// Checks whether the given property of a node is a documentation object.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <returns>True if the given property of a node is a documentation object; otherwise, false.</returns>
         public static bool IsDocumentProperty(Node node, string propertyName)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
@@ -167,6 +236,12 @@ namespace BaseNodeHelper
             return IsDocumentProperty(NodeType, propertyName);
         }
 
+        /// <summary>
+        /// Checks whether the given property of a node type is a documentation object.
+        /// </summary>
+        /// <param name="nodeType">The node type.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <returns>True if the given property of a node type is a documentation object; otherwise, false.</returns>
         public static bool IsDocumentProperty(Type nodeType, string propertyName)
         {
             if (nodeType == null) throw new ArgumentNullException(nameof(nodeType));
@@ -179,6 +254,11 @@ namespace BaseNodeHelper
             return PropertyType == typeof(Document);
         }
 
+        /// <summary>
+        /// Sets the documentation of a node.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <param name="document">The documentation.</param>
         public static void SetDocumentation(Node node, Document document)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
@@ -193,6 +273,12 @@ namespace BaseNodeHelper
             Property.SetValue(node, document);
         }
 
+        /// <summary>
+        /// Copy the documentation from a node to another.
+        /// </summary>
+        /// <param name="sourceNode">The source node.</param>
+        /// <param name="destinationNode">The destination node.</param>
+        /// <param name="cloneCommentGuid">True if Uuid of the destination documentation is to be the same as the source, or should be a new Uuid.</param>
         public static void CopyDocumentation(Node sourceNode, Node destinationNode, bool cloneCommentGuid)
         {
             if (sourceNode == null) throw new ArgumentNullException(nameof(sourceNode));
@@ -212,6 +298,12 @@ namespace BaseNodeHelper
             Property.SetValue(destinationNode, DocumentCopy);
         }
 
+        /// <summary>
+        /// Copy a documentation from a block to another.
+        /// </summary>
+        /// <param name="sourceBlock">The source block.</param>
+        /// <param name="destinationBlock">The destination block.</param>
+        /// <param name="cloneCommentGuid">True if Uuid of the destination documentation is to be the same as the source, or should be a new Uuid.</param>
         public static void CopyDocumentation(IBlock sourceBlock, IBlock destinationBlock, bool cloneCommentGuid)
         {
             if (sourceBlock == null) throw new ArgumentNullException(nameof(sourceBlock));
@@ -231,6 +323,12 @@ namespace BaseNodeHelper
             Property.SetValue(destinationBlock, DocumentCopy);
         }
 
+        /// <summary>
+        /// Copy a documentation from a block list to another.
+        /// </summary>
+        /// <param name="sourceBlockList">The source block list.</param>
+        /// <param name="destinationBlockList">The destination block list.</param>
+        /// <param name="cloneCommentGuid">True if Uuid of the destination documentation is to be the same as the source, or should be a new Uuid.</param>
         public static void CopyDocumentation(IBlockList sourceBlockList, IBlockList destinationBlockList, bool cloneCommentGuid)
         {
             if (sourceBlockList == null) throw new ArgumentNullException(nameof(sourceBlockList));
@@ -250,66 +348,144 @@ namespace BaseNodeHelper
             Property.SetValue(destinationBlockList, DocumentCopy);
         }
 
-        public static bool IsBooleanProperty(Node parentNode, string propertyName)
+        /// <summary>
+        /// Checks whether the property of a node is a <see cref="bool"/>.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <returns>True if the property of a node is a <see cref="bool"/>; otherwise, false.</returns>
+        public static bool IsBooleanProperty(Node node, string propertyName)
         {
-            return IsValueProperty(parentNode, propertyName, typeof(bool));
+            return IsValueProperty(node, propertyName, typeof(bool));
         }
 
+        /// <summary>
+        /// Checks whether the property of a node type is a <see cref="bool"/>.
+        /// </summary>
+        /// <param name="nodeType">The node type.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <returns>True if the property of a node type is a <see cref="bool"/>; otherwise, false.</returns>
         public static bool IsBooleanProperty(Type nodeType, string propertyName)
         {
             return IsValueProperty(nodeType, propertyName, typeof(bool));
         }
 
-        public static void SetBooleanProperty(Node parentNode, string propertyName, bool value)
+        /// <summary>
+        /// Sets the value of a <see cref="bool"/> property of a node.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <param name="value">The new value.</param>
+        public static void SetBooleanProperty(Node node, string propertyName, bool value)
         {
-            SetValueProperty(parentNode, propertyName, value);
+            SetValueProperty(node, propertyName, value);
         }
 
+        /// <summary>
+        /// Copy the <see cref="bool"/> value of from a node to another for a given property.
+        /// </summary>
+        /// <param name="sourceNode">The source node.</param>
+        /// <param name="destinationNode">The destination node.</param>
+        /// <param name="propertyName">The property name.</param>
         public static void CopyBooleanProperty(Node sourceNode, Node destinationNode, string propertyName)
         {
             CopyValueProperty<bool>(sourceNode, destinationNode, propertyName);
         }
 
-        public static bool IsStringProperty(Node parentNode, string propertyName)
+        /// <summary>
+        /// Checks whether the property of a node is a <see cref="string"/>.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <returns>True if the property of a node is a <see cref="string"/>; otherwise, false.</returns>
+        public static bool IsStringProperty(Node node, string propertyName)
         {
-            return IsValueProperty(parentNode, propertyName, typeof(string));
+            return IsValueProperty(node, propertyName, typeof(string));
         }
 
+        /// <summary>
+        /// Checks whether the property of a node type is a <see cref="string"/>.
+        /// </summary>
+        /// <param name="nodeType">The node type.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <returns>True if the property of a node type is a <see cref="string"/>; otherwise, false.</returns>
         public static bool IsStringProperty(Type nodeType, string propertyName)
         {
             return IsValueProperty(nodeType, propertyName, typeof(string));
         }
 
-        public static void SetStringProperty(Node parentNode, string propertyName, string value)
+        /// <summary>
+        /// Sets the value of a <see cref="string"/> property of a node.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <param name="value">The new value.</param>
+        public static void SetStringProperty(Node node, string propertyName, string value)
         {
-            SetValueProperty(parentNode, propertyName, value);
+            SetValueProperty(node, propertyName, value);
         }
 
+        /// <summary>
+        /// Copy the <see cref="string"/> value of from a node to another for a given property.
+        /// </summary>
+        /// <param name="sourceNode">The source node.</param>
+        /// <param name="destinationNode">The destination node.</param>
+        /// <param name="propertyName">The property name.</param>
         public static void CopyStringProperty(Node sourceNode, Node destinationNode, string propertyName)
         {
             CopyValueProperty<string>(sourceNode, destinationNode, propertyName);
         }
 
-        public static bool IsGuidProperty(Node parentNode, string propertyName)
+        /// <summary>
+        /// Checks whether the property of a node is a <see cref="Guid"/>.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <returns>True if the property of a node is a <see cref="Guid"/>; otherwise, false.</returns>
+        public static bool IsGuidProperty(Node node, string propertyName)
         {
-            return IsValueProperty(parentNode, propertyName, typeof(Guid));
+            return IsValueProperty(node, propertyName, typeof(Guid));
         }
 
+        /// <summary>
+        /// Checks whether the property of a node type is a <see cref="Guid"/>.
+        /// </summary>
+        /// <param name="nodeType">The node type.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <returns>True if the property of a node type is a <see cref="Guid"/>; otherwise, false.</returns>
         public static bool IsGuidProperty(Type nodeType, string propertyName)
         {
             return IsValueProperty(nodeType, propertyName, typeof(Guid));
         }
 
-        public static void SetGuidProperty(Node parentNode, string propertyName, Guid value)
+        /// <summary>
+        /// Sets the value of a <see cref="Guid"/> property of a node.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <param name="value">The new value.</param>
+        public static void SetGuidProperty(Node node, string propertyName, Guid value)
         {
-            SetValueProperty(parentNode, propertyName, value);
+            SetValueProperty(node, propertyName, value);
         }
 
+        /// <summary>
+        /// Copy the <see cref="Guid"/> value of from a node to another for a given property.
+        /// </summary>
+        /// <param name="sourceNode">The source node.</param>
+        /// <param name="destinationNode">The destination node.</param>
+        /// <param name="propertyName">The property name.</param>
         public static void CopyGuidProperty(Node sourceNode, Node destinationNode, string propertyName)
         {
             CopyValueProperty<Guid>(sourceNode, destinationNode, propertyName);
         }
 
+        /// <summary>
+        /// Checks whether the property of a node is an enum.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <returns>True if the property of a node is an enum; otherwise, false.</returns>
         public static bool IsEnumProperty(Node node, string propertyName)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
@@ -319,6 +495,12 @@ namespace BaseNodeHelper
             return IsEnumProperty(NodeType, propertyName);
         }
 
+        /// <summary>
+        /// Checks whether the property of a node type is an enum.
+        /// </summary>
+        /// <param name="nodeType">The node type.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <returns>True if the property of a node type is an enum; otherwise, false.</returns>
         public static bool IsEnumProperty(Type nodeType, string propertyName)
         {
             if (nodeType == null) throw new ArgumentNullException(nameof(nodeType));
@@ -330,6 +512,12 @@ namespace BaseNodeHelper
             return PropertyType.IsEnum;
         }
 
+        /// <summary>
+        /// Sets the value of an enum property of a node.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <param name="value">The new value.</param>
         public static void SetEnumProperty(Node node, string propertyName, object value)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
@@ -344,6 +532,12 @@ namespace BaseNodeHelper
             Property.SetValue(node, value);
         }
 
+        /// <summary>
+        /// Copy the enum value of from a node to another for a given property.
+        /// </summary>
+        /// <param name="sourceNode">The source node.</param>
+        /// <param name="destinationNode">The destination node.</param>
+        /// <param name="propertyName">The property name.</param>
         public static void CopyEnumProperty(Node sourceNode, Node destinationNode, string propertyName)
         {
             if (sourceNode == null) throw new ArgumentNullException(nameof(sourceNode));

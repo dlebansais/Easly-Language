@@ -1,17 +1,22 @@
-﻿#pragma warning disable SA1600 // Elements should be documented
-
-namespace BaseNodeHelper
+﻿namespace BaseNodeHelper
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Reflection;
     using BaseNode;
     using Easly;
 
+    /// <summary>
+    /// Provides methods to manipulate a tree of nodes.
+    /// </summary>
     public static partial class NodeTreeHelper
     {
+        /// <summary>
+        /// Enumerates properties of a node.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <returns>The list of property names.</returns>
         public static IList<string> EnumChildNodeProperties(Node node)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
@@ -20,6 +25,11 @@ namespace BaseNodeHelper
             return EnumChildNodeProperties(NodeType);
         }
 
+        /// <summary>
+        /// Enumerates properties of a node type.
+        /// </summary>
+        /// <param name="nodeType">The node type.</param>
+        /// <returns>The list of property names.</returns>
         public static IList<string> EnumChildNodeProperties(Type nodeType)
         {
             if (nodeType == null) throw new ArgumentNullException(nameof(nodeType));
@@ -38,31 +48,11 @@ namespace BaseNodeHelper
             return Result;
         }
 
-        public static PropertyInfo GetPropertyOf(Type type, string propertyName)
-        {
-            if (type == null) throw new ArgumentNullException(nameof(type));
-
-            PropertyInfo Property = SafeType.GetProperty(type, propertyName);
-
-            foreach (Type Interface in type.GetInterfaces())
-            {
-                PropertyInfo? InterfaceProperty = Interface.GetProperty(propertyName);
-                if (InterfaceProperty != null)
-                    return InterfaceProperty;
-            }
-
-            return null!;
-        }
-
-        public static bool IsNodeInterfaceType(Type type)
-        {
-            if (type == null) throw new ArgumentNullException(nameof(type));
-
-            string FullName = SafeType.FullName(typeof(Node));
-
-            return type.IsInterface && type.GetInterface(FullName) != null;
-        }
-
+        /// <summary>
+        /// Checks whether the provided type inherits from <see cref="Node"/>.
+        /// </summary>
+        /// <param name="type">The type to check.</param>
+        /// <returns>True if the provided type inherits from <see cref="Node"/>; otherwise, false.</returns>
         public static bool IsNodeDescendantType(Type type)
         {
             if (type == null) throw new ArgumentNullException(nameof(type));
@@ -70,57 +60,11 @@ namespace BaseNodeHelper
             return type.IsSubclassOf(typeof(Node));
         }
 
-        public static Type NodeTypeToInterfaceType(Type type)
-        {
-            if (type == null) throw new ArgumentNullException(nameof(type));
-            if (type.IsInterface || type.IsAbstract) throw new ArgumentException($"{nameof(type)} must be neither an interface nor an abstract type");
-
-            Type[] Interfaces = type.GetInterfaces();
-            foreach (Type InterfaceType in Interfaces)
-                if (InterfaceType.Name == $"I{type.Name}")
-                    return InterfaceType;
-
-            return null!;
-        }
-
-        public static Type InterfaceTypeToNodeType(Type type)
-        {
-            if (type == null) throw new ArgumentNullException(nameof(type));
-            if (!type.IsInterface) throw new ArgumentException($"{nameof(type)} must be an interface");
-
-            string FullName = SafeType.FullName(type);
-
-            string[] Prefixes = FullName.Split('.');
-            Debug.Assert(Prefixes.Length > 0);
-
-            int InterfaceIndex = 0;
-            while (InterfaceIndex + 1 < Prefixes.Length && !Prefixes[InterfaceIndex].Contains("`") && !Prefixes[InterfaceIndex].Contains("["))
-                InterfaceIndex++;
-
-            string LastName = Prefixes[InterfaceIndex];
-            Debug.Assert(LastName.Length > 1);
-            Debug.Assert(LastName[0] == 'I');
-
-            string NodeTypeName = LastName.Substring(1);
-
-            string NodeTypeFullName = string.Empty;
-            for (int i = 0; i < Prefixes.Length; i++)
-            {
-                if (i > 0)
-                    NodeTypeFullName += ".";
-
-                if (i != InterfaceIndex)
-                    NodeTypeFullName += Prefixes[i];
-                else
-                    NodeTypeFullName += NodeTypeName;
-            }
-
-            Assembly TypeAssembly = type.Assembly;
-            Type Result = SafeType.GetType(TypeAssembly, NodeTypeFullName);
-
-            return Result;
-        }
-
+        /// <summary>
+        /// Checks whether the provided type is a <see cref="IOptionalReference"/> that inherits from <see cref="Node"/>.
+        /// </summary>
+        /// <param name="type">The type to check.</param>
+        /// <returns>True if the provided type is an optional reference that inherits from <see cref="Node"/>; otherwise, false.</returns>
         public static bool IsOptionalReferenceType(Type type)
         {
             if (type == null) throw new ArgumentNullException(nameof(type));
@@ -137,21 +81,11 @@ namespace BaseNodeHelper
             return IsNodeDescendantType(GenericType);
         }
 
-        public static bool IsOptionalDescendantType(Type type)
-        {
-            if (type == null) throw new ArgumentNullException(nameof(type));
-
-            if (type.IsInterface || !type.IsGenericType || type.GetGenericTypeDefinition() != typeof(OptionalReference<>))
-                return false;
-
-            Type[] GenericArguments = type.GetGenericArguments();
-            Debug.Assert(GenericArguments.Length == 1);
-
-            Type GenericType = GenericArguments[0];
-
-            return IsNodeDescendantType(GenericType);
-        }
-
+        /// <summary>
+        /// Checks whether the provided type is a <see cref="System.Collections.IList"/> of items that inherit from <see cref="Node"/>.
+        /// </summary>
+        /// <param name="type">The type to check.</param>
+        /// <returns>True if the provided type is a <see cref="System.Collections.IList"/> of items that inherit from <see cref="Node"/>; otherwise, false.</returns>
         public static bool IsNodeListType(Type type)
         {
             if (type == null) throw new ArgumentNullException(nameof(type));
@@ -168,6 +102,11 @@ namespace BaseNodeHelper
             return IsNodeDescendantType(GenericType);
         }
 
+        /// <summary>
+        /// Checks whether the provided type is a <see cref="IBlockList"/>.
+        /// </summary>
+        /// <param name="type">The type to check.</param>
+        /// <returns>True if the provided type is a <see cref="IBlockList"/>; otherwise, false.</returns>
         public static bool IsBlockListType(Type type)
         {
             if (type == null) throw new ArgumentNullException(nameof(type));
@@ -186,6 +125,11 @@ namespace BaseNodeHelper
             return IsNodeDescendantType(GenericType);
         }
 
+        /// <summary>
+        /// Checks whether the provided type is a <see cref="IBlock"/>.
+        /// </summary>
+        /// <param name="type">The type to check.</param>
+        /// <returns>True if the provided type is a <see cref="IBlock"/>; otherwise, false.</returns>
         public static bool IsBlockType(Type type)
         {
             if (type == null) throw new ArgumentNullException(nameof(type));
@@ -204,6 +148,11 @@ namespace BaseNodeHelper
             return IsNodeDescendantType(GenericType);
         }
 
+        /// <summary>
+        /// Checks whether the provided node contains only text.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <returns>True if the provided node contains only text; otherwise, false.</returns>
         public static bool IsTextNode(Node node)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
@@ -214,6 +163,13 @@ namespace BaseNodeHelper
             return Property != null;
         }
 
+        /// <summary>
+        /// Checks whether <paramref name="node"/> can be assigned <paramref name="childNode"/> in its property with name <paramref name="propertyName"/>.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <param name="childNode">The child node.</param>
+        /// <returns>True if the node can be assigned the child node.</returns>
         public static bool IsAssignable(Node node, string propertyName, Node childNode)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
@@ -315,6 +271,11 @@ namespace BaseNodeHelper
             return Result;
         }
 
+        /// <summary>
+        /// Gets the list of optional child nodes of a node.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <param name="optionalNodesTable">The list of optional child nodes of a node upon return.</param>
         public static void GetOptionalNodes(Node node, out IDictionary<string, IOptionalReference> optionalNodesTable)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
@@ -337,6 +298,11 @@ namespace BaseNodeHelper
             }
         }
 
+        /// <summary>
+        /// Gets the list of argument blocks of a node.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <param name="argumentBlocksTable">The list of argument blocks of a node upon return.</param>
         public static void GetArgumentBlocks(Node node, out IDictionary<string, IBlockList<Argument>> argumentBlocksTable)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));

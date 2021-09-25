@@ -1,11 +1,18 @@
-﻿#pragma warning disable SA1600 // Elements should be documented
-
-namespace BaseNodeHelper
+﻿namespace BaseNodeHelper
 {
     using BaseNode;
 
+    /// <summary>
+    /// Provides methods to manipulate nodes.
+    /// </summary>
     public static partial class NodeHelper
     {
+        /// <summary>
+        /// Creates an instance of a simplified version of a node.
+        /// </summary>
+        /// <param name="node">The node to simplify.</param>
+        /// <param name="simplifiedNode">The simplified node.</param>
+        /// <returns>True if the node could be simplified; otherwise, false.</returns>
         public static bool GetSimplifiedNode(Node node, out Node simplifiedNode)
         {
             switch (node)

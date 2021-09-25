@@ -1,6 +1,4 @@
-﻿#pragma warning disable SA1600 // Elements should be documented
-
-namespace BaseNodeHelper
+﻿namespace BaseNodeHelper
 {
     using System;
     using System.Collections.Generic;
@@ -8,8 +6,17 @@ namespace BaseNodeHelper
     using System.Reflection;
     using BaseNode;
 
+    /// <summary>
+    /// Provides methods to check a tree of nodes.
+    /// </summary>
     public static class NodeTreeDiagnostic
     {
+        /// <summary>
+        /// Checks whether a node is a valid root.
+        /// </summary>
+        /// <param name="root">The root node.</param>
+        /// <param name="assertValid">If true, the call must not fail.</param>
+        /// <returns>True if the node is a valid root node; otherwise, false.</returns>
         public static bool IsValid(Node root, bool assertValid = true)
         {
             List<Node> NodeList = new List<Node>();

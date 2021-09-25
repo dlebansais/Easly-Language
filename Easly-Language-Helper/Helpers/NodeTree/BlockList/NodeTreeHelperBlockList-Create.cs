@@ -1,6 +1,4 @@
-﻿#pragma warning disable SA1600 // Elements should be documented
-
-namespace BaseNodeHelper
+﻿namespace BaseNodeHelper
 {
     using System;
     using System.Collections;
@@ -8,10 +6,21 @@ namespace BaseNodeHelper
     using System.Diagnostics;
     using System.Reflection;
     using BaseNode;
-    using Easly;
 
+    /// <summary>
+    /// Provides methods to manipulate block lists of nodes.
+    /// </summary>
     public static partial class NodeTreeHelperBlockList
     {
+        /// <summary>
+        /// Creates a new instance of a <see cref="IBlock"/> with provided values.
+        /// </summary>
+        /// <param name="node">The node for which the block is created.</param>
+        /// <param name="propertyName">The property name in the block.</param>
+        /// <param name="replication">The replication status.</param>
+        /// <param name="replicationPattern">The replication pattern.</param>
+        /// <param name="sourceIdentifier">The source identifier.</param>
+        /// <returns>The created instance.</returns>
         public static IBlock CreateBlock(Node node, string propertyName, ReplicationStatus replication, Pattern replicationPattern, Identifier sourceIdentifier)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
@@ -28,6 +37,14 @@ namespace BaseNodeHelper
             return CreateBlock(PropertyType, replication, replicationPattern, sourceIdentifier);
         }
 
+        /// <summary>
+        /// Creates a new instance of a <see cref="IBlock"/> with provided values.
+        /// </summary>
+        /// <param name="blockList">The block list for which the block is created.</param>
+        /// <param name="replication">The replication status.</param>
+        /// <param name="replicationPattern">The replication pattern.</param>
+        /// <param name="sourceIdentifier">The source identifier.</param>
+        /// <returns>The created instance.</returns>
         public static IBlock CreateBlock(IBlockList blockList, ReplicationStatus replication, Pattern replicationPattern, Identifier sourceIdentifier)
         {
             if (blockList == null) throw new ArgumentNullException(nameof(blockList));
@@ -37,6 +54,14 @@ namespace BaseNodeHelper
             return CreateBlock(blockList.GetType(), replication, replicationPattern, sourceIdentifier);
         }
 
+        /// <summary>
+        /// Creates a new instance of a <see cref="IBlock"/> with provided values.
+        /// </summary>
+        /// <param name="propertyType">The type of block list for which the block is created.</param>
+        /// <param name="replication">The replication status.</param>
+        /// <param name="replicationPattern">The replication pattern.</param>
+        /// <param name="sourceIdentifier">The source identifier.</param>
+        /// <returns>The created instance.</returns>
         public static IBlock CreateBlock(Type propertyType, ReplicationStatus replication, Pattern replicationPattern, Identifier sourceIdentifier)
         {
             if (propertyType == null) throw new ArgumentNullException(nameof(propertyType));

@@ -1,17 +1,22 @@
-﻿#pragma warning disable SA1600 // Elements should be documented
-
-namespace BaseNodeHelper
+﻿namespace BaseNodeHelper
 {
     using System;
     using System.Collections;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Reflection;
     using BaseNode;
-    using Easly;
 
+    /// <summary>
+    /// Provides methods to manipulate nodes.
+    /// </summary>
     public static partial class NodeHelper
     {
+        /// <summary>
+        /// Creates a new instance of a <see cref="Node"/> making a copy of all objects.
+        /// </summary>
+        /// <param name="root">The root node to copy.</param>
+        /// <param name="cloneCommentGuid">The Uuid of the cloned object documentation.</param>
+        /// <returns>The created instance.</returns>
         public static Node DeepCloneNode(Node root, bool cloneCommentGuid)
         {
             IList<string> PropertyNames = NodeTreeHelper.EnumChildNodeProperties(root);
@@ -74,7 +79,7 @@ namespace BaseNodeHelper
             return ClonedRoot;
         }
 
-        public static IList<Node> DeepCloneNodeList(IEnumerable<Node> rootList, bool cloneCommentGuid)
+        private static IList<Node> DeepCloneNodeList(IEnumerable<Node> rootList, bool cloneCommentGuid)
         {
             if (rootList == null) throw new ArgumentNullException(nameof(rootList));
 
@@ -89,7 +94,7 @@ namespace BaseNodeHelper
             return Result;
         }
 
-        public static IList<IBlock> DeepCloneBlockList(IEnumerable<IBlock> rootBlockList, bool cloneCommentGuid)
+        private static IList<IBlock> DeepCloneBlockList(IEnumerable<IBlock> rootBlockList, bool cloneCommentGuid)
         {
             if (rootBlockList == null) throw new ArgumentNullException(nameof(rootBlockList));
 
@@ -119,7 +124,7 @@ namespace BaseNodeHelper
             return ClonedNodeBlockList;
         }
 
-        public static IBlockList DeepCloneBlockList(IBlockList rootBlockList, bool cloneCommentGuid)
+        private static IBlockList DeepCloneBlockList(IBlockList rootBlockList, bool cloneCommentGuid)
         {
             if (rootBlockList == null) throw new ArgumentNullException(nameof(rootBlockList));
 

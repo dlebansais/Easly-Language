@@ -1,13 +1,20 @@
-﻿#pragma warning disable SA1600 // Elements should be documented
-
-namespace BaseNodeHelper
+﻿namespace BaseNodeHelper
 {
     using System.Collections.Generic;
     using System.Diagnostics;
     using BaseNode;
 
+    /// <summary>
+    /// Provides methods to manipulate nodes.
+    /// </summary>
     public static partial class NodeHelper
     {
+        /// <summary>
+        /// Creates an instance of a simplified version of an expression.
+        /// </summary>
+        /// <param name="nodeExpression">The expression to simplify.</param>
+        /// <param name="simplifiedNode">The simplified expression.</param>
+        /// <returns>True if the expression could be simplified; otherwise, false.</returns>
         public static bool GetSimplifiedExpression(Expression nodeExpression, out Node simplifiedNode)
         {
             switch (nodeExpression)
@@ -39,7 +46,7 @@ namespace BaseNodeHelper
             }
         }
 
-        public static bool GetSimplifiedExpressionSingle(Expression nodeExpression, out Node simplifiedNode)
+        private static bool GetSimplifiedExpressionSingle(Expression nodeExpression, out Node simplifiedNode)
         {
             switch (nodeExpression)
             {

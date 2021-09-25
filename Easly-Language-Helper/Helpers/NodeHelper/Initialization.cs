@@ -1,16 +1,15 @@
-﻿#pragma warning disable SA1600 // Elements should be documented
-#pragma warning disable SA1601 // Partial elements should be documented
-
-namespace BaseNodeHelper
+﻿namespace BaseNodeHelper
 {
     using System;
     using System.Collections;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Reflection;
     using BaseNode;
     using Easly;
 
+    /// <summary>
+    /// Provides methods to manipulate nodes.
+    /// </summary>
     public static partial class NodeHelper
     {
         private static void InitializeDocumentation(Node node)

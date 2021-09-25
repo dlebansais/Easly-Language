@@ -1,18 +1,20 @@
-﻿#pragma warning disable SA1600 // Elements should be documented
-#pragma warning disable SA1601 // Partial elements should be documented
-
-namespace BaseNodeHelper
+﻿namespace BaseNodeHelper
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Reflection;
     using BaseNode;
-    using Easly;
 
+    /// <summary>
+    /// Provides methods to manipulate nodes.
+    /// </summary>
     public static partial class NodeHelper
     {
+        /// <summary>
+        /// Creates an instance of a <see cref="AssignmentArgument"/> from the provided values.
+        /// </summary>
+        /// <param name="parameterList">The list of assignment identifiers.</param>
+        /// <param name="source">The source expression.</param>
+        /// <returns>The created instance.</returns>
         public static AssignmentArgument CreateAssignmentArgument(List<Identifier> parameterList, Expression source)
         {
             if (parameterList == null) throw new ArgumentNullException(nameof(parameterList));
@@ -27,6 +29,12 @@ namespace BaseNodeHelper
             return Result;
         }
 
+        /// <summary>
+        /// Creates an instance of a <see cref="AssignmentArgument"/> from the provided values.
+        /// </summary>
+        /// <param name="parameterBlocks">A block list of assignment identifiers.</param>
+        /// <param name="source">The source expression.</param>
+        /// <returns>The created instance.</returns>
         public static AssignmentArgument CreateAssignmentArgument(IBlockList<Identifier> parameterBlocks, Expression source)
         {
             if (parameterBlocks == null) throw new ArgumentNullException(nameof(parameterBlocks));
@@ -41,6 +49,11 @@ namespace BaseNodeHelper
             return Result;
         }
 
+        /// <summary>
+        /// Creates an instance of a <see cref="PositionalArgument"/> from the provided expression.
+        /// </summary>
+        /// <param name="source">The source expression.</param>
+        /// <returns>The created instance.</returns>
         public static PositionalArgument CreatePositionalArgument(Expression source)
         {
             if (source == null) throw new ArgumentNullException(nameof(source));

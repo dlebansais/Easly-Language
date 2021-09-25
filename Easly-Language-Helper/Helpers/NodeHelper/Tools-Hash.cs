@@ -1,17 +1,21 @@
-﻿#pragma warning disable SA1600 // Elements should be documented
-
-namespace BaseNodeHelper
+﻿namespace BaseNodeHelper
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Reflection;
     using BaseNode;
-    using Easly;
 
+    /// <summary>
+    /// Provides methods to manipulate nodes.
+    /// </summary>
     public static partial class NodeHelper
     {
+        /// <summary>
+        /// Gets the hash value of a node.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <returns>The has value.</returns>
         public static ulong NodeHash(Node node)
         {
             IList<string> PropertyNames = NodeTreeHelper.EnumChildNodeProperties(node);
@@ -23,7 +27,7 @@ namespace BaseNodeHelper
             return Hash;
         }
 
-        public static void NodeHashPropertyName(Node node, string propertyName, ref ulong hash)
+        private static void NodeHashPropertyName(Node node, string propertyName, ref ulong hash)
         {
             if (NodeTreeHelperChild.IsChildNodeProperty(node, propertyName, out _))
                 NodeHashChildNode(node, propertyName, ref hash);
@@ -37,14 +41,14 @@ namespace BaseNodeHelper
                 NodeHashOther(node, propertyName, ref hash);
         }
 
-        public static void NodeHashChildNode(Node node, string propertyName, ref ulong hash)
+        private static void NodeHashChildNode(Node node, string propertyName, ref ulong hash)
         {
             NodeTreeHelperChild.GetChildNode(node, propertyName, out Node ChildNode);
 
             MergeHash(ref hash, NodeHash(ChildNode));
         }
 
-        public static void NodeHashOptionalChildNode(Node node, string propertyName, ref ulong hash)
+        private static void NodeHashOptionalChildNode(Node node, string propertyName, ref ulong hash)
         {
             NodeTreeHelperOptional.GetChildNode(node, propertyName, out bool IsAssigned, out Node ChildNode);
 
@@ -54,7 +58,7 @@ namespace BaseNodeHelper
                 MergeHash(ref hash, NodeHash(ChildNode));
         }
 
-        public static void NodeHashNodeList(Node node, string propertyName, ref ulong hash)
+        private static void NodeHashNodeList(Node node, string propertyName, ref ulong hash)
         {
             NodeTreeHelperList.GetChildNodeList(node, propertyName, out IReadOnlyList<Node> ChildNodeList);
 
@@ -62,7 +66,7 @@ namespace BaseNodeHelper
                 MergeHash(ref hash, NodeHash(ChildNode));
         }
 
-        public static void NodeHashBlockList(Node node, string propertyName, ref ulong hash)
+        private static void NodeHashBlockList(Node node, string propertyName, ref ulong hash)
         {
             NodeTreeHelperBlockList.GetChildBlockList(node, propertyName, out IReadOnlyList<NodeTreeBlock> ChildBlockList);
 
@@ -82,7 +86,7 @@ namespace BaseNodeHelper
             }
         }
 
-        public static void NodeHashOther(Node node, string propertyName, ref ulong hash)
+        private static void NodeHashOther(Node node, string propertyName, ref ulong hash)
         {
             Type NodeType = node.GetType();
 

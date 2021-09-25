@@ -1,7 +1,4 @@
-﻿#pragma warning disable SA1600 // Elements should be documented
-#pragma warning disable SA1601 // Partial elements should be documented
-
-namespace BaseNodeHelper
+﻿namespace BaseNodeHelper
 {
     using System;
     using System.Collections;
@@ -9,8 +6,18 @@ namespace BaseNodeHelper
     using System.Diagnostics;
     using BaseNode;
 
+    /// <summary>
+    /// Provides methods to manipulate nodes.
+    /// </summary>
     public static partial class NodeHelper
     {
+        /// <summary>
+        /// Gets the simpler unicode character corresponding to a sequence of characters for a binary operator.
+        /// This method does the opposite of <see cref="GetInverseRenamedBinarySymbol(string, out string)"/>.
+        /// </summary>
+        /// <param name="symbol">The sequence of character.</param>
+        /// <param name="renamedSymbol">The unicode character upon return.</param>
+        /// <returns>True if the provided sequence could be translated; otherwise, false.</returns>
         public static bool GetRenamedBinarySymbol(string symbol, out string renamedSymbol)
         {
             renamedSymbol = null!;
@@ -33,6 +40,13 @@ namespace BaseNodeHelper
             return renamedSymbol != null;
         }
 
+        /// <summary>
+        /// Gets the sequence of characters that corresponds to a unicode character for a binary operator.
+        /// This method does the opposite of <see cref="GetRenamedBinarySymbol(string, out string)"/>.
+        /// </summary>
+        /// <param name="symbol">The unicode character.</param>
+        /// <param name="renamedSymbol">The sequence of character upon return.</param>
+        /// <returns>True if the provided character could be translated; otherwise, false.</returns>
         public static bool GetInverseRenamedBinarySymbol(string symbol, out string renamedSymbol)
         {
             renamedSymbol = null!;
@@ -55,6 +69,27 @@ namespace BaseNodeHelper
             return renamedSymbol != null;
         }
 
+        private static bool GetRenamedBinarySymbol(Identifier symbol, out Identifier renamedSymbol)
+        {
+            renamedSymbol = null!;
+            bool Result = false;
+
+            if (GetRenamedBinarySymbol(symbol.Text, out string renamedSymbolText))
+            {
+                renamedSymbol = CreateSimpleIdentifier(renamedSymbolText);
+                Result = true;
+            }
+
+            return Result;
+        }
+
+        /// <summary>
+        /// Gets the simpler unicode character corresponding to a sequence of characters for a unary operator.
+        /// This method does the opposite of <see cref="GetInverseRenamedUnarySymbol(string, out string)"/>.
+        /// </summary>
+        /// <param name="symbol">The sequence of character.</param>
+        /// <param name="renamedSymbol">The unicode character upon return.</param>
+        /// <returns>True if the provided sequence could be translated; otherwise, false.</returns>
         public static bool GetRenamedUnarySymbol(string symbol, out string renamedSymbol)
         {
             renamedSymbol = null!;
@@ -69,6 +104,13 @@ namespace BaseNodeHelper
             return renamedSymbol != null;
         }
 
+        /// <summary>
+        /// Gets the sequence of characters that corresponds to a unicode character for a unary operator.
+        /// This method does the opposite of <see cref="GetRenamedUnarySymbol(string, out string)"/>.
+        /// </summary>
+        /// <param name="symbol">The unicode character.</param>
+        /// <param name="renamedSymbol">The sequence of character upon return.</param>
+        /// <returns>True if the provided character could be translated; otherwise, false.</returns>
         public static bool GetInverseRenamedUnarySymbol(string symbol, out string renamedSymbol)
         {
             renamedSymbol = null!;
@@ -81,6 +123,20 @@ namespace BaseNodeHelper
             }
 
             return renamedSymbol != null;
+        }
+
+        private static bool GetRenamedUnarySymbol(Identifier symbol, out Identifier renamedSymbol)
+        {
+            renamedSymbol = null!;
+            bool Result = false;
+
+            if (GetRenamedUnarySymbol(symbol.Text, out string renamedSymbolText))
+            {
+                renamedSymbol = CreateSimpleIdentifier(renamedSymbolText);
+                Result = true;
+            }
+
+            return Result;
         }
 
         private static bool SplitIdentifier(Identifier identifier, char startTag, char endTag, out IList<Identifier> split)
@@ -390,34 +446,6 @@ namespace BaseNodeHelper
                     return false;
 
             return true;
-        }
-
-        private static bool GetRenamedBinarySymbol(Identifier symbol, out Identifier renamedSymbol)
-        {
-            renamedSymbol = null!;
-            bool Result = false;
-
-            if (GetRenamedBinarySymbol(symbol.Text, out string renamedSymbolText))
-            {
-                renamedSymbol = CreateSimpleIdentifier(renamedSymbolText);
-                Result = true;
-            }
-
-            return Result;
-        }
-
-        private static bool GetRenamedUnarySymbol(Identifier symbol, out Identifier renamedSymbol)
-        {
-            renamedSymbol = null!;
-            bool Result = false;
-
-            if (GetRenamedUnarySymbol(symbol.Text, out string renamedSymbolText))
-            {
-                renamedSymbol = CreateSimpleIdentifier(renamedSymbolText);
-                Result = true;
-            }
-
-            return Result;
         }
     }
 }

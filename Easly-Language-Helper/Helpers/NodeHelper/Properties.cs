@@ -1,15 +1,17 @@
 ﻿namespace BaseNodeHelper
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Reflection;
     using BaseNode;
-    using Easly;
 
+    /// <summary>
+    /// Provides methods to manipulate nodes.
+    /// </summary>
     public static partial class NodeHelper
     {
+        /// <summary>
+        /// Gets the table of property names for collections that are not allowed to be empty, for each node type.
+        /// </summary>
         public static IReadOnlyDictionary<Type, string[]> NeverEmptyCollectionTable { get; } = new Dictionary<Type, string[]>()
         {
             { typeof(Attachment), new string[] { nameof(Attachment.AttachTypeBlocks) } },
@@ -43,6 +45,9 @@
             { typeof(TupleType), new string[] { nameof(TupleType.EntityDeclarationBlocks) } },
         };
 
+        /// <summary>
+        /// Gets the table of property names for collections that can be expanded, for each node type.
+        /// </summary>
         public static IReadOnlyDictionary<Type, string[]> WithExpandCollectionTable { get; } = new Dictionary<Type, string[]>()
         {
             { typeof(PrecursorExpression), new string[] { nameof(PrecursorExpression.ArgumentBlocks) } },

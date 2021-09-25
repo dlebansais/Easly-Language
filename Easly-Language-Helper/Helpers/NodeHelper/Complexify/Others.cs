@@ -1,13 +1,12 @@
-﻿#pragma warning disable SA1600 // Elements should be documented
-
-namespace BaseNodeHelper
+﻿namespace BaseNodeHelper
 {
-    using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.Diagnostics;
     using BaseNode;
 
+    /// <summary>
+    /// Provides methods to manipulate nodes.
+    /// </summary>
     public static partial class NodeHelper
     {
         #region Others

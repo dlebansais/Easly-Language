@@ -1,6 +1,4 @@
-﻿#pragma warning disable SA1600 // Elements should be documented
-
-namespace BaseNodeHelper
+﻿namespace BaseNodeHelper
 {
     using System;
     using System.Collections;
@@ -9,9 +7,20 @@ namespace BaseNodeHelper
     using System.Reflection;
     using BaseNode;
 
+    /// <summary>
+    /// Provides methods to walk through a tree of nodes.
+    /// </summary>
+    /// <typeparam name="TContext">The type of context to use.</typeparam>
     public static class NodeTreeWalk<TContext>
         where TContext : class
     {
+        /// <summary>
+        /// Walks a tree of nodes from a root.
+        /// </summary>
+        /// <param name="root">The root node.</param>
+        /// <param name="callbacks">Callbacks to call for each child.</param>
+        /// <param name="data">The call context.</param>
+        /// <returns>True if none of the callbacks returned false; otherwise, false.</returns>
         internal static bool Walk(Node root, WalkCallbacks<TContext> callbacks, TContext data)
         {
             if (root == null) throw new ArgumentNullException(nameof(root));

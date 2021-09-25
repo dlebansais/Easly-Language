@@ -1,53 +1,83 @@
-﻿#pragma warning disable SA1600 // Elements should be documented
-#pragma warning disable SA1601 // Partial elements should be documented
-
-namespace BaseNodeHelper
+﻿namespace BaseNodeHelper
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using System.Reflection;
     using BaseNode;
-    using Easly;
 
+    /// <summary>
+    /// Provides methods to manipulate nodes.
+    /// </summary>
     public static partial class NodeHelper
     {
+        /// <summary>
+        /// Creates a new instance of an object inheriting from <see cref="Argument"/> with the simplest content.
+        /// </summary>
+        /// <returns>The created instance.</returns>
         public static Argument CreateDefaultArgument()
         {
             return CreateEmptyPositionalArgument();
         }
 
+        /// <summary>
+        /// Creates a new instance of an object inheriting from <see cref="TypeArgument"/> with the simplest content.
+        /// </summary>
+        /// <returns>The created instance.</returns>
         public static TypeArgument CreateDefaultTypeArgument()
         {
             return CreateEmptyPositionalTypeArgument();
         }
 
+        /// <summary>
+        /// Creates a new instance of an object inheriting from <see cref="Body"/> with the simplest content.
+        /// </summary>
+        /// <returns>The created instance.</returns>
         public static Body CreateDefaultBody()
         {
             return CreateEmptyEffectiveBody();
         }
 
+        /// <summary>
+        /// Creates a new instance of an object inheriting from <see cref="Expression"/> with the simplest content.
+        /// </summary>
+        /// <returns>The created instance.</returns>
         public static Expression CreateDefaultExpression()
         {
             return CreateEmptyQueryExpression();
         }
 
+        /// <summary>
+        /// Creates a new instance of an object inheriting from <see cref="Instruction"/> with the simplest content.
+        /// </summary>
+        /// <returns>The created instance.</returns>
         public static Instruction CreateDefaultInstruction()
         {
             return CreateEmptyCommandInstruction();
         }
 
+        /// <summary>
+        /// Creates a new instance of an object inheriting from <see cref="Feature"/> with the simplest content.
+        /// </summary>
+        /// <returns>The created instance.</returns>
         public static Feature CreateDefaultFeature()
         {
             return CreateEmptyAttributeFeature();
         }
 
+        /// <summary>
+        /// Creates a new instance of an object inheriting from <see cref="ObjectType"/> with the simplest content.
+        /// </summary>
+        /// <returns>The created instance.</returns>
         public static ObjectType CreateDefaultType()
         {
             return CreateEmptySimpleType();
         }
 
+        /// <summary>
+        /// Creates a new instance of an object inheriting from <see cref="Node"/> with the simplest content that implements <paramref name="interfaceType"/>.
+        /// </summary>
+        /// <param name="interfaceType">The required interface the new object must implement.</param>
+        /// <returns>The created instance.</returns>
         public static Node CreateDefault(Type interfaceType)
         {
             if (interfaceType == null) throw new ArgumentNullException(nameof(interfaceType));
@@ -60,6 +90,11 @@ namespace BaseNodeHelper
                 throw new ArgumentOutOfRangeException($"{nameof(interfaceType)}: {interfaceType.FullName}");
         }
 
+        /// <summary>
+        /// Gets the type of the simplest object inheriting from <see cref="Node"/> that implements <paramref name="interfaceType"/>.
+        /// </summary>
+        /// <param name="interfaceType">The required interface the returned type must implement.</param>
+        /// <returns>The type of the simplest object inheriting from <see cref="Node"/> that implements <paramref name="interfaceType"/>.</returns>
         public static Type GetDefaultItemType(Type interfaceType)
         {
             Type Result;
@@ -89,6 +124,11 @@ namespace BaseNodeHelper
             return Result;
         }
 
+        /// <summary>
+        /// Creates a new instance of an object inheriting from <see cref="Node"/> with the simplest content that implements <paramref name="interfaceType"/>.
+        /// </summary>
+        /// <param name="interfaceType">The required interface the new object must implement.</param>
+        /// <returns>The created instance.</returns>
         public static Node CreateDefaultFromInterface(Type interfaceType)
         {
             if (interfaceType == null) throw new ArgumentNullException(nameof(interfaceType));
@@ -118,6 +158,11 @@ namespace BaseNodeHelper
             return Result;
         }
 
+        /// <summary>
+        /// Checks if <paramref name="type"/> is a node type.
+        /// </summary>
+        /// <param name="type">The type to check.</param>
+        /// <returns>True if <paramref name="type"/> is a node type; otherwise, false.</returns>
         public static bool IsNodeType(Type type)
         {
             Type? CurrentType = type;
@@ -128,6 +173,11 @@ namespace BaseNodeHelper
             return CurrentType != null;
         }
 
+        /// <summary>
+        /// Creates a new instance of an object of type <paramref name="objectType"/>.
+        /// </summary>
+        /// <param name="objectType">The type of the new object to create.</param>
+        /// <returns>The created instance.</returns>
         public static Node CreateEmptyNode(Type objectType)
         {
             if (objectType == null) throw new ArgumentNullException(nameof(objectType));
@@ -148,6 +198,12 @@ namespace BaseNodeHelper
             return EmptyNode;
         }
 
+        /// <summary>
+        /// Fills the content of the <paramref name="propertyName"/> property of <paramref name="emptyNode"/> with an empty content, using <paramref name="objectType"/> as the item type if the property is a collection.
+        /// </summary>
+        /// <param name="objectType">The item type if the property is a collection.</param>
+        /// <param name="emptyNode">The node to fill.</param>
+        /// <param name="propertyName">The name of the property in <paramref name="emptyNode"/> to fill.</param>
         public static void CreateEmptyNodePropertyName(Type objectType, Node emptyNode, string propertyName)
         {
             Type /*ChildInterfaceType,*/ ChildNodeType;
@@ -166,6 +222,13 @@ namespace BaseNodeHelper
                 NodeTreeHelper.SetGuidProperty(emptyNode, propertyName, Guid.NewGuid());
         }
 
+        /// <summary>
+        /// Creates an empty list of <paramref name="childNodeType"/> elements in the property with name <paramref name="propertyName"/> of the <paramref name="emptyNode"/> node.
+        /// </summary>
+        /// <param name="objectType">Not used.</param>
+        /// <param name="emptyNode">The node to fill.</param>
+        /// <param name="propertyName">The name of the property in <paramref name="emptyNode"/> to fill.</param>
+        /// <param name="childNodeType">The type of element elements in the created list.</param>
         public static void CreateEmptyNodeList(Type objectType, Node emptyNode, string propertyName, Type childNodeType)
         {
             if (IsCollectionNeverEmpty(emptyNode, propertyName))
@@ -185,6 +248,14 @@ namespace BaseNodeHelper
                 InitializeEmptyNodeList(emptyNode, propertyName, childNodeType);
         }
 
+        /// <summary>
+        /// Creates an empty block list of <paramref name="childNodeType"/> elements in the property with name <paramref name="propertyName"/> of the <paramref name="emptyNode"/> node.
+        /// If the block list is not allowed to be empty, it contains an empty element upon return.
+        /// </summary>
+        /// <param name="objectType">Not used.</param>
+        /// <param name="emptyNode">The node to fill.</param>
+        /// <param name="propertyName">The name of the property in <paramref name="emptyNode"/> to fill.</param>
+        /// <param name="childNodeType">The type of element elements in the created list.</param>
         public static void CreateEmptyBlockList(Type objectType, Node emptyNode, string propertyName, Type childNodeType)
         {
             if (IsCollectionNeverEmpty(emptyNode, propertyName))
@@ -204,6 +275,11 @@ namespace BaseNodeHelper
                 InitializeEmptyBlockList(emptyNode, propertyName, /*ChildInterfaceType,*/ childNodeType);
         }
 
+        /// <summary>
+        /// Checks if a node is empty.
+        /// </summary>
+        /// <param name="node">The node to check.</param>
+        /// <returns>True if the node is empty; otherwise, false.</returns>
         public static bool IsEmptyNode(Node node)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
@@ -217,6 +293,12 @@ namespace BaseNodeHelper
             return true;
         }
 
+        /// <summary>
+        /// Checks if the property of a node is empty.
+        /// </summary>
+        /// <param name="node">The node to check.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <returns>True if the node property is empty; otherwise, false.</returns>
         public static bool IsEmptyNodePropertyName(Node node, string propertyName)
         {
             if (NodeTreeHelperChild.IsChildNodeProperty(node, propertyName, out _))
@@ -235,18 +317,36 @@ namespace BaseNodeHelper
                 return true;
         }
 
+        /// <summary>
+        /// Checks if the property of a node is an empty child node.
+        /// </summary>
+        /// <param name="node">The node to check.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <returns>True if the node property is an empty child node; otherwise, false.</returns>
         public static bool IsEmptyChildNode(Node node, string propertyName)
         {
             NodeTreeHelperChild.GetChildNode(node, propertyName, out Node ChildNode);
             return IsEmptyNode(ChildNode);
         }
 
+        /// <summary>
+        /// Checks if the property of a node is an unassigned optional child node.
+        /// </summary>
+        /// <param name="node">The node to check.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <returns>True if the node property is an unassigned optional child node; otherwise, false.</returns>
         public static bool IsEmptyOptionalChildNode(Node node, string propertyName)
         {
             NodeTreeHelperOptional.GetChildNode(node, propertyName, out bool IsAssigned, out _);
             return !IsAssigned;
         }
 
+        /// <summary>
+        /// Checks if the property of a node is an empty list of nodes.
+        /// </summary>
+        /// <param name="node">The node to check.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <returns>True if the node property is an empty list of nodes; otherwise, false.</returns>
         public static bool IsEmptyNodeList(Node node, string propertyName)
         {
             NodeTreeHelperList.GetChildNodeList(node, propertyName, out IReadOnlyList<Node> ChildNodeList);
@@ -268,6 +368,13 @@ namespace BaseNodeHelper
             return true;
         }
 
+        /// <summary>
+        /// Checks if the property of a node is an empty block list.
+        /// If the block list is not allowed to be empty, returns true if it contains only one default element.
+        /// </summary>
+        /// <param name="node">The node to check.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <returns>True if the node property is an empty block list; otherwise, false.</returns>
         public static bool IsEmptyBlockList(Node node, string propertyName)
         {
             NodeTreeHelperBlockList.GetChildBlockList(node, propertyName, out IReadOnlyList<NodeTreeBlock> ChildBlockList);
@@ -295,6 +402,12 @@ namespace BaseNodeHelper
             return true;
         }
 
+        /// <summary>
+        /// Checks if the property of a node is an empty string.
+        /// </summary>
+        /// <param name="node">The node to check.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <returns>True if the node property is an empty string; otherwise, false.</returns>
         public static bool IsEmptyStringProperty(Node node, string propertyName)
         {
             string Text = NodeTreeHelper.GetString(node, propertyName);
@@ -306,6 +419,12 @@ namespace BaseNodeHelper
             return Text.Length == 0;
         }
 
+        /// <summary>
+        /// Checks if the property of a node is an enum with default value.
+        /// </summary>
+        /// <param name="node">The node to check.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <returns>True if the node property is an enum with default value; otherwise, false.</returns>
         public static bool IsEmptyEnumProperty(Node node, string propertyName)
         {
             int Value = NodeTreeHelper.GetEnumValue(node, propertyName);

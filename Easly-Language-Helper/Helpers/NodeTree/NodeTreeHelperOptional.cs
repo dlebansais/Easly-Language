@@ -1,17 +1,23 @@
-﻿#pragma warning disable SA1600 // Elements should be documented
-
-namespace BaseNodeHelper
+﻿namespace BaseNodeHelper
 {
     using System;
-    using System.Collections;
-    using System.Collections.Generic;
     using System.Diagnostics;
     using System.Reflection;
     using BaseNode;
     using Easly;
 
+    /// <summary>
+    /// Provides methods to manipulate optional nodes in a program tree.
+    /// </summary>
     public static class NodeTreeHelperOptional
     {
+        /// <summary>
+        /// Checks whether a property of a node is that of an optional child node.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <param name="childNodeType">If successful, the child node type upon return.</param>
+        /// <returns>True if the property is that of an optional child node; otherwise, false.</returns>
         public static bool IsOptionalChildNodeProperty(Node node, string propertyName, out Type childNodeType)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
@@ -20,6 +26,13 @@ namespace BaseNodeHelper
             return IsOptionalChildNodeProperty(node.GetType(), propertyName, out childNodeType);
         }
 
+        /// <summary>
+        /// Checks whether a property of a node type is that of an optional child node.
+        /// </summary>
+        /// <param name="nodeType">The node type.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <param name="childNodeType">If successful, the child node type upon return.</param>
+        /// <returns>True if the property is that of an optional child node; otherwise, false.</returns>
         public static bool IsOptionalChildNodeProperty(Type nodeType, string propertyName, out Type childNodeType)
         {
             if (nodeType == null) throw new ArgumentNullException(nameof(nodeType));
@@ -45,6 +58,13 @@ namespace BaseNodeHelper
             return NodeTreeHelper.IsNodeDescendantType(childNodeType);
         }
 
+        /// <summary>
+        /// Checks whether a child node is the value of an optional node property in a node.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <param name="childNode">The child node.</param>
+        /// <returns>True if <paramref name="childNode"/> is the value of an optional node property in <paramref name="node"/>; otherwise, false.</returns>
         public static bool IsOptionalChildNode(Node node, string propertyName, Node childNode)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
@@ -78,6 +98,13 @@ namespace BaseNodeHelper
             return true;
         }
 
+        /// <summary>
+        /// Gets the optional child node of a given property in a node.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <param name="isAssigned">A value indicating whether the child node is assigned upon return.</param>
+        /// <param name="childNode">The child node upon return.</param>
         public static void GetChildNode(Node node, string propertyName, out bool isAssigned, out Node childNode)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
@@ -105,6 +132,12 @@ namespace BaseNodeHelper
             Debug.Assert(!isAssigned || childNode != null);
         }
 
+        /// <summary>
+        /// Gets the optional child node from an instance of a <see cref="IOptionalReference"/> object.
+        /// </summary>
+        /// <param name="optional">The source object.</param>
+        /// <param name="isAssigned">A value indicating whether the child node is assigned upon return.</param>
+        /// <param name="childNode">The child node upon return.</param>
         public static void GetChildNode(IOptionalReference optional, out bool isAssigned, out Node childNode)
         {
             if (optional == null) throw new ArgumentNullException(nameof(optional));
@@ -122,6 +155,12 @@ namespace BaseNodeHelper
             Debug.Assert(!isAssigned || childNode != null);
         }
 
+        /// <summary>
+        /// Gets the optional child node type of a given property in a node.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <returns>The childnode type.</returns>
         public static Type OptionalChildInterfaceType(Node node, string propertyName)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
@@ -146,22 +185,12 @@ namespace BaseNodeHelper
             return InterfaceType;
         }
 
-        public static Type OptionalChildInterfaceType(IOptionalReference optional)
-        {
-            if (optional == null) throw new ArgumentNullException(nameof(optional));
-
-            Type OptionalType = optional.GetType();
-
-            Debug.Assert(OptionalType.IsGenericType);
-            Type[] GenericArguments = OptionalType.GetGenericArguments();
-            Debug.Assert(GenericArguments.Length == 1);
-
-            Type InterfaceType = GenericArguments[0];
-            Debug.Assert(NodeTreeHelper.IsNodeInterfaceType(InterfaceType));
-
-            return InterfaceType;
-        }
-
+        /// <summary>
+        /// Gets the optional reference for a child node of a given property in a node.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <returns>The optional reference.</returns>
         public static IOptionalReference GetOptionalReference(Node node, string propertyName)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
@@ -177,6 +206,12 @@ namespace BaseNodeHelper
             return Optional;
         }
 
+        /// <summary>
+        /// Sets the optional reference for a child node of a given property in a node.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <param name="optional">The optional reference.</param>
         public static void SetOptionalReference(Node node, string propertyName, IOptionalReference optional)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
@@ -191,6 +226,12 @@ namespace BaseNodeHelper
             Property.SetValue(node, optional);
         }
 
+        /// <summary>
+        /// Sets the child node of a given optional reference property in a node.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <param name="newChildNode">The child node.</param>
         public static void SetOptionalChildNode(Node node, string propertyName, Node newChildNode)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
@@ -224,6 +265,11 @@ namespace BaseNodeHelper
             Optional.Assign();
         }
 
+        /// <summary>
+        /// Clears the child node of a given optional reference property in a node.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <param name="propertyName">The property name.</param>
         public static void ClearOptionalChildNode(Node node, string propertyName)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
@@ -247,6 +293,12 @@ namespace BaseNodeHelper
             Debug.Assert(!Optional.HasItem);
         }
 
+        /// <summary>
+        /// Checkes whether the child node of a given optional reference property in a node is assigned.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <returns>True assigned; otherwise, false.</returns>
         public static bool IsChildNodeAssigned(Node node, string propertyName)
         {
             IOptionalReference Optional = GetOptionalReference(node, propertyName);
@@ -254,6 +306,11 @@ namespace BaseNodeHelper
             return Optional.IsAssigned;
         }
 
+        /// <summary>
+        /// Assigns the child node of a given optional reference property in a node.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <param name="propertyName">The property name.</param>
         public static void AssignChildNode(Node node, string propertyName)
         {
             IOptionalReference Optional = GetOptionalReference(node, propertyName);
@@ -261,6 +318,11 @@ namespace BaseNodeHelper
             Optional.Assign();
         }
 
+        /// <summary>
+        /// Unassigns the child node of a given optional reference property in a node.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <param name="propertyName">The property name.</param>
         public static void UnassignChildNode(Node node, string propertyName)
         {
             IOptionalReference Optional = GetOptionalReference(node, propertyName);

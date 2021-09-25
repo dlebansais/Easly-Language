@@ -1,18 +1,21 @@
-﻿#pragma warning disable SA1600 // Elements should be documented
-#pragma warning disable SA1601 // Partial elements should be documented
-
-namespace BaseNodeHelper
+﻿namespace BaseNodeHelper
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using System.Reflection;
     using BaseNode;
-    using Easly;
 
+    /// <summary>
+    /// Provides methods to manipulate nodes.
+    /// </summary>
     public static partial class NodeHelper
     {
+        /// <summary>
+        /// Creates a new instance of a <see cref="AsLongAsInstruction"/> with a single continuation.
+        /// </summary>
+        /// <param name="continueCondition">The continue condition.</param>
+        /// <param name="continuation">The continuation.</param>
+        /// <returns>The created instance.</returns>
         public static AsLongAsInstruction CreateAsLongAsInstruction(Expression continueCondition, Continuation continuation)
         {
             AsLongAsInstruction Result = new AsLongAsInstruction();
@@ -24,6 +27,12 @@ namespace BaseNodeHelper
             return Result;
         }
 
+        /// <summary>
+        /// Creates a new instance of a <see cref="AsLongAsInstruction"/> with provided values.
+        /// </summary>
+        /// <param name="continueCondition">The continue condition.</param>
+        /// <param name="continuationBlocks">The list of continuations.</param>
+        /// <returns>The created instance.</returns>
         public static AsLongAsInstruction CreateAsLongAsInstruction(Expression continueCondition, IBlockList<Continuation> continuationBlocks)
         {
             AsLongAsInstruction Result = new AsLongAsInstruction();
@@ -35,6 +44,13 @@ namespace BaseNodeHelper
             return Result;
         }
 
+        /// <summary>
+        /// Creates a new instance of a <see cref="AsLongAsInstruction"/> with provided values.
+        /// </summary>
+        /// <param name="continueCondition">The continue condition.</param>
+        /// <param name="continuationBlocks">The list of continuations.</param>
+        /// <param name="elseInstructions">The instructions for the else case.</param>
+        /// <returns>The created instance.</returns>
         public static AsLongAsInstruction CreateAsLongAsInstruction(Expression continueCondition, IBlockList<Continuation> continuationBlocks, Scope elseInstructions)
         {
             AsLongAsInstruction Result = new AsLongAsInstruction();
@@ -47,6 +63,10 @@ namespace BaseNodeHelper
             return Result;
         }
 
+        /// <summary>
+        /// Creates a new instance of a <see cref="Continuation"/> with no instructions.
+        /// </summary>
+        /// <returns>The created instance.</returns>
         public static Continuation CreateEmptyContinuation()
         {
             Continuation Result = new Continuation();
@@ -57,6 +77,12 @@ namespace BaseNodeHelper
             return Result;
         }
 
+        /// <summary>
+        /// Creates a new instance of a <see cref="AssignmentInstruction"/> with the provided values.
+        /// </summary>
+        /// <param name="assignmentList">The list of assigned destinations.</param>
+        /// <param name="source">The source expression.</param>
+        /// <returns>The created instance.</returns>
         public static AssignmentInstruction CreateAssignmentInstruction(List<QualifiedName> assignmentList, Expression source)
         {
             if (assignmentList == null) throw new ArgumentNullException(nameof(assignmentList));
@@ -72,20 +98,32 @@ namespace BaseNodeHelper
             return Result;
         }
 
-        public static AssignmentInstruction CreateAssignmentInstruction(IBlockList<QualifiedName> destinationBlocks, Expression source)
+        /// <summary>
+        /// Creates a new instance of a <see cref="AssignmentInstruction"/> with the provided values.
+        /// </summary>
+        /// <param name="assignmentBlocks">The list of assigned destinations.</param>
+        /// <param name="source">The source expression.</param>
+        /// <returns>The created instance.</returns>
+        public static AssignmentInstruction CreateAssignmentInstruction(IBlockList<QualifiedName> assignmentBlocks, Expression source)
         {
-            if (destinationBlocks == null) throw new ArgumentNullException(nameof(destinationBlocks));
-            if (destinationBlocks.NodeBlockList.Count == 0) throw new ArgumentException($"{nameof(destinationBlocks)} must not be empty");
-            Debug.Assert(destinationBlocks.NodeBlockList[0].NodeList.Count > 0, $"A block in a block list always has at least one node");
+            if (assignmentBlocks == null) throw new ArgumentNullException(nameof(assignmentBlocks));
+            if (assignmentBlocks.NodeBlockList.Count == 0) throw new ArgumentException($"{nameof(assignmentBlocks)} must not be empty");
+            Debug.Assert(assignmentBlocks.NodeBlockList[0].NodeList.Count > 0, $"A block in a block list always has at least one node");
 
             AssignmentInstruction Result = new AssignmentInstruction();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.DestinationBlocks = destinationBlocks;
+            Result.DestinationBlocks = assignmentBlocks;
             Result.Source = source;
 
             return Result;
         }
 
+        /// <summary>
+        /// Creates a new instance of a <see cref="AttachmentInstruction"/> with a single attachment.
+        /// </summary>
+        /// <param name="source">The source exporession.</param>
+        /// <param name="nameList">The list of attached names.</param>
+        /// <returns>The created instance.</returns>
         public static AttachmentInstruction CreateAttachmentInstruction(Expression source, List<Name> nameList)
         {
             ObjectType AttachType = CreateDefaultType();
@@ -101,6 +139,13 @@ namespace BaseNodeHelper
             return Result;
         }
 
+        /// <summary>
+        /// Creates a new instance of a <see cref="AttachmentInstruction"/> with provided values.
+        /// </summary>
+        /// <param name="source">The source exporession.</param>
+        /// <param name="entityNameBlocks">The list of attached names.</param>
+        /// <param name="attachmentBlocks">The list of attachments.</param>
+        /// <returns>The created instance.</returns>
         public static AttachmentInstruction CreateAttachmentInstruction(Expression source, IBlockList<Name> entityNameBlocks, IBlockList<Attachment> attachmentBlocks)
         {
             ObjectType AttachType = CreateDefaultType();
@@ -116,6 +161,14 @@ namespace BaseNodeHelper
             return Result;
         }
 
+        /// <summary>
+        /// Creates a new instance of a <see cref="AttachmentInstruction"/> with provided values.
+        /// </summary>
+        /// <param name="source">The source exporession.</param>
+        /// <param name="entityNameBlocks">The list of attached names.</param>
+        /// <param name="attachmentBlocks">The list of attachments.</param>
+        /// <param name="elseInstructions">The instructions for the else case.</param>
+        /// <returns>The created instance.</returns>
         public static AttachmentInstruction CreateAttachmentInstruction(Expression source, IBlockList<Name> entityNameBlocks, IBlockList<Attachment> attachmentBlocks, Scope elseInstructions)
         {
             ObjectType AttachType = CreateDefaultType();
@@ -132,6 +185,11 @@ namespace BaseNodeHelper
             return Result;
         }
 
+        /// <summary>
+        /// Creates a new instance of a <see cref="CheckInstruction"/> with provided values.
+        /// </summary>
+        /// <param name="booleanExpression">The checked expression.</param>
+        /// <returns>The created instance.</returns>
         public static CheckInstruction CreateCheckInstruction(Expression booleanExpression)
         {
             CheckInstruction Result = new CheckInstruction();
@@ -141,6 +199,12 @@ namespace BaseNodeHelper
             return Result;
         }
 
+        /// <summary>
+        /// Creates a new instance of a <see cref="CommandInstruction"/> with provided values.
+        /// </summary>
+        /// <param name="command">The command.</param>
+        /// <param name="argumentList">The list of arguments.</param>
+        /// <returns>The created instance.</returns>
         public static CommandInstruction CreateCommandInstruction(QualifiedName command, List<Argument> argumentList)
         {
             CommandInstruction Result = new CommandInstruction();
@@ -151,6 +215,12 @@ namespace BaseNodeHelper
             return Result;
         }
 
+        /// <summary>
+        /// Creates a new instance of a <see cref="CommandInstruction"/> with provided values.
+        /// </summary>
+        /// <param name="command">The command.</param>
+        /// <param name="argumentBlocks">The list of arguments.</param>
+        /// <returns>The created instance.</returns>
         public static CommandInstruction CreateCommandInstruction(QualifiedName command, IBlockList<Argument> argumentBlocks)
         {
             CommandInstruction Result = new CommandInstruction();
@@ -161,6 +231,13 @@ namespace BaseNodeHelper
             return Result;
         }
 
+        /// <summary>
+        /// Creates a new instance of a <see cref="CreateInstruction"/> with provided values.
+        /// </summary>
+        /// <param name="entityIdentifier">The created object identifier.</param>
+        /// <param name="creationRoutineIdentifier">The creation routine identifier.</param>
+        /// <param name="argumentList">The list of arguments.</param>
+        /// <returns>The created instance.</returns>
         public static CreateInstruction CreateCreateInstruction(Identifier entityIdentifier, Identifier creationRoutineIdentifier, List<Argument> argumentList)
         {
             CreateInstruction Result = new CreateInstruction();
@@ -173,6 +250,13 @@ namespace BaseNodeHelper
             return Result;
         }
 
+        /// <summary>
+        /// Creates a new instance of a <see cref="CreateInstruction"/> with provided values.
+        /// </summary>
+        /// <param name="entityIdentifier">The created object identifier.</param>
+        /// <param name="creationRoutineIdentifier">The creation routine identifier.</param>
+        /// <param name="argumentBlocks">The list of arguments.</param>
+        /// <returns>The created instance.</returns>
         public static CreateInstruction CreateCreateInstruction(Identifier entityIdentifier, Identifier creationRoutineIdentifier, IBlockList<Argument> argumentBlocks)
         {
             CreateInstruction Result = new CreateInstruction();
@@ -185,6 +269,14 @@ namespace BaseNodeHelper
             return Result;
         }
 
+        /// <summary>
+        /// Creates a new instance of a <see cref="CreateInstruction"/> with provided values.
+        /// </summary>
+        /// <param name="entityIdentifier">The created object identifier.</param>
+        /// <param name="creationRoutineIdentifier">The creation routine identifier.</param>
+        /// <param name="argumentBlocks">The list of arguments.</param>
+        /// <param name="processor">The processor on which the object is created.</param>
+        /// <returns>The created instance.</returns>
         public static CreateInstruction CreateCreateInstruction(Identifier entityIdentifier, Identifier creationRoutineIdentifier, IBlockList<Argument> argumentBlocks, QualifiedName processor)
         {
             CreateInstruction Result = new CreateInstruction();
@@ -198,6 +290,10 @@ namespace BaseNodeHelper
             return Result;
         }
 
+        /// <summary>
+        /// Creates a new instance of a <see cref="DebugInstruction"/> with no instructions.
+        /// </summary>
+        /// <returns>The created instance.</returns>
         public static DebugInstruction CreateEmptyDebugInstruction()
         {
             DebugInstruction Result = new DebugInstruction();
@@ -207,6 +303,11 @@ namespace BaseNodeHelper
             return Result;
         }
 
+        /// <summary>
+        /// Creates a new instance of a <see cref="DebugInstruction"/> with a single instruction.
+        /// </summary>
+        /// <param name="instruction">The instruction.</param>
+        /// <returns>The created instance.</returns>
         public static DebugInstruction CreateSimpleDebugInstruction(Instruction instruction)
         {
             DebugInstruction Result = new DebugInstruction();
@@ -216,6 +317,11 @@ namespace BaseNodeHelper
             return Result;
         }
 
+        /// <summary>
+        /// Creates a new instance of a <see cref="ForLoopInstruction"/> with empty content.
+        /// </summary>
+        /// <param name="whileCondition">The condition.</param>
+        /// <returns>The created instance.</returns>
         public static ForLoopInstruction CreateForLoopInstruction(Expression whileCondition)
         {
             ForLoopInstruction Result = new ForLoopInstruction();
@@ -231,6 +337,11 @@ namespace BaseNodeHelper
             return Result;
         }
 
+        /// <summary>
+        /// Creates a new instance of a <see cref="ForLoopInstruction"/> with a single instruction.
+        /// </summary>
+        /// <param name="instruction">The instruction.</param>
+        /// <returns>The created instance.</returns>
         public static ForLoopInstruction CreateForLoopInstruction(Instruction instruction)
         {
             ForLoopInstruction Result = new ForLoopInstruction();
@@ -246,16 +357,26 @@ namespace BaseNodeHelper
             return Result;
         }
 
-        public static IfThenElseInstruction CreateIfThenElseInstruction(Conditional firstConditional)
+        /// <summary>
+        /// Creates a new instance of a <see cref="IfThenElseInstruction"/> with a single conditional.
+        /// </summary>
+        /// <param name="conditional">The conditional.</param>
+        /// <returns>The created instance.</returns>
+        public static IfThenElseInstruction CreateIfThenElseInstruction(Conditional conditional)
         {
             IfThenElseInstruction Result = new IfThenElseInstruction();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.ConditionalBlocks = BlockListHelper<Conditional>.CreateSimpleBlockList(firstConditional);
+            Result.ConditionalBlocks = BlockListHelper<Conditional>.CreateSimpleBlockList(conditional);
             Result.ElseInstructions = OptionalReferenceHelper<Scope>.CreateReference(CreateEmptyScope());
 
             return Result;
         }
 
+        /// <summary>
+        /// Creates a new instance of a <see cref="IfThenElseInstruction"/> with provided values.
+        /// </summary>
+        /// <param name="conditionalBlocks">The list of conditionals.</param>
+        /// <returns>The created instance.</returns>
         public static IfThenElseInstruction CreateIfThenElseInstruction(IBlockList<Conditional> conditionalBlocks)
         {
             IfThenElseInstruction Result = new IfThenElseInstruction();
@@ -266,6 +387,12 @@ namespace BaseNodeHelper
             return Result;
         }
 
+        /// <summary>
+        /// Creates a new instance of a <see cref="IfThenElseInstruction"/> with provided values.
+        /// </summary>
+        /// <param name="conditionalBlocks">The list of conditionals.</param>
+        /// <param name="elseInstructions">The instructions for the else case.</param>
+        /// <returns>The created instance.</returns>
         public static IfThenElseInstruction CreateIfThenElseInstruction(IBlockList<Conditional> conditionalBlocks, Scope elseInstructions)
         {
             IfThenElseInstruction Result = new IfThenElseInstruction();
@@ -277,6 +404,13 @@ namespace BaseNodeHelper
             return Result;
         }
 
+        /// <summary>
+        /// Creates a new instance of a <see cref="IndexAssignmentInstruction"/> with provided values.
+        /// </summary>
+        /// <param name="destination">The destination.</param>
+        /// <param name="argumentList">The list of arguments.</param>
+        /// <param name="source">The source expression.</param>
+        /// <returns>The created instance.</returns>
         public static IndexAssignmentInstruction CreateIndexAssignmentInstruction(QualifiedName destination, List<Argument> argumentList, Expression source)
         {
             if (argumentList == null) throw new ArgumentNullException(nameof(argumentList));
@@ -291,6 +425,13 @@ namespace BaseNodeHelper
             return Result;
         }
 
+        /// <summary>
+        /// Creates a new instance of a <see cref="IndexAssignmentInstruction"/> with provided values.
+        /// </summary>
+        /// <param name="destination">The destination.</param>
+        /// <param name="argumentBlocks">The list of arguments.</param>
+        /// <param name="source">The source expression.</param>
+        /// <returns>The created instance.</returns>
         public static IndexAssignmentInstruction CreateIndexAssignmentInstruction(QualifiedName destination, IBlockList<Argument> argumentBlocks, Expression source)
         {
             if (argumentBlocks == null) throw new ArgumentNullException(nameof(argumentBlocks));
@@ -306,6 +447,11 @@ namespace BaseNodeHelper
             return Result;
         }
 
+        /// <summary>
+        /// Creates a new instance of a <see cref="InspectInstruction"/> with empty content.
+        /// </summary>
+        /// <param name="source">The source expression.</param>
+        /// <returns>The created instance.</returns>
         public static InspectInstruction CreateInspectInstruction(Expression source)
         {
             Expression FirstExpression = CreateDefaultManifestNumberExpression();
@@ -320,6 +466,12 @@ namespace BaseNodeHelper
             return Result;
         }
 
+        /// <summary>
+        /// Creates a new instance of a <see cref="InspectInstruction"/> with a single case.
+        /// </summary>
+        /// <param name="source">The source expression.</param>
+        /// <param name="with">The with case.</param>
+        /// <returns>The created instance.</returns>
         public static InspectInstruction CreateInspectInstruction(Expression source, With with)
         {
             InspectInstruction Result = new InspectInstruction();
@@ -331,6 +483,12 @@ namespace BaseNodeHelper
             return Result;
         }
 
+        /// <summary>
+        /// Creates a new instance of a <see cref="InspectInstruction"/> with provided values.
+        /// </summary>
+        /// <param name="source">The source expression.</param>
+        /// <param name="withBlocks">The list of with cases.</param>
+        /// <returns>The created instance.</returns>
         public static InspectInstruction CreateInspectInstruction(Expression source, IBlockList<With> withBlocks)
         {
             InspectInstruction Result = new InspectInstruction();
@@ -342,6 +500,13 @@ namespace BaseNodeHelper
             return Result;
         }
 
+        /// <summary>
+        /// Creates a new instance of a <see cref="InspectInstruction"/> with provided values.
+        /// </summary>
+        /// <param name="source">The source expression.</param>
+        /// <param name="withBlocks">The list of with cases.</param>
+        /// <param name="elseInstructions">The instructions for the else case.</param>
+        /// <returns>The created instance.</returns>
         public static InspectInstruction CreateInspectInstruction(Expression source, IBlockList<With> withBlocks, Scope elseInstructions)
         {
             InspectInstruction Result = new InspectInstruction();
@@ -354,6 +519,12 @@ namespace BaseNodeHelper
             return Result;
         }
 
+        /// <summary>
+        /// Creates a new instance of a <see cref="KeywordAssignmentInstruction"/> with provided values.
+        /// </summary>
+        /// <param name="destination">The destination keyword.</param>
+        /// <param name="source">The source expression.</param>
+        /// <returns>The created instance.</returns>
         public static KeywordAssignmentInstruction CreateKeywordAssignmentInstruction(Keyword destination, Expression source)
         {
             KeywordAssignmentInstruction Result = new KeywordAssignmentInstruction();
@@ -364,6 +535,12 @@ namespace BaseNodeHelper
             return Result;
         }
 
+        /// <summary>
+        /// Creates a new instance of a <see cref="OverLoopInstruction"/> with provided values.
+        /// </summary>
+        /// <param name="overList">The list of collections.</param>
+        /// <param name="nameList">The list of indexers.</param>
+        /// <returns>The created instance.</returns>
         public static OverLoopInstruction CreateOverLoopInstruction(Expression overList, List<Name> nameList)
         {
             if (nameList == null) throw new ArgumentNullException(nameof(nameList));
@@ -381,6 +558,13 @@ namespace BaseNodeHelper
             return Result;
         }
 
+        /// <summary>
+        /// Creates a new instance of a <see cref="OverLoopInstruction"/> with a single instruction.
+        /// </summary>
+        /// <param name="overList">The list of collections.</param>
+        /// <param name="nameList">The list of indexers.</param>
+        /// <param name="instruction">The instruction.</param>
+        /// <returns>The created instance.</returns>
         public static OverLoopInstruction CreateOverLoopInstruction(Expression overList, List<Name> nameList, Instruction instruction)
         {
             if (nameList == null) throw new ArgumentNullException(nameof(nameList));
@@ -400,6 +584,15 @@ namespace BaseNodeHelper
             return Result;
         }
 
+        /// <summary>
+        /// Creates a new instance of a <see cref="OverLoopInstruction"/> with provided values.
+        /// </summary>
+        /// <param name="overList">The list of collections.</param>
+        /// <param name="indexerBlocks">The list of indexers.</param>
+        /// <param name="iteration">The iteration type.</param>
+        /// <param name="loopInstructions">List of instructions in the loop.</param>
+        /// <param name="invariantBlocks">The list of invariants.</param>
+        /// <returns>The created instance.</returns>
         public static OverLoopInstruction CreateOverLoopInstruction(Expression overList, IBlockList<Name> indexerBlocks, IterationType iteration, Scope loopInstructions, IBlockList<Assertion> invariantBlocks)
         {
             if (indexerBlocks == null) throw new ArgumentNullException(nameof(indexerBlocks));
@@ -419,6 +612,16 @@ namespace BaseNodeHelper
             return Result;
         }
 
+        /// <summary>
+        /// Creates a new instance of a <see cref="OverLoopInstruction"/> with provided values.
+        /// </summary>
+        /// <param name="overList">The list of collections.</param>
+        /// <param name="indexerBlocks">The list of indexers.</param>
+        /// <param name="iteration">The iteration type.</param>
+        /// <param name="loopInstructions">List of instructions in the loop.</param>
+        /// <param name="exitEntityName">The exit entoty name.</param>
+        /// <param name="invariantBlocks">The list of invariants.</param>
+        /// <returns>The created instance.</returns>
         public static OverLoopInstruction CreateOverLoopInstruction(Expression overList, IBlockList<Name> indexerBlocks, IterationType iteration, Scope loopInstructions, Identifier exitEntityName, IBlockList<Assertion> invariantBlocks)
         {
             if (indexerBlocks == null) throw new ArgumentNullException(nameof(indexerBlocks));
@@ -437,6 +640,12 @@ namespace BaseNodeHelper
             return Result;
         }
 
+        /// <summary>
+        /// Creates a new instance of a <see cref="PrecursorIndexAssignmentInstruction"/> with provided values.
+        /// </summary>
+        /// <param name="argumentList">The list of arguments.</param>
+        /// <param name="source">The source expression.</param>
+        /// <returns>The created instance.</returns>
         public static PrecursorIndexAssignmentInstruction CreatePrecursorIndexAssignmentInstruction(List<Argument> argumentList, Expression source)
         {
             if (argumentList == null) throw new ArgumentNullException(nameof(argumentList));
@@ -453,6 +662,12 @@ namespace BaseNodeHelper
             return Result;
         }
 
+        /// <summary>
+        /// Creates a new instance of a <see cref="PrecursorIndexAssignmentInstruction"/> with provided values.
+        /// </summary>
+        /// <param name="argumentBlocks">The list of arguments.</param>
+        /// <param name="source">The source expression.</param>
+        /// <returns>The created instance.</returns>
         public static PrecursorIndexAssignmentInstruction CreatePrecursorIndexAssignmentInstruction(IBlockList<Argument> argumentBlocks, Expression source)
         {
             if (argumentBlocks == null) throw new ArgumentNullException(nameof(argumentBlocks));
@@ -468,6 +683,13 @@ namespace BaseNodeHelper
             return Result;
         }
 
+        /// <summary>
+        /// Creates a new instance of a <see cref="PrecursorIndexAssignmentInstruction"/> with provided values.
+        /// </summary>
+        /// <param name="ancestorType">The ancestor type.</param>
+        /// <param name="argumentBlocks">The list of arguments.</param>
+        /// <param name="source">The source expression.</param>
+        /// <returns>The created instance.</returns>
         public static PrecursorIndexAssignmentInstruction CreatePrecursorIndexAssignmentInstruction(ObjectType ancestorType, IBlockList<Argument> argumentBlocks, Expression source)
         {
             if (argumentBlocks == null) throw new ArgumentNullException(nameof(argumentBlocks));
@@ -484,6 +706,11 @@ namespace BaseNodeHelper
             return Result;
         }
 
+        /// <summary>
+        /// Creates a new instance of a <see cref="PrecursorInstruction"/> with provided values.
+        /// </summary>
+        /// <param name="argumentList">The list of arguments.</param>
+        /// <returns>The created instance.</returns>
         public static PrecursorInstruction CreatePrecursorInstruction(List<Argument> argumentList)
         {
             PrecursorInstruction Result = new PrecursorInstruction();
@@ -494,6 +721,11 @@ namespace BaseNodeHelper
             return Result;
         }
 
+        /// <summary>
+        /// Creates a new instance of a <see cref="PrecursorInstruction"/> with provided values.
+        /// </summary>
+        /// <param name="argumentBlocks">The list of arguments.</param>
+        /// <returns>The created instance.</returns>
         public static PrecursorInstruction CreatePrecursorInstruction(IBlockList<Argument> argumentBlocks)
         {
             PrecursorInstruction Result = new PrecursorInstruction();
@@ -504,6 +736,12 @@ namespace BaseNodeHelper
             return Result;
         }
 
+        /// <summary>
+        /// Creates a new instance of a <see cref="PrecursorInstruction"/> with provided values.
+        /// </summary>
+        /// <param name="ancestorType">The ancestor type.</param>
+        /// <param name="argumentBlocks">The list of arguments.</param>
+        /// <returns>The created instance.</returns>
         public static PrecursorInstruction CreatePrecursorInstruction(ObjectType ancestorType, IBlockList<Argument> argumentBlocks)
         {
             PrecursorInstruction Result = new PrecursorInstruction();
@@ -515,6 +753,11 @@ namespace BaseNodeHelper
             return Result;
         }
 
+        /// <summary>
+        /// Creates a new instance of a <see cref="RaiseEventInstruction"/> with provided values.
+        /// </summary>
+        /// <param name="queryIdentifier">The query identifier.</param>
+        /// <returns>The created instance.</returns>
         public static RaiseEventInstruction CreateRaiseEventInstruction(Identifier queryIdentifier)
         {
             RaiseEventInstruction Result = new RaiseEventInstruction();
@@ -525,6 +768,11 @@ namespace BaseNodeHelper
             return Result;
         }
 
+        /// <summary>
+        /// Creates a new instance of a <see cref="ReleaseInstruction"/> with provided values.
+        /// </summary>
+        /// <param name="entityName">The released entity name.</param>
+        /// <returns>The created instance.</returns>
         public static ReleaseInstruction CreateReleaseInstruction(QualifiedName entityName)
         {
             ReleaseInstruction Result = new ReleaseInstruction();
@@ -534,6 +782,13 @@ namespace BaseNodeHelper
             return Result;
         }
 
+        /// <summary>
+        /// Creates a new instance of a <see cref="ThrowInstruction"/> with provided values.
+        /// </summary>
+        /// <param name="exceptionType">The exception type.</param>
+        /// <param name="creationRoutineIdentifier">The creation routine identifier.</param>
+        /// <param name="argumentList">The list of arguments.</param>
+        /// <returns>The created instance.</returns>
         public static ThrowInstruction CreateThrowInstruction(ObjectType exceptionType, Identifier creationRoutineIdentifier, List<Argument> argumentList)
         {
             ThrowInstruction Result = new ThrowInstruction();
@@ -545,6 +800,13 @@ namespace BaseNodeHelper
             return Result;
         }
 
+        /// <summary>
+        /// Creates a new instance of a <see cref="ThrowInstruction"/> with provided values.
+        /// </summary>
+        /// <param name="exceptionType">The exception type.</param>
+        /// <param name="creationRoutineIdentifier">The creation routine identifier.</param>
+        /// <param name="argumentBlocks">The list of arguments.</param>
+        /// <returns>The created instance.</returns>
         public static ThrowInstruction CreateThrowInstruction(ObjectType exceptionType, Identifier creationRoutineIdentifier, IBlockList<Argument> argumentBlocks)
         {
             ThrowInstruction Result = new ThrowInstruction();

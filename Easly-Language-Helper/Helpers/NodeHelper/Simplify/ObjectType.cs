@@ -1,12 +1,19 @@
-﻿#pragma warning disable SA1600 // Elements should be documented
-
-namespace BaseNodeHelper
+﻿namespace BaseNodeHelper
 {
     using System.Diagnostics;
     using BaseNode;
 
+    /// <summary>
+    /// Provides methods to manipulate nodes.
+    /// </summary>
     public static partial class NodeHelper
     {
+        /// <summary>
+        /// Creates an instance of a simplified version of an object type.
+        /// </summary>
+        /// <param name="nodeObjectType">The object type to simplify.</param>
+        /// <param name="simplifiedNode">The simplified object type.</param>
+        /// <returns>True if the object type could be simplified; otherwise, false.</returns>
         public static bool GetSimplifiedObjectType(ObjectType nodeObjectType, out Node simplifiedNode)
         {
             switch (nodeObjectType)

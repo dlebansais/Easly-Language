@@ -1,17 +1,21 @@
-﻿#pragma warning disable SA1600 // Elements should be documented
-
-namespace BaseNodeHelper
+﻿namespace BaseNodeHelper
 {
     using System;
     using System.Collections;
-    using System.Collections.Generic;
     using System.Diagnostics;
     using System.Reflection;
     using BaseNode;
-    using Easly;
 
+    /// <summary>
+    /// Provides methods to manipulate block lists of nodes.
+    /// </summary>
     public static partial class NodeTreeHelperBlockList
     {
+        /// <summary>
+        /// Clears the list of nodes in a block list.
+        /// </summary>
+        /// <param name="node">The node with the property that is the block list of nodes to clear.</param>
+        /// <param name="propertyName">The property name.</param>
         public static void ClearChildBlockList(Node node, string propertyName)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
@@ -28,6 +32,14 @@ namespace BaseNodeHelper
             NodeBlockList.Clear();
         }
 
+        /// <summary>
+        /// Inserts a node in the list of nodes in a block list.
+        /// </summary>
+        /// <param name="node">The node with the property that is the block list of nodes where to insert.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <param name="blockIndex">Index of the block where to insert.</param>
+        /// <param name="index">Index in the list of nodes where to insert.</param>
+        /// <param name="childNode">The node to insert.</param>
         public static void InsertIntoBlock(Node node, string propertyName, int blockIndex, int index, Node childNode)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
@@ -56,6 +68,12 @@ namespace BaseNodeHelper
             NodeList.Insert(index, childNode);
         }
 
+        /// <summary>
+        /// Inserts a node in the list of nodes in a block.
+        /// </summary>
+        /// <param name="block">The block where to insert.</param>
+        /// <param name="index">Index in the list of nodes where to insert.</param>
+        /// <param name="childNode">The node to insert.</param>
         public static void InsertIntoBlock(IBlock block, int index, Node childNode)
         {
             if (block == null) throw new ArgumentNullException(nameof(block));
@@ -69,6 +87,14 @@ namespace BaseNodeHelper
             NodeList.Insert(index, childNode);
         }
 
+        /// <summary>
+        /// Removes a node in the list of nodes in a block list at the specified index.
+        /// </summary>
+        /// <param name="node">The node with the property that is the block list of nodes where to remove.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <param name="blockIndex">Index of the block where to remove.</param>
+        /// <param name="index">Index in the list of nodes where to remove.</param>
+        /// <param name="isBlockRemoved">True upon return if the block was also removed because the node was the last in that block.</param>
         public static void RemoveFromBlock(Node node, string propertyName, int blockIndex, int index, out bool isBlockRemoved)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
@@ -108,6 +134,14 @@ namespace BaseNodeHelper
                 isBlockRemoved = false;
         }
 
+        /// <summary>
+        /// Replaces a node in the list of nodes in a block list at the specified index.
+        /// </summary>
+        /// <param name="node">The node with the property that is the block list of nodes where to replace.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <param name="blockIndex">Index of the block where to replace.</param>
+        /// <param name="index">Index in the list of nodes where to replace.</param>
+        /// <param name="newChildNode">The node replacing the existing node.</param>
         public static void ReplaceNode(Node node, string propertyName, int blockIndex, int index, Node newChildNode)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
@@ -136,6 +170,12 @@ namespace BaseNodeHelper
             NodeList[index] = newChildNode;
         }
 
+        /// <summary>
+        /// Replaces a node in the list of nodes in a block list at the specified index.
+        /// </summary>
+        /// <param name="block">The block where to replace.</param>
+        /// <param name="index">Index in the list of nodes where to replace.</param>
+        /// <param name="newChildNode">The node replacing the existing node.</param>
         public static void ReplaceInBlock(IBlock block, int index, Node newChildNode)
         {
             if (block == null) throw new ArgumentNullException(nameof(block));
@@ -149,6 +189,13 @@ namespace BaseNodeHelper
             NodeList[index] = newChildNode;
         }
 
+        /// <summary>
+        /// Inserts a block of nodes in a block list.
+        /// </summary>
+        /// <param name="node">The node with the property that is the block list of nodes where to insert.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <param name="blockIndex">Index of the block where to insert.</param>
+        /// <param name="childBlock">The block to insert.</param>
         public static void InsertIntoBlockList(Node node, string propertyName, int blockIndex, IBlock childBlock)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
@@ -171,6 +218,12 @@ namespace BaseNodeHelper
             NodeBlockList.Insert(blockIndex, childBlock);
         }
 
+        /// <summary>
+        /// Removes a block of nodes from a block list.
+        /// </summary>
+        /// <param name="node">The node with the property that is the block list of nodes where to remove.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <param name="blockIndex">Index of the block where to remove.</param>
         public static void RemoveFromBlockList(Node node, string propertyName, int blockIndex)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
@@ -192,6 +245,14 @@ namespace BaseNodeHelper
             NodeBlockList.RemoveAt(blockIndex);
         }
 
+        /// <summary>
+        /// Splits a block of nodes in a block list.
+        /// </summary>
+        /// <param name="node">The node with the property that is the block list of nodes where to split.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <param name="blockIndex">Index of the block where to split.</param>
+        /// <param name="index">Index in the list of nodes where to split.</param>
+        /// <param name="newChildBlock">The new block that will contains nodes appearing before <paramref name="index"/>.</param>
         public static void SplitBlock(Node node, string propertyName, int blockIndex, int index, IBlock newChildBlock)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
@@ -237,6 +298,13 @@ namespace BaseNodeHelper
             Debug.Assert(NewNodeList.Count > 0);
         }
 
+        /// <summary>
+        /// Merges a block of nodes in a block list.
+        /// </summary>
+        /// <param name="node">The node with the property that is the block list of nodes where to merge.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <param name="blockIndex">Index of the block where to merge.</param>
+        /// <param name="mergedBlock">The block that contains merged nodes upon return..</param>
         public static void MergeBlocks(Node node, string propertyName, int blockIndex, out IBlock mergedBlock)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
@@ -278,6 +346,12 @@ namespace BaseNodeHelper
             NodeBlockList.RemoveAt(blockIndex - 1);
         }
 
+        /// <summary>
+        /// Moves a node in a block.
+        /// </summary>
+        /// <param name="block">The block with the node to move.</param>
+        /// <param name="index">The node idnex.</param>
+        /// <param name="direction">The move direction.</param>
         public static void MoveNode(IBlock block, int index, int direction)
         {
             if (block == null) throw new ArgumentNullException(nameof(block));
@@ -297,6 +371,13 @@ namespace BaseNodeHelper
             NodeList.Insert(index + direction, ChildNode);
         }
 
+        /// <summary>
+        /// Moves a block in a block list.
+        /// </summary>
+        /// <param name="node">The node with the property that is the block list of nodes where to move.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <param name="blockIndex">The index of the block to move.</param>
+        /// <param name="direction">The move direction.</param>
         public static void MoveBlock(Node node, string propertyName, int blockIndex, int direction)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));

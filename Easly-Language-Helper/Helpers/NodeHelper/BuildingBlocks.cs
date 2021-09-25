@@ -1,15 +1,18 @@
 ﻿namespace BaseNodeHelper
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Reflection;
     using BaseNode;
-    using Easly;
 
+    /// <summary>
+    /// Provides methods to manipulate nodes.
+    /// </summary>
     public static partial class NodeHelper
     {
+        /// <summary>
+        /// Creates a new instance of <see cref="Document"/> with empty text.
+        /// </summary>
+        /// <returns>The created instance.</returns>
         public static Document CreateEmptyDocumentation()
         {
             Document Documentation = new Document();
@@ -19,6 +22,12 @@
             return Documentation;
         }
 
+        /// <summary>
+        /// Creates a new instance of <see cref="Document"/> with the provided parameters.
+        /// </summary>
+        /// <param name="comment">The text comment.</param>
+        /// <param name="uuid">The comment id.</param>
+        /// <returns>The created instance.</returns>
         public static Document CreateSimpleDocumentation(string comment, Guid uuid)
         {
             Document Documentation = new Document();
@@ -28,6 +37,10 @@
             return Documentation;
         }
 
+        /// <summary>
+        /// Creates a new instance of <see cref="Pattern"/> with a pattern text matching everything.
+        /// </summary>
+        /// <returns>The created instance.</returns>
         public static Pattern CreateEmptyPattern()
         {
             Pattern EmptyPattern = new Pattern();
@@ -37,6 +50,11 @@
             return EmptyPattern;
         }
 
+        /// <summary>
+        /// Creates a new instance of <see cref="Pattern"/> with the provided parameters.
+        /// </summary>
+        /// <param name="patternText">The pattern text.</param>
+        /// <returns>The created instance.</returns>
         public static Pattern CreateSimplePattern(string patternText)
         {
             Pattern SimplePattern = new Pattern();
@@ -46,6 +64,10 @@
             return SimplePattern;
         }
 
+        /// <summary>
+        /// Creates a new instance of <see cref="Identifier"/> with an empty identifier.
+        /// </summary>
+        /// <returns>The created instance.</returns>
         public static Identifier CreateEmptyIdentifier()
         {
             Identifier EmptyIdentifier = new Identifier();
@@ -55,6 +77,11 @@
             return EmptyIdentifier;
         }
 
+        /// <summary>
+        /// Creates a new instance of <see cref="Pattern"/> with the provided parameters.
+        /// </summary>
+        /// <param name="identifierText">The identifier text.</param>
+        /// <returns>The created instance.</returns>
         public static Identifier CreateSimpleIdentifier(string identifierText)
         {
             Identifier SimpleIdentifier = new Identifier();
@@ -64,6 +91,10 @@
             return SimpleIdentifier;
         }
 
+        /// <summary>
+        /// Creates a new instance of <see cref="Name"/> with an empty identifier.
+        /// </summary>
+        /// <returns>The created instance.</returns>
         public static Name CreateEmptyName()
         {
             Name EmptyName = new Name();
@@ -73,6 +104,11 @@
             return EmptyName;
         }
 
+        /// <summary>
+        /// Creates a new instance of <see cref="Name"/> with the provided parameters.
+        /// </summary>
+        /// <param name="nameText">The name text.</param>
+        /// <returns>The created instance.</returns>
         public static Name CreateSimpleName(string nameText)
         {
             Name SimpleName = new Name();
@@ -82,6 +118,10 @@
             return SimpleName;
         }
 
+        /// <summary>
+        /// Creates a new instance of <see cref="QualifiedName "/> with a path made of a single empty identifier.
+        /// </summary>
+        /// <returns>The created instance.</returns>
         public static QualifiedName CreateEmptyQualifiedName()
         {
             List<Identifier> Path = new List<Identifier>();
@@ -89,6 +129,11 @@
             return CreateQualifiedName(Path);
         }
 
+        /// <summary>
+        /// Creates a new instance of <see cref="QualifiedName "/> with a path made of a single identifier.
+        /// </summary>
+        /// <param name="identifierText">The identifier text.</param>
+        /// <returns>The created instance.</returns>
         public static QualifiedName CreateSimpleQualifiedName(string identifierText)
         {
             List<Identifier> Path = new List<Identifier>();
@@ -96,6 +141,12 @@
             return CreateQualifiedName(Path);
         }
 
+        /// <summary>
+        /// Creates a new instance of <see cref="QualifiedName "/> with a path made from a list of identifier.
+        /// The list must contain at least one element.
+        /// </summary>
+        /// <param name="path">The list of identifiers.</param>
+        /// <returns>The created instance.</returns>
         public static QualifiedName CreateQualifiedName(IList<Identifier> path)
         {
             if (path == null) throw new ArgumentNullException(nameof(path));
@@ -108,6 +159,10 @@
             return DefaultQualifiedName;
         }
 
+        /// <summary>
+        /// Creates a new instance of an object inheriting from <see cref="Expression"/> with the simplest empty expression.
+        /// </summary>
+        /// <returns>The created instance.</returns>
         public static Expression CreateEmptyQueryExpression()
         {
             QueryExpression EmptyQueryExpression = new QueryExpression();
@@ -118,16 +173,25 @@
             return EmptyQueryExpression;
         }
 
-        public static Expression CreateSimpleQueryExpression(string queryText)
+        /// <summary>
+        /// Creates a new instance of an object inheriting from <see cref="Expression"/> with the simplest expression from a text.
+        /// </summary>
+        /// <param name="text">The expression text.</param>
+        /// <returns>The created instance.</returns>
+        public static Expression CreateSimpleQueryExpression(string text)
         {
             QueryExpression SimpleQueryExpression = new QueryExpression();
             SimpleQueryExpression.Documentation = CreateEmptyDocumentation();
-            SimpleQueryExpression.Query = CreateSimpleQualifiedName(queryText);
+            SimpleQueryExpression.Query = CreateSimpleQualifiedName(text);
             SimpleQueryExpression.ArgumentBlocks = BlockListHelper<Argument>.CreateEmptyBlockList();
 
             return SimpleQueryExpression;
         }
 
+        /// <summary>
+        /// Creates a new instance of an object inheriting from <see cref="Instruction"/> with the simplest empty instruction.
+        /// </summary>
+        /// <returns>The created instance.</returns>
         public static Instruction CreateEmptyCommandInstruction()
         {
             CommandInstruction EmptyCommandInstruction = new CommandInstruction();
@@ -138,16 +202,25 @@
             return EmptyCommandInstruction;
         }
 
-        public static Instruction CreateSimpleCommandInstruction(string commandText)
+        /// <summary>
+        /// Creates a new instance of an object inheriting from <see cref="Instruction"/> with the simplest instruction from a text.
+        /// </summary>
+        /// <param name="text">The instruction text.</param>
+        /// <returns>The created instance.</returns>
+        public static Instruction CreateSimpleCommandInstruction(string text)
         {
             CommandInstruction SimpleCommandInstruction = new CommandInstruction();
             SimpleCommandInstruction.Documentation = CreateEmptyDocumentation();
-            SimpleCommandInstruction.Command = CreateSimpleQualifiedName(commandText);
+            SimpleCommandInstruction.Command = CreateSimpleQualifiedName(text);
             SimpleCommandInstruction.ArgumentBlocks = BlockListHelper<Argument>.CreateEmptyBlockList();
 
             return SimpleCommandInstruction;
         }
 
+        /// <summary>
+        /// Creates a new instance of <see cref="PositionalArgument"/> with an empty source.
+        /// </summary>
+        /// <returns>The created instance.</returns>
         public static PositionalArgument CreateEmptyPositionalArgument()
         {
             PositionalArgument EmptyPositionalArgument = new PositionalArgument();
@@ -157,15 +230,24 @@
             return EmptyPositionalArgument;
         }
 
-        public static PositionalArgument CreateSimplePositionalArgument(string queryText)
+        /// <summary>
+        /// Creates a new instance of <see cref="PositionalArgument"/> with the source expression from a text.
+        /// </summary>
+        /// <param name="text">The source expression text.</param>
+        /// <returns>The created instance.</returns>
+        public static PositionalArgument CreateSimplePositionalArgument(string text)
         {
             PositionalArgument SimplePositionalArgument = new PositionalArgument();
             SimplePositionalArgument.Documentation = CreateEmptyDocumentation();
-            SimplePositionalArgument.Source = CreateSimpleQueryExpression(queryText);
+            SimplePositionalArgument.Source = CreateSimpleQueryExpression(text);
 
             return SimplePositionalArgument;
         }
 
+        /// <summary>
+        /// Creates a new instance of <see cref="AssignmentArgument"/> with empty source and destination.
+        /// </summary>
+        /// <returns>The created instance.</returns>
         public static AssignmentArgument CreateEmptyAssignmentArgument()
         {
             Identifier Parameter = CreateEmptyIdentifier();
@@ -178,18 +260,28 @@
             return EmptyAssignmentArgument;
         }
 
-        public static AssignmentArgument CreateSimpleAssignmentArgument(string identifierText, string queryText)
+        /// <summary>
+        /// Creates a new instance of <see cref="AssignmentArgument"/> with provided parameters for source and destination.
+        /// </summary>
+        /// <param name="destinationText">The destination text.</param>
+        /// <param name="sourceText">The source text.</param>
+        /// <returns>The created instance.</returns>
+        public static AssignmentArgument CreateSimpleAssignmentArgument(string destinationText, string sourceText)
         {
-            Identifier Parameter = CreateSimpleIdentifier(identifierText);
+            Identifier Parameter = CreateSimpleIdentifier(destinationText);
 
             AssignmentArgument SimpleAssignmentArgument = new AssignmentArgument();
             SimpleAssignmentArgument.Documentation = CreateEmptyDocumentation();
             SimpleAssignmentArgument.ParameterBlocks = BlockListHelper<Identifier>.CreateSimpleBlockList(Parameter);
-            SimpleAssignmentArgument.Source = CreateSimpleQueryExpression(queryText);
+            SimpleAssignmentArgument.Source = CreateSimpleQueryExpression(sourceText);
 
             return SimpleAssignmentArgument;
         }
 
+        /// <summary>
+        /// Creates a new instance of <see cref="PositionalTypeArgument"/> with an empty source.
+        /// </summary>
+        /// <returns>The created instance.</returns>
         public static PositionalTypeArgument CreateEmptyPositionalTypeArgument()
         {
             PositionalTypeArgument EmptyPositionalTypeArgument = new PositionalTypeArgument();
@@ -199,15 +291,24 @@
             return EmptyPositionalTypeArgument;
         }
 
-        public static PositionalTypeArgument CreateSimplePositionalTypeArgument(string typeText)
+        /// <summary>
+        /// Creates a new instance of <see cref="PositionalTypeArgument"/> with the source type from a text.
+        /// </summary>
+        /// <param name="text">The source type text.</param>
+        /// <returns>The created instance.</returns>
+        public static PositionalTypeArgument CreateSimplePositionalTypeArgument(string text)
         {
             PositionalTypeArgument SimplePositionalTypeArgument = new PositionalTypeArgument();
             SimplePositionalTypeArgument.Documentation = CreateEmptyDocumentation();
-            SimplePositionalTypeArgument.Source = CreateSimpleSimpleType(typeText);
+            SimplePositionalTypeArgument.Source = CreateSimpleSimpleType(text);
 
             return SimplePositionalTypeArgument;
         }
 
+        /// <summary>
+        /// Creates a new instance of <see cref="SimpleType"/> with an empty class identifier.
+        /// </summary>
+        /// <returns>The created instance.</returns>
         public static SimpleType CreateEmptySimpleType()
         {
             SimpleType EmptySimpleType = new SimpleType();
@@ -217,15 +318,24 @@
             return EmptySimpleType;
         }
 
-        public static SimpleType CreateSimpleSimpleType(string identifierText)
+        /// <summary>
+        /// Creates a new instance of <see cref="SimpleType"/> with the provided class identifier.
+        /// </summary>
+        /// <param name="text">The class identifier.</param>
+        /// <returns>The created instance.</returns>
+        public static SimpleType CreateSimpleSimpleType(string text)
         {
             SimpleType SimpleSimpleType = new SimpleType();
             SimpleSimpleType.Documentation = CreateEmptyDocumentation();
-            SimpleSimpleType.ClassIdentifier = CreateSimpleIdentifier(identifierText);
+            SimpleSimpleType.ClassIdentifier = CreateSimpleIdentifier(text);
 
             return SimpleSimpleType;
         }
 
+        /// <summary>
+        /// Creates a new instance of <see cref="Scope"/> with no local variables and no instructions.
+        /// </summary>
+        /// <returns>The created instance.</returns>
         public static Scope CreateEmptyScope()
         {
             Scope EmptyScope = new Scope();
@@ -236,6 +346,11 @@
             return EmptyScope;
         }
 
+        /// <summary>
+        /// Creates a new instance of <see cref="Scope"/> with no local variables and the provided instruction.
+        /// </summary>
+        /// <param name="instruction">The instruction.</param>
+        /// <returns>The created instance.</returns>
         public static Scope CreateSimpleScope(Instruction instruction)
         {
             Scope EmptyScope = new Scope();
@@ -246,6 +361,10 @@
             return EmptyScope;
         }
 
+        /// <summary>
+        /// Creates a new instance of <see cref="Conditional"/> with a default condition and no instructions.
+        /// </summary>
+        /// <returns>The created instance.</returns>
         public static Conditional CreateEmptyConditional()
         {
             Conditional EmptyConditional = new Conditional();
@@ -256,6 +375,10 @@
             return EmptyConditional;
         }
 
+        /// <summary>
+        /// Creates a new instance of <see cref="QueryOverload"/> with a default return type and no instructions.
+        /// </summary>
+        /// <returns>The created instance.</returns>
         public static QueryOverload CreateEmptyQueryOverload()
         {
             EntityDeclaration FirstResult = CreateEmptyEntityDeclaration();
@@ -272,6 +395,26 @@
             return EmptyQueryOverload;
         }
 
+        /// <summary>
+        /// Creates a new instance of <see cref="CommandOverload"/> with no instructions.
+        /// </summary>
+        /// <returns>The created instance.</returns>
+        public static CommandOverload CreateEmptyCommandOverload()
+        {
+            CommandOverload EmptyCommandOverload = new CommandOverload();
+            EmptyCommandOverload.Documentation = CreateEmptyDocumentation();
+            EmptyCommandOverload.ParameterBlocks = BlockListHelper<EntityDeclaration>.CreateEmptyBlockList();
+            EmptyCommandOverload.ParameterEnd = ParameterEndStatus.Closed;
+            EmptyCommandOverload.CommandBody = CreateDefaultBody();
+
+            return EmptyCommandOverload;
+        }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="QueryOverloadType"/> with the provided return type and no instructions.
+        /// </summary>
+        /// <param name="returnType">The type for which to create a new overload.</param>
+        /// <returns>The created instance.</returns>
         public static QueryOverloadType CreateEmptyQueryOverloadType(ObjectType returnType)
         {
             Name EntityName = CreateSimpleName("Result");
@@ -288,6 +431,10 @@
             return EmptyQueryOverloadType;
         }
 
+        /// <summary>
+        /// Creates a new instance of <see cref="CommandOverloadType"/> with no instructions.
+        /// </summary>
+        /// <returns>The created instance.</returns>
         public static CommandOverloadType CreateEmptyCommandOverloadType()
         {
             CommandOverloadType EmptyCommandOverloadType = new CommandOverloadType();
@@ -301,6 +448,10 @@
             return EmptyCommandOverloadType;
         }
 
+        /// <summary>
+        /// Creates a new instance of <see cref="EntityDeclaration"/> with an empty name and default type.
+        /// </summary>
+        /// <returns>The created instance.</returns>
         public static EntityDeclaration CreateEmptyEntityDeclaration()
         {
             EntityDeclaration EmptyEntityDeclaration = new EntityDeclaration();
@@ -310,17 +461,6 @@
             EmptyEntityDeclaration.DefaultValue = OptionalReferenceHelper<Expression>.CreateReference(CreateDefaultExpression());
 
             return EmptyEntityDeclaration;
-        }
-
-        public static CommandOverload CreateEmptyCommandOverload()
-        {
-            CommandOverload EmptyCommandOverload = new CommandOverload();
-            EmptyCommandOverload.Documentation = CreateEmptyDocumentation();
-            EmptyCommandOverload.ParameterBlocks = BlockListHelper<EntityDeclaration>.CreateEmptyBlockList();
-            EmptyCommandOverload.ParameterEnd = ParameterEndStatus.Closed;
-            EmptyCommandOverload.CommandBody = CreateDefaultBody();
-
-            return EmptyCommandOverload;
         }
     }
 }

@@ -1,6 +1,4 @@
-﻿#pragma warning disable SA1600 // Elements should be documented
-
-namespace BaseNodeHelper
+﻿namespace BaseNodeHelper
 {
     using System;
     using System.Collections;
@@ -10,8 +8,18 @@ namespace BaseNodeHelper
     using BaseNode;
     using Easly;
 
+    /// <summary>
+    /// Provides methods to manipulate block lists of nodes.
+    /// </summary>
     public static partial class NodeTreeHelperBlockList
     {
+        /// <summary>
+        /// Checks whether a property of a node is a block list.
+        /// </summary>
+        /// <param name="node">The node with the property to check.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <param name="childNodeType">If successful, the block list node type upon return.</param>
+        /// <returns>True if the property of the node is a block list; otherwise, false.</returns>
         public static bool IsBlockListProperty(Node node, string propertyName, /*out Type childInterfaceType,*/ out Type childNodeType)
         {
             Type NodeType = node.GetType();
@@ -25,6 +33,13 @@ namespace BaseNodeHelper
             return true;
         }
 
+        /// <summary>
+        /// Checks whether a property of a node type is a block list.
+        /// </summary>
+        /// <param name="nodeType">The node type with the property to check.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <param name="childNodeType">If successful, the block list node type upon return.</param>
+        /// <returns>True if the property of the node is a block list; otherwise, false.</returns>
         public static bool IsBlockListProperty(Type nodeType, string propertyName, /*out Type childInterfaceType,*/ out Type childNodeType)
         {
             if (nodeType == null) throw new ArgumentNullException(nameof(nodeType));
@@ -63,6 +78,11 @@ namespace BaseNodeHelper
             return true;
         }
 
+        /// <summary>
+        /// Gets the type of nodes in a block.
+        /// </summary>
+        /// <param name="block">The block.</param>
+        /// <param name="childNodeType">The node type upon return.</param>
         public static void GetBlockType(IBlock block, /*out Type childInterfaceType,*/ out Type childNodeType)
         {
             if (block == null) throw new ArgumentNullException(nameof(block));
@@ -90,6 +110,11 @@ namespace BaseNodeHelper
             Debug.Assert(!childNodeType.IsInterface);
         }
 
+        /// <summary>
+        /// Gets a block list in a node with the specified property.
+        /// </summary>
+        /// <param name="node">The node with the block list.</param>
+        /// <param name="propertyName">The property name.</param>
         public static IBlockList GetBlockList(Node node, string propertyName)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
@@ -107,6 +132,12 @@ namespace BaseNodeHelper
             return BlockList;
         }
 
+        /// <summary>
+        /// Gets a list of all nodes in a node with the specified property.
+        /// </summary>
+        /// <param name="node">The node with the block list.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <param name="childBlockList">The list of nodes upon return.</param>
         public static void GetChildBlockList(Node node, string propertyName, out IReadOnlyList<NodeTreeBlock> childBlockList)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
@@ -139,6 +170,12 @@ namespace BaseNodeHelper
             childBlockList = Result.AsReadOnly();
         }
 
+        /// <summary>
+        /// Gets the type of a block list in a node with the specified property.
+        /// </summary>
+        /// <param name="node">The node with the block list.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <returns>The block list type.</returns>
         public static Type BlockListInterfaceType(Node node, string propertyName)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
@@ -148,6 +185,12 @@ namespace BaseNodeHelper
             return BlockListInterfaceType(NodeType, propertyName);
         }
 
+        /// <summary>
+        /// Gets the type of a block list in a node type with the specified property.
+        /// </summary>
+        /// <param name="nodeType">The node type with the block list.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <returns>The block list type.</returns>
         public static Type BlockListInterfaceType(Type nodeType, string propertyName)
         {
             if (nodeType == null) throw new ArgumentNullException(nameof(nodeType));
@@ -173,6 +216,12 @@ namespace BaseNodeHelper
             return InterfaceType;
         }
 
+        /// <summary>
+        /// Gets the type of block list nodes in a node with the specified property.
+        /// </summary>
+        /// <param name="node">The node with the block list.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <returns>The block list node type.</returns>
         public static Type BlockListItemType(Node node, string propertyName)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
@@ -182,6 +231,12 @@ namespace BaseNodeHelper
             return BlockListItemType(NodeType, propertyName);
         }
 
+        /// <summary>
+        /// Gets the type of block list nodes in a node type with the specified property.
+        /// </summary>
+        /// <param name="nodeType">The node type with the block list.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <returns>The block list node type.</returns>
         public static Type BlockListItemType(Type nodeType, string propertyName)
         {
             if (nodeType == null) throw new ArgumentNullException(nameof(nodeType));
@@ -207,6 +262,12 @@ namespace BaseNodeHelper
             return ItemType;
         }
 
+        /// <summary>
+        /// Gets the type of block list blocks in a node with the specified property.
+        /// </summary>
+        /// <param name="node">The node with the block list.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <returns>The block list block type.</returns>
         public static Type BlockListBlockType(Node node, string propertyName)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
@@ -216,6 +277,12 @@ namespace BaseNodeHelper
             return BlockListBlockType(NodeType, propertyName);
         }
 
+        /// <summary>
+        /// Gets the type of block list blocks in a node type with the specified property.
+        /// </summary>
+        /// <param name="nodeType">The node type with the block list.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <returns>The block list block type.</returns>
         public static Type BlockListBlockType(Type nodeType, string propertyName)
         {
             if (nodeType == null) throw new ArgumentNullException(nameof(nodeType));
@@ -242,7 +309,13 @@ namespace BaseNodeHelper
             return BlockType;
         }
 
-        public static bool GetLastBlockIndex(Node node, string propertyName, out int blockIndex)
+        /// <summary>
+        /// Gets the index of the last block in a block list in a node with the specified property.
+        /// </summary>
+        /// <param name="node">The node with the block list.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <param name="blockIndex">The index of the last block upon return.</param>
+        public static void GetLastBlockIndex(Node node, string propertyName, out int blockIndex)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
@@ -262,11 +335,16 @@ namespace BaseNodeHelper
 
             blockIndex = NodeBlockList.Count;
             Debug.Assert(blockIndex >= 0);
-
-            return true;
         }
 
-        public static bool GetLastBlockChildIndex(Node node, string propertyName, int blockIndex, out int index)
+        /// <summary>
+        /// Gets the index of the last node in a block list in a node with the specified property.
+        /// </summary>
+        /// <param name="node">The node with the block list.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <param name="blockIndex">The block index.</param>
+        /// <param name="index">The index of the last node in the block upon return.</param>
+        public static void GetLastBlockChildIndex(Node node, string propertyName, int blockIndex, out int index)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
@@ -294,10 +372,16 @@ namespace BaseNodeHelper
 
             index = NodeList.Count;
             Debug.Assert(index >= 0);
-
-            return true;
         }
 
+        /// <summary>
+        /// Checks whether a child node is in a block list of a node at the specified indexes.
+        /// </summary>
+        /// <param name="node">The node with the block list.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <param name="blockIndex">The block index.</param>
+        /// <param name="index">The index of the last node in the block upon return.</param>
+        /// <param name="childNode">The child node to check.</param>
         public static bool IsBlockChildNode(Node node, string propertyName, int blockIndex, int index, Node childNode)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
@@ -323,6 +407,12 @@ namespace BaseNodeHelper
             return IsChildNode(Block, index, childNode);
         }
 
+        /// <summary>
+        /// Checks whether a child node is in a block specified index.
+        /// </summary>
+        /// <param name="block">The block.</param>
+        /// <param name="index">The index of the last node in the block upon return.</param>
+        /// <param name="childNode">The child node to check.</param>
         public static bool IsChildNode(IBlock block, int index, Node childNode)
         {
             if (block == null) throw new ArgumentNullException(nameof(block));
@@ -342,6 +432,13 @@ namespace BaseNodeHelper
             return true;
         }
 
+        /// <summary>
+        /// Gets the block at the specified index in a block list property of a given node.
+        /// </summary>
+        /// <param name="node">The node with the block list.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <param name="blockIndex">The block index.</param>
+        /// <param name="childBlock">The block at the specified index upon return.</param>
         public static void GetChildBlock(Node node, string propertyName, int blockIndex, out IBlock childBlock)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
@@ -368,6 +465,14 @@ namespace BaseNodeHelper
             childBlock = BlockFromList;
         }
 
+        /// <summary>
+        /// Gets the node at the specified indexes in a block list property of a given node.
+        /// </summary>
+        /// <param name="node">The node with the block list.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <param name="blockIndex">The block index.</param>
+        /// <param name="index">The node index in the block.</param>
+        /// <param name="childNode">The node at the specified indexes upon return.</param>
         public static void GetChildNode(Node node, string propertyName, int blockIndex, int index, out Node childNode)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
@@ -400,6 +505,12 @@ namespace BaseNodeHelper
             childNode = NodeItem;
         }
 
+        /// <summary>
+        /// Gets the node at the specified index in a block.
+        /// </summary>
+        /// <param name="block">The block.</param>
+        /// <param name="index">The node index.</param>
+        /// <param name="childNode">The node at the specified index upon return.</param>
         public static void GetChildNode(IBlock block, int index, out Node childNode)
         {
             if (block == null) throw new ArgumentNullException(nameof(block));
@@ -415,6 +526,12 @@ namespace BaseNodeHelper
             childNode = NodeItem;
         }
 
+        /// <summary>
+        /// Sets the block list a given node.
+        /// </summary>
+        /// <param name="node">The node with the block list property.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <param name="blockList">The value to set.</param>
         public static void SetBlockList(Node node, string propertyName, IBlockList blockList)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
@@ -433,6 +550,11 @@ namespace BaseNodeHelper
             Property.SetValue(node, blockList);
         }
 
+        /// <summary>
+        /// Checks whether a block list is empty.
+        /// </summary>
+        /// <param name="blockList">The block list.</param>
+        /// <returns>True if the block list is empty; otherwise, false.</returns>
         public static bool IsBlockListEmpty(IBlockList blockList)
         {
             if (blockList == null) throw new ArgumentNullException(nameof(blockList));
@@ -442,6 +564,11 @@ namespace BaseNodeHelper
             return NodeBlockList.Count == 0;
         }
 
+        /// <summary>
+        /// Checks whether a block list contains exactly one node.
+        /// </summary>
+        /// <param name="blockList">The block list.</param>
+        /// <returns>True if the block list contains exactly one node; otherwise, false.</returns>
         public static bool IsBlockListSingle(IBlockList blockList)
         {
             if (blockList == null) throw new ArgumentNullException(nameof(blockList));

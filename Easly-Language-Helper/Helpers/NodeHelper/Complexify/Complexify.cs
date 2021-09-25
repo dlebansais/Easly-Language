@@ -1,15 +1,20 @@
-﻿#pragma warning disable SA1600 // Elements should be documented
-
-namespace BaseNodeHelper
+﻿namespace BaseNodeHelper
 {
-    using System;
     using System.Collections;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using BaseNode;
 
+    /// <summary>
+    /// Provides methods to manipulate nodes.
+    /// </summary>
     public static partial class NodeHelper
     {
+        /// <summary>
+        /// Gets a list of nodes <paramref name="node"/> can be complexified into.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <param name="complexifiedNodeList">The resulting list of nodes upon success. It contains at least one element.</param>
+        /// <returns>True if the provided node can be complexified; otherwise, false.</returns>
         public static bool GetComplexifiedNode(Node node, out IList<Node> complexifiedNodeList)
         {
             complexifiedNodeList = new List<Node>();

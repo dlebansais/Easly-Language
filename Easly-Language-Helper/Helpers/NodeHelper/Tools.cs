@@ -1,17 +1,21 @@
-﻿#pragma warning disable SA1600 // Elements should be documented
-
-namespace BaseNodeHelper
+﻿namespace BaseNodeHelper
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Reflection;
     using BaseNode;
-    using Easly;
 
+    /// <summary>
+    /// Provides methods to manipulate nodes.
+    /// </summary>
     public static partial class NodeHelper
     {
+        /// <summary>
+        /// Gets a node type by its short name.
+        /// </summary>
+        /// <param name="typeName">The type name.</param>
+        /// <returns>The node type.</returns>
         public static Type NodeType(string typeName)
         {
             string RootName = SafeType.FullName(typeof(Root));
@@ -30,6 +34,11 @@ namespace BaseNodeHelper
             return FullType;
         }
 
+        /// <summary>
+        /// Creates a dictionary of nodes indexed by types.
+        /// </summary>
+        /// <typeparam name="TValue">The dictionary value type.</typeparam>
+        /// <returns>The created instance.</returns>
         public static IDictionary<Type, TValue?> CreateNodeDictionary<TValue>()
         {
             IDictionary<Type, TValue?> Result = new Dictionary<Type, TValue?>();
@@ -58,6 +67,12 @@ namespace BaseNodeHelper
             return Result;
         }
 
+        /// <summary>
+        /// Checks whether a property of a node is a collection of blocks that must never be empty.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <returns>True if the property is a collection of blocks that must never be empty; otherwise, false.</returns>
         public static bool IsCollectionNeverEmpty(Node node, string propertyName)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
@@ -65,6 +80,12 @@ namespace BaseNodeHelper
             return IsCollectionNeverEmpty(node.GetType(), propertyName);
         }
 
+        /// <summary>
+        /// Checks whether a property of a node type is a collection of blocks that must never be empty.
+        /// </summary>
+        /// <param name="nodeType">The node type.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <returns>True if the property is a collection of blocks that must never be empty; otherwise, false.</returns>
         public static bool IsCollectionNeverEmpty(Type nodeType, string propertyName)
         {
             if (!NodeTreeHelperList.IsNodeListProperty(nodeType, propertyName, out Type _) && !NodeTreeHelperBlockList.IsBlockListProperty(nodeType, propertyName, /*out Type _,*/ out _)) throw new ArgumentException($"{nameof(propertyName)} must be a list or block list property of {nameof(nodeType)}");
@@ -82,6 +103,12 @@ namespace BaseNodeHelper
             return false;
         }
 
+        /// <summary>
+        /// Checks whether a property of a node is a collection of blocks that can be expanded.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <returns>True if the property is a collection of blocks that can be expanded; otherwise, false.</returns>
         public static bool IsCollectionWithExpand(Node node, string propertyName)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
@@ -89,6 +116,12 @@ namespace BaseNodeHelper
             return IsCollectionWithExpand(node.GetType(), propertyName);
         }
 
+        /// <summary>
+        /// Checks whether a property of a node type is a collection of blocks that can be expanded.
+        /// </summary>
+        /// <param name="nodeType">The node type.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <returns>True if the property is a collection of blocks that can be expanded; otherwise, false.</returns>
         public static bool IsCollectionWithExpand(Type nodeType, string propertyName)
         {
             if (!NodeTreeHelperList.IsNodeListProperty(nodeType, propertyName, out Type _) && !NodeTreeHelperBlockList.IsBlockListProperty(nodeType, propertyName, /*out Type _,*/ out _)) throw new ArgumentException($"{nameof(propertyName)} must be a list or block list property of {nameof(nodeType)}");
@@ -107,6 +140,11 @@ namespace BaseNodeHelper
             return false;
         }
 
+        /// <summary>
+        /// Creates a new instance of a <see cref="Document"/> as a copy of the provided value.
+        /// </summary>
+        /// <param name="documentation">The documentation to copy.</param>
+        /// <returns>The created instance.</returns>
         public static Document CreateDocumentationCopy(Document documentation)
         {
             if (documentation == null) throw new ArgumentNullException(nameof(documentation));
@@ -114,6 +152,11 @@ namespace BaseNodeHelper
             return CreateSimpleDocumentation(documentation.Comment, documentation.Uuid);
         }
 
+        /// <summary>
+        /// Creates a new instance of a <see cref="QualifiedName"/> from a string.
+        /// </summary>
+        /// <param name="text">The string.</param>
+        /// <returns>The created instance.</returns>
         private static QualifiedName StringToQualifiedName(string text)
         {
             string[] StringList;

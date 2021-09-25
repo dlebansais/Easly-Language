@@ -1,13 +1,20 @@
-﻿#pragma warning disable SA1600 // Elements should be documented
-
-namespace BaseNodeHelper
+﻿namespace BaseNodeHelper
 {
     using System.Collections.Generic;
     using System.Diagnostics;
     using BaseNode;
 
+    /// <summary>
+    /// Provides methods to manipulate nodes.
+    /// </summary>
     public static partial class NodeHelper
     {
+        /// <summary>
+        /// Creates an instance of a simplified version of an instruction.
+        /// </summary>
+        /// <param name="nodeInstruction">The instruction to simplify.</param>
+        /// <param name="simplifiedNode">The simplified instruction.</param>
+        /// <returns>True if the instruction could be simplified; otherwise, false.</returns>
         public static bool GetSimplifiedInstruction(Instruction nodeInstruction, out Node simplifiedNode)
         {
             switch (nodeInstruction)
@@ -41,7 +48,7 @@ namespace BaseNodeHelper
             }
         }
 
-        public static bool GetSimplifiedInstructionSingle(Instruction nodeInstruction, out Node simplifiedNode)
+        private static bool GetSimplifiedInstructionSingle(Instruction nodeInstruction, out Node simplifiedNode)
         {
             switch (nodeInstruction)
             {
