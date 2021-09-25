@@ -41,7 +41,7 @@
                 new QualifiedName(),
                 new QueryOverload(),
                 new QueryOverloadType(),
-                new Range(),
+                new BaseNode.Range(),
                 new Rename(),
                 new Root(),
                 new Scope(),

@@ -18,9 +18,9 @@
         public static void TestLanguageInitializers()
         {
             MethodInfo FunctionInfo = (MethodInfo)typeof(IList).GetMember("IndexOf")[0];
-            PropertyInfo IndexerInfo = typeof(IList).GetProperty("Item");
+            PropertyInfo IndexerInfo = typeof(IList).GetProperty("Item")!;
             MethodInfo ProcedureInfo = (MethodInfo)typeof(IList).GetMember("Clear")[0];
-            PropertyInfo PropertyInfo = typeof(Name).GetProperty("Text");
+            PropertyInfo PropertyInfo = typeof(Name).GetProperty("Text")!;
 
             FunctionEntity TestFunctionEntity = new(FunctionInfo);
             IndexerEntity TestIndexerEntity = new(IndexerInfo);
@@ -65,9 +65,9 @@
         public static void TestLanguageClasses()
         {
             MethodInfo FunctionInfo = (MethodInfo)typeof(IList).GetMember("IndexOf")[0];
-            PropertyInfo IndexerInfo = typeof(IList).GetProperty("Item");
+            PropertyInfo IndexerInfo = typeof(IList).GetProperty("Item")!;
             MethodInfo ProcedureInfo = (MethodInfo)typeof(IList).GetMember("Clear")[0];
-            PropertyInfo PropertyInfo = typeof(Name).GetProperty("Text");
+            PropertyInfo PropertyInfo = typeof(Name).GetProperty("Text")!;
 
             FunctionEntity TestFunctionEntity = new(FunctionInfo);
 
