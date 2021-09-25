@@ -40,8 +40,6 @@
     </PackageReference>
     <PackageReference Include="Easly-Number-Debug" Version="1.2.3" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
     <PackageReference Include="Easly-Number" Version="1.2.3" Condition="'$(Configuration)|$(Platform)'!='Debug|x64'" />
-    <PackageReference Include="Contracts-Debug" Version="1.0.12" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
-    <PackageReference Include="Contracts" Version="1.0.12" Condition="'$(Configuration)|$(Platform)'!='Debug|x64'" />
   </ItemGroup>
 
   <ItemGroup>
