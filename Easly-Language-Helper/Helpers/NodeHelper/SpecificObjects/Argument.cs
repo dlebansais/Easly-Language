@@ -23,7 +23,7 @@
 
             AssignmentArgument Result = new AssignmentArgument();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.ParameterBlocks = BlockListHelper<Identifier>.CreateBlockList(parameterList);
+            Result.ParameterBlocks = BlockListHelper<Identifier>.CreateBlockListFromNodeList(parameterList);
             Result.Source = source;
 
             return Result;

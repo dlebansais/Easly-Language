@@ -92,7 +92,7 @@
 
             AssignmentInstruction Result = new AssignmentInstruction();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.DestinationBlocks = BlockListHelper<QualifiedName>.CreateBlockList(assignmentList);
+            Result.DestinationBlocks = BlockListHelper<QualifiedName>.CreateBlockListFromNodeList(assignmentList);
             Result.Source = source;
 
             return Result;
@@ -132,7 +132,7 @@
             AttachmentInstruction Result = new AttachmentInstruction();
             Result.Documentation = CreateEmptyDocumentation();
             Result.Source = source;
-            Result.EntityNameBlocks = BlockListHelper<Name>.CreateBlockList(nameList);
+            Result.EntityNameBlocks = BlockListHelper<Name>.CreateBlockListFromNodeList(nameList);
             Result.AttachmentBlocks = BlockListHelper<Attachment>.CreateSimpleBlockList(FirstAttachment);
             Result.ElseInstructions = OptionalReferenceHelper<Scope>.CreateReference(CreateEmptyScope());
 
@@ -210,7 +210,7 @@
             CommandInstruction Result = new CommandInstruction();
             Result.Documentation = CreateEmptyDocumentation();
             Result.Command = command;
-            Result.ArgumentBlocks = BlockListHelper<Argument>.CreateBlockList(argumentList);
+            Result.ArgumentBlocks = BlockListHelper<Argument>.CreateBlockListFromNodeList(argumentList);
 
             return Result;
         }
@@ -244,7 +244,7 @@
             Result.Documentation = CreateEmptyDocumentation();
             Result.EntityIdentifier = entityIdentifier;
             Result.CreationRoutineIdentifier = creationRoutineIdentifier;
-            Result.ArgumentBlocks = BlockListHelper<Argument>.CreateBlockList(argumentList);
+            Result.ArgumentBlocks = BlockListHelper<Argument>.CreateBlockListFromNodeList(argumentList);
             Result.Processor = OptionalReferenceHelper<QualifiedName>.CreateReference(CreateEmptyQualifiedName());
 
             return Result;
@@ -419,7 +419,7 @@
             IndexAssignmentInstruction Result = new IndexAssignmentInstruction();
             Result.Documentation = CreateEmptyDocumentation();
             Result.Destination = destination;
-            Result.ArgumentBlocks = BlockListHelper<Argument>.CreateBlockList(argumentList);
+            Result.ArgumentBlocks = BlockListHelper<Argument>.CreateBlockListFromNodeList(argumentList);
             Result.Source = source;
 
             return Result;
@@ -549,7 +549,7 @@
             OverLoopInstruction Result = new OverLoopInstruction();
             Result.Documentation = CreateEmptyDocumentation();
             Result.OverList = overList;
-            Result.IndexerBlocks = BlockListHelper<Name>.CreateBlockList(nameList);
+            Result.IndexerBlocks = BlockListHelper<Name>.CreateBlockListFromNodeList(nameList);
             Result.Iteration = IterationType.Single;
             Result.LoopInstructions = CreateEmptyScope();
             Result.ExitEntityName = OptionalReferenceHelper<Identifier>.CreateReference(CreateEmptyIdentifier());
@@ -575,7 +575,7 @@
             OverLoopInstruction Result = new OverLoopInstruction();
             Result.Documentation = CreateEmptyDocumentation();
             Result.OverList = overList;
-            Result.IndexerBlocks = BlockListHelper<Name>.CreateBlockList(nameList);
+            Result.IndexerBlocks = BlockListHelper<Name>.CreateBlockListFromNodeList(nameList);
             Result.Iteration = IterationType.Single;
             Result.LoopInstructions = CreateSimpleScope(instruction);
             Result.ExitEntityName = OptionalReferenceHelper<Identifier>.CreateReference(CreateEmptyIdentifier());
@@ -656,7 +656,7 @@
             PrecursorIndexAssignmentInstruction Result = new PrecursorIndexAssignmentInstruction();
             Result.Documentation = CreateEmptyDocumentation();
             Result.AncestorType = OptionalReferenceHelper<ObjectType>.CreateReference(CreateDefaultType());
-            Result.ArgumentBlocks = BlockListHelper<Argument>.CreateBlockList(argumentList);
+            Result.ArgumentBlocks = BlockListHelper<Argument>.CreateBlockListFromNodeList(argumentList);
             Result.Source = source;
 
             return Result;
@@ -716,7 +716,7 @@
             PrecursorInstruction Result = new PrecursorInstruction();
             Result.Documentation = CreateEmptyDocumentation();
             Result.AncestorType = OptionalReferenceHelper<ObjectType>.CreateReference(CreateDefaultType());
-            Result.ArgumentBlocks = BlockListHelper<Argument>.CreateBlockList(argumentList);
+            Result.ArgumentBlocks = BlockListHelper<Argument>.CreateBlockListFromNodeList(argumentList);
 
             return Result;
         }
@@ -795,7 +795,7 @@
             Result.Documentation = CreateEmptyDocumentation();
             Result.ExceptionType = exceptionType;
             Result.CreationRoutine = creationRoutineIdentifier;
-            Result.ArgumentBlocks = BlockListHelper<Argument>.CreateBlockList(argumentList);
+            Result.ArgumentBlocks = BlockListHelper<Argument>.CreateBlockListFromNodeList(argumentList);
 
             return Result;
         }

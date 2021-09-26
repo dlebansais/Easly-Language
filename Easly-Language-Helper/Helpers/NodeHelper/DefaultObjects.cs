@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Diagnostics;
     using BaseNode;
+    using Contracts;
 
     /// <summary>
     /// Provides methods to manipulate nodes.
@@ -74,20 +75,19 @@
         }
 
         /// <summary>
-        /// Creates a new instance of an object inheriting from <see cref="Node"/> with the simplest content that implements <paramref name="interfaceType"/>.
+        /// Creates a new instance of an object inheriting from <see cref="Node"/> with the simplest content that inherits from <paramref name="nodeType"/>.
+        /// <paramref name="nodeType"/> must be one of the supported types.
         /// </summary>
-        /// <param name="interfaceType">The required interface the new object must implement.</param>
+        /// <param name="nodeType">The required type the new object must inherit from.</param>
         /// <returns>The created instance.</returns>
-        public static Node CreateDefault(Type interfaceType)
+        public static Node CreateDefault(Type nodeType)
         {
-            if (interfaceType == null) throw new ArgumentNullException(nameof(interfaceType));
+            Contract.RequireNotNull(nodeType, out Type NodeType);
 
-            Node Result = CreateDefaultNoCheck(interfaceType);
+            if (!CreateDefaultNoCheck(NodeType, out Node Result))
+                throw new ArgumentOutOfRangeException($"No default object can be created for {nodeType.FullName}");
 
-            if (Result != null)
-                return Result;
-            else
-                throw new ArgumentOutOfRangeException($"{nameof(interfaceType)}: {interfaceType.FullName}");
+            return Result;
         }
 
         /// <summary>
@@ -133,9 +133,7 @@
         {
             if (interfaceType == null) throw new ArgumentNullException(nameof(interfaceType));
 
-            Node Result = CreateDefaultNoCheck(interfaceType);
-
-            if (Result != null)
+            if (CreateDefaultNoCheck(interfaceType, out Node Result))
                 return Result;
 
             string NamePrefix = SafeType.AssemblyQualifiedName(interfaceType);
@@ -433,46 +431,55 @@
             return Value == Min;
         }
 
-        private static Node CreateDefaultNoCheck(Type interfaceType)
+        private static bool CreateDefaultNoCheck(Type nodeType, out Node node)
         {
-            if (interfaceType == typeof(Body) || interfaceType == typeof(EffectiveBody))
-                return CreateDefaultBody();
-            else if (interfaceType == typeof(Expression) || interfaceType == typeof(QueryExpression))
-                return CreateDefaultExpression();
-            else if (interfaceType == typeof(Instruction) || interfaceType == typeof(CommandInstruction))
-                return CreateDefaultInstruction();
-            else if (interfaceType == typeof(Feature) || interfaceType == typeof(AttributeFeature))
-                return CreateDefaultFeature();
-            else if (interfaceType == typeof(ObjectType) || interfaceType == typeof(SimpleType))
-                return CreateDefaultType();
+            if (nodeType == typeof(Body) || nodeType == typeof(EffectiveBody))
+                node = CreateDefaultBody();
+            else if (nodeType == typeof(Expression) || nodeType == typeof(QueryExpression))
+                node = CreateDefaultExpression();
+            else if (nodeType == typeof(Instruction) || nodeType == typeof(CommandInstruction))
+                node = CreateDefaultInstruction();
+            else if (nodeType == typeof(Feature) || nodeType == typeof(AttributeFeature))
+                node = CreateDefaultFeature();
+            else if (nodeType == typeof(ObjectType) || nodeType == typeof(SimpleType))
+                node = CreateDefaultType();
             else
-                return CreateDefaultNoCheckArgument(interfaceType);
+                return CreateDefaultNoCheckArgument(nodeType, out node);
+
+            return true;
         }
 
-        private static Node CreateDefaultNoCheckArgument(Type interfaceType)
+        private static bool CreateDefaultNoCheckArgument(Type nodeType, out Node node)
         {
-            if (interfaceType == typeof(Argument) || interfaceType == typeof(PositionalArgument))
-                return CreateDefaultArgument();
-            else if (interfaceType == typeof(TypeArgument) || interfaceType == typeof(PositionalTypeArgument))
-                return CreateDefaultTypeArgument();
+            if (nodeType == typeof(Argument) || nodeType == typeof(PositionalArgument))
+                node = CreateDefaultArgument();
+            else if (nodeType == typeof(TypeArgument) || nodeType == typeof(PositionalTypeArgument))
+                node = CreateDefaultTypeArgument();
             else
-                return CreateDefaultNoCheckSingle(interfaceType);
+                return CreateDefaultNoCheckSingle(nodeType, out node);
+
+            return true;
         }
 
-        private static Node CreateDefaultNoCheckSingle(Type interfaceType)
+        private static bool CreateDefaultNoCheckSingle(Type nodeType, out Node node)
         {
-            if (interfaceType == typeof(Name))
-                return CreateEmptyName();
-            else if (interfaceType == typeof(Identifier))
-                return CreateEmptyIdentifier();
-            else if (interfaceType == typeof(QualifiedName))
-                return CreateEmptyQualifiedName();
-            else if (interfaceType == typeof(Scope))
-                return CreateEmptyScope();
-            else if (interfaceType == typeof(Import))
-                return CreateSimpleImport(string.Empty, string.Empty, ImportType.Latest);
+            if (nodeType == typeof(Name))
+                node = CreateEmptyName();
+            else if (nodeType == typeof(Identifier))
+                node = CreateEmptyIdentifier();
+            else if (nodeType == typeof(QualifiedName))
+                node = CreateEmptyQualifiedName();
+            else if (nodeType == typeof(Scope))
+                node = CreateEmptyScope();
+            else if (nodeType == typeof(Import))
+                node = CreateSimpleImport(string.Empty, string.Empty, ImportType.Latest);
             else
-                return null!;
+            {
+                Contract.Unused(out node);
+                return false;
+            }
+
+            return true;
         }
     }
 }

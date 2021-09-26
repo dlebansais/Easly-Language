@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using BaseNode;
+    using Contracts;
 
     /// <summary>
     /// Provides methods to manipulate nodes.
@@ -30,8 +31,10 @@
         /// <returns>The created instance.</returns>
         public static Document CreateSimpleDocumentation(string comment, Guid uuid)
         {
+            Contract.RequireNotNull(comment, out string Comment);
+
             Document Documentation = new Document();
-            Documentation.Comment = comment;
+            Documentation.Comment = Comment;
             Documentation.Uuid = uuid;
 
             return Documentation;
@@ -53,13 +56,15 @@
         /// <summary>
         /// Creates a new instance of <see cref="Pattern"/> with the provided parameters.
         /// </summary>
-        /// <param name="patternText">The pattern text.</param>
+        /// <param name="text">The pattern text.</param>
         /// <returns>The created instance.</returns>
-        public static Pattern CreateSimplePattern(string patternText)
+        public static Pattern CreateSimplePattern(string text)
         {
+            Contract.RequireNotNull(text, out string Text);
+
             Pattern SimplePattern = new Pattern();
             SimplePattern.Documentation = CreateEmptyDocumentation();
-            SimplePattern.Text = patternText;
+            SimplePattern.Text = Text;
 
             return SimplePattern;
         }
@@ -80,13 +85,15 @@
         /// <summary>
         /// Creates a new instance of <see cref="Pattern"/> with the provided parameters.
         /// </summary>
-        /// <param name="identifierText">The identifier text.</param>
+        /// <param name="text">The identifier text.</param>
         /// <returns>The created instance.</returns>
-        public static Identifier CreateSimpleIdentifier(string identifierText)
+        public static Identifier CreateSimpleIdentifier(string text)
         {
+            Contract.RequireNotNull(text, out string Text);
+
             Identifier SimpleIdentifier = new Identifier();
             SimpleIdentifier.Documentation = CreateEmptyDocumentation();
-            SimpleIdentifier.Text = identifierText;
+            SimpleIdentifier.Text = Text;
 
             return SimpleIdentifier;
         }
@@ -107,13 +114,15 @@
         /// <summary>
         /// Creates a new instance of <see cref="Name"/> with the provided parameters.
         /// </summary>
-        /// <param name="nameText">The name text.</param>
+        /// <param name="text">The name text.</param>
         /// <returns>The created instance.</returns>
-        public static Name CreateSimpleName(string nameText)
+        public static Name CreateSimpleName(string text)
         {
+            Contract.RequireNotNull(text, out string Text);
+
             Name SimpleName = new Name();
             SimpleName.Documentation = CreateEmptyDocumentation();
-            SimpleName.Text = nameText;
+            SimpleName.Text = Text;
 
             return SimpleName;
         }
@@ -132,12 +141,15 @@
         /// <summary>
         /// Creates a new instance of <see cref="QualifiedName "/> with a path made of a single identifier.
         /// </summary>
-        /// <param name="identifierText">The identifier text.</param>
+        /// <param name="text">The identifier text.</param>
         /// <returns>The created instance.</returns>
-        public static QualifiedName CreateSimpleQualifiedName(string identifierText)
+        public static QualifiedName CreateSimpleQualifiedName(string text)
         {
+            Contract.RequireNotNull(text, out string Text);
+
             List<Identifier> Path = new List<Identifier>();
-            Path.Add(CreateSimpleIdentifier(identifierText));
+            Path.Add(CreateSimpleIdentifier(Text));
+
             return CreateQualifiedName(Path);
         }
 
@@ -149,12 +161,18 @@
         /// <returns>The created instance.</returns>
         public static QualifiedName CreateQualifiedName(IList<Identifier> path)
         {
-            if (path == null) throw new ArgumentNullException(nameof(path));
-            if (path.Count == 0) throw new ArgumentException($"{nameof(path)} must be have at least one element");
+            Contract.RequireNotNull(path, out IList<Identifier> Path);
+
+            if (Path.Count == 0)
+                throw new ArgumentException($"{nameof(path)} must be have at least one element");
+
+            foreach (Identifier? Item in Path)
+                if (Item == null)
+                    throw new ArgumentException($"{nameof(path)} must not contain null");
 
             QualifiedName DefaultQualifiedName = new QualifiedName();
             DefaultQualifiedName.Documentation = CreateEmptyDocumentation();
-            DefaultQualifiedName.Path = path;
+            DefaultQualifiedName.Path = Path;
 
             return DefaultQualifiedName;
         }
@@ -180,9 +198,11 @@
         /// <returns>The created instance.</returns>
         public static Expression CreateSimpleQueryExpression(string text)
         {
+            Contract.RequireNotNull(text, out string Text);
+
             QueryExpression SimpleQueryExpression = new QueryExpression();
             SimpleQueryExpression.Documentation = CreateEmptyDocumentation();
-            SimpleQueryExpression.Query = CreateSimpleQualifiedName(text);
+            SimpleQueryExpression.Query = CreateSimpleQualifiedName(Text);
             SimpleQueryExpression.ArgumentBlocks = BlockListHelper<Argument>.CreateEmptyBlockList();
 
             return SimpleQueryExpression;
@@ -209,9 +229,11 @@
         /// <returns>The created instance.</returns>
         public static Instruction CreateSimpleCommandInstruction(string text)
         {
+            Contract.RequireNotNull(text, out string Text);
+
             CommandInstruction SimpleCommandInstruction = new CommandInstruction();
             SimpleCommandInstruction.Documentation = CreateEmptyDocumentation();
-            SimpleCommandInstruction.Command = CreateSimpleQualifiedName(text);
+            SimpleCommandInstruction.Command = CreateSimpleQualifiedName(Text);
             SimpleCommandInstruction.ArgumentBlocks = BlockListHelper<Argument>.CreateEmptyBlockList();
 
             return SimpleCommandInstruction;
@@ -237,9 +259,11 @@
         /// <returns>The created instance.</returns>
         public static PositionalArgument CreateSimplePositionalArgument(string text)
         {
+            Contract.RequireNotNull(text, out string Text);
+
             PositionalArgument SimplePositionalArgument = new PositionalArgument();
             SimplePositionalArgument.Documentation = CreateEmptyDocumentation();
-            SimplePositionalArgument.Source = CreateSimpleQueryExpression(text);
+            SimplePositionalArgument.Source = CreateSimpleQueryExpression(Text);
 
             return SimplePositionalArgument;
         }
@@ -268,12 +292,15 @@
         /// <returns>The created instance.</returns>
         public static AssignmentArgument CreateSimpleAssignmentArgument(string destinationText, string sourceText)
         {
-            Identifier Parameter = CreateSimpleIdentifier(destinationText);
+            Contract.RequireNotNull(destinationText, out string DestinationText);
+            Contract.RequireNotNull(sourceText, out string SourceText);
+
+            Identifier Parameter = CreateSimpleIdentifier(DestinationText);
 
             AssignmentArgument SimpleAssignmentArgument = new AssignmentArgument();
             SimpleAssignmentArgument.Documentation = CreateEmptyDocumentation();
             SimpleAssignmentArgument.ParameterBlocks = BlockListHelper<Identifier>.CreateSimpleBlockList(Parameter);
-            SimpleAssignmentArgument.Source = CreateSimpleQueryExpression(sourceText);
+            SimpleAssignmentArgument.Source = CreateSimpleQueryExpression(SourceText);
 
             return SimpleAssignmentArgument;
         }
@@ -298,9 +325,11 @@
         /// <returns>The created instance.</returns>
         public static PositionalTypeArgument CreateSimplePositionalTypeArgument(string text)
         {
+            Contract.RequireNotNull(text, out string Text);
+
             PositionalTypeArgument SimplePositionalTypeArgument = new PositionalTypeArgument();
             SimplePositionalTypeArgument.Documentation = CreateEmptyDocumentation();
-            SimplePositionalTypeArgument.Source = CreateSimpleSimpleType(text);
+            SimplePositionalTypeArgument.Source = CreateSimpleSimpleType(Text);
 
             return SimplePositionalTypeArgument;
         }
@@ -325,9 +354,11 @@
         /// <returns>The created instance.</returns>
         public static SimpleType CreateSimpleSimpleType(string text)
         {
+            Contract.RequireNotNull(text, out string Text);
+
             SimpleType SimpleSimpleType = new SimpleType();
             SimpleSimpleType.Documentation = CreateEmptyDocumentation();
-            SimpleSimpleType.ClassIdentifier = CreateSimpleIdentifier(text);
+            SimpleSimpleType.ClassIdentifier = CreateSimpleIdentifier(Text);
 
             return SimpleSimpleType;
         }
@@ -353,10 +384,12 @@
         /// <returns>The created instance.</returns>
         public static Scope CreateSimpleScope(Instruction instruction)
         {
+            Contract.RequireNotNull(instruction, out Instruction Instruction);
+
             Scope EmptyScope = new Scope();
             EmptyScope.Documentation = CreateEmptyDocumentation();
             EmptyScope.EntityDeclarationBlocks = BlockListHelper<EntityDeclaration>.CreateEmptyBlockList();
-            EmptyScope.InstructionBlocks = BlockListHelper<Instruction>.CreateSimpleBlockList(instruction);
+            EmptyScope.InstructionBlocks = BlockListHelper<Instruction>.CreateSimpleBlockList(Instruction);
 
             return EmptyScope;
         }
@@ -417,8 +450,10 @@
         /// <returns>The created instance.</returns>
         public static QueryOverloadType CreateEmptyQueryOverloadType(ObjectType returnType)
         {
+            Contract.RequireNotNull(returnType, out ObjectType ReturnType);
+
             Name EntityName = CreateSimpleName("Result");
-            EntityDeclaration ResultEntity = CreateEntityDeclaration(EntityName, returnType);
+            EntityDeclaration ResultEntity = CreateEntityDeclaration(EntityName, ReturnType);
             QueryOverloadType EmptyQueryOverloadType = new QueryOverloadType();
             EmptyQueryOverloadType.Documentation = CreateEmptyDocumentation();
             EmptyQueryOverloadType.ParameterBlocks = BlockListHelper<EntityDeclaration>.CreateEmptyBlockList();

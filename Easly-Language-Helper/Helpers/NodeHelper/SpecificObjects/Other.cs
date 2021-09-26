@@ -276,8 +276,8 @@
         {
             Root EmptyRoot = new Root();
             EmptyRoot.Documentation = CreateEmptyDocumentation();
-            EmptyRoot.ClassBlocks = BlockListHelper<Class>.CreateBlockList(classList);
-            EmptyRoot.LibraryBlocks = BlockListHelper<Library>.CreateBlockList(libraryList);
+            EmptyRoot.ClassBlocks = BlockListHelper<Class>.CreateBlockListFromNodeList(classList);
+            EmptyRoot.LibraryBlocks = BlockListHelper<Library>.CreateBlockListFromNodeList(libraryList);
             EmptyRoot.Replicates = globalReplicateList;
 
             return EmptyRoot;
@@ -294,8 +294,8 @@
         {
             Root EmptyRoot = new Root();
             EmptyRoot.Documentation = CreateEmptyDocumentation();
-            EmptyRoot.ClassBlocks = BlockListHelper<Class>.CreateBlockList(classBlockList);
-            EmptyRoot.LibraryBlocks = BlockListHelper<Library>.CreateBlockList(libraryBlockList);
+            EmptyRoot.ClassBlocks = BlockListHelper<Class>.CreateBlockListFromBlockList(classBlockList);
+            EmptyRoot.LibraryBlocks = BlockListHelper<Library>.CreateBlockListFromBlockList(libraryBlockList);
             EmptyRoot.Replicates = globalReplicateList;
 
             return EmptyRoot;

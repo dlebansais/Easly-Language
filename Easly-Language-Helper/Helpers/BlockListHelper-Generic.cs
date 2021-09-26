@@ -18,7 +18,7 @@
         /// <returns>The created instance.</returns>
         internal static IBlockList<TNode> CreateEmptyBlockList()
         {
-            return CreateBlockList(new List<TNode>());
+            return CreateBlockListFromNodeList(new List<TNode>());
         }
 
         /// <summary>
@@ -31,7 +31,7 @@
             IList<TNode> NodeList = new List<TNode>();
             NodeList.Add(node);
 
-            return CreateBlockList(NodeList);
+            return CreateBlockListFromNodeList(NodeList);
         }
 
         /// <summary>
@@ -39,10 +39,8 @@
         /// </summary>
         /// <param name="nodeList">The list of items to add to the new instance.</param>
         /// <returns>The created instance.</returns>
-        internal static IBlockList<TNode> CreateBlockList(IList<TNode> nodeList)
+        internal static IBlockList<TNode> CreateBlockListFromNodeList(IList<TNode> nodeList)
         {
-            if (nodeList == null) throw new ArgumentNullException(nameof(nodeList));
-
             BlockList<TNode> Blocks = new BlockList<TNode>();
             Blocks.Documentation = NodeHelper.CreateEmptyDocumentation();
             Blocks.NodeBlockList = new List<IBlock<TNode>>();
@@ -61,14 +59,8 @@
         /// </summary>
         /// <param name="nodeBlockList">The list of blocks of items to add to the new instance. All blocks must contain at least one element, and the created instance takes ownership of <paramref name="nodeBlockList"/>.</param>
         /// <returns>The created instance.</returns>
-        internal static IBlockList<TNode> CreateBlockList(IList<IBlock<TNode>> nodeBlockList)
+        internal static IBlockList<TNode> CreateBlockListFromBlockList(IList<IBlock<TNode>> nodeBlockList)
         {
-            if (nodeBlockList == null) throw new ArgumentNullException(nameof(nodeBlockList));
-            if (nodeBlockList.Count == 0) throw new ArgumentException($"{nameof(nodeBlockList)} must have at least one block");
-
-            foreach (IBlock<TNode> Block in nodeBlockList)
-                if (Block.NodeList.Count == 0) throw new ArgumentException($"All blocks in {nameof(nodeBlockList)} must have at least one node");
-
             BlockList<TNode> Blocks = new BlockList<TNode>();
             Blocks.Documentation = NodeHelper.CreateEmptyDocumentation();
             Blocks.NodeBlockList = nodeBlockList;
@@ -83,8 +75,8 @@
         /// <returns>The created instance.</returns>
         internal static IBlockList<TNode> CreateBlockListCopy(IBlockList<TNode> blockList)
         {
-            if (blockList == null)
-                return CreateEmptyBlockList();
+            /*if (blockList == null)
+                return CreateEmptyBlockList();*/
 
             BlockList<TNode> Result = new BlockList<TNode>();
             Result.Documentation = NodeHelper.CreateDocumentationCopy(blockList.Documentation);

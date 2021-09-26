@@ -1,6 +1,7 @@
 ﻿namespace BaseNodeHelper
 {
     using BaseNode;
+    using Contracts;
     using Easly;
 
     /// <summary>
@@ -19,14 +20,18 @@
         public static IOptionalReference<TNode> CreateReference<TNode>(TNode item)
             where TNode : Node
         {
-            return OptionalReferenceHelper<TNode>.CreateReference(item);
+            Contract.RequireNotNull(item, out TNode Item);
+
+            return OptionalReferenceHelper<TNode>.CreateReference(Item);
         }
 
         /// <inheritdoc cref="OptionalReferenceHelper{TNode}.CreateReferenceCopy"/>
         public static IOptionalReference<TNode> CreateReferenceCopy<TNode>(IOptionalReference<TNode> optional)
             where TNode : Node
         {
-            return OptionalReferenceHelper<TNode>.CreateReferenceCopy(optional);
+            Contract.RequireNotNull(optional, out IOptionalReference<TNode> Optional);
+
+            return OptionalReferenceHelper<TNode>.CreateReferenceCopy(Optional);
         }
     }
 }

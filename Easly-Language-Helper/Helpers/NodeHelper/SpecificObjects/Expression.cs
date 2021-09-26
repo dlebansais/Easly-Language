@@ -172,7 +172,7 @@
             IndexQueryExpression Result = new IndexQueryExpression();
             Result.Documentation = CreateEmptyDocumentation();
             Result.IndexedExpression = indexedExpression;
-            Result.ArgumentBlocks = BlockListHelper<Argument>.CreateBlockList(argumentList);
+            Result.ArgumentBlocks = BlockListHelper<Argument>.CreateBlockListFromNodeList(argumentList);
 
             return Result;
         }
@@ -207,7 +207,7 @@
             InitializedObjectExpression Result = new InitializedObjectExpression();
             Result.Documentation = CreateEmptyDocumentation();
             Result.ClassIdentifier = classIdentifier;
-            Result.AssignmentBlocks = BlockListHelper<AssignmentArgument>.CreateBlockList(assignmentArgumentList);
+            Result.AssignmentBlocks = BlockListHelper<AssignmentArgument>.CreateBlockListFromNodeList(assignmentArgumentList);
 
             return Result;
         }
@@ -349,7 +349,7 @@
             PrecursorExpression Result = new PrecursorExpression();
             Result.Documentation = CreateEmptyDocumentation();
             Result.AncestorType = OptionalReferenceHelper<ObjectType>.CreateReference(CreateDefaultType());
-            Result.ArgumentBlocks = BlockListHelper<Argument>.CreateBlockList(argumentList);
+            Result.ArgumentBlocks = BlockListHelper<Argument>.CreateBlockListFromNodeList(argumentList);
 
             return Result;
         }
@@ -401,7 +401,7 @@
             PrecursorIndexExpression Result = new PrecursorIndexExpression();
             Result.Documentation = CreateEmptyDocumentation();
             Result.AncestorType = OptionalReferenceHelper<ObjectType>.CreateReference(CreateDefaultType());
-            Result.ArgumentBlocks = BlockListHelper<Argument>.CreateBlockList(argumentList);
+            Result.ArgumentBlocks = BlockListHelper<Argument>.CreateBlockListFromNodeList(argumentList);
 
             return Result;
         }
@@ -467,7 +467,7 @@
             QueryExpression SimpleQueryExpression = new QueryExpression();
             SimpleQueryExpression.Documentation = CreateEmptyDocumentation();
             SimpleQueryExpression.Query = query;
-            SimpleQueryExpression.ArgumentBlocks = BlockListHelper<Argument>.CreateBlockList(argumentList);
+            SimpleQueryExpression.ArgumentBlocks = BlockListHelper<Argument>.CreateBlockListFromNodeList(argumentList);
 
             return SimpleQueryExpression;
         }

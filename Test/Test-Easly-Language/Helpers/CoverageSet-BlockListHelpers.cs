@@ -23,7 +23,9 @@
             IBlock<Identifier> IdentifierBlock = BlockListHelper.CreateBlock<Identifier>(IdentifierList);
 
             Pattern ReplicationPattern = NodeHelper.CreateEmptyPattern();
+            ReplicationPattern = NodeHelper.CreateSimplePattern(string.Empty);
             Identifier SourceIdentifier = NodeHelper.CreateEmptyIdentifier();
+            SourceIdentifier = NodeHelper.CreateSimpleIdentifier(string.Empty);
             IdentifierBlock = BlockListHelper.CreateBlock<Identifier>(IdentifierList, ReplicationStatus.Normal, ReplicationPattern, SourceIdentifier);
 
             List<IBlock<Identifier>> IdentifierBlockList = new() { IdentifierBlock };

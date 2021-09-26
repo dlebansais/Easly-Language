@@ -74,7 +74,7 @@
             GenericType Result = new GenericType();
             Result.Documentation = CreateEmptyDocumentation();
             Result.ClassIdentifier = classIdentifier;
-            Result.TypeArgumentBlocks = BlockListHelper<TypeArgument>.CreateBlockList(typeArgumentList);
+            Result.TypeArgumentBlocks = BlockListHelper<TypeArgument>.CreateBlockListFromNodeList(typeArgumentList);
 
             return Result;
         }
