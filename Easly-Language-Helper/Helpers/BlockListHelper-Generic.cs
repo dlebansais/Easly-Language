@@ -105,11 +105,7 @@
                 {
                     TNode Item = Block.NodeList[Index];
                     TNode NewItem = (TNode)NodeHelper.DeepCloneNode(Item, cloneCommentGuid: false);
-
-                    Debug.Assert(NewItem != null, $"The clone is always a {nameof(TNode)}");
-
-                    if (NewItem != null)
-                        NewNodeList.Add(NewItem);
+                    NewNodeList.Add(NewItem);
                 }
 
                 NewBlock.NodeList = NewNodeList;
