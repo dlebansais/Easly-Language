@@ -1,5 +1,6 @@
 ﻿namespace BaseNodeHelper
 {
+    using System;
     using System.Collections.Generic;
     using BaseNode;
     using Contracts;
@@ -58,6 +59,9 @@
         {
             Contract.RequireNotNull(nodeList, out IList<TNode> NodeList);
 
+            if (NodeList.Count == 0)
+                throw new ArgumentException($"{nameof(nodeList)} must be have at least one node");
+
             return BlockListHelper<TNode>.CreateBlock(NodeList);
         }
 
@@ -68,6 +72,9 @@
             Contract.RequireNotNull(nodeList, out IList<TNode> NodeList);
             Contract.RequireNotNull(replicationPattern, out Pattern ReplicationPattern);
             Contract.RequireNotNull(sourceIdentifier, out Identifier SourceIdentifier);
+
+            if (NodeList.Count == 0)
+                throw new ArgumentException($"{nameof(nodeList)} must be have at least one node");
 
             return BlockListHelper<TNode>.CreateBlock(NodeList, replication, ReplicationPattern, SourceIdentifier);
         }

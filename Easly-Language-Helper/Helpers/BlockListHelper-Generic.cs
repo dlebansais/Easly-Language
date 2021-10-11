@@ -123,9 +123,6 @@
         /// <returns>The created instance.</returns>
         internal static IBlock<TNode> CreateBlock(IList<TNode> nodeList)
         {
-            if (nodeList == null) throw new ArgumentNullException(nameof(nodeList));
-            if (nodeList.Count == 0) throw new ArgumentException($"{nameof(nodeList)} must be have at least one node");
-
             return CreateBlock(nodeList, ReplicationStatus.Normal, NodeHelper.CreateEmptyPattern(), NodeHelper.CreateEmptyIdentifier());
         }
 
@@ -139,9 +136,6 @@
         /// <returns>The created instance.</returns>
         internal static IBlock<TNode> CreateBlock(IList<TNode> nodeList, ReplicationStatus replication, Pattern replicationPattern, Identifier sourceIdentifier)
         {
-            if (nodeList == null) throw new ArgumentNullException(nameof(nodeList));
-            if (nodeList.Count == 0) throw new ArgumentException($"{nameof(nodeList)} must be have at least one node");
-
             Block<TNode> Block = new Block<TNode>();
             Block.Documentation = NodeHelper.CreateEmptyDocumentation();
             Block.NodeList = nodeList;
@@ -159,8 +153,6 @@
         /// <returns>True if the provided block list contains exactly one item; otheriwe, false.</returns>
         internal static bool IsSimple(IBlockList<TNode> blockList)
         {
-            if (blockList == null) throw new ArgumentNullException(nameof(blockList));
-
             return blockList.NodeBlockList.Count == 1 && blockList.NodeBlockList[0].NodeList.Count == 1;
         }
     }

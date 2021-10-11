@@ -4,6 +4,7 @@
     using BaseNodeHelper;
     using Easly;
     using NUnit.Framework;
+    using System;
     using System.Collections.Generic;
 
     [TestFixture]
@@ -33,6 +34,9 @@
 
             IBlockList<Identifier> BlockListCopy = BlockListHelper.CreateBlockListCopy<Identifier>(WithBlocksBlockList);
             bool IsSimple = BlockListHelper.IsSimple(BlockListCopy);
+
+            Assert.Throws<ArgumentException>(() => { BlockListHelper.CreateBlock<Identifier>(new List<Identifier>()); });
+            Assert.Throws<ArgumentException>(() => { BlockListHelper.CreateBlock<Identifier>(new List<Identifier>(), ReplicationStatus.Normal, ReplicationPattern, SourceIdentifier); });
         }
 
         [Test]
