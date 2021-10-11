@@ -33,11 +33,17 @@
             IBlockList<Identifier> WithBlocksBlockList = BlockListHelper.CreateBlockList<Identifier>(IdentifierBlockList);
 
             IBlockList<Identifier> BlockListCopy = BlockListHelper.CreateBlockListCopy<Identifier>(WithBlocksBlockList);
-            bool IsSimple = BlockListHelper.IsSimple(BlockListCopy);
+
+            bool IsSimple;
+
+            IsSimple = BlockListHelper.IsSimple(BlockListCopy);
             Assert.That(IsSimple);
 
             IdentifierList.Add(new Identifier());
             IsSimple = BlockListHelper.IsSimple(WithBlocksBlockList);
+            Assert.That(!IsSimple);
+
+            IsSimple = BlockListHelper.IsSimple(EmptyBlockList);
             Assert.That(!IsSimple);
 
             Assert.Throws<ArgumentException>(() => { BlockListHelper.CreateBlock<Identifier>(new List<Identifier>()); });
