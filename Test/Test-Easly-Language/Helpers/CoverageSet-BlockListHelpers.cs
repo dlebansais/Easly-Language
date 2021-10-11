@@ -34,6 +34,11 @@
 
             IBlockList<Identifier> BlockListCopy = BlockListHelper.CreateBlockListCopy<Identifier>(WithBlocksBlockList);
             bool IsSimple = BlockListHelper.IsSimple(BlockListCopy);
+            Assert.That(IsSimple);
+
+            IdentifierList.Add(new Identifier());
+            IsSimple = BlockListHelper.IsSimple(WithBlocksBlockList);
+            Assert.That(!IsSimple);
 
             Assert.Throws<ArgumentException>(() => { BlockListHelper.CreateBlock<Identifier>(new List<Identifier>()); });
             Assert.Throws<ArgumentException>(() => { BlockListHelper.CreateBlock<Identifier>(new List<Identifier>(), ReplicationStatus.Normal, ReplicationPattern, SourceIdentifier); });
