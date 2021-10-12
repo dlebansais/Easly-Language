@@ -50,19 +50,18 @@
             if (optional.HasItem)
             {
                 Debug.Assert(optional.Item != null, $"If {nameof(OptionalReference<TNode>.HasItem)} is true, {nameof(OptionalReference<TNode>.Item)} is never null");
+                TNode Item = optional.Item!;
 
-                if (optional.Item != null)
-                {
-                    TNode ClonedItem = (TNode)NodeHelper.DeepCloneNode(optional.Item, cloneCommentGuid: false);
-                    Debug.Assert(ClonedItem != null, "A clone reference is never null");
+                TNode ClonedItem = (TNode)NodeHelper.DeepCloneNode(Item, cloneCommentGuid: false);
+                Debug.Assert(ClonedItem != null, "A clone reference is never null");
 
-                    if (ClonedItem != null)
-                        Result.Item = ClonedItem;
-                }
+                Result.Item = ClonedItem!;
             }
 
             if (optional.IsAssigned)
                 Result.Assign();
+            else
+                Result.Unassign();
 
             return Result;
         }

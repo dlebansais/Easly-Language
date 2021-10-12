@@ -49,16 +49,5 @@
             Assert.Throws<ArgumentException>(() => { BlockListHelper.CreateBlock<Identifier>(new List<Identifier>()); });
             Assert.Throws<ArgumentException>(() => { BlockListHelper.CreateBlock<Identifier>(new List<Identifier>(), ReplicationStatus.Normal, ReplicationPattern, SourceIdentifier); });
         }
-
-        [Test]
-        public static void TestOptionalReferenceHelpers()
-        {
-            IOptionalReference<Identifier> EmptyEmptyReference = OptionalReferenceHelper.CreateEmptyReference<Identifier>();
-
-            Identifier EmptyIdentifier = NodeHelper.CreateEmptyIdentifier();
-            IOptionalReference<Identifier> SimpleOptionalReference = OptionalReferenceHelper.CreateReference<Identifier>(EmptyIdentifier);
-
-            IOptionalReference<Identifier> OptionalReferenceCopy = OptionalReferenceHelper.CreateReferenceCopy<Identifier>(SimpleOptionalReference);
-        }
     }
 }
