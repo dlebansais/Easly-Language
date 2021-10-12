@@ -16,10 +16,14 @@
             Identifier EmptyIdentifier = NodeHelper.CreateEmptyIdentifier();
             IOptionalReference<Identifier> SimpleOptionalReference = OptionalReferenceHelper.CreateReference<Identifier>(EmptyIdentifier);
 
+            IOptionalReference<Identifier> AssignedOptionalReference = OptionalReferenceHelper.CreateReference<Identifier>(EmptyIdentifier);
+            AssignedOptionalReference.Assign();
+
             IOptionalReference<Identifier> OptionalReferenceCopy;
 
-            OptionalReferenceCopy = OptionalReferenceHelper.CreateReferenceCopy<Identifier>(SimpleOptionalReference);
             OptionalReferenceCopy = OptionalReferenceHelper.CreateReferenceCopy<Identifier>(EmptyEmptyReference);
+            OptionalReferenceCopy = OptionalReferenceHelper.CreateReferenceCopy<Identifier>(SimpleOptionalReference);
+            OptionalReferenceCopy = OptionalReferenceHelper.CreateReferenceCopy<Identifier>(AssignedOptionalReference);
         }
     }
 }
