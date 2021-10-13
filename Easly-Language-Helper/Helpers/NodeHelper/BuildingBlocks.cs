@@ -166,10 +166,6 @@
             if (Path.Count == 0)
                 throw new ArgumentException($"{nameof(path)} must be have at least one element");
 
-            foreach (Identifier? Item in Path)
-                if (Item == null)
-                    throw new ArgumentException($"{nameof(path)} must not contain null");
-
             QualifiedName DefaultQualifiedName = new QualifiedName();
             DefaultQualifiedName.Documentation = CreateEmptyDocumentation();
             DefaultQualifiedName.Path = Path;
@@ -492,7 +488,7 @@
             EntityDeclaration EmptyEntityDeclaration = new EntityDeclaration();
             EmptyEntityDeclaration.Documentation = CreateEmptyDocumentation();
             EmptyEntityDeclaration.EntityName = CreateEmptyName();
-            EmptyEntityDeclaration.EntityType = CreateDefaultType();
+            EmptyEntityDeclaration.EntityType = CreateDefaultObjectType();
             EmptyEntityDeclaration.DefaultValue = OptionalReferenceHelper<Expression>.CreateReference(CreateDefaultExpression());
 
             return EmptyEntityDeclaration;

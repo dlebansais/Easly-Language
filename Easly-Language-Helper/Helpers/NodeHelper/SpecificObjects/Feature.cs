@@ -21,7 +21,7 @@
             Result.ExportIdentifier = CreateEmptyExportIdentifier();
             Result.Export = ExportStatus.Exported;
             Result.EntityName = CreateEmptyName();
-            Result.EntityType = CreateDefaultType();
+            Result.EntityType = CreateDefaultObjectType();
             Result.EnsureBlocks = BlockListHelper<Assertion>.CreateEmptyBlockList();
 
             return Result;
@@ -38,7 +38,7 @@
             Result.ExportIdentifier = CreateEmptyExportIdentifier();
             Result.Export = ExportStatus.Exported;
             Result.EntityName = CreateEmptyName();
-            Result.EntityType = CreateDefaultType();
+            Result.EntityType = CreateDefaultObjectType();
             Result.ConstantValue = CreateDefaultExpression();
 
             return Result;
@@ -93,7 +93,7 @@
             Result.Documentation = CreateEmptyDocumentation();
             Result.ExportIdentifier = CreateEmptyExportIdentifier();
             Result.Export = ExportStatus.Exported;
-            Result.EntityType = CreateDefaultType();
+            Result.EntityType = CreateDefaultObjectType();
             Result.IndexParameterBlocks = BlockListHelper<EntityDeclaration>.CreateSimpleBlockList(FirstParameter);
             Result.ParameterEnd = ParameterEndStatus.Closed;
             Result.ModifiedQueryBlocks = BlockListHelper<Identifier>.CreateEmptyBlockList();
@@ -133,7 +133,7 @@
             Result.ExportIdentifier = CreateEmptyExportIdentifier();
             Result.Export = ExportStatus.Exported;
             Result.EntityName = CreateEmptyName();
-            Result.EntityType = CreateDefaultType();
+            Result.EntityType = CreateDefaultObjectType();
             Result.PropertyKind = UtilityType.ReadOnly;
             Result.ModifiedQueryBlocks = BlockListHelper<Identifier>.CreateEmptyBlockList();
             Result.GetterBody = OptionalReferenceHelper<Body>.CreateReference(CreateDefaultBody());
@@ -192,7 +192,7 @@
             Result.ExportIdentifier = exportIdentifier != null ? (Identifier)DeepCloneNode(exportIdentifier, cloneCommentGuid: false) : CreateEmptyExportIdentifier();
             Result.Export = export;
             Result.EntityName = entityName != null ? (Name)DeepCloneNode(entityName, cloneCommentGuid: false) : CreateEmptyName();
-            Result.EntityType = entityType != null ? (ObjectType)DeepCloneNode(entityType, cloneCommentGuid: false) : CreateDefaultType();
+            Result.EntityType = entityType != null ? (ObjectType)DeepCloneNode(entityType, cloneCommentGuid: false) : CreateDefaultObjectType();
             Result.EnsureBlocks = BlockListHelper<Assertion>.CreateBlockListCopy(ensureBlocks);
 
             return Result;
@@ -205,7 +205,7 @@
             Result.ExportIdentifier = exportIdentifier != null ? (Identifier)DeepCloneNode(exportIdentifier, cloneCommentGuid: false) : CreateEmptyExportIdentifier();
             Result.Export = export;
             Result.EntityName = entityName != null ? (Name)DeepCloneNode(entityName, cloneCommentGuid: false) : CreateEmptyName();
-            Result.EntityType = entityType != null ? (ObjectType)DeepCloneNode(entityType, cloneCommentGuid: false) : CreateDefaultType();
+            Result.EntityType = entityType != null ? (ObjectType)DeepCloneNode(entityType, cloneCommentGuid: false) : CreateDefaultObjectType();
             Result.ConstantValue = constantValue != null ? (Expression)DeepCloneNode(constantValue, cloneCommentGuid: false) : CreateDefaultExpression();
 
             return Result;
@@ -257,7 +257,7 @@
             Result.Documentation = CreateDocumentationCopy(documentation);
             Result.ExportIdentifier = exportIdentifier != null ? (Identifier)DeepCloneNode(exportIdentifier, cloneCommentGuid: false) : CreateEmptyExportIdentifier();
             Result.Export = export;
-            Result.EntityType = entityType != null ? (ObjectType)DeepCloneNode(entityType, cloneCommentGuid: false) : CreateDefaultType();
+            Result.EntityType = entityType != null ? (ObjectType)DeepCloneNode(entityType, cloneCommentGuid: false) : CreateDefaultObjectType();
             if (indexParameterBlocks != null)
             {
                 if (indexParameterBlocks.NodeBlockList.Count == 0) throw new ArgumentException($"{nameof(indexParameterBlocks)} must not be empty");
@@ -301,7 +301,7 @@
             Result.ExportIdentifier = exportIdentifier != null ? (Identifier)DeepCloneNode(exportIdentifier, cloneCommentGuid: false) : CreateEmptyExportIdentifier();
             Result.Export = export;
             Result.EntityName = entityName != null ? (Name)DeepCloneNode(entityName, cloneCommentGuid: false) : CreateEmptyName();
-            Result.EntityType = entityType != null ? (ObjectType)DeepCloneNode(entityType, cloneCommentGuid: false) : CreateDefaultType();
+            Result.EntityType = entityType != null ? (ObjectType)DeepCloneNode(entityType, cloneCommentGuid: false) : CreateDefaultObjectType();
             Result.PropertyKind = propertyKind;
             Result.ModifiedQueryBlocks = BlockListHelper<Identifier>.CreateBlockListCopy(modifiedQueryBlocks);
             Result.GetterBody = OptionalReferenceHelper<Body>.CreateReferenceCopy(getterBody);

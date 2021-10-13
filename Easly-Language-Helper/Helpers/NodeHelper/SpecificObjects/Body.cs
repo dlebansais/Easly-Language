@@ -68,7 +68,7 @@
             Result.RequireBlocks = BlockListHelper<Assertion>.CreateEmptyBlockList();
             Result.EnsureBlocks = BlockListHelper<Assertion>.CreateEmptyBlockList();
             Result.ExceptionIdentifierBlocks = BlockListHelper<Identifier>.CreateEmptyBlockList();
-            Result.AncestorType = OptionalReferenceHelper<ObjectType>.CreateReference(CreateDefaultType());
+            Result.AncestorType = OptionalReferenceHelper<ObjectType>.CreateReference(CreateDefaultObjectType());
 
             return Result;
         }

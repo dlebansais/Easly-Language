@@ -20,7 +20,7 @@
             AgentExpression Result = new AgentExpression();
             Result.Documentation = CreateEmptyDocumentation();
             Result.Delegated = delegated;
-            Result.BaseType = OptionalReferenceHelper<ObjectType>.CreateReference(CreateDefaultType());
+            Result.BaseType = OptionalReferenceHelper<ObjectType>.CreateReference(CreateDefaultObjectType());
 
             return Result;
         }
@@ -348,7 +348,7 @@
         {
             PrecursorExpression Result = new PrecursorExpression();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.AncestorType = OptionalReferenceHelper<ObjectType>.CreateReference(CreateDefaultType());
+            Result.AncestorType = OptionalReferenceHelper<ObjectType>.CreateReference(CreateDefaultObjectType());
             Result.ArgumentBlocks = BlockListHelper<Argument>.CreateBlockListFromNodeList(argumentList);
 
             return Result;
@@ -363,7 +363,7 @@
         {
             PrecursorExpression Result = new PrecursorExpression();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.AncestorType = OptionalReferenceHelper<ObjectType>.CreateReference(CreateDefaultType());
+            Result.AncestorType = OptionalReferenceHelper<ObjectType>.CreateReference(CreateDefaultObjectType());
             Result.ArgumentBlocks = argumentBlocks;
 
             return Result;
@@ -400,7 +400,7 @@
 
             PrecursorIndexExpression Result = new PrecursorIndexExpression();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.AncestorType = OptionalReferenceHelper<ObjectType>.CreateReference(CreateDefaultType());
+            Result.AncestorType = OptionalReferenceHelper<ObjectType>.CreateReference(CreateDefaultObjectType());
             Result.ArgumentBlocks = BlockListHelper<Argument>.CreateBlockListFromNodeList(argumentList);
 
             return Result;
@@ -417,7 +417,7 @@
 
             PrecursorIndexExpression Result = new PrecursorIndexExpression();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.AncestorType = OptionalReferenceHelper<ObjectType>.CreateReference(CreateDefaultType());
+            Result.AncestorType = OptionalReferenceHelper<ObjectType>.CreateReference(CreateDefaultObjectType());
             Result.ArgumentBlocks = argumentBlocks;
 
             return Result;

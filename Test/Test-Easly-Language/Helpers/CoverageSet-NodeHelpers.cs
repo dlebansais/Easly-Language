@@ -29,6 +29,8 @@
             QualifiedName = NodeHelper.CreateSimpleQualifiedName(string.Empty);
             QualifiedName = NodeHelper.CreateQualifiedName(new List<Identifier> { Identifier });
 
+            Assert.Throws<ArgumentException>(() => { NodeHelper.CreateQualifiedName(new List<Identifier>()); });
+
             Expression Expression = NodeHelper.CreateEmptyQueryExpression();
             Expression = NodeHelper.CreateSimpleQueryExpression(string.Empty);
 
@@ -72,7 +74,7 @@
             Expression Expression = NodeHelper.CreateDefaultExpression();
             Instruction Instruction = NodeHelper.CreateDefaultInstruction();
             Feature Feature = NodeHelper.CreateDefaultFeature();
-            ObjectType ObjectType = NodeHelper.CreateDefaultType();
+            ObjectType ObjectType = NodeHelper.CreateDefaultObjectType();
 
             Node Default = NodeHelper.CreateDefault(typeof(PositionalArgument));
             Default = NodeHelper.CreateDefaultFromInterface(typeof(PositionalArgument));

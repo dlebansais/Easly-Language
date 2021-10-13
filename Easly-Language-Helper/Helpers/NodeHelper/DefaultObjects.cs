@@ -69,7 +69,7 @@
         /// Creates a new instance of an object inheriting from <see cref="ObjectType"/> with the simplest content.
         /// </summary>
         /// <returns>The created instance.</returns>
-        public static ObjectType CreateDefaultType()
+        public static ObjectType CreateDefaultObjectType()
         {
             return CreateEmptySimpleType();
         }
@@ -85,7 +85,7 @@
             Contract.RequireNotNull(nodeType, out Type NodeType);
 
             if (!CreateDefaultNoCheck(NodeType, out Node Result))
-                throw new ArgumentOutOfRangeException($"No default object can be created for {nodeType.FullName}");
+                throw new ArgumentException($"No default object can be created for {nodeType.FullName}");
 
             return Result;
         }
@@ -442,7 +442,7 @@
             else if (nodeType == typeof(Feature) || nodeType == typeof(AttributeFeature))
                 node = CreateDefaultFeature();
             else if (nodeType == typeof(ObjectType) || nodeType == typeof(SimpleType))
-                node = CreateDefaultType();
+                node = CreateDefaultObjectType();
             else
                 return CreateDefaultNoCheckArgument(nodeType, out node);
 

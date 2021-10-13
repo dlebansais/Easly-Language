@@ -126,7 +126,7 @@
         /// <returns>The created instance.</returns>
         public static AttachmentInstruction CreateAttachmentInstruction(Expression source, List<Name> nameList)
         {
-            ObjectType AttachType = CreateDefaultType();
+            ObjectType AttachType = CreateDefaultObjectType();
             Attachment FirstAttachment = CreateAttachment(AttachType);
 
             AttachmentInstruction Result = new AttachmentInstruction();
@@ -148,7 +148,7 @@
         /// <returns>The created instance.</returns>
         public static AttachmentInstruction CreateAttachmentInstruction(Expression source, IBlockList<Name> entityNameBlocks, IBlockList<Attachment> attachmentBlocks)
         {
-            ObjectType AttachType = CreateDefaultType();
+            ObjectType AttachType = CreateDefaultObjectType();
             Attachment FirstAttachment = CreateAttachment(AttachType);
 
             AttachmentInstruction Result = new AttachmentInstruction();
@@ -171,7 +171,7 @@
         /// <returns>The created instance.</returns>
         public static AttachmentInstruction CreateAttachmentInstruction(Expression source, IBlockList<Name> entityNameBlocks, IBlockList<Attachment> attachmentBlocks, Scope elseInstructions)
         {
-            ObjectType AttachType = CreateDefaultType();
+            ObjectType AttachType = CreateDefaultObjectType();
             Attachment FirstAttachment = CreateAttachment(AttachType);
 
             AttachmentInstruction Result = new AttachmentInstruction();
@@ -655,7 +655,7 @@
 
             PrecursorIndexAssignmentInstruction Result = new PrecursorIndexAssignmentInstruction();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.AncestorType = OptionalReferenceHelper<ObjectType>.CreateReference(CreateDefaultType());
+            Result.AncestorType = OptionalReferenceHelper<ObjectType>.CreateReference(CreateDefaultObjectType());
             Result.ArgumentBlocks = BlockListHelper<Argument>.CreateBlockListFromNodeList(argumentList);
             Result.Source = source;
 
@@ -676,7 +676,7 @@
 
             PrecursorIndexAssignmentInstruction Result = new PrecursorIndexAssignmentInstruction();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.AncestorType = OptionalReferenceHelper<ObjectType>.CreateReference(CreateDefaultType());
+            Result.AncestorType = OptionalReferenceHelper<ObjectType>.CreateReference(CreateDefaultObjectType());
             Result.ArgumentBlocks = argumentBlocks;
             Result.Source = source;
 
@@ -715,7 +715,7 @@
         {
             PrecursorInstruction Result = new PrecursorInstruction();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.AncestorType = OptionalReferenceHelper<ObjectType>.CreateReference(CreateDefaultType());
+            Result.AncestorType = OptionalReferenceHelper<ObjectType>.CreateReference(CreateDefaultObjectType());
             Result.ArgumentBlocks = BlockListHelper<Argument>.CreateBlockListFromNodeList(argumentList);
 
             return Result;
@@ -730,7 +730,7 @@
         {
             PrecursorInstruction Result = new PrecursorInstruction();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.AncestorType = OptionalReferenceHelper<ObjectType>.CreateReference(CreateDefaultType());
+            Result.AncestorType = OptionalReferenceHelper<ObjectType>.CreateReference(CreateDefaultObjectType());
             Result.ArgumentBlocks = argumentBlocks;
 
             return Result;
