@@ -88,22 +88,32 @@
             Node DefaultScope = NodeHelper.CreateDefaultFromType(typeof(Scope));
             Node DefaultImport = NodeHelper.CreateDefaultFromType(typeof(Import));
 
-            Node DefaultClass = NodeHelper.CreateDefaultFromType(typeof(Class));
+            Node DefaultConstraint = NodeHelper.CreateDefaultFromType(typeof(Constraint));
 
             Assert.Throws<ArgumentException>(() => { NodeHelper.CreateEmptyNode(typeof(CoverageSet)); });
             Assert.Throws<ArgumentException>(() => { NodeHelper.CreateEmptyNode(typeof(Argument)); });
 
-            Node DefaultLibrary = NodeHelper.CreateEmptyNode(typeof(Library));
+            Class DefaultClass = (Class)NodeHelper.CreateEmptyNode(typeof(Class));
+            //System.Diagnostics.Debug.Assert(false);
+            Assert.That(NodeHelper.IsEmptyNode(DefaultClass));
+
+            Library DefaultLibrary = (Library)NodeHelper.CreateEmptyNode(typeof(Library));
             Assert.That(NodeHelper.IsEmptyNode(DefaultLibrary));
 
-            Node DefaultGlobalReplicate = NodeHelper.CreateEmptyNode(typeof(GlobalReplicate));
+            GlobalReplicate DefaultGlobalReplicate = (GlobalReplicate)NodeHelper.CreateEmptyNode(typeof(GlobalReplicate));
             Assert.That(NodeHelper.IsEmptyNode(DefaultGlobalReplicate));
 
-            Node DefaultInspectInstruction = NodeHelper.CreateEmptyNode(typeof(InspectInstruction));
+            InspectInstruction DefaultInspectInstruction = (InspectInstruction)NodeHelper.CreateEmptyNode(typeof(InspectInstruction));
             Assert.That(NodeHelper.IsEmptyNode(DefaultInspectInstruction));
 
-            Node DefaultRoot = NodeHelper.CreateEmptyNode(typeof(Root));
+            AttachmentInstruction DefaultAttachmentInstruction = (AttachmentInstruction)NodeHelper.CreateEmptyNode(typeof(AttachmentInstruction));
+            Assert.That(NodeHelper.IsEmptyNode(DefaultAttachmentInstruction));
+
+            Root DefaultRoot = (Root)NodeHelper.CreateEmptyNode(typeof(Root));
             Assert.That(NodeHelper.IsEmptyNode(DefaultRoot));
+
+            DefaultRoot.Replicates.Add(DefaultGlobalReplicate);
+            Assert.That(!NodeHelper.IsEmptyNode(DefaultRoot));
         }
 
         [Test]

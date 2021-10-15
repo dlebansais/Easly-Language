@@ -574,15 +574,14 @@
 
                 max = int.MinValue;
                 min = int.MaxValue;
-                foreach (int? Value in Values)
+                foreach (object? Value in Values)
                 {
-                    if (Value == null)
-                        return;
+                    int ValueInt = (int)Value!;
 
-                    if (max < Value)
-                        max = Value.Value;
-                    if (min > Value)
-                        min = Value.Value;
+                    if (max < ValueInt)
+                        max = ValueInt;
+                    if (min > ValueInt)
+                        min = ValueInt;
                 }
             }
         }
