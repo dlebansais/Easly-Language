@@ -91,68 +91,50 @@
         }
 
         /// <summary>
-        /// Gets the type of the simplest object inheriting from <see cref="Node"/> that implements <paramref name="interfaceType"/>.
+        /// Gets the type of the simplest object inheriting from <see cref="Node"/> that implements <paramref name="nodeType"/>.
         /// </summary>
-        /// <param name="interfaceType">The required interface the returned type must implement.</param>
-        /// <returns>The type of the simplest object inheriting from <see cref="Node"/> that implements <paramref name="interfaceType"/>.</returns>
-        public static Type GetDefaultItemType(Type interfaceType)
+        /// <param name="nodeType">The required interface the returned type must implement.</param>
+        /// <returns>The type of the simplest object inheriting from <see cref="Node"/> that implements <paramref name="nodeType"/>.</returns>
+        public static Type GetDefaultItemType(Type nodeType)
         {
-            Type Result;
+            Contract.RequireNotNull(nodeType, out Type NodeType);
 
-            if (interfaceType == typeof(Argument))
-                Result = typeof(PositionalArgument);
-            else if (interfaceType == typeof(TypeArgument))
-                Result = typeof(PositionalTypeArgument);
-            else if (interfaceType == typeof(Body))
-                Result = typeof(EffectiveBody);
-            else if (interfaceType == typeof(Expression))
-                Result = typeof(QueryExpression);
-            else if (interfaceType == typeof(Instruction))
-                Result = typeof(CommandInstruction);
-            else if (interfaceType == typeof(Feature))
-                Result = typeof(AttributeFeature);
-            else if (interfaceType == typeof(ObjectType))
-                Result = typeof(SimpleType);
+            if (NodeType == typeof(Argument))
+                return typeof(PositionalArgument);
+            else if (NodeType == typeof(TypeArgument))
+                return typeof(PositionalTypeArgument);
+            else if (NodeType == typeof(Body))
+                return typeof(EffectiveBody);
+            else if (NodeType == typeof(Expression))
+                return typeof(QueryExpression);
+            else if (NodeType == typeof(Instruction))
+                return typeof(CommandInstruction);
+            else if (NodeType == typeof(Feature))
+                return typeof(AttributeFeature);
+            else if (NodeType == typeof(ObjectType))
+                return typeof(SimpleType);
             else
-                Result = interfaceType;
-
-            Debug.Assert(Result != null, $"The returned value can't possibly be null");
-
-            if (Result == null)
-                return null!;
-
-            return Result;
+                return NodeType;
         }
 
         /// <summary>
-        /// Creates a new instance of an object inheriting from <see cref="Node"/> with the simplest content that implements <paramref name="interfaceType"/>.
+        /// Creates a new instance of an object inheriting from <see cref="Node"/> with the simplest content that implements <paramref name="nodeType"/>.
         /// </summary>
-        /// <param name="interfaceType">The required interface the new object must implement.</param>
+        /// <param name="nodeType">The required type the new object must inherit from.</param>
         /// <returns>The created instance.</returns>
-        public static Node CreateDefaultFromInterface(Type interfaceType)
+        public static Node CreateDefaultFromType(Type nodeType)
         {
-            if (interfaceType == null) throw new ArgumentNullException(nameof(interfaceType));
+            Contract.RequireNotNull(nodeType, out Type NodeType);
 
-            if (CreateDefaultNoCheck(interfaceType, out Node Result))
+            if (CreateDefaultNoCheck(NodeType, out Node Result))
                 return Result;
 
-            string NamePrefix = SafeType.AssemblyQualifiedName(interfaceType);
+            string NodeTypeName = SafeType.AssemblyQualifiedName(NodeType);
+            Type ResultNodeType = SafeType.GetType(NodeTypeName);
 
-            NamePrefix = NamePrefix.Substring(0, NamePrefix.IndexOf(".", StringComparison.InvariantCulture) + 1);
+            Debug.Assert(!ResultNodeType.IsAbstract, $"A default type value is never abstract");
 
-            string NodeTypeName = SafeType.AssemblyQualifiedName(interfaceType);
-
-            // NodeTypeName = NodeTypeName.Replace(NamePrefix + "I", NamePrefix);
-            Type NodeType = SafeType.GetType(NodeTypeName);
-
-            Debug.Assert(!NodeType.IsAbstract, $"A default type value is never abstract");
-
-            Result = CreateEmptyNode(NodeType);
-            Debug.Assert(Result != null, $"A default empty object is never null");
-
-            if (Result == null)
-                return null!;
-
+            Result = CreateEmptyNode(ResultNodeType);
             return Result;
         }
 
@@ -178,9 +160,11 @@
         /// <returns>The created instance.</returns>
         public static Node CreateEmptyNode(Type objectType)
         {
-            if (objectType == null) throw new ArgumentNullException(nameof(objectType));
-            if (!IsNodeType(objectType)) throw new ArgumentException($"{nameof(objectType)} must be a node type");
-            if (objectType.IsAbstract) throw new ArgumentException($"{nameof(objectType)} must not be an abstract node type");
+            if (!IsNodeType(objectType))
+                throw new ArgumentException($"{nameof(objectType)} must be a node type");
+
+            if (objectType.IsAbstract)
+                throw new ArgumentException($"{nameof(objectType)} must not be an abstract node type");
 
             string FullName = SafeType.FullName(objectType);
 
@@ -204,15 +188,15 @@
         /// <param name="propertyName">The name of the property in <paramref name="emptyNode"/> to fill.</param>
         public static void CreateEmptyNodePropertyName(Type objectType, Node emptyNode, string propertyName)
         {
-            Type /*ChildInterfaceType,*/ ChildNodeType;
+            Type ChildNodeType;
 
             if (NodeTreeHelperChild.IsChildNodeProperty(emptyNode, propertyName, out ChildNodeType))
-                InitializeChildNode(emptyNode, propertyName, CreateDefaultFromInterface(ChildNodeType));
+                InitializeChildNode(emptyNode, propertyName, CreateDefaultFromType(ChildNodeType));
             else if (NodeTreeHelperOptional.IsOptionalChildNodeProperty(emptyNode, propertyName, out _))
                 InitializeUnassignedOptionalChildNode(emptyNode, propertyName);
             else if (NodeTreeHelperList.IsNodeListProperty(emptyNode, propertyName, out ChildNodeType))
                 CreateEmptyNodeList(objectType, emptyNode, propertyName, ChildNodeType);
-            else if (NodeTreeHelperBlockList.IsBlockListProperty(emptyNode, propertyName, /*out ChildInterfaceType,*/ out ChildNodeType))
+            else if (NodeTreeHelperBlockList.IsBlockListProperty(emptyNode, propertyName, out ChildNodeType))
                 CreateEmptyBlockList(objectType, emptyNode, propertyName, ChildNodeType);
             else if (NodeTreeHelper.IsStringProperty(emptyNode, propertyName))
                 NodeTreeHelper.SetStringProperty(emptyNode, propertyName, string.Empty);
@@ -227,11 +211,10 @@
         /// <param name="emptyNode">The node to fill.</param>
         /// <param name="propertyName">The name of the property in <paramref name="emptyNode"/> to fill.</param>
         /// <param name="childNodeType">The type of element elements in the created list.</param>
-        public static void CreateEmptyNodeList(Type objectType, Node emptyNode, string propertyName, Type childNodeType)
+        private static void CreateEmptyNodeList(Type objectType, Node emptyNode, string propertyName, Type childNodeType)
         {
             if (IsCollectionNeverEmpty(emptyNode, propertyName))
             {
-                // Type NodeType = NodeTreeHelper.InterfaceTypeToNodeType(ChildNodeType);
                 Type NodeType = childNodeType;
 
                 Node FirstNode;
@@ -254,23 +237,22 @@
         /// <param name="emptyNode">The node to fill.</param>
         /// <param name="propertyName">The name of the property in <paramref name="emptyNode"/> to fill.</param>
         /// <param name="childNodeType">The type of element elements in the created list.</param>
-        public static void CreateEmptyBlockList(Type objectType, Node emptyNode, string propertyName, Type childNodeType)
+        private static void CreateEmptyBlockList(Type objectType, Node emptyNode, string propertyName, Type childNodeType)
         {
             if (IsCollectionNeverEmpty(emptyNode, propertyName))
             {
-                // Type NodeType = NodeTreeHelper.InterfaceTypeToNodeType(ChildInterfaceType);
                 Type NodeType = childNodeType;
 
                 Node FirstNode;
                 if (NodeType.IsAbstract)
-                    FirstNode = /*CreateDefault(ChildInterfaceType)*/CreateDefault(NodeType);
+                    FirstNode = CreateDefault(NodeType);
                 else
                     FirstNode = CreateEmptyNode(NodeType);
 
-                InitializeSimpleBlockList(emptyNode, propertyName, /*ChildInterfaceType,*/ childNodeType, FirstNode);
+                InitializeSimpleBlockList(emptyNode, propertyName, childNodeType, FirstNode);
             }
             else
-                InitializeEmptyBlockList(emptyNode, propertyName, /*ChildInterfaceType,*/ childNodeType);
+                InitializeEmptyBlockList(emptyNode, propertyName, childNodeType);
         }
 
         /// <summary>
@@ -280,12 +262,12 @@
         /// <returns>True if the node is empty; otherwise, false.</returns>
         public static bool IsEmptyNode(Node node)
         {
-            if (node == null) throw new ArgumentNullException(nameof(node));
+            Contract.RequireNotNull(node, out Node Node);
 
-            IList<string> PropertyNames = NodeTreeHelper.EnumChildNodeProperties(node.GetType());
+            IList<string> PropertyNames = NodeTreeHelper.EnumChildNodeProperties(Node.GetType());
 
             foreach (string PropertyName in PropertyNames)
-                if (!IsEmptyNodePropertyName(node, PropertyName))
+                if (!IsEmptyNodePropertyName(Node, PropertyName))
                     return false;
 
             return true;
@@ -297,7 +279,7 @@
         /// <param name="node">The node to check.</param>
         /// <param name="propertyName">The property name.</param>
         /// <returns>True if the node property is empty; otherwise, false.</returns>
-        public static bool IsEmptyNodePropertyName(Node node, string propertyName)
+        private static bool IsEmptyNodePropertyName(Node node, string propertyName)
         {
             if (NodeTreeHelperChild.IsChildNodeProperty(node, propertyName, out _))
                 return IsEmptyChildNode(node, propertyName);
@@ -305,7 +287,7 @@
                 return IsEmptyOptionalChildNode(node, propertyName);
             else if (NodeTreeHelperList.IsNodeListProperty(node, propertyName, out _))
                 return IsEmptyNodeList(node, propertyName);
-            else if (NodeTreeHelperBlockList.IsBlockListProperty(node, propertyName, /*out ChildInterfaceType,*/ out _))
+            else if (NodeTreeHelperBlockList.IsBlockListProperty(node, propertyName, out _))
                 return IsEmptyBlockList(node, propertyName);
             else if (NodeTreeHelper.IsStringProperty(node, propertyName))
                 return IsEmptyStringProperty(node, propertyName);
@@ -321,7 +303,7 @@
         /// <param name="node">The node to check.</param>
         /// <param name="propertyName">The property name.</param>
         /// <returns>True if the node property is an empty child node; otherwise, false.</returns>
-        public static bool IsEmptyChildNode(Node node, string propertyName)
+        private static bool IsEmptyChildNode(Node node, string propertyName)
         {
             NodeTreeHelperChild.GetChildNode(node, propertyName, out Node ChildNode);
             return IsEmptyNode(ChildNode);
@@ -333,7 +315,7 @@
         /// <param name="node">The node to check.</param>
         /// <param name="propertyName">The property name.</param>
         /// <returns>True if the node property is an unassigned optional child node; otherwise, false.</returns>
-        public static bool IsEmptyOptionalChildNode(Node node, string propertyName)
+        private static bool IsEmptyOptionalChildNode(Node node, string propertyName)
         {
             NodeTreeHelperOptional.GetChildNode(node, propertyName, out bool IsAssigned, out _);
             return !IsAssigned;
@@ -345,7 +327,7 @@
         /// <param name="node">The node to check.</param>
         /// <param name="propertyName">The property name.</param>
         /// <returns>True if the node property is an empty list of nodes; otherwise, false.</returns>
-        public static bool IsEmptyNodeList(Node node, string propertyName)
+        private static bool IsEmptyNodeList(Node node, string propertyName)
         {
             NodeTreeHelperList.GetChildNodeList(node, propertyName, out IReadOnlyList<Node> ChildNodeList);
 
@@ -373,7 +355,7 @@
         /// <param name="node">The node to check.</param>
         /// <param name="propertyName">The property name.</param>
         /// <returns>True if the node property is an empty block list; otherwise, false.</returns>
-        public static bool IsEmptyBlockList(Node node, string propertyName)
+        private static bool IsEmptyBlockList(Node node, string propertyName)
         {
             NodeTreeHelperBlockList.GetChildBlockList(node, propertyName, out IReadOnlyList<NodeTreeBlock> ChildBlockList);
 
@@ -406,7 +388,7 @@
         /// <param name="node">The node to check.</param>
         /// <param name="propertyName">The property name.</param>
         /// <returns>True if the node property is an empty string; otherwise, false.</returns>
-        public static bool IsEmptyStringProperty(Node node, string propertyName)
+        private static bool IsEmptyStringProperty(Node node, string propertyName)
         {
             string Text = NodeTreeHelper.GetString(node, propertyName);
             Debug.Assert(Text != null, $"The content of a string property is never null");
@@ -423,7 +405,7 @@
         /// <param name="node">The node to check.</param>
         /// <param name="propertyName">The property name.</param>
         /// <returns>True if the node property is an enum with default value; otherwise, false.</returns>
-        public static bool IsEmptyEnumProperty(Node node, string propertyName)
+        private static bool IsEmptyEnumProperty(Node node, string propertyName)
         {
             int Value = NodeTreeHelper.GetEnumValue(node, propertyName);
             NodeTreeHelper.GetEnumRange(node.GetType(), propertyName, out int Min, out _);

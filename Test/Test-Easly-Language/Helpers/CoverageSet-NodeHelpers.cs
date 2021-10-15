@@ -77,7 +77,7 @@
             ObjectType ObjectType = NodeHelper.CreateDefaultObjectType();
 
             Node Default = NodeHelper.CreateDefault(typeof(PositionalArgument));
-            Default = NodeHelper.CreateDefaultFromInterface(typeof(PositionalArgument));
+            Default = NodeHelper.CreateDefaultFromType(typeof(PositionalArgument));
 
             Type DefaultType = NodeHelper.GetDefaultItemType(typeof(Argument));
         }

@@ -41,5 +41,70 @@
             Node DefaultScope = NodeHelper.CreateDefault(typeof(Scope));
             Node DefaultImport = NodeHelper.CreateDefault(typeof(Import));
         }
+
+        [Test]
+        public static void TestDefaultNodeType()
+        {
+            Type DefaultArgumentType = NodeHelper.GetDefaultItemType(typeof(Argument));
+            Assert.That(DefaultArgumentType.IsSubclassOf(typeof(Argument)));
+
+            Type DefaultTypeArgumentType = NodeHelper.GetDefaultItemType(typeof(TypeArgument));
+            Assert.That(DefaultTypeArgumentType.IsSubclassOf(typeof(TypeArgument)));
+
+            Type DefaultBodyType = NodeHelper.GetDefaultItemType(typeof(Body));
+            Assert.That(DefaultBodyType.IsSubclassOf(typeof(Body)));
+
+            Type DefaultExpressionType = NodeHelper.GetDefaultItemType(typeof(Expression));
+            Assert.That(DefaultExpressionType.IsSubclassOf(typeof(Expression)));
+
+            Type DefaultInstructionType = NodeHelper.GetDefaultItemType(typeof(Instruction));
+            Assert.That(DefaultInstructionType.IsSubclassOf(typeof(Instruction)));
+
+            Type DefaultFeatureType = NodeHelper.GetDefaultItemType(typeof(Feature));
+            Assert.That(DefaultFeatureType.IsSubclassOf(typeof(Feature)));
+
+            Type DefaultObjectTypeType = NodeHelper.GetDefaultItemType(typeof(ObjectType));
+            Assert.That(DefaultObjectTypeType.IsSubclassOf(typeof(ObjectType)));
+
+            Type DefaultOtherType = NodeHelper.GetDefaultItemType(typeof(CoverageSet));
+            Assert.AreEqual(DefaultOtherType, typeof(CoverageSet));
+        }
+
+        [Test]
+        public static void TestDefaultNodeFromType()
+        {
+            Node DefaultBody = NodeHelper.CreateDefaultFromType(typeof(Body));
+            Node DefaultExpression = NodeHelper.CreateDefaultFromType(typeof(Expression));
+            Node DefaultInstruction = NodeHelper.CreateDefaultFromType(typeof(Instruction));
+            Node DefaultFeature = NodeHelper.CreateDefaultFromType(typeof(Feature));
+            Node DefaultObjectType = NodeHelper.CreateDefaultFromType(typeof(ObjectType));
+
+            Node DefaultArgument = NodeHelper.CreateDefaultFromType(typeof(Argument));
+            Node DefaultTypeArgument = NodeHelper.CreateDefaultFromType(typeof(TypeArgument));
+
+            Node DefaultName = NodeHelper.CreateDefaultFromType(typeof(Name));
+            Node DefaultIdentifier = NodeHelper.CreateDefaultFromType(typeof(Identifier));
+            Node DefaultQualifiedName = NodeHelper.CreateDefaultFromType(typeof(QualifiedName));
+            Node DefaultScope = NodeHelper.CreateDefaultFromType(typeof(Scope));
+            Node DefaultImport = NodeHelper.CreateDefaultFromType(typeof(Import));
+
+            Node DefaultClass = NodeHelper.CreateDefaultFromType(typeof(Class));
+
+            Assert.Throws<ArgumentException>(() => { NodeHelper.CreateEmptyNode(typeof(CoverageSet)); });
+            Assert.Throws<ArgumentException>(() => { NodeHelper.CreateEmptyNode(typeof(Argument)); });
+
+            Node DefaultLibrary = NodeHelper.CreateEmptyNode(typeof(Library));
+            Assert.That(NodeHelper.IsEmptyNode(DefaultLibrary));
+
+            Node DefaultGlobalReplicate = NodeHelper.CreateEmptyNode(typeof(GlobalReplicate));
+            Assert.That(NodeHelper.IsEmptyNode(DefaultGlobalReplicate));
+        }
+
+        [Test]
+        public static void TestIsNodeType()
+        {
+            Assert.That(NodeHelper.IsNodeType(typeof(Identifier)));
+            Assert.That(!NodeHelper.IsNodeType(typeof(CoverageSet)));
+        }
     }
 }

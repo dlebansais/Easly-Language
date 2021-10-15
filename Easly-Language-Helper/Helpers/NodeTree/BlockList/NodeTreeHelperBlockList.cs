@@ -23,12 +23,8 @@
         public static bool IsBlockListProperty(Node node, string propertyName, /*out Type childInterfaceType,*/ out Type childNodeType)
         {
             Type NodeType = node.GetType();
-            if (!IsBlockListProperty(NodeType, propertyName, /*out childInterfaceType,*/ out childNodeType))
+            if (!IsBlockListProperty(NodeType, propertyName, out childNodeType))
                 return false;
-
-            PropertyInfo Property = SafeType.GetProperty(NodeType, propertyName);
-            object Collection = SafeType.GetPropertyValue(Property, node);
-            Debug.Assert(Collection is IBlockList);
 
             return true;
         }
