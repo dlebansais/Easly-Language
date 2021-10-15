@@ -215,14 +215,9 @@
         {
             if (IsCollectionNeverEmpty(emptyNode, propertyName))
             {
-                Type NodeType = childNodeType;
+                Debug.Assert(!childNodeType.IsAbstract, "There isn't any list of abstract nodes in the language");
 
-                Node FirstNode;
-                if (NodeType.IsAbstract)
-                    FirstNode = CreateDefault(childNodeType);
-                else
-                    FirstNode = CreateEmptyNode(NodeType);
-
+                Node FirstNode = CreateDefaultFirstNode(childNodeType);
                 InitializeSimpleNodeList(emptyNode, propertyName, childNodeType, FirstNode);
             }
             else
@@ -241,18 +236,23 @@
         {
             if (IsCollectionNeverEmpty(emptyNode, propertyName))
             {
-                Type NodeType = childNodeType;
-
-                Node FirstNode;
-                if (NodeType.IsAbstract)
-                    FirstNode = CreateDefault(NodeType);
-                else
-                    FirstNode = CreateEmptyNode(NodeType);
-
+                Node FirstNode = CreateDefaultFirstNode(childNodeType);
                 InitializeSimpleBlockList(emptyNode, propertyName, childNodeType, FirstNode);
             }
             else
                 InitializeEmptyBlockList(emptyNode, propertyName, childNodeType);
+        }
+
+        private static Node CreateDefaultFirstNode(Type nodeType)
+        {
+            Node FirstNode;
+
+            if (nodeType.IsAbstract)
+                FirstNode = CreateDefault(nodeType);
+            else
+                FirstNode = CreateEmptyNode(nodeType);
+
+            return FirstNode;
         }
 
         /// <summary>

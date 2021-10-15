@@ -98,6 +98,12 @@
 
             Node DefaultGlobalReplicate = NodeHelper.CreateEmptyNode(typeof(GlobalReplicate));
             Assert.That(NodeHelper.IsEmptyNode(DefaultGlobalReplicate));
+
+            Node DefaultInspectInstruction = NodeHelper.CreateEmptyNode(typeof(InspectInstruction));
+            Assert.That(NodeHelper.IsEmptyNode(DefaultInspectInstruction));
+
+            Node DefaultRoot = NodeHelper.CreateEmptyNode(typeof(Root));
+            Assert.That(NodeHelper.IsEmptyNode(DefaultRoot));
         }
 
         [Test]
