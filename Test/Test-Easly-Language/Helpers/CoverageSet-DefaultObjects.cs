@@ -100,10 +100,8 @@
             Library DefaultLibrary = (Library)NodeHelper.CreateEmptyNode(typeof(Library));
             Assert.That(NodeHelper.IsEmptyNode(DefaultLibrary));
 
-            GlobalReplicate DefaultGlobalReplicate1 = (GlobalReplicate)NodeHelper.CreateEmptyNode(typeof(GlobalReplicate));
-            Assert.That(NodeHelper.IsEmptyNode(DefaultGlobalReplicate1));
-            GlobalReplicate DefaultGlobalReplicate2 = (GlobalReplicate)NodeHelper.CreateEmptyNode(typeof(GlobalReplicate));
-            Assert.That(NodeHelper.IsEmptyNode(DefaultGlobalReplicate2));
+            GlobalReplicate DefaultGlobalReplicate = (GlobalReplicate)NodeHelper.CreateEmptyNode(typeof(GlobalReplicate));
+            Assert.That(NodeHelper.IsEmptyNode(DefaultGlobalReplicate));
 
             InspectInstruction DefaultInspectInstruction = (InspectInstruction)NodeHelper.CreateEmptyNode(typeof(InspectInstruction));
             Assert.That(NodeHelper.IsEmptyNode(DefaultInspectInstruction));
@@ -129,15 +127,17 @@
             Root DefaultRoot = (Root)NodeHelper.CreateEmptyNode(typeof(Root));
             Assert.That(NodeHelper.IsEmptyNode(DefaultRoot));
 
-            DefaultRoot.Replicates.Add(DefaultGlobalReplicate1);
+            DefaultRoot.Replicates.Add(DefaultGlobalReplicate);
             Assert.That(!NodeHelper.IsEmptyNode(DefaultRoot));
 
-            DefaultRoot.Replicates.Add(DefaultGlobalReplicate2);
-            Assert.That(!NodeHelper.IsEmptyNode(DefaultRoot));
+            //System.Diagnostics.Debug.Assert(false);
+            Pattern Pattern0 = DefaultGlobalReplicate.Patterns[0];
+            Pattern0.Text = "Foo0";
+            Assert.That(!NodeHelper.IsEmptyNode(DefaultGlobalReplicate));
 
-            Pattern SimplePattern = NodeHelper.CreateSimplePattern("Foo");
-            DefaultGlobalReplicate2.Patterns.Add(SimplePattern);
-            Assert.That(!NodeHelper.IsEmptyNode(DefaultRoot));
+            Pattern SimplePattern1 = NodeHelper.CreateSimplePattern("Foo1");
+            DefaultGlobalReplicate.Patterns.Add(SimplePattern1);
+            Assert.That(!NodeHelper.IsEmptyNode(DefaultGlobalReplicate));
         }
 
         [Test]
