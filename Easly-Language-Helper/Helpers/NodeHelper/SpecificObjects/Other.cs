@@ -247,6 +247,23 @@
         }
 
         /// <summary>
+        /// Creates a new instance of a <see cref="ClassReplicate"/> with default values.
+        /// </summary>
+        /// <param name="nameText">The global replicate name.</param>
+        /// <returns>The created instance.</returns>
+        public static ClassReplicate CreateSimpleClassReplicate(string nameText)
+        {
+            ClassReplicate SimpleClassReplicate = new ClassReplicate();
+            SimpleClassReplicate.Documentation = CreateEmptyDocumentation();
+            SimpleClassReplicate.ReplicateName = CreateSimpleName(nameText);
+
+            Pattern FirstPattern = CreateEmptyPattern();
+            SimpleClassReplicate.PatternBlocks = BlockListHelper<Pattern>.CreateSimpleBlockList(FirstPattern);
+
+            return SimpleClassReplicate;
+        }
+
+        /// <summary>
         /// Creates a new instance of a <see cref="Import"/> with provided values.
         /// </summary>
         /// <param name="identifierText">The import identifier.</param>

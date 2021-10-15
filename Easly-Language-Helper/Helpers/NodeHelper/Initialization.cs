@@ -43,30 +43,6 @@
             ItemProperty.SetValue(node, EmptyReference);
         }
 
-        private static void InitializeOptionalChildNode(Node node, string propertyName, Node childNode)
-        {
-            Type NodeType = node.GetType();
-            PropertyInfo ItemProperty = SafeType.GetProperty(NodeType, propertyName);
-
-            Type ItemType = ItemProperty.PropertyType;
-            Type[] Generics = ItemType.GetGenericArguments();
-
-            Type ReferenceType = typeof(OptionalReference<>).MakeGenericType(Generics);
-            string FullName = SafeType.FullName(ReferenceType);
-
-            Assembly ReferenceAssembly = ReferenceType.Assembly;
-
-            IOptionalReference EmptyReference = SafeType.CreateInstance<IOptionalReference>(ReferenceAssembly, FullName);
-
-            PropertyInfo ReferenceProperty = SafeType.GetProperty(ReferenceType, nameof(OptionalReference<Node>.Item));
-
-            ReferenceProperty.SetValue(EmptyReference, childNode);
-
-            EmptyReference.Unassign();
-
-            ItemProperty.SetValue(node, EmptyReference);
-        }
-
         private static void InitializeEmptyNodeList(Node node, string propertyName, Type childNodeType)
         {
             Type[] Generics = new Type[] { childNodeType };
