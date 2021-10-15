@@ -391,11 +391,6 @@
         private static bool IsEmptyStringProperty(Node node, string propertyName)
         {
             string Text = NodeTreeHelper.GetString(node, propertyName);
-            Debug.Assert(Text != null, $"The content of a string property is never null");
-
-            if (Text == null)
-                return false;
-
             return Text.Length == 0;
         }
 

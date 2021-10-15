@@ -5,6 +5,7 @@
     using Easly;
     using NUnit.Framework;
     using System;
+    using System.Collections.Generic;
 
     [TestFixture]
     public partial class CoverageSet
@@ -94,14 +95,15 @@
             Assert.Throws<ArgumentException>(() => { NodeHelper.CreateEmptyNode(typeof(Argument)); });
 
             Class DefaultClass = (Class)NodeHelper.CreateEmptyNode(typeof(Class));
-            //System.Diagnostics.Debug.Assert(false);
             Assert.That(NodeHelper.IsEmptyNode(DefaultClass));
 
             Library DefaultLibrary = (Library)NodeHelper.CreateEmptyNode(typeof(Library));
             Assert.That(NodeHelper.IsEmptyNode(DefaultLibrary));
 
-            GlobalReplicate DefaultGlobalReplicate = (GlobalReplicate)NodeHelper.CreateEmptyNode(typeof(GlobalReplicate));
-            Assert.That(NodeHelper.IsEmptyNode(DefaultGlobalReplicate));
+            GlobalReplicate DefaultGlobalReplicate1 = (GlobalReplicate)NodeHelper.CreateEmptyNode(typeof(GlobalReplicate));
+            Assert.That(NodeHelper.IsEmptyNode(DefaultGlobalReplicate1));
+            GlobalReplicate DefaultGlobalReplicate2 = (GlobalReplicate)NodeHelper.CreateEmptyNode(typeof(GlobalReplicate));
+            Assert.That(NodeHelper.IsEmptyNode(DefaultGlobalReplicate2));
 
             InspectInstruction DefaultInspectInstruction = (InspectInstruction)NodeHelper.CreateEmptyNode(typeof(InspectInstruction));
             Assert.That(NodeHelper.IsEmptyNode(DefaultInspectInstruction));
@@ -109,10 +111,32 @@
             AttachmentInstruction DefaultAttachmentInstruction = (AttachmentInstruction)NodeHelper.CreateEmptyNode(typeof(AttachmentInstruction));
             Assert.That(NodeHelper.IsEmptyNode(DefaultAttachmentInstruction));
 
+            Attachment Attachment0 = DefaultAttachmentInstruction.AttachmentBlocks.NodeBlockList[0].NodeList[0];
+            Attachment0.Instructions = NodeHelper.CreateSimpleScope(DefaultInspectInstruction);
+            Assert.That(!NodeHelper.IsEmptyNode(DefaultAttachmentInstruction));
+
+            Attachment DefaultAttachment1 = (Attachment)NodeHelper.CreateEmptyNode(typeof(Attachment));
+
+            DefaultAttachmentInstruction.AttachmentBlocks.NodeBlockList[0].NodeList.Add(DefaultAttachment1);
+            Assert.That(!NodeHelper.IsEmptyNode(DefaultAttachmentInstruction));
+
+            Attachment DefaultAttachment2 = (Attachment)NodeHelper.CreateEmptyNode(typeof(Attachment));
+            List<Attachment> AttachmentList = new() { DefaultAttachment2 };
+            IBlock<Attachment> SimpleBlock = BlockListHelper.CreateBlock<Attachment>(AttachmentList);
+            DefaultAttachmentInstruction.AttachmentBlocks.NodeBlockList.Add(SimpleBlock);
+            Assert.That(!NodeHelper.IsEmptyNode(DefaultAttachmentInstruction));
+
             Root DefaultRoot = (Root)NodeHelper.CreateEmptyNode(typeof(Root));
             Assert.That(NodeHelper.IsEmptyNode(DefaultRoot));
 
-            DefaultRoot.Replicates.Add(DefaultGlobalReplicate);
+            DefaultRoot.Replicates.Add(DefaultGlobalReplicate1);
+            Assert.That(!NodeHelper.IsEmptyNode(DefaultRoot));
+
+            DefaultRoot.Replicates.Add(DefaultGlobalReplicate2);
+            Assert.That(!NodeHelper.IsEmptyNode(DefaultRoot));
+
+            Pattern SimplePattern = NodeHelper.CreateSimplePattern("Foo");
+            DefaultGlobalReplicate2.Patterns.Add(SimplePattern);
             Assert.That(!NodeHelper.IsEmptyNode(DefaultRoot));
         }
 
