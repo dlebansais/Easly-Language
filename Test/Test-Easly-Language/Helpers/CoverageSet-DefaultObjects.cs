@@ -203,8 +203,17 @@
             List<Instruction> InstructionList = new() { DefaultInstruction };
             IBlock<Instruction> InstructionBlock = BlockListHelper.CreateBlock(InstructionList);
 
+            EntityDeclaration DefaultEntityDeclaration = (EntityDeclaration)NodeHelper.CreateDefaultFromType(typeof(EntityDeclaration));
+            List<EntityDeclaration> EntityDeclarationList = new() { DefaultEntityDeclaration };
+            IBlock<EntityDeclaration> EntityDeclarationBlock = BlockListHelper.CreateBlock(EntityDeclarationList);
+
             ScopeNode.InstructionBlocks.NodeBlockList.Add(InstructionBlock);
             Assert.That(!NodeHelper.IsDefaultNode(ScopeNode));
+            ScopeNode.InstructionBlocks.NodeBlockList.Remove(InstructionBlock);
+
+            ScopeNode.EntityDeclarationBlocks.NodeBlockList.Add(EntityDeclarationBlock);
+            Assert.That(!NodeHelper.IsDefaultNode(ScopeNode));
+            ScopeNode.EntityDeclarationBlocks.NodeBlockList.Remove(EntityDeclarationBlock);
 
             QualifiedName QualifiedNameNode = (QualifiedName)NodeHelper.CreateDefault(typeof(QualifiedName));
             Assert.That(NodeHelper.IsDefaultNode(QualifiedNameNode));
