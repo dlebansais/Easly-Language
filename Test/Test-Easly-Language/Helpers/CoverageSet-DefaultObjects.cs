@@ -180,5 +180,61 @@
             Assert.That(NodeHelper.IsNodeType(typeof(Identifier)));
             Assert.That(!NodeHelper.IsNodeType(typeof(CoverageSet)));
         }
+
+        [Test]
+        public static void TestNonDefault()
+        {
+            Name NameNode = (Name)NodeHelper.CreateDefault(typeof(Name));
+            Assert.That(NodeHelper.IsDefaultNode(NameNode));
+
+            NameNode.Text = "Foo";
+            Assert.That(!NodeHelper.IsDefaultNode(NameNode));
+
+            Identifier IdentifierNode = (Identifier)NodeHelper.CreateDefault(typeof(Identifier));
+            Assert.That(NodeHelper.IsDefaultNode(IdentifierNode));
+
+            IdentifierNode.Text = "Foo";
+            Assert.That(!NodeHelper.IsDefaultNode(IdentifierNode));
+
+            Scope ScopeNode = (Scope)NodeHelper.CreateDefault(typeof(Scope));
+            Assert.That(NodeHelper.IsDefaultNode(ScopeNode));
+
+            Instruction DefaultInstruction = (Instruction)NodeHelper.CreateDefaultFromType(typeof(Instruction));
+            List<Instruction> InstructionList = new() { DefaultInstruction };
+            IBlock<Instruction> InstructionBlock = BlockListHelper.CreateBlock(InstructionList);
+
+            ScopeNode.InstructionBlocks.NodeBlockList.Add(InstructionBlock);
+            Assert.That(!NodeHelper.IsDefaultNode(ScopeNode));
+
+            QualifiedName QualifiedNameNode = (QualifiedName)NodeHelper.CreateDefault(typeof(QualifiedName));
+            Assert.That(NodeHelper.IsDefaultNode(QualifiedNameNode));
+
+            QualifiedNameNode.Path[0].Text = "Foo";
+            Assert.That(!NodeHelper.IsDefaultNode(QualifiedNameNode));
+
+            AnchoredType AnchoredTypeNode = NodeHelper.CreateAnchoredType(QualifiedNameNode, AnchorKinds.Declaration);
+            Assert.That(!NodeHelper.IsDefaultNode(AnchoredTypeNode));
+
+            SimpleType SimpleTypeNode = (SimpleType)NodeHelper.CreateDefault(typeof(SimpleType));
+            Assert.That(NodeHelper.IsDefaultNode(SimpleTypeNode));
+
+            SimpleTypeNode.ClassIdentifier.Text = "Foo";
+            Assert.That(!NodeHelper.IsDefaultNode(SimpleTypeNode));
+
+            PrecursorBody PrecursorBodyNode = NodeHelper.CreateEmptyPrecursorBody();
+            Assert.That(!NodeHelper.IsDefaultNode(PrecursorBodyNode));
+
+            Body BodyNode = NodeHelper.CreateDefaultBody();
+            Assert.That(BodyNode is EffectiveBody);
+            EffectiveBody EffectiveBodyNode = (EffectiveBody)BodyNode;
+
+            Assert.That(NodeHelper.IsDefaultNode(EffectiveBodyNode));
+
+            ExceptionHandler DefaultExceptionHandler = (ExceptionHandler)NodeHelper.CreateDefaultFromType(typeof(ExceptionHandler));
+            List<ExceptionHandler> ExceptionHandlerList = new() { DefaultExceptionHandler };
+            IBlock<ExceptionHandler> ExceptionHandlerBlock = BlockListHelper.CreateBlock(ExceptionHandlerList);
+            EffectiveBodyNode.ExceptionHandlerBlocks.NodeBlockList.Add(ExceptionHandlerBlock);
+            Assert.That(!NodeHelper.IsDefaultNode(EffectiveBodyNode));
+        }
     }
 }
