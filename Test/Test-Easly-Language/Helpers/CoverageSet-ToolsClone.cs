@@ -20,10 +20,16 @@
             SimpleClass.ClassReplicateBlocks.NodeBlockList.Add(SimpleBlock);
             SimpleClass.FromIdentifier.Clear();
 
-            Class ClassClone = (Class)NodeHelper.DeepCloneNode(SimpleClass, false);
+            Class ClassClone;
+
+            ClassClone = (Class)NodeHelper.DeepCloneNode(SimpleClass, false);
 
             Identifier SimpleIdentifier = NodeHelper.CreateSimpleIdentifier("Foo");
             SimpleClass.FromIdentifier.Item = SimpleIdentifier;
+
+            ClassClone = (Class)NodeHelper.DeepCloneNode(SimpleClass, false);
+
+            SimpleClass.FromIdentifier.Unassign();
 
             ClassClone = (Class)NodeHelper.DeepCloneNode(SimpleClass, false);
 
