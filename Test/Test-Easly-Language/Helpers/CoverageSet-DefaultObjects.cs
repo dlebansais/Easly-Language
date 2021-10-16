@@ -221,6 +221,9 @@
             QualifiedNameNode.Path[0].Text = "Foo";
             Assert.That(!NodeHelper.IsDefaultNode(QualifiedNameNode));
 
+            QualifiedNameNode.Path.Add(IdentifierNode);
+            Assert.That(!NodeHelper.IsDefaultNode(QualifiedNameNode));
+
             AnchoredType AnchoredTypeNode = NodeHelper.CreateAnchoredType(QualifiedNameNode, AnchorKinds.Declaration);
             Assert.That(!NodeHelper.IsDefaultNode(AnchoredTypeNode));
 
@@ -228,6 +231,9 @@
             Assert.That(NodeHelper.IsDefaultNode(SimpleTypeNode));
 
             SimpleTypeNode.ClassIdentifier.Text = "Foo";
+            Assert.That(!NodeHelper.IsDefaultNode(SimpleTypeNode));
+
+            SimpleTypeNode.Sharing = SharingType.WriteOnly;
             Assert.That(!NodeHelper.IsDefaultNode(SimpleTypeNode));
 
             PrecursorBody PrecursorBodyNode = NodeHelper.CreateEmptyPrecursorBody();
@@ -242,7 +248,11 @@
             ExceptionHandler DefaultExceptionHandler = (ExceptionHandler)NodeHelper.CreateDefaultFromType(typeof(ExceptionHandler));
             List<ExceptionHandler> ExceptionHandlerList = new() { DefaultExceptionHandler };
             IBlock<ExceptionHandler> ExceptionHandlerBlock = BlockListHelper.CreateBlock(ExceptionHandlerList);
+
             EffectiveBodyNode.ExceptionHandlerBlocks.NodeBlockList.Add(ExceptionHandlerBlock);
+            Assert.That(!NodeHelper.IsDefaultNode(EffectiveBodyNode));
+
+            EffectiveBodyNode.BodyInstructionBlocks.NodeBlockList.Add(InstructionBlock);
             Assert.That(!NodeHelper.IsDefaultNode(EffectiveBodyNode));
 
             PropertyFeature PropertyFeatureNode = NodeHelper.CreateEmptyPropertyFeature();
@@ -262,10 +272,26 @@
             AttributeFeatureNode.EnsureBlocks.NodeBlockList.Add(AssertionBlock);
             Assert.That(!NodeHelper.IsDefaultNode(AttributeFeatureNode));
 
+            AttributeFeatureNode.ExportIdentifier.Text = "Foo";
+            Assert.That(!NodeHelper.IsDefaultNode(AttributeFeatureNode));
+
             Expression ExpressionNode = (Expression)NodeHelper.CreateDefaultFromType(typeof(Expression));
             Assert.That(ExpressionNode is QueryExpression);
+
             QueryExpression QueryExpressionNode = (QueryExpression)ExpressionNode;
             Assert.That(NodeHelper.IsDefaultNode(QueryExpressionNode));
+
+            Argument ArgumentNode = (Argument)NodeHelper.CreateDefaultFromType(typeof(Argument));
+            Assert.That(ArgumentNode is PositionalArgument);
+
+            PositionalArgument PositionalArgumentNode = (PositionalArgument)ArgumentNode;
+            Assert.That(NodeHelper.IsDefaultNode(PositionalArgumentNode));
+
+            List<Argument> ArgumentList = new() { ArgumentNode };
+            IBlock<Argument> ArgumentBlock = BlockListHelper.CreateBlock(ArgumentList);
+
+            QueryExpressionNode.ArgumentBlocks.NodeBlockList.Add(ArgumentBlock);
+            Assert.That(!NodeHelper.IsDefaultNode(QueryExpressionNode));
 
             ManifestCharacterExpression ManifestCharacterExpressionNode = (ManifestCharacterExpression)NodeHelper.CreateDefaultFromType(typeof(ManifestCharacterExpression));
             Assert.That(NodeHelper.IsDefaultNode(ManifestCharacterExpressionNode));
@@ -279,11 +305,24 @@
             PreprocessorExpression PreprocessorExpressionNode = (PreprocessorExpression)NodeHelper.CreateDefaultFromType(typeof(PreprocessorExpression));
             Assert.That(!NodeHelper.IsDefaultNode(PreprocessorExpressionNode));
 
-            Argument ArgumentNode = (Argument)NodeHelper.CreateDefaultFromType(typeof(Argument));
-            Assert.That(ArgumentNode is PositionalArgument);
+            AssignmentArgument AssignmentArgumentNode = (AssignmentArgument)NodeHelper.CreateDefaultFromType(typeof(AssignmentArgument));
+            Assert.That(!NodeHelper.IsDefaultNode(AssignmentArgumentNode));
 
-            PositionalArgument PositionalArgumentNode = (PositionalArgument)ArgumentNode;
-            Assert.That(NodeHelper.IsDefaultNode(PositionalArgumentNode));
+            Assert.That(PositionalArgumentNode.Source is QueryExpression);
+            QueryExpression Source = (QueryExpression)PositionalArgumentNode.Source;
+            Assert.That(Source.Query.Path.Count == 1);
+
+            Source.Query.Path[0].Text = "Foo";
+            Assert.That(!NodeHelper.IsDefaultNode(PositionalArgumentNode));
+
+            Source.Query.Path.Add(IdentifierNode);
+            Assert.That(!NodeHelper.IsDefaultNode(PositionalArgumentNode));
+
+            Source.ArgumentBlocks.NodeBlockList.Add(ArgumentBlock);
+            Assert.That(!NodeHelper.IsDefaultNode(PositionalArgumentNode));
+
+            PositionalArgumentNode.Source = ManifestCharacterExpressionNode;
+            Assert.That(!NodeHelper.IsDefaultNode(PositionalArgumentNode));
         }
     }
 }

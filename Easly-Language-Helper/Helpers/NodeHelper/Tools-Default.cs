@@ -195,12 +195,11 @@
                     IList<Identifier> Path = AsQueryExpression.Query.Path;
                     Debug.Assert(Path.Count > 0);
 
-                    if (Path.Count == 1 && Path[0].Text.Length == 0)
-                    {
-                        IBlockList ArgumentBlocks = (IBlockList)AsQueryExpression.ArgumentBlocks;
-                        if (NodeTreeHelperBlockList.IsBlockListEmpty(ArgumentBlocks))
-                            return true;
-                    }
+                    bool DefaultQueryPath = Path.Count == 1 && Path[0].Text.Length == 0;
+                    bool DefaultQueryArguments = NodeTreeHelperBlockList.IsBlockListEmpty((IBlockList)AsQueryExpression.ArgumentBlocks);
+
+                    if (DefaultQueryPath && DefaultQueryArguments)
+                        return true;
                 }
 
             return false;
