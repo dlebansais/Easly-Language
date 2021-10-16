@@ -1,6 +1,5 @@
 ﻿namespace BaseNodeHelper
 {
-    using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using BaseNode;
@@ -18,16 +17,11 @@
         /// <returns>True if the optional reference is assigned to a node with the default value for its type; otherwise, false.</returns>
         public static bool IsOptionalAssignedToDefault(IOptionalReference optional)
         {
-            if (optional == null) throw new ArgumentNullException(nameof(optional));
-
             if (!optional.IsAssigned)
                 return false;
 
+            Debug.Assert(optional.HasItem);
             Node Node = (Node)optional.Item;
-            Debug.Assert(Node != null, $"The optional item is always a {nameof(Node)}");
-
-            if (Node == null)
-                return false;
 
             return IsDefaultNode(Node);
         }
@@ -62,6 +56,9 @@
                 case Body AsBody:
                     return IsDefaultBody(AsBody);
 
+                case Feature AsFeature:
+                    return IsDefaultFeature(AsFeature);
+
                 case Argument AsArgument:
                     return IsDefaultArgument(AsArgument);
 
@@ -87,20 +84,18 @@
 
         private static bool IsDefaultQualifiedName(QualifiedName nodeQualifiedName)
         {
-            IList<Identifier> Path = nodeQualifiedName.Path; // Debug.Assert(Path.Count > 0);
+            IList<Identifier> Path = nodeQualifiedName.Path;
+            Debug.Assert(Path.Count > 0);
+
             return Path.Count == 1 && Path[0].Text.Length == 0;
         }
 
         private static bool IsDefaultObjectType(ObjectType nodeObjectType)
         {
-            switch (nodeObjectType)
-            {
-                case SimpleType AsSimpleType:
-                    return IsDefaultSimpleType(AsSimpleType);
+            if (nodeObjectType is not SimpleType AsSimpleType)
+                return false;
 
-                default:
-                    return false;
-            }
+            return IsDefaultSimpleType(AsSimpleType);
         }
 
         private static bool IsDefaultSimpleType(SimpleType nodeSimpleType)
@@ -110,24 +105,37 @@
 
         private static bool IsDefaultBody(Body nodeBody)
         {
-            switch (nodeBody)
-            {
-                case EffectiveBody AsEffectiveBody:
-                    return IsDefaultEffectiveBody(AsEffectiveBody);
+            if (nodeBody is not EffectiveBody AsEffectiveBody)
+                return false;
 
-                default:
-                    return false;
-            }
+            return IsDefaultEffectiveBody(AsEffectiveBody);
         }
 
         private static bool IsDefaultEffectiveBody(EffectiveBody nodeEffectiveBody)
         {
-            return nodeEffectiveBody.RequireBlocks.NodeBlockList.Count == 0 &&
-                   nodeEffectiveBody.EnsureBlocks.NodeBlockList.Count == 0 &&
-                   nodeEffectiveBody.ExceptionIdentifierBlocks.NodeBlockList.Count == 0 &&
-                   nodeEffectiveBody.EntityDeclarationBlocks.NodeBlockList.Count == 0 &&
-                   nodeEffectiveBody.BodyInstructionBlocks.NodeBlockList.Count == 0 &&
-                   nodeEffectiveBody.ExceptionHandlerBlocks.NodeBlockList.Count == 0;
+            return NodeTreeHelperBlockList.IsBlockListEmpty((IBlockList)nodeEffectiveBody.RequireBlocks) &&
+                   NodeTreeHelperBlockList.IsBlockListEmpty((IBlockList)nodeEffectiveBody.EnsureBlocks) &&
+                   NodeTreeHelperBlockList.IsBlockListEmpty((IBlockList)nodeEffectiveBody.ExceptionIdentifierBlocks) &&
+                   NodeTreeHelperBlockList.IsBlockListEmpty((IBlockList)nodeEffectiveBody.EntityDeclarationBlocks) &&
+                   NodeTreeHelperBlockList.IsBlockListEmpty((IBlockList)nodeEffectiveBody.BodyInstructionBlocks) &&
+                   NodeTreeHelperBlockList.IsBlockListEmpty((IBlockList)nodeEffectiveBody.ExceptionHandlerBlocks);
+        }
+
+        private static bool IsDefaultFeature(Feature nodeFeature)
+        {
+            if (nodeFeature is not AttributeFeature AsAttributeFeature)
+                return false;
+
+            return IsDefaultAttributeFeature(AsAttributeFeature);
+        }
+
+        private static bool IsDefaultAttributeFeature(AttributeFeature nodeAttributeFeature)
+        {
+            return nodeAttributeFeature.ExportIdentifier.Text == "All" &&
+                   nodeAttributeFeature.Export == ExportStatus.Exported &&
+                   IsDefaultName(nodeAttributeFeature.EntityName) &&
+                   IsDefaultObjectType(nodeAttributeFeature.EntityType) &&
+                   NodeTreeHelperBlockList.IsBlockListEmpty((IBlockList)nodeAttributeFeature.EnsureBlocks);
         }
 
         private static bool IsDefaultExpression(Expression nodeExpression)
@@ -153,7 +161,9 @@
 
         private static bool IsDefaultQueryExpression(QueryExpression nodeQueryExpression)
         {
-            IList<Identifier> Path = nodeQueryExpression.Query.Path; // Debug.Assert(Path.Count > 0);
+            IList<Identifier> Path = nodeQueryExpression.Query.Path;
+            Debug.Assert(Path.Count > 0);
+
             return nodeQueryExpression.ArgumentBlocks.NodeBlockList.Count == 0 && Path.Count == 1 && Path[0].Text.Length == 0;
         }
 
@@ -178,14 +188,11 @@
                 if (AsPositional.Source is QueryExpression AsQueryExpression)
                 {
                     IList<Identifier> Path = AsQueryExpression.Query.Path;
+                    Debug.Assert(Path.Count > 0);
+
                     if (Path.Count == 1 && Path[0].Text.Length == 0)
                     {
                         IBlockList ArgumentBlocks = (IBlockList)AsQueryExpression.ArgumentBlocks;
-                        Debug.Assert(ArgumentBlocks != null, $"ArgumentBlocks is always a {nameof(IBlockList)}");
-
-                        if (ArgumentBlocks == null)
-                            return false;
-
                         if (NodeTreeHelperBlockList.IsBlockListEmpty(ArgumentBlocks))
                             return true;
                     }

@@ -14,12 +14,25 @@
         public static void TestDefaultObjects()
         {
             Argument DefaultArgument = NodeHelper.CreateDefaultArgument();
+            Assert.That(NodeHelper.IsDefaultNode(DefaultArgument));
+
             TypeArgument DefaultTypeArgument = NodeHelper.CreateDefaultTypeArgument();
+            Assert.That(NodeHelper.IsDefaultNode(DefaultTypeArgument));
+
             Body DefaultBody = NodeHelper.CreateDefaultBody();
+            Assert.That(NodeHelper.IsDefaultNode(DefaultBody));
+
             Expression DefaultExpression = NodeHelper.CreateDefaultExpression();
+            Assert.That(NodeHelper.IsDefaultNode(DefaultExpression));
+
             Instruction DefaultInstruction = NodeHelper.CreateDefaultInstruction();
+            Assert.That(NodeHelper.IsDefaultNode(DefaultInstruction));
+
             Feature DefaultFeature = NodeHelper.CreateDefaultFeature();
+            Assert.That(NodeHelper.IsDefaultNode(DefaultFeature));
+
             ObjectType DefaultObjectType = NodeHelper.CreateDefaultObjectType();
+            Assert.That(NodeHelper.IsDefaultNode(DefaultObjectType));
         }
 
         [Test]
@@ -28,19 +41,40 @@
             Assert.Throws<ArgumentException>(() => { NodeHelper.CreateDefault(typeof(CoverageSet)); });
 
             Node DefaultBody = NodeHelper.CreateDefault(typeof(Body));
+            Assert.That(NodeHelper.IsDefaultNode(DefaultBody));
+
             Node DefaultExpression = NodeHelper.CreateDefault(typeof(Expression));
+            Assert.That(NodeHelper.IsDefaultNode(DefaultExpression));
+
             Node DefaultInstruction = NodeHelper.CreateDefault(typeof(Instruction));
+            Assert.That(NodeHelper.IsDefaultNode(DefaultInstruction));
+
             Node DefaultFeature = NodeHelper.CreateDefault(typeof(Feature));
+            Assert.That(NodeHelper.IsDefaultNode(DefaultFeature));
+
             Node DefaultObjectType = NodeHelper.CreateDefault(typeof(ObjectType));
+            Assert.That(NodeHelper.IsDefaultNode(DefaultObjectType));
 
             Node DefaultArgument = NodeHelper.CreateDefault(typeof(Argument));
+            Assert.That(NodeHelper.IsDefaultNode(DefaultArgument));
+
             Node DefaultTypeArgument = NodeHelper.CreateDefault(typeof(TypeArgument));
+            Assert.That(NodeHelper.IsDefaultNode(DefaultTypeArgument));
 
             Node DefaultName = NodeHelper.CreateDefault(typeof(Name));
+            Assert.That(NodeHelper.IsDefaultNode(DefaultName));
+
             Node DefaultIdentifier = NodeHelper.CreateDefault(typeof(Identifier));
+            Assert.That(NodeHelper.IsDefaultNode(DefaultIdentifier));
+
             Node DefaultQualifiedName = NodeHelper.CreateDefault(typeof(QualifiedName));
+            Assert.That(NodeHelper.IsDefaultNode(DefaultQualifiedName));
+
             Node DefaultScope = NodeHelper.CreateDefault(typeof(Scope));
+            Assert.That(NodeHelper.IsDefaultNode(DefaultScope));
+
             Node DefaultImport = NodeHelper.CreateDefault(typeof(Import));
+            Assert.That(NodeHelper.IsDefaultNode(DefaultImport));
         }
 
         [Test]

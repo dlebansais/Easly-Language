@@ -2,6 +2,7 @@
 {
     using BaseNode;
     using BaseNodeHelper;
+    using Easly;
     using NUnit.Framework;
     using System.Collections.Generic;
 
@@ -18,6 +19,12 @@
             IBlock<ClassReplicate> SimpleBlock = BlockListHelper.CreateBlock<ClassReplicate>(GlobalReplicateList);
 
             SimpleClass.ClassReplicateBlocks.NodeBlockList.Add(SimpleBlock);
+
+            Assert.That(!NodeHelper.IsOptionalAssignedToDefault((IOptionalReference)SimpleClass.FromIdentifier));
+            
+            SimpleClass.FromIdentifier.Assign();
+            Assert.That(NodeHelper.IsOptionalAssignedToDefault((IOptionalReference)SimpleClass.FromIdentifier));
+
             SimpleClass.FromIdentifier.Clear();
 
             Class ClassClone;
