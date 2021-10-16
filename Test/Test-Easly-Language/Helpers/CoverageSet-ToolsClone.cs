@@ -19,11 +19,11 @@
 
             SimpleClass.ClassReplicateBlocks.NodeBlockList.Add(SimpleBlock);
 
+            Class ClassClone = (Class)NodeHelper.DeepCloneNode(SimpleClass, false);
+
             Identifier SimpleIdentifier = NodeHelper.CreateSimpleIdentifier("Foo");
             SimpleClass.FromIdentifier.Item = SimpleIdentifier;
 
-            Class ClassClone = (Class)NodeHelper.DeepCloneNode(SimpleClass, false);
-            SimpleClass.FromIdentifier.Unassign();
             ClassClone = (Class)NodeHelper.DeepCloneNode(SimpleClass, false);
 
             QualifiedName SimpleQualifiedName = NodeHelper.CreateSimpleQualifiedName("Foo");
