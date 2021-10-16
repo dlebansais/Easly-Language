@@ -235,6 +235,46 @@
             IBlock<ExceptionHandler> ExceptionHandlerBlock = BlockListHelper.CreateBlock(ExceptionHandlerList);
             EffectiveBodyNode.ExceptionHandlerBlocks.NodeBlockList.Add(ExceptionHandlerBlock);
             Assert.That(!NodeHelper.IsDefaultNode(EffectiveBodyNode));
+
+            PropertyFeature PropertyFeatureNode = NodeHelper.CreateEmptyPropertyFeature();
+            Assert.That(!NodeHelper.IsDefaultNode(PropertyFeatureNode));
+
+            Feature FeatureNode = NodeHelper.CreateDefaultFeature();
+            Assert.That(FeatureNode is AttributeFeature);
+            AttributeFeature AttributeFeatureNode = (AttributeFeature)FeatureNode;
+
+            Assert.That(NodeHelper.IsDefaultNode(AttributeFeatureNode));
+
+            Assertion AssertionNode = (Assertion)NodeHelper.CreateDefaultFromType(typeof(Assertion));
+            Assert.That(NodeHelper.IsDefaultNode(AssertionNode));
+            List<Assertion> AssertionList = new() { AssertionNode };
+            IBlock<Assertion> AssertionBlock = BlockListHelper.CreateBlock(AssertionList);
+
+            AttributeFeatureNode.EnsureBlocks.NodeBlockList.Add(AssertionBlock);
+            Assert.That(!NodeHelper.IsDefaultNode(AttributeFeatureNode));
+
+            Expression ExpressionNode = (Expression)NodeHelper.CreateDefaultFromType(typeof(Expression));
+            Assert.That(ExpressionNode is QueryExpression);
+            QueryExpression QueryExpressionNode = (QueryExpression)ExpressionNode;
+            Assert.That(NodeHelper.IsDefaultNode(QueryExpressionNode));
+
+            ManifestCharacterExpression ManifestCharacterExpressionNode = (ManifestCharacterExpression)NodeHelper.CreateDefaultFromType(typeof(ManifestCharacterExpression));
+            Assert.That(NodeHelper.IsDefaultNode(ManifestCharacterExpressionNode));
+
+            ManifestNumberExpression ManifestNumberExpressionNode = (ManifestNumberExpression)NodeHelper.CreateDefaultFromType(typeof(ManifestNumberExpression));
+            Assert.That(NodeHelper.IsDefaultNode(ManifestNumberExpressionNode));
+
+            ManifestStringExpression ManifestStringExpressionNode = (ManifestStringExpression)NodeHelper.CreateDefaultFromType(typeof(ManifestStringExpression));
+            Assert.That(NodeHelper.IsDefaultNode(ManifestStringExpressionNode));
+
+            PreprocessorExpression PreprocessorExpressionNode = (PreprocessorExpression)NodeHelper.CreateDefaultFromType(typeof(PreprocessorExpression));
+            Assert.That(!NodeHelper.IsDefaultNode(PreprocessorExpressionNode));
+
+            Argument ArgumentNode = (Argument)NodeHelper.CreateDefaultFromType(typeof(Argument));
+            Assert.That(ArgumentNode is PositionalArgument);
+
+            PositionalArgument PositionalArgumentNode = (PositionalArgument)ArgumentNode;
+            Assert.That(NodeHelper.IsDefaultNode(PositionalArgumentNode));
         }
     }
 }

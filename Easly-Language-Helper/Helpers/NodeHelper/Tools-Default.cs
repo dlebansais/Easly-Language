@@ -79,7 +79,8 @@
 
         private static bool IsDefaultScope(Scope nodeScope)
         {
-            return nodeScope.EntityDeclarationBlocks.NodeBlockList.Count == 0 && nodeScope.InstructionBlocks.NodeBlockList.Count == 0;
+            return nodeScope.EntityDeclarationBlocks.NodeBlockList.Count == 0 &&
+                   nodeScope.InstructionBlocks.NodeBlockList.Count == 0;
         }
 
         private static bool IsDefaultQualifiedName(QualifiedName nodeQualifiedName)
@@ -87,7 +88,8 @@
             IList<Identifier> Path = nodeQualifiedName.Path;
             Debug.Assert(Path.Count > 0);
 
-            return Path.Count == 1 && Path[0].Text.Length == 0;
+            return Path.Count == 1 &&
+                   Path[0].Text.Length == 0;
         }
 
         private static bool IsDefaultObjectType(ObjectType nodeObjectType)
@@ -100,7 +102,8 @@
 
         private static bool IsDefaultSimpleType(SimpleType nodeSimpleType)
         {
-            return nodeSimpleType.Sharing == SharingType.NotShared && nodeSimpleType.ClassIdentifier.Text.Length == 0;
+            return nodeSimpleType.Sharing == SharingType.NotShared &&
+                   nodeSimpleType.ClassIdentifier.Text.Length == 0;
         }
 
         private static bool IsDefaultBody(Body nodeBody)
@@ -164,7 +167,9 @@
             IList<Identifier> Path = nodeQueryExpression.Query.Path;
             Debug.Assert(Path.Count > 0);
 
-            return nodeQueryExpression.ArgumentBlocks.NodeBlockList.Count == 0 && Path.Count == 1 && Path[0].Text.Length == 0;
+            return nodeQueryExpression.ArgumentBlocks.NodeBlockList.Count == 0 &&
+                   Path.Count == 1 &&
+                   Path[0].Text.Length == 0;
         }
 
         private static bool IsDefaultManifestCharacterExpression(ManifestCharacterExpression nodeManifestCharacterExpression)
