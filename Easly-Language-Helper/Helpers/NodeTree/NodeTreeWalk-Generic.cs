@@ -72,16 +72,13 @@
 
         private static bool WalkOptionalChildNode(Node node, WalkCallbacks<TContext> callbacks, TContext data, string nodePropertyName)
         {
-            NodeTreeHelperOptional.GetChildNode(node, nodePropertyName, out bool IsAssigned, out Node ChildNode);
+            NodeTreeHelperOptional.GetChildNode(node, nodePropertyName, out bool IsAssigned, out bool HasItem, out Node ChildNode);
             if (IsAssigned)
             {
-                Debug.Assert(ChildNode != null);
+                Debug.Assert(HasItem);
 
-                if (ChildNode != null)
-                {
-                    if (!Walk(ChildNode, node, nodePropertyName, callbacks, data))
-                        return false;
-                }
+                if (!Walk(ChildNode, node, nodePropertyName, callbacks, data))
+                    return false;
             }
 
             return true;

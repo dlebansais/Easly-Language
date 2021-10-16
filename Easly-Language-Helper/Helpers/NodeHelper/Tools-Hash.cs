@@ -50,7 +50,7 @@
 
         private static void NodeHashOptionalChildNode(Node node, string propertyName, ref ulong hash)
         {
-            NodeTreeHelperOptional.GetChildNode(node, propertyName, out bool IsAssigned, out Node ChildNode);
+            NodeTreeHelperOptional.GetChildNode(node, propertyName, out bool IsAssigned, out _, out Node ChildNode);
 
             MergeHash(ref hash, IsAssigned ? 1UL : 0);
 

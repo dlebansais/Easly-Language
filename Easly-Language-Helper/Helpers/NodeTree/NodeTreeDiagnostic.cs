@@ -99,9 +99,9 @@
 
         private static bool IsValidOptionalChildNode(List<Node> nodeList, List<Guid> guidList, Node root, bool assertValid, string propertyName)
         {
-            NodeTreeHelperOptional.GetChildNode(root, propertyName, out _, out Node ChildNode);
+            NodeTreeHelperOptional.GetChildNode(root, propertyName, out _, out bool HasItem, out Node ChildNode);
 
-            if (ChildNode != null)
+            if (HasItem)
             {
                 if (!IsValid(nodeList, guidList, ChildNode, assertValid))
                     return FailIsValidCheck(assertValid);

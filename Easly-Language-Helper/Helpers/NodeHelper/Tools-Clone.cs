@@ -3,6 +3,7 @@
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Reflection;
     using BaseNode;
 
@@ -26,20 +27,18 @@
 
             foreach (string PropertyName in PropertyNames)
             {
-                Type /*ChildInterfaceType,*/ ChildNodeType;
-
-                if (NodeTreeHelperChild.IsChildNodeProperty(root, PropertyName, out ChildNodeType))
+                if (NodeTreeHelperChild.IsChildNodeProperty(root, PropertyName, out _))
                 {
                     NodeTreeHelperChild.GetChildNode(root, PropertyName, out Node ChildNode);
 
                     Node ClonedChildNode = DeepCloneNode(ChildNode, cloneCommentGuid);
                     NodeTreeHelperChild.SetChildNode(ClonedRoot, PropertyName, ClonedChildNode);
                 }
-                else if (NodeTreeHelperOptional.IsOptionalChildNodeProperty(root, PropertyName, out ChildNodeType))
+                else if (NodeTreeHelperOptional.IsOptionalChildNodeProperty(root, PropertyName, out _))
                 {
-                    NodeTreeHelperOptional.GetChildNode(root, PropertyName, out bool IsAssigned, out Node ChildNode);
+                    NodeTreeHelperOptional.GetChildNode(root, PropertyName, out bool IsAssigned, out bool HasItem, out Node ChildNode);
 
-                    if (ChildNode != null)
+                    if (HasItem)
                     {
                         Node ClonedChildNode = DeepCloneNode(ChildNode, cloneCommentGuid);
                         NodeTreeHelperOptional.SetOptionalChildNode(ClonedRoot, PropertyName, ClonedChildNode);
@@ -47,7 +46,7 @@
                             NodeTreeHelperOptional.UnassignChildNode(ClonedRoot, PropertyName);
                     }
                 }
-                else if (NodeTreeHelperList.IsNodeListProperty(root, PropertyName, out ChildNodeType))
+                else if (NodeTreeHelperList.IsNodeListProperty(root, PropertyName, out _))
                 {
                     NodeTreeHelperList.GetChildNodeList(root, PropertyName, out IReadOnlyList<Node> ChildNodeList);
                     IList<Node> ClonedChildNodeList = DeepCloneNodeList(ChildNodeList, cloneCommentGuid);
@@ -56,7 +55,7 @@
                     for (int Index = 0; Index < ChildNodeList.Count; Index++)
                         NodeTreeHelperList.InsertIntoList(ClonedRoot, PropertyName, Index, ClonedChildNodeList[Index]);
                 }
-                else if (NodeTreeHelperBlockList.IsBlockListProperty(root, PropertyName, /*out ChildInterfaceType,*/ out ChildNodeType))
+                else if (NodeTreeHelperBlockList.IsBlockListProperty(root, PropertyName, out _))
                 {
                     IBlockList BlockList = NodeTreeHelperBlockList.GetBlockList(root, PropertyName);
                     IBlockList ClonedBlockList = DeepCloneBlockList(BlockList, cloneCommentGuid);
@@ -70,10 +69,11 @@
                     NodeTreeHelper.CopyStringProperty(root, ClonedRoot, PropertyName);
                 else if (NodeTreeHelper.IsGuidProperty(root, PropertyName))
                     NodeTreeHelper.CopyGuidProperty(root, ClonedRoot, PropertyName);
-                else if (NodeTreeHelper.IsDocumentProperty(root, PropertyName))
-                    NodeTreeHelper.CopyDocumentation(root, ClonedRoot, cloneCommentGuid);
                 else
-                    throw new ArgumentOutOfRangeException($"{nameof(PropertyName)}: {PropertyName}");
+                {
+                    Debug.Assert(NodeTreeHelper.IsDocumentProperty(root, PropertyName));
+                    NodeTreeHelper.CopyDocumentation(root, ClonedRoot, cloneCommentGuid);
+                }
             }
 
             return ClonedRoot;
@@ -81,8 +81,6 @@
 
         private static IList<Node> DeepCloneNodeList(IEnumerable<Node> rootList, bool cloneCommentGuid)
         {
-            if (rootList == null) throw new ArgumentNullException(nameof(rootList));
-
             List<Node> Result = new List<Node>();
 
             foreach (Node ChildNode in rootList)
@@ -94,40 +92,8 @@
             return Result;
         }
 
-        private static IList<IBlock> DeepCloneBlockList(IEnumerable<IBlock> rootBlockList, bool cloneCommentGuid)
-        {
-            if (rootBlockList == null) throw new ArgumentNullException(nameof(rootBlockList));
-
-            IList<IBlock> ClonedNodeBlockList = new List<IBlock>();
-
-            foreach (IBlock Block in rootBlockList)
-            {
-                Type BlockType = Block.GetType();
-                Type[] GenericArguments = BlockType.GetGenericArguments();
-                BlockType = typeof(IBlock<>).MakeGenericType(GenericArguments);
-
-                Pattern ClonedPattern = (Pattern)DeepCloneNode(Block.ReplicationPattern, cloneCommentGuid);
-                Identifier ClonedSource = (Identifier)DeepCloneNode(Block.SourceIdentifier, cloneCommentGuid);
-                IBlock ClonedBlock = NodeTreeHelperBlockList.CreateBlock(BlockType, Block.Replication, ClonedPattern, ClonedSource);
-                NodeTreeHelper.CopyDocumentation(Block, ClonedBlock, cloneCommentGuid);
-
-                for (int Index = 0; Index < Block.NodeList.Count; Index++)
-                {
-                    Node ChildNode = SafeType.ItemAt<Node>(Block.NodeList, Index);
-                    Node ClonedChildNode = DeepCloneNode(ChildNode, cloneCommentGuid);
-                    NodeTreeHelperBlockList.InsertIntoBlock(ClonedBlock, Index, ClonedChildNode);
-                }
-
-                ClonedNodeBlockList.Add(ClonedBlock);
-            }
-
-            return ClonedNodeBlockList;
-        }
-
         private static IBlockList DeepCloneBlockList(IBlockList rootBlockList, bool cloneCommentGuid)
         {
-            if (rootBlockList == null) throw new ArgumentNullException(nameof(rootBlockList));
-
             Type BlockListType = rootBlockList.GetType();
             Type[] GenericArguments = BlockListType.GetGenericArguments();
             BlockListType = typeof(BlockList<>).MakeGenericType(GenericArguments);

@@ -23,6 +23,8 @@
             SimpleClass.FromIdentifier.Item = SimpleIdentifier;
 
             Class ClassClone = (Class)NodeHelper.DeepCloneNode(SimpleClass, false);
+            SimpleClass.FromIdentifier.Unassign();
+            ClassClone = (Class)NodeHelper.DeepCloneNode(SimpleClass, false);
 
             QualifiedName SimpleQualifiedName = NodeHelper.CreateSimpleQualifiedName("Foo");
             QualifiedName QualifiedNameClone = (QualifiedName)NodeHelper.DeepCloneNode(SimpleQualifiedName, true);

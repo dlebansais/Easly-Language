@@ -4,6 +4,7 @@
     using System.Diagnostics;
     using System.Reflection;
     using BaseNode;
+    using Contracts;
     using Easly;
 
     /// <summary>
@@ -104,15 +105,10 @@
         /// <param name="node">The node.</param>
         /// <param name="propertyName">The property name.</param>
         /// <param name="isAssigned">A value indicating whether the child node is assigned upon return.</param>
+        /// <param name="hasItem">A value indicating whether there is a child node upon return.</param>
         /// <param name="childNode">The child node upon return.</param>
-        public static void GetChildNode(Node node, string propertyName, out bool isAssigned, out Node childNode)
+        public static void GetChildNode(Node node, string propertyName, out bool isAssigned, out bool hasItem, out Node childNode)
         {
-            if (node == null) throw new ArgumentNullException(nameof(node));
-            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
-
-            isAssigned = false;
-            childNode = null!;
-
             Type NodeType = node.GetType();
             PropertyInfo Property = SafeType.GetProperty(NodeType, propertyName);
 
@@ -123,13 +119,15 @@
             IOptionalReference Optional = SafeType.GetPropertyValue<IOptionalReference>(Property, node);
 
             isAssigned = Optional.IsAssigned;
+            hasItem = Optional.HasItem;
 
-            if (Optional.HasItem)
+            if (hasItem)
                 childNode = (Node)Optional.Item;
             else
-                childNode = null!;
-
-            Debug.Assert(!isAssigned || childNode != null);
+            {
+                Debug.Assert(!isAssigned);
+                Contract.Unused(out childNode);
+            }
         }
 
         /// <summary>
