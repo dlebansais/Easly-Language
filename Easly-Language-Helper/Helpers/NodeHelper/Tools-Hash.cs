@@ -111,13 +111,8 @@
             }
             else if (Info.PropertyType.IsEnum)
             {
-                int? PropertyValue = Info.GetValue(node) as int?;
-                Debug.Assert(PropertyValue != null);
-
-                if (PropertyValue == null)
-                    return;
-
-                MergeHash(ref hash, ValueHash(PropertyValue.Value));
+                int PropertyValue = (int)Info.GetValue(node)!;
+                MergeHash(ref hash, ValueHash(PropertyValue));
             }
             else if (Info.PropertyType == typeof(string))
             {
