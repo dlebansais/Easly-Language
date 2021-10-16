@@ -18,6 +18,7 @@
             IBlock<ClassReplicate> SimpleBlock = BlockListHelper.CreateBlock<ClassReplicate>(GlobalReplicateList);
 
             SimpleClass.ClassReplicateBlocks.NodeBlockList.Add(SimpleBlock);
+            SimpleClass.FromIdentifier.Clear();
 
             Class ClassClone = (Class)NodeHelper.DeepCloneNode(SimpleClass, false);
 
