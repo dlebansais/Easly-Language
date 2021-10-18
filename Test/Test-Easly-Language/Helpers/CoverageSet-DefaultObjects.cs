@@ -239,22 +239,6 @@
             PrecursorBody PrecursorBodyNode = NodeHelper.CreateEmptyPrecursorBody();
             Assert.That(!NodeHelper.IsDefaultNode(PrecursorBodyNode));
 
-            Body BodyNode = NodeHelper.CreateDefaultBody();
-            Assert.That(BodyNode is EffectiveBody);
-            EffectiveBody EffectiveBodyNode = (EffectiveBody)BodyNode;
-
-            Assert.That(NodeHelper.IsDefaultNode(EffectiveBodyNode));
-
-            ExceptionHandler DefaultExceptionHandler = (ExceptionHandler)NodeHelper.CreateDefaultFromType(typeof(ExceptionHandler));
-            List<ExceptionHandler> ExceptionHandlerList = new() { DefaultExceptionHandler };
-            IBlock<ExceptionHandler> ExceptionHandlerBlock = BlockListHelper.CreateBlock(ExceptionHandlerList);
-
-            EffectiveBodyNode.ExceptionHandlerBlocks.NodeBlockList.Add(ExceptionHandlerBlock);
-            Assert.That(!NodeHelper.IsDefaultNode(EffectiveBodyNode));
-
-            EffectiveBodyNode.BodyInstructionBlocks.NodeBlockList.Add(InstructionBlock);
-            Assert.That(!NodeHelper.IsDefaultNode(EffectiveBodyNode));
-
             PropertyFeature PropertyFeatureNode = NodeHelper.CreateEmptyPropertyFeature();
             Assert.That(!NodeHelper.IsDefaultNode(PropertyFeatureNode));
 
@@ -323,6 +307,54 @@
 
             PositionalArgumentNode.Source = ManifestCharacterExpressionNode;
             Assert.That(!NodeHelper.IsDefaultNode(PositionalArgumentNode));
+        }
+
+        [Test]
+        public static void TestNonDefaultBody()
+        {
+            Body BodyNode = NodeHelper.CreateDefaultBody();
+            Assert.That(BodyNode is EffectiveBody);
+            EffectiveBody EffectiveBodyNode = (EffectiveBody)BodyNode;
+
+            Assert.That(NodeHelper.IsDefaultNode(EffectiveBodyNode));
+
+            ExceptionHandler DefaultExceptionHandler = (ExceptionHandler)NodeHelper.CreateDefaultFromType(typeof(ExceptionHandler));
+            List<ExceptionHandler> ExceptionHandlerList = new() { DefaultExceptionHandler };
+            IBlock<ExceptionHandler> ExceptionHandlerBlock = BlockListHelper.CreateBlock(ExceptionHandlerList);
+
+            EffectiveBodyNode.ExceptionHandlerBlocks.NodeBlockList.Add(ExceptionHandlerBlock);
+            Assert.That(!NodeHelper.IsDefaultNode(EffectiveBodyNode));
+
+            Instruction DefaultInstruction = (Instruction)NodeHelper.CreateDefaultFromType(typeof(Instruction));
+            List<Instruction> InstructionList = new() { DefaultInstruction };
+            IBlock<Instruction> InstructionBlock = BlockListHelper.CreateBlock(InstructionList);
+
+            EffectiveBodyNode.BodyInstructionBlocks.NodeBlockList.Add(InstructionBlock);
+            Assert.That(!NodeHelper.IsDefaultNode(EffectiveBodyNode));
+
+            EntityDeclaration DefaultEntityDeclaration = (EntityDeclaration)NodeHelper.CreateDefaultFromType(typeof(EntityDeclaration));
+            List<EntityDeclaration> EntityDeclarationList = new() { DefaultEntityDeclaration };
+            IBlock<EntityDeclaration> EntityDeclarationBlock = BlockListHelper.CreateBlock(EntityDeclarationList);
+
+            EffectiveBodyNode.EntityDeclarationBlocks.NodeBlockList.Add(EntityDeclarationBlock);
+            Assert.That(!NodeHelper.IsDefaultNode(EffectiveBodyNode));
+
+            Identifier DefaultIdentifier = (Identifier)NodeHelper.CreateDefaultFromType(typeof(Identifier));
+            List<Identifier> IdentifierList = new() { DefaultIdentifier };
+            IBlock<Identifier> IdentifierBlock = BlockListHelper.CreateBlock(IdentifierList);
+
+            EffectiveBodyNode.ExceptionIdentifierBlocks.NodeBlockList.Add(IdentifierBlock);
+            Assert.That(!NodeHelper.IsDefaultNode(EffectiveBodyNode));
+
+            Assertion DefaultAssertion = (Assertion)NodeHelper.CreateDefaultFromType(typeof(Assertion));
+            List<Assertion> AssertionList = new() { DefaultAssertion };
+            IBlock<Assertion> AssertionBlock = BlockListHelper.CreateBlock(AssertionList);
+
+            EffectiveBodyNode.EnsureBlocks.NodeBlockList.Add(AssertionBlock);
+            Assert.That(!NodeHelper.IsDefaultNode(EffectiveBodyNode));
+
+            EffectiveBodyNode.RequireBlocks.NodeBlockList.Add(AssertionBlock);
+            Assert.That(!NodeHelper.IsDefaultNode(EffectiveBodyNode));
         }
     }
 }
