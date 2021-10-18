@@ -92,50 +92,39 @@
 
             PropertyInfo Info = SafeType.GetProperty(NodeType, propertyName);
 
-            if (Info.PropertyType == typeof(Document))
+            if (Info.PropertyType == typeof(bool))
             {
-                Document? Documentation = SafeType.GetPropertyValue<Document>(Info, node);
+                bool PropertyValue = (bool)Info.GetValue(node)!;
 
-                MergeHash(ref hash, ValueHash(Documentation.Comment));
-                MergeHash(ref hash, ValueHash(Documentation.Uuid));
-            }
-            else if (Info.PropertyType == typeof(bool))
-            {
-                bool? PropertyValue = Info.GetValue(node) as bool?;
-                Debug.Assert(PropertyValue != null);
-
-                if (PropertyValue == null)
-                    return;
-
-                MergeHash(ref hash, ValueHash(PropertyValue.Value));
+                MergeHash(ref hash, ValueHash(PropertyValue));
             }
             else if (Info.PropertyType.IsEnum)
             {
                 int PropertyValue = (int)Info.GetValue(node)!;
+
                 MergeHash(ref hash, ValueHash(PropertyValue));
             }
             else if (Info.PropertyType == typeof(string))
             {
-                string? PropertyValue = Info.GetValue(node) as string;
-                Debug.Assert(PropertyValue != null);
-
-                if (PropertyValue == null)
-                    return;
+                string PropertyValue = SafeType.GetPropertyValue<string>(Info, node);
 
                 MergeHash(ref hash, ValueHash(PropertyValue));
             }
             else if (Info.PropertyType == typeof(Guid))
             {
-                Guid? PropertyValue = Info.GetValue(node) as Guid?;
-                Debug.Assert(PropertyValue != null);
+                Guid PropertyValue = (Guid)Info.GetValue(node)!;
 
-                if (PropertyValue == null)
-                    return;
-
-                MergeHash(ref hash, ValueHash(PropertyValue.Value));
+                MergeHash(ref hash, ValueHash(PropertyValue));
             }
             else
-                throw new ArgumentOutOfRangeException($"{nameof(NodeType)}: {NodeType.FullName}");
+            {
+                Debug.Assert(Info.PropertyType == typeof(Document));
+
+                Document Documentation = SafeType.GetPropertyValue<Document>(Info, node);
+
+                MergeHash(ref hash, ValueHash(Documentation.Comment));
+                MergeHash(ref hash, ValueHash(Documentation.Uuid));
+            }
         }
 
         private static ulong ValueHash(bool value)
