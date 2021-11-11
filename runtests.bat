@@ -1,0 +1,3 @@
+@echo off
+echo Starting Tests...
+dotnet test
