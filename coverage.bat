@@ -15,7 +15,7 @@ set NUINT_CONSOLE_VERSION=3.12.0
 set NUINT_CONSOLE=NUnit.ConsoleRunner.%NUINT_CONSOLE_VERSION%
 
 set RESULTFILENAME=Coverage-%PROJECTNAME%.xml
-set FRAMEWORK=net48
+set FRAMEWORK=netcoreapp3.1
 
 nuget install OpenCover -Version %OPENCOVER_VERSION% -OutputDirectory packages
 if not exist ".\packages\%OPENCOVER%\tools\OpenCover.Console.exe" goto error_console1
@@ -32,7 +32,7 @@ dotnet publish Test\%TESTPROJECTNAME% -c Debug -f %FRAMEWORK% /p:Platform=x64 -o
 if not exist ".\Test\%TESTPROJECTNAME%\bin\x64\Debug\publish\%TESTPROJECTNAME%.dll" goto error_not_built
 if exist .\Test\%TESTPROJECTNAME%\*.log del .\Test\%TESTPROJECTNAME%\*.log
 if exist .\Test\%TESTPROJECTNAME%\obj\x64\Debug\%RESULTFILENAME% del .\Test\%TESTPROJECTNAME%\obj\x64\Debug\%RESULTFILENAME%
-".\packages\%OPENCOVER%\tools\OpenCover.Console.exe" -register:user -target:".\packages\%NUINT_CONSOLE%\tools\nunit3-console.exe" -targetargs:".\Test\%TESTPROJECTNAME%\bin\x64\Debug\publish\%TESTPROJECTNAME%.dll --trace=Debug --labels=Before" -filter:"+[%PROJECTNAME%*]* -[%TESTPROJECTNAME%*]*" -output:".\Test\%TESTPROJECTNAME%\obj\x64\Debug\%RESULTFILENAME%"
+".\packages\%OPENCOVER%\tools\OpenCover.Console.exe" -register:user -target:"dotnet test" -filter:"+[%PROJECTNAME%*]* -[%TESTPROJECTNAME%*]*" -output:".\Test\%TESTPROJECTNAME%\obj\x64\Debug\%RESULTFILENAME%"
 
 if exist .\Test\%TESTPROJECTNAME%\obj\x64\Debug\%RESULTFILENAME% .\packages\%CODECOV%\tools\win7-x86\codecov -f ".\Test\%TESTPROJECTNAME%\obj\x64\Debug\%RESULTFILENAME%" -t %PROJECT_TOKEN%
 goto end
