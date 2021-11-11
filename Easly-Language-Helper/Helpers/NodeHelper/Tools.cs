@@ -5,6 +5,7 @@
     using System.Diagnostics;
     using System.Reflection;
     using BaseNode;
+    using Contracts;
 
     /// <summary>
     /// Provides methods to manipulate nodes.
@@ -75,9 +76,9 @@
         /// <returns>True if the property is a collection of blocks that must never be empty; otherwise, false.</returns>
         public static bool IsCollectionNeverEmpty(Node node, string propertyName)
         {
-            if (node == null) throw new ArgumentNullException(nameof(node));
+            Contract.RequireNotNull(node, out Node Node);
 
-            return IsCollectionNeverEmpty(node.GetType(), propertyName);
+            return IsCollectionNeverEmpty(Node.GetType(), propertyName);
         }
 
         /// <summary>
@@ -88,14 +89,13 @@
         /// <returns>True if the property is a collection of blocks that must never be empty; otherwise, false.</returns>
         public static bool IsCollectionNeverEmpty(Type nodeType, string propertyName)
         {
-            if (!NodeTreeHelperList.IsNodeListProperty(nodeType, propertyName, out Type _) && !NodeTreeHelperBlockList.IsBlockListProperty(nodeType, propertyName, /*out Type _,*/ out _)) throw new ArgumentException($"{nameof(propertyName)} must be a list or block list property of {nameof(nodeType)}");
+            Contract.RequireNotNull(nodeType, out Type NodeType);
 
-            // Type InterfaceType = NodeTreeHelper.NodeTypeToInterfaceType(nodeType);
-            Type InterfaceType = nodeType;
+            Debug.Assert(NodeTreeHelperList.IsNodeListProperty(NodeType, propertyName, out _) || NodeTreeHelperBlockList.IsBlockListProperty(NodeType, propertyName, out _));
 
-            if (NeverEmptyCollectionTable.ContainsKey(InterfaceType))
+            if (NeverEmptyCollectionTable.ContainsKey(NodeType))
             {
-                foreach (string Item in NeverEmptyCollectionTable[InterfaceType])
+                foreach (string Item in NeverEmptyCollectionTable[NodeType])
                     if (Item == propertyName)
                         return true;
             }
@@ -111,9 +111,9 @@
         /// <returns>True if the property is a collection of blocks that can be expanded; otherwise, false.</returns>
         public static bool IsCollectionWithExpand(Node node, string propertyName)
         {
-            if (node == null) throw new ArgumentNullException(nameof(node));
+            Contract.RequireNotNull(node, out Node Node);
 
-            return IsCollectionWithExpand(node.GetType(), propertyName);
+            return IsCollectionWithExpand(Node.GetType(), propertyName);
         }
 
         /// <summary>
@@ -124,15 +124,14 @@
         /// <returns>True if the property is a collection of blocks that can be expanded; otherwise, false.</returns>
         public static bool IsCollectionWithExpand(Type nodeType, string propertyName)
         {
-            if (!NodeTreeHelperList.IsNodeListProperty(nodeType, propertyName, out Type _) && !NodeTreeHelperBlockList.IsBlockListProperty(nodeType, propertyName, /*out Type _,*/ out _)) throw new ArgumentException($"{nameof(propertyName)} must be a list or block list property of {nameof(nodeType)}");
-            if (IsCollectionNeverEmpty(nodeType, propertyName)) throw new ArgumentException($"{nameof(nodeType)} must be a list or block list that can be empty");
+            Contract.RequireNotNull(nodeType, out Type NodeType);
 
-            // Type InterfaceType = NodeTreeHelper.NodeTypeToInterfaceType(nodeType);
-            Type InterfaceType = nodeType;
+            Debug.Assert(NodeTreeHelperList.IsNodeListProperty(NodeType, propertyName, out _) || NodeTreeHelperBlockList.IsBlockListProperty(NodeType, propertyName, out _));
+            Debug.Assert(!IsCollectionNeverEmpty(NodeType, propertyName));
 
-            if (WithExpandCollectionTable.ContainsKey(InterfaceType))
+            if (WithExpandCollectionTable.ContainsKey(NodeType))
             {
-                foreach (string Item in WithExpandCollectionTable[InterfaceType])
+                foreach (string Item in WithExpandCollectionTable[NodeType])
                     if (Item == propertyName)
                         return true;
             }
@@ -147,9 +146,9 @@
         /// <returns>The created instance.</returns>
         public static Document CreateDocumentationCopy(Document documentation)
         {
-            if (documentation == null) throw new ArgumentNullException(nameof(documentation));
+            Contract.RequireNotNull(documentation, out Document Documentation);
 
-            return CreateSimpleDocumentation(documentation.Comment, documentation.Uuid);
+            return CreateSimpleDocumentation(Documentation.Comment, documentation.Uuid);
         }
 
         /// <summary>
@@ -162,7 +161,7 @@
             string[] StringList;
             ParseDotSeparatedIdentifiers(text, out StringList);
 
-            List<Identifier> IdentifierList = new List<Identifier>();
+            List<Identifier> IdentifierList = new();
             foreach (string Identifier in StringList)
                 IdentifierList.Add(CreateSimpleIdentifier(Identifier));
 
