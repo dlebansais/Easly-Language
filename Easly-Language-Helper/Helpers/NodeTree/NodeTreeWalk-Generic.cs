@@ -108,6 +108,59 @@
             return true;
         }
 
+        private static bool WalkBlockListKeyNotNull(Node node, WalkCallbacks<TContext> callbacks, TContext data, string nodePropertyName, string key)
+        {
+            string Value = callbacks.BlockSubstitution.Value;
+
+            string ListPropertyName = nodePropertyName.Replace(key, Value);
+            Debug.Assert(ListPropertyName != nodePropertyName);
+
+            Type NodeType = node.GetType();
+            if (NodeType == null)
+                return false;
+
+            PropertyInfo Property = SafeType.GetProperty(NodeType, ListPropertyName);
+
+            IList NodeList = SafeType.GetPropertyValue<IList>(Property, node);
+
+            for (int Index = 0; Index < NodeList.Count; Index++)
+            {
+                Node ChildNode = SafeType.ItemAt<Node>(NodeList, Index);
+
+                if (!Walk(ChildNode, node, nodePropertyName, callbacks, data))
+                    return false;
+            }
+
+            return true;
+        }
+
+        private static bool WalkBlockListKeyNull(Node node, WalkCallbacks<TContext> callbacks, TContext data, string nodePropertyName, IBlockList blockList)
+        {
+            if (blockList == null || blockList.NodeBlockList == null)
+                return false;
+
+            for (int BlockIndex = 0; BlockIndex < blockList.NodeBlockList.Count; BlockIndex++)
+            {
+                IBlock Block = SafeType.ItemAt<IBlock>(blockList.NodeBlockList, BlockIndex);
+
+                if (callbacks.HandlerBlock != null && !callbacks.HandlerBlock(node, nodePropertyName, blockList, Block, callbacks, data))
+                    return false;
+
+                if (Block == null || Block.NodeList == null)
+                    return false;
+
+                for (int Index = 0; Index < Block.NodeList.Count; Index++)
+                {
+                    Node ChildNode = SafeType.ItemAt<Node>(Block.NodeList, Index);
+
+                    if (!Walk(ChildNode, node, nodePropertyName, callbacks, data))
+                        return false;
+                }
+            }
+
+            return true;
+        }
+
         private static bool WalkBlockList(Node node, WalkCallbacks<TContext> callbacks, TContext data, string nodePropertyName)
         {
             IBlockList BlockList = NodeTreeHelperBlockList.GetBlockList(node, nodePropertyName);
@@ -120,52 +173,9 @@
                 string Key = callbacks.BlockSubstitution.Key;
 
                 if (Key != null)
-                {
-                    string Value = callbacks.BlockSubstitution.Value;
-
-                    string ListPropertyName = nodePropertyName.Replace(Key, Value);
-                    Debug.Assert(ListPropertyName != nodePropertyName);
-
-                    Type NodeType = node.GetType();
-                    if (NodeType == null)
-                        return false;
-
-                    PropertyInfo Property = SafeType.GetProperty(NodeType, ListPropertyName);
-
-                    IList NodeList = SafeType.GetPropertyValue<IList>(Property, node);
-
-                    for (int Index = 0; Index < NodeList.Count; Index++)
-                    {
-                        Node ChildNode = SafeType.ItemAt<Node>(NodeList, Index);
-
-                        if (!Walk(ChildNode, node, nodePropertyName, callbacks, data))
-                            return false;
-                    }
-                }
+                    return WalkBlockListKeyNotNull(node, callbacks, data, nodePropertyName, Key);
                 else
-                {
-                    if (BlockList == null || BlockList.NodeBlockList == null)
-                        return false;
-
-                    for (int BlockIndex = 0; BlockIndex < BlockList.NodeBlockList.Count; BlockIndex++)
-                    {
-                        IBlock Block = SafeType.ItemAt<IBlock>(BlockList.NodeBlockList, BlockIndex);
-
-                        if (callbacks.HandlerBlock != null && !callbacks.HandlerBlock(node, nodePropertyName, BlockList, Block, callbacks, data))
-                            return false;
-
-                        if (Block == null || Block.NodeList == null)
-                            return false;
-
-                        for (int Index = 0; Index < Block.NodeList.Count; Index++)
-                        {
-                            Node ChildNode = SafeType.ItemAt<Node>(Block.NodeList, Index);
-
-                            if (!Walk(ChildNode, node, nodePropertyName, callbacks, data))
-                                return false;
-                        }
-                    }
-                }
+                    return WalkBlockListKeyNull(node, callbacks, data, nodePropertyName, BlockList);
             }
 
             return true;
