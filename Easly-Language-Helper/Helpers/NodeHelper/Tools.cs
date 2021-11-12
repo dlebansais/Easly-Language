@@ -77,8 +77,9 @@
         public static bool IsCollectionNeverEmpty(Node node, string propertyName)
         {
             Contract.RequireNotNull(node, out Node Node);
+            Contract.RequireNotNull(propertyName, out string PropertyName);
 
-            return IsCollectionNeverEmpty(Node.GetType(), propertyName);
+            return IsCollectionNeverEmpty(Node.GetType(), PropertyName);
         }
 
         /// <summary>
@@ -90,17 +91,16 @@
         public static bool IsCollectionNeverEmpty(Type nodeType, string propertyName)
         {
             Contract.RequireNotNull(nodeType, out Type NodeType);
+            Contract.RequireNotNull(propertyName, out string PropertyName);
 
-            Debug.Assert(NodeTreeHelperList.IsNodeListProperty(NodeType, propertyName, out _) || NodeTreeHelperBlockList.IsBlockListProperty(NodeType, propertyName, out _));
+            Debug.Assert(NodeTreeHelperList.IsNodeListProperty(NodeType, PropertyName, out _) || NodeTreeHelperBlockList.IsBlockListProperty(NodeType, PropertyName, out _));
+
+            bool Result = false;
 
             if (NeverEmptyCollectionTable.ContainsKey(NodeType))
-            {
-                foreach (string Item in NeverEmptyCollectionTable[NodeType])
-                    if (Item == propertyName)
-                        return true;
-            }
+                Result = Array.Exists(NeverEmptyCollectionTable[NodeType], (string item) => item == PropertyName);
 
-            return false;
+            return Result;
         }
 
         /// <summary>
@@ -112,8 +112,9 @@
         public static bool IsCollectionWithExpand(Node node, string propertyName)
         {
             Contract.RequireNotNull(node, out Node Node);
+            Contract.RequireNotNull(propertyName, out string PropertyName);
 
-            return IsCollectionWithExpand(Node.GetType(), propertyName);
+            return IsCollectionWithExpand(Node.GetType(), PropertyName);
         }
 
         /// <summary>
@@ -125,16 +126,15 @@
         public static bool IsCollectionWithExpand(Type nodeType, string propertyName)
         {
             Contract.RequireNotNull(nodeType, out Type NodeType);
+            Contract.RequireNotNull(propertyName, out string PropertyName);
 
-            Debug.Assert(NodeTreeHelperList.IsNodeListProperty(NodeType, propertyName, out _) || NodeTreeHelperBlockList.IsBlockListProperty(NodeType, propertyName, out _));
-            Debug.Assert(!IsCollectionNeverEmpty(NodeType, propertyName));
+            Debug.Assert(NodeTreeHelperList.IsNodeListProperty(NodeType, PropertyName, out _) || NodeTreeHelperBlockList.IsBlockListProperty(NodeType, PropertyName, out _));
+            Debug.Assert(!IsCollectionNeverEmpty(NodeType, PropertyName));
+
+            bool Result = false;
 
             if (WithExpandCollectionTable.ContainsKey(NodeType))
-            {
-                foreach (string Item in WithExpandCollectionTable[NodeType])
-                    if (Item == propertyName)
-                        return true;
-            }
+                Result = Array.Exists(WithExpandCollectionTable[NodeType], (string item) => item == PropertyName);
 
             return false;
         }
