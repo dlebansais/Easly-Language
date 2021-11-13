@@ -39,7 +39,7 @@ public static partial class NodeHelper
         Contract.RequireNotNull(instructions, out Scope Instructions);
 
         if (NodeTreeHelperBlockList.IsBlockListEmpty((IBlockList)AttachTypeBlocks))
-            throw new ArgumentException($"{nameof(AttachTypeBlocks)} must not be empty");
+            throw new ArgumentException($"{nameof(attachTypeBlocks)} must not be empty");
 
         Attachment Result = new Attachment();
         Result.Documentation = CreateEmptyDocumentation();

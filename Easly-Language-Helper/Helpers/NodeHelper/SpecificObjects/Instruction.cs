@@ -43,7 +43,7 @@ public static partial class NodeHelper
         Contract.RequireNotNull(continuationBlocks, out IBlockList<Continuation> ContinuationBlocks);
 
         if (NodeTreeHelperBlockList.IsBlockListEmpty((IBlockList)ContinuationBlocks))
-            throw new ArgumentException($"{nameof(ContinuationBlocks)} must not be empty");
+            throw new ArgumentException($"{nameof(continuationBlocks)} must not be empty");
 
         AsLongAsInstruction Result = new AsLongAsInstruction();
         Result.Documentation = CreateEmptyDocumentation();
@@ -68,7 +68,7 @@ public static partial class NodeHelper
         Contract.RequireNotNull(elseInstructions, out Scope ElseInstructions);
 
         if (NodeTreeHelperBlockList.IsBlockListEmpty((IBlockList)ContinuationBlocks))
-            throw new ArgumentException($"{nameof(ContinuationBlocks)} must not be empty");
+            throw new ArgumentException($"{nameof(continuationBlocks)} must not be empty");
 
         AsLongAsInstruction Result = new AsLongAsInstruction();
         Result.Documentation = CreateEmptyDocumentation();
@@ -588,7 +588,7 @@ public static partial class NodeHelper
         Contract.RequireNotNull(withBlocks, out IBlockList<With> WithBlocks);
 
         if (NodeTreeHelperBlockList.IsBlockListEmpty((IBlockList)WithBlocks))
-            throw new ArgumentException($"{nameof(WithBlocks)} must not be empty");
+            throw new ArgumentException($"{nameof(withBlocks)} must not be empty");
 
         InspectInstruction Result = new InspectInstruction();
         Result.Documentation = CreateEmptyDocumentation();
@@ -613,7 +613,7 @@ public static partial class NodeHelper
         Contract.RequireNotNull(elseInstructions, out Scope ElseInstructions);
 
         if (NodeTreeHelperBlockList.IsBlockListEmpty((IBlockList)WithBlocks))
-            throw new ArgumentException($"{nameof(WithBlocks)} must not be empty");
+            throw new ArgumentException($"{nameof(withBlocks)} must not be empty");
 
         InspectInstruction Result = new InspectInstruction();
         Result.Documentation = CreateEmptyDocumentation();

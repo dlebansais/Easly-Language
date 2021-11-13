@@ -259,31 +259,6 @@ public static partial class NodeHelper
         return Result;
     }
 
-    private static IndexerFeature CreateInitializedIndexerFeature(Document documentation, Identifier exportIdentifier, ExportStatus export, ObjectType? entityType, IBlockList<Identifier>? modifiedQueryBlocks, IOptionalReference<Body>? getterBody, IOptionalReference<Body>? setterBody, IBlockList<EntityDeclaration>? indexParameterBlocks, ParameterEndStatus parameterEnd)
-    {
-        Contract.RequireNotNull(entityType, out ObjectType EntityType);
-        Contract.RequireNotNull(modifiedQueryBlocks, out IBlockList<Identifier> ModifiedQueryBlocks);
-        Contract.RequireNotNull(getterBody, out IOptionalReference<Body> GetterBody);
-        Contract.RequireNotNull(setterBody, out IOptionalReference<Body> SetterBody);
-        Contract.RequireNotNull(indexParameterBlocks, out IBlockList<EntityDeclaration> IndexParameterBlocks);
-
-        if (NodeTreeHelperBlockList.IsBlockListEmpty((IBlockList)IndexParameterBlocks))
-            throw new ArgumentException($"{nameof(indexParameterBlocks)} must not be empty");
-
-        IndexerFeature Result = new IndexerFeature();
-        Result.Documentation = CreateDocumentationCopy(documentation);
-        Result.ExportIdentifier = (Identifier)DeepCloneNode(exportIdentifier, cloneCommentGuid: false);
-        Result.Export = export;
-        Result.EntityType = (ObjectType)DeepCloneNode(EntityType, cloneCommentGuid: false);
-        Result.IndexParameterBlocks = BlockListHelper<EntityDeclaration>.CreateBlockListCopy(IndexParameterBlocks);
-        Result.ParameterEnd = parameterEnd;
-        Result.ModifiedQueryBlocks = BlockListHelper<Identifier>.CreateBlockListCopy(ModifiedQueryBlocks);
-        Result.GetterBody = OptionalReferenceHelper<Body>.CreateReferenceCopy(GetterBody);
-        Result.SetterBody = OptionalReferenceHelper<Body>.CreateReferenceCopy(SetterBody);
-
-        return Result;
-    }
-
     private static ProcedureFeature CreateInitializedProcedureFeature(Document documentation, Identifier exportIdentifier, ExportStatus export, Name? entityName, IBlockList<CommandOverload>? commandOverloadBlocks)
     {
         Contract.RequireNotNull(entityName, out Name EntityName);
@@ -317,6 +292,31 @@ public static partial class NodeHelper
         Result.EntityName = (Name)DeepCloneNode(EntityName, cloneCommentGuid: false);
         Result.EntityType = (ObjectType)DeepCloneNode(EntityType, cloneCommentGuid: false);
         Result.PropertyKind = propertyKind;
+        Result.ModifiedQueryBlocks = BlockListHelper<Identifier>.CreateBlockListCopy(ModifiedQueryBlocks);
+        Result.GetterBody = OptionalReferenceHelper<Body>.CreateReferenceCopy(GetterBody);
+        Result.SetterBody = OptionalReferenceHelper<Body>.CreateReferenceCopy(SetterBody);
+
+        return Result;
+    }
+
+    private static IndexerFeature CreateInitializedIndexerFeature(Document documentation, Identifier exportIdentifier, ExportStatus export, ObjectType? entityType, IBlockList<Identifier>? modifiedQueryBlocks, IOptionalReference<Body>? getterBody, IOptionalReference<Body>? setterBody, IBlockList<EntityDeclaration>? indexParameterBlocks, ParameterEndStatus parameterEnd)
+    {
+        Contract.RequireNotNull(entityType, out ObjectType EntityType);
+        Contract.RequireNotNull(modifiedQueryBlocks, out IBlockList<Identifier> ModifiedQueryBlocks);
+        Contract.RequireNotNull(getterBody, out IOptionalReference<Body> GetterBody);
+        Contract.RequireNotNull(setterBody, out IOptionalReference<Body> SetterBody);
+        Contract.RequireNotNull(indexParameterBlocks, out IBlockList<EntityDeclaration> IndexParameterBlocks);
+
+        if (NodeTreeHelperBlockList.IsBlockListEmpty((IBlockList)IndexParameterBlocks))
+            throw new ArgumentException($"{nameof(indexParameterBlocks)} must not be empty");
+
+        IndexerFeature Result = new IndexerFeature();
+        Result.Documentation = CreateDocumentationCopy(documentation);
+        Result.ExportIdentifier = (Identifier)DeepCloneNode(exportIdentifier, cloneCommentGuid: false);
+        Result.Export = export;
+        Result.EntityType = (ObjectType)DeepCloneNode(EntityType, cloneCommentGuid: false);
+        Result.IndexParameterBlocks = BlockListHelper<EntityDeclaration>.CreateBlockListCopy(IndexParameterBlocks);
+        Result.ParameterEnd = parameterEnd;
         Result.ModifiedQueryBlocks = BlockListHelper<Identifier>.CreateBlockListCopy(ModifiedQueryBlocks);
         Result.GetterBody = OptionalReferenceHelper<Body>.CreateReferenceCopy(GetterBody);
         Result.SetterBody = OptionalReferenceHelper<Body>.CreateReferenceCopy(SetterBody);

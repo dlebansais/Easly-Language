@@ -62,7 +62,7 @@ public static partial class NodeHelper
         Contract.RequireNotNull(overloadBlocks, out IBlockList<QueryOverloadType> OverloadBlocks);
 
         if (NodeTreeHelperBlockList.IsBlockListEmpty((IBlockList)OverloadBlocks))
-            throw new ArgumentException($"{nameof(OverloadBlocks)} must not be empty");
+            throw new ArgumentException($"{nameof(overloadBlocks)} must not be empty");
 
         FunctionType Result = new FunctionType();
         Result.Documentation = CreateEmptyDocumentation();
@@ -107,7 +107,7 @@ public static partial class NodeHelper
         Contract.RequireNotNull(typeArgumentBlocks, out IBlockList<TypeArgument> TypeArgumentBlocks);
 
         if (NodeTreeHelperBlockList.IsBlockListEmpty((IBlockList)TypeArgumentBlocks))
-            throw new ArgumentException($"{nameof(TypeArgumentBlocks)} must not be empty");
+            throw new ArgumentException($"{nameof(typeArgumentBlocks)} must not be empty");
 
         GenericType Result = new GenericType();
         Result.Documentation = CreateEmptyDocumentation();
@@ -176,7 +176,7 @@ public static partial class NodeHelper
         Contract.RequireNotNull(setExceptionIdentifierBlocks, out IBlockList<Identifier> SetExceptionIdentifierBlocks);
 
         if (NodeTreeHelperBlockList.IsBlockListEmpty((IBlockList)IndexParameterBlocks))
-            throw new ArgumentException($"{nameof(IndexParameterBlocks)} must not be empty");
+            throw new ArgumentException($"{nameof(indexParameterBlocks)} must not be empty");
 
         IndexerType Result = new IndexerType();
         Result.Documentation = CreateEmptyDocumentation();
@@ -240,7 +240,7 @@ public static partial class NodeHelper
         Contract.RequireNotNull(overloadBlocks, out IBlockList<CommandOverloadType> OverloadBlocks);
 
         if (NodeTreeHelperBlockList.IsBlockListEmpty((IBlockList)OverloadBlocks))
-            throw new ArgumentException($"{nameof(OverloadBlocks)} must not be empty");
+            throw new ArgumentException($"{nameof(overloadBlocks)} must not be empty");
 
         ProcedureType Result = new ProcedureType();
         Result.Documentation = CreateEmptyDocumentation();
@@ -352,7 +352,7 @@ public static partial class NodeHelper
         Contract.RequireNotNull(entityDeclarationBlocks, out IBlockList<EntityDeclaration> EntityDeclarationBlocks);
 
         if (NodeTreeHelperBlockList.IsBlockListEmpty((IBlockList)EntityDeclarationBlocks))
-            throw new ArgumentException($"{nameof(EntityDeclarationBlocks)} must not be empty");
+            throw new ArgumentException($"{nameof(entityDeclarationBlocks)} must not be empty");
 
         TupleType Result = new TupleType();
         Result.Documentation = CreateEmptyDocumentation();
