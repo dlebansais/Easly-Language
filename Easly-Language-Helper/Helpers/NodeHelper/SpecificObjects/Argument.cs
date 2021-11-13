@@ -25,8 +25,6 @@ public static partial class NodeHelper
         if (ParameterList.Count == 0)
             throw new ArgumentException($"{nameof(parameterList)} must not be empty");
 
-        Debug.Assert(ParameterList.Count > 0);
-
         AssignmentArgument Result = new AssignmentArgument();
         Result.Documentation = CreateEmptyDocumentation();
         Result.ParameterBlocks = BlockListHelper<Identifier>.CreateBlockListFromNodeList(ParameterList);
@@ -48,8 +46,6 @@ public static partial class NodeHelper
 
         if (NodeTreeHelperBlockList.IsBlockListEmpty((IBlockList)ParameterBlocks))
             throw new ArgumentException($"{nameof(parameterBlocks)} must not be empty");
-
-        Debug.Assert(ParameterBlocks.NodeBlockList.Count > 0 && ParameterBlocks.NodeBlockList[0].NodeList.Count > 0);
 
         AssignmentArgument Result = new AssignmentArgument();
         Result.Documentation = CreateEmptyDocumentation();

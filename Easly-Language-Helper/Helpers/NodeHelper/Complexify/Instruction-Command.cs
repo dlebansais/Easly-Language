@@ -271,7 +271,7 @@
             {
                 CloneComplexifiedCommand(node, Pattern, out CommandInstruction ClonedCommand);
                 Expression FirstExpression = CreateDefaultManifestNumberExpression();
-                With FirstWith = CreateWith(FirstExpression, ClonedCommand);
+                With FirstWith = CreateSimpleWith(FirstExpression, ClonedCommand);
 
                 Expression Source = CreateEmptyQueryExpression();
                 complexifiedNode = CreateInspectInstruction(Source, FirstWith);
