@@ -387,7 +387,7 @@
             Expression NullExpression = null!;
             Continuation NullContinuation = null!;
             IBlockList<Continuation> NullContinuationBlockList = null!;
-            Scope NullScope = null!; ;
+            Scope NullScope = null!;
             Instruction NullInstruction = null!;
 #endif
 
