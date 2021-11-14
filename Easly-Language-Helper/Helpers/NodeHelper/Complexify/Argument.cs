@@ -65,7 +65,12 @@
 
         private static bool GetComplexifiedPositionalArgument(PositionalArgument node, out IList<Argument> complexifiedArgumentList)
         {
-            if (GetComplexifiedExpression(node.Source, out IList<Expression> ComplexifiedSourceList))
+            if (GetComplexifiedAsAssignmentArgument(node, out AssignmentArgument ComplexifiedAssignmentArgument))
+            {
+                complexifiedArgumentList = new List<Argument>() { ComplexifiedAssignmentArgument };
+                return true;
+            }
+            else if (GetComplexifiedExpression(node.Source, out IList<Expression> ComplexifiedSourceList))
             {
                 complexifiedArgumentList = new List<Argument>();
 
@@ -75,11 +80,6 @@
                     complexifiedArgumentList.Add(NewPositionalArgument);
                 }
 
-                return true;
-            }
-            else if (GetComplexifiedAsAssignmentArgument(node, out AssignmentArgument ComplexifiedAssignmentArgument))
-            {
-                complexifiedArgumentList = new List<Argument>() { ComplexifiedAssignmentArgument };
                 return true;
             }
 
