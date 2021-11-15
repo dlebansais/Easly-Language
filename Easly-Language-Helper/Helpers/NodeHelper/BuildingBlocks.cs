@@ -177,7 +177,7 @@
         /// Creates a new instance of an object inheriting from <see cref="Expression"/> with the simplest empty expression.
         /// </summary>
         /// <returns>The created instance.</returns>
-        public static Expression CreateEmptyQueryExpression()
+        public static QueryExpression CreateEmptyQueryExpression()
         {
             QueryExpression EmptyQueryExpression = new QueryExpression();
             EmptyQueryExpression.Documentation = CreateEmptyDocumentation();
@@ -192,7 +192,7 @@
         /// </summary>
         /// <param name="text">The expression text.</param>
         /// <returns>The created instance.</returns>
-        public static Expression CreateSimpleQueryExpression(string text)
+        public static QueryExpression CreateSimpleQueryExpression(string text)
         {
             Contract.RequireNotNull(text, out string Text);
 
@@ -208,7 +208,7 @@
         /// Creates a new instance of an object inheriting from <see cref="Instruction"/> with the simplest empty instruction.
         /// </summary>
         /// <returns>The created instance.</returns>
-        public static Instruction CreateEmptyCommandInstruction()
+        public static CommandInstruction CreateEmptyCommandInstruction()
         {
             CommandInstruction EmptyCommandInstruction = new CommandInstruction();
             EmptyCommandInstruction.Documentation = CreateEmptyDocumentation();
@@ -223,7 +223,7 @@
         /// </summary>
         /// <param name="text">The instruction text.</param>
         /// <returns>The created instance.</returns>
-        public static Instruction CreateSimpleCommandInstruction(string text)
+        public static CommandInstruction CreateSimpleCommandInstruction(string text)
         {
             Contract.RequireNotNull(text, out string Text);
 

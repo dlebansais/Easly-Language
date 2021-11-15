@@ -58,10 +58,10 @@
                 complexifiedExpressionList = new List<Expression>() { ComplexifiedBinaryXorConditionalExpression };
             else if (ComplexifyAsBinaryImpliesConditionalExpression(node, out BinaryConditionalExpression ComplexifiedBinaryImpliesConditionalExpression))
                 complexifiedExpressionList = new List<Expression>() { ComplexifiedBinaryImpliesConditionalExpression };
-            else if (ComplexifyAsBinaryOperatorExpression(node, out BinaryOperatorExpression ComplexifiedBinaryOperatorExpression))
-                complexifiedExpressionList = new List<Expression>() { ComplexifiedBinaryOperatorExpression };
-            else if (ComplexifyAsClassConstantExpression(node, out ClassConstantExpression ComplexifiedClassConstantExpression))
-                complexifiedExpressionList = new List<Expression>() { ComplexifiedClassConstantExpression };
+            else if (ComplexifyAsEqualExpression(node, out EqualityExpression ComplexifiedEqualityExpression))
+                complexifiedExpressionList = new List<Expression>() { ComplexifiedEqualityExpression };
+            else if (ComplexifyAsDifferentExpression(node, out EqualityExpression ComplexifiedDifferentExpression))
+                complexifiedExpressionList = new List<Expression>() { ComplexifiedDifferentExpression };
             else
                 return GetComplexifiedQueryExpressionSingle2(node, out complexifiedExpressionList);
 
@@ -72,10 +72,10 @@
         {
             if (ComplexifyAsCloneOfExpression(node, out CloneOfExpression ComplexifiedCloneOfExpression))
                 complexifiedExpressionList = new List<Expression>() { ComplexifiedCloneOfExpression };
-            else if (ComplexifyAsEqualExpression(node, out EqualityExpression ComplexifiedEqualityExpression))
-                complexifiedExpressionList = new List<Expression>() { ComplexifiedEqualityExpression };
-            else if (ComplexifyAsDifferentExpression(node, out EqualityExpression ComplexifiedDifferentExpression))
-                complexifiedExpressionList = new List<Expression>() { ComplexifiedDifferentExpression };
+            else if (ComplexifyAsBinaryOperatorExpression(node, out BinaryOperatorExpression ComplexifiedBinaryOperatorExpression))
+                complexifiedExpressionList = new List<Expression>() { ComplexifiedBinaryOperatorExpression };
+            else if (ComplexifyAsClassConstantExpression(node, out ClassConstantExpression ComplexifiedClassConstantExpression))
+                complexifiedExpressionList = new List<Expression>() { ComplexifiedClassConstantExpression };
             else if (ComplexifyAsIndexQueryExpression(node, out IndexQueryExpression ComplexifiedIndexQueryExpression))
                 complexifiedExpressionList = new List<Expression>() { ComplexifiedIndexQueryExpression };
             else if (ComplexifyAsInitializedObjectExpression(node, out InitializedObjectExpression ComplexifiedInitializedObjectExpression))

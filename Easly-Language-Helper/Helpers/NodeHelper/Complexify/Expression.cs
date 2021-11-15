@@ -401,7 +401,7 @@
         {
             complexifiedNode = null!;
 
-            if (IsQuerySimple(node) && ParsePattern(node, "agent", out string BeforeText, out string AfterText) && BeforeText.Length == 0)
+            if (IsQuerySimple(node) && ParsePattern(node, "agent ", out string BeforeText, out string AfterText) && BeforeText.Length == 0)
             {
                 AfterText = AfterText.Trim();
 
@@ -491,7 +491,7 @@
                 {
                     int ClassNameIndex = Text.IndexOf("}", StringComparison.InvariantCulture);
 
-                    if (ClassNameIndex > 2)
+                    if (ClassNameIndex >= 2)
                     {
                         Identifier ClassIdentifier = CreateSimpleIdentifier(Text.Substring(1, ClassNameIndex - 1));
                         Identifier ConstantIdentifier = CreateSimpleIdentifier(Text.Substring(ClassNameIndex + 1));

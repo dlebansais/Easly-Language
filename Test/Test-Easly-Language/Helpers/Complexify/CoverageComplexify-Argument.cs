@@ -13,7 +13,7 @@
     {
         [Test]
         [Category("Complexify")]
-        public static void TestComplexifyArgument()
+        public static void TestComplexifyAssignmentArgument()
         {
             bool Result;
             IList<Node> ComplexifiedNodeList;
@@ -52,11 +52,23 @@
 
             AssignmentArgument Complexified3 = (AssignmentArgument)ComplexifiedNodeList[0];
             Assert.That(Complexified3.Source is ManifestNumberExpression);
+        }
+
+        [Test]
+        [Category("Complexify")]
+        public static void TestComplexifyPositionalArgument()
+        {
+            bool Result;
+            IList<Node> ComplexifiedNodeList;
+
+            Expression DefaultExpression = NodeHelper.CreateDefaultExpression();
 
             PositionalArgument Argument4 = NodeHelper.CreatePositionalArgument(DefaultExpression);
 
             Result = NodeHelper.GetComplexifiedNode(Argument4, out ComplexifiedNodeList);
             Assert.False(Result);
+
+            Expression NumberExpression = NodeHelper.CreateSimpleQueryExpression("0");
 
             PositionalArgument Argument5 = NodeHelper.CreatePositionalArgument(NumberExpression);
 
