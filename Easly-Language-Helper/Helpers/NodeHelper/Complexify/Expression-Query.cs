@@ -72,6 +72,8 @@
         {
             if (ComplexifyAsCloneOfExpression(node, out CloneOfExpression ComplexifiedCloneOfExpression))
                 complexifiedExpressionList = new List<Expression>() { ComplexifiedCloneOfExpression };
+            else if (ComplexifyAsUnaryOperatorExpression(node, out UnaryOperatorExpression ComplexifiedUnaryOperatorExpression))
+                complexifiedExpressionList = new List<Expression>() { ComplexifiedUnaryOperatorExpression };
             else if (ComplexifyAsBinaryOperatorExpression(node, out BinaryOperatorExpression ComplexifiedBinaryOperatorExpression))
                 complexifiedExpressionList = new List<Expression>() { ComplexifiedBinaryOperatorExpression };
             else if (ComplexifyAsClassConstantExpression(node, out ClassConstantExpression ComplexifiedClassConstantExpression))
@@ -110,8 +112,6 @@
                 complexifiedExpressionList = new List<Expression>() { ComplexifiedResultOfExpression };
             else if (ComplexifyAsUnaryNotExpression(node, out UnaryNotExpression ComplexifiedUnaryNotExpression))
                 complexifiedExpressionList = new List<Expression>() { ComplexifiedUnaryNotExpression };
-            else if (ComplexifyAsUnaryOperatorExpression(node, out UnaryOperatorExpression ComplexifiedUnaryOperatorExpression))
-                complexifiedExpressionList = new List<Expression>() { ComplexifiedUnaryOperatorExpression };
 
             return complexifiedExpressionList != null;
         }
@@ -322,25 +322,25 @@
             if (IsQuerySimple(node))
             {
                 string Text = node.Query.Path[0].Text;
+                Dictionary<string, PreprocessorMacro> PreprocessorTable = new()
+                {
+                    { "DateAndTime", PreprocessorMacro.DateAndTime },
+                    { "CompilationDiscreteIdentifier", PreprocessorMacro.CompilationDiscreteIdentifier },
+                    { "ClassPath", PreprocessorMacro.ClassPath },
+                    { "CompilerVersion", PreprocessorMacro.CompilerVersion },
+                    { "ConformanceToStandard", PreprocessorMacro.ConformanceToStandard },
+                    { "DiscreteClassIdentifier", PreprocessorMacro.DiscreteClassIdentifier },
+                    { "Counter", PreprocessorMacro.Counter },
+                    { "Debugging", PreprocessorMacro.Debugging },
+                    { "RandomInteger", PreprocessorMacro.RandomInteger },
+                };
 
-                if (Text == "DateAndTime")
-                    complexifiedNode = CreatePreprocessorExpression(PreprocessorMacro.DateAndTime);
-                else if (Text == "CompilationDiscreteIdentifier")
-                    complexifiedNode = CreatePreprocessorExpression(PreprocessorMacro.CompilationDiscreteIdentifier);
-                else if (Text == "ClassPath")
-                    complexifiedNode = CreatePreprocessorExpression(PreprocessorMacro.ClassPath);
-                else if (Text == "CompilerVersion")
-                    complexifiedNode = CreatePreprocessorExpression(PreprocessorMacro.CompilerVersion);
-                else if (Text == "ConformanceToStandard")
-                    complexifiedNode = CreatePreprocessorExpression(PreprocessorMacro.ConformanceToStandard);
-                else if (Text == "DiscreteClassIdentifier")
-                    complexifiedNode = CreatePreprocessorExpression(PreprocessorMacro.DiscreteClassIdentifier);
-                else if (Text == "Counter")
-                    complexifiedNode = CreatePreprocessorExpression(PreprocessorMacro.Counter);
-                else if (Text == "Debugging")
-                    complexifiedNode = CreatePreprocessorExpression(PreprocessorMacro.Debugging);
-                else if (Text == "RandomInteger")
-                    complexifiedNode = CreatePreprocessorExpression(PreprocessorMacro.RandomInteger);
+                foreach (KeyValuePair<string, PreprocessorMacro> Entry in PreprocessorTable)
+                    if (Text == Entry.Key)
+                    {
+                        complexifiedNode = CreatePreprocessorExpression(Entry.Value);
+                        break;
+                    }
             }
 
             return complexifiedNode != null;
@@ -385,11 +385,11 @@
             string Text = node.Query.Path[0].Text;
             string Pattern = "-";
 
-            if (Text.StartsWith(Pattern + " ", StringComparison.InvariantCulture))
+            if (Text.StartsWith(Pattern, StringComparison.InvariantCulture))
             {
                 Identifier OperatorName = CreateSimpleIdentifier(Pattern);
 
-                CloneComplexifiedExpression(node, Text.Substring(Pattern.Length + 1), out Expression RightExpression);
+                CloneComplexifiedExpression(node, Text.Substring(Pattern.Length), out Expression RightExpression);
                 complexifiedNode = CreateUnaryOperatorExpression(OperatorName, RightExpression);
             }
 

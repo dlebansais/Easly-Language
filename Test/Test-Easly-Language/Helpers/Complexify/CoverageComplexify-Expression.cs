@@ -169,7 +169,6 @@
 
             QueryExpression Expression18 = NodeHelper.CreateSimpleQueryExpression("a /= b");
 
-            //System.Diagnostics.Debugger.Launch();
             Result = NodeHelper.GetComplexifiedNode(Expression18, out ComplexifiedNodeList);
             Assert.True(Result);
             Assert.AreEqual(ComplexifiedNodeList.Count, 1);
@@ -191,6 +190,111 @@
 
             IndexQueryExpression Complexified19_1 = (IndexQueryExpression)ComplexifiedNodeList[1];
             Assert.That(Complexified19_1.ArgumentBlocks.NodeBlockList.Count == 1 && Complexified19_1.ArgumentBlocks.NodeBlockList[0].NodeList.Count == 2);
+
+            QueryExpression Expression20 = NodeHelper.CreateSimpleQueryExpression("a { b := c }");
+
+            Result = NodeHelper.GetComplexifiedNode(Expression20, out ComplexifiedNodeList);
+            Assert.True(Result);
+            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+            Assert.That(ComplexifiedNodeList[0] is InitializedObjectExpression);
+
+            QueryExpression Expression21 = NodeHelper.CreateSimpleQueryExpression("True");
+
+            Result = NodeHelper.GetComplexifiedNode(Expression21, out ComplexifiedNodeList);
+            Assert.True(Result);
+            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+            Assert.That(ComplexifiedNodeList[0] is KeywordExpression);
+
+            KeywordExpression Complexified21 = (KeywordExpression)ComplexifiedNodeList[0];
+            Assert.AreEqual(Complexified21.Value, Keyword.True);
+
+            QueryExpression Expression22 = NodeHelper.CreateSimpleQueryExpression("'a'");
+
+            Result = NodeHelper.GetComplexifiedNode(Expression22, out ComplexifiedNodeList);
+            Assert.True(Result);
+            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+            Assert.That(ComplexifiedNodeList[0] is ManifestCharacterExpression);
+
+            ManifestCharacterExpression Complexified22 = (ManifestCharacterExpression)ComplexifiedNodeList[0];
+            Assert.AreEqual(Complexified22.Text, "a");
+
+            QueryExpression Expression23 = NodeHelper.CreateSimpleQueryExpression("\"a\"");
+
+            Result = NodeHelper.GetComplexifiedNode(Expression23, out ComplexifiedNodeList);
+            Assert.True(Result);
+            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+            Assert.That(ComplexifiedNodeList[0] is ManifestStringExpression);
+
+            ManifestStringExpression Complexified23 = (ManifestStringExpression)ComplexifiedNodeList[0];
+            Assert.AreEqual(Complexified23.Text, "a");
+
+            QueryExpression Expression24 = NodeHelper.CreateSimpleQueryExpression("new a");
+
+            Result = NodeHelper.GetComplexifiedNode(Expression24, out ComplexifiedNodeList);
+            Assert.True(Result);
+            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+            Assert.That(ComplexifiedNodeList[0] is NewExpression);
+
+            QueryExpression Expression25 = NodeHelper.CreateSimpleQueryExpression("entity Current");
+
+            Result = NodeHelper.GetComplexifiedNode(Expression25, out ComplexifiedNodeList);
+            Assert.True(Result);
+            Assert.AreEqual(ComplexifiedNodeList.Count, 2);
+            Assert.That(ComplexifiedNodeList[0] is EntityExpression);
+            Assert.That(ComplexifiedNodeList[1] is KeywordEntityExpression);
+
+            KeywordEntityExpression Complexified25 = (KeywordEntityExpression)ComplexifiedNodeList[1];
+            Assert.AreEqual(Complexified25.Value, Keyword.Current);
+
+            QueryExpression Expression26 = NodeHelper.CreateSimpleQueryExpression("old a");
+
+            Result = NodeHelper.GetComplexifiedNode(Expression26, out ComplexifiedNodeList);
+            Assert.True(Result);
+            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+            Assert.That(ComplexifiedNodeList[0] is OldExpression);
+
+            QueryExpression Expression27 = NodeHelper.CreateSimpleQueryExpression("precursor");
+
+            Result = NodeHelper.GetComplexifiedNode(Expression27, out ComplexifiedNodeList);
+            Assert.True(Result);
+            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+            Assert.That(ComplexifiedNodeList[0] is PrecursorExpression);
+
+            QueryExpression Expression28 = NodeHelper.CreateQueryExpression(NodeHelper.CreateSimpleQualifiedName("precursor[]"), new List<Argument>() { NodeHelper.CreateSimplePositionalArgument("a") });
+
+            Result = NodeHelper.GetComplexifiedNode(Expression28, out ComplexifiedNodeList);
+            Assert.True(Result);
+            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+            Assert.That(ComplexifiedNodeList[0] is PrecursorIndexExpression);
+
+            QueryExpression Expression29 = NodeHelper.CreateSimpleQueryExpression("DateAndTime");
+
+            Result = NodeHelper.GetComplexifiedNode(Expression29, out ComplexifiedNodeList);
+            Assert.True(Result);
+            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+            Assert.That(ComplexifiedNodeList[0] is PreprocessorExpression);
+
+            QueryExpression Expression30 = NodeHelper.CreateSimpleQueryExpression("result of a");
+
+            Result = NodeHelper.GetComplexifiedNode(Expression30, out ComplexifiedNodeList);
+            Assert.True(Result);
+            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+            Assert.That(ComplexifiedNodeList[0] is ResultOfExpression);
+
+            QueryExpression Expression31 = NodeHelper.CreateSimpleQueryExpression("not a");
+
+            Result = NodeHelper.GetComplexifiedNode(Expression31, out ComplexifiedNodeList);
+            Assert.True(Result);
+            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+            Assert.That(ComplexifiedNodeList[0] is UnaryNotExpression);
+
+            QueryExpression Expression32 = NodeHelper.CreateSimpleQueryExpression("- a");
+
+            //System.Diagnostics.Debugger.Launch();
+            Result = NodeHelper.GetComplexifiedNode(Expression32, out ComplexifiedNodeList);
+            Assert.True(Result);
+            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+            Assert.That(ComplexifiedNodeList[0] is UnaryOperatorExpression);
         }
     }
 }
