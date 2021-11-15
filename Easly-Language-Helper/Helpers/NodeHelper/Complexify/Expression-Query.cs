@@ -139,35 +139,23 @@
 
                 if (ParsePattern(Text, "{", out string ClassText, out string InitText))
                 {
-                    if (ParsePattern(InitText, ":=", out string ParameterText, out string SourceText) && SourceText.EndsWith("}", StringComparison.InvariantCulture))
+                    if (ParsePattern(InitText, ":=", out string ParameterText, out string SourceText))
                     {
-                        Identifier ClassIdentifier = CreateSimpleIdentifier(ClassText);
+                        if (SourceText.EndsWith("}", StringComparison.InvariantCulture))
+                        {
+                            Identifier ClassIdentifier = CreateSimpleIdentifier(ClassText);
 
-                        Identifier ParameterIdentifier = CreateSimpleIdentifier(ParameterText);
-                        Expression Source = CreateSimpleQueryExpression(SourceText.Substring(0, SourceText.Length - 1));
-                        AssignmentArgument FirstArgument = CreateAssignmentArgument(new List<Identifier>() { ParameterIdentifier }, Source);
+                            Identifier ParameterIdentifier = CreateSimpleIdentifier(ParameterText);
+                            Expression Source = CreateSimpleQueryExpression(SourceText.Substring(0, SourceText.Length - 1));
+                            AssignmentArgument FirstArgument = CreateAssignmentArgument(new List<Identifier>() { ParameterIdentifier }, Source);
 
-                        List<AssignmentArgument> ArgumentList = new List<AssignmentArgument>();
-                        ArgumentList.Add(FirstArgument);
+                            List<AssignmentArgument> ArgumentList = new List<AssignmentArgument>();
+                            ArgumentList.Add(FirstArgument);
 
-                        complexifiedNode = CreateInitializedObjectExpression(ClassIdentifier, ArgumentList);
+                            complexifiedNode = CreateInitializedObjectExpression(ClassIdentifier, ArgumentList);
+                        }
                     }
                 }
-            }
-
-            return complexifiedNode != null;
-        }
-
-        private static bool ComplexifyAsKeywordEntityExpression(QueryExpression node, out KeywordEntityExpression complexifiedNode)
-        {
-            complexifiedNode = null!;
-
-            if (node.ArgumentBlocks.NodeBlockList.Count == 0 && ParsePattern(node, "entity ", out string BeforeText, out string AfterText) && BeforeText.Length == 0)
-            {
-                string Text = AfterText.Trim();
-
-                if (StringToKeyword(Text, out Keyword Value) && Value == Keyword.Indexer)
-                    complexifiedNode = CreateKeywordEntityExpression(Value);
             }
 
             return complexifiedNode != null;
@@ -244,12 +232,6 @@
             if (node.ArgumentBlocks.NodeBlockList.Count == 0 && ParsePattern(node, "new ", out string BeforeText, out string AfterText) && BeforeText.Length == 0)
             {
                 QualifiedName ClonedQuery = (QualifiedName)DeepCloneNode(node.Query, cloneCommentGuid: false);
-                Debug.Assert(ClonedQuery != null, $"The clone is always a {nameof(QualifiedName)}");
-                Debug.Assert(ClonedQuery != null && ClonedQuery.Path.Count > 0, $"The clone always has at least one element");
-
-                if (ClonedQuery == null)
-                    return false;
-
                 NodeTreeHelper.SetString(ClonedQuery.Path[0], "Text", AfterText);
 
                 complexifiedNode = CreateNewExpression(ClonedQuery);
@@ -265,12 +247,6 @@
             if (node.ArgumentBlocks.NodeBlockList.Count == 0 && ParsePattern(node, "old ", out string BeforeText, out string AfterText) && BeforeText.Length == 0)
             {
                 QualifiedName ClonedQuery = (QualifiedName)DeepCloneNode(node.Query, cloneCommentGuid: false);
-                Debug.Assert(ClonedQuery != null, $"The clone is always a {nameof(QualifiedName)}");
-                Debug.Assert(ClonedQuery != null && ClonedQuery.Path.Count > 0, $"The clone always has at least one element");
-
-                if (ClonedQuery == null)
-                    return false;
-
                 NodeTreeHelper.SetString(ClonedQuery.Path[0], "Text", AfterText);
 
                 complexifiedNode = CreateOldExpression(ClonedQuery);
