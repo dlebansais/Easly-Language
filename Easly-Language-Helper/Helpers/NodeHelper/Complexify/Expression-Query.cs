@@ -137,11 +137,14 @@
             {
                 string Text = node.Query.Path[0].Text;
 
-                if (ParsePattern(Text, "{", out string ClassText, out string InitText))
+                bool IsFirstBracketFound = ParsePattern(Text, "{", out string ClassText, out string InitText);
+                if (IsFirstBracketFound)
                 {
-                    if (ParsePattern(InitText, ":=", out string ParameterText, out string SourceText))
+                    bool IsAssignmentFound = ParsePattern(InitText, ":=", out string ParameterText, out string SourceText);
+                    if (IsAssignmentFound)
                     {
-                        if (SourceText.EndsWith("}", StringComparison.InvariantCulture))
+                        bool IsLastBracketFound = SourceText.EndsWith("}", StringComparison.InvariantCulture);
+                        if (IsLastBracketFound)
                         {
                             Identifier ClassIdentifier = CreateSimpleIdentifier(ClassText);
 
