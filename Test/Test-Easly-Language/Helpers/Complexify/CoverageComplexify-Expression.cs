@@ -191,12 +191,15 @@
             IndexQueryExpression Complexified19_1 = (IndexQueryExpression)ComplexifiedNodeList[1];
             Assert.That(Complexified19_1.ArgumentBlocks.NodeBlockList.Count == 1 && Complexified19_1.ArgumentBlocks.NodeBlockList[0].NodeList.Count == 2);
 
-            QueryExpression Expression20 = NodeHelper.CreateSimpleQueryExpression("a { b := c }");
+            QueryExpression Expression20 = NodeHelper.CreateSimpleQueryExpression("a{b:=c}");
 
             Result = NodeHelper.GetComplexifiedNode(Expression20, out ComplexifiedNodeList);
             Assert.True(Result);
             Assert.AreEqual(ComplexifiedNodeList.Count, 1);
             Assert.That(ComplexifiedNodeList[0] is InitializedObjectExpression);
+
+            Assert.False(NodeHelper.GetComplexifiedNode(NodeHelper.CreateSimpleQueryExpression("a{b"), out _));
+            Assert.False(NodeHelper.GetComplexifiedNode(NodeHelper.CreateSimpleQueryExpression("a{b:="), out _));
 
             QueryExpression Expression21 = NodeHelper.CreateSimpleQueryExpression("True");
 
@@ -288,7 +291,7 @@
             Assert.AreEqual(ComplexifiedNodeList.Count, 1);
             Assert.That(ComplexifiedNodeList[0] is UnaryNotExpression);
 
-            QueryExpression Expression32 = NodeHelper.CreateSimpleQueryExpression("- a");
+            QueryExpression Expression32 = NodeHelper.CreateSimpleQueryExpression("-a");
 
             //System.Diagnostics.Debugger.Launch();
             Result = NodeHelper.GetComplexifiedNode(Expression32, out ComplexifiedNodeList);
