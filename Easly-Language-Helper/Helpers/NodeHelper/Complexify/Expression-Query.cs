@@ -30,10 +30,10 @@
                 QueryExpression NewQueryExpression = CreateQueryExpression(NewQuery, ArgumentList);
                 complexifiedExpressionList = new List<Expression>() { NewQueryExpression };
             }
-            else if (ComplexifyAsEntityExpression(node, out EntityExpression ComplexifiedEntityExpression, out KeywordEntityExpression ComplexifiedKeywordEntityExpression))
+            else if (ComplexifyAsEntityExpression(node, out EntityExpression ComplexifiedEntityExpression, out bool IsKeyword, out KeywordEntityExpression ComplexifiedKeywordEntityExpression))
             {
                 complexifiedExpressionList = new List<Expression>() { ComplexifiedEntityExpression };
-                if (ComplexifiedKeywordEntityExpression != null)
+                if (IsKeyword)
                     complexifiedExpressionList.Add(ComplexifiedKeywordEntityExpression);
             }
             else
