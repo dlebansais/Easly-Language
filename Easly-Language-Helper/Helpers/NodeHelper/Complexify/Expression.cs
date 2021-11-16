@@ -134,7 +134,7 @@
 
                         string BaseTypeName = Text.Substring(1, TypeNameIndex - 1).Trim();
                         Identifier BaseTypeIdentifier = CreateSimpleIdentifier(BaseTypeName);
-                        ObjectType NewBaseType = CreateSimpleType(SharingType.NotShared, BaseTypeIdentifier);
+                        SimpleType NewBaseType = CreateSimpleType(SharingType.NotShared, BaseTypeIdentifier);
 
                         AgentExpression NewAgentExpression = CreateAgentExpression(NewDelegated, NewBaseType);
                         complexifiedExpressionList.Add(NewAgentExpression);

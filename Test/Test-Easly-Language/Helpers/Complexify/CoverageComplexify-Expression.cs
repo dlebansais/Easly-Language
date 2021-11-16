@@ -13,14 +13,14 @@
     {
         [Test]
         [Category("Complexify")]
-        public static void TestComplexifyExpression()
+        public static void TestComplexifyQueryExpression()
         {
             bool Result;
             IList<Node> ComplexifiedNodeList;
 
             QueryExpression Expression1 = NodeHelper.CreateSimpleQueryExpression(String.Empty);
 
-            Result = NodeHelper.GetComplexifiedNode(Expression1, out ComplexifiedNodeList);
+            Result = NodeHelper.GetComplexifiedNode(Expression1, out _);
             Assert.False(Result);
 
             QueryExpression Expression2 = NodeHelper.CreateSimpleQueryExpression("a.b");
@@ -298,6 +298,485 @@
             Assert.True(Result);
             Assert.AreEqual(ComplexifiedNodeList.Count, 1);
             Assert.That(ComplexifiedNodeList[0] is UnaryOperatorExpression);
+        }
+
+        [Test]
+        [Category("Complexify")]
+        public static void TestComplexifyAgentExpression()
+        {
+            bool Result;
+            IList<Node> ComplexifiedNodeList;
+
+            Identifier SimpleIdentifier = NodeHelper.CreateSimpleIdentifier("a");
+            ObjectType DefaultObjectType = NodeHelper.CreateDefaultObjectType();
+            AgentExpression Expression1 = NodeHelper.CreateAgentExpression(SimpleIdentifier, DefaultObjectType);
+
+            Result = NodeHelper.GetComplexifiedNode(Expression1, out _);
+            Assert.False(Result);
+
+            ObjectType AnchorType = NodeHelper.CreateSimpleSimpleType("like b");
+            AgentExpression Expression2 = NodeHelper.CreateAgentExpression(SimpleIdentifier, AnchorType);
+
+            Result = NodeHelper.GetComplexifiedNode(Expression2, out ComplexifiedNodeList);
+            Assert.True(Result);
+            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+            Assert.That(ComplexifiedNodeList[0] is AgentExpression);
+
+            AgentExpression Complexified2 = (AgentExpression)ComplexifiedNodeList[0];
+            Assert.That(Complexified2.BaseType.IsAssigned);
+            Assert.That(Complexified2.BaseType.Item is AnchoredType);
+
+            Identifier TypeIdentifier = NodeHelper.CreateSimpleIdentifier("{b}a");
+            AgentExpression Expression3 = NodeHelper.CreateAgentExpression(TypeIdentifier, DefaultObjectType);
+
+            Result = NodeHelper.GetComplexifiedNode(Expression3, out ComplexifiedNodeList);
+            Assert.True(Result);
+            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+            Assert.That(ComplexifiedNodeList[0] is AgentExpression);
+
+            AgentExpression Complexified3 = (AgentExpression)ComplexifiedNodeList[0];
+            Assert.That(Complexified3.BaseType.IsAssigned);
+            Assert.That(Complexified3.BaseType.Item is SimpleType);
+
+            Assert.False(NodeHelper.GetComplexifiedNode(NodeHelper.CreateAgentExpression(NodeHelper.CreateSimpleIdentifier("{b"), DefaultObjectType), out _));
+        }
+
+        [Test]
+        [Category("Complexify")]
+        public static void TestComplexifyBinaryConditionalExpression()
+        {
+            bool Result;
+            IList<Node> ComplexifiedNodeList;
+
+            Expression LeftExpression = NodeHelper.CreateDefaultExpression();
+            Expression RightExpression = NodeHelper.CreateDefaultExpression();
+
+            BinaryConditionalExpression Expression1 = NodeHelper.CreateBinaryConditionalExpression(LeftExpression, ConditionalTypes.And, RightExpression);
+
+            Result = NodeHelper.GetComplexifiedNode(Expression1, out _);
+            Assert.False(Result);
+
+            Expression NumberExpression = NodeHelper.CreateSimpleQueryExpression("0");
+
+            BinaryConditionalExpression Expression2 = NodeHelper.CreateBinaryConditionalExpression(NumberExpression, ConditionalTypes.And, RightExpression);
+
+            Result = NodeHelper.GetComplexifiedNode(Expression2, out ComplexifiedNodeList);
+            Assert.True(Result);
+            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+            Assert.That(ComplexifiedNodeList[0] is BinaryConditionalExpression);
+
+            BinaryConditionalExpression Complexified2 = (BinaryConditionalExpression)ComplexifiedNodeList[0];
+            Assert.AreEqual(Complexified2.Conditional, ConditionalTypes.And);
+            Assert.That(Complexified2.LeftExpression is ManifestNumberExpression);
+
+            BinaryConditionalExpression Expression3 = NodeHelper.CreateBinaryConditionalExpression(RightExpression, ConditionalTypes.Or, NumberExpression);
+
+            Result = NodeHelper.GetComplexifiedNode(Expression3, out ComplexifiedNodeList);
+            Assert.True(Result);
+            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+            Assert.That(ComplexifiedNodeList[0] is BinaryConditionalExpression);
+
+            BinaryConditionalExpression Complexified3 = (BinaryConditionalExpression)ComplexifiedNodeList[0];
+            Assert.AreEqual(Complexified3.Conditional, ConditionalTypes.Or);
+            Assert.That(Complexified3.RightExpression is ManifestNumberExpression);
+        }
+
+        [Test]
+        [Category("Complexify")]
+        public static void TestComplexifyBinaryOperatorExpression()
+        {
+            bool Result;
+            IList<Node> ComplexifiedNodeList;
+
+            Expression LeftExpression = NodeHelper.CreateDefaultExpression();
+            Expression RightExpression = NodeHelper.CreateDefaultExpression();
+            Identifier SimpleIdentifier = NodeHelper.CreateSimpleIdentifier("+");
+
+            BinaryOperatorExpression Expression1 = NodeHelper.CreateBinaryOperatorExpression(LeftExpression, SimpleIdentifier, RightExpression);
+
+            Result = NodeHelper.GetComplexifiedNode(Expression1, out _);
+            Assert.False(Result);
+
+            Expression NumberExpression = NodeHelper.CreateSimpleQueryExpression("0");
+
+            BinaryOperatorExpression Expression2 = NodeHelper.CreateBinaryOperatorExpression(NumberExpression, SimpleIdentifier, RightExpression);
+
+            Result = NodeHelper.GetComplexifiedNode(Expression2, out ComplexifiedNodeList);
+            Assert.True(Result);
+            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+            Assert.That(ComplexifiedNodeList[0] is BinaryOperatorExpression);
+
+            BinaryOperatorExpression Complexified2 = (BinaryOperatorExpression)ComplexifiedNodeList[0];
+            Assert.That(Complexified2.LeftExpression is ManifestNumberExpression);
+
+            BinaryOperatorExpression Expression3 = NodeHelper.CreateBinaryOperatorExpression(RightExpression, SimpleIdentifier, NumberExpression);
+
+            Result = NodeHelper.GetComplexifiedNode(Expression3, out ComplexifiedNodeList);
+            Assert.True(Result);
+            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+            Assert.That(ComplexifiedNodeList[0] is BinaryOperatorExpression);
+
+            BinaryOperatorExpression Complexified3 = (BinaryOperatorExpression)ComplexifiedNodeList[0];
+            Assert.That(Complexified3.RightExpression is ManifestNumberExpression);
+
+            Identifier SymbolIdentifier = NodeHelper.CreateSimpleIdentifier(">=");
+
+            BinaryOperatorExpression Expression4 = NodeHelper.CreateBinaryOperatorExpression(RightExpression, SymbolIdentifier, RightExpression);
+
+            Result = NodeHelper.GetComplexifiedNode(Expression4, out ComplexifiedNodeList);
+            Assert.True(Result);
+            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+            Assert.That(ComplexifiedNodeList[0] is BinaryOperatorExpression);
+
+            BinaryOperatorExpression Complexified4 = (BinaryOperatorExpression)ComplexifiedNodeList[0];
+            Assert.That(Complexified4.LeftExpression is QueryExpression);
+            Assert.That(Complexified4.RightExpression is QueryExpression);
+            Assert.AreEqual(Complexified4.Operator.Text, "≥");
+        }
+
+        [Test]
+        [Category("Complexify")]
+        public static void TestComplexifyEntityExpression()
+        {
+            bool Result;
+            IList<Node> ComplexifiedNodeList;
+
+            QualifiedName SimpleQualifiedName = NodeHelper.CreateSimpleQualifiedName("a");
+
+            EntityExpression Expression1 = NodeHelper.CreateEntityExpression(SimpleQualifiedName);
+
+            Result = NodeHelper.GetComplexifiedNode(Expression1, out _);
+            Assert.False(Result);
+
+            QualifiedName OtherQualifiedName = NodeHelper.CreateSimpleQualifiedName("a.b");
+
+            EntityExpression Expression2 = NodeHelper.CreateEntityExpression(OtherQualifiedName);
+
+            Result = NodeHelper.GetComplexifiedNode(Expression2, out ComplexifiedNodeList);
+            Assert.True(Result);
+            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+            Assert.That(ComplexifiedNodeList[0] is EntityExpression);
+
+            EntityExpression Complexified2 = (EntityExpression)ComplexifiedNodeList[0];
+            Assert.That(Complexified2.Query.Path.Count == 2);
+        }
+
+        [Test]
+        [Category("Complexify")]
+        public static void TestComplexifyEqualityExpression()
+        {
+            bool Result;
+            IList<Node> ComplexifiedNodeList;
+
+            Expression LeftExpression = NodeHelper.CreateDefaultExpression();
+            Expression RightExpression = NodeHelper.CreateDefaultExpression();
+
+            EqualityExpression Expression1 = NodeHelper.CreateEqualityExpression(LeftExpression, ComparisonType.Equal, EqualityType.Physical , RightExpression);
+
+            Result = NodeHelper.GetComplexifiedNode(Expression1, out _);
+            Assert.False(Result);
+
+            Expression NumberExpression = NodeHelper.CreateSimpleQueryExpression("0");
+
+            EqualityExpression Expression2 = NodeHelper.CreateEqualityExpression(NumberExpression, ComparisonType.Equal, EqualityType.Physical, RightExpression);
+
+            Result = NodeHelper.GetComplexifiedNode(Expression2, out ComplexifiedNodeList);
+            Assert.True(Result);
+            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+            Assert.That(ComplexifiedNodeList[0] is EqualityExpression);
+
+            EqualityExpression Complexified2 = (EqualityExpression)ComplexifiedNodeList[0];
+            Assert.AreEqual(Complexified2.Comparison, ComparisonType.Equal);
+            Assert.AreEqual(Complexified2.Equality, EqualityType.Physical);
+            Assert.That(Complexified2.LeftExpression is ManifestNumberExpression);
+
+            EqualityExpression Expression3 = NodeHelper.CreateEqualityExpression(LeftExpression, ComparisonType.Different, EqualityType.Deep, NumberExpression);
+
+            Result = NodeHelper.GetComplexifiedNode(Expression3, out ComplexifiedNodeList);
+            Assert.True(Result);
+            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+            Assert.That(ComplexifiedNodeList[0] is EqualityExpression);
+
+            EqualityExpression Complexified3 = (EqualityExpression)ComplexifiedNodeList[0];
+            Assert.AreEqual(Complexified3.Comparison, ComparisonType.Different);
+            Assert.AreEqual(Complexified3.Equality, EqualityType.Deep);
+            Assert.That(Complexified3.RightExpression is ManifestNumberExpression);
+        }
+
+        [Test]
+        [Category("Complexify")]
+        public static void TestComplexifyIndexQueryExpression()
+        {
+            bool Result;
+            IList<Node> ComplexifiedNodeList;
+
+            Expression DefaultExpression = NodeHelper.CreateDefaultExpression();
+            Argument DefaultArgument = NodeHelper.CreateDefaultArgument();
+            List<Argument> DefaultArgumentList = new() { DefaultArgument };
+
+            IndexQueryExpression Expression1 = NodeHelper.CreateIndexQueryExpression(DefaultExpression, DefaultArgumentList);
+
+            Result = NodeHelper.GetComplexifiedNode(Expression1, out _);
+            Assert.False(Result);
+
+            Expression NumberExpression = NodeHelper.CreateSimpleQueryExpression("0");
+
+            IndexQueryExpression Expression2 = NodeHelper.CreateIndexQueryExpression(NumberExpression, DefaultArgumentList);
+
+            Result = NodeHelper.GetComplexifiedNode(Expression2, out ComplexifiedNodeList);
+            Assert.True(Result);
+            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+            Assert.That(ComplexifiedNodeList[0] is IndexQueryExpression);
+
+            IndexQueryExpression Complexified2 = (IndexQueryExpression)ComplexifiedNodeList[0];
+            Assert.That(Complexified2.IndexedExpression is ManifestNumberExpression);
+        }
+
+        [Test]
+        [Category("Complexify")]
+        public static void TestComplexifyInitializedObjectExpression()
+        {
+            bool Result;
+            IList<Node> ComplexifiedNodeList;
+
+            Identifier SimpleIdentifier = NodeHelper.CreateSimpleIdentifier("+");
+            List<AssignmentArgument> EmptyAssignmentArgumentList = new();
+
+            InitializedObjectExpression Expression1 = NodeHelper.CreateInitializedObjectExpression(SimpleIdentifier, EmptyAssignmentArgumentList);
+
+            Result = NodeHelper.GetComplexifiedNode(Expression1, out _);
+            Assert.False(Result);
+
+            AssignmentArgument SimpleAssignmentArgument = NodeHelper.CreateSimpleAssignmentArgument("a", "b");
+            List<AssignmentArgument> SimpleAssignmentArgumentList = new() { SimpleAssignmentArgument };
+
+            InitializedObjectExpression Expression2 = NodeHelper.CreateInitializedObjectExpression(SimpleIdentifier, SimpleAssignmentArgumentList);
+
+            Result = NodeHelper.GetComplexifiedNode(Expression2, out _);
+            Assert.False(Result);
+
+            Expression NumberExpression = NodeHelper.CreateSimpleQueryExpression("0");
+            AssignmentArgument NumberAssignmentArgument = NodeHelper.CreateAssignmentArgument(new List<Identifier>() { SimpleIdentifier }, NumberExpression);
+
+            InitializedObjectExpression Expression3 = NodeHelper.CreateInitializedObjectExpression(SimpleIdentifier, new List<AssignmentArgument>() { NumberAssignmentArgument });
+
+            Result = NodeHelper.GetComplexifiedNode(Expression3, out ComplexifiedNodeList);
+            Assert.True(Result);
+            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+            Assert.That(ComplexifiedNodeList[0] is InitializedObjectExpression);
+
+            InitializedObjectExpression Complexified3 = (InitializedObjectExpression)ComplexifiedNodeList[0];
+            Assert.That(Complexified3.AssignmentBlocks.NodeBlockList.Count == 1 && Complexified3.AssignmentBlocks.NodeBlockList[0].NodeList.Count == 1);
+
+            AssignmentArgument ComplexifiedArgument3 = Complexified3.AssignmentBlocks.NodeBlockList[0].NodeList[0];
+            Assert.That(ComplexifiedArgument3.Source is ManifestNumberExpression);
+        }
+
+        [Test]
+        [Category("Complexify")]
+        public static void TestComplexifyNewExpression()
+        {
+            bool Result;
+            IList<Node> ComplexifiedNodeList;
+
+            QualifiedName SimpleQualifiedName = NodeHelper.CreateSimpleQualifiedName("a");
+
+            NewExpression Expression1 = NodeHelper.CreateNewExpression(SimpleQualifiedName);
+
+            Result = NodeHelper.GetComplexifiedNode(Expression1, out _);
+            Assert.False(Result);
+
+            QualifiedName OtherQualifiedName = NodeHelper.CreateSimpleQualifiedName("a.b");
+
+            NewExpression Expression2 = NodeHelper.CreateNewExpression(OtherQualifiedName);
+
+            Result = NodeHelper.GetComplexifiedNode(Expression2, out ComplexifiedNodeList);
+            Assert.True(Result);
+            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+            Assert.That(ComplexifiedNodeList[0] is NewExpression);
+
+            NewExpression Complexified2 = (NewExpression)ComplexifiedNodeList[0];
+            Assert.That(Complexified2.Object.Path.Count == 2);
+        }
+
+        [Test]
+        [Category("Complexify")]
+        public static void TestComplexifyOldExpression()
+        {
+            bool Result;
+            IList<Node> ComplexifiedNodeList;
+
+            QualifiedName SimpleQualifiedName = NodeHelper.CreateSimpleQualifiedName("a");
+
+            OldExpression Expression1 = NodeHelper.CreateOldExpression(SimpleQualifiedName);
+
+            Result = NodeHelper.GetComplexifiedNode(Expression1, out _);
+            Assert.False(Result);
+
+            QualifiedName OtherQualifiedName = NodeHelper.CreateSimpleQualifiedName("a.b");
+
+            OldExpression Expression2 = NodeHelper.CreateOldExpression(OtherQualifiedName);
+
+            Result = NodeHelper.GetComplexifiedNode(Expression2, out ComplexifiedNodeList);
+            Assert.True(Result);
+            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+            Assert.That(ComplexifiedNodeList[0] is OldExpression);
+
+            OldExpression Complexified2 = (OldExpression)ComplexifiedNodeList[0];
+            Assert.That(Complexified2.Query.Path.Count == 2);
+        }
+
+        [Test]
+        [Category("Complexify")]
+        public static void TestComplexifyPrecursorExpression()
+        {
+            bool Result;
+            IList<Node> ComplexifiedNodeList;
+
+            IBlockList<Argument> EmptyArgumentBlockList = BlockListHelper.CreateEmptyBlockList<Argument>();
+            ObjectType DefaultObjectType = NodeHelper.CreateDefaultObjectType();
+
+            PrecursorExpression Expression1 = NodeHelper.CreatePrecursorExpression(EmptyArgumentBlockList, DefaultObjectType);
+
+            Result = NodeHelper.GetComplexifiedNode(Expression1, out _);
+            Assert.False(Result);
+
+            ObjectType AnchorType = NodeHelper.CreateSimpleSimpleType("like a");
+
+            PrecursorExpression Expression2 = NodeHelper.CreatePrecursorExpression(EmptyArgumentBlockList, AnchorType);
+
+            Result = NodeHelper.GetComplexifiedNode(Expression2, out ComplexifiedNodeList);
+            Assert.True(Result);
+            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+            Assert.That(ComplexifiedNodeList[0] is PrecursorExpression);
+
+            PrecursorExpression Complexified2 = (PrecursorExpression)ComplexifiedNodeList[0];
+            Assert.That(Complexified2.AncestorType.IsAssigned);
+            Assert.That(Complexified2.AncestorType.Item is AnchoredType);
+        }
+
+        [Test]
+        [Category("Complexify")]
+        public static void TestComplexifyPrecursorIndexExpression()
+        {
+            bool Result;
+            IList<Node> ComplexifiedNodeList;
+
+            Argument SimpleArgument = NodeHelper.CreateSimplePositionalArgument("a");
+            IBlockList<Argument> SimpleArgumentBlockList = BlockListHelper.CreateSimpleBlockList(SimpleArgument);
+            ObjectType DefaultObjectType = NodeHelper.CreateDefaultObjectType();
+
+            PrecursorIndexExpression Expression1 = NodeHelper.CreatePrecursorIndexExpression(SimpleArgumentBlockList, DefaultObjectType);
+
+            Result = NodeHelper.GetComplexifiedNode(Expression1, out _);
+            Assert.False(Result);
+
+            ObjectType AnchorType = NodeHelper.CreateSimpleSimpleType("like b");
+
+            PrecursorIndexExpression Expression2 = NodeHelper.CreatePrecursorIndexExpression(SimpleArgumentBlockList, AnchorType);
+
+            Result = NodeHelper.GetComplexifiedNode(Expression2, out ComplexifiedNodeList);
+            Assert.True(Result);
+            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+            Assert.That(ComplexifiedNodeList[0] is PrecursorIndexExpression);
+
+            PrecursorIndexExpression Complexified2 = (PrecursorIndexExpression)ComplexifiedNodeList[0];
+            Assert.That(Complexified2.AncestorType.IsAssigned);
+            Assert.That(Complexified2.AncestorType.Item is AnchoredType);
+        }
+
+        [Test]
+        [Category("Complexify")]
+        public static void TestComplexifyResultOfExpression()
+        {
+            bool Result;
+            IList<Node> ComplexifiedNodeList;
+
+            Expression DefaultExpression = NodeHelper.CreateDefaultExpression();
+
+            ResultOfExpression Expression1 = NodeHelper.CreateResultOfExpression(DefaultExpression);
+
+            Result = NodeHelper.GetComplexifiedNode(Expression1, out _);
+            Assert.False(Result);
+
+            Expression NumberExpression = NodeHelper.CreateSimpleQueryExpression("0");
+
+            ResultOfExpression Expression2 = NodeHelper.CreateResultOfExpression(NumberExpression);
+
+            Result = NodeHelper.GetComplexifiedNode(Expression2, out ComplexifiedNodeList);
+            Assert.True(Result);
+            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+            Assert.That(ComplexifiedNodeList[0] is ResultOfExpression);
+
+            ResultOfExpression Complexified2 = (ResultOfExpression)ComplexifiedNodeList[0];
+            Assert.That(Complexified2.Source is ManifestNumberExpression);
+        }
+
+        [Test]
+        [Category("Complexify")]
+        public static void TestComplexifyUnaryNotExpression()
+        {
+            bool Result;
+            IList<Node> ComplexifiedNodeList;
+
+            Expression RightExpression = NodeHelper.CreateDefaultExpression();
+
+            UnaryNotExpression Expression1 = NodeHelper.CreateUnaryNotExpression(RightExpression);
+
+            Result = NodeHelper.GetComplexifiedNode(Expression1, out _);
+            Assert.False(Result);
+
+            Expression NumberExpression = NodeHelper.CreateSimpleQueryExpression("0");
+
+            UnaryNotExpression Expression2 = NodeHelper.CreateUnaryNotExpression(NumberExpression);
+
+            Result = NodeHelper.GetComplexifiedNode(Expression2, out ComplexifiedNodeList);
+            Assert.True(Result);
+            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+            Assert.That(ComplexifiedNodeList[0] is UnaryNotExpression);
+
+            UnaryNotExpression Complexified2 = (UnaryNotExpression)ComplexifiedNodeList[0];
+            Assert.That(Complexified2.RightExpression is ManifestNumberExpression);
+        }
+
+        [Test]
+        [Category("Complexify")]
+        public static void TestComplexifyUnaryOperatorExpression()
+        {
+            bool Result;
+            IList<Node> ComplexifiedNodeList;
+
+            Identifier SimpleIdentifier = NodeHelper.CreateSimpleIdentifier("-");
+            Expression DefaultExpression = NodeHelper.CreateDefaultExpression();
+
+            UnaryOperatorExpression Expression1 = NodeHelper.CreateUnaryOperatorExpression(SimpleIdentifier, DefaultExpression);
+
+            Result = NodeHelper.GetComplexifiedNode(Expression1, out _);
+            Assert.False(Result);
+
+            Expression NumberExpression = NodeHelper.CreateSimpleQueryExpression("0");
+
+            UnaryOperatorExpression Expression2 = NodeHelper.CreateUnaryOperatorExpression(SimpleIdentifier, NumberExpression);
+
+            Result = NodeHelper.GetComplexifiedNode(Expression2, out ComplexifiedNodeList);
+            Assert.True(Result);
+            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+            Assert.That(ComplexifiedNodeList[0] is UnaryOperatorExpression);
+
+            UnaryOperatorExpression Complexified2 = (UnaryOperatorExpression)ComplexifiedNodeList[0];
+            Assert.That(Complexified2.RightExpression is ManifestNumberExpression);
+
+            Identifier SymbolIdentifier = NodeHelper.CreateSimpleIdentifier("sqrt");
+
+            UnaryOperatorExpression Expression3 = NodeHelper.CreateUnaryOperatorExpression(SymbolIdentifier, DefaultExpression);
+
+            Result = NodeHelper.GetComplexifiedNode(Expression3, out ComplexifiedNodeList);
+            Assert.True(Result);
+            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+            Assert.That(ComplexifiedNodeList[0] is UnaryOperatorExpression);
+
+            UnaryOperatorExpression Complexified3 = (UnaryOperatorExpression)ComplexifiedNodeList[0];
+            Assert.AreEqual(Complexified3.Operator.Text, "√");
         }
     }
 }
