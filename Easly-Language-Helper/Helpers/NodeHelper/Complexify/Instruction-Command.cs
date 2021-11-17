@@ -38,8 +38,8 @@
         {
             if (ComplexifyAsAsLongAsInstruction(node, out AsLongAsInstruction ComplexifiedAsLongAsInstruction))
                 complexifiedInstructionList = new List<Instruction>() { ComplexifiedAsLongAsInstruction };
-            else if (ComplexifyAsAssignmentInstruction(node, out AssignmentInstruction ComplexifiedAssignmentInstruction))
-                complexifiedInstructionList = new List<Instruction>() { ComplexifiedAssignmentInstruction };
+            else if (ComplexifyAsIndexAssignmentInstruction(node, out IndexAssignmentInstruction ComplexifiedIndexAssignmentInstruction))
+                complexifiedInstructionList = new List<Instruction>() { ComplexifiedIndexAssignmentInstruction };
             else if (ComplexifyAsAttachmentInstruction(node, out AttachmentInstruction ComplexifiedAttachmentInstruction))
                 complexifiedInstructionList = new List<Instruction>() { ComplexifiedAttachmentInstruction };
             else if (ComplexifyAsCheckInstruction(node, out CheckInstruction ComplexifiedCheckInstruction))
@@ -62,14 +62,14 @@
 
             if (ComplexifyAsIfThenElseInstruction(node, out IfThenElseInstruction ComplexifiedIfThenElseInstruction))
                 complexifiedInstructionList = new List<Instruction>() { ComplexifiedIfThenElseInstruction };
-            else if (ComplexifyAsIndexAssignmentInstruction(node, out IndexAssignmentInstruction ComplexifiedIndexAssignmentInstruction))
-                complexifiedInstructionList = new List<Instruction>() { ComplexifiedIndexAssignmentInstruction };
+            else if (ComplexifyAsPrecursorIndexAssignmentInstruction(node, out PrecursorIndexAssignmentInstruction ComplexifiedPrecursorIndexAssignmentInstruction))
+                complexifiedInstructionList = new List<Instruction>() { ComplexifiedPrecursorIndexAssignmentInstruction };
+            else if (ComplexifyAsAssignmentInstruction(node, out AssignmentInstruction ComplexifiedAssignmentInstruction))
+                complexifiedInstructionList = new List<Instruction>() { ComplexifiedAssignmentInstruction };
             else if (ComplexifyAsInspectInstruction(node, out InspectInstruction ComplexifiedInspectInstruction))
                 complexifiedInstructionList = new List<Instruction>() { ComplexifiedInspectInstruction };
             else if (ComplexifyAsOverLoopInstruction(node, out OverLoopInstruction ComplexifiedOverLoopInstruction))
                 complexifiedInstructionList = new List<Instruction>() { ComplexifiedOverLoopInstruction };
-            else if (ComplexifyAsPrecursorIndexAssignmentInstruction(node, out PrecursorIndexAssignmentInstruction ComplexifiedPrecursorIndexAssignmentInstruction))
-                complexifiedInstructionList = new List<Instruction>() { ComplexifiedPrecursorIndexAssignmentInstruction };
             else if (ComplexifyAsPrecursorInstruction(node, out PrecursorInstruction ComplexifiedPrecursorInstruction))
                 complexifiedInstructionList = new List<Instruction>() { ComplexifiedPrecursorInstruction };
             else if (ComplexifyAsRaiseEventInstruction(node, out RaiseEventInstruction ComplexifiedRaiseEventInstruction))

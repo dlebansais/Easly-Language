@@ -150,6 +150,8 @@
             Assert.AreEqual(ComplexifiedNodeList.Count, 1);
             Assert.That(ComplexifiedNodeList[0] is ClassConstantExpression);
 
+            Assert.False(NodeHelper.GetComplexifiedNode(NodeHelper.CreateSimpleQueryExpression("{}"), out _));
+
             QueryExpression Expression16 = NodeHelper.CreateSimpleQueryExpression("clone of a");
 
             Result = NodeHelper.GetComplexifiedNode(Expression16, out ComplexifiedNodeList);
@@ -432,6 +434,34 @@
             Assert.That(Complexified4.LeftExpression is QueryExpression);
             Assert.That(Complexified4.RightExpression is QueryExpression);
             Assert.AreEqual(Complexified4.Operator.Text, "≥");
+        }
+
+        [Test]
+        [Category("Complexify")]
+        public static void TestComplexifyCloneOfExpression()
+        {
+            bool Result;
+            IList<Node> ComplexifiedNodeList;
+
+            Expression DefaultExpression = NodeHelper.CreateDefaultExpression();
+
+            CloneOfExpression Expression1 = NodeHelper.CreateCloneOfExpression(CloneType.Deep, DefaultExpression);
+
+            Result = NodeHelper.GetComplexifiedNode(Expression1, out _);
+            Assert.False(Result);
+
+            Expression NumberExpression = NodeHelper.CreateSimpleQueryExpression("0");
+
+            CloneOfExpression Expression2 = NodeHelper.CreateCloneOfExpression(CloneType.Shallow, NumberExpression);
+
+            Result = NodeHelper.GetComplexifiedNode(Expression2, out ComplexifiedNodeList);
+            Assert.True(Result);
+            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+            Assert.That(ComplexifiedNodeList[0] is CloneOfExpression);
+
+            CloneOfExpression Complexified2 = (CloneOfExpression)ComplexifiedNodeList[0];
+            Assert.AreEqual(Complexified2.Type, CloneType.Shallow);
+            Assert.That(Complexified2.Source is ManifestNumberExpression);
         }
 
         [Test]
