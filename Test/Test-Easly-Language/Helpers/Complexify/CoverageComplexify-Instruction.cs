@@ -60,14 +60,18 @@
             Assert.AreEqual(ComplexifiedNodeList.Count, 1);
             Assert.That(ComplexifiedNodeList[0] is AsLongAsInstruction);
 
-            CommandInstruction Instruction6 = NodeHelper.CreateSimpleCommandInstruction("a:=b");
+            CommandInstruction Instruction6 = NodeHelper.CreateSimpleCommandInstruction("Result:=b");
 
             Result = NodeHelper.GetComplexifiedNode(Instruction6, out ComplexifiedNodeList);
             Assert.True(Result);
-            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+            Assert.AreEqual(ComplexifiedNodeList.Count, 2);
             Assert.That(ComplexifiedNodeList[0] is AssignmentInstruction);
+            Assert.That(ComplexifiedNodeList[1] is KeywordAssignmentInstruction);
 
-            CommandInstruction Instruction7 = NodeHelper.CreateSimpleCommandInstruction("attach a to b");
+            KeywordAssignmentInstruction Complexified6 = (KeywordAssignmentInstruction)ComplexifiedNodeList[1];
+            Assert.AreEqual(Complexified6.Destination, Keyword.Result);
+
+            CommandInstruction Instruction7 = NodeHelper.CreateSimpleCommandInstruction("attach a");
 
             Result = NodeHelper.GetComplexifiedNode(Instruction7, out ComplexifiedNodeList);
             Assert.True(Result);
@@ -112,7 +116,6 @@
             QualifiedName IndexQualifiedName = NodeHelper.CreateQualifiedName(new List<Identifier>() { NodeHelper.CreateSimpleIdentifier("a"), NodeHelper.CreateSimpleIdentifier("[]:=") });
             CommandInstruction Instruction13 = NodeHelper.CreateCommandInstruction(IndexQualifiedName, new List<Argument>());
 
-            //System.Diagnostics.Debugger.Launch();
             Result = NodeHelper.GetComplexifiedNode(Instruction13, out ComplexifiedNodeList);
             Assert.True(Result);
             Assert.AreEqual(ComplexifiedNodeList.Count, 1);
@@ -167,6 +170,33 @@
             Assert.True(Result);
             Assert.AreEqual(ComplexifiedNodeList.Count, 1);
             Assert.That(ComplexifiedNodeList[0] is ThrowInstruction);
+
+            Identifier StartIdentifier = NodeHelper.CreateSimpleIdentifier("a");
+            Identifier MiddleIdentifier = NodeHelper.CreateSimpleIdentifier("b:=c");
+            Identifier EndIdentifier = NodeHelper.CreateSimpleIdentifier("d");
+            List<Identifier> AssignmentPathList = new() { StartIdentifier , MiddleIdentifier, EndIdentifier };
+            QualifiedName AssignmentPathQualifiedName = NodeHelper.CreateQualifiedName(AssignmentPathList);
+            CommandInstruction Instruction21 = NodeHelper.CreateCommandInstruction(AssignmentPathQualifiedName, new List<Argument>());
+
+            //System.Diagnostics.Debugger.Launch();
+            Result = NodeHelper.GetComplexifiedNode(Instruction21, out ComplexifiedNodeList);
+            Assert.True(Result);
+            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+            Assert.That(ComplexifiedNodeList[0] is AssignmentInstruction);
+
+            CommandInstruction Instruction22 = NodeHelper.CreateSimpleCommandInstruction("attach a to b");
+
+            Result = NodeHelper.GetComplexifiedNode(Instruction22, out ComplexifiedNodeList);
+            Assert.True(Result);
+            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+            Assert.That(ComplexifiedNodeList[0] is AttachmentInstruction);
+
+            CommandInstruction Instruction23 = NodeHelper.CreateCommandInstruction(IndexQualifiedName, new List<Argument>() { NodeHelper.CreateSimplePositionalArgument("a") });
+
+            Result = NodeHelper.GetComplexifiedNode(Instruction23, out ComplexifiedNodeList);
+            Assert.True(Result);
+            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+            Assert.That(ComplexifiedNodeList[0] is IndexAssignmentInstruction);
         }
     }
 }
