@@ -64,12 +64,8 @@
                 complexifiedInstructionList = new List<Instruction>() { ComplexifiedIfThenElseInstruction };
             else if (ComplexifyAsPrecursorIndexAssignmentInstruction(node, out PrecursorIndexAssignmentInstruction ComplexifiedPrecursorIndexAssignmentInstruction))
                 complexifiedInstructionList = new List<Instruction>() { ComplexifiedPrecursorIndexAssignmentInstruction };
-            else if (ComplexifyAsAssignmentInstruction(node, out AssignmentInstruction ComplexifiedAssignmentInstruction, out bool IsKeyword, out KeywordAssignmentInstruction ComplexifiedKeywordAssignmentInstruction))
-            {
+            else if (ComplexifyAsAssignmentInstruction(node, out AssignmentInstruction ComplexifiedAssignmentInstruction))
                 complexifiedInstructionList = new List<Instruction>() { ComplexifiedAssignmentInstruction };
-                if (IsKeyword)
-                    complexifiedInstructionList.Add(ComplexifiedKeywordAssignmentInstruction);
-            }
             else if (ComplexifyAsInspectInstruction(node, out InspectInstruction ComplexifiedInspectInstruction))
                 complexifiedInstructionList = new List<Instruction>() { ComplexifiedInspectInstruction };
             else if (ComplexifyAsOverLoopInstruction(node, out OverLoopInstruction ComplexifiedOverLoopInstruction))
@@ -100,11 +96,9 @@
             return complexifiedNode != null;
         }
 
-        private static bool ComplexifyAsAssignmentInstruction(CommandInstruction node, out AssignmentInstruction complexifiedNode, out bool isKeyword, out KeywordAssignmentInstruction complexifiedNodeKeyword)
+        private static bool ComplexifyAsAssignmentInstruction(CommandInstruction node, out AssignmentInstruction complexifiedNode)
         {
             complexifiedNode = null!;
-            isKeyword = false;
-            complexifiedNodeKeyword = null!;
 
             int BreakIndex = -1;
             int BreakTextIndex = -1;
@@ -142,16 +136,6 @@
                 Expression Source = CreateQueryExpression(AssignmentSource, ClonedCommand.ArgumentBlocks);
 
                 complexifiedNode = CreateAssignmentInstruction(new List<QualifiedName>() { AssignmentTarget }, Source);
-
-                if (TargetIdentifierList.Count == 1)
-                {
-                    string KeywordText = TargetIdentifierList[0].Text;
-                    if (StringToKeyword(KeywordText, out Keyword Value))
-                    {
-                        isKeyword = true;
-                        complexifiedNodeKeyword = CreateKeywordAssignmentInstruction(Value, Source);
-                    }
-                }
             }
 
             return complexifiedNode != null;

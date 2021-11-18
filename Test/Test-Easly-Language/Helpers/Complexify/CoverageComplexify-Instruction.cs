@@ -62,6 +62,7 @@
 
             CommandInstruction Instruction6 = NodeHelper.CreateSimpleCommandInstruction("Result:=b");
 
+            System.Diagnostics.Debugger.Launch();
             Result = NodeHelper.GetComplexifiedNode(Instruction6, out ComplexifiedNodeList);
             Assert.True(Result);
             Assert.AreEqual(ComplexifiedNodeList.Count, 2);
@@ -178,7 +179,6 @@
             QualifiedName AssignmentPathQualifiedName = NodeHelper.CreateQualifiedName(AssignmentPathList);
             CommandInstruction Instruction21 = NodeHelper.CreateCommandInstruction(AssignmentPathQualifiedName, new List<Argument>());
 
-            //System.Diagnostics.Debugger.Launch();
             Result = NodeHelper.GetComplexifiedNode(Instruction21, out ComplexifiedNodeList);
             Assert.True(Result);
             Assert.AreEqual(ComplexifiedNodeList.Count, 1);
