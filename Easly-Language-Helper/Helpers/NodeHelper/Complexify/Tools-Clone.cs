@@ -35,16 +35,6 @@
             rightExpression = CreateQueryExpression(ClonedCommand.Command, ClonedCommand.ArgumentBlocks);
         }
 
-        private static void CloneComplexifiedCommand(CommandInstruction node, string beforeText, string afterText, out Expression leftExpression, out Expression rightExpression)
-        {
-            leftExpression = CreateSimpleQueryExpression(beforeText);
-
-            CommandInstruction ClonedCommand = (CommandInstruction)DeepCloneNode(node, cloneCommentGuid: false);
-            NodeTreeHelper.SetString(ClonedCommand.Command.Path[0], "Text", afterText);
-
-            rightExpression = CreateQueryExpression(ClonedCommand.Command, ClonedCommand.ArgumentBlocks);
-        }
-
         private static void CloneComplexifiedCommand(CommandInstruction node, string pattern, out CommandInstruction clonedCommand)
         {
             clonedCommand = (CommandInstruction)DeepCloneNode(node, cloneCommentGuid: false);

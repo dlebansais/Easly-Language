@@ -433,19 +433,5 @@
             value = (Keyword)(-1);
             return false;
         }
-
-        private static bool IsNodeListSameType<T>(IList nodeList, out IList<T> result)
-            where T : Node
-        {
-            result = new List<T>();
-
-            foreach (object? Node in nodeList)
-                if (Node is T AsT)
-                    result.Add(AsT);
-                else
-                    return false;
-
-            return true;
-        }
     }
 }

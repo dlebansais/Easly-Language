@@ -53,14 +53,12 @@
             CommandInstruction Complexified4_1 = (CommandInstruction)ComplexifiedNodeList[1];
             Assert.That(Complexified4_1.ArgumentBlocks.NodeBlockList.Count == 1 && Complexified4_1.ArgumentBlocks.NodeBlockList[0].NodeList.Count == 2);
 
-            CommandInstruction Instruction5 = NodeHelper.CreateSimpleCommandInstruction("as long as a.b");
+            CommandInstruction Instruction5 = NodeHelper.CreateSimpleCommandInstruction("as long as a");
 
-            //System.Diagnostics.Debugger.Launch();
             Result = NodeHelper.GetComplexifiedNode(Instruction5, out ComplexifiedNodeList);
             Assert.True(Result);
-            Assert.AreEqual(ComplexifiedNodeList.Count, 2);
-            Assert.That(ComplexifiedNodeList[0] is CommandInstruction);
-            Assert.That(ComplexifiedNodeList[1] is AsLongAsInstruction);
+            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+            Assert.That(ComplexifiedNodeList[0] is AsLongAsInstruction);
 
             CommandInstruction Instruction6 = NodeHelper.CreateSimpleCommandInstruction("Result:=b");
 
@@ -123,8 +121,13 @@
             Assert.AreEqual(ComplexifiedNodeList.Count, 1);
             Assert.That(ComplexifiedNodeList[0] is IndexAssignmentInstruction);
 
-            CommandInstruction Instruction14 = NodeHelper.CreateSimpleCommandInstruction("inspect a");
+            Identifier FirstIdentifier = NodeHelper.CreateSimpleIdentifier("inspect ");
+            Identifier SecondIdentifier = NodeHelper.CreateSimpleIdentifier("a");
+            QualifiedName SplittableQualifiedName = NodeHelper.CreateQualifiedName(new List<Identifier>() { FirstIdentifier, SecondIdentifier });
+            IBlockList<Argument> EmptyArgumentBlockList = BlockListHelper.CreateEmptyBlockList<Argument>();
+            CommandInstruction Instruction14 = NodeHelper.CreateCommandInstruction(SplittableQualifiedName, EmptyArgumentBlockList);
 
+            //System.Diagnostics.Debugger.Launch();
             Result = NodeHelper.GetComplexifiedNode(Instruction14, out ComplexifiedNodeList);
             Assert.True(Result);
             Assert.AreEqual(ComplexifiedNodeList.Count, 1);
