@@ -59,7 +59,9 @@
                 }
             }
 
-            Debug.Assert((IsSplit && Path.Count >= node.Path.Count) || (!IsSplit && Path.Count == node.Path.Count), "A split at least increases the count of elements, and no split preserves it");
+            bool WithSplit = IsSplit && Path.Count >= node.Path.Count;
+            bool WithoutSplit = !IsSplit && Path.Count == node.Path.Count;
+            Debug.Assert(WithSplit || WithoutSplit, "A split at least increases the count of elements, and no split preserves it");
 
             if (IsSplit)
                 complexifiedNode = CreateQualifiedName(Path);

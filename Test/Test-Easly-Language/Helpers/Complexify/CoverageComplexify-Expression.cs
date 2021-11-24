@@ -295,7 +295,6 @@
 
             QueryExpression Expression32 = NodeHelper.CreateSimpleQueryExpression("-a");
 
-            //System.Diagnostics.Debugger.Launch();
             Result = NodeHelper.GetComplexifiedNode(Expression32, out ComplexifiedNodeList);
             Assert.True(Result);
             Assert.AreEqual(ComplexifiedNodeList.Count, 1);
@@ -421,9 +420,9 @@
             BinaryOperatorExpression Complexified3 = (BinaryOperatorExpression)ComplexifiedNodeList[0];
             Assert.That(Complexified3.RightExpression is ManifestNumberExpression);
 
-            Identifier SymbolIdentifier = NodeHelper.CreateSimpleIdentifier(">=");
+            Identifier GreaterEqualSymbolIdentifier = NodeHelper.CreateSimpleIdentifier(">=");
 
-            BinaryOperatorExpression Expression4 = NodeHelper.CreateBinaryOperatorExpression(RightExpression, SymbolIdentifier, RightExpression);
+            BinaryOperatorExpression Expression4 = NodeHelper.CreateBinaryOperatorExpression(RightExpression, GreaterEqualSymbolIdentifier, RightExpression);
 
             Result = NodeHelper.GetComplexifiedNode(Expression4, out ComplexifiedNodeList);
             Assert.True(Result);
@@ -434,6 +433,34 @@
             Assert.That(Complexified4.LeftExpression is QueryExpression);
             Assert.That(Complexified4.RightExpression is QueryExpression);
             Assert.AreEqual(Complexified4.Operator.Text, "≥");
+
+            Identifier LesserEqualSymbolIdentifier = NodeHelper.CreateSimpleIdentifier("<=");
+
+            BinaryOperatorExpression Expression5 = NodeHelper.CreateBinaryOperatorExpression(RightExpression, LesserEqualSymbolIdentifier, RightExpression);
+
+            Result = NodeHelper.GetComplexifiedNode(Expression5, out ComplexifiedNodeList);
+            Assert.True(Result);
+            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+            Assert.That(ComplexifiedNodeList[0] is BinaryOperatorExpression);
+
+            BinaryOperatorExpression Complexified5 = (BinaryOperatorExpression)ComplexifiedNodeList[0];
+            Assert.That(Complexified5.LeftExpression is QueryExpression);
+            Assert.That(Complexified5.RightExpression is QueryExpression);
+            Assert.AreEqual(Complexified5.Operator.Text, "≤");
+
+            Identifier ImplySymbolIdentifier = NodeHelper.CreateSimpleIdentifier("=>");
+
+            BinaryOperatorExpression Expression6 = NodeHelper.CreateBinaryOperatorExpression(RightExpression, ImplySymbolIdentifier, RightExpression);
+
+            Result = NodeHelper.GetComplexifiedNode(Expression6, out ComplexifiedNodeList);
+            Assert.True(Result);
+            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+            Assert.That(ComplexifiedNodeList[0] is BinaryOperatorExpression);
+
+            BinaryOperatorExpression Complexified6 = (BinaryOperatorExpression)ComplexifiedNodeList[0];
+            Assert.That(Complexified6.LeftExpression is QueryExpression);
+            Assert.That(Complexified6.RightExpression is QueryExpression);
+            Assert.AreEqual(Complexified6.Operator.Text, "⇒");
         }
 
         [Test]
@@ -560,6 +587,18 @@
 
             IndexQueryExpression Complexified2 = (IndexQueryExpression)ComplexifiedNodeList[0];
             Assert.That(Complexified2.IndexedExpression is ManifestNumberExpression);
+
+            Identifier SimpleIdentifier = NodeHelper.CreateSimpleIdentifier("a");
+            IBlockList<Identifier> SimpleIdentifierBlockList = BlockListHelper.CreateSimpleBlockList(SimpleIdentifier);
+            Argument SplittableArgument = NodeHelper.CreateAssignmentArgument(SimpleIdentifierBlockList, NumberExpression);
+            IBlockList<Argument> SplittableArgumentBlockList = BlockListHelper.CreateSimpleBlockList(SplittableArgument);
+
+            IndexQueryExpression Expression3 = NodeHelper.CreateIndexQueryExpression(DefaultExpression, SplittableArgumentBlockList);
+
+            Result = NodeHelper.GetComplexifiedNode(Expression3, out ComplexifiedNodeList);
+            Assert.True(Result);
+            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+            Assert.That(ComplexifiedNodeList[0] is IndexQueryExpression);
         }
 
         [Test]
