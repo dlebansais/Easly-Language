@@ -217,8 +217,8 @@
         private static bool ComplexifyWithArguments(QualifiedName qualifiedName, char leftSymbol, char rightSymbol, out QualifiedName newQualifiedName, out List<Argument> argumentList)
         {
             int BreakPathIndex = -1;
-            string BeforeText = String.Empty;
-            string AfterText = String.Empty;
+            string BeforeText = string.Empty;
+            string AfterText = string.Empty;
 
             for (int i = 0; i < qualifiedName.Path.Count; i++)
             {
