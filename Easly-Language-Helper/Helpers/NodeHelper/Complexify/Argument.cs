@@ -11,7 +11,8 @@
     {
         private static bool GetComplexifiedArgument(Argument node, out IList<Argument> complexifiedArgumentList)
         {
-            complexifiedArgumentList = null!;
+            Contracts.Contract.Unused(out complexifiedArgumentList);
+
             bool Result = false;
             bool IsHandled = false;
 

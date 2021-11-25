@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using BaseNode;
+    using Contracts;
 
     /// <summary>
     /// Provides methods to manipulate nodes.
@@ -30,7 +31,7 @@
                 }
             }
 
-            newBlockList = null!;
+            Contract.Unused(out newBlockList);
             return false;
         }
 
@@ -56,7 +57,7 @@
                 }
             }
 
-            newBlockList = null!;
+            Contract.Unused(out newBlockList);
             return false;
         }
 
@@ -77,7 +78,7 @@
                 return true;
             }
 
-            split = null!;
+            Contract.Unused(out split);
             return false;
         }
 
@@ -125,7 +126,7 @@
                 }
             }
 
-            newArgumentBlocks = null!;
+            Contract.Unused(out newArgumentBlocks);
             return false;
         }
 
@@ -154,7 +155,7 @@
                 }
             }
 
-            newAssignmentArgumentBlocks = null!;
+            Contract.Unused(out newAssignmentArgumentBlocks);
             return false;
         }
 
@@ -180,7 +181,7 @@
                 }
             }
 
-            newQualifiedNameBlocks = null!;
+            Contract.Unused(out newQualifiedNameBlocks);
             return false;
         }
 
@@ -206,7 +207,7 @@
                 }
             }
 
-            newBlockList = null!;
+            Contract.Unused(out newBlockList);
             return false;
         }
 
@@ -254,7 +255,7 @@
                 }
             }
 
-            newTypeArgumentBlocks = null!;
+            Contract.Unused(out newTypeArgumentBlocks);
             return false;
         }
 
@@ -302,7 +303,7 @@
                 }
             }
 
-            newObjectTypeBlocks = null!;
+            Contract.Unused(out newObjectTypeBlocks);
             return false;
         }
     }

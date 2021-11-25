@@ -41,8 +41,7 @@
 
         private static bool GetComplexifiedNodeNotRecursive(Node node, out IList complexifiedNodeList)
         {
-            bool Result = false;
-            complexifiedNodeList = null!;
+            bool Result;
 
             switch (node)
             {
@@ -87,8 +86,9 @@
                     break;
 
                 default:
-                    complexifiedNodeList = null!;
-                    return false;
+                    Contracts.Contract.Unused(out complexifiedNodeList);
+                    Result = false;
+                    break;
             }
 
             return Result;

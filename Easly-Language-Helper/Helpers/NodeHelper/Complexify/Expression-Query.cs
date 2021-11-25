@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Diagnostics;
     using BaseNode;
+    using Contracts;
     using EaslyNumber;
 
     /// <summary>
@@ -39,7 +40,7 @@
             else
                 return GetComplexifiedQueryExpressionSingle1(node, out complexifiedExpressionList);
 
-            return complexifiedExpressionList != null;
+            return true;
         }
 
         private static bool GetComplexifiedQueryExpressionSingle1(QueryExpression node, out IList<Expression> complexifiedExpressionList)
@@ -96,8 +97,6 @@
 
         private static bool GetComplexifiedQueryExpressionSingle3(QueryExpression node, out IList<Expression> complexifiedExpressionList)
         {
-            complexifiedExpressionList = null!;
-
             if (ComplexifyAsNewExpression(node, out NewExpression ComplexifiedNewExpression))
                 complexifiedExpressionList = new List<Expression>() { ComplexifiedNewExpression };
             else if (ComplexifyAsOldExpression(node, out OldExpression ComplexifiedOldExpression))
@@ -112,27 +111,30 @@
                 complexifiedExpressionList = new List<Expression>() { ComplexifiedResultOfExpression };
             else if (ComplexifyAsUnaryNotExpression(node, out UnaryNotExpression ComplexifiedUnaryNotExpression))
                 complexifiedExpressionList = new List<Expression>() { ComplexifiedUnaryNotExpression };
+            else
+            {
+                Contract.Unused(out complexifiedExpressionList);
+                return false;
+            }
 
-            return complexifiedExpressionList != null;
+            return true;
         }
 
         private static bool ComplexifyAsIndexQueryExpression(QueryExpression node, out IndexQueryExpression complexifiedNode)
         {
-            complexifiedNode = null!;
-
             if (node.ArgumentBlocks.NodeBlockList.Count == 0 && ComplexifyWithArguments(node.Query, '[', ']', out QualifiedName NewQuery, out List<Argument> ArgumentList))
             {
                 Expression IndexedExpression = CreateQueryExpression(NewQuery, new List<Argument>());
                 complexifiedNode = CreateIndexQueryExpression(IndexedExpression, ArgumentList);
+                return true;
             }
 
-            return complexifiedNode != null;
+            Contract.Unused(out complexifiedNode);
+            return false;
         }
 
         private static bool ComplexifyAsInitializedObjectExpression(QueryExpression node, out InitializedObjectExpression complexifiedNode)
         {
-            complexifiedNode = null!;
-
             if (IsQuerySimple(node))
             {
                 string Text = node.Query.Path[0].Text;
@@ -153,48 +155,52 @@
                             ArgumentList.Add(FirstArgument);
 
                             complexifiedNode = CreateInitializedObjectExpression(ClassIdentifier, ArgumentList);
+                            return true;
                         }
                     }
                 }
             }
 
-            return complexifiedNode != null;
+            Contract.Unused(out complexifiedNode);
+            return false;
         }
 
         private static bool ComplexifyAsKeywordExpression(QueryExpression node, out KeywordExpression complexifiedNode)
         {
-            complexifiedNode = null!;
-
             if (IsQuerySimple(node))
             {
                 string Text = node.Query.Path[0].Text;
 
                 if (StringToKeyword(Text, out Keyword Value))
+                {
                     complexifiedNode = CreateKeywordExpression(Value);
+                    return true;
+                }
             }
 
-            return complexifiedNode != null;
+            Contract.Unused(out complexifiedNode);
+            return false;
         }
 
         private static bool ComplexifyAsManifestCharacterExpression(QueryExpression node, out ManifestCharacterExpression complexifiedNode)
         {
-            complexifiedNode = null!;
-
             if (IsQuerySimple(node))
             {
                 string Text = node.Query.Path[0].Text;
 
                 if (Text.Length == 3 && Text[0] == '\'' && Text[2] == '\'')
+                {
                     complexifiedNode = CreateManifestCharacterExpression(Text.Substring(1, 1));
+                    return true;
+                }
             }
 
-            return complexifiedNode != null;
+            Contract.Unused(out complexifiedNode);
+            return false;
         }
 
         private static bool ComplexifyAsManifestNumberExpression(QueryExpression node, out ManifestNumberExpression complexifiedNode)
         {
-            complexifiedNode = null!;
-
             if (IsQuerySimple(node))
             {
                 string Text = node.Query.Path[0].Text;
@@ -203,62 +209,66 @@
                 {
                     FormattedNumber fn = FormattedNumber.Parse(Text);
                     if (fn.IsValid)
+                    {
                         complexifiedNode = CreateSimpleManifestNumberExpression(Text);
+                        return true;
+                    }
                 }
             }
 
-            return complexifiedNode != null;
+            Contract.Unused(out complexifiedNode);
+            return false;
         }
 
         private static bool ComplexifyAsManifestStringExpression(QueryExpression node, out ManifestStringExpression complexifiedNode)
         {
-            complexifiedNode = null!;
-
             if (IsQuerySimple(node))
             {
                 string Text = node.Query.Path[0].Text;
 
                 if (Text.Length >= 2 && Text[0] == '"' && Text[Text.Length - 1] == '"')
+                {
                     complexifiedNode = CreateManifestStringExpression(Text.Substring(1, Text.Length - 2));
+                    return true;
+                }
             }
 
-            return complexifiedNode != null;
+            Contract.Unused(out complexifiedNode);
+            return false;
         }
 
         private static bool ComplexifyAsNewExpression(QueryExpression node, out NewExpression complexifiedNode)
         {
-            complexifiedNode = null!;
-
             if (node.ArgumentBlocks.NodeBlockList.Count == 0 && ParsePattern(node, "new ", out string BeforeText, out string AfterText) && BeforeText.Length == 0)
             {
                 QualifiedName ClonedQuery = (QualifiedName)DeepCloneNode(node.Query, cloneCommentGuid: false);
                 NodeTreeHelper.SetString(ClonedQuery.Path[0], "Text", AfterText);
 
                 complexifiedNode = CreateNewExpression(ClonedQuery);
+                return true;
             }
 
-            return complexifiedNode != null;
+            Contract.Unused(out complexifiedNode);
+            return false;
         }
 
         private static bool ComplexifyAsOldExpression(QueryExpression node, out OldExpression complexifiedNode)
         {
-            complexifiedNode = null!;
-
             if (node.ArgumentBlocks.NodeBlockList.Count == 0 && ParsePattern(node, "old ", out string BeforeText, out string AfterText) && BeforeText.Length == 0)
             {
                 QualifiedName ClonedQuery = (QualifiedName)DeepCloneNode(node.Query, cloneCommentGuid: false);
                 NodeTreeHelper.SetString(ClonedQuery.Path[0], "Text", AfterText);
 
                 complexifiedNode = CreateOldExpression(ClonedQuery);
+                return true;
             }
 
-            return complexifiedNode != null;
+            Contract.Unused(out complexifiedNode);
+            return false;
         }
 
         private static bool ComplexifyAsPrecursorExpression(QueryExpression node, out PrecursorExpression complexifiedNode)
         {
-            complexifiedNode = null!;
-
             if (node.Query.Path.Count == 1)
             {
                 string Text = node.Query.Path[0].Text;
@@ -267,16 +277,16 @@
                 {
                     QueryExpression ClonedQuery = (QueryExpression)DeepCloneNode(node, cloneCommentGuid: false);
                     complexifiedNode = CreatePrecursorExpression(ClonedQuery.ArgumentBlocks);
+                    return true;
                 }
             }
 
-            return complexifiedNode != null;
+            Contract.Unused(out complexifiedNode);
+            return false;
         }
 
         private static bool ComplexifyAsPrecursorIndexExpression(QueryExpression node, out PrecursorIndexExpression complexifiedNode)
         {
-            complexifiedNode = null!;
-
             if (node.Query.Path.Count == 1 && node.ArgumentBlocks.NodeBlockList.Count > 0)
             {
                 string Text = node.Query.Path[0].Text;
@@ -285,16 +295,16 @@
                 {
                     QueryExpression ClonedQuery = (QueryExpression)DeepCloneNode(node, cloneCommentGuid: false);
                     complexifiedNode = CreatePrecursorIndexExpression(ClonedQuery.ArgumentBlocks);
+                    return true;
                 }
             }
 
-            return complexifiedNode != null;
+            Contract.Unused(out complexifiedNode);
+            return false;
         }
 
         private static bool ComplexifyAsPreprocessorExpression(QueryExpression node, out PreprocessorExpression complexifiedNode)
         {
-            complexifiedNode = null!;
-
             if (IsQuerySimple(node))
             {
                 string Text = node.Query.Path[0].Text;
@@ -315,31 +325,30 @@
                     if (Text == Entry.Key)
                     {
                         complexifiedNode = CreatePreprocessorExpression(Entry.Value);
-                        break;
+                        return true;
                     }
             }
 
-            return complexifiedNode != null;
+            Contract.Unused(out complexifiedNode);
+            return false;
         }
 
         private static bool ComplexifyAsResultOfExpression(QueryExpression node, out ResultOfExpression complexifiedNode)
         {
-            complexifiedNode = null!;
-
             if (ParsePattern(node, "result of ", out string BeforeText, out string AfterText) && BeforeText.Length == 0)
             {
                 CloneComplexifiedExpression(node, AfterText, out Expression Source);
                 complexifiedNode = CreateResultOfExpression(Source);
+                return true;
             }
 
-            return complexifiedNode != null;
+            Contract.Unused(out complexifiedNode);
+            return false;
         }
 
         private static bool ComplexifyAsUnaryNotExpression(QueryExpression node, out UnaryNotExpression complexifiedNode)
         {
             Debug.Assert(node.Query.Path.Count > 0, $"{nameof(node)} has at least one element in the query path");
-
-            complexifiedNode = null!;
 
             string Text = node.Query.Path[0].Text;
 
@@ -347,16 +356,16 @@
             {
                 CloneComplexifiedExpression(node, Text.Substring(4), out Expression RightExpression);
                 complexifiedNode = CreateUnaryNotExpression(RightExpression);
+                return true;
             }
 
-            return complexifiedNode != null;
+            Contract.Unused(out complexifiedNode);
+            return false;
         }
 
         private static bool ComplexifyAsUnaryOperatorExpression(QueryExpression node, out UnaryOperatorExpression complexifiedNode)
         {
             Debug.Assert(node.Query.Path.Count > 0, $"{nameof(node)} has at least one element in the query path");
-
-            complexifiedNode = null!;
 
             string Text = node.Query.Path[0].Text;
             string Pattern = "-";
@@ -367,9 +376,11 @@
 
                 CloneComplexifiedExpression(node, Text.Substring(Pattern.Length), out Expression RightExpression);
                 complexifiedNode = CreateUnaryOperatorExpression(OperatorName, RightExpression);
+                return true;
             }
 
-            return complexifiedNode != null;
+            Contract.Unused(out complexifiedNode);
+            return false;
         }
     }
 }

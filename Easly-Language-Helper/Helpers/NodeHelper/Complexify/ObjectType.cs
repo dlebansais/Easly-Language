@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Diagnostics;
     using BaseNode;
+    using Contracts;
 
     /// <summary>
     /// Provides methods to manipulate nodes.
@@ -12,7 +13,8 @@
     {
         private static bool GetComplexifiedObjectType(ObjectType node, out IList<ObjectType> complexifiedObjectTypeList)
         {
-            complexifiedObjectTypeList = null!;
+            Contract.Unused(out complexifiedObjectTypeList);
+
             bool Result = false;
             bool IsHandled = false;
 
@@ -70,26 +72,25 @@
 
         private static bool GetComplexifiedAnchoredType(AnchoredType node, out IList<ObjectType> complexifiedObjectTypeList)
         {
-            complexifiedObjectTypeList = null!;
-
             if (ComplexifyQualifiedName(node.AnchoredName, out QualifiedName ComplexifiedAnchoredName))
             {
                 AnchoredType NewAnchoredType = CreateAnchoredType(ComplexifiedAnchoredName, node.AnchorKind);
                 complexifiedObjectTypeList = new List<ObjectType>() { NewAnchoredType };
+                return true;
             }
             else if (node.AnchoredName.Path.Count == 1 && StringToKeyword(node.AnchoredName.Path[0].Text, out Keyword Value))
             {
                 KeywordAnchoredType NewKeywordAnchoredType = CreateKeywordAnchoredType(Value);
                 complexifiedObjectTypeList = new List<ObjectType>() { NewKeywordAnchoredType };
+                return true;
             }
 
-            return complexifiedObjectTypeList != null;
+            Contract.Unused(out complexifiedObjectTypeList);
+            return false;
         }
 
         private static bool GetComplexifiedFunctionType(FunctionType node, out IList<ObjectType> complexifiedObjectTypeList)
         {
-            complexifiedObjectTypeList = null!;
-
             if (GetComplexifiedObjectType(node.BaseType, out IList<ObjectType> ComplexifiedBaseTypeList))
             {
                 complexifiedObjectTypeList = new List<ObjectType>();
@@ -100,24 +101,27 @@
                     FunctionType NewFunctionType = CreateFunctionType(ComplexifiedBaseType, ClonedOverloadBlocks);
                     complexifiedObjectTypeList.Add(NewFunctionType);
                 }
+
+                return true;
             }
 
-            return complexifiedObjectTypeList != null;
+            Contract.Unused(out complexifiedObjectTypeList);
+            return false;
         }
 
         private static bool GetComplexifiedGenericType(GenericType node, out IList<ObjectType> complexifiedObjectTypeList)
         {
-            complexifiedObjectTypeList = null!;
-
             if (GetComplexifiedTypeArgumentBlockList(node.TypeArgumentBlocks, out IBlockList<TypeArgument> ComplexifiedTypeArgumentBlocks))
             {
                 Identifier ClonedClassIdentifier = (Identifier)DeepCloneNode(node.ClassIdentifier, cloneCommentGuid: false);
 
                 GenericType NewGenericType = CreateGenericType(node.Sharing, ClonedClassIdentifier, ComplexifiedTypeArgumentBlocks);
                 complexifiedObjectTypeList = new List<ObjectType>() { NewGenericType };
+                return true;
             }
 
-            return complexifiedObjectTypeList != null;
+            Contract.Unused(out complexifiedObjectTypeList);
+            return false;
         }
 
         private static bool GetComplexifiedIndexerType(IndexerType node, out IList<ObjectType> complexifiedObjectTypeList)
@@ -142,6 +146,8 @@
                     IndexerType NewIndexerType = CreateIndexerType(ComplexifiedBaseType, ClonedEntityType, ClonedIndexParameterBlocks, node.ParameterEnd, node.IndexerKind, ClonedGetRequireBlocks, ClonedGetEnsureBlocks, ClonedGetExceptionIdentifierBlocks, ClonedSetRequireBlocks, ClonedSetEnsureBlocks, ClonedSetExceptionIdentifierBlocks);
                     complexifiedObjectTypeList.Add(NewIndexerType);
                 }
+
+                return true;
             }
             else if (GetComplexifiedObjectType(node.EntityType, out IList<ObjectType> ComplexifiedEntityTypeList))
             {
@@ -161,15 +167,16 @@
                     IndexerType NewIndexerType = CreateIndexerType(ClonedBaseType, ComplexifiedEntityType, ClonedIndexParameterBlocks, node.ParameterEnd, node.IndexerKind, ClonedGetRequireBlocks, ClonedGetEnsureBlocks, ClonedGetExceptionIdentifierBlocks, ClonedSetRequireBlocks, ClonedSetEnsureBlocks, ClonedSetExceptionIdentifierBlocks);
                     complexifiedObjectTypeList.Add(NewIndexerType);
                 }
+
+                return true;
             }
 
-            return complexifiedObjectTypeList != null;
+            Contract.Unused(out complexifiedObjectTypeList);
+            return false;
         }
 
         private static bool GetComplexifiedProcedureType(ProcedureType node, out IList<ObjectType> complexifiedObjectTypeList)
         {
-            complexifiedObjectTypeList = null!;
-
             if (GetComplexifiedObjectType(node.BaseType, out IList<ObjectType> ComplexifiedBaseTypeList))
             {
                 complexifiedObjectTypeList = new List<ObjectType>();
@@ -180,15 +187,16 @@
                     ProcedureType NewProcedureType = CreateProcedureType(ComplexifiedBaseType, ClonedOverloadBlocks);
                     complexifiedObjectTypeList.Add(NewProcedureType);
                 }
+
+                return true;
             }
 
-            return complexifiedObjectTypeList != null;
+            Contract.Unused(out complexifiedObjectTypeList);
+            return false;
         }
 
         private static bool GetComplexifiedPropertyType(PropertyType node, out IList<ObjectType> complexifiedObjectTypeList)
         {
-            complexifiedObjectTypeList = null!;
-
             if (GetComplexifiedObjectType(node.BaseType, out IList<ObjectType> ComplexifiedBaseTypeList))
             {
                 complexifiedObjectTypeList = new List<ObjectType>();
@@ -204,6 +212,8 @@
                     PropertyType NewPropertyType = CreatePropertyType(ComplexifiedBaseType, ClonedEntityType, node.PropertyKind, ClonedGetEnsureBlocks, ClonedGetExceptionIdentifierBlocks, ClonedSetRequireBlocks, ClonedSetExceptionIdentifierBlocks);
                     complexifiedObjectTypeList.Add(NewPropertyType);
                 }
+
+                return true;
             }
             else if (GetComplexifiedObjectType(node.EntityType, out IList<ObjectType> ComplexifiedEntityTypeList))
             {
@@ -220,15 +230,16 @@
                     PropertyType NewPropertyType = CreatePropertyType(ClonedBaseType, ComplexifiedEntityType, node.PropertyKind, ClonedGetEnsureBlocks, ClonedGetExceptionIdentifierBlocks, ClonedSetRequireBlocks, ClonedSetExceptionIdentifierBlocks);
                     complexifiedObjectTypeList.Add(NewPropertyType);
                 }
+
+                return true;
             }
 
-            return complexifiedObjectTypeList != null;
+            Contract.Unused(out complexifiedObjectTypeList);
+            return false;
         }
 
         private static bool GetComplexifiedSimpleType(SimpleType node, out IList<ObjectType> complexifiedObjectTypeList)
         {
-            complexifiedObjectTypeList = null!;
-
             if (ComplexifyAsAnchoredType(node, out AnchoredType ComplexifiedAnchoredType))
                 complexifiedObjectTypeList = new List<ObjectType>() { ComplexifiedAnchoredType };
             else if (ComplexifyAsFunctionType(node, out FunctionType ComplexifiedFunctionType))
@@ -243,14 +254,17 @@
                 complexifiedObjectTypeList = new List<ObjectType>() { ComplexifiedProcedureType };
             else if (ComplexifyAsTupleType(node, out TupleType ComplexifiedTupleType))
                 complexifiedObjectTypeList = new List<ObjectType>() { ComplexifiedTupleType };
+            else
+            {
+                Contract.Unused(out complexifiedObjectTypeList);
+                return false;
+            }
 
-            return complexifiedObjectTypeList != null;
+            return true;
         }
 
         private static bool ComplexifyAsAnchoredType(SimpleType node, out AnchoredType complexifiedNode)
         {
-            complexifiedNode = null!;
-
             string ClassIdentifierText = node.ClassIdentifier.Text;
 
             if (ClassIdentifierText.StartsWith("like", StringComparison.InvariantCulture))
@@ -258,31 +272,32 @@
                 string Text = ClassIdentifierText.Substring(4).Trim();
                 QualifiedName AnchoredName = CreateSimpleQualifiedName(Text);
                 complexifiedNode = CreateAnchoredType(AnchoredName, AnchorKinds.Declaration);
+                return true;
             }
 
-            return complexifiedNode != null;
+            Contract.Unused(out complexifiedNode);
+            return false;
         }
 
         private static bool ComplexifyAsFunctionType(SimpleType node, out FunctionType complexifiedNode)
         {
-            complexifiedNode = null!;
-
             string Text = node.ClassIdentifier.Text;
 
             if (Text.StartsWith("function ", StringComparison.InvariantCulture))
             {
                 SimpleType BaseType = CreateSimpleSimpleType(Text.Substring(9));
                 SimpleType ReturnType = CreateEmptySimpleType();
+
                 complexifiedNode = CreateFunctionType(BaseType, ReturnType);
+                return true;
             }
 
-            return complexifiedNode != null;
+            Contract.Unused(out complexifiedNode);
+            return false;
         }
 
         private static bool ComplexifyAsGenericType(SimpleType node, out GenericType complexifiedNode)
         {
-            complexifiedNode = null!;
-
             string Text = node.ClassIdentifier.Text;
             int GenericBeginIndex = Text.IndexOf("[", StringComparison.InvariantCulture);
 
@@ -293,15 +308,15 @@
                 TypeArgument TypeArgument = CreatePositionalTypeArgument(TypeSource);
 
                 complexifiedNode = CreateGenericType(ClassIdentifier, new List<TypeArgument>() { TypeArgument });
+                return true;
             }
 
-            return complexifiedNode != null;
+            Contract.Unused(out complexifiedNode);
+            return false;
         }
 
         private static bool ComplexifyAsIndexerType(SimpleType node, out IndexerType complexifiedNode)
         {
-            complexifiedNode = null!;
-
             string Text = node.ClassIdentifier.Text;
 
             if (Text.StartsWith("indexer ", StringComparison.InvariantCulture))
@@ -311,47 +326,50 @@
                 Name ParameterName = CreateEmptyName();
                 SimpleType ParameterType = CreateEmptySimpleType();
                 EntityDeclaration Parameter = CreateEntityDeclaration(ParameterName, ParameterType);
+
                 complexifiedNode = CreateIndexerType(BaseType, EntityType, Parameter);
+                return true;
             }
 
-            return complexifiedNode != null;
+            Contract.Unused(out complexifiedNode);
+            return false;
         }
 
         private static bool ComplexifyAsPropertyType(SimpleType node, out PropertyType complexifiedNode)
         {
-            complexifiedNode = null!;
-
             string Text = node.ClassIdentifier.Text;
 
             if (Text.StartsWith("property ", StringComparison.InvariantCulture))
             {
                 SimpleType BaseType = CreateSimpleSimpleType(Text.Substring(9));
                 SimpleType EntityType = CreateEmptySimpleType();
+
                 complexifiedNode = CreatePropertyType(BaseType, EntityType);
+                return true;
             }
 
-            return complexifiedNode != null;
+            Contract.Unused(out complexifiedNode);
+            return false;
         }
 
         private static bool ComplexifyAsProcedureType(SimpleType node, out ProcedureType complexifiedNode)
         {
-            complexifiedNode = null!;
-
             string Text = node.ClassIdentifier.Text;
 
             if (Text.StartsWith("procedure ", StringComparison.InvariantCulture))
             {
                 SimpleType BaseType = CreateSimpleSimpleType(Text.Substring(10));
+
                 complexifiedNode = CreateProcedureType(BaseType);
+                return true;
             }
 
-            return complexifiedNode != null;
+            Contract.Unused(out complexifiedNode);
+            return false;
         }
 
         private static bool ComplexifyAsTupleType(SimpleType node, out TupleType complexifiedNode)
         {
-            complexifiedNode = null!;
-
             string Text = node.ClassIdentifier.Text;
 
             if (Text.StartsWith("tuple ", StringComparison.InvariantCulture))
@@ -359,23 +377,26 @@
                 Name EntityName = CreateEmptyName();
                 SimpleType EntityType = CreateSimpleSimpleType(Text.Substring(6));
                 EntityDeclaration Entity = CreateEntityDeclaration(EntityName, EntityType);
+
                 complexifiedNode = CreateTupleType(Entity);
+                return true;
             }
 
-            return complexifiedNode != null;
+            Contract.Unused(out complexifiedNode);
+            return false;
         }
 
         private static bool GetComplexifiedTupleType(TupleType node, out IList<ObjectType> complexifiedObjectTypeList)
         {
-            complexifiedObjectTypeList = null!;
-
             if (GetComplexifiedEntityDeclarationBlockList(node.EntityDeclarationBlocks, out IBlockList<EntityDeclaration> ComplexifiedEntityDeclarationBlocks))
             {
                 TupleType NewTupleType = CreateTupleType(node.Sharing, ComplexifiedEntityDeclarationBlocks);
                 complexifiedObjectTypeList = new List<ObjectType>() { NewTupleType };
+                return true;
             }
 
-            return complexifiedObjectTypeList != null;
+            Contract.Unused(out complexifiedObjectTypeList);
+            return false;
         }
     }
 }

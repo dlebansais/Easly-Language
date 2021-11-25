@@ -1,10 +1,10 @@
 ﻿namespace BaseNodeHelper
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.Diagnostics;
     using BaseNode;
+    using Contracts;
 
     /// <summary>
     /// Provides methods to manipulate nodes.
@@ -20,24 +20,23 @@
         /// <returns>True if the provided sequence could be translated; otherwise, false.</returns>
         public static bool GetRenamedBinarySymbol(string symbol, out string renamedSymbol)
         {
-            renamedSymbol = null!;
-
             switch (symbol)
             {
                 case ">=":
                     renamedSymbol = "≥";
-                    break;
+                    return true;
 
                 case "<=":
                     renamedSymbol = "≤";
-                    break;
+                    return true;
 
                 case "=>":
                     renamedSymbol = "⇒";
-                    break;
+                    return true;
             }
 
-            return renamedSymbol != null;
+            Contract.Unused(out renamedSymbol);
+            return false;
         }
 
         /// <summary>
@@ -49,38 +48,35 @@
         /// <returns>True if the provided character could be translated; otherwise, false.</returns>
         public static bool GetInverseRenamedBinarySymbol(string symbol, out string renamedSymbol)
         {
-            renamedSymbol = null!;
-
             switch (symbol)
             {
                 case "≥":
                     renamedSymbol = ">=";
-                    break;
+                    return true;
 
                 case "≤":
                     renamedSymbol = "<=";
-                    break;
+                    return true;
 
                 case "⇒":
                     renamedSymbol = "=>";
-                    break;
+                    return true;
             }
 
-            return renamedSymbol != null;
+            Contract.Unused(out renamedSymbol);
+            return false;
         }
 
         private static bool GetRenamedBinarySymbol(Identifier symbol, out Identifier renamedSymbol)
         {
-            renamedSymbol = null!;
-            bool Result = false;
-
             if (GetRenamedBinarySymbol(symbol.Text, out string renamedSymbolText))
             {
                 renamedSymbol = CreateSimpleIdentifier(renamedSymbolText);
-                Result = true;
+                return true;
             }
 
-            return Result;
+            Contract.Unused(out renamedSymbol);
+            return false;
         }
 
         /// <summary>
@@ -92,16 +88,15 @@
         /// <returns>True if the provided sequence could be translated; otherwise, false.</returns>
         public static bool GetRenamedUnarySymbol(string symbol, out string renamedSymbol)
         {
-            renamedSymbol = null!;
-
             switch (symbol)
             {
                 case "sqrt":
                     renamedSymbol = "√";
-                    break;
+                    return true;
             }
 
-            return renamedSymbol != null;
+            Contract.Unused(out renamedSymbol);
+            return false;
         }
 
         /// <summary>
@@ -113,30 +108,27 @@
         /// <returns>True if the provided character could be translated; otherwise, false.</returns>
         public static bool GetInverseRenamedUnarySymbol(string symbol, out string renamedSymbol)
         {
-            renamedSymbol = null!;
-
             switch (symbol)
             {
                 case "√":
                     renamedSymbol = "sqrt";
-                    break;
+                    return true;
             }
 
-            return renamedSymbol != null;
+            Contract.Unused(out renamedSymbol);
+            return false;
         }
 
         private static bool GetRenamedUnarySymbol(Identifier symbol, out Identifier renamedSymbol)
         {
-            renamedSymbol = null!;
-            bool Result = false;
-
             if (GetRenamedUnarySymbol(symbol.Text, out string renamedSymbolText))
             {
                 renamedSymbol = CreateSimpleIdentifier(renamedSymbolText);
-                Result = true;
+                return true;
             }
 
-            return Result;
+            Contract.Unused(out renamedSymbol);
+            return false;
         }
 
         private static bool SplitIdentifier(Identifier identifier, char startTag, char endTag, out IList<Identifier> split)
@@ -156,7 +148,7 @@
                 return true;
             }
 
-            split = null!;
+            Contract.Unused(out split);
             return false;
         }
 
@@ -213,7 +205,7 @@
                 }
             }
 
-            split = null!;
+            Contract.Unused(out split);
             return false;
         }
 
@@ -224,12 +216,9 @@
 
         private static bool ComplexifyWithArguments(QualifiedName qualifiedName, char leftSymbol, char rightSymbol, out QualifiedName newQualifiedName, out List<Argument> argumentList)
         {
-            newQualifiedName = null!;
-            argumentList = null!;
-
             int BreakPathIndex = -1;
-            string BeforeText = null!;
-            string AfterText = null!;
+            string BeforeText = String.Empty;
+            string AfterText = String.Empty;
 
             for (int i = 0; i < qualifiedName.Path.Count; i++)
             {
@@ -244,7 +233,7 @@
                 }
             }
 
-            if (BreakPathIndex >= 0 && BeforeText != null && AfterText != null)
+            if (BreakPathIndex >= 0)
             {
                 string Text = qualifiedName.Path[qualifiedName.Path.Count - 1].Text;
 
@@ -280,6 +269,8 @@
                 }
             }
 
+            Contract.Unused(out newQualifiedName);
+            Contract.Unused(out argumentList);
             return false;
         }
 
@@ -289,8 +280,8 @@
             {
                 int ColonIndex;
                 int CommaIndex;
-                EntityDeclaration FirstEntityDeclaration = null!;
-                EntityDeclaration SecondEntityDeclaration = null!;
+                EntityDeclaration FirstEntityDeclaration;
+                EntityDeclaration SecondEntityDeclaration;
 
                 if ((ColonIndex = entityDeclaration.EntityName.Text.IndexOf(":", StringComparison.InvariantCulture)) >= 0)
                 {
@@ -316,17 +307,19 @@
 
                     SecondEntityDeclaration = CreateEntityDeclaration(CreateSimpleName(SecondName), SecondType);
                 }
-
-                if (FirstEntityDeclaration != null && SecondEntityDeclaration != null)
+                else
                 {
-                    split = new List<EntityDeclaration>();
-                    split.Add(FirstEntityDeclaration);
-                    split.Add(SecondEntityDeclaration);
-                    return true;
+                    Contract.Unused(out split);
+                    return false;
                 }
+
+                split = new List<EntityDeclaration>();
+                split.Add(FirstEntityDeclaration);
+                split.Add(SecondEntityDeclaration);
+                return true;
             }
 
-            split = null!;
+            Contract.Unused(out split);
             return false;
         }
 
@@ -349,7 +342,7 @@
                 }
             }
 
-            split = null!;
+            Contract.Unused(out split);
             return false;
         }
 
@@ -372,7 +365,7 @@
                 }
             }
 
-            split = null!;
+            Contract.Unused(out split);
             return false;
         }
 
@@ -399,17 +392,17 @@
 
         private static bool ParsePattern(string text, string patternText, out string beforeText, out string afterText)
         {
-            beforeText = null!;
-            afterText = null!;
-
             int PatternIndex = text.IndexOf(patternText, StringComparison.InvariantCulture);
             if (PatternIndex >= 0)
             {
                 beforeText = text.Substring(0, PatternIndex).Trim();
                 afterText = text.Substring(PatternIndex + patternText.Length).Trim();
+                return true;
             }
 
-            return beforeText != null || afterText != null;
+            Contract.Unused(out beforeText);
+            Contract.Unused(out afterText);
+            return false;
         }
 
         private static bool StringToKeyword(string text, out Keyword value)

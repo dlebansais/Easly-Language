@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Diagnostics;
     using BaseNode;
+    using Contracts;
 
     /// <summary>
     /// Provides methods to manipulate nodes.
@@ -11,7 +12,8 @@
     {
         private static bool GetComplexifiedTypeArgument(TypeArgument node, out IList<TypeArgument> complexifiedTypeArgumentList)
         {
-            complexifiedTypeArgumentList = null!;
+            Contract.Unused(out complexifiedTypeArgumentList);
+
             bool Result = false;
             bool IsHandled = false;
 
@@ -35,8 +37,6 @@
 
         private static bool GetComplexifiedAssignmentTypeArgument(AssignmentTypeArgument node, out IList<TypeArgument> complexifiedTypeArgumentList)
         {
-            complexifiedTypeArgumentList = null!;
-
             if (GetComplexifiedObjectType(node.Source, out IList<ObjectType> ComplexifiedSourceList))
             {
                 complexifiedTypeArgumentList = new List<TypeArgument>();
@@ -47,15 +47,16 @@
                     AssignmentTypeArgument NewAssignmentTypeArgument = CreateAssignmentTypeArgument(ClonedParameterIdentifier, ComplexifiedSource);
                     complexifiedTypeArgumentList.Add(NewAssignmentTypeArgument);
                 }
+
+                return true;
             }
 
-            return complexifiedTypeArgumentList != null;
+            Contract.Unused(out complexifiedTypeArgumentList);
+            return false;
         }
 
         private static bool GetComplexifiedPositionalTypeArgument(PositionalTypeArgument node, out IList<TypeArgument> complexifiedTypeArgumentList)
         {
-            complexifiedTypeArgumentList = null!;
-
             if (GetComplexifiedObjectType(node.Source, out IList<ObjectType> ComplexifiedSourceList))
             {
                 complexifiedTypeArgumentList = new List<TypeArgument>();
@@ -65,17 +66,21 @@
                     PositionalTypeArgument NewPositionalTypeArgument = CreatePositionalTypeArgument(ComplexifiedSource);
                     complexifiedTypeArgumentList.Add(NewPositionalTypeArgument);
                 }
+
+                return true;
             }
             else if (ComplexifyAsAssignmentTypeArgument(node, out AssignmentTypeArgument ComplexifiedAssignmentTypeArgument))
+            {
                 complexifiedTypeArgumentList = new List<TypeArgument>() { ComplexifiedAssignmentTypeArgument };
+                return true;
+            }
 
-            return complexifiedTypeArgumentList != null;
+            Contract.Unused(out complexifiedTypeArgumentList);
+            return false;
         }
 
         private static bool ComplexifyAsAssignmentTypeArgument(PositionalTypeArgument node, out AssignmentTypeArgument complexifiedNode)
         {
-            complexifiedNode = null!;
-
             if (node.Source is SimpleType AsSimpleType)
             {
                 string Text = AsSimpleType.ClassIdentifier.Text;
@@ -86,6 +91,7 @@
                     SimpleType AssignmentType = CreateSimpleSimpleType(AfterText);
 
                     complexifiedNode = CreateAssignmentTypeArgument(AssignmentTarget, AssignmentType);
+                    return true;
                 }
             }
             else if (node.Source is GenericType AsGenericType)
@@ -100,10 +106,12 @@
                     GenericType NewGenericType = CreateGenericType(SharingType.NotShared, NewClassIdentifier, ClonedTypeArgumentBlocks);
 
                     complexifiedNode = CreateAssignmentTypeArgument(AssignmentTarget, NewGenericType);
+                    return true;
                 }
             }
 
-            return complexifiedNode != null;
+            Contract.Unused(out complexifiedNode);
+            return false;
         }
     }
 }

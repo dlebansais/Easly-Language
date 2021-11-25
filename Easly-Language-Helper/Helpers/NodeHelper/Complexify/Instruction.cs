@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Diagnostics;
     using BaseNode;
+    using Contracts;
 
     /// <summary>
     /// Provides methods to manipulate nodes.
@@ -50,7 +51,6 @@
 
         private static bool GetComplexifiedInstructionSingle(Instruction node, out IList<Instruction> complexifiedInstructionList)
         {
-            complexifiedInstructionList = null!;
             bool IsHandled = false;
 
             switch (node)
@@ -79,13 +79,12 @@
 
             Debug.Assert(IsHandled, $"All descendants of {nameof(Instruction)} have been handled");
 
+            Contract.Unused(out complexifiedInstructionList);
             return false;
         }
 
         private static bool GetComplexifiedAsLongAsInstruction(AsLongAsInstruction node, out IList<Instruction> complexifiedInstructionList)
         {
-            complexifiedInstructionList = null!;
-
             if (GetComplexifiedExpression(node.ContinueCondition, out IList<Expression> ComplexifiedContinueConditionList))
             {
                 complexifiedInstructionList = new List<Instruction>();
@@ -106,20 +105,22 @@
 
                     complexifiedInstructionList.Add(NewAsLongAsInstruction);
                 }
+
+                return true;
             }
 
-            return complexifiedInstructionList != null;
+            Contract.Unused(out complexifiedInstructionList);
+            return false;
         }
 
         private static bool GetComplexifiedAssignmentInstruction(AssignmentInstruction node, out IList<Instruction> complexifiedInstructionList)
         {
-            complexifiedInstructionList = null!;
-
             if (GetComplexifiedQualifiedNameBlockList(node.DestinationBlocks, out IBlockList<QualifiedName> ComplexifiedDestinationBlocks))
             {
                 Expression ClonedSource = (Expression)DeepCloneNode(node.Source, cloneCommentGuid: false);
                 AssignmentInstruction NewAssignmentInstruction = CreateAssignmentInstruction(ComplexifiedDestinationBlocks, ClonedSource);
                 complexifiedInstructionList = new List<Instruction>() { NewAssignmentInstruction };
+                return true;
             }
             else if (GetComplexifiedExpression(node.Source, out IList<Expression> ComplexifiedSourceList))
             {
@@ -131,19 +132,26 @@
                     AssignmentInstruction NewAssignmentInstruction = CreateAssignmentInstruction(ClonedDestinationBlocks, ComplexifiedSource);
                     complexifiedInstructionList.Add(NewAssignmentInstruction);
                 }
+
+                return true;
             }
             else if (ComplexifyAsKeywordAssignmentInstruction(node, out KeywordAssignmentInstruction ComplexifiedKeywordAssignmentInstruction))
+            {
                 complexifiedInstructionList = new List<Instruction>() { ComplexifiedKeywordAssignmentInstruction };
+                return true;
+            }
             else if (ComplexifyAsIndexAssignmentInstruction(node, out IndexAssignmentInstruction ComplexifiedIndexAssignmentInstruction))
+            {
                 complexifiedInstructionList = new List<Instruction>() { ComplexifiedIndexAssignmentInstruction };
+                return true;
+            }
 
-            return complexifiedInstructionList != null;
+            Contract.Unused(out complexifiedInstructionList);
+            return false;
         }
 
         private static bool ComplexifyAsKeywordAssignmentInstruction(AssignmentInstruction node, out KeywordAssignmentInstruction complexifiedNode)
         {
-            complexifiedNode = null!;
-
             if (BlockListHelper<QualifiedName>.IsSimple(node.DestinationBlocks))
             {
                 QualifiedName AssignmentTarget = node.DestinationBlocks.NodeBlockList[0].NodeList[0];
@@ -165,18 +173,18 @@
                         {
                             Expression Source = (Expression)DeepCloneNode(node.Source, cloneCommentGuid: false);
                             complexifiedNode = CreateKeywordAssignmentInstruction(Keyword, Source);
+                            return true;
                         }
                     }
                 }
             }
 
-            return complexifiedNode != null;
+            Contract.Unused(out complexifiedNode);
+            return false;
         }
 
         private static bool ComplexifyAsIndexAssignmentInstruction(AssignmentInstruction node, out IndexAssignmentInstruction complexifiedNode)
         {
-            complexifiedNode = null!;
-
             if (BlockListHelper<QualifiedName>.IsSimple(node.DestinationBlocks))
             {
                 QualifiedName AssignmentTarget = node.DestinationBlocks.NodeBlockList[0].NodeList[0];
@@ -184,16 +192,16 @@
                 {
                     Expression ClonedSource = (Expression)DeepCloneNode(node.Source, cloneCommentGuid: false);
                     complexifiedNode = CreateIndexAssignmentInstruction(NewQuery, ArgumentList, ClonedSource);
+                    return true;
                 }
             }
 
-            return complexifiedNode != null;
+            Contract.Unused(out complexifiedNode);
+            return false;
         }
 
         private static bool GetComplexifiedAttachmentInstruction(AttachmentInstruction node, out IList<Instruction> complexifiedInstructionList)
         {
-            complexifiedInstructionList = null!;
-
             if (GetComplexifiedExpression(node.Source, out IList<Expression> ComplexifiedSourceList))
             {
                 complexifiedInstructionList = new List<Instruction>();
@@ -215,6 +223,8 @@
 
                     complexifiedInstructionList.Add(NewAttachmentInstruction);
                 }
+
+                return true;
             }
             else if (GetComplexifiedNameBlockList(node.EntityNameBlocks, out IBlockList<Name> ComplexifiedEntityNameBlocks))
             {
@@ -232,15 +242,15 @@
                     NewAttachmentInstruction = CreateAttachmentInstruction(ClonedSource, ComplexifiedEntityNameBlocks, ClonedAttachmentBlocks);
 
                 complexifiedInstructionList = new List<Instruction>() { NewAttachmentInstruction };
+                return true;
             }
 
-            return complexifiedInstructionList != null;
+            Contract.Unused(out complexifiedInstructionList);
+            return false;
         }
 
         private static bool GetComplexifiedCheckInstruction(CheckInstruction node, out IList<Instruction> complexifiedInstructionList)
         {
-            complexifiedInstructionList = null!;
-
             if (GetComplexifiedExpression(node.BooleanExpression, out IList<Expression> ComplexifiedBooleanExpressionList))
             {
                 complexifiedInstructionList = new List<Instruction>();
@@ -250,15 +260,16 @@
                     CheckInstruction NewCheckInstruction = CreateCheckInstruction(ComplexifiedBooleanExpression);
                     complexifiedInstructionList.Add(NewCheckInstruction);
                 }
+
+                return true;
             }
 
-            return complexifiedInstructionList != null;
+            Contract.Unused(out complexifiedInstructionList);
+            return false;
         }
 
         private static bool GetComplexifiedCreateInstruction(CreateInstruction node, out IList<Instruction> complexifiedInstructionList)
         {
-            complexifiedInstructionList = null!;
-
             if (GetComplexifiedArgumentBlockList(node.ArgumentBlocks, out IBlockList<Argument> ComplexifiedArgumentBlocks))
             {
                 Identifier ClonedEntityIdentifier = (Identifier)DeepCloneNode(node.EntityIdentifier, cloneCommentGuid: false);
@@ -275,6 +286,7 @@
                     NewCreateInstruction = CreateCreateInstruction(ClonedEntityIdentifier, ClonedCreationRoutineIdentifier, ComplexifiedArgumentBlocks);
 
                 complexifiedInstructionList = new List<Instruction>() { NewCreateInstruction };
+                return true;
             }
             else if (node.Processor.IsAssigned && ComplexifyQualifiedName(node.Processor.Item, out QualifiedName ComplexifiedPropcessor))
             {
@@ -284,15 +296,15 @@
 
                 CreateInstruction NewCreateInstruction = CreateCreateInstruction(ClonedEntityIdentifier, ClonedCreationRoutineIdentifier, ClonedArgumentBlocks, ComplexifiedPropcessor);
                 complexifiedInstructionList = new List<Instruction>() { NewCreateInstruction };
+                return true;
             }
 
-            return complexifiedInstructionList != null;
+            Contract.Unused(out complexifiedInstructionList);
+            return false;
         }
 
         private static bool GetComplexifiedIfThenElseInstruction(IfThenElseInstruction node, out IList<Instruction> complexifiedInstructionList)
         {
-            complexifiedInstructionList = null!;
-
             Debug.Assert(!NodeTreeHelperBlockList.IsBlockListEmpty((IBlockList)node.ConditionalBlocks), $"The conditional of {nameof(node)} is never empty");
 
             Conditional FirstConditional = node.ConditionalBlocks.NodeBlockList[0].NodeList[0];
@@ -317,21 +329,23 @@
 
                     complexifiedInstructionList.Add(NewIfThenElseInstruction);
                 }
+
+                return true;
             }
 
-            return complexifiedInstructionList != null;
+            Contract.Unused(out complexifiedInstructionList);
+            return false;
         }
 
         private static bool GetComplexifiedIndexAssignmentInstruction(IndexAssignmentInstruction node, out IList<Instruction> complexifiedInstructionList)
         {
-            complexifiedInstructionList = null!;
-
             if (ComplexifyQualifiedName(node.Destination, out QualifiedName ComplexifiedDestination))
             {
                 IBlockList<Argument> ClonedArgumentBlocks = (IBlockList<Argument>)DeepCloneBlockList((IBlockList)node.ArgumentBlocks, cloneCommentGuid: false);
                 Expression ClonedSource = (Expression)DeepCloneNode(node.Source, cloneCommentGuid: false);
                 IndexAssignmentInstruction NewIndexAssignmentInstruction = CreateIndexAssignmentInstruction(ComplexifiedDestination, ClonedArgumentBlocks, ClonedSource);
                 complexifiedInstructionList = new List<Instruction>() { NewIndexAssignmentInstruction };
+                return true;
             }
             else if (GetComplexifiedArgumentBlockList(node.ArgumentBlocks, out IBlockList<Argument> ComplexifiedArgumentBlocks))
             {
@@ -339,6 +353,7 @@
                 Expression ClonedSource = (Expression)DeepCloneNode(node.Source, cloneCommentGuid: false);
                 IndexAssignmentInstruction NewIndexAssignmentInstruction = CreateIndexAssignmentInstruction(ClonedDestination, ComplexifiedArgumentBlocks, ClonedSource);
                 complexifiedInstructionList = new List<Instruction>() { NewIndexAssignmentInstruction };
+                return true;
             }
             else if (GetComplexifiedExpression(node.Source, out IList<Expression> ComplexifiedSourceList))
             {
@@ -351,15 +366,16 @@
                     IndexAssignmentInstruction NewIndexAssignmentInstruction = CreateIndexAssignmentInstruction(ClonedDestination, ClonedArgumentBlocks, ComplexifiedSource);
                     complexifiedInstructionList.Add(NewIndexAssignmentInstruction);
                 }
+
+                return true;
             }
 
-            return complexifiedInstructionList != null;
+            Contract.Unused(out complexifiedInstructionList);
+            return false;
         }
 
         private static bool GetComplexifiedInspectInstruction(InspectInstruction node, out IList<Instruction> complexifiedInstructionList)
         {
-            complexifiedInstructionList = null!;
-
             if (GetComplexifiedExpression(node.Source, out IList<Expression> ComplexifiedSourceList))
             {
                 complexifiedInstructionList = new List<Instruction>();
@@ -379,15 +395,16 @@
 
                     complexifiedInstructionList.Add(NewInspectInstruction);
                 }
+
+                return true;
             }
 
-            return complexifiedInstructionList != null;
+            Contract.Unused(out complexifiedInstructionList);
+            return false;
         }
 
         private static bool GetComplexifiedKeywordAssignmentInstruction(KeywordAssignmentInstruction node, out IList<Instruction> complexifiedInstructionList)
         {
-            complexifiedInstructionList = null!;
-
             if (GetComplexifiedExpression(node.Source, out IList<Expression> ComplexifiedSourceList))
             {
                 complexifiedInstructionList = new List<Instruction>();
@@ -397,15 +414,16 @@
                     KeywordAssignmentInstruction NewKeywordAssignmentInstruction = CreateKeywordAssignmentInstruction(node.Destination, ComplexifiedSource);
                     complexifiedInstructionList.Add(NewKeywordAssignmentInstruction);
                 }
+
+                return true;
             }
 
-            return complexifiedInstructionList != null;
+            Contract.Unused(out complexifiedInstructionList);
+            return false;
         }
 
         private static bool GetComplexifiedOverLoopInstruction(OverLoopInstruction node, out IList<Instruction> complexifiedInstructionList)
         {
-            complexifiedInstructionList = null!;
-
             if (GetComplexifiedExpression(node.OverList, out IList<Expression> ComplexifiedOverListList))
             {
                 complexifiedInstructionList = new List<Instruction>();
@@ -428,15 +446,16 @@
 
                     complexifiedInstructionList.Add(NewOverLoopInstruction);
                 }
+
+                return true;
             }
 
-            return complexifiedInstructionList != null;
+            Contract.Unused(out complexifiedInstructionList);
+            return false;
         }
 
         private static bool GetComplexifiedPrecursorIndexAssignmentInstruction(PrecursorIndexAssignmentInstruction node, out IList<Instruction> complexifiedInstructionList)
         {
-            complexifiedInstructionList = null!;
-
             if (node.AncestorType.IsAssigned && GetComplexifiedObjectType(node.AncestorType.Item, out IList<ObjectType> ComplexifiedAncestorTypeList))
             {
                 complexifiedInstructionList = new List<Instruction>();
@@ -449,6 +468,8 @@
                     PrecursorIndexAssignmentInstruction NewPrecursorIndexAssignmentInstruction = CreatePrecursorIndexAssignmentInstruction(ComplexifiedAncestorType, ClonedArgumentBlocks, ClonedSource);
                     complexifiedInstructionList.Add(NewPrecursorIndexAssignmentInstruction);
                 }
+
+                return true;
             }
             else if (GetComplexifiedArgumentBlockList(node.ArgumentBlocks, out IBlockList<Argument> ComplexifiedArgumentBlocks))
             {
@@ -465,6 +486,7 @@
                     NewPrecursorIndexAssignmentInstruction = CreatePrecursorIndexAssignmentInstruction(ComplexifiedArgumentBlocks, ClonedSource);
 
                 complexifiedInstructionList = new List<Instruction>() { NewPrecursorIndexAssignmentInstruction };
+                return true;
             }
             else if (GetComplexifiedExpression(node.Source, out IList<Expression> ComplexifiedSourceList))
             {
@@ -486,15 +508,16 @@
 
                     complexifiedInstructionList.Add(NewPrecursorIndexAssignmentInstruction);
                 }
+
+                return true;
             }
 
-            return complexifiedInstructionList != null;
+            Contract.Unused(out complexifiedInstructionList);
+            return false;
         }
 
         private static bool GetComplexifiedPrecursorInstruction(PrecursorInstruction node, out IList<Instruction> complexifiedInstructionList)
         {
-            complexifiedInstructionList = null!;
-
             if (node.AncestorType.IsAssigned && GetComplexifiedObjectType(node.AncestorType.Item, out IList<ObjectType> ComplexifiedAncestorTypeList))
             {
                 complexifiedInstructionList = new List<Instruction>();
@@ -506,6 +529,8 @@
                     PrecursorInstruction NewPrecursorInstruction = CreatePrecursorInstruction(ComplexifiedAncestorType, ClonedArgumentBlocks);
                     complexifiedInstructionList.Add(NewPrecursorInstruction);
                 }
+
+                return true;
             }
             else if (GetComplexifiedArgumentBlockList(node.ArgumentBlocks, out IBlockList<Argument> ComplexifiedArgumentBlocks))
             {
@@ -520,28 +545,28 @@
                     NewPrecursorInstruction = CreatePrecursorInstruction(ComplexifiedArgumentBlocks);
 
                 complexifiedInstructionList = new List<Instruction>() { NewPrecursorInstruction };
+                return true;
             }
 
-            return complexifiedInstructionList != null;
+            Contract.Unused(out complexifiedInstructionList);
+            return false;
         }
 
         private static bool GetComplexifiedReleaseInstruction(ReleaseInstruction node, out IList<Instruction> complexifiedInstructionList)
         {
-            complexifiedInstructionList = null!;
-
             if (ComplexifyQualifiedName(node.EntityName, out QualifiedName ComplexifiedEntityName))
             {
                 ReleaseInstruction NewReleaseInstruction = CreateReleaseInstruction(ComplexifiedEntityName);
                 complexifiedInstructionList = new List<Instruction>() { NewReleaseInstruction };
+                return true;
             }
 
-            return complexifiedInstructionList != null;
+            Contract.Unused(out complexifiedInstructionList);
+            return false;
         }
 
         private static bool GetComplexifiedThrowInstruction(ThrowInstruction node, out IList<Instruction> complexifiedInstructionList)
         {
-            complexifiedInstructionList = null!;
-
             if (GetComplexifiedObjectType(node.ExceptionType, out IList<ObjectType> ComplexifiedExceptionTypeList))
             {
                 complexifiedInstructionList = new List<Instruction>();
@@ -554,6 +579,8 @@
                     ThrowInstruction NewThrowInstruction = CreateThrowInstruction(ComplexifiedExceptionType, ClonedCreationRoutine, ClonedArgumentBlocks);
                     complexifiedInstructionList.Add(NewThrowInstruction);
                 }
+
+                return true;
             }
             else if (GetComplexifiedArgumentBlockList(node.ArgumentBlocks, out IBlockList<Argument> ComplexifiedArgumentBlocks))
             {
@@ -562,9 +589,11 @@
 
                 ThrowInstruction NewThrowInstruction = CreateThrowInstruction(ClonedExceptionType, ClonedCreationRoutine, ComplexifiedArgumentBlocks);
                 complexifiedInstructionList = new List<Instruction>() { NewThrowInstruction };
+                return true;
             }
 
-            return complexifiedInstructionList != null;
+            Contract.Unused(out complexifiedInstructionList);
+            return false;
         }
     }
 }

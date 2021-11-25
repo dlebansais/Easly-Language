@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Diagnostics;
     using BaseNode;
+    using Contracts;
 
     /// <summary>
     /// Provides methods to manipulate nodes.
@@ -12,37 +13,35 @@
         #region Others
         private static bool GetComplexifiedAttachment(Attachment node, out IList<Attachment> complexifiedAttachmentList)
         {
-            complexifiedAttachmentList = null!;
-
             if (GetComplexifiedObjectTypeBlockList(node.AttachTypeBlocks, out IBlockList<ObjectType> ComplexifiedAttachTypeBlocks))
             {
                 Scope ClonedInstructions = (Scope)DeepCloneNode(node.Instructions, cloneCommentGuid: false);
                 Attachment ComplexifiedAttachment = CreateAttachment(ComplexifiedAttachTypeBlocks, ClonedInstructions);
 
                 complexifiedAttachmentList = new List<Attachment>() { ComplexifiedAttachment };
-
                 return true;
             }
 
-            complexifiedAttachmentList = null!;
+            Contract.Unused(out complexifiedAttachmentList);
             return false;
         }
 
         private static bool GetComplexifiedQualifiedName(QualifiedName node, out IList<QualifiedName> complexifiedQualifiedNameList)
         {
-            complexifiedQualifiedNameList = null!;
-
             if (ComplexifyQualifiedName(node, out QualifiedName ComplexifiedQualifiedName))
+            {
                 complexifiedQualifiedNameList = new List<QualifiedName>() { ComplexifiedQualifiedName };
+                return true;
+            }
 
-            return complexifiedQualifiedNameList != null;
+            Contract.Unused(out complexifiedQualifiedNameList);
+            return false;
         }
 
         private static bool ComplexifyQualifiedName(QualifiedName node, out QualifiedName complexifiedNode)
         {
             Debug.Assert(node.Path.Count > 0, $"{nameof(node)} always has at least one element");
 
-            complexifiedNode = null!;
             bool IsSplit = false;
 
             IList<Identifier> Path = new List<Identifier>();
@@ -64,15 +63,17 @@
             Debug.Assert(WithSplit || WithoutSplit, "A split at least increases the count of elements, and no split preserves it");
 
             if (IsSplit)
+            {
                 complexifiedNode = CreateQualifiedName(Path);
+                return true;
+            }
 
-            return complexifiedNode != null;
+            Contract.Unused(out complexifiedNode);
+            return false;
         }
 
         private static bool GetComplexifiedConditional(Conditional node, out IList<Conditional> complexifiedConditionalList)
         {
-            complexifiedConditionalList = null!;
-
             if (GetComplexifiedExpression(node.BooleanExpression, out IList<Expression> ComplexifiedBooleanExpressionList))
             {
                 complexifiedConditionalList = new List<Conditional>();
@@ -87,7 +88,7 @@
                 return true;
             }
 
-            complexifiedConditionalList = null!;
+            Contract.Unused(out complexifiedConditionalList);
             return false;
         }
         #endregion

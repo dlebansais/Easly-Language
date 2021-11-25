@@ -1,7 +1,5 @@
 ﻿namespace BaseNodeHelper
 {
-    using System;
-    using System.Diagnostics;
     using BaseNode;
 
     /// <summary>
