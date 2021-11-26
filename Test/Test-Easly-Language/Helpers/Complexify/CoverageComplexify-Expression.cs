@@ -299,6 +299,19 @@
             Assert.True(Result);
             Assert.AreEqual(ComplexifiedNodeList.Count, 1);
             Assert.That(ComplexifiedNodeList[0] is UnaryOperatorExpression);
+
+            Identifier FirstIdentifier = NodeHelper.CreateSimpleIdentifier("a");
+            Identifier MiddleIdentifier1 = NodeHelper.CreateSimpleIdentifier("b[c");
+            Identifier MiddleIdentifier2 = NodeHelper.CreateSimpleIdentifier("d");
+            Identifier LastIdentifier = NodeHelper.CreateSimpleIdentifier("e]");
+            QualifiedName Path = NodeHelper.CreateQualifiedName(new List<Identifier>() { FirstIdentifier, MiddleIdentifier1, MiddleIdentifier2, LastIdentifier });
+            QueryExpression Expression33 = NodeHelper.CreateQueryExpression(Path, new List<Argument>());
+
+            //System.Diagnostics.Debugger.Launch();
+            Result = NodeHelper.GetComplexifiedNode(Expression33, out ComplexifiedNodeList);
+            Assert.True(Result);
+            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+            Assert.That(ComplexifiedNodeList[0] is IndexQueryExpression);
         }
 
         [Test]

@@ -127,7 +127,6 @@
             IBlockList<Argument> EmptyArgumentBlockList = BlockListHelper.CreateEmptyBlockList<Argument>();
             CommandInstruction Instruction14 = NodeHelper.CreateCommandInstruction(SplittableQualifiedName, EmptyArgumentBlockList);
 
-            //System.Diagnostics.Debugger.Launch();
             Result = NodeHelper.GetComplexifiedNode(Instruction14, out ComplexifiedNodeList);
             Assert.True(Result);
             Assert.AreEqual(ComplexifiedNodeList.Count, 1);
