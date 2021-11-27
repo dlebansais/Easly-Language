@@ -18,6 +18,7 @@
             bool Result;
             IList<Node> ComplexifiedNodeList;
 
+            //System.Diagnostics.Debugger.Launch();
             Identifier EmptyIdentifier = NodeHelper.CreateEmptyIdentifier();
             List<Identifier> SimpleParameterList = new() { EmptyIdentifier };
             Expression DefaultExpression = NodeHelper.CreateDefaultExpression();

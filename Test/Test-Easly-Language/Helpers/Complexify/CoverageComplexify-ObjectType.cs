@@ -83,24 +83,40 @@
             Result = NodeHelper.GetComplexifiedNode(ObjectType1, out _);
             Assert.False(Result);
 
-            TypeArgument SimpleTypeArgument = NodeHelper.CreateSimplePositionalTypeArgument("a[b]");
+            PositionalTypeArgument SimplePositionalTypeArgument = NodeHelper.CreateSimplePositionalTypeArgument("a[b,c]");
 
-            GenericType ObjectType2 = NodeHelper.CreateGenericType(EmptyIdentifier, new List<TypeArgument>() { SimpleTypeArgument });
+            GenericType ObjectType2 = NodeHelper.CreateGenericType(EmptyIdentifier, new List<TypeArgument>() { SimplePositionalTypeArgument });
 
+            //System.Diagnostics.Debugger.Launch();
             Result = NodeHelper.GetComplexifiedNode(ObjectType2, out ComplexifiedNodeList);
             Assert.True(Result);
-            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+            Assert.AreEqual(ComplexifiedNodeList.Count, 2);
             Assert.That(ComplexifiedNodeList[0] is GenericType);
+            Assert.That(ComplexifiedNodeList[1] is GenericType);
 
             TypeArgument SplittableTypeArgument = NodeHelper.CreateSimplePositionalTypeArgument("a,b");
 
             GenericType ObjectType3 = NodeHelper.CreateGenericType(EmptyIdentifier, new List<TypeArgument>() { SplittableTypeArgument });
 
-            //System.Diagnostics.Debugger.Launch();
             Result = NodeHelper.GetComplexifiedNode(ObjectType3, out ComplexifiedNodeList);
             Assert.True(Result);
             Assert.AreEqual(ComplexifiedNodeList.Count, 1);
             Assert.That(ComplexifiedNodeList[0] is GenericType);
+
+            ObjectType DefaultObjectType = NodeHelper.CreateDefaultObjectType();
+            AssignmentTypeArgument SimpleAssignmentTypeArgument = NodeHelper.CreateAssignmentTypeArgument(EmptyIdentifier, DefaultObjectType);
+
+            GenericType ObjectType4 = NodeHelper.CreateGenericType(EmptyIdentifier, new List<TypeArgument>() { SimpleAssignmentTypeArgument });
+
+            Result = NodeHelper.GetComplexifiedNode(ObjectType4, out _);
+            Assert.False(Result);
+
+            TypeArgument SplittableTypeArgumentNoEnd = NodeHelper.CreateSimplePositionalTypeArgument("a,");
+
+            GenericType ObjectType5 = NodeHelper.CreateGenericType(EmptyIdentifier, new List<TypeArgument>() { SplittableTypeArgumentNoEnd });
+
+            Result = NodeHelper.GetComplexifiedNode(ObjectType5, out _);
+            Assert.False(Result);
         }
 
         [Test]
@@ -268,14 +284,37 @@
             Result = NodeHelper.GetComplexifiedNode(ObjectType1, out _);
             Assert.False(Result);
 
-            Name SimpleName = NodeHelper.CreateSimpleName("a:b");
+            Name SplittableName = NodeHelper.CreateSimpleName("a:b");
             ObjectType DefaultObjectType = NodeHelper.CreateDefaultObjectType();
-            EntityDeclaration SimpleEntityDeclaration = NodeHelper.CreateEntityDeclaration(SimpleName, DefaultObjectType);
-            IBlockList<EntityDeclaration> EntityDeclarationBlockList = BlockListHelper.CreateSimpleBlockList(SimpleEntityDeclaration);
+            EntityDeclaration SplittableNameEntityDeclaration = NodeHelper.CreateEntityDeclaration(SplittableName, DefaultObjectType);
+            IBlockList<EntityDeclaration> SplittableNameEntityDeclarationBlockList = BlockListHelper.CreateSimpleBlockList(SplittableNameEntityDeclaration);
 
-            TupleType ObjectType2 = NodeHelper.CreateTupleType(SharingType.ReadWrite, EntityDeclarationBlockList);
+            TupleType ObjectType2 = NodeHelper.CreateTupleType(SharingType.ReadWrite, SplittableNameEntityDeclarationBlockList);
 
             Result = NodeHelper.GetComplexifiedNode(ObjectType2, out ComplexifiedNodeList);
+            Assert.True(Result);
+            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+            Assert.That(ComplexifiedNodeList[0] is TupleType);
+
+            Name SimpleName = NodeHelper.CreateSimpleName("a");
+
+            QualifiedName SimpleQualifiedName = NodeHelper.CreateSimpleQualifiedName("a");
+            AnchoredType AnchoredType = NodeHelper.CreateAnchoredType(SimpleQualifiedName, AnchorKinds.Declaration);
+            EntityDeclaration AnchorEntityDeclaration = NodeHelper.CreateEntityDeclaration(SimpleName, AnchoredType);
+            IBlockList<EntityDeclaration> AnchoredDeclarationBlockList = BlockListHelper.CreateSimpleBlockList(AnchorEntityDeclaration);
+
+            TupleType ObjectType3 = NodeHelper.CreateTupleType(SharingType.ReadWrite, AnchoredDeclarationBlockList);
+
+            Result = NodeHelper.GetComplexifiedNode(ObjectType3, out _);
+            Assert.False(Result);
+
+            ObjectType SplittableObjectType = NodeHelper.CreateSimpleSimpleType("b,c");
+            EntityDeclaration SimpleEntityDeclaration = NodeHelper.CreateEntityDeclaration(SimpleName, SplittableObjectType);
+            IBlockList<EntityDeclaration> EntityDeclarationBlockList = BlockListHelper.CreateSimpleBlockList(SimpleEntityDeclaration);
+
+            TupleType ObjectType4 = NodeHelper.CreateTupleType(SharingType.ReadWrite, EntityDeclarationBlockList);
+
+            Result = NodeHelper.GetComplexifiedNode(ObjectType4, out ComplexifiedNodeList);
             Assert.True(Result);
             Assert.AreEqual(ComplexifiedNodeList.Count, 1);
             Assert.That(ComplexifiedNodeList[0] is TupleType);

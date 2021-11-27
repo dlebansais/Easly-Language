@@ -307,11 +307,16 @@
             QualifiedName Path = NodeHelper.CreateQualifiedName(new List<Identifier>() { FirstIdentifier, MiddleIdentifier1, MiddleIdentifier2, LastIdentifier });
             QueryExpression Expression33 = NodeHelper.CreateQueryExpression(Path, new List<Argument>());
 
-            //System.Diagnostics.Debugger.Launch();
             Result = NodeHelper.GetComplexifiedNode(Expression33, out ComplexifiedNodeList);
             Assert.True(Result);
             Assert.AreEqual(ComplexifiedNodeList.Count, 1);
             Assert.That(ComplexifiedNodeList[0] is IndexQueryExpression);
+
+            QueryExpression Expression34 = NodeHelper.CreateQueryExpression(NodeHelper.CreateQualifiedName(new List<Identifier>() { FirstIdentifier, MiddleIdentifier1 }), new List<Argument>());
+
+            //System.Diagnostics.Debugger.Launch();
+            Result = NodeHelper.GetComplexifiedNode(Expression34, out _);
+            Assert.False(Result);
         }
 
         [Test]
