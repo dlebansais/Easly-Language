@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using BaseNode;
 using Contracts;
+using Easly;
 
 /// <summary>
 /// Provides methods to manipulate nodes.
@@ -434,6 +435,40 @@ public static partial class NodeHelper
         Result.IterationInstructionBlocks = BlockListHelper<Instruction>.CreateEmptyBlockList();
         Result.InvariantBlocks = BlockListHelper<Assertion>.CreateEmptyBlockList();
         Result.Variant = OptionalReferenceHelper<Expression>.CreateReference(CreateDefaultExpression());
+
+        return Result;
+    }
+
+    /// <summary>
+    /// Creates a new instance of a <see cref="ForLoopInstruction"/>.
+    /// </summary>
+    /// <param name="entityDeclarationBlocks">The local variables.</param>
+    /// <param name="initInstructionBlocks">The initialization instructions.</param>
+    /// <param name="whileCondition">The loop condition.</param>
+    /// <param name="loopInstructionBlocks">The loop instructions.</param>
+    /// <param name="iterationInstructionBlocks">The interation instructions.</param>
+    /// <param name="invariantBlocks">The invariant.</param>
+    /// <param name="variant">The variant.</param>
+    /// <returns>The created instance.</returns>
+    public static ForLoopInstruction CreateForLoopInstruction(IBlockList<EntityDeclaration> entityDeclarationBlocks, IBlockList<Instruction> initInstructionBlocks, Expression whileCondition, IBlockList<Instruction> loopInstructionBlocks, IBlockList<Instruction> iterationInstructionBlocks, IBlockList<Assertion> invariantBlocks, IOptionalReference<Expression> variant)
+    {
+        Contract.RequireNotNull(entityDeclarationBlocks, out IBlockList<EntityDeclaration> EntityDeclarationBlocks);
+        Contract.RequireNotNull(initInstructionBlocks, out IBlockList<Instruction> InitInstructionBlocks);
+        Contract.RequireNotNull(whileCondition, out Expression WhileCondition);
+        Contract.RequireNotNull(loopInstructionBlocks, out IBlockList<Instruction> LoopInstructionBlocks);
+        Contract.RequireNotNull(iterationInstructionBlocks, out IBlockList<Instruction> IterationInstructionBlocks);
+        Contract.RequireNotNull(invariantBlocks, out IBlockList<Assertion> InvariantBlocks);
+        Contract.RequireNotNull(variant, out IOptionalReference<Expression> Variant);
+
+        ForLoopInstruction Result = new ForLoopInstruction();
+        Result.Documentation = CreateEmptyDocumentation();
+        Result.EntityDeclarationBlocks = EntityDeclarationBlocks;
+        Result.InitInstructionBlocks = InitInstructionBlocks;
+        Result.WhileCondition = WhileCondition;
+        Result.LoopInstructionBlocks = LoopInstructionBlocks;
+        Result.IterationInstructionBlocks = IterationInstructionBlocks;
+        Result.InvariantBlocks = InvariantBlocks;
+        Result.Variant = Variant;
 
         return Result;
     }

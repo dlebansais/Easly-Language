@@ -67,6 +67,42 @@
             Result = NodeHelper.GetSimplifiedInstruction(Instruction1, out SimplifiedNode);
             Assert.True(Result);
             Assert.That(SimplifiedNode is CommandInstruction);
+
+            Identifier FirstIdentifier = NodeHelper.CreateSimpleIdentifier("a");
+            QualifiedName FirstQualifiedName = NodeHelper.CreateQualifiedName(new List<Identifier>() { FirstIdentifier });
+            IBlock<QualifiedName> FirstBlock = BlockListHelper.CreateBlock(new List<QualifiedName>() { FirstQualifiedName });
+            Identifier SecondIdentifier = NodeHelper.CreateSimpleIdentifier("b");
+            QualifiedName SecondQualifiedName = NodeHelper.CreateQualifiedName(new List<Identifier>() { SecondIdentifier });
+            IBlock<QualifiedName> SecondBlock = BlockListHelper.CreateBlock(new List<QualifiedName>() { SecondQualifiedName });
+            IBlockList<QualifiedName> NotSimpleBlockList = BlockListHelper.CreateBlockList(new List<IBlock<QualifiedName>>() { FirstBlock, SecondBlock });
+
+            AssignmentInstruction Instruction2= NodeHelper.CreateAssignmentInstruction(NotSimpleBlockList, DefaultExpression);
+
+            Result = NodeHelper.GetSimplifiedInstruction(Instruction2, out SimplifiedNode);
+            Assert.True(Result);
+            Assert.That(SimplifiedNode is CommandInstruction);
+
+            ManifestNumberExpression NumberExpression = NodeHelper.CreateDefaultManifestNumberExpression();
+
+            AssignmentInstruction Instruction3 = NodeHelper.CreateAssignmentInstruction(SimpleQualifiedNameList, NumberExpression);
+
+            Result = NodeHelper.GetSimplifiedInstruction(Instruction3, out SimplifiedNode);
+            Assert.True(Result);
+            Assert.That(SimplifiedNode is CommandInstruction);
+
+            QualifiedName NotSimpleQualifiedName = NodeHelper.CreateQualifiedName(new List<Identifier>() { FirstIdentifier, SecondIdentifier });
+            AssignmentInstruction Instruction4 = NodeHelper.CreateAssignmentInstruction(new List<QualifiedName>() { NotSimpleQualifiedName }, DefaultExpression);
+
+            Result = NodeHelper.GetSimplifiedInstruction(Instruction4, out SimplifiedNode);
+            Assert.True(Result);
+            Assert.That(SimplifiedNode is CommandInstruction);
+
+            QueryExpression NotSimpleQuery = NodeHelper.CreateQueryExpression(NotSimpleQualifiedName, new List<Argument>());
+            AssignmentInstruction Instruction5 = NodeHelper.CreateAssignmentInstruction(SimpleQualifiedNameList, NotSimpleQuery);
+
+            Result = NodeHelper.GetSimplifiedInstruction(Instruction5, out SimplifiedNode);
+            Assert.True(Result);
+            Assert.That(SimplifiedNode is CommandInstruction);
         }
 
         [Test]
@@ -135,6 +171,12 @@
             Result = NodeHelper.GetSimplifiedInstruction(Instruction1, out SimplifiedNode);
             Assert.True(Result);
             Assert.That(SimplifiedNode is CommandInstruction);
+
+            DebugInstruction Instruction2 = NodeHelper.CreateEmptyDebugInstruction();
+
+            Result = NodeHelper.GetSimplifiedInstruction(Instruction2, out SimplifiedNode);
+            Assert.True(Result);
+            Assert.That(SimplifiedNode is CommandInstruction);
         }
 
         [Test]
@@ -149,6 +191,44 @@
             Result = NodeHelper.GetSimplifiedInstruction(Instruction1, out SimplifiedNode);
             Assert.True(Result);
             Assert.That(SimplifiedNode is AssignmentInstruction);
+
+            Instruction DefaultInstruction = NodeHelper.CreateDefaultInstruction();
+
+            ForLoopInstruction Instruction2 = NodeHelper.CreateSimpleForLoopInstruction(DefaultInstruction);
+
+            Result = NodeHelper.GetSimplifiedInstruction(Instruction2, out SimplifiedNode);
+            Assert.True(Result);
+            Assert.That(SimplifiedNode is CommandInstruction);
+
+            IBlockList<Instruction> EmptyInstructionBlocks = BlockListHelper.CreateEmptyBlockList<Instruction>();
+            IBlockList<EntityDeclaration> EntityDeclarationBlocks = BlockListHelper.CreateEmptyBlockList<EntityDeclaration>();
+            Expression DefaultCondition = NodeHelper.CreateDefaultExpression();
+            IBlockList<Assertion> InvariantBlocks = BlockListHelper.CreateEmptyBlockList<Assertion>();
+            IOptionalReference<Expression> Variant = OptionalReferenceHelper.CreateReference<Expression>(NodeHelper.CreateDefaultExpression());
+
+            IBlockList<Instruction> InitInstructionBlocks = BlockListHelper.CreateSimpleBlockList(DefaultInstruction);
+
+            ForLoopInstruction Instruction3 = NodeHelper.CreateForLoopInstruction(EntityDeclarationBlocks, InitInstructionBlocks, DefaultCondition, EmptyInstructionBlocks, EmptyInstructionBlocks, InvariantBlocks, Variant);
+
+            Result = NodeHelper.GetSimplifiedInstruction(Instruction3, out SimplifiedNode);
+            Assert.True(Result);
+            Assert.That(SimplifiedNode is CommandInstruction);
+
+            IBlockList<Instruction> LoopInstructionBlocks = BlockListHelper.CreateSimpleBlockList(DefaultInstruction);
+
+            ForLoopInstruction Instruction4 = NodeHelper.CreateForLoopInstruction(EntityDeclarationBlocks, EmptyInstructionBlocks, DefaultCondition, LoopInstructionBlocks, EmptyInstructionBlocks, InvariantBlocks, Variant);
+
+            Result = NodeHelper.GetSimplifiedInstruction(Instruction4, out SimplifiedNode);
+            Assert.True(Result);
+            Assert.That(SimplifiedNode is CommandInstruction);
+
+            IBlockList<Instruction> IterationInstructionBlocks = BlockListHelper.CreateSimpleBlockList(DefaultInstruction);
+
+            ForLoopInstruction Instruction5 = NodeHelper.CreateForLoopInstruction(EntityDeclarationBlocks, EmptyInstructionBlocks, DefaultCondition, EmptyInstructionBlocks, IterationInstructionBlocks, InvariantBlocks, Variant);
+
+            Result = NodeHelper.GetSimplifiedInstruction(Instruction5, out SimplifiedNode);
+            Assert.True(Result);
+            Assert.That(SimplifiedNode is CommandInstruction);
         }
 
         [Test]
@@ -165,6 +245,16 @@
             Result = NodeHelper.GetSimplifiedInstruction(Instruction1, out SimplifiedNode);
             Assert.True(Result);
             Assert.That(SimplifiedNode is AssignmentInstruction);
+
+            Expression DefaultCondition = NodeHelper.CreateDefaultExpression();
+            Instruction DefaultInstruction = NodeHelper.CreateDefaultInstruction();
+            Conditional SimpleConditional = NodeHelper.CreateConditional(DefaultCondition, DefaultInstruction);
+
+            IfThenElseInstruction Instruction2 = NodeHelper.CreateIfThenElseInstruction(SimpleConditional);
+
+            Result = NodeHelper.GetSimplifiedInstruction(Instruction2, out SimplifiedNode);
+            Assert.True(Result);
+            Assert.That(SimplifiedNode is CommandInstruction);
         }
 
         [Test]
@@ -188,6 +278,22 @@
 
         [Test]
         [Category("Simplify")]
+        public static void TestSimplifyInspectInstruction()
+        {
+            bool Result;
+            Node SimplifiedNode;
+
+            Expression DefaultExpression = NodeHelper.CreateDefaultExpression();
+
+            InspectInstruction Instruction1 = NodeHelper.CreateInspectInstruction(DefaultExpression);
+
+            Result = NodeHelper.GetSimplifiedInstruction(Instruction1, out SimplifiedNode);
+            Assert.True(Result);
+            Assert.That(SimplifiedNode is AssignmentInstruction);
+        }
+
+        [Test]
+        [Category("Simplify")]
         public static void TestSimplifyKeywordAssignmentInstruction()
         {
             bool Result;
@@ -198,6 +304,14 @@
             KeywordAssignmentInstruction Instruction1 = NodeHelper.CreateKeywordAssignmentInstruction(Keyword.Result, DefaultExpression);
 
             Result = NodeHelper.GetSimplifiedInstruction(Instruction1, out SimplifiedNode);
+            Assert.True(Result);
+            Assert.That(SimplifiedNode is CommandInstruction);
+
+            ManifestNumberExpression NumberExpression = NodeHelper.CreateDefaultManifestNumberExpression();
+
+            KeywordAssignmentInstruction Instruction2 = NodeHelper.CreateKeywordAssignmentInstruction(Keyword.Result, NumberExpression);
+
+            Result = NodeHelper.GetSimplifiedInstruction(Instruction2, out SimplifiedNode);
             Assert.True(Result);
             Assert.That(SimplifiedNode is CommandInstruction);
         }

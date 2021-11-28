@@ -221,7 +221,9 @@
 
         private static bool SimplifyIfThenElseInstruction(IfThenElseInstruction node, out Node simplifiedNode)
         {
-            Debug.Assert(node.ConditionalBlocks.NodeBlockList.Count > 0 && node.ConditionalBlocks.NodeBlockList[0].NodeList.Count > 0, "There is always at least one conditional");
+            Debug.Assert(node.ConditionalBlocks.NodeBlockList.Count > 0, "There is always at least one conditional");
+            Debug.Assert(node.ConditionalBlocks.NodeBlockList[0].NodeList.Count > 0, "There is always at least one conditional");
+
             Conditional FirstConditional = node.ConditionalBlocks.NodeBlockList[0].NodeList[0];
 
             if (FirstConditional.Instructions.InstructionBlocks.NodeBlockList.Count > 0)
