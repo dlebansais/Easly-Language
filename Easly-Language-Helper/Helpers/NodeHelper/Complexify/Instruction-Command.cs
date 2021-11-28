@@ -224,7 +224,7 @@
             if (ParsePattern(node, Pattern, out string BeforeText, out _) && BeforeText.Length == 0)
             {
                 CloneComplexifiedCommand(node, Pattern, out CommandInstruction ClonedCommand);
-                complexifiedNode = CreateForLoopInstruction(ClonedCommand);
+                complexifiedNode = CreateSimpleForLoopInstruction(ClonedCommand);
                 return true;
             }
 

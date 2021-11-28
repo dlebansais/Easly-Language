@@ -382,19 +382,32 @@ public static partial class NodeHelper
     }
 
     /// <summary>
+    /// Creates a new instance of a <see cref="DebugInstruction"/>.
+    /// </summary>
+    /// <param name="instructions">The instructions.</param>
+    /// <returns>The created instance.</returns>
+    public static DebugInstruction CreateDebugInstruction(Scope instructions)
+    {
+        Contract.RequireNotNull(instructions, out Scope Instructions);
+
+        DebugInstruction Result = new DebugInstruction();
+        Result.Documentation = CreateEmptyDocumentation();
+        Result.Instructions = Instructions;
+
+        return Result;
+    }
+
+    /// <summary>
     /// Creates a new instance of a <see cref="ForLoopInstruction"/> with empty content.
     /// </summary>
-    /// <param name="whileCondition">The condition.</param>
     /// <returns>The created instance.</returns>
-    public static ForLoopInstruction CreateForLoopInstruction(Expression whileCondition)
+    public static ForLoopInstruction CreateEmptyForLoopInstruction()
     {
-        Contract.RequireNotNull(whileCondition, out Expression WhileCondition);
-
         ForLoopInstruction Result = new ForLoopInstruction();
         Result.Documentation = CreateEmptyDocumentation();
         Result.EntityDeclarationBlocks = BlockListHelper<EntityDeclaration>.CreateEmptyBlockList();
         Result.InitInstructionBlocks = BlockListHelper<Instruction>.CreateEmptyBlockList();
-        Result.WhileCondition = WhileCondition;
+        Result.WhileCondition = CreateEmptyQueryExpression();
         Result.LoopInstructionBlocks = BlockListHelper<Instruction>.CreateEmptyBlockList();
         Result.IterationInstructionBlocks = BlockListHelper<Instruction>.CreateEmptyBlockList();
         Result.InvariantBlocks = BlockListHelper<Assertion>.CreateEmptyBlockList();
@@ -408,7 +421,7 @@ public static partial class NodeHelper
     /// </summary>
     /// <param name="instruction">The instruction.</param>
     /// <returns>The created instance.</returns>
-    public static ForLoopInstruction CreateForLoopInstruction(Instruction instruction)
+    public static ForLoopInstruction CreateSimpleForLoopInstruction(Instruction instruction)
     {
         Contract.RequireNotNull(instruction, out Instruction Instruction);
 

@@ -254,7 +254,7 @@
 
             Result = NodeHelper.GetSimplifiedExpression(Expression2, out SimplifiedNode);
             Assert.True(Result);
-            Assert.That(SimplifiedNode is QueryExpression);
+            Assert.That(SimplifiedNode is ManifestNumberExpression);
         }
 
         [Test]

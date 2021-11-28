@@ -780,7 +780,6 @@
             ObjectType DefaultObjectType = NodeHelper.CreateDefaultObjectType();
             Identifier EmptyIdentifier = NodeHelper.CreateEmptyIdentifier();
             List<Argument> EmptyArgumentList = new();
-            IBlockList<Argument> EmptyArgumentBlockList = BlockListHelper.CreateEmptyBlockList<Argument>();
 
             ThrowInstruction Instruction1 = NodeHelper.CreateThrowInstruction(DefaultObjectType, EmptyIdentifier, EmptyArgumentList);
 

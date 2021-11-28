@@ -531,8 +531,8 @@
             Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateSimpleDebugInstruction(NullInstruction); });
 #endif
 
-            ForLoopInstruction Instruction17 = NodeHelper.CreateForLoopInstruction(DefaultExpression);
-            ForLoopInstruction Instruction18 = NodeHelper.CreateForLoopInstruction(DefaultInstruction);
+            ForLoopInstruction Instruction17 = NodeHelper.CreateEmptyForLoopInstruction();
+            ForLoopInstruction Instruction18 = NodeHelper.CreateSimpleForLoopInstruction(DefaultInstruction);
 
 #if !DEBUG
             Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateForLoopInstruction(NullExpression); });
