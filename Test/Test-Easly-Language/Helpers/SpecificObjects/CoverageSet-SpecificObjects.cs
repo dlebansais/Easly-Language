@@ -526,9 +526,11 @@
 
             DebugInstruction Instruction15 = NodeHelper.CreateEmptyDebugInstruction();
             DebugInstruction Instruction16 = NodeHelper.CreateSimpleDebugInstruction(DefaultInstruction);
+            DebugInstruction Instruction16_1 = NodeHelper.CreateDebugInstruction(EmptyScope);
 
 #if !DEBUG
             Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateSimpleDebugInstruction(NullInstruction); });
+            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateDebugInstruction(NullScope); });
 #endif
 
             ForLoopInstruction Instruction17 = NodeHelper.CreateEmptyForLoopInstruction();

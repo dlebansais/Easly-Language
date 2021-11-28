@@ -406,6 +406,7 @@
         {
             bool Result;
             IList<Node> ComplexifiedNodeList;
+            string InverseRenamedSymbol;
 
             Expression LeftExpression = NodeHelper.CreateDefaultExpression();
             Expression RightExpression = NodeHelper.CreateDefaultExpression();
@@ -452,6 +453,10 @@
             Assert.That(Complexified4.RightExpression is QueryExpression);
             Assert.AreEqual(Complexified4.Operator.Text, "≥");
 
+            Result = NodeHelper.GetInverseRenamedBinarySymbol(Complexified4.Operator.Text, out InverseRenamedSymbol);
+            Assert.True(Result);
+            Assert.AreEqual(InverseRenamedSymbol, ">=");
+
             Identifier LesserEqualSymbolIdentifier = NodeHelper.CreateSimpleIdentifier("<=");
 
             BinaryOperatorExpression Expression5 = NodeHelper.CreateBinaryOperatorExpression(RightExpression, LesserEqualSymbolIdentifier, RightExpression);
@@ -466,6 +471,10 @@
             Assert.That(Complexified5.RightExpression is QueryExpression);
             Assert.AreEqual(Complexified5.Operator.Text, "≤");
 
+            Result = NodeHelper.GetInverseRenamedBinarySymbol(Complexified5.Operator.Text, out InverseRenamedSymbol);
+            Assert.True(Result);
+            Assert.AreEqual(InverseRenamedSymbol, "<=");
+
             Identifier ImplySymbolIdentifier = NodeHelper.CreateSimpleIdentifier("=>");
 
             BinaryOperatorExpression Expression6 = NodeHelper.CreateBinaryOperatorExpression(RightExpression, ImplySymbolIdentifier, RightExpression);
@@ -479,6 +488,13 @@
             Assert.That(Complexified6.LeftExpression is QueryExpression);
             Assert.That(Complexified6.RightExpression is QueryExpression);
             Assert.AreEqual(Complexified6.Operator.Text, "⇒");
+
+            Result = NodeHelper.GetInverseRenamedBinarySymbol(Complexified6.Operator.Text, out InverseRenamedSymbol);
+            Assert.True(Result);
+            Assert.AreEqual(InverseRenamedSymbol, "=>");
+
+            Result = NodeHelper.GetInverseRenamedBinarySymbol("*", out _);
+            Assert.False(Result);
         }
 
         [Test]
@@ -832,6 +848,7 @@
         {
             bool Result;
             IList<Node> ComplexifiedNodeList;
+            string InverseRenamedSymbol;
 
             Identifier SimpleIdentifier = NodeHelper.CreateSimpleIdentifier("-");
             Expression DefaultExpression = NodeHelper.CreateDefaultExpression();
@@ -864,6 +881,13 @@
 
             UnaryOperatorExpression Complexified3 = (UnaryOperatorExpression)ComplexifiedNodeList[0];
             Assert.AreEqual(Complexified3.Operator.Text, "√");
+
+            Result = NodeHelper.GetInverseRenamedUnarySymbol(Complexified3.Operator.Text, out InverseRenamedSymbol);
+            Assert.True(Result);
+            Assert.AreEqual(InverseRenamedSymbol, "sqrt");
+
+            Result = NodeHelper.GetInverseRenamedUnarySymbol("*", out _);
+            Assert.False(Result);
         }
     }
 }

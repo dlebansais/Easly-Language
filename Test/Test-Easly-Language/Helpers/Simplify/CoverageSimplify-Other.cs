@@ -74,6 +74,9 @@
             Result = NodeHelper.GetSimplifiedNode(TypeArgument1, out SimplifiedNode);
             Assert.True(Result);
             Assert.That(SimplifiedNode is PositionalTypeArgument);
+
+            Result = NodeHelper.GetSimplifiedNode(EmptyIdentifier, out _);
+            Assert.False(Result);
         }
     }
 }
