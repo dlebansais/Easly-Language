@@ -12,6 +12,7 @@
     /// </summary>
     public static partial class NodeHelper
     {
+#if NOTUSED
         /// <summary>
         /// Gets a node type by its short name.
         /// </summary>
@@ -34,7 +35,9 @@
 
             return FullType;
         }
+#endif
 
+#if NOTUSED
         /// <summary>
         /// Creates a dictionary of nodes indexed by types.
         /// </summary>
@@ -67,6 +70,7 @@
 
             return Result;
         }
+#endif
 
         /// <summary>
         /// Checks whether a property of a node is a collection of blocks that must never be empty.
