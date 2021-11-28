@@ -18,7 +18,7 @@
             bool Result;
             IList<Node> ComplexifiedNodeList;
 
-            QueryExpression Expression1 = NodeHelper.CreateSimpleQueryExpression(String.Empty);
+            QueryExpression Expression1 = NodeHelper.CreateSimpleQueryExpression(string.Empty);
 
             Result = NodeHelper.GetComplexifiedNode(Expression1, out _);
             Assert.False(Result);

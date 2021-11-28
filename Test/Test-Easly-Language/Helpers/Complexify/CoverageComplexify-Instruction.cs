@@ -16,7 +16,7 @@
             bool Result;
             IList<Node> ComplexifiedNodeList;
 
-            CommandInstruction Instruction1 = NodeHelper.CreateSimpleCommandInstruction(String.Empty);
+            CommandInstruction Instruction1 = NodeHelper.CreateSimpleCommandInstruction(string.Empty);
 
             Result = NodeHelper.GetComplexifiedNode(Instruction1, out _);
             Assert.False(Result);

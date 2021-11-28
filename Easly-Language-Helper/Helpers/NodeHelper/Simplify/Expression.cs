@@ -131,29 +131,17 @@
 
             if (GetExpressionText(node.LeftExpression, out LeftText) && GetExpressionText(node.RightExpression, out RightText))
             {
-                string Operator = null!;
-
-                switch (node.Conditional)
+                Dictionary<ConditionalTypes, string> SimplifyOperatorTable = new()
                 {
-                    case ConditionalTypes.And:
-                        Operator = " and ";
-                        break;
+                    { ConditionalTypes.And, " and " },
+                    { ConditionalTypes.Or, " or " },
+                    { ConditionalTypes.Xor, " xor " },
+                    { ConditionalTypes.Implies, " ⇒ " },
+                };
 
-                    case ConditionalTypes.Or:
-                        Operator = " or ";
-                        break;
+                Debug.Assert(SimplifyOperatorTable.ContainsKey(node.Conditional), $"All values of {nameof(ConditionalTypes)} have been handled");
 
-                    case ConditionalTypes.Xor:
-                        Operator = " xor ";
-                        break;
-
-                    case ConditionalTypes.Implies:
-                        Operator = " ⇒ ";
-                        break;
-                }
-
-                Debug.Assert(Operator != null, $"All values of {nameof(ConditionalTypes)} have been handled");
-
+                string Operator = SimplifyOperatorTable[node.Conditional];
                 string SimplifiedText = LeftText + Operator + RightText;
                 simplifiedNode = CreateSimpleQueryExpression(SimplifiedText);
                 return true;

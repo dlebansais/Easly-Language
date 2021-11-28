@@ -259,7 +259,7 @@
                 if (node.ArgumentBlocks.NodeBlockList.Count > 0)
                     ClonedArgumentBlocks = BlockListHelper<Argument>.CreateBlockListCopy(node.ArgumentBlocks);
                 else
-                    ClonedArgumentBlocks = BlockListHelper<Argument>.CreateSimpleBlockList(CreatePositionalArgument(CreateSimpleManifestNumberExpression("0")));
+                    ClonedArgumentBlocks = BlockListHelper<Argument>.CreateSimpleBlockList(CreatePositionalArgument(CreateDefaultManifestNumberExpression()));
 
                 complexifiedNode = CreateIndexAssignmentInstruction(ClonedDestination, ClonedArgumentBlocks, CreateEmptyQueryExpression());
                 return true;
