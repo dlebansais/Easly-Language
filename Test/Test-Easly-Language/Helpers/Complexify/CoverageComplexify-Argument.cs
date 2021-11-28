@@ -25,7 +25,7 @@
 
             AssignmentArgument Argument1 = NodeHelper.CreateAssignmentArgument(SimpleParameterList, DefaultExpression);
 
-            Result = NodeHelper.GetComplexifiedNode(Argument1, out ComplexifiedNodeList);
+            Result = NodeHelper.GetComplexifiedNode(Argument1, out _);
             Assert.False(Result);
 
             Identifier SplitableIdentifier = NodeHelper.CreateSimpleIdentifier("test,test,test");
@@ -64,25 +64,25 @@
 
             Expression DefaultExpression = NodeHelper.CreateDefaultExpression();
 
-            PositionalArgument Argument4 = NodeHelper.CreatePositionalArgument(DefaultExpression);
+            PositionalArgument Argument1 = NodeHelper.CreatePositionalArgument(DefaultExpression);
 
-            Result = NodeHelper.GetComplexifiedNode(Argument4, out ComplexifiedNodeList);
+            Result = NodeHelper.GetComplexifiedNode(Argument1, out ComplexifiedNodeList);
             Assert.False(Result);
 
             Expression NumberExpression = NodeHelper.CreateSimpleQueryExpression("0");
 
-            PositionalArgument Argument5 = NodeHelper.CreatePositionalArgument(NumberExpression);
+            PositionalArgument Argument2 = NodeHelper.CreatePositionalArgument(NumberExpression);
 
-            Result = NodeHelper.GetComplexifiedNode(Argument5, out ComplexifiedNodeList);
+            Result = NodeHelper.GetComplexifiedNode(Argument2, out ComplexifiedNodeList);
             Assert.True(Result);
             Assert.AreEqual(ComplexifiedNodeList.Count, 1);
             Assert.That(ComplexifiedNodeList[0] is PositionalArgument);
 
             Expression AssignmentExpression = NodeHelper.CreateSimpleQueryExpression("x:=y");
 
-            PositionalArgument Argument6 = NodeHelper.CreatePositionalArgument(AssignmentExpression);
+            PositionalArgument Argument3 = NodeHelper.CreatePositionalArgument(AssignmentExpression);
 
-            Result = NodeHelper.GetComplexifiedNode(Argument6, out ComplexifiedNodeList);
+            Result = NodeHelper.GetComplexifiedNode(Argument3, out ComplexifiedNodeList);
             Assert.True(Result);
             Assert.AreEqual(ComplexifiedNodeList.Count, 1);
             Assert.That(ComplexifiedNodeList[0] is AssignmentArgument);

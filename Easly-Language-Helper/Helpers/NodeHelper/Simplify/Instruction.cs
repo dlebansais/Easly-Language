@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Diagnostics;
     using BaseNode;
+    using Contracts;
 
     /// <summary>
     /// Provides methods to manipulate nodes.
@@ -44,11 +45,11 @@
                 case PrecursorIndexAssignmentInstruction AsPrecursorIndexAssignmentInstruction:
                     return SimplifyPrecursorIndexAssignmentInstruction(AsPrecursorIndexAssignmentInstruction, out simplifiedNode);
                 default:
-                    return GetSimplifiedInstructionSingle(nodeInstruction, out simplifiedNode);
+                    return GetSimplifiedInstructionSingle1(nodeInstruction, out simplifiedNode);
             }
         }
 
-        private static bool GetSimplifiedInstructionSingle(Instruction nodeInstruction, out Node simplifiedNode)
+        private static bool GetSimplifiedInstructionSingle1(Instruction nodeInstruction, out Node simplifiedNode)
         {
             switch (nodeInstruction)
             {
@@ -62,23 +63,42 @@
                     return SimplifyRaiseEventInstruction(AsRaiseEventInstruction, out simplifiedNode);
                 case ReleaseInstruction AsReleaseInstruction:
                     return SimplifyReleaseInstruction(AsReleaseInstruction, out simplifiedNode);
-                case ThrowInstruction AsThrowInstruction:
-                    return SimplifyThrowInstruction(AsThrowInstruction, out simplifiedNode);
                 default:
-                    simplifiedNode = null!;
-                    return false;
+                    return GetSimplifiedInstructionSingle2(nodeInstruction, out simplifiedNode);
             }
+        }
+
+        private static bool GetSimplifiedInstructionSingle2(Instruction nodeInstruction, out Node simplifiedNode)
+        {
+            Contract.Unused(out simplifiedNode);
+
+            bool Result = false;
+            bool IsHandled = false;
+
+            switch (nodeInstruction)
+            {
+                case ThrowInstruction AsThrowInstruction:
+                    Result = SimplifyThrowInstruction(AsThrowInstruction, out simplifiedNode);
+                    IsHandled = true;
+                    break;
+            }
+
+            Debug.Assert(IsHandled, $"All descendants of {nameof(Instruction)} have been handled");
+
+            return Result;
         }
 
         private static bool SimplifyCommandInstruction(CommandInstruction node, out Node simplifiedNode)
         {
-            simplifiedNode = null!;
-
             CommandInstruction ClonedCommand = (CommandInstruction)DeepCloneNode(node, cloneCommentGuid: false);
             if (ClonedCommand.ArgumentBlocks.NodeBlockList.Count > 0)
+            {
                 simplifiedNode = CreateCommandInstruction(ClonedCommand.Command, new List<Argument>());
+                return true;
+            }
 
-            return simplifiedNode != null;
+            Contract.Unused(out simplifiedNode);
+            return false;
         }
 
         private static bool SimplifyAsLongAsInstruction(AsLongAsInstruction node, out Node simplifiedNode)
@@ -170,26 +190,24 @@
 
         private static bool SimplifyForLoopInstruction(ForLoopInstruction node, out Node simplifiedNode)
         {
-            Instruction SelectedInstruction = null!;
-
             if (node.InitInstructionBlocks.NodeBlockList.Count > 0)
             {
                 Debug.Assert(node.InitInstructionBlocks.NodeBlockList[0].NodeList.Count > 0, "A block in a block list always has at least one element");
-                SelectedInstruction = node.InitInstructionBlocks.NodeBlockList[0].NodeList[0];
+                Instruction SelectedInstruction = node.InitInstructionBlocks.NodeBlockList[0].NodeList[0];
+                simplifiedNode = (Instruction)DeepCloneNode(SelectedInstruction, cloneCommentGuid: false);
             }
             else if (node.LoopInstructionBlocks.NodeBlockList.Count > 0)
             {
                 Debug.Assert(node.LoopInstructionBlocks.NodeBlockList[0].NodeList.Count > 0, "A block in a block list always has at least one element");
-                SelectedInstruction = node.LoopInstructionBlocks.NodeBlockList[0].NodeList[0];
+                Instruction SelectedInstruction = node.LoopInstructionBlocks.NodeBlockList[0].NodeList[0];
+                simplifiedNode = (Instruction)DeepCloneNode(SelectedInstruction, cloneCommentGuid: false);
             }
             else if (node.IterationInstructionBlocks.NodeBlockList.Count > 0)
             {
                 Debug.Assert(node.IterationInstructionBlocks.NodeBlockList[0].NodeList.Count > 0, "A block in a block list always has at least one element");
-                SelectedInstruction = node.IterationInstructionBlocks.NodeBlockList[0].NodeList[0];
-            }
-
-            if (SelectedInstruction != null)
+                Instruction SelectedInstruction = node.IterationInstructionBlocks.NodeBlockList[0].NodeList[0];
                 simplifiedNode = (Instruction)DeepCloneNode(SelectedInstruction, cloneCommentGuid: false);
+            }
             else
             {
                 QualifiedName AssignmentTarget = CreateEmptyQualifiedName();
@@ -249,7 +267,6 @@
             List<Identifier> IdentifierList = new List<Identifier>();
             IdentifierList.Add(KeywordIdentifier);
 
-            List<Argument> ArgumentList = new List<Argument>();
             IBlockList<Argument> ArgumentBlocks;
 
             if (node.Source is QueryExpression AsQueryExpression)
@@ -305,7 +322,6 @@
         private static bool SimplifyRaiseEventInstruction(RaiseEventInstruction node, out Node simplifiedNode)
         {
             simplifiedNode = CreateSimpleCommandInstruction(node.QueryIdentifier.Text);
-
             return true;
         }
 

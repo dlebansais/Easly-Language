@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Reflection;
+    using Contracts;
 
     /// <summary>
     /// Helper class for null-aware operations with types.
@@ -201,7 +202,7 @@
                 }
             }
 
-            Contracts.Contract.Unused(out property);
+            Contract.Unused(out property);
             return false;
         }
 

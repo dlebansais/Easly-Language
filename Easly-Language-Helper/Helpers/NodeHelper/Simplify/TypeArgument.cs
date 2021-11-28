@@ -1,7 +1,9 @@
 ﻿namespace BaseNodeHelper
 {
     using System;
+    using System.Diagnostics;
     using BaseNode;
+    using Contracts;
 
     /// <summary>
     /// Provides methods to manipulate nodes.
@@ -16,16 +18,27 @@
         /// <returns>True if the type argument could be simplified; otherwise, false.</returns>
         public static bool GetSimplifiedTypeArgument(TypeArgument nodeTypeArgument, out Node simplifiedNode)
         {
+            Contract.Unused(out simplifiedNode);
+
+            bool Result = false;
+            bool IsHandled = false;
+
             switch (nodeTypeArgument)
             {
                 case AssignmentTypeArgument AsAssignmentTypeArgument:
-                    return SimplifyAssignmentTypeArgument(AsAssignmentTypeArgument, out simplifiedNode);
+                    Result = SimplifyAssignmentTypeArgument(AsAssignmentTypeArgument, out simplifiedNode);
+                    IsHandled = true;
+                    break;
+
                 case PositionalTypeArgument AsPositionalTypeArgument:
-                    return SimplifyPositionalTypeArgument(AsPositionalTypeArgument, out simplifiedNode);
-                default:
-                    simplifiedNode = null!;
-                    return false;
+                    Result = SimplifyPositionalTypeArgument(AsPositionalTypeArgument, out simplifiedNode);
+                    IsHandled = true;
+                    break;
             }
+
+            Debug.Assert(IsHandled, $"All descendants of {nameof(TypeArgument)} have been handled");
+
+            return Result;
         }
 
         private static bool SimplifyAssignmentTypeArgument(AssignmentTypeArgument node, out Node simplifiedNode)
@@ -36,10 +49,8 @@
 
         private static bool SimplifyPositionalTypeArgument(PositionalTypeArgument node, out Node simplifiedNode)
         {
-            if (node == null) throw new ArgumentNullException(nameof(node));
-
-            simplifiedNode = null!;
-            return true;
+            Contract.Unused(out simplifiedNode);
+            return false;
         }
     }
 }

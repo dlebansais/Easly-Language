@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Diagnostics;
     using BaseNode;
+    using Contracts;
 
     /// <summary>
     /// Provides methods to manipulate nodes.
@@ -11,7 +12,7 @@
     {
         private static bool GetComplexifiedArgument(Argument node, out IList<Argument> complexifiedArgumentList)
         {
-            Contracts.Contract.Unused(out complexifiedArgumentList);
+            Contract.Unused(out complexifiedArgumentList);
 
             bool Result = false;
             bool IsHandled = false;

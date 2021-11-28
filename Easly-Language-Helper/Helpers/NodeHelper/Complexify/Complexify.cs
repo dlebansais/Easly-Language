@@ -3,6 +3,7 @@
     using System.Collections;
     using System.Collections.Generic;
     using BaseNode;
+    using Contracts;
 
     /// <summary>
     /// Provides methods to manipulate nodes.
@@ -86,7 +87,7 @@
                     break;
 
                 default:
-                    Contracts.Contract.Unused(out complexifiedNodeList);
+                    Contract.Unused(out complexifiedNodeList);
                     Result = false;
                     break;
             }

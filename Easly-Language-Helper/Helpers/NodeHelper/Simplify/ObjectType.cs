@@ -2,6 +2,7 @@
 {
     using System.Diagnostics;
     using BaseNode;
+    using Contracts;
 
     /// <summary>
     /// Provides methods to manipulate nodes.
@@ -16,28 +17,50 @@
         /// <returns>True if the object type could be simplified; otherwise, false.</returns>
         public static bool GetSimplifiedObjectType(ObjectType nodeObjectType, out Node simplifiedNode)
         {
+            Contract.Unused(out simplifiedNode);
+
+            bool Result = false;
+            bool IsHandled = false;
+
             switch (nodeObjectType)
             {
                 case AnchoredType AsAnchoredType:
-                    return SimplifyAnchoredType(AsAnchoredType, out simplifiedNode);
+                    Result = SimplifyAnchoredType(AsAnchoredType, out simplifiedNode);
+                    IsHandled = true;
+                    break;
                 case KeywordAnchoredType AsKeywordAnchoredType:
-                    return SimplifyKeywordAnchoredType(AsKeywordAnchoredType, out simplifiedNode);
+                    Result = SimplifyKeywordAnchoredType(AsKeywordAnchoredType, out simplifiedNode);
+                    IsHandled = true;
+                    break;
                 case FunctionType AsFunctionType:
-                    return SimplifyFunctionType(AsFunctionType, out simplifiedNode);
+                    Result = SimplifyFunctionType(AsFunctionType, out simplifiedNode);
+                    IsHandled = true;
+                    break;
                 case GenericType AsGenericType:
-                    return SimplifyGenericType(AsGenericType, out simplifiedNode);
+                    Result = SimplifyGenericType(AsGenericType, out simplifiedNode);
+                    IsHandled = true;
+                    break;
                 case IndexerType AsIndexerType:
-                    return SimplifyIndexerType(AsIndexerType, out simplifiedNode);
+                    Result = SimplifyIndexerType(AsIndexerType, out simplifiedNode);
+                    IsHandled = true;
+                    break;
                 case PropertyType AsPropertyType:
-                    return SimplifyPropertyType(AsPropertyType, out simplifiedNode);
+                    Result = SimplifyPropertyType(AsPropertyType, out simplifiedNode);
+                    IsHandled = true;
+                    break;
                 case ProcedureType AsProcedureType:
-                    return SimplifyProcedureType(AsProcedureType, out simplifiedNode);
+                    Result = SimplifyProcedureType(AsProcedureType, out simplifiedNode);
+                    IsHandled = true;
+                    break;
                 case TupleType AsTupleType:
-                    return SimplifyTupleType(AsTupleType, out simplifiedNode);
-                default:
-                    simplifiedNode = null!;
-                    return false;
+                    Result = SimplifyTupleType(AsTupleType, out simplifiedNode);
+                    IsHandled = true;
+                    break;
             }
+
+            Debug.Assert(IsHandled, $"All descendants of {nameof(ObjectType)} have been handled");
+
+            return Result;
         }
 
         private static bool SimplifyAnchoredType(AnchoredType node, out Node simplifiedNode)

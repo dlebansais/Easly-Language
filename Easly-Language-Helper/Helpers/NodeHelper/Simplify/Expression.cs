@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Diagnostics;
     using BaseNode;
+    using Contracts;
 
     /// <summary>
     /// Provides methods to manipulate nodes.
@@ -42,11 +43,11 @@
                 case UnaryOperatorExpression AsUnaryOperatorExpression:
                     return SimplifyUnaryOperatorExpression(AsUnaryOperatorExpression, out simplifiedNode);
                 default:
-                    return GetSimplifiedExpressionSingle(nodeExpression, out simplifiedNode);
+                    return GetSimplifiedExpressionSingle1(nodeExpression, out simplifiedNode);
             }
         }
 
-        private static bool GetSimplifiedExpressionSingle(Expression nodeExpression, out Node simplifiedNode)
+        private static bool GetSimplifiedExpressionSingle1(Expression nodeExpression, out Node simplifiedNode)
         {
             switch (nodeExpression)
             {
@@ -74,23 +75,42 @@
                     return SimplifyNewExpression(AsNewExpression, out simplifiedNode);
                 case OldExpression AsOldExpression:
                     return SimplifyOldExpression(AsOldExpression, out simplifiedNode);
-                case PreprocessorExpression AsPreprocessorExpression:
-                    return SimplifyPreprocessorExpression(AsPreprocessorExpression, out simplifiedNode);
                 default:
-                    simplifiedNode = null!;
-                    return false;
+                    return GetSimplifiedExpressionSingle2(nodeExpression, out simplifiedNode);
             }
+        }
+
+        private static bool GetSimplifiedExpressionSingle2(Expression nodeExpression, out Node simplifiedNode)
+        {
+            Contract.Unused(out simplifiedNode);
+
+            bool Result = false;
+            bool IsHandled = false;
+
+            switch (nodeExpression)
+            {
+                case PreprocessorExpression AsPreprocessorExpression:
+                    Result = SimplifyPreprocessorExpression(AsPreprocessorExpression, out simplifiedNode);
+                    IsHandled = true;
+                    break;
+            }
+
+            Debug.Assert(IsHandled, $"All descendants of {nameof(Expression)} have been handled");
+
+            return Result;
         }
 
         private static bool SimplifyQueryExpression(QueryExpression node, out Node simplifiedNode)
         {
-            simplifiedNode = null!;
-
-            QueryExpression ClonedQuery = (QueryExpression)DeepCloneNode(node, cloneCommentGuid: false);
-            if (ClonedQuery.ArgumentBlocks.NodeBlockList.Count > 0)
+            if (node.ArgumentBlocks.NodeBlockList.Count > 0)
+            {
+                QueryExpression ClonedQuery = (QueryExpression)DeepCloneNode(node, cloneCommentGuid: false);
                 simplifiedNode = CreateQueryExpression(ClonedQuery.Query, new List<Argument>());
+                return true;
+            }
 
-            return simplifiedNode != null;
+            Contract.Unused(out simplifiedNode);
+            return false;
         }
 
         private static bool SimplifyAgentExpression(AgentExpression node, out Node simplifiedNode)
@@ -107,8 +127,6 @@
 
         private static bool SimplifyBinaryConditionalExpression(BinaryConditionalExpression node, out Node simplifiedNode)
         {
-            simplifiedNode = null!;
-
             string LeftText, RightText;
 
             if (GetExpressionText(node.LeftExpression, out LeftText) && GetExpressionText(node.RightExpression, out RightText))
@@ -138,22 +156,24 @@
 
                 string SimplifiedText = LeftText + Operator + RightText;
                 simplifiedNode = CreateSimpleQueryExpression(SimplifiedText);
+                return true;
             }
 
-            return simplifiedNode != null;
+            Contract.Unused(out simplifiedNode);
+            return false;
         }
 
         private static bool SimplifyBinaryOperatorExpression(BinaryOperatorExpression node, out Node simplifiedNode)
         {
-            simplifiedNode = null!;
-
             if (GetExpressionText(node.LeftExpression, out string LeftText) && GetExpressionText(node.RightExpression, out string RightText))
             {
                 string SimplifiedText = LeftText + " " + node.Operator.Text + " " + RightText;
                 simplifiedNode = CreateSimpleQueryExpression(SimplifiedText);
+                return true;
             }
 
-            return simplifiedNode != null;
+            Contract.Unused(out simplifiedNode);
+            return false;
         }
 
         private static bool SimplifyClassConstantExpression(ClassConstantExpression node, out Node simplifiedNode)
@@ -167,17 +187,17 @@
 
         private static bool SimplifyCloneOfExpression(CloneOfExpression node, out Node simplifiedNode)
         {
-            simplifiedNode = null!;
-
             string SourceText;
 
             if (GetExpressionText(node.Source, out SourceText))
             {
                 string SimplifiedText = $"clone of {SourceText}";
                 simplifiedNode = CreateSimpleQueryExpression(SimplifiedText);
+                return true;
             }
 
-            return simplifiedNode != null;
+            Contract.Unused(out simplifiedNode);
+            return false;
         }
 
         private static bool SimplifyEntityExpression(EntityExpression node, out Node simplifiedNode)
@@ -189,16 +209,16 @@
 
         private static bool SimplifyEqualityExpression(EqualityExpression node, out Node simplifiedNode)
         {
-            simplifiedNode = null!;
-
             if (GetExpressionText(node.LeftExpression, out string LeftText) && GetExpressionText(node.RightExpression, out string RightText))
             {
                 string EqualityText = (node.Comparison == ComparisonType.Equal) ? "=" : "/=";
                 string SimplifiedText = $"{LeftText} {EqualityText} {RightText}";
                 simplifiedNode = CreateSimpleQueryExpression(SimplifiedText);
+                return true;
             }
 
-            return simplifiedNode != null;
+            Contract.Unused(out simplifiedNode);
+            return false;
         }
 
         private static bool SimplifyIndexQueryExpression(IndexQueryExpression node, out Node simplifiedNode)
@@ -247,12 +267,6 @@
                 {
                     Argument Item = Block.NodeList[Index];
                     Argument NewItem = (Argument)DeepCloneNode(Item, cloneCommentGuid: false);
-
-                    Debug.Assert(NewItem != null, $"A cloned object is always a {nameof(Argument)}");
-
-                    simplifiedNode = null!;
-                    if (NewItem == null)
-                        return false;
 
                     NewNodeList.Add(NewItem);
                 }
@@ -346,47 +360,47 @@
 
         private static bool SimplifyResultOfExpression(ResultOfExpression node, out Node simplifiedNode)
         {
-            simplifiedNode = null!;
-
             string SourceText;
 
             if (GetExpressionText(node.Source, out SourceText))
             {
                 string SimplifiedText = $"result of {SourceText}";
                 simplifiedNode = CreateSimpleQueryExpression(SimplifiedText);
+                return true;
             }
 
-            return simplifiedNode != null;
+            Contract.Unused(out simplifiedNode);
+            return false;
         }
 
         private static bool SimplifyUnaryNotExpression(UnaryNotExpression node, out Node simplifiedNode)
         {
-            simplifiedNode = null!;
-
             string RightText;
 
             if (GetExpressionText(node.RightExpression, out RightText))
             {
                 string SimplifiedText = $"not {RightText}";
                 simplifiedNode = CreateSimpleQueryExpression(SimplifiedText);
+                return true;
             }
 
-            return simplifiedNode != null;
+            Contract.Unused(out simplifiedNode);
+            return false;
         }
 
         private static bool SimplifyUnaryOperatorExpression(UnaryOperatorExpression node, out Node simplifiedNode)
         {
-            simplifiedNode = null!;
-
             string RightText;
 
             if (GetExpressionText(node.RightExpression, out RightText))
             {
                 string SimplifiedText = $"{node.Operator.Text} {RightText}";
                 simplifiedNode = CreateSimpleQueryExpression(SimplifiedText);
+                return true;
             }
 
-            return simplifiedNode != null;
+            Contract.Unused(out simplifiedNode);
+            return false;
         }
     }
 }

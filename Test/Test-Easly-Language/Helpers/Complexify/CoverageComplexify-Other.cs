@@ -22,7 +22,7 @@
 
             Attachment Attachment1 = NodeHelper.CreateAttachment(DefaultObjectType);
 
-            Result = NodeHelper.GetComplexifiedNode(Attachment1, out ComplexifiedNodeList);
+            Result = NodeHelper.GetComplexifiedNode(Attachment1, out _);
             Assert.False(Result);
 
             ObjectType SplittableSimpleType = NodeHelper.CreateSimpleSimpleType("a,b");

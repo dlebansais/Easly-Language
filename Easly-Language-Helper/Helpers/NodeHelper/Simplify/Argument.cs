@@ -1,7 +1,8 @@
 ﻿namespace BaseNodeHelper
 {
-    using System;
+    using System.Diagnostics;
     using BaseNode;
+    using Contracts;
 
     /// <summary>
     /// Provides methods to manipulate nodes.
@@ -16,16 +17,27 @@
         /// <returns>True if the argument could be simplified; otherwise, false.</returns>
         public static bool GetSimplifiedArgument(Argument nodeArgument, out Node simplifiedNode)
         {
+            Contract.Unused(out simplifiedNode);
+
+            bool Result = false;
+            bool IsHandled = false;
+
             switch (nodeArgument)
             {
                 case AssignmentArgument AsAssignmentArgument:
-                    return SimplifyAssignmentArgument(AsAssignmentArgument, out simplifiedNode);
+                    Result = SimplifyAssignmentArgument(AsAssignmentArgument, out simplifiedNode);
+                    IsHandled = true;
+                    break;
+
                 case PositionalArgument AsPositionalArgument:
-                    return SimplifyPositionalArgument(AsPositionalArgument, out simplifiedNode);
-                default:
-                    simplifiedNode = null!;
-                    return false;
+                    Result = SimplifyPositionalArgument(AsPositionalArgument, out simplifiedNode);
+                    IsHandled = true;
+                    break;
             }
+
+            Debug.Assert(IsHandled, $"All descendants of {nameof(Argument)} have been handled");
+
+            return Result;
         }
 
         private static bool SimplifyAssignmentArgument(AssignmentArgument node, out Node simplifiedNode)
@@ -37,10 +49,8 @@
 
         private static bool SimplifyPositionalArgument(PositionalArgument node, out Node simplifiedNode)
         {
-            if (node == null) throw new ArgumentNullException(nameof(node));
-
-            simplifiedNode = null!;
-            return true;
+            Contract.Unused(out simplifiedNode);
+            return false;
         }
     }
 }

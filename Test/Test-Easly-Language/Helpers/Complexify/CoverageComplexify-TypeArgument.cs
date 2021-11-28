@@ -23,7 +23,7 @@
 
             AssignmentTypeArgument Argument1 = NodeHelper.CreateAssignmentTypeArgument(EmptyIdentifier, DefaultObjectType);
 
-            Result = NodeHelper.GetComplexifiedNode(Argument1, out ComplexifiedNodeList);
+            Result = NodeHelper.GetComplexifiedNode(Argument1, out _);
             Assert.False(Result);
 
             ObjectType AnchorType = NodeHelper.CreateSimpleSimpleType("like a");
