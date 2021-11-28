@@ -105,13 +105,13 @@
             return true;
         }
 
-        private static bool SimplifyPropertyType(PropertyType node, out Node simplifiedNode)
+        private static bool SimplifyProcedureType(ProcedureType node, out Node simplifiedNode)
         {
             simplifiedNode = (ObjectType)DeepCloneNode(node.BaseType, cloneCommentGuid: false);
             return true;
         }
 
-        private static bool SimplifyProcedureType(ProcedureType node, out Node simplifiedNode)
+        private static bool SimplifyPropertyType(PropertyType node, out Node simplifiedNode)
         {
             simplifiedNode = (ObjectType)DeepCloneNode(node.BaseType, cloneCommentGuid: false);
             return true;
