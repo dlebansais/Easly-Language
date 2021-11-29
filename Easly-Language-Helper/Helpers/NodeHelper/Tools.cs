@@ -118,7 +118,7 @@
             Contract.RequireNotNull(nodeType, out Type NodeType);
             Contract.RequireNotNull(propertyName, out string PropertyName);
 
-            Debug.Assert(NodeTreeHelperList.IsNodeListProperty(NodeType, PropertyName, out _) || NodeTreeHelperBlockList.IsBlockListProperty(NodeType, PropertyName, out _));
+            Debug.Assert(NodeTreeHelperBlockList.IsBlockListProperty(NodeType, PropertyName, out _));
             Debug.Assert(!IsCollectionNeverEmpty(NodeType, PropertyName));
 
             bool Result = false;
