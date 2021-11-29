@@ -12,13 +12,13 @@
     /// </summary>
     public static partial class NodeHelper
     {
-#if NOTUSED
         /// <summary>
         /// Gets a node type by its short name.
         /// </summary>
         /// <param name="typeName">The type name.</param>
-        /// <returns>The node type.</returns>
-        public static Type NodeType(string typeName)
+        /// <param name="type">The type upon return.</param>
+        /// <returns>True if the type could be found; otherwise, false.</returns>
+        public static bool GetNodeType(string typeName, out Type type)
         {
             string RootName = SafeType.FullName(typeof(Root));
 
@@ -28,49 +28,35 @@
             Assembly RootAssembly = typeof(Root).Assembly;
 
             Type? FullType = RootAssembly.GetType(FullTypeName);
-            Debug.Assert(FullType != null);
 
-            if (FullType == null)
-                return null!;
+            if (FullType != null)
+            {
+                type = FullType;
+                return true;
+            }
 
-            return FullType;
+            Contract.Unused(out type);
+            return false;
         }
-#endif
 
-#if NOTUSED
         /// <summary>
         /// Creates a dictionary of nodes indexed by types.
         /// </summary>
         /// <typeparam name="TValue">The dictionary value type.</typeparam>
+        /// <param name="defaultValue">The default value to associate to each type.</param>
         /// <returns>The created instance.</returns>
-        public static IDictionary<Type, TValue?> CreateNodeDictionary<TValue>()
+        public static IDictionary<Type, TValue> CreateNodeDictionary<TValue>(TValue defaultValue)
         {
-            IDictionary<Type, TValue?> Result = new Dictionary<Type, TValue?>();
+            IDictionary<Type, TValue> Result = new Dictionary<Type, TValue>();
             Assembly LanguageAssembly = typeof(Root).Assembly;
             Type[] LanguageTypes = LanguageAssembly.GetTypes();
 
             foreach (Type Item in LanguageTypes)
-            {
-                if (!Item.IsInterface && !Item.IsAbstract)
-                {
-                    string FullName = SafeType.FullName(typeof(Node));
-
-                    if (Item.GetInterface(FullName) != null)
-                    {
-                        Type[] Interfaces = Item.GetInterfaces();
-                        foreach (Type InterfaceType in Interfaces)
-                            if (InterfaceType.Name == $"I{Item.Name}")
-                            {
-                                Result.Add(InterfaceType, default(TValue));
-                                break;
-                            }
-                    }
-                }
-            }
+                if (!Item.IsInterface && !Item.IsAbstract && Item.IsSubclassOf(typeof(Node)))
+                    Result.Add(Item, defaultValue);
 
             return Result;
         }
-#endif
 
         /// <summary>
         /// Checks whether a property of a node is a collection of blocks that must never be empty.
@@ -140,7 +126,7 @@
             if (WithExpandCollectionTable.ContainsKey(NodeType))
                 Result = Array.Exists(WithExpandCollectionTable[NodeType], (string item) => item == PropertyName);
 
-            return false;
+            return Result;
         }
 
         /// <summary>
