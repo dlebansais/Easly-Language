@@ -18,9 +18,6 @@
         /// <returns>The string content.</returns>
         public static string GetString(Node node, string propertyName)
         {
-            if (node == null) throw new ArgumentNullException(nameof(node));
-            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
-
             Type NodeType = node.GetType();
             PropertyInfo Property = SafeType.GetProperty(NodeType, propertyName);
             Debug.Assert(Property.PropertyType == typeof(string));

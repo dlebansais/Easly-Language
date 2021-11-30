@@ -19,6 +19,17 @@
 
             Result = NodeTreeDiagnostic.IsValid(DefaultExpression, assertValid: true);
             Assert.True(Result);
+
+            Expression InvalidDocExpression = NodeHelper.CreateDefaultExpression();
+            InvalidDocExpression.Documentation.Uuid = Guid.Empty;
+
+            Result = NodeTreeDiagnostic.IsValid(InvalidDocExpression, assertValid: false);
+            Assert.False(Result);
+
+            GlobalReplicate globalReplicate = NodeHelper.CreateSimpleGlobalReplicate(string.Empty);
+
+            Result = NodeTreeDiagnostic.IsValid(globalReplicate, assertValid: true);
+            Assert.True(Result);
         }
     }
 }

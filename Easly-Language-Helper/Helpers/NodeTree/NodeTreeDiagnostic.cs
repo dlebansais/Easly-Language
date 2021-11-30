@@ -34,15 +34,6 @@
 
         private static bool IsValid(List<Node> nodeList, List<Guid> guidList, Node root, bool assertValid)
         {
-            if (root == null)
-                return FailIsValidCheck(assertValid);
-
-            if (root.Documentation == null)
-                return FailIsValidCheck(assertValid);
-
-            if (root.Documentation.Comment == null)
-                return FailIsValidCheck(assertValid);
-
             if (root.Documentation.Uuid == Guid.Empty)
                 return FailIsValidCheck(assertValid);
 
@@ -79,7 +70,7 @@
             else if (NodeTreeHelper.IsEnumProperty(root, propertyName))
                 return IsValidEnumProperty(root, assertValid, propertyName);
             else if (NodeTreeHelper.IsStringProperty(root, propertyName))
-                return IsValidStringProperty(root, assertValid, propertyName);
+                return true;
             else if (NodeTreeHelper.IsGuidProperty(root, propertyName))
                 return IsValidGuidProperty(guidList, root, assertValid, propertyName);
             else if (NodeTreeHelper.IsDocumentProperty(root, propertyName))
@@ -113,8 +104,6 @@
         private static bool IsValidNodeList(List<Node> nodeList, List<Guid> guidList, Node root, bool assertValid, string propertyName)
         {
             NodeTreeHelperList.GetChildNodeList(root, propertyName, out IReadOnlyList<Node> ChildNodeList);
-            if (ChildNodeList == null)
-                return FailIsValidCheck(assertValid);
 
             for (int Index = 0; Index < ChildNodeList.Count; Index++)
             {
@@ -162,21 +151,9 @@
             Type RootType = root.GetType();
             NodeTreeHelper.GetEnumRange(RootType, propertyName, out int Min, out int Max);
             PropertyInfo EnumPropertyInfo = SafeType.GetProperty(RootType, propertyName);
-            int? Value = EnumPropertyInfo.GetValue(root) as int?;
-            Debug.Assert(Value != null);
-
-            if (Value == null)
-                return false;
+            int Value = (int)EnumPropertyInfo.GetValue(root)!;
 
             if (Value < Min || Value > Max)
-                return FailIsValidCheck(assertValid);
-
-            return true;
-        }
-
-        private static bool IsValidStringProperty(Node root, bool assertValid, string propertyName)
-        {
-            if (NodeTreeHelper.GetString(root, propertyName) == null)
                 return FailIsValidCheck(assertValid);
 
             return true;
@@ -198,15 +175,6 @@
 
         private static bool IsValidBlockList(List<Node> nodeList, List<Guid> guidList, IBlockList blockList, bool assertValid)
         {
-            if (blockList == null)
-                return FailIsValidCheck(assertValid);
-
-            if (blockList.Documentation == null)
-                return FailIsValidCheck(assertValid);
-
-            if (blockList.Documentation.Comment == null)
-                return FailIsValidCheck(assertValid);
-
             if (blockList.Documentation.Uuid == Guid.Empty)
                 return FailIsValidCheck(assertValid);
 
@@ -215,23 +183,11 @@
 
             guidList.Add(blockList.Documentation.Uuid);
 
-            if (blockList.NodeBlockList == null)
-                return FailIsValidCheck(assertValid);
-
             return true;
         }
 
         private static bool IsValidBlock(List<Node> nodeList, List<Guid> guidList, IBlock block, bool assertValid)
         {
-            if (block == null)
-                return FailIsValidCheck(assertValid);
-
-            if (block.Documentation == null)
-                return FailIsValidCheck(assertValid);
-
-            if (block.Documentation.Comment == null)
-                return FailIsValidCheck(assertValid);
-
             if (block.Documentation.Uuid == Guid.Empty)
                 return FailIsValidCheck(assertValid);
 
@@ -239,9 +195,6 @@
                 return FailIsValidCheck(assertValid);
 
             guidList.Add(block.Documentation.Uuid);
-
-            if (block.NodeList == null)
-                return FailIsValidCheck(assertValid);
 
             if (block.NodeList.Count == 0)
                 return FailIsValidCheck(assertValid);
