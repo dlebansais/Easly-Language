@@ -235,6 +235,54 @@ public static partial class NodeHelper
     }
 
     /// <summary>
+    /// Creates a new instance of a <see cref="Inheritance "/>.
+    /// </summary>
+    /// <param name="parentType">The parent type.</param>
+    /// <param name="conformanceType">The conformance type.</param>
+    /// <param name="renameBlocks">The rename blocks.</param>
+    /// <param name="forgetIndexer">The forget Indexer flag.</param>
+    /// <param name="forgetBlocks">The forget blocks.</param>
+    /// <param name="keepIndexer">The keep Indexer flag.</param>
+    /// <param name="keepBlocks">The keep blocks.</param>
+    /// <param name="discontinueIndexer">The discontinue Indexer flag.</param>
+    /// <param name="discontinueBlocks">The discontinue blocks.</param>
+    /// <param name="exportChangeBlocks">The export change blocks.</param>
+    /// <returns>The created instance.</returns>
+    public static Inheritance CreateInheritance(ObjectType parentType,
+                                                ConformanceType conformanceType,
+                                                IBlockList<Rename> renameBlocks,
+                                                bool forgetIndexer,
+                                                IBlockList<Identifier> forgetBlocks,
+                                                bool keepIndexer,
+                                                IBlockList<Identifier> keepBlocks,
+                                                bool discontinueIndexer,
+                                                IBlockList<Identifier> discontinueBlocks,
+                                                IBlockList<ExportChange> exportChangeBlocks)
+    {
+        Contract.RequireNotNull(parentType, out ObjectType ParentType);
+        Contract.RequireNotNull(renameBlocks, out IBlockList<Rename> RenameBlocks);
+        Contract.RequireNotNull(forgetBlocks, out IBlockList<Identifier> ForgetBlocks);
+        Contract.RequireNotNull(keepBlocks, out IBlockList<Identifier> KeepBlocks);
+        Contract.RequireNotNull(discontinueBlocks, out IBlockList<Identifier> DiscontinueBlocks);
+        Contract.RequireNotNull(exportChangeBlocks, out IBlockList<ExportChange> ExportChangeBlocks);
+
+        Inheritance Result = new Inheritance();
+        Result.Documentation = CreateEmptyDocumentation();
+        Result.ParentType = ParentType;
+        Result.Conformance = conformanceType;
+        Result.RenameBlocks = RenameBlocks;
+        Result.ForgetIndexer = forgetIndexer;
+        Result.ForgetBlocks = ForgetBlocks;
+        Result.KeepIndexer = keepIndexer;
+        Result.KeepBlocks = KeepBlocks;
+        Result.DiscontinueIndexer = discontinueIndexer;
+        Result.DiscontinueBlocks = DiscontinueBlocks;
+        Result.ExportChangeBlocks = ExportChangeBlocks;
+
+        return Result;
+    }
+
+    /// <summary>
     /// Creates a new instance of a <see cref="Class"/> with default values.
     /// </summary>
     /// <param name="nameText">The class name.</param>
