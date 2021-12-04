@@ -25,7 +25,6 @@
 
             Result = NodeTreeDiagnostic.IsValid(InvalidDocExpression, throwOnInvalid: false);
             Assert.False(Result);
-
             Assert.Throws<InvalidNodeException>(() => { NodeTreeDiagnostic.IsValid(InvalidDocExpression, throwOnInvalid: true); });
 
             GlobalReplicate globalReplicate = NodeHelper.CreateSimpleGlobalReplicate(string.Empty);
@@ -43,8 +42,30 @@
             QualifiedName DuplicateQualifiedName = NodeHelper.CreateQualifiedName(new List<Identifier>() { FirstIdentifier, FirstIdentifier });
             Result = NodeTreeDiagnostic.IsValid(DuplicateQualifiedName, throwOnInvalid: false);
             Assert.False(Result);
-
             Assert.Throws<InvalidNodeException>(() => { NodeTreeDiagnostic.IsValid(DuplicateQualifiedName, throwOnInvalid: true); });
+
+            IBlockList<Argument> EmptyArgumentBlockList = BlockListHelper.CreateEmptyBlockList<Argument>();
+            ObjectType DefaultObjectType = NodeHelper.CreateDefaultObjectType();
+
+            PrecursorExpression NewPrecursorExpression = NodeHelper.CreatePrecursorExpression(EmptyArgumentBlockList, DefaultObjectType);
+            Result = NodeTreeDiagnostic.IsValid(NewPrecursorExpression, throwOnInvalid: true);
+            Assert.True(Result);
+
+            PositionalArgument NewArgument = NodeHelper.CreatePositionalArgument(NewPrecursorExpression);
+            IBlockList<Argument> SimpleArgumentBlockList = BlockListHelper.CreateSimpleBlockList<Argument>(NewArgument);
+
+            PrecursorExpression BadPrecursorExpression = NodeHelper.CreatePrecursorExpression(SimpleArgumentBlockList, DefaultObjectType);
+            Result = NodeTreeDiagnostic.IsValid(BadPrecursorExpression, throwOnInvalid: false);
+            Assert.False(Result);
+            Assert.Throws<InvalidNodeException>(() => { NodeTreeDiagnostic.IsValid(BadPrecursorExpression, throwOnInvalid: true); });
+
+            Inheritance NewInheritance = NodeHelper.CreateSimpleInheritance("a");
+            Result = NodeTreeDiagnostic.IsValid(NewInheritance, throwOnInvalid: true);
+            Assert.True(Result);
+
+            Class NewClass = NodeHelper.CreateSimpleClass("a");
+            Result = NodeTreeDiagnostic.IsValid(NewClass, throwOnInvalid: true);
+            Assert.True(Result);
         }
     }
 }

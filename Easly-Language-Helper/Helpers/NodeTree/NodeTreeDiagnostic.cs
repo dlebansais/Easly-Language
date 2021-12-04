@@ -57,50 +57,23 @@
 
         private static bool IsValidProperty(List<Node> nodeList, List<Guid> guidList, Node originalRoot, Node root, bool throwOnInvalid, string propertyName)
         {
-            bool Result = false;
-            bool IsHandled = false;
-
             if (NodeTreeHelperChild.IsChildNodeProperty(root, propertyName, out _))
-            {
-                Result = IsValidChildNode(nodeList, guidList, originalRoot, root, throwOnInvalid, propertyName);
-                IsHandled = true;
-            }
+                return IsValidChildNode(nodeList, guidList, originalRoot, root, throwOnInvalid, propertyName);
             else if (NodeTreeHelperOptional.IsOptionalChildNodeProperty(root, propertyName, out _))
-            {
-                Result = IsValidOptionalChildNode(nodeList, guidList, originalRoot, root, throwOnInvalid, propertyName);
-                IsHandled = true;
-            }
+                return IsValidOptionalChildNode(nodeList, guidList, originalRoot, root, throwOnInvalid, propertyName);
             else if (NodeTreeHelperList.IsNodeListProperty(root, propertyName, out _))
-            {
-                Result = IsValidNodeList(nodeList, guidList, originalRoot, root, throwOnInvalid, propertyName);
-                IsHandled = true;
-            }
+                return IsValidNodeList(nodeList, guidList, originalRoot, root, throwOnInvalid, propertyName);
             else if (NodeTreeHelperBlockList.IsBlockListProperty(root, propertyName, out _))
-            {
-                Result = IsValidBlockList(nodeList, guidList, originalRoot, root, throwOnInvalid, propertyName);
-                IsHandled = true;
-            }
-            else if (NodeTreeHelper.IsBooleanProperty(root, propertyName) ||
-                     NodeTreeHelper.IsStringProperty(root, propertyName) ||
-                     NodeTreeHelper.IsDocumentProperty(root, propertyName))
-            {
-                Result = true;
-                IsHandled = true;
-            }
+                return IsValidBlockList(nodeList, guidList, originalRoot, root, throwOnInvalid, propertyName);
+            else if (NodeTreeHelper.IsBooleanProperty(root, propertyName) || NodeTreeHelper.IsStringProperty(root, propertyName) || NodeTreeHelper.IsDocumentProperty(root, propertyName))
+                return true;
             else if (NodeTreeHelper.IsEnumProperty(root, propertyName))
+                return IsValidEnumProperty(originalRoot, root, throwOnInvalid, propertyName);
+            else
             {
-                Result = IsValidEnumProperty(originalRoot, root, throwOnInvalid, propertyName);
-                IsHandled = true;
+                Debug.Assert(NodeTreeHelper.IsGuidProperty(root, propertyName));
+                return IsValidGuidProperty(guidList, originalRoot, root, throwOnInvalid, propertyName);
             }
-            else if (NodeTreeHelper.IsGuidProperty(root, propertyName))
-            {
-                Result = IsValidGuidProperty(guidList, originalRoot, root, throwOnInvalid, propertyName);
-                IsHandled = true;
-            }
-
-            Debug.Assert(IsHandled);
-
-            return Result;
         }
 
         private static bool IsValidChildNode(List<Node> nodeList, List<Guid> guidList, Node originalRoot, Node root, bool throwOnInvalid, string propertyName)

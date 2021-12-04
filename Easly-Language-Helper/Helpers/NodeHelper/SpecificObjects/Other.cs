@@ -210,6 +210,31 @@ public static partial class NodeHelper
     }
 
     /// <summary>
+    /// Creates a new instance of a <see cref="Inheritance "/> with the specified parent type name.
+    /// </summary>
+    /// <param name="parentTypeName">The parent type name.</param>
+    /// <returns>The created instance.</returns>
+    public static Inheritance CreateSimpleInheritance(string parentTypeName)
+    {
+        Contract.RequireNotNull(parentTypeName, out string ParentTypeName);
+
+        Inheritance Result = new Inheritance();
+        Result.Documentation = CreateEmptyDocumentation();
+        Result.ParentType = CreateSimpleSimpleType(ParentTypeName);
+        Result.Conformance = ConformanceType.Conformant;
+        Result.RenameBlocks = BlockListHelper<Rename>.CreateEmptyBlockList();
+        Result.ForgetIndexer = false;
+        Result.ForgetBlocks = BlockListHelper<Identifier>.CreateEmptyBlockList();
+        Result.KeepIndexer = false;
+        Result.KeepBlocks = BlockListHelper<Identifier>.CreateEmptyBlockList();
+        Result.DiscontinueIndexer = false;
+        Result.DiscontinueBlocks = BlockListHelper<Identifier>.CreateEmptyBlockList();
+        Result.ExportChangeBlocks = BlockListHelper<ExportChange>.CreateEmptyBlockList();
+
+        return Result;
+    }
+
+    /// <summary>
     /// Creates a new instance of a <see cref="Class"/> with default values.
     /// </summary>
     /// <param name="nameText">The class name.</param>
