@@ -9,11 +9,11 @@
     using System.Diagnostics;
 
     [TestFixture]
-    public partial class CoverageSet
+    public partial class ComplexifyArgumentCoverage
     {
         [Test]
         [Category("Complexify")]
-        public static void TestComplexifyAssignmentArgument()
+        public static void TestAssignmentArgument()
         {
             bool Result;
             IList<Node> ComplexifiedNodeList;
@@ -57,7 +57,7 @@
 
         [Test]
         [Category("Complexify")]
-        public static void TestComplexifyPositionalArgument()
+        public static void TestPositionalArgument()
         {
             bool Result;
             IList<Node> ComplexifiedNodeList;

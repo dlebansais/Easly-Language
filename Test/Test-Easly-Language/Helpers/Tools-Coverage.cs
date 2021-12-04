@@ -8,7 +8,7 @@
     using System.Collections.Generic;
 
     [TestFixture]
-    public partial class CoverageSet
+    public partial class ToolsCoverage
     {
         [Test]
         public static void TestGetNodeType()

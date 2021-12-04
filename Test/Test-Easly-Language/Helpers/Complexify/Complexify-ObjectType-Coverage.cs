@@ -7,11 +7,11 @@
     using System.Collections.Generic;
 
     [TestFixture]
-    public partial class CoverageSet
+    public partial class ComplexifyObjectTypeCoverage
     {
         [Test]
         [Category("Complexify")]
-        public static void TestComplexifyAnchoredType()
+        public static void TestAnchoredType()
         {
             bool Result;
             IList<Node> ComplexifiedNodeList;
@@ -44,7 +44,7 @@
 
         [Test]
         [Category("Complexify")]
-        public static void TestComplexifyFunctionType()
+        public static void TestFunctionType()
         {
             bool Result;
             IList<Node> ComplexifiedNodeList;
@@ -69,7 +69,7 @@
 
         [Test]
         [Category("Complexify")]
-        public static void TestComplexifyGenericType()
+        public static void TestGenericType()
         {
             bool Result;
             IList<Node> ComplexifiedNodeList;
@@ -121,7 +121,7 @@
 
         [Test]
         [Category("Complexify")]
-        public static void TestComplexifyIndexerType()
+        public static void TestIndexerType()
         {
             bool Result;
             IList<Node> ComplexifiedNodeList;
@@ -154,7 +154,7 @@
 
         [Test]
         [Category("Complexify")]
-        public static void TestComplexifyProcedureType()
+        public static void TestProcedureType()
         {
             bool Result;
             IList<Node> ComplexifiedNodeList;
@@ -178,7 +178,7 @@
 
         [Test]
         [Category("Complexify")]
-        public static void TestComplexifyPropertyType()
+        public static void TestPropertyType()
         {
             bool Result;
             IList<Node> ComplexifiedNodeList;
@@ -210,7 +210,7 @@
 
         [Test]
         [Category("Complexify")]
-        public static void TestComplexifySimpleType()
+        public static void TestSimpleType()
         {
             bool Result;
             IList<Node> ComplexifiedNodeList;
@@ -272,7 +272,7 @@
 
         [Test]
         [Category("Complexify")]
-        public static void TestComplexifyTupleType()
+        public static void TestTupleType()
         {
             bool Result;
             IList<Node> ComplexifiedNodeList;

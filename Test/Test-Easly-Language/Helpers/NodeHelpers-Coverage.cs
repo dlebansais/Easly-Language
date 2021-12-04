@@ -8,10 +8,10 @@
     using System.Collections.Generic;
 
     [TestFixture]
-    public partial class CoverageSet
+    public partial class NodeHelperCoverage
     {
         [Test]
-        public static void TestNodeHelperBuilding()
+        public static void TestBuilding()
         {
             Document Documentation = NodeHelper.CreateEmptyDocumentation();
             Documentation = NodeHelper.CreateSimpleDocumentation(string.Empty, Guid.Empty);
@@ -66,7 +66,7 @@
         }
 
         [Test]
-        public static void TestNodeHelperDefault()
+        public static void TestDefault()
         {
             Argument Argument = NodeHelper.CreateDefaultArgument();
             TypeArgument TypeArgument = NodeHelper.CreateDefaultTypeArgument();

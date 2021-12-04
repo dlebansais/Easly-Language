@@ -8,10 +8,10 @@
     using System.Collections.Generic;
 
     [TestFixture]
-    public partial class CoverageSet
+    public partial class NodeTreeHelperCoverage
     {
         [Test]
-        public static void TestNodeTreeHelper()
+        public static void Test()
         {
             Expression DefaultExpression = NodeHelper.CreateDefaultExpression();
 

@@ -2,18 +2,15 @@
 {
     using BaseNode;
     using BaseNodeHelper;
-    using Easly;
     using NUnit.Framework;
-    using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
 
     [TestFixture]
-    public partial class CoverageSet
+    public partial class SimplifyArgumentCoverage
     {
         [Test]
         [Category("Simplify")]
-        public static void TestSimplifyAssignmentArgument()
+        public static void TestAssignmentArgument()
         {
             bool Result;
             Node SimplifiedNode;
@@ -32,7 +29,7 @@
 
         [Test]
         [Category("Simplify")]
-        public static void TestSimplifyPositionalArgument()
+        public static void TestPositionalArgument()
         {
             bool Result;
 

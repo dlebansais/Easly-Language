@@ -9,11 +9,11 @@
     using System.Diagnostics;
 
     [TestFixture]
-    public partial class CoverageSet
+    public partial class SimplifyObjectTypeCoverage
     {
         [Test]
         [Category("Simplify")]
-        public static void TestSimplifyAnchoredType()
+        public static void TestAnchoredType()
         {
             bool Result;
             Node SimplifiedNode;
@@ -29,7 +29,7 @@
 
         [Test]
         [Category("Simplify")]
-        public static void TestSimplifyFunctionType()
+        public static void TestFunctionType()
         {
             bool Result;
             Node SimplifiedNode;
@@ -46,7 +46,7 @@
 
         [Test]
         [Category("Simplify")]
-        public static void TestSimplifyGenericType()
+        public static void TestGenericType()
         {
             bool Result;
             Node SimplifiedNode;
@@ -84,7 +84,7 @@
 
         [Test]
         [Category("Simplify")]
-        public static void TestSimplifyIndexerType()
+        public static void TestIndexerType()
         {
             bool Result;
             Node SimplifiedNode;
@@ -102,7 +102,7 @@
 
         [Test]
         [Category("Simplify")]
-        public static void TestSimplifyKeywordAnchoredType()
+        public static void TestKeywordAnchoredType()
         {
             bool Result;
             Node SimplifiedNode;
@@ -116,7 +116,7 @@
 
         [Test]
         [Category("Simplify")]
-        public static void TestSimplifyProcedureType()
+        public static void TestProcedureType()
         {
             bool Result;
             Node SimplifiedNode;
@@ -132,7 +132,7 @@
 
         [Test]
         [Category("Simplify")]
-        public static void TestSimplifyPropertyType()
+        public static void TestPropertyType()
         {
             bool Result;
             Node SimplifiedNode;
@@ -149,7 +149,7 @@
 
         [Test]
         [Category("Simplify")]
-        public static void TestSimplifyTupleType()
+        public static void TestTupleType()
         {
             bool Result;
             Node SimplifiedNode;

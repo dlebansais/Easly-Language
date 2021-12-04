@@ -8,10 +8,10 @@
     using System.Collections.Generic;
 
     [TestFixture]
-    public partial class CoverageSet
+    public partial class DefaultObjectsCoverage
     {
         [Test]
-        public static void TestDefaultObjects()
+        public static void Test()
         {
             Argument DefaultArgument = NodeHelper.CreateDefaultArgument();
             Assert.That(NodeHelper.IsDefaultNode(DefaultArgument));

@@ -9,11 +9,11 @@
     using System.Diagnostics;
 
     [TestFixture]
-    public partial class CoverageSet
+    public partial class ComplexifyExpressionCoverage
     {
         [Test]
         [Category("Complexify")]
-        public static void TestComplexifyQueryExpression()
+        public static void TestQueryExpression()
         {
             bool Result;
             IList<Node> ComplexifiedNodeList;
@@ -321,7 +321,7 @@
 
         [Test]
         [Category("Complexify")]
-        public static void TestComplexifyAgentExpression()
+        public static void TestAgentExpression()
         {
             bool Result;
             IList<Node> ComplexifiedNodeList;
@@ -362,7 +362,7 @@
 
         [Test]
         [Category("Complexify")]
-        public static void TestComplexifyBinaryConditionalExpression()
+        public static void TestBinaryConditionalExpression()
         {
             bool Result;
             IList<Node> ComplexifiedNodeList;
@@ -402,7 +402,7 @@
 
         [Test]
         [Category("Complexify")]
-        public static void TestComplexifyBinaryOperatorExpression()
+        public static void TestBinaryOperatorExpression()
         {
             bool Result;
             IList<Node> ComplexifiedNodeList;
@@ -499,7 +499,7 @@
 
         [Test]
         [Category("Complexify")]
-        public static void TestComplexifyCloneOfExpression()
+        public static void TestCloneOfExpression()
         {
             bool Result;
             IList<Node> ComplexifiedNodeList;
@@ -527,7 +527,7 @@
 
         [Test]
         [Category("Complexify")]
-        public static void TestComplexifyEntityExpression()
+        public static void TestEntityExpression()
         {
             bool Result;
             IList<Node> ComplexifiedNodeList;
@@ -554,7 +554,7 @@
 
         [Test]
         [Category("Complexify")]
-        public static void TestComplexifyEqualityExpression()
+        public static void TestEqualityExpression()
         {
             bool Result;
             IList<Node> ComplexifiedNodeList;
@@ -596,7 +596,7 @@
 
         [Test]
         [Category("Complexify")]
-        public static void TestComplexifyIndexQueryExpression()
+        public static void TestIndexQueryExpression()
         {
             bool Result;
             IList<Node> ComplexifiedNodeList;
@@ -637,7 +637,7 @@
 
         [Test]
         [Category("Complexify")]
-        public static void TestComplexifyInitializedObjectExpression()
+        public static void TestInitializedObjectExpression()
         {
             bool Result;
             IList<Node> ComplexifiedNodeList;
@@ -677,7 +677,7 @@
 
         [Test]
         [Category("Complexify")]
-        public static void TestComplexifyNewExpression()
+        public static void TestNewExpression()
         {
             bool Result;
             IList<Node> ComplexifiedNodeList;
@@ -704,7 +704,7 @@
 
         [Test]
         [Category("Complexify")]
-        public static void TestComplexifyOldExpression()
+        public static void TestOldExpression()
         {
             bool Result;
             IList<Node> ComplexifiedNodeList;
@@ -731,7 +731,7 @@
 
         [Test]
         [Category("Complexify")]
-        public static void TestComplexifyPrecursorExpression()
+        public static void TestPrecursorExpression()
         {
             bool Result;
             IList<Node> ComplexifiedNodeList;
@@ -760,7 +760,7 @@
 
         [Test]
         [Category("Complexify")]
-        public static void TestComplexifyPrecursorIndexExpression()
+        public static void TestPrecursorIndexExpression()
         {
             bool Result;
             IList<Node> ComplexifiedNodeList;
@@ -790,7 +790,7 @@
 
         [Test]
         [Category("Complexify")]
-        public static void TestComplexifyResultOfExpression()
+        public static void TestResultOfExpression()
         {
             bool Result;
             IList<Node> ComplexifiedNodeList;
@@ -817,7 +817,7 @@
 
         [Test]
         [Category("Complexify")]
-        public static void TestComplexifyUnaryNotExpression()
+        public static void TestUnaryNotExpression()
         {
             bool Result;
             IList<Node> ComplexifiedNodeList;
@@ -844,7 +844,7 @@
 
         [Test]
         [Category("Complexify")]
-        public static void TestComplexifyUnaryOperatorExpression()
+        public static void TestUnaryOperatorExpression()
         {
             bool Result;
             IList<Node> ComplexifiedNodeList;

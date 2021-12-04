@@ -9,11 +9,11 @@
     using System.Diagnostics;
 
     [TestFixture]
-    public partial class CoverageSet
+    public partial class ComplexifyOtherCoverage
     {
         [Test]
         [Category("Complexify")]
-        public static void TestComplexifyAttachment()
+        public static void TestAttachment()
         {
             bool Result;
             IList<Node> ComplexifiedNodeList;
@@ -49,7 +49,7 @@
 
         [Test]
         [Category("Complexify")]
-        public static void TestComplexifyConditional()
+        public static void TestConditional()
         {
             bool Result;
             IList<Node> ComplexifiedNodeList;
@@ -73,7 +73,7 @@
 
         [Test]
         [Category("Complexify")]
-        public static void TestComplexifyIdentifier()
+        public static void TestIdentifier()
         {
             bool Result;
 

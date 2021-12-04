@@ -9,11 +9,11 @@
     using System.Diagnostics;
 
     [TestFixture]
-    public partial class CoverageSet
+    public partial class SimplifyOtherCoverage
     {
         [Test]
         [Category("Simplify")]
-        public static void TestSimplifyQualifiedName()
+        public static void TestQualifiedName()
         {
             bool Result;
             Node SimplifiedNode;
@@ -34,7 +34,7 @@
 
         [Test]
         [Category("Simplify")]
-        public static void TestSimplifyNode()
+        public static void TestNode()
         {
             bool Result;
             Node SimplifiedNode;

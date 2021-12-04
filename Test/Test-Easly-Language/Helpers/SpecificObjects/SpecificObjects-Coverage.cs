@@ -8,10 +8,10 @@
     using System.Collections.Generic;
 
     [TestFixture]
-    public partial class CoverageSet
+    public partial class SpecificObjectsCoverage
     {
         [Test]
-        public static void TestSpecificObjectsArgument()
+        public static void TestArgument()
         {
 #if !DEBUG
             List<Identifier> NullIdentifierList = null!;
@@ -59,7 +59,7 @@
         }
 
         [Test]
-        public static void TestSpecificObjectsBody()
+        public static void TestBody()
         {
             DeferredBody Body1 = NodeHelper.CreateEmptyDeferredBody();
             EffectiveBody Body2 = NodeHelper.CreateEmptyEffectiveBody();
@@ -123,7 +123,7 @@
         }
 
         [Test]
-        public static void TestSpecificObjectsExpression()
+        public static void TestExpression()
         {
 #if !DEBUG
             Identifier NullIdentifier = null!;
@@ -278,7 +278,7 @@
         }
 
         [Test]
-        public static void TestSpecificObjectsFeature()
+        public static void TestFeature()
         {
             AttributeFeature Feature1 = NodeHelper.CreateEmptyAttributeFeature();
             ConstantFeature Feature2 = NodeHelper.CreateEmptyConstantFeature();
@@ -383,7 +383,7 @@
         }
 
         [Test]
-        public static void TestSpecificObjectsInstruction()
+        public static void TestInstruction()
         {
             Expression DefaultExpression = NodeHelper.CreateDefaultExpression();
             IBlockList<Continuation> EmptyContinuationBlockList = BlockListHelper.CreateEmptyBlockList<Continuation>();
@@ -713,7 +713,7 @@
         }
 
         [Test]
-        public static void TestSpecificObjectsOther()
+        public static void TestOther()
         {
             ObjectType DefaultObjectType = NodeHelper.CreateDefaultObjectType();
             Scope EmptyScope = NodeHelper.CreateEmptyScope();
@@ -821,7 +821,7 @@
         }
 
         [Test]
-        public static void TestSpecificObjectsType()
+        public static void TestObjectType()
         {
             QualifiedName EmptyQualifiedName = NodeHelper.CreateEmptyQualifiedName();
             Identifier EmptyIdentifier = NodeHelper.CreateEmptyIdentifier();
@@ -969,7 +969,7 @@
         }
 
         [Test]
-        public static void TestSpecificObjectsTypeArgument()
+        public static void TestTypeArgument()
         {
             Identifier EmptyIdentifier = NodeHelper.CreateEmptyIdentifier();
             ObjectType DefaultObjectType = NodeHelper.CreateDefaultObjectType();

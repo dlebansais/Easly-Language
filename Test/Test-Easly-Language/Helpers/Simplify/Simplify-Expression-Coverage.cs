@@ -9,11 +9,11 @@
     using System.Diagnostics;
 
     [TestFixture]
-    public partial class CoverageSet
+    public partial class SimplifyExpressionCoverage
     {
         [Test]
         [Category("Simplify")]
-        public static void TestSimplifyQueryExpression()
+        public static void TestQueryExpression()
         {
             bool Result;
             Node SimplifiedNode;
@@ -36,7 +36,7 @@
 
         [Test]
         [Category("Simplify")]
-        public static void TestSimplifyAgentExpression()
+        public static void TestAgentExpression()
         {
             bool Result;
             Node SimplifiedNode;
@@ -52,7 +52,7 @@
 
         [Test]
         [Category("Simplify")]
-        public static void TestSimplifyAssertionTagExpression()
+        public static void TestAssertionTagExpression()
         {
             bool Result;
             Node SimplifiedNode;
@@ -68,7 +68,7 @@
 
         [Test]
         [Category("Simplify")]
-        public static void TestSimplifyBinaryConditionalExpression()
+        public static void TestBinaryConditionalExpression()
         {
             bool Result;
             Node SimplifiedNode;
@@ -120,7 +120,7 @@
 
         [Test]
         [Category("Simplify")]
-        public static void TestSimplifyBinaryOperatorExpression()
+        public static void TestBinaryOperatorExpression()
         {
             bool Result;
             Node SimplifiedNode;
@@ -146,7 +146,7 @@
 
         [Test]
         [Category("Simplify")]
-        public static void TestSimplifyClassConstantExpression()
+        public static void TestClassConstantExpression()
         {
             bool Result;
             Node SimplifiedNode;
@@ -163,7 +163,7 @@
 
         [Test]
         [Category("Simplify")]
-        public static void TestSimplifyCloneOfExpression()
+        public static void TestCloneOfExpression()
         {
             bool Result;
             Node SimplifiedNode;
@@ -186,7 +186,7 @@
 
         [Test]
         [Category("Simplify")]
-        public static void TestSimplifyEntityExpression()
+        public static void TestEntityExpression()
         {
             bool Result;
             Node SimplifiedNode;
@@ -202,7 +202,7 @@
 
         [Test]
         [Category("Simplify")]
-        public static void TestSimplifyEqualityExpression()
+        public static void TestEqualityExpression()
         {
             bool Result;
             Node SimplifiedNode;
@@ -233,7 +233,7 @@
 
         [Test]
         [Category("Simplify")]
-        public static void TestSimplifyIndexQueryExpression()
+        public static void TestIndexQueryExpression()
         {
             bool Result;
             Node SimplifiedNode;
@@ -259,7 +259,7 @@
 
         [Test]
         [Category("Simplify")]
-        public static void TestSimplifyInitializedObjectExpression()
+        public static void TestInitializedObjectExpression()
         {
             bool Result;
             Node SimplifiedNode;
@@ -285,7 +285,7 @@
 
         [Test]
         [Category("Simplify")]
-        public static void TestSimplifyKeywordEntityExpression()
+        public static void TestKeywordEntityExpression()
         {
             bool Result;
             Node SimplifiedNode;
@@ -299,7 +299,7 @@
 
         [Test]
         [Category("Simplify")]
-        public static void TestSimplifyKeywordExpression()
+        public static void TestKeywordExpression()
         {
             bool Result;
             Node SimplifiedNode;
@@ -313,7 +313,7 @@
 
         [Test]
         [Category("Simplify")]
-        public static void TestSimplifyManifestCharacterExpression()
+        public static void TestManifestCharacterExpression()
         {
             bool Result;
             Node SimplifiedNode;
@@ -327,7 +327,7 @@
 
         [Test]
         [Category("Simplify")]
-        public static void TestSimplifyManifestNumberExpression()
+        public static void TestManifestNumberExpression()
         {
             bool Result;
             Node SimplifiedNode;
@@ -341,7 +341,7 @@
 
         [Test]
         [Category("Simplify")]
-        public static void TestSimplifyManifestStringExpression()
+        public static void TestManifestStringExpression()
         {
             bool Result;
             Node SimplifiedNode;
@@ -355,7 +355,7 @@
 
         [Test]
         [Category("Simplify")]
-        public static void TestSimplifyNewExpression()
+        public static void TestNewExpression()
         {
             bool Result;
             Node SimplifiedNode;
@@ -371,7 +371,7 @@
 
         [Test]
         [Category("Simplify")]
-        public static void TestSimplifyOldExpression()
+        public static void TestOldExpression()
         {
             bool Result;
             Node SimplifiedNode;
@@ -387,7 +387,7 @@
 
         [Test]
         [Category("Simplify")]
-        public static void TestSimplifyPrecursorExpression()
+        public static void TestPrecursorExpression()
         {
             bool Result;
             Node SimplifiedNode;
@@ -404,7 +404,7 @@
 
         [Test]
         [Category("Simplify")]
-        public static void TestSimplifyPrecursorIndexExpression()
+        public static void TestPrecursorIndexExpression()
         {
             bool Result;
             Node SimplifiedNode;
@@ -422,7 +422,7 @@
 
         [Test]
         [Category("Simplify")]
-        public static void TestSimplifyPreprocessorExpression()
+        public static void TestPreprocessorExpression()
         {
             bool Result;
             Node SimplifiedNode;
@@ -436,7 +436,7 @@
 
         [Test]
         [Category("Simplify")]
-        public static void TestSimplifyResultOfExpression()
+        public static void TestResultOfExpression()
         {
             bool Result;
             Node SimplifiedNode;
@@ -459,7 +459,7 @@
 
         [Test]
         [Category("Simplify")]
-        public static void TestSimplifyUnaryNotExpression()
+        public static void TestUnaryNotExpression()
         {
             bool Result;
             Node SimplifiedNode;
@@ -482,7 +482,7 @@
 
         [Test]
         [Category("Simplify")]
-        public static void TestSimplifyUnaryOperatorExpression()
+        public static void TestUnaryOperatorExpression()
         {
             bool Result;
             Node SimplifiedNode;

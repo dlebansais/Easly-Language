@@ -9,11 +9,11 @@
     using System.Diagnostics;
 
     [TestFixture]
-    public partial class CoverageSet
+    public partial class SimplifyInstructionCoverage
     {
         [Test]
         [Category("Simplify")]
-        public static void TestSimplifyCommandInstruction()
+        public static void TestCommandInstruction()
         {
             bool Result;
             Node SimplifiedNode;
@@ -36,7 +36,7 @@
 
         [Test]
         [Category("Simplify")]
-        public static void TestSimplifyAsLongAsInstruction()
+        public static void TestAsLongAsInstruction()
         {
             bool Result;
             Node SimplifiedNode;
@@ -53,7 +53,7 @@
 
         [Test]
         [Category("Simplify")]
-        public static void TestSimplifyAssignmentInstruction()
+        public static void TestAssignmentInstruction()
         {
             bool Result;
             Node SimplifiedNode;
@@ -107,7 +107,7 @@
 
         [Test]
         [Category("Simplify")]
-        public static void TestSimplifyAttachmentInstruction()
+        public static void TestAttachmentInstruction()
         {
             bool Result;
             Node SimplifiedNode;
@@ -125,7 +125,7 @@
 
         [Test]
         [Category("Simplify")]
-        public static void TestSimplifyCheckInstruction()
+        public static void TestCheckInstruction()
         {
             bool Result;
             Node SimplifiedNode;
@@ -141,7 +141,7 @@
 
         [Test]
         [Category("Simplify")]
-        public static void TestSimplifyCreateInstruction()
+        public static void TestCreateInstruction()
         {
             bool Result;
             Node SimplifiedNode;
@@ -159,7 +159,7 @@
 
         [Test]
         [Category("Simplify")]
-        public static void TestSimplifyDebugInstruction()
+        public static void TestDebugInstruction()
         {
             bool Result;
             Node SimplifiedNode;
@@ -181,7 +181,7 @@
 
         [Test]
         [Category("Simplify")]
-        public static void TestSimplifyForLoopInstruction()
+        public static void TestForLoopInstruction()
         {
             bool Result;
             Node SimplifiedNode;
@@ -233,7 +233,7 @@
 
         [Test]
         [Category("Simplify")]
-        public static void TestSimplifyIfThenElseInstruction()
+        public static void TestIfThenElseInstruction()
         {
             bool Result;
             Node SimplifiedNode;
@@ -259,7 +259,7 @@
 
         [Test]
         [Category("Simplify")]
-        public static void TestSimplifyIndexAssignmentInstruction()
+        public static void TestIndexAssignmentInstruction()
         {
             bool Result;
             Node SimplifiedNode;
@@ -278,7 +278,7 @@
 
         [Test]
         [Category("Simplify")]
-        public static void TestSimplifyInspectInstruction()
+        public static void TestInspectInstruction()
         {
             bool Result;
             Node SimplifiedNode;
@@ -294,7 +294,7 @@
 
         [Test]
         [Category("Simplify")]
-        public static void TestSimplifyKeywordAssignmentInstruction()
+        public static void TestKeywordAssignmentInstruction()
         {
             bool Result;
             Node SimplifiedNode;
@@ -318,7 +318,7 @@
 
         [Test]
         [Category("Simplify")]
-        public static void TestSimplifyOverLoopInstruction()
+        public static void TestOverLoopInstruction()
         {
             bool Result;
             Node SimplifiedNode;
@@ -336,7 +336,7 @@
 
         [Test]
         [Category("Simplify")]
-        public static void TestSimplifyPrecursorIndexAssignmentInstruction()
+        public static void TestPrecursorIndexAssignmentInstruction()
         {
             bool Result;
             Node SimplifiedNode;
@@ -355,7 +355,7 @@
 
         [Test]
         [Category("Simplify")]
-        public static void TestSimplifyPrecursorInstruction()
+        public static void TestPrecursorInstruction()
         {
             bool Result;
             Node SimplifiedNode;
@@ -372,7 +372,7 @@
 
         [Test]
         [Category("Simplify")]
-        public static void TestSimplifyRaiseEventInstruction()
+        public static void TestRaiseEventInstruction()
         {
             bool Result;
             Node SimplifiedNode;
@@ -388,7 +388,7 @@
 
         [Test]
         [Category("Simplify")]
-        public static void TestSimplifyReleaseInstruction()
+        public static void TestReleaseInstruction()
         {
             bool Result;
             Node SimplifiedNode;
@@ -404,7 +404,7 @@
 
         [Test]
         [Category("Simplify")]
-        public static void TestSimplifyThrowInstruction()
+        public static void TestThrowInstruction()
         {
             bool Result;
             Node SimplifiedNode;

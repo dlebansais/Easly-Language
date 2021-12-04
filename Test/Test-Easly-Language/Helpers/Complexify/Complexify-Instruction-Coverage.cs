@@ -7,11 +7,11 @@
     using System.Collections.Generic;
 
     [TestFixture]
-    public partial class CoverageSet
+    public partial class ComplexifyInstructionCoverage
     {
         [Test]
         [Category("Complexify")]
-        public static void TestComplexifyCommandInstruction()
+        public static void TestCommandInstruction()
         {
             bool Result;
             IList<Node> ComplexifiedNodeList;
@@ -204,7 +204,7 @@
 
         [Test]
         [Category("Complexify")]
-        public static void TestComplexifyAsLongAsInstruction()
+        public static void TestAsLongAsInstruction()
         {
             bool Result;
             IList<Node> ComplexifiedNodeList;
@@ -245,7 +245,7 @@
 
         [Test]
         [Category("Complexify")]
-        public static void TestComplexifyAssignmentInstruction()
+        public static void TestAssignmentInstruction()
         {
             bool Result;
             IList<Node> ComplexifiedNodeList;
@@ -335,7 +335,7 @@
 
         [Test]
         [Category("Complexify")]
-        public static void TestComplexifyAttachmentInstruction()
+        public static void TestAttachmentInstruction()
         {
             bool Result;
             IList<Node> ComplexifiedNodeList;
@@ -392,7 +392,7 @@
 
         [Test]
         [Category("Complexify")]
-        public static void TestComplexifyCheckInstruction()
+        public static void TestCheckInstruction()
         {
             bool Result;
             IList<Node> ComplexifiedNodeList;
@@ -416,7 +416,7 @@
 
         [Test]
         [Category("Complexify")]
-        public static void TestComplexifyCreateInstruction()
+        public static void TestCreateInstruction()
         {
             bool Result;
             IList<Node> ComplexifiedNodeList;
@@ -462,7 +462,7 @@
 
         [Test]
         [Category("Complexify")]
-        public static void TestComplexifyIfThenElseInstruction()
+        public static void TestIfThenElseInstruction()
         {
             bool Result;
             IList<Node> ComplexifiedNodeList;
@@ -496,7 +496,7 @@
 
         [Test]
         [Category("Complexify")]
-        public static void TestComplexifyIndexAssignmentInstruction()
+        public static void TestIndexAssignmentInstruction()
         {
             bool Result;
             IList<Node> ComplexifiedNodeList;
@@ -542,7 +542,7 @@
 
         [Test]
         [Category("Complexify")]
-        public static void TestComplexifyInspectInstruction()
+        public static void TestInspectInstruction()
         {
             bool Result;
             IList<Node> ComplexifiedNodeList;
@@ -576,7 +576,7 @@
 
         [Test]
         [Category("Complexify")]
-        public static void TestComplexifyKeywordAssignmentInstruction()
+        public static void TestKeywordAssignmentInstruction()
         {
             bool Result;
             IList<Node> ComplexifiedNodeList;
@@ -600,7 +600,7 @@
 
         [Test]
         [Category("Complexify")]
-        public static void TestComplexifyOverLoopInstruction()
+        public static void TestOverLoopInstruction()
         {
             bool Result;
             IList<Node> ComplexifiedNodeList;
@@ -638,7 +638,7 @@
 
         [Test]
         [Category("Complexify")]
-        public static void TestComplexifyPrecursorIndexAssignmentInstruction()
+        public static void TestPrecursorIndexAssignmentInstruction()
         {
             bool Result;
             IList<Node> ComplexifiedNodeList;
@@ -702,7 +702,7 @@
 
         [Test]
         [Category("Complexify")]
-        public static void TestComplexifyPrecursorInstruction()
+        public static void TestPrecursorInstruction()
         {
             bool Result;
             IList<Node> ComplexifiedNodeList;
@@ -748,7 +748,7 @@
 
         [Test]
         [Category("Complexify")]
-        public static void TestComplexifyReleaseInstruction()
+        public static void TestReleaseInstruction()
         {
             bool Result;
             IList<Node> ComplexifiedNodeList;
@@ -772,7 +772,7 @@
 
         [Test]
         [Category("Complexify")]
-        public static void TestComplexifyThrowInstruction()
+        public static void TestThrowInstruction()
         {
             bool Result;
             IList<Node> ComplexifiedNodeList;

@@ -8,10 +8,10 @@
     using System.Collections.Generic;
 
     [TestFixture]
-    public partial class CoverageSet
+    public partial class BlockListHelpersCoverage
     {
         [Test]
-        public static void TestBlockListHelpers()
+        public static void Test()
         {
             IBlockList<Identifier> EmptyBlockList = BlockListHelper.CreateEmptyBlockList<Identifier>();
             

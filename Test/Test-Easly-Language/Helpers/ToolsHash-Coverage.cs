@@ -7,10 +7,10 @@
     using System.Collections.Generic;
 
     [TestFixture]
-    public partial class CoverageSet
+    public partial class ToolsHashCoverage
     {
         [Test]
-        public static void TestHash()
+        public static void Test()
         {
             Class SimpleClass = NodeHelper.CreateSimpleClass("Foo");
 

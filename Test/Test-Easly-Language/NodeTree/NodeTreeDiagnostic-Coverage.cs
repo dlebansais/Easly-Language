@@ -8,10 +8,10 @@
     using System.Collections.Generic;
 
     [TestFixture]
-    public partial class CoverageSet
+    public partial class NodeTreeDiagnosticCoverage
     {
         [Test]
-        public static void TestNodeTreeDiagnostic()
+        public static void Test()
         {
             bool Result;
 
@@ -32,6 +32,19 @@
 
             Result = NodeTreeDiagnostic.IsValid(globalReplicate, throwOnInvalid: true);
             Assert.True(Result);
+
+            Identifier FirstIdentifier = NodeHelper.CreateSimpleIdentifier("a");
+            Identifier SecondIdentifier = NodeHelper.CreateSimpleIdentifier("b");
+
+            QualifiedName SimpleQualifiedName = NodeHelper.CreateQualifiedName(new List<Identifier>() { FirstIdentifier, SecondIdentifier });
+            Result = NodeTreeDiagnostic.IsValid(SimpleQualifiedName, throwOnInvalid: true);
+            Assert.True(Result);
+
+            QualifiedName DuplicateQualifiedName = NodeHelper.CreateQualifiedName(new List<Identifier>() { FirstIdentifier, FirstIdentifier });
+            Result = NodeTreeDiagnostic.IsValid(DuplicateQualifiedName, throwOnInvalid: false);
+            Assert.False(Result);
+
+            Assert.Throws<InvalidNodeException>(() => { NodeTreeDiagnostic.IsValid(DuplicateQualifiedName, throwOnInvalid: true); });
         }
     }
 }

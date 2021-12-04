@@ -6,10 +6,10 @@
     using NUnit.Framework;
 
     [TestFixture]
-    public partial class CoverageSet
+    public partial class OptionalReferenceHelpersCoverage
     {
         [Test]
-        public static void TestOptionalReferenceHelpers()
+        public static void Test()
         {
             IOptionalReference<Identifier> EmptyEmptyReference = OptionalReferenceHelper.CreateEmptyReference<Identifier>();
 
