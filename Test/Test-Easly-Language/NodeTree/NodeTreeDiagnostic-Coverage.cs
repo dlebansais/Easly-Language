@@ -50,6 +50,18 @@
             Class NewClass = NodeHelper.CreateSimpleClass("a");
             Result = NodeTreeDiagnostic.IsValid(NewClass, throwOnInvalid: true);
             Assert.True(Result);
+
+            Argument DefaultArgument = NodeHelper.CreateDefaultArgument();
+            Pattern ReplicationPattern = NodeHelper.CreateEmptyPattern();
+            Identifier SourceIdentifier = NodeHelper.CreateEmptyIdentifier();
+            IBlock<Argument> ArgumentBlock = BlockListHelper.CreateBlock(new List<Argument>() { DefaultArgument }, ReplicationStatus.Replicated, ReplicationPattern, SourceIdentifier);
+
+            IBlockList<Argument> SimpleArgumentBlockList = BlockListHelper.CreateEmptyBlockList<Argument>();
+            SimpleArgumentBlockList.NodeBlockList.Add(ArgumentBlock);
+
+            QueryExpression NewQueryExpression = NodeHelper.CreateQueryExpression(SimpleQualifiedName, SimpleArgumentBlockList);
+            Result = NodeTreeDiagnostic.IsValid(NewQueryExpression, throwOnInvalid: true);
+            Assert.True(Result);
         }
 
         [Test]
@@ -157,6 +169,123 @@
             Result = NodeTreeDiagnostic.IsValid(NewInheritance, throwOnInvalid: false);
             Assert.False(Result);
             Assert.Throws<InvalidNodeException>(() => { NodeTreeDiagnostic.IsValid(NewInheritance, throwOnInvalid: true); });
+        }
+
+        [Test]
+        public static void TestInvalidEnumLow()
+        {
+            bool Result;
+
+            QualifiedName SimpleQualifiedName = NodeHelper.CreateSimpleQualifiedName("a");
+            AnchoredType NewAnchoredType = NodeHelper.CreateAnchoredType(SimpleQualifiedName, (AnchorKinds)((int)AnchorKinds.Declaration) - 1);
+
+            Result = NodeTreeDiagnostic.IsValid(NewAnchoredType, throwOnInvalid: false);
+            Assert.False(Result);
+            Assert.Throws<InvalidNodeException>(() => { NodeTreeDiagnostic.IsValid(NewAnchoredType, throwOnInvalid: true); });
+        }
+
+        [Test]
+        public static void TestInvalidEnumHigh()
+        {
+            bool Result;
+
+            QualifiedName SimpleQualifiedName = NodeHelper.CreateSimpleQualifiedName("a");
+            AnchoredType NewAnchoredType = NodeHelper.CreateAnchoredType(SimpleQualifiedName, (AnchorKinds)((int)AnchorKinds.Creation) + 1);
+
+            Result = NodeTreeDiagnostic.IsValid(NewAnchoredType, throwOnInvalid: false);
+            Assert.False(Result);
+            Assert.Throws<InvalidNodeException>(() => { NodeTreeDiagnostic.IsValid(NewAnchoredType, throwOnInvalid: true); });
+        }
+
+        [Test]
+        public static void TestInvalidGuid()
+        {
+            bool Result;
+
+            Class NewClass = NodeHelper.CreateSimpleClass("a");
+            NewClass.ClassGuid = NewClass.Documentation.Uuid;
+
+            Result = NodeTreeDiagnostic.IsValid(NewClass, throwOnInvalid: false);
+            Assert.False(Result);
+            Assert.Throws<InvalidNodeException>(() => { NodeTreeDiagnostic.IsValid(NewClass, throwOnInvalid: true); });
+        }
+
+        [Test]
+        public static void TestEmptyBlock()
+        {
+            bool Result;
+
+            QualifiedName SimpleQualifiedName = NodeHelper.CreateSimpleQualifiedName("a");
+            PositionalArgument SimplePositionalArgument = NodeHelper.CreateSimplePositionalArgument("b");
+            IBlockList<Argument> SimpleArgumentBlockList = BlockListHelper.CreateSimpleBlockList<Argument>(SimplePositionalArgument);
+
+            QueryExpression BadQueryExpression = NodeHelper.CreateQueryExpression(SimpleQualifiedName, SimpleArgumentBlockList);
+            SimpleArgumentBlockList.NodeBlockList[0].NodeList.Clear();
+
+            Result = NodeTreeDiagnostic.IsValid(BadQueryExpression, throwOnInvalid: false);
+            Assert.False(Result);
+            Assert.Throws<InvalidNodeException>(() => { NodeTreeDiagnostic.IsValid(BadQueryExpression, throwOnInvalid: true); });
+        }
+
+        [Test]
+        public static void TestInvalidBlockGuid()
+        {
+            bool Result;
+
+            QualifiedName SimpleQualifiedName = NodeHelper.CreateSimpleQualifiedName("a");
+            PositionalArgument SimplePositionalArgument = NodeHelper.CreateSimplePositionalArgument("b");
+            IBlockList<Argument> SimpleArgumentBlockList = BlockListHelper.CreateSimpleBlockList<Argument>(SimplePositionalArgument);
+
+            QueryExpression BadQueryExpression = NodeHelper.CreateQueryExpression(SimpleQualifiedName, SimpleArgumentBlockList);
+            SimpleArgumentBlockList.NodeBlockList[0].Documentation.Uuid = BadQueryExpression.Documentation.Uuid;
+
+            Result = NodeTreeDiagnostic.IsValid(BadQueryExpression, throwOnInvalid: false);
+            Assert.False(Result);
+            Assert.Throws<InvalidNodeException>(() => { NodeTreeDiagnostic.IsValid(BadQueryExpression, throwOnInvalid: true); });
+        }
+
+        [Test]
+        public static void TestInvalidPattern()
+        {
+            bool Result;
+
+            QualifiedName SimpleQualifiedName = NodeHelper.CreateSimpleQualifiedName("a");
+            PositionalArgument FirstPositionalArgument = NodeHelper.CreateSimplePositionalArgument("b");
+            IBlockList<Argument> SimpleArgumentBlockList = BlockListHelper.CreateSimpleBlockList<Argument>(FirstPositionalArgument);
+
+            QueryExpression BadQueryExpression = NodeHelper.CreateQueryExpression(SimpleQualifiedName, SimpleArgumentBlockList);
+
+            PositionalArgument SecondPositionalArgument = NodeHelper.CreateSimplePositionalArgument("c");
+            Pattern ReplicationPattern = SimpleArgumentBlockList.NodeBlockList[0].ReplicationPattern;
+            Identifier SourceIdentifier = SimpleArgumentBlockList.NodeBlockList[0].SourceIdentifier;
+            IBlock<Argument> ArgumentBlock = BlockListHelper.CreateBlock(new List<Argument>() { SecondPositionalArgument }, ReplicationStatus.Normal, ReplicationPattern, SourceIdentifier);
+            BadQueryExpression.ArgumentBlocks.NodeBlockList.Add(ArgumentBlock);
+
+            Result = NodeTreeDiagnostic.IsValid(BadQueryExpression, throwOnInvalid: false);
+            Assert.False(Result);
+            Assert.Throws<InvalidNodeException>(() => { NodeTreeDiagnostic.IsValid(BadQueryExpression, throwOnInvalid: true); });
+        }
+
+        [Test]
+        public static void TestInvalidSourceIdentifier()
+        {
+            bool Result;
+
+            QualifiedName SimpleQualifiedName = NodeHelper.CreateSimpleQualifiedName("a");
+            PositionalArgument FirstPositionalArgument = NodeHelper.CreateSimplePositionalArgument("b");
+            IBlockList<Argument> SimpleArgumentBlockList = BlockListHelper.CreateSimpleBlockList<Argument>(FirstPositionalArgument);
+
+            QueryExpression BadQueryExpression = NodeHelper.CreateQueryExpression(SimpleQualifiedName, SimpleArgumentBlockList);
+
+            PositionalArgument SecondPositionalArgument = NodeHelper.CreateSimplePositionalArgument("c");
+            Pattern ReplicationPattern = NodeHelper.CreateEmptyPattern();
+            Identifier SourceIdentifier = SimpleArgumentBlockList.NodeBlockList[0].SourceIdentifier;
+            IBlock<Argument> ArgumentBlock = BlockListHelper.CreateBlock(new List<Argument>() { SecondPositionalArgument }, ReplicationStatus.Normal, ReplicationPattern, SourceIdentifier);
+            BadQueryExpression.ArgumentBlocks.NodeBlockList.Add(ArgumentBlock);
+
+            Result = NodeTreeDiagnostic.IsValid(BadQueryExpression, throwOnInvalid: false);
+            Assert.False(Result);
+            Assert.Throws<InvalidNodeException>(() => { NodeTreeDiagnostic.IsValid(BadQueryExpression, throwOnInvalid: true); });
         }
     }
 }
