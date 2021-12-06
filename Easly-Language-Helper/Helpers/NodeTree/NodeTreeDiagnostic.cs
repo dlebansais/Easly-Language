@@ -5,6 +5,7 @@
     using System.Diagnostics;
     using System.Reflection;
     using BaseNode;
+    using Contracts;
 
     /// <summary>
     /// Provides methods to check a tree of nodes.
@@ -19,8 +20,10 @@
         /// <returns>True if the node is a valid root node; otherwise, false.</returns>
         public static bool IsValid(Node root, bool throwOnInvalid = true)
         {
+            Contract.RequireNotNull(root, out Node Root);
+
             List<Guid> GuidList = new List<Guid>();
-            return IsValid(GuidList, root, root, throwOnInvalid);
+            return IsValid(GuidList, Root, Root, throwOnInvalid);
         }
 
         private static bool IsValid(List<Guid> guidList, Node originalRoot, Node root, bool throwOnInvalid)

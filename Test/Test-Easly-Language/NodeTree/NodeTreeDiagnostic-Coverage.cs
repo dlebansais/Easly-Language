@@ -2,7 +2,6 @@
 {
     using BaseNode;
     using BaseNodeHelper;
-    using Easly;
     using NUnit.Framework;
     using System;
     using System.Collections.Generic;
@@ -62,6 +61,22 @@
             QueryExpression NewQueryExpression = NodeHelper.CreateQueryExpression(SimpleQualifiedName, SimpleArgumentBlockList);
             Result = NodeTreeDiagnostic.IsValid(NewQueryExpression, throwOnInvalid: true);
             Assert.True(Result);
+        }
+
+        [Test]
+        public static void TestInvalidNodeException()
+        {
+            bool Result;
+
+            Expression InvalidDocExpression = NodeHelper.CreateDefaultExpression();
+            InvalidDocExpression.Documentation.Uuid = Guid.Empty;
+
+            Result = NodeTreeDiagnostic.IsValid(InvalidDocExpression, throwOnInvalid: false);
+            Assert.False(Result);
+            InvalidNodeException? Exception = Assert.Throws<InvalidNodeException>(() => { NodeTreeDiagnostic.IsValid(InvalidDocExpression, throwOnInvalid: true); });
+            Assert.NotNull(Exception);
+            Assert.NotNull(Exception?.InvalidNode);
+            Assert.NotNull(Exception?.RootNode);
         }
 
         [Test]

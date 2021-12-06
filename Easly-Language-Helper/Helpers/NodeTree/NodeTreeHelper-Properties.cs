@@ -4,6 +4,7 @@
     using System.Diagnostics;
     using System.Reflection;
     using BaseNode;
+    using Contracts;
 
     /// <summary>
     /// Provides methods to manipulate a tree of nodes.
@@ -18,11 +19,16 @@
         /// <returns>The string content.</returns>
         public static string GetString(Node node, string propertyName)
         {
-            Type NodeType = node.GetType();
-            PropertyInfo Property = SafeType.GetProperty(NodeType, propertyName);
-            Debug.Assert(Property.PropertyType == typeof(string));
+            Contract.RequireNotNull(node, out Node Node);
+            Contract.RequireNotNull(propertyName, out string PropertyName);
 
-            string Text = SafeType.GetPropertyValue<string>(Property, node);
+            Type NodeType = Node.GetType();
+            PropertyInfo Property = SafeType.GetProperty(NodeType, PropertyName);
+
+            if (Property.PropertyType != typeof(string))
+                throw new ArgumentException($"{nameof(propertyName)} must be the name of a string property");
+
+            string Text = SafeType.GetPropertyValue<string>(Property, Node);
 
             return Text;
         }
@@ -35,15 +41,17 @@
         /// <param name="text">The string content to set.</param>
         public static void SetString(Node node, string propertyName, string text)
         {
-            if (node == null) throw new ArgumentNullException(nameof(node));
-            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
-            if (text == null) throw new ArgumentNullException(nameof(text));
+            Contract.RequireNotNull(node, out Node Node);
+            Contract.RequireNotNull(propertyName, out string PropertyName);
+            Contract.RequireNotNull(text, out string Text);
 
-            Type NodeType = node.GetType();
-            PropertyInfo Property = SafeType.GetProperty(NodeType, propertyName);
-            Debug.Assert(Property.PropertyType == typeof(string));
+            Type NodeType = Node.GetType();
+            PropertyInfo Property = SafeType.GetProperty(NodeType, PropertyName);
 
-            Property.SetValue(node, text);
+            if (Property.PropertyType != typeof(string))
+                throw new ArgumentException($"{nameof(propertyName)} must be the name of a string property");
+
+            Property.SetValue(Node, Text);
         }
 
         /// <summary>
@@ -54,7 +62,10 @@
         /// <returns>The enum content.</returns>
         public static int GetEnumValue(Node node, string propertyName)
         {
-            return GetEnumValueAndRange(node, propertyName, out int Min, out int Max);
+            Contract.RequireNotNull(node, out Node Node);
+            Contract.RequireNotNull(propertyName, out string PropertyName);
+
+            return GetEnumValueAndRange(Node, PropertyName, out int Min, out int Max);
         }
 
         /// <summary>
@@ -67,41 +78,31 @@
         /// <returns>The enum content.</returns>
         public static int GetEnumValueAndRange(Node node, string propertyName, out int min, out int max)
         {
-            if (node == null) throw new ArgumentNullException(nameof(node));
-            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
+            Contract.RequireNotNull(node, out Node Node);
+            Contract.RequireNotNull(propertyName, out string PropertyName);
 
-            Type NodeType = node.GetType();
-            PropertyInfo Property = SafeType.GetProperty(NodeType, propertyName);
-
+            Type NodeType = Node.GetType();
+            PropertyInfo Property = SafeType.GetProperty(NodeType, PropertyName);
             Type PropertyType = Property.PropertyType;
-            Debug.Assert(PropertyType.IsEnum || PropertyType == typeof(bool));
 
-            GetEnumMinMax(Property, out min, out max);
-            int? Result;
+            if (!IsDiscretePropertyType(PropertyType))
+                throw new ArgumentException($"{nameof(propertyName)} must be the name of a discrete value property (enumeration or boolean)");
+
+            GetEnumMinMax(PropertyType, out min, out max);
+            int Result;
 
             if (PropertyType == typeof(bool))
             {
-                bool? BoolValue = Property.GetValue(node) as bool?;
-                Debug.Assert(BoolValue != null);
+                bool BoolValue = (bool)Property.GetValue(Node)!;
 
-                if (BoolValue == null)
-                    return 0;
-
-                Result = BoolValue.Value ? 1 : 0;
+                Result = BoolValue ? 1 : 0;
             }
             else
-                Result = Property.GetValue(node) as int?;
-
-            if (Result == null)
-            {
-                min = 0;
-                max = 0;
-                return 0;
-            }
+                Result = (int)Property.GetValue(Node)!;
 
             Debug.Assert(min <= Result && Result <= max);
 
-            return Result.Value;
+            return Result;
         }
 
         /// <summary>
@@ -112,22 +113,25 @@
         /// <param name="value">The enum content.</param>
         public static void SetEnumValue(Node node, string propertyName, int value)
         {
-            if (node == null) throw new ArgumentNullException(nameof(node));
-            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
+            Contract.RequireNotNull(node, out Node Node);
+            Contract.RequireNotNull(propertyName, out string PropertyName);
 
-            Type NodeType = node.GetType();
-            PropertyInfo Property = SafeType.GetProperty(NodeType, propertyName);
-
+            Type NodeType = Node.GetType();
+            PropertyInfo Property = SafeType.GetProperty(NodeType, PropertyName);
             Type PropertyType = Property.PropertyType;
-            Debug.Assert(PropertyType.IsEnum || PropertyType == typeof(bool));
 
-            GetEnumMinMax(Property, out int Min, out int Max);
-            Debug.Assert(Min <= value && value <= Max);
+            if (!IsDiscretePropertyType(PropertyType))
+                throw new ArgumentException($"{nameof(propertyName)} must be the name of a discrete value property (enumeration or boolean)");
+
+            GetEnumMinMax(PropertyType, out int Min, out int Max);
+
+            if (Min < value || value > Max)
+                throw new ArgumentOutOfRangeException(nameof(value));
 
             if (PropertyType == typeof(bool))
-                Property.SetValue(node, value == 1 ? true : false);
+                Property.SetValue(Node, value == 1 ? true : false);
             else
-                Property.SetValue(node, value);
+                Property.SetValue(Node, value);
         }
 
         /// <summary>
@@ -139,14 +143,16 @@
         /// <param name="max">The max value upon return.</param>
         public static void GetEnumRange(Type nodeType, string propertyName, out int min, out int max)
         {
-            if (nodeType == null) throw new ArgumentNullException(nameof(nodeType));
-            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
+            Contract.RequireNotNull(nodeType, out Type NodeType);
+            Contract.RequireNotNull(propertyName, out string PropertyName);
 
-            PropertyInfo Property = SafeType.GetProperty(nodeType, propertyName);
+            PropertyInfo Property = SafeType.GetProperty(NodeType, PropertyName);
             Type PropertyType = Property.PropertyType;
-            Debug.Assert(PropertyType.IsEnum || PropertyType == typeof(bool));
 
-            GetEnumMinMax(Property, out min, out max);
+            if (!IsDiscretePropertyType(PropertyType))
+                throw new ArgumentException($"{nameof(propertyName)} must be the name of a discrete value property (enumeration or boolean)");
+
+            GetEnumMinMax(PropertyType, out min, out max);
         }
 
         /// <summary>
@@ -157,22 +163,19 @@
         /// <returns>The property value.</returns>
         public static Guid GetGuid(Node node, string propertyName)
         {
-            if (node == null) throw new ArgumentNullException(nameof(node));
-            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
+            Contract.RequireNotNull(node, out Node Node);
+            Contract.RequireNotNull(propertyName, out string PropertyName);
 
-            Type NodeType = node.GetType();
-            PropertyInfo Property = SafeType.GetProperty(NodeType, propertyName);
-
+            Type NodeType = Node.GetType();
+            PropertyInfo Property = SafeType.GetProperty(NodeType, PropertyName);
             Type PropertyType = Property.PropertyType;
-            Debug.Assert(PropertyType == typeof(Guid));
 
-            Guid? Result = Property.GetValue(node) as Guid?;
-            Debug.Assert(Result != null);
+            if (PropertyType != typeof(Guid))
+                throw new ArgumentException($"{nameof(propertyName)} must be the name of a {typeof(Guid)} property");
 
-            if (Result == null)
-                return Guid.Empty;
+            Guid Result = (Guid)Property.GetValue(Node)!;
 
-            return Result.Value;
+            return Result;
         }
 
         /// <summary>
@@ -182,7 +185,9 @@
         /// <returns>The comment text.</returns>
         public static string GetCommentText(Node node)
         {
-            return GetCommentText(node.Documentation);
+            Contract.RequireNotNull(node, out Node Node);
+
+            return GetCommentText(Node.Documentation);
         }
 
         /// <summary>
@@ -192,7 +197,9 @@
         /// <returns>The comment text.</returns>
         public static string GetCommentText(Document documentation)
         {
-            return documentation.Comment;
+            Contract.RequireNotNull(documentation, out Document Documentation);
+
+            return Documentation.Comment;
         }
 
         /// <summary>
@@ -202,7 +209,10 @@
         /// <param name="text">The comment text.</param>
         public static void SetCommentText(Node node, string text)
         {
-            SetCommentText(node.Documentation, text);
+            Contract.RequireNotNull(node, out Node Node);
+            Contract.RequireNotNull(text, out string Text);
+
+            SetCommentText(Node.Documentation, Text);
         }
 
         /// <summary>
@@ -212,10 +222,13 @@
         /// <param name="text">The comment text.</param>
         public static void SetCommentText(Document documentation, string text)
         {
-            Type DocumentationType = documentation.GetType();
+            Contract.RequireNotNull(documentation, out Document Documentation);
+            Contract.RequireNotNull(text, out string Text);
+
+            Type DocumentationType = Documentation.GetType();
             PropertyInfo CommentProperty = SafeType.GetProperty(DocumentationType, nameof(Document.Comment));
 
-            CommentProperty.SetValue(documentation, text);
+            CommentProperty.SetValue(Documentation, Text);
         }
 
         /// <summary>
@@ -226,11 +239,11 @@
         /// <returns>True if the given property of a node is a documentation object; otherwise, false.</returns>
         public static bool IsDocumentProperty(Node node, string propertyName)
         {
-            if (node == null) throw new ArgumentNullException(nameof(node));
-            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
+            Contract.RequireNotNull(node, out Node Node);
+            Contract.RequireNotNull(propertyName, out string PropertyName);
 
-            Type NodeType = node.GetType();
-            return IsDocumentProperty(NodeType, propertyName);
+            Type NodeType = Node.GetType();
+            return IsDocumentProperty(NodeType, PropertyName);
         }
 
         /// <summary>
@@ -241,10 +254,10 @@
         /// <returns>True if the given property of a node type is a documentation object; otherwise, false.</returns>
         public static bool IsDocumentProperty(Type nodeType, string propertyName)
         {
-            if (nodeType == null) throw new ArgumentNullException(nameof(nodeType));
-            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
+            Contract.RequireNotNull(nodeType, out Type NodeType);
+            Contract.RequireNotNull(propertyName, out string PropertyName);
 
-            if (!SafeType.CheckAndGetPropertyOf(nodeType, propertyName, out PropertyInfo Property))
+            if (!SafeType.CheckAndGetPropertyOf(NodeType, PropertyName, out PropertyInfo Property))
                 return false;
 
             Type PropertyType = Property.PropertyType;
@@ -258,16 +271,16 @@
         /// <param name="document">The documentation.</param>
         public static void SetDocumentation(Node node, Document document)
         {
-            if (node == null) throw new ArgumentNullException(nameof(node));
-            if (document == null) throw new ArgumentNullException(nameof(document));
+            Contract.RequireNotNull(node, out Node Node);
+            Contract.RequireNotNull(document, out Document Document);
 
-            Type NodeType = node.GetType();
+            Type NodeType = Node.GetType();
             PropertyInfo Property = SafeType.GetProperty(NodeType, nameof(Node.Documentation));
 
             Type PropertyType = Property.PropertyType;
             Debug.Assert(PropertyType == typeof(Document));
 
-            Property.SetValue(node, document);
+            Property.SetValue(Node, Document);
         }
 
         /// <summary>
@@ -278,21 +291,23 @@
         /// <param name="cloneCommentGuid">True if Uuid of the destination documentation is to be the same as the source, or should be a new Uuid.</param>
         public static void CopyDocumentation(Node sourceNode, Node destinationNode, bool cloneCommentGuid)
         {
-            if (sourceNode == null) throw new ArgumentNullException(nameof(sourceNode));
-            if (destinationNode == null) throw new ArgumentNullException(nameof(destinationNode));
+            Contract.RequireNotNull(sourceNode, out Node SourceNode);
+            Contract.RequireNotNull(destinationNode, out Node DestinationNode);
 
-            Type SourceNodeType = sourceNode.GetType();
-            Type DestinationNodeType = sourceNode.GetType();
-            if (SourceNodeType != DestinationNodeType) throw new ArgumentException($"{nameof(sourceNode)} and {nameof(destinationNode)} must be of the same type");
+            Type SourceNodeType = SourceNode.GetType();
+            Type DestinationNodeType = DestinationNode.GetType();
+
+            if (SourceNodeType != DestinationNodeType)
+                throw new ArgumentException($"{nameof(sourceNode)} and {nameof(destinationNode)} must be of the same type");
 
             PropertyInfo Property = SafeType.GetProperty(SourceNodeType, nameof(Node.Documentation));
 
             Type PropertyType = Property.PropertyType;
             Debug.Assert(PropertyType == typeof(Document));
 
-            Guid GuidCopy = cloneCommentGuid ? sourceNode.Documentation.Uuid : Guid.NewGuid();
-            Document DocumentCopy = NodeHelper.CreateSimpleDocumentation(sourceNode.Documentation.Comment, GuidCopy);
-            Property.SetValue(destinationNode, DocumentCopy);
+            Guid GuidCopy = cloneCommentGuid ? SourceNode.Documentation.Uuid : Guid.NewGuid();
+            Document DocumentCopy = NodeHelper.CreateSimpleDocumentation(SourceNode.Documentation.Comment, GuidCopy);
+            Property.SetValue(DestinationNode, DocumentCopy);
         }
 
         /// <summary>
@@ -303,21 +318,23 @@
         /// <param name="cloneCommentGuid">True if Uuid of the destination documentation is to be the same as the source, or should be a new Uuid.</param>
         public static void CopyDocumentation(IBlock sourceBlock, IBlock destinationBlock, bool cloneCommentGuid)
         {
-            if (sourceBlock == null) throw new ArgumentNullException(nameof(sourceBlock));
-            if (destinationBlock == null) throw new ArgumentNullException(nameof(destinationBlock));
+            Contract.RequireNotNull(sourceBlock, out IBlock SourceBlock);
+            Contract.RequireNotNull(destinationBlock, out IBlock DestinationBlock);
 
-            Type SourceBlockType = sourceBlock.GetType();
-            Type DestinationBlockType = sourceBlock.GetType();
-            Debug.Assert(SourceBlockType == DestinationBlockType);
+            Type SourceBlockType = SourceBlock.GetType();
+            Type DestinationBlockType = DestinationBlock.GetType();
+
+            if (SourceBlockType != DestinationBlockType)
+                throw new ArgumentException($"{nameof(sourceBlock)} and {nameof(destinationBlock)} must be of the same type");
 
             PropertyInfo Property = SafeType.GetProperty(SourceBlockType, nameof(IBlock.Documentation));
 
             Type PropertyType = Property.PropertyType;
             Debug.Assert(PropertyType == typeof(Document));
 
-            Guid GuidCopy = cloneCommentGuid ? sourceBlock.Documentation.Uuid : Guid.NewGuid();
-            Document DocumentCopy = NodeHelper.CreateSimpleDocumentation(sourceBlock.Documentation.Comment, GuidCopy);
-            Property.SetValue(destinationBlock, DocumentCopy);
+            Guid GuidCopy = cloneCommentGuid ? SourceBlock.Documentation.Uuid : Guid.NewGuid();
+            Document DocumentCopy = NodeHelper.CreateSimpleDocumentation(SourceBlock.Documentation.Comment, GuidCopy);
+            Property.SetValue(DestinationBlock, DocumentCopy);
         }
 
         /// <summary>
@@ -328,21 +345,23 @@
         /// <param name="cloneCommentGuid">True if Uuid of the destination documentation is to be the same as the source, or should be a new Uuid.</param>
         public static void CopyDocumentation(IBlockList sourceBlockList, IBlockList destinationBlockList, bool cloneCommentGuid)
         {
-            if (sourceBlockList == null) throw new ArgumentNullException(nameof(sourceBlockList));
-            if (destinationBlockList == null) throw new ArgumentNullException(nameof(destinationBlockList));
+            Contract.RequireNotNull(sourceBlockList, out IBlockList SourceBlockList);
+            Contract.RequireNotNull(destinationBlockList, out IBlockList DestinationBlockList);
 
-            Type SourceBlockType = sourceBlockList.GetType();
-            Type DestinationBlockType = sourceBlockList.GetType();
-            Debug.Assert(SourceBlockType == DestinationBlockType);
+            Type SourceBlockListType = SourceBlockList.GetType();
+            Type DestinationBlockListType = DestinationBlockList.GetType();
 
-            PropertyInfo Property = SafeType.GetProperty(SourceBlockType, nameof(IBlock.Documentation));
+            if (SourceBlockListType != DestinationBlockListType)
+                throw new ArgumentException($"{nameof(sourceBlockList)} and {nameof(destinationBlockList)} must be of the same type");
+
+            PropertyInfo Property = SafeType.GetProperty(SourceBlockListType, nameof(IBlock.Documentation));
 
             Type PropertyType = Property.PropertyType;
             Debug.Assert(PropertyType == typeof(Document));
 
-            Guid GuidCopy = cloneCommentGuid ? sourceBlockList.Documentation.Uuid : Guid.NewGuid();
-            Document DocumentCopy = NodeHelper.CreateSimpleDocumentation(sourceBlockList.Documentation.Comment, GuidCopy);
-            Property.SetValue(destinationBlockList, DocumentCopy);
+            Guid GuidCopy = cloneCommentGuid ? SourceBlockList.Documentation.Uuid : Guid.NewGuid();
+            Document DocumentCopy = NodeHelper.CreateSimpleDocumentation(SourceBlockList.Documentation.Comment, GuidCopy);
+            Property.SetValue(DestinationBlockList, DocumentCopy);
         }
 
         /// <summary>
@@ -353,7 +372,10 @@
         /// <returns>True if the property of a node is a <see cref="bool"/>; otherwise, false.</returns>
         public static bool IsBooleanProperty(Node node, string propertyName)
         {
-            return IsValueProperty(node, propertyName, typeof(bool));
+            Contract.RequireNotNull(node, out Node Node);
+            Contract.RequireNotNull(propertyName, out string PropertyName);
+
+            return IsValueProperty(Node, PropertyName, typeof(bool));
         }
 
         /// <summary>
@@ -364,7 +386,10 @@
         /// <returns>True if the property of a node type is a <see cref="bool"/>; otherwise, false.</returns>
         public static bool IsBooleanProperty(Type nodeType, string propertyName)
         {
-            return IsValueProperty(nodeType, propertyName, typeof(bool));
+            Contract.RequireNotNull(nodeType, out Type NodeType);
+            Contract.RequireNotNull(propertyName, out string PropertyName);
+
+            return IsValueProperty(NodeType, PropertyName, typeof(bool));
         }
 
         /// <summary>
@@ -375,7 +400,10 @@
         /// <param name="value">The new value.</param>
         public static void SetBooleanProperty(Node node, string propertyName, bool value)
         {
-            SetValueProperty(node, propertyName, value);
+            Contract.RequireNotNull(node, out Node Node);
+            Contract.RequireNotNull(propertyName, out string PropertyName);
+
+            SetValueProperty(Node, PropertyName, value);
         }
 
         /// <summary>
@@ -386,7 +414,10 @@
         /// <param name="propertyName">The property name.</param>
         public static void CopyBooleanProperty(Node sourceNode, Node destinationNode, string propertyName)
         {
-            CopyValueProperty<bool>(sourceNode, destinationNode, propertyName);
+            Contract.RequireNotNull(sourceNode, out Node SourceNode);
+            Contract.RequireNotNull(destinationNode, out Node DestinationNode);
+
+            CopyValueProperty<bool>(SourceNode, DestinationNode, propertyName);
         }
 
         /// <summary>
@@ -397,7 +428,10 @@
         /// <returns>True if the property of a node is a <see cref="string"/>; otherwise, false.</returns>
         public static bool IsStringProperty(Node node, string propertyName)
         {
-            return IsValueProperty(node, propertyName, typeof(string));
+            Contract.RequireNotNull(node, out Node Node);
+            Contract.RequireNotNull(propertyName, out string PropertyName);
+
+            return IsValueProperty(Node, PropertyName, typeof(string));
         }
 
         /// <summary>
@@ -408,7 +442,10 @@
         /// <returns>True if the property of a node type is a <see cref="string"/>; otherwise, false.</returns>
         public static bool IsStringProperty(Type nodeType, string propertyName)
         {
-            return IsValueProperty(nodeType, propertyName, typeof(string));
+            Contract.RequireNotNull(nodeType, out Type NodeType);
+            Contract.RequireNotNull(propertyName, out string PropertyName);
+
+            return IsValueProperty(NodeType, PropertyName, typeof(string));
         }
 
         /// <summary>
@@ -419,7 +456,10 @@
         /// <param name="value">The new value.</param>
         public static void SetStringProperty(Node node, string propertyName, string value)
         {
-            SetValueProperty(node, propertyName, value);
+            Contract.RequireNotNull(node, out Node Node);
+            Contract.RequireNotNull(propertyName, out string PropertyName);
+
+            SetValueProperty(Node, PropertyName, value);
         }
 
         /// <summary>
@@ -430,7 +470,11 @@
         /// <param name="propertyName">The property name.</param>
         public static void CopyStringProperty(Node sourceNode, Node destinationNode, string propertyName)
         {
-            CopyValueProperty<string>(sourceNode, destinationNode, propertyName);
+            Contract.RequireNotNull(sourceNode, out Node SourceNode);
+            Contract.RequireNotNull(destinationNode, out Node DestinationNode);
+            Contract.RequireNotNull(propertyName, out string PropertyName);
+
+            CopyValueProperty<string>(SourceNode, DestinationNode, PropertyName);
         }
 
         /// <summary>
@@ -441,7 +485,10 @@
         /// <returns>True if the property of a node is a <see cref="Guid"/>; otherwise, false.</returns>
         public static bool IsGuidProperty(Node node, string propertyName)
         {
-            return IsValueProperty(node, propertyName, typeof(Guid));
+            Contract.RequireNotNull(node, out Node Node);
+            Contract.RequireNotNull(propertyName, out string PropertyName);
+
+            return IsValueProperty(Node, PropertyName, typeof(Guid));
         }
 
         /// <summary>
@@ -452,7 +499,10 @@
         /// <returns>True if the property of a node type is a <see cref="Guid"/>; otherwise, false.</returns>
         public static bool IsGuidProperty(Type nodeType, string propertyName)
         {
-            return IsValueProperty(nodeType, propertyName, typeof(Guid));
+            Contract.RequireNotNull(nodeType, out Type NodeType);
+            Contract.RequireNotNull(propertyName, out string PropertyName);
+
+            return IsValueProperty(NodeType, PropertyName, typeof(Guid));
         }
 
         /// <summary>
@@ -463,7 +513,10 @@
         /// <param name="value">The new value.</param>
         public static void SetGuidProperty(Node node, string propertyName, Guid value)
         {
-            SetValueProperty(node, propertyName, value);
+            Contract.RequireNotNull(node, out Node Node);
+            Contract.RequireNotNull(propertyName, out string PropertyName);
+
+            SetValueProperty(Node, PropertyName, value);
         }
 
         /// <summary>
@@ -474,7 +527,11 @@
         /// <param name="propertyName">The property name.</param>
         public static void CopyGuidProperty(Node sourceNode, Node destinationNode, string propertyName)
         {
-            CopyValueProperty<Guid>(sourceNode, destinationNode, propertyName);
+            Contract.RequireNotNull(sourceNode, out Node SourceNode);
+            Contract.RequireNotNull(destinationNode, out Node DestinationNode);
+            Contract.RequireNotNull(propertyName, out string PropertyName);
+
+            CopyValueProperty<Guid>(SourceNode, DestinationNode, PropertyName);
         }
 
         /// <summary>
@@ -485,11 +542,11 @@
         /// <returns>True if the property of a node is an enum; otherwise, false.</returns>
         public static bool IsEnumProperty(Node node, string propertyName)
         {
-            if (node == null) throw new ArgumentNullException(nameof(node));
-            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
+            Contract.RequireNotNull(node, out Node Node);
+            Contract.RequireNotNull(propertyName, out string PropertyName);
 
-            Type NodeType = node.GetType();
-            return IsEnumProperty(NodeType, propertyName);
+            Type NodeType = Node.GetType();
+            return IsEnumProperty(NodeType, PropertyName);
         }
 
         /// <summary>
@@ -500,33 +557,36 @@
         /// <returns>True if the property of a node type is an enum; otherwise, false.</returns>
         public static bool IsEnumProperty(Type nodeType, string propertyName)
         {
-            if (nodeType == null) throw new ArgumentNullException(nameof(nodeType));
-            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
+            Contract.RequireNotNull(nodeType, out Type NodeType);
+            Contract.RequireNotNull(propertyName, out string PropertyName);
 
-            PropertyInfo Property = SafeType.GetProperty(nodeType, propertyName);
-
+            PropertyInfo Property = SafeType.GetProperty(NodeType, PropertyName);
             Type PropertyType = Property.PropertyType;
+
             return PropertyType.IsEnum;
         }
 
         /// <summary>
         /// Sets the value of an enum property of a node.
         /// </summary>
+        /// <typeparam name="TEnum">The enum type.</typeparam>
         /// <param name="node">The node.</param>
         /// <param name="propertyName">The property name.</param>
         /// <param name="value">The new value.</param>
-        public static void SetEnumProperty(Node node, string propertyName, object value)
+        public static void SetEnumProperty<TEnum>(Node node, string propertyName, TEnum value)
+            where TEnum : System.Enum
         {
-            if (node == null) throw new ArgumentNullException(nameof(node));
-            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
+            Contract.RequireNotNull(node, out Node Node);
+            Contract.RequireNotNull(propertyName, out string PropertyName);
 
-            Type NodeType = node.GetType();
-            PropertyInfo Property = SafeType.GetProperty(NodeType, propertyName);
-
+            Type NodeType = Node.GetType();
+            PropertyInfo Property = SafeType.GetProperty(NodeType, PropertyName);
             Type PropertyType = Property.PropertyType;
-            Debug.Assert(PropertyType.IsEnum);
 
-            Property.SetValue(node, value);
+            if (!PropertyType.IsEnum)
+                throw new ArgumentException($"{nameof(propertyName)} must be the name of an enumeration property");
+
+            Property.SetValue(Node, value);
         }
 
         /// <summary>
@@ -537,37 +597,42 @@
         /// <param name="propertyName">The property name.</param>
         public static void CopyEnumProperty(Node sourceNode, Node destinationNode, string propertyName)
         {
-            if (sourceNode == null) throw new ArgumentNullException(nameof(sourceNode));
-            if (destinationNode == null) throw new ArgumentNullException(nameof(destinationNode));
-            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
+            Contract.RequireNotNull(sourceNode, out Node SourceNode);
+            Contract.RequireNotNull(destinationNode, out Node DestinationNode);
+            Contract.RequireNotNull(propertyName, out string PropertyName);
 
-            Type SourceNodeType = sourceNode.GetType();
-            Type DestinationNodeType = sourceNode.GetType();
-            Debug.Assert(SourceNodeType == DestinationNodeType);
+            Type SourceNodeType = SourceNode.GetType();
+            Type DestinationNodeType = DestinationNode.GetType();
 
-            PropertyInfo Property = SafeType.GetProperty(SourceNodeType, propertyName);
+            if (SourceNodeType != DestinationNodeType)
+                throw new ArgumentException($"{nameof(sourceNode)} and {nameof(destinationNode)} must be of the same type");
 
+            PropertyInfo Property = SafeType.GetProperty(SourceNodeType, PropertyName);
             Type PropertyType = Property.PropertyType;
-            if (!PropertyType.IsEnum) throw new ArgumentException($"{nameof(propertyName)} must designate an enum property");
 
-            Property.SetValue(destinationNode, Property.GetValue(sourceNode));
+            if (!PropertyType.IsEnum)
+                throw new ArgumentException($"{nameof(propertyName)} must be the name of an enumeration property");
+
+            Property.SetValue(DestinationNode, Property.GetValue(SourceNode));
         }
 
-        private static void GetEnumMinMax(PropertyInfo property, out int min, out int max)
+        private static bool IsDiscretePropertyType(Type propertyType)
         {
-            if (property == null) throw new ArgumentNullException(nameof(property));
+            return propertyType.IsEnum || propertyType == typeof(bool);
+        }
 
-            Type PropertyType = property.PropertyType;
-            if (!PropertyType.IsEnum && PropertyType != typeof(bool)) throw new ArgumentException($"{nameof(property)} must designate an enum or bool property");
+        private static void GetEnumMinMax(Type propertyType, out int min, out int max)
+        {
+            Debug.Assert(IsDiscretePropertyType(propertyType));
 
-            if (PropertyType == typeof(bool))
+            if (propertyType == typeof(bool))
             {
                 max = 1;
                 min = 0;
             }
             else
             {
-                Array Values = property.PropertyType.GetEnumValues();
+                Array Values = propertyType.GetEnumValues();
 
                 max = int.MinValue;
                 min = int.MaxValue;
@@ -585,23 +650,15 @@
 
         private static bool IsValueProperty(Node node, string propertyName, Type type)
         {
-            if (node == null) throw new ArgumentNullException(nameof(node));
-            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
-            if (type == null) throw new ArgumentNullException(nameof(type));
-
             Type NodeType = node.GetType();
             return IsValueProperty(NodeType, propertyName, type);
         }
 
         private static bool IsValueProperty(Type nodeType, string propertyName, Type type)
         {
-            if (nodeType == null) throw new ArgumentNullException(nameof(nodeType));
-            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
-            if (type == null) throw new ArgumentNullException(nameof(type));
-
             PropertyInfo Property = SafeType.GetProperty(nodeType, propertyName);
-
             Type PropertyType = Property.PropertyType;
+
             if (PropertyType != type)
                 return false;
 
@@ -610,33 +667,29 @@
 
         private static void SetValueProperty<T>(Node node, string propertyName, T value)
         {
-            if (node == null) throw new ArgumentNullException(nameof(node));
-            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
-            if (value == null) throw new ArgumentNullException(nameof(value));
-
             Type NodeType = node.GetType();
             PropertyInfo Property = SafeType.GetProperty(NodeType, propertyName);
-
             Type PropertyType = Property.PropertyType;
-            Debug.Assert(PropertyType == typeof(T));
+
+            if (PropertyType != typeof(T))
+                throw new ArgumentException($"{nameof(propertyName)} must be the name of a property of type {typeof(T)}");
 
             Property.SetValue(node, value);
         }
 
         private static void CopyValueProperty<T>(Node sourceNode, Node destinationNode, string propertyName)
         {
-            if (sourceNode == null) throw new ArgumentNullException(nameof(sourceNode));
-            if (destinationNode == null) throw new ArgumentNullException(nameof(destinationNode));
-            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
-
             Type SourceNodeType = sourceNode.GetType();
-            Type DestinationNodeType = sourceNode.GetType();
-            Debug.Assert(SourceNodeType == DestinationNodeType);
+            Type DestinationNodeType = destinationNode.GetType();
+
+            if (SourceNodeType != DestinationNodeType)
+                throw new ArgumentException($"{nameof(sourceNode)} and {nameof(destinationNode)} must be of the same type");
 
             PropertyInfo Property = SafeType.GetProperty(SourceNodeType, propertyName);
-
             Type PropertyType = Property.PropertyType;
-            Debug.Assert(PropertyType == typeof(T));
+
+            if (PropertyType != typeof(T))
+                throw new ArgumentException($"{nameof(propertyName)} must be the name of a property of type {typeof(T)}");
 
             Property.SetValue(destinationNode, Property.GetValue(sourceNode));
         }
