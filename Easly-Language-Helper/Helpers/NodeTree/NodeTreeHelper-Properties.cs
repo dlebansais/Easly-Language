@@ -100,9 +100,23 @@
             else
                 Result = (int)Property.GetValue(Node)!;
 
-            Debug.Assert(min <= Result && Result <= max);
+            Debug.Assert(Result >= min);
+            Debug.Assert(Result <= max);
 
             return Result;
+        }
+
+        /// <summary>
+        /// Sets the content of an enum property of a node.
+        /// </summary>
+        /// <typeparam name="T">The enum type.</typeparam>
+        /// <param name="node">The node.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <param name="value">The enum content.</param>
+        public static void SetEnumValue<T>(Node node, string propertyName, T value)
+            where T : System.Enum
+        {
+            SetEnumValue(node, propertyName, (int)(object)value);
         }
 
         /// <summary>
