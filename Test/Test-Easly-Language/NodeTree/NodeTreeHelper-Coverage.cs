@@ -76,6 +76,11 @@
             Assert.Throws<ArgumentException>(() => { NodeTreeHelper.GetEnumValueAndRange(DefaultExpression, nameof(AnchoredType.AnchorKind), out _, out _); });
         }
 
+        private enum TestSetEnum: byte
+        {
+            TestValue,
+        };
+
         [Test]
         public static void TestSetEnumValue()
         {
@@ -83,6 +88,71 @@
             AnchoredType SimpleAnchoredType = NodeHelper.CreateAnchoredType(SimpleQualifiedName, AnchorKinds.Declaration);
 
             NodeTreeHelper.SetEnumValue(SimpleAnchoredType, nameof(AnchoredType.AnchorKind), AnchorKinds.Creation);
+            NodeTreeHelper.SetEnumValue(SimpleAnchoredType, nameof(AnchoredType.AnchorKind), (int)AnchorKinds.Creation);
+
+            Assert.Throws<ArgumentOutOfRangeException>(() => { NodeTreeHelper.SetEnumValue(SimpleAnchoredType, nameof(AnchoredType.AnchorKind), (int)(AnchorKinds.Creation) + 1); });
+
+            Expression DefaultExpression = NodeHelper.CreateDefaultExpression();
+
+            Assert.Throws<ArgumentException>(() => { NodeTreeHelper.SetEnumValue(SimpleAnchoredType, nameof(AnchoredType.AnchorKind), TestSetEnum.TestValue); });
+
+            Inheritance NewInheritance = NodeHelper.CreateSimpleInheritance("a");
+            NodeTreeHelper.SetEnumValue(NewInheritance, nameof(Inheritance.ForgetIndexer), true);
+            NodeTreeHelper.SetEnumValue(NewInheritance, nameof(Inheritance.ForgetIndexer), 1);
+
+            Assert.Throws<ArgumentException>(() => { NodeTreeHelper.SetEnumValue(DefaultExpression, nameof(AnchoredType.AnchorKind), AnchorKinds.Creation); });
+        }
+
+        [Test]
+        public static void TestGetEnumRange()
+        {
+            NodeTreeHelper.GetEnumRange(typeof(AnchoredType), nameof(AnchoredType.AnchorKind), out int Min, out int Max);
+            Assert.AreEqual(Min, (int)AnchorKinds.Declaration);
+            Assert.AreEqual(Max, (int)AnchorKinds.Creation);
+
+            Assert.Throws<ArgumentException>(() => { NodeTreeHelper.GetEnumRange(typeof(Inheritance), nameof(Inheritance.DiscontinueBlocks), out _, out _); });
+        }
+
+        [Test]
+        public static void TestGetGuid()
+        {
+            Class NewClass = NodeHelper.CreateSimpleClass("a");
+
+            Guid Guid = NodeTreeHelper.GetGuid(NewClass, nameof(Class.ClassGuid));
+            Assert.AreEqual(Guid, NewClass.ClassGuid);
+
+            Assert.Throws<ArgumentException>(() => { NodeTreeHelper.GetGuid(NewClass, nameof(Class.ClassPath)); });
+        }
+
+        [Test]
+        public static void TestGetComment()
+        {
+            string Result;
+
+            Identifier SimpleIdentifier = NodeHelper.CreateSimpleIdentifier("a");
+
+            Result = NodeTreeHelper.GetCommentText(SimpleIdentifier);
+            Assert.AreEqual(Result, string.Empty);
+        }
+
+        [Test]
+        public static void TestSetComment()
+        {
+            Identifier SimpleIdentifier = NodeHelper.CreateSimpleIdentifier("a");
+
+            NodeTreeHelper.SetCommentText(SimpleIdentifier, "a");
+            Assert.AreEqual(SimpleIdentifier.Documentation.Comment, "a");
+        }
+
+        [Test]
+        public static void TestIsDocumentProperty()
+        {
+            bool Result;
+
+            Identifier SimpleIdentifier = NodeHelper.CreateSimpleIdentifier("a");
+
+            Result = NodeTreeHelper.IsDocumentProperty(SimpleIdentifier, nameof(Identifier.Documentation));
+            Assert.True(Result);
         }
     }
 }

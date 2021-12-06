@@ -23,7 +23,9 @@
             Contract.RequireNotNull(propertyName, out string PropertyName);
 
             Type NodeType = Node.GetType();
-            PropertyInfo Property = SafeType.GetProperty(NodeType, PropertyName);
+
+            if (!SafeType.CheckAndGetPropertyOf(NodeType, PropertyName, out PropertyInfo Property))
+                throw new ArgumentException($"{nameof(propertyName)} must be the name of a property of {NodeType}");
 
             if (Property.PropertyType != typeof(string))
                 throw new ArgumentException($"{nameof(propertyName)} must be the name of a string property");
@@ -46,7 +48,9 @@
             Contract.RequireNotNull(text, out string Text);
 
             Type NodeType = Node.GetType();
-            PropertyInfo Property = SafeType.GetProperty(NodeType, PropertyName);
+
+            if (!SafeType.CheckAndGetPropertyOf(NodeType, PropertyName, out PropertyInfo Property))
+                throw new ArgumentException($"{nameof(propertyName)} must be the name of a property of {NodeType}");
 
             if (Property.PropertyType != typeof(string))
                 throw new ArgumentException($"{nameof(propertyName)} must be the name of a string property");
@@ -82,7 +86,10 @@
             Contract.RequireNotNull(propertyName, out string PropertyName);
 
             Type NodeType = Node.GetType();
-            PropertyInfo Property = SafeType.GetProperty(NodeType, PropertyName);
+
+            if (!SafeType.CheckAndGetPropertyOf(NodeType, PropertyName, out PropertyInfo Property))
+                throw new ArgumentException($"{nameof(propertyName)} must be the name of a property of {NodeType}");
+
             Type PropertyType = Property.PropertyType;
 
             if (!IsDiscretePropertyType(PropertyType))
@@ -109,14 +116,28 @@
         /// <summary>
         /// Sets the content of an enum property of a node.
         /// </summary>
-        /// <typeparam name="T">The enum type.</typeparam>
+        /// <typeparam name="TEnum">The enum type.</typeparam>
         /// <param name="node">The node.</param>
         /// <param name="propertyName">The property name.</param>
         /// <param name="value">The enum content.</param>
-        public static void SetEnumValue<T>(Node node, string propertyName, T value)
-            where T : System.Enum
+        public static void SetEnumValue<TEnum>(Node node, string propertyName, TEnum value)
+            where TEnum : struct, System.Enum
         {
+            if (!typeof(TEnum).IsEnum || typeof(TEnum).GetEnumUnderlyingType() != typeof(int))
+                throw new ArgumentException($"{nameof(value)} must be of an enumeration value type");
+
             SetEnumValue(node, propertyName, (int)(object)value);
+        }
+
+        /// <summary>
+        /// Sets the content of an enum property of a node.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <param name="value">The enum content.</param>
+        public static void SetEnumValue(Node node, string propertyName, bool value)
+        {
+            SetEnumValue(node, propertyName, value ? 1 : 0);
         }
 
         /// <summary>
@@ -131,7 +152,10 @@
             Contract.RequireNotNull(propertyName, out string PropertyName);
 
             Type NodeType = Node.GetType();
-            PropertyInfo Property = SafeType.GetProperty(NodeType, PropertyName);
+
+            if (!SafeType.CheckAndGetPropertyOf(NodeType, PropertyName, out PropertyInfo Property))
+                throw new ArgumentException($"{nameof(propertyName)} must be the name of a property of {NodeType}");
+
             Type PropertyType = Property.PropertyType;
 
             if (!IsDiscretePropertyType(PropertyType))
@@ -139,7 +163,7 @@
 
             GetEnumMinMax(PropertyType, out int Min, out int Max);
 
-            if (Min < value || value > Max)
+            if (Min > value || value > Max)
                 throw new ArgumentOutOfRangeException(nameof(value));
 
             if (PropertyType == typeof(bool))
@@ -160,7 +184,9 @@
             Contract.RequireNotNull(nodeType, out Type NodeType);
             Contract.RequireNotNull(propertyName, out string PropertyName);
 
-            PropertyInfo Property = SafeType.GetProperty(NodeType, PropertyName);
+            if (!SafeType.CheckAndGetPropertyOf(NodeType, PropertyName, out PropertyInfo Property))
+                throw new ArgumentException($"{nameof(propertyName)} must be the name of a property of {NodeType}");
+
             Type PropertyType = Property.PropertyType;
 
             if (!IsDiscretePropertyType(PropertyType))
@@ -181,7 +207,10 @@
             Contract.RequireNotNull(propertyName, out string PropertyName);
 
             Type NodeType = Node.GetType();
-            PropertyInfo Property = SafeType.GetProperty(NodeType, PropertyName);
+
+            if (!SafeType.CheckAndGetPropertyOf(NodeType, PropertyName, out PropertyInfo Property))
+                throw new ArgumentException($"{nameof(propertyName)} must be the name of a property of {NodeType}");
+
             Type PropertyType = Property.PropertyType;
 
             if (PropertyType != typeof(Guid))
@@ -574,7 +603,9 @@
             Contract.RequireNotNull(nodeType, out Type NodeType);
             Contract.RequireNotNull(propertyName, out string PropertyName);
 
-            PropertyInfo Property = SafeType.GetProperty(NodeType, PropertyName);
+            if (!SafeType.CheckAndGetPropertyOf(NodeType, PropertyName, out PropertyInfo Property))
+                return false;
+
             Type PropertyType = Property.PropertyType;
 
             return PropertyType.IsEnum;
@@ -593,8 +624,14 @@
             Contract.RequireNotNull(node, out Node Node);
             Contract.RequireNotNull(propertyName, out string PropertyName);
 
+            if (!typeof(TEnum).IsEnum || typeof(TEnum).GetEnumUnderlyingType() != typeof(int))
+                throw new ArgumentException($"{nameof(value)} must be of an enumeration value type");
+
             Type NodeType = Node.GetType();
-            PropertyInfo Property = SafeType.GetProperty(NodeType, PropertyName);
+
+            if (!SafeType.CheckAndGetPropertyOf(NodeType, PropertyName, out PropertyInfo Property))
+                throw new ArgumentException($"{nameof(propertyName)} must be the name of a property of {NodeType}");
+
             Type PropertyType = Property.PropertyType;
 
             if (!PropertyType.IsEnum)
@@ -621,7 +658,9 @@
             if (SourceNodeType != DestinationNodeType)
                 throw new ArgumentException($"{nameof(sourceNode)} and {nameof(destinationNode)} must be of the same type");
 
-            PropertyInfo Property = SafeType.GetProperty(SourceNodeType, PropertyName);
+            if (!SafeType.CheckAndGetPropertyOf(SourceNodeType, PropertyName, out PropertyInfo Property))
+                throw new ArgumentException($"{nameof(propertyName)} must be the name of a property of {SourceNodeType}");
+
             Type PropertyType = Property.PropertyType;
 
             if (!PropertyType.IsEnum)
@@ -670,7 +709,9 @@
 
         private static bool IsValueProperty(Type nodeType, string propertyName, Type type)
         {
-            PropertyInfo Property = SafeType.GetProperty(nodeType, propertyName);
+            if (!SafeType.CheckAndGetPropertyOf(nodeType, propertyName, out PropertyInfo Property))
+                return false;
+
             Type PropertyType = Property.PropertyType;
 
             if (PropertyType != type)
@@ -682,7 +723,10 @@
         private static void SetValueProperty<T>(Node node, string propertyName, T value)
         {
             Type NodeType = node.GetType();
-            PropertyInfo Property = SafeType.GetProperty(NodeType, propertyName);
+
+            if (!SafeType.CheckAndGetPropertyOf(NodeType, propertyName, out PropertyInfo Property))
+                throw new ArgumentException($"{nameof(propertyName)} must be the name of a property of {NodeType}");
+
             Type PropertyType = Property.PropertyType;
 
             if (PropertyType != typeof(T))
@@ -699,7 +743,9 @@
             if (SourceNodeType != DestinationNodeType)
                 throw new ArgumentException($"{nameof(sourceNode)} and {nameof(destinationNode)} must be of the same type");
 
-            PropertyInfo Property = SafeType.GetProperty(SourceNodeType, propertyName);
+            if (!SafeType.CheckAndGetPropertyOf(SourceNodeType, propertyName, out PropertyInfo Property))
+                throw new ArgumentException($"{nameof(propertyName)} must be the name of a property of {SourceNodeType}");
+
             Type PropertyType = Property.PropertyType;
 
             if (PropertyType != typeof(T))

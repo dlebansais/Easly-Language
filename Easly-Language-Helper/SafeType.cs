@@ -149,18 +149,18 @@
         /// Gets the public property with the specified name. The property must exist.
         /// </summary>
         /// <param name="type">The type.</param>
-        /// <param name="name">The string containing the name of the public property to get.</param>
+        /// <param name="propertyName">The string containing the name of the public property to get.</param>
         /// <returns>An object representing the public property with the specified name.</returns>
         /// <exception cref="AmbiguousMatchException">More than one property is found with the specified name.</exception>
-        public static PropertyInfo GetProperty(Type type, string name)
+        public static PropertyInfo GetProperty(Type type, string propertyName)
         {
-            PropertyInfo? Result = type.GetProperty(name);
+            PropertyInfo? Result = type.GetProperty(propertyName);
 
             if (Result == null)
             {
                 foreach (Type Interface in type.GetInterfaces())
                 {
-                    PropertyInfo? InterfaceProperty = Interface.GetProperty(name);
+                    PropertyInfo? InterfaceProperty = Interface.GetProperty(propertyName);
                     if (InterfaceProperty != null)
                         if (Result != null)
                             throw new AmbiguousMatchException();
@@ -169,8 +169,10 @@
                 }
             }
 
-            Debug.Assert(Result != null);
-            Debug.Assert(IsPropertyOf(type, name));
+            if (Result == null)
+                throw new ArgumentException($"{nameof(propertyName)} must be the name of a property of {type}");
+
+            Debug.Assert(IsPropertyOf(type, propertyName));
 
             return Result!;
         }
