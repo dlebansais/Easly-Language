@@ -123,6 +123,23 @@
         }
 
         [Test]
+        public static void TestCopyEnumProperty()
+        {
+            QualifiedName FirstQualifiedName = NodeHelper.CreateSimpleQualifiedName("a");
+            AnchoredType FirstAnchoredType = NodeHelper.CreateAnchoredType(FirstQualifiedName, AnchorKinds.Declaration);
+            QualifiedName SecondQualifiedName = NodeHelper.CreateSimpleQualifiedName("b");
+            AnchoredType SecondAnchoredType = NodeHelper.CreateAnchoredType(SecondQualifiedName, AnchorKinds.Creation);
+
+            NodeTreeHelper.CopyEnumProperty(FirstAnchoredType, SecondAnchoredType, nameof(AnchoredType.AnchorKind));
+
+            QueryExpression DefaultExpression = (QueryExpression)NodeHelper.CreateDefaultExpression();
+
+            Assert.Throws<ArgumentException>(() => { NodeTreeHelper.CopyEnumProperty(FirstAnchoredType, DefaultExpression, nameof(AnchoredType.AnchorKind)); });
+            Assert.Throws<ArgumentException>(() => { NodeTreeHelper.CopyEnumProperty(FirstAnchoredType, SecondAnchoredType, nameof(QueryExpression.Query)); });
+            Assert.Throws<ArgumentException>(() => { NodeTreeHelper.CopyEnumProperty(FirstAnchoredType, SecondAnchoredType, nameof(AnchoredType.AnchoredName)); });
+        }
+
+        [Test]
         public static void TestGetEnumRange()
         {
             NodeTreeHelper.GetEnumRange(typeof(AnchoredType), nameof(AnchoredType.AnchorKind), out int Min, out int Max);
@@ -278,6 +295,9 @@
 
             Result = NodeTreeHelper.IsBooleanProperty(NewInheritance, nameof(QueryExpression.Query));
             Assert.False(Result);
+
+            Result = NodeTreeHelper.IsBooleanProperty(typeof(Inheritance), nameof(Inheritance.ForgetIndexer));
+            Assert.True(Result);
         }
 
         [Test]
@@ -304,6 +324,9 @@
 
             Result = NodeTreeHelper.IsStringProperty(SimpleIdentifier, nameof(QueryExpression.Query));
             Assert.False(Result);
+
+            Result = NodeTreeHelper.IsStringProperty(typeof(Identifier), nameof(Identifier.Text));
+            Assert.True(Result);
         }
 
         [Test]
@@ -321,6 +344,30 @@
 
             Result = NodeTreeHelper.IsGuidProperty(NewClass, nameof(QueryExpression.Query));
             Assert.False(Result);
+
+            Result = NodeTreeHelper.IsGuidProperty(typeof(Class), nameof(Class.ClassGuid));
+            Assert.True(Result);
+        }
+
+        [Test]
+        public static void TestIsEnumProperty()
+        {
+            bool Result;
+
+            QualifiedName SimpleQualifiedName = NodeHelper.CreateSimpleQualifiedName("a");
+            AnchoredType SimpleAnchoredType = NodeHelper.CreateAnchoredType(SimpleQualifiedName, AnchorKinds.Declaration);
+
+            Result = NodeTreeHelper.IsEnumProperty(SimpleAnchoredType, nameof(AnchoredType.AnchorKind));
+            Assert.True(Result);
+
+            Result = NodeTreeHelper.IsEnumProperty(SimpleAnchoredType, nameof(AnchoredType.AnchoredName));
+            Assert.False(Result);
+
+            Result = NodeTreeHelper.IsEnumProperty(SimpleAnchoredType, nameof(QueryExpression.Query));
+            Assert.False(Result);
+
+            Result = NodeTreeHelper.IsEnumProperty(typeof(AnchoredType), nameof(AnchoredType.AnchorKind));
+            Assert.True(Result);
         }
     }
 }

@@ -612,35 +612,6 @@
         }
 
         /// <summary>
-        /// Sets the value of an enum property of a node.
-        /// </summary>
-        /// <typeparam name="TEnum">The enum type.</typeparam>
-        /// <param name="node">The node.</param>
-        /// <param name="propertyName">The property name.</param>
-        /// <param name="value">The new value.</param>
-        public static void SetEnumProperty<TEnum>(Node node, string propertyName, TEnum value)
-            where TEnum : struct, System.Enum
-        {
-            Contract.RequireNotNull(node, out Node Node);
-            Contract.RequireNotNull(propertyName, out string PropertyName);
-
-            if (typeof(TEnum).GetEnumUnderlyingType() != typeof(int))
-                throw new ArgumentException($"{nameof(value)} must be of an enumeration value type");
-
-            Type NodeType = Node.GetType();
-
-            if (!SafeType.CheckAndGetPropertyOf(NodeType, PropertyName, out PropertyInfo Property))
-                throw new ArgumentException($"{nameof(propertyName)} must be the name of a property of {NodeType}");
-
-            Type PropertyType = Property.PropertyType;
-
-            if (!PropertyType.IsEnum)
-                throw new ArgumentException($"{nameof(propertyName)} must be the name of an enumeration property");
-
-            Property.SetValue(Node, value);
-        }
-
-        /// <summary>
         /// Copy the enum value of from a node to another for a given property.
         /// </summary>
         /// <param name="sourceNode">The source node.</param>
