@@ -658,22 +658,17 @@
             {
                 Array Values = propertyType.GetEnumValues();
 
+                max = int.MinValue;
                 min = int.MaxValue;
                 foreach (object? Value in Values)
                 {
                     int ValueInt = (int)Value!;
 
+                    Debug.Assert(max < ValueInt);
+                    max = ValueInt;
+
                     if (min > ValueInt)
                         min = ValueInt;
-                }
-
-                max = min;
-                foreach (object? Value in Values)
-                {
-                    int ValueInt = (int)Value!;
-
-                    if (max < ValueInt)
-                        max = ValueInt;
                 }
             }
         }
