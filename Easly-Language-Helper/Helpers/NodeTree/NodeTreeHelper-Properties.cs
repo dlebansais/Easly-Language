@@ -123,7 +123,7 @@
         public static void SetEnumValue<TEnum>(Node node, string propertyName, TEnum value)
             where TEnum : struct, System.Enum
         {
-            if (!typeof(TEnum).IsEnum || typeof(TEnum).GetEnumUnderlyingType() != typeof(int))
+            if (typeof(TEnum).GetEnumUnderlyingType() != typeof(int))
                 throw new ArgumentException($"{nameof(value)} must be of an enumeration value type");
 
             SetEnumValue(node, propertyName, (int)(object)value);
@@ -619,12 +619,12 @@
         /// <param name="propertyName">The property name.</param>
         /// <param name="value">The new value.</param>
         public static void SetEnumProperty<TEnum>(Node node, string propertyName, TEnum value)
-            where TEnum : System.Enum
+            where TEnum : struct, System.Enum
         {
             Contract.RequireNotNull(node, out Node Node);
             Contract.RequireNotNull(propertyName, out string PropertyName);
 
-            if (!typeof(TEnum).IsEnum || typeof(TEnum).GetEnumUnderlyingType() != typeof(int))
+            if (typeof(TEnum).GetEnumUnderlyingType() != typeof(int))
                 throw new ArgumentException($"{nameof(value)} must be of an enumeration value type");
 
             Type NodeType = Node.GetType();
