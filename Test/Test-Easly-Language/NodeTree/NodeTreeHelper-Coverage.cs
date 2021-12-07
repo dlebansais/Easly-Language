@@ -307,6 +307,27 @@
 
             NodeTreeHelper.SetBooleanProperty(NewInheritance, nameof(Inheritance.ForgetIndexer), true);
             Assert.True(NewInheritance.ForgetIndexer);
+
+            Assert.Throws<ArgumentException>(() => { NodeTreeHelper.SetBooleanProperty(NewInheritance, nameof(QueryExpression.Query), true); });
+            Assert.Throws<ArgumentException>(() => { NodeTreeHelper.SetBooleanProperty(NewInheritance, nameof(Inheritance.ForgetBlocks), true); });
+        }
+
+        [Test]
+        public static void TestCopyBooleanProperty()
+        {
+            Inheritance FirstInheritance = NodeHelper.CreateSimpleInheritance("a");
+            Inheritance SecondInheritance = NodeHelper.CreateSimpleInheritance("b");
+
+            SecondInheritance.ForgetIndexer = true;
+
+            NodeTreeHelper.CopyBooleanProperty(FirstInheritance, SecondInheritance, nameof(Inheritance.ForgetIndexer));
+            Assert.True(FirstInheritance.ForgetIndexer);
+
+            Expression DefaultExpression = NodeHelper.CreateDefaultExpression();
+
+            Assert.Throws<ArgumentException>(() => { NodeTreeHelper.CopyBooleanProperty(FirstInheritance, DefaultExpression, nameof(Inheritance.ForgetIndexer)); });
+            Assert.Throws<ArgumentException>(() => { NodeTreeHelper.CopyBooleanProperty(FirstInheritance, SecondInheritance, nameof(Inheritance.ForgetBlocks)); });
+            Assert.Throws<ArgumentException>(() => { NodeTreeHelper.CopyBooleanProperty(FirstInheritance, SecondInheritance, nameof(QueryExpression.Query)); });
         }
 
         [Test]
