@@ -537,8 +537,7 @@
             ForLoopInstruction Instruction18 = NodeHelper.CreateSimpleForLoopInstruction(DefaultInstruction);
 
 #if !DEBUG
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateForLoopInstruction(NullExpression); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateForLoopInstruction(NullInstruction); });
+            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateSimpleForLoopInstruction(NullInstruction); });
 #endif
 
             Conditional EmptyConditional = NodeHelper.CreateEmptyConditional();

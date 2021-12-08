@@ -20,7 +20,9 @@
         /// <returns>The list of property names.</returns>
         public static IList<string> EnumChildNodeProperties(Node node)
         {
-            Type NodeType = node.GetType();
+            Contract.RequireNotNull(node, out Node Node);
+
+            Type NodeType = Node.GetType();
             return EnumChildNodeProperties(NodeType);
         }
 
@@ -31,13 +33,15 @@
         /// <returns>The list of property names.</returns>
         public static IList<string> EnumChildNodeProperties(Type nodeType)
         {
-            if (!IsNodeDescendantType(nodeType))
+            Contract.RequireNotNull(nodeType, out Type NodeType);
+
+            if (!IsNodeDescendantType(NodeType))
                 throw new ArgumentException($"{nameof(nodeType)} must inherit from {nameof(Node)}");
 
-            if (GetBaseNodeAncestor(nodeType, out Type AncestorType))
-                nodeType = AncestorType;
+            if (GetBaseNodeAncestor(NodeType, out Type AncestorType))
+                NodeType = AncestorType;
 
-            IList<PropertyInfo> Properties = GetTypeProperties(nodeType);
+            IList<PropertyInfo> Properties = GetTypeProperties(NodeType);
 
             List<string> Result = new();
             foreach (PropertyInfo Property in Properties)
@@ -55,7 +59,9 @@
         /// <returns>True if the provided type inherits from <see cref="Node"/>; otherwise, false.</returns>
         public static bool IsNodeDescendantType(Type type)
         {
-            return type.IsSubclassOf(typeof(Node));
+            Contract.RequireNotNull(type, out Type Type);
+
+            return Type.IsSubclassOf(typeof(Node));
         }
 
         /// <summary>
@@ -65,10 +71,12 @@
         /// <returns>True if the provided type is an optional reference that inherits from <see cref="Node"/>; otherwise, false.</returns>
         public static bool IsOptionalReferenceType(Type type)
         {
-            if (!type.IsInterface || !type.IsGenericType || type.GetGenericTypeDefinition() != typeof(IOptionalReference<>))
+            Contract.RequireNotNull(type, out Type Type);
+
+            if (!Type.IsInterface || !Type.IsGenericType || Type.GetGenericTypeDefinition() != typeof(IOptionalReference<>))
                 return false;
 
-            Type[] GenericArguments = type.GetGenericArguments();
+            Type[] GenericArguments = Type.GetGenericArguments();
             Debug.Assert(GenericArguments.Length == 1);
 
             Type GenericType = GenericArguments[0];
@@ -83,10 +91,12 @@
         /// <returns>True if the provided type is a <see cref="System.Collections.IList"/> of items that inherit from <see cref="Node"/>; otherwise, false.</returns>
         public static bool IsNodeListType(Type type)
         {
-            if (!type.IsInterface || !type.IsGenericType || type.GetGenericTypeDefinition() != typeof(IList<>))
+            Contract.RequireNotNull(type, out Type Type);
+
+            if (!Type.IsInterface || !Type.IsGenericType || Type.GetGenericTypeDefinition() != typeof(IList<>))
                 return false;
 
-            Type[] GenericArguments = type.GetGenericArguments();
+            Type[] GenericArguments = Type.GetGenericArguments();
             Debug.Assert(GenericArguments.Length == 1);
 
             Type GenericType = GenericArguments[0];
@@ -101,10 +111,12 @@
         /// <returns>True if the provided type is a <see cref="IBlockList"/>; otherwise, false.</returns>
         public static bool IsBlockListType(Type type)
         {
-            if (!type.IsInterface || !type.IsGenericType || type.GetGenericTypeDefinition() != typeof(IBlockList<>))
+            Contract.RequireNotNull(type, out Type Type);
+
+            if (!Type.IsInterface || !Type.IsGenericType || Type.GetGenericTypeDefinition() != typeof(IBlockList<>))
                 return false;
 
-            Type[] GenericArguments = type.GetGenericArguments();
+            Type[] GenericArguments = Type.GetGenericArguments();
             Debug.Assert(GenericArguments.Length == 1);
 
             Type GenericType = GenericArguments[0];
@@ -119,15 +131,18 @@
         /// <returns>True if the provided type is a <see cref="IBlock"/>; otherwise, false.</returns>
         public static bool IsBlockType(Type type)
         {
-            if (!type.IsInterface || !type.IsGenericType || type.GetGenericTypeDefinition() != typeof(IBlock<>))
+            Contract.RequireNotNull(type, out Type Type);
+
+            if (!Type.IsInterface || !Type.IsGenericType || Type.GetGenericTypeDefinition() != typeof(IBlock<>))
                 return false;
 
-            Type[] GenericArguments = type.GetGenericArguments();
+            Type[] GenericArguments = Type.GetGenericArguments();
             Debug.Assert(GenericArguments.Length == 1);
 
             Type GenericType = GenericArguments[0];
+            Debug.Assert(IsNodeDescendantType(GenericType));
 
-            return IsNodeDescendantType(GenericType);
+            return true;
         }
 
         /// <summary>
@@ -137,7 +152,9 @@
         /// <returns>True if the provided node contains only text; otherwise, false.</returns>
         public static bool IsTextNode(Node node)
         {
-            Type NodeType = node.GetType();
+            Contract.RequireNotNull(node, out Node Node);
+
+            Type NodeType = Node.GetType();
 
             return SafeType.IsPropertyOf(NodeType, nameof(Identifier.Text));
         }
@@ -151,10 +168,14 @@
         /// <returns>True if the node can be assigned the child node.</returns>
         public static bool IsAssignable(Node node, string propertyName, Node childNode)
         {
-            Type ParentNodeType = node.GetType();
-            PropertyInfo Property = SafeType.GetProperty(ParentNodeType, propertyName);
+            Contract.RequireNotNull(node, out Node Node);
+            Contract.RequireNotNull(propertyName, out string PropertyName);
+            Contract.RequireNotNull(childNode, out Node ChildNode);
 
-            Type NodeType = childNode.GetType();
+            Type ParentNodeType = Node.GetType();
+            PropertyInfo Property = SafeType.GetProperty(ParentNodeType, PropertyName);
+
+            Type NodeType = ChildNode.GetType();
             Type PropertyType = Property.PropertyType;
 
             Type AssignedType;
@@ -254,9 +275,11 @@
         /// <param name="optionalNodesTable">The list of optional child nodes of a node upon return.</param>
         public static void GetOptionalNodes(Node node, out IDictionary<string, IOptionalReference> optionalNodesTable)
         {
+            Contract.RequireNotNull(node, out Node Node);
+
             optionalNodesTable = new Dictionary<string, IOptionalReference>();
 
-            Type NodeType = node.GetType();
+            Type NodeType = Node.GetType();
             IList<PropertyInfo> Properties = GetTypeProperties(NodeType);
 
             foreach (PropertyInfo Property in Properties)
@@ -266,7 +289,7 @@
 
                 if (IsOptionalReferenceType(PropertyType))
                 {
-                    IOptionalReference Optional = SafeType.GetPropertyValue<IOptionalReference>(Property, node);
+                    IOptionalReference Optional = SafeType.GetPropertyValue<IOptionalReference>(Property, Node);
                     optionalNodesTable.Add(PropertyName, Optional);
                 }
             }
@@ -279,9 +302,11 @@
         /// <param name="argumentBlocksTable">The list of argument blocks of a node upon return.</param>
         public static void GetArgumentBlocks(Node node, out IDictionary<string, IBlockList<Argument>> argumentBlocksTable)
         {
+            Contract.RequireNotNull(node, out Node Node);
+
             argumentBlocksTable = new Dictionary<string, IBlockList<Argument>>();
 
-            Type NodeType = node.GetType();
+            Type NodeType = Node.GetType();
             IList<PropertyInfo> Properties = GetTypeProperties(NodeType);
 
             foreach (PropertyInfo Property in Properties)
@@ -298,7 +323,7 @@
 
                     if (GenericArguments[0] == typeof(Argument))
                     {
-                        IBlockList<Argument>? ArgumentBlocks = SafeType.GetPropertyValue<IBlockList<Argument>>(Property, node);
+                        IBlockList<Argument>? ArgumentBlocks = SafeType.GetPropertyValue<IBlockList<Argument>>(Property, Node);
 
                         argumentBlocksTable.Add(PropertyName, ArgumentBlocks);
                     }

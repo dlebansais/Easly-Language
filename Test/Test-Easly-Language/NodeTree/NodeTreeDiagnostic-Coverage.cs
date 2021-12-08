@@ -77,6 +77,11 @@
             Assert.NotNull(Exception);
             Assert.NotNull(Exception?.InvalidNode);
             Assert.NotNull(Exception?.RootNode);
+
+#if !DEBUG
+            Expression NullExpression = null!;
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeDiagnostic.IsValid(NullExpression, throwOnInvalid: true); });
+#endif
         }
 
         [Test]

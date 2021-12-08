@@ -1,6 +1,7 @@
 ﻿namespace BaseNodeHelper
 {
     using BaseNode;
+    using Contracts;
 
     /// <summary>
     /// Provides methods to manipulate nodes.
@@ -15,10 +16,13 @@
         /// <returns>The created instance.</returns>
         public static AssignmentTypeArgument CreateAssignmentTypeArgument(Identifier parameterIdentifier, ObjectType source)
         {
+            Contract.RequireNotNull(parameterIdentifier, out Identifier ParameterIdentifier);
+            Contract.RequireNotNull(source, out ObjectType Source);
+
             AssignmentTypeArgument Result = new AssignmentTypeArgument();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.ParameterIdentifier = parameterIdentifier;
-            Result.Source = source;
+            Result.ParameterIdentifier = ParameterIdentifier;
+            Result.Source = Source;
 
             return Result;
         }
@@ -30,9 +34,11 @@
         /// <returns>The created instance.</returns>
         public static PositionalTypeArgument CreatePositionalTypeArgument(ObjectType source)
         {
+            Contract.RequireNotNull(source, out ObjectType Source);
+
             PositionalTypeArgument Result = new PositionalTypeArgument();
             Result.Documentation = CreateEmptyDocumentation();
-            Result.Source = source;
+            Result.Source = Source;
 
             return Result;
         }

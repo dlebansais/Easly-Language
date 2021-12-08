@@ -10,13 +10,130 @@
     [TestFixture]
     public partial class NodeTreeHelperCoverage
     {
+        private class DescendantExpression : QueryExpression
+        {
+        };
+
         [Test]
         public static void TestEnumChildNodeProperties()
         {
+            IList<string> ChildNodePropertyList;
+
             Expression DefaultExpression = NodeHelper.CreateDefaultExpression();
 
-            IList<string> ChildNodePropertyList = NodeTreeHelper.EnumChildNodeProperties(DefaultExpression);
+            ChildNodePropertyList = NodeTreeHelper.EnumChildNodeProperties(DefaultExpression);
             Assert.True(ChildNodePropertyList.Contains(nameof(Expression.Documentation)));
+
+            ChildNodePropertyList = NodeTreeHelper.EnumChildNodeProperties(typeof(QueryExpression));
+            Assert.True(ChildNodePropertyList.Contains(nameof(Expression.Documentation)));
+
+            DescendantExpression NewDescendantExpression = new DescendantExpression();
+
+            ChildNodePropertyList = NodeTreeHelper.EnumChildNodeProperties(NewDescendantExpression);
+            Assert.True(ChildNodePropertyList.Contains(nameof(Expression.Documentation)));
+
+            Assert.Throws<ArgumentException>(() => { NodeTreeHelper.EnumChildNodeProperties(typeof(string)); });
+
+#if !DEBUG
+            Expression NullExpression = null!;
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.EnumChildNodeProperties(NullExpression); });
+#endif
+        }
+
+        [Test]
+        public static void TestIsBlockType()
+        {
+            bool Result;
+
+            Result = NodeTreeHelper.IsBlockType(typeof(IBlock<Identifier>));
+            Assert.True(Result);
+
+            Result = NodeTreeHelper.IsBlockType(typeof(string));
+            Assert.False(Result);
+
+            Result = NodeTreeHelper.IsBlockType(typeof(IDisposable));
+            Assert.False(Result);
+
+            Result = NodeTreeHelper.IsBlockType(typeof(IEnumerable<int>));
+            Assert.False(Result);
+
+#if !DEBUG
+            Type NullType = null!;
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.IsBlockType(NullType); });
+#endif
+        }
+
+        [Test]
+        public static void TestIsTextNode()
+        {
+            bool Result;
+
+            Identifier SimpleIdentifier = NodeHelper.CreateSimpleIdentifier("a");
+            Expression DefaultExpression = NodeHelper.CreateDefaultExpression();
+
+            Result = NodeTreeHelper.IsTextNode(SimpleIdentifier);
+            Assert.True(Result);
+
+            Result = NodeTreeHelper.IsTextNode(DefaultExpression);
+            Assert.False(Result);
+
+#if !DEBUG
+            Identifier NullIdentifier = null!;
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.IsTextNode(NullIdentifier); });
+#endif
+        }
+
+        [Test]
+        public static void TestIsAssignable()
+        {
+            bool Result;
+
+            QueryExpression SimpleQueryExpression = NodeHelper.CreateSimpleQueryExpression("b");
+            QualifiedName SimpleQualifiedName = NodeHelper.CreateSimpleQualifiedName("a");
+
+            Result = NodeTreeHelper.IsAssignable(SimpleQueryExpression, nameof(QueryExpression.Query), SimpleQualifiedName);
+            Assert.True(Result);
+
+#if !DEBUG
+            QueryExpression NullQueryExpression = null!;
+            QualifiedName NullQualifiedName = null!;
+            string NullString = null!;
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.IsAssignable(NullQueryExpression, nameof(QueryExpression.Query), SimpleQualifiedName); });
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.IsAssignable(SimpleQueryExpression, NullQualifiedName, SimpleQualifiedName); });
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.IsAssignable(SimpleQueryExpression, nameof(QueryExpression.Query), NullString); });
+#endif
+        }
+
+        [Test]
+        public static void TestGetOptionalNodes()
+        {
+            IBlockList<Argument> EmptyArgumentBlockList = BlockListHelper.CreateEmptyBlockList<Argument>();
+            PrecursorExpression NewPrecursorExpression = NodeHelper.CreatePrecursorExpression(EmptyArgumentBlockList);
+
+            NodeTreeHelper.GetOptionalNodes(NewPrecursorExpression, out IDictionary<string, IOptionalReference> OptionalNodesTable);
+            Assert.True(OptionalNodesTable.ContainsKey(nameof(PrecursorExpression.AncestorType)));
+            Assert.AreEqual(OptionalNodesTable.Count, 1);
+
+#if !DEBUG
+            PrecursorExpression NullPrecursorExpression = null!;
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.GetOptionalNodes(NullPrecursorExpression, out _); });
+#endif
+        }
+
+        [Test]
+        public static void TestGetArgumentBlocks()
+        {
+            IBlockList<Argument> EmptyArgumentBlockList = BlockListHelper.CreateEmptyBlockList<Argument>();
+            PrecursorExpression NewPrecursorExpression = NodeHelper.CreatePrecursorExpression(EmptyArgumentBlockList);
+
+            NodeTreeHelper.GetArgumentBlocks(NewPrecursorExpression, out IDictionary<string, IBlockList<Argument>> ArgumentBlocksTable);
+            Assert.True(ArgumentBlocksTable.ContainsKey(nameof(PrecursorExpression.ArgumentBlocks)));
+            Assert.AreEqual(ArgumentBlocksTable.Count, 1);
+
+#if !DEBUG
+            PrecursorExpression NullPrecursorExpression = null!;
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.GetArgumentBlocks(NullPrecursorExpression, out _); });
+#endif
         }
 
         [Test]
@@ -33,6 +150,13 @@
 
             Assert.Throws<ArgumentException>(() => { NodeTreeHelper.GetString(DefaultExpression, nameof(Identifier.Text)); });
             Assert.Throws<ArgumentException>(() => { NodeTreeHelper.GetString(DefaultExpression, nameof(QueryExpression.Query)); });
+
+#if !DEBUG
+            Identifier NullIdentifier = null!;
+            string NullString = null!;
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.GetString(NullIdentifier, nameof(Identifier.Text)); });
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.GetString(SimpleIdentifier, NullString); });
+#endif
         }
 
         [Test]
@@ -46,6 +170,14 @@
 
             Assert.Throws<ArgumentException>(() => { NodeTreeHelper.SetString(DefaultExpression, nameof(Identifier.Text), "b"); });
             Assert.Throws<ArgumentException>(() => { NodeTreeHelper.SetString(DefaultExpression, nameof(QueryExpression.Query), "b"); });
+
+#if !DEBUG
+            Identifier NullIdentifier = null!;
+            string NullString = null!;
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.SetString(NullIdentifier, nameof(Identifier.Text), "b"); });
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.SetString(SimpleIdentifier, NullString, "b"); });
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.SetString(SimpleIdentifier, nameof(Identifier.Text), NullString); });
+#endif
         }
 
         [Test]
@@ -55,6 +187,13 @@
             AnchoredType SimpleAnchoredType = NodeHelper.CreateAnchoredType(SimpleQualifiedName, AnchorKinds.Declaration);
 
             NodeTreeHelper.GetEnumValue(SimpleAnchoredType, nameof(AnchoredType.AnchorKind));
+
+#if !DEBUG
+            AnchoredType NullAnchoredType = null!;
+            string NullString = null!;
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.GetEnumValue(NullAnchoredType, nameof(AnchoredType.AnchorKind)); });
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.GetEnumValue(SimpleAnchoredType, NullString); });
+#endif
         }
 
         [Test]
@@ -88,6 +227,13 @@
 
             Assert.Throws<ArgumentException>(() => { NodeTreeHelper.GetEnumValueAndRange(DefaultExpression, nameof(AnchoredType.AnchorKind), out _, out _); });
             Assert.Throws<ArgumentException>(() => { NodeTreeHelper.GetEnumValueAndRange(DefaultExpression, nameof(QueryExpression.Query), out _, out _); });
+
+#if !DEBUG
+            AnchoredType NullAnchoredType = null!;
+            string NullString = null!;
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.GetEnumValueAndRange(NullAnchoredType, nameof(AnchoredType.AnchorKind), out _, out _); });
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.GetEnumValueAndRange(SimpleAnchoredType, NullString, out _, out _); });
+#endif
         }
 
         private enum TestSetEnum: byte
@@ -120,6 +266,15 @@
             Assert.Throws<ArgumentException>(() => { NodeTreeHelper.SetEnumValue(DefaultExpression, nameof(QueryExpression.Query), AnchorKinds.Creation); });
             Assert.Throws<ArgumentOutOfRangeException>(() => { NodeTreeHelper.SetEnumValue(NewInheritance, nameof(Inheritance.ForgetIndexer), -1); });
             Assert.Throws<ArgumentOutOfRangeException>(() => { NodeTreeHelper.SetEnumValue(NewInheritance, nameof(Inheritance.ForgetIndexer), 2); });
+
+#if !DEBUG
+            AnchoredType NullAnchoredType = null!;
+            string NullString = null!;
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.SetEnumValue(NullAnchoredType, nameof(AnchoredType.AnchorKind), AnchorKinds.Creation); });
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.SetEnumValue(SimpleAnchoredType, NullString, AnchorKinds.Creation); });
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.SetEnumValue(NullAnchoredType, nameof(AnchoredType.AnchorKind), (int)AnchorKinds.Creation); });
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.SetEnumValue(SimpleAnchoredType, NullString, (int)AnchorKinds.Creation); });
+#endif
         }
 
         [Test]
@@ -137,6 +292,14 @@
             Assert.Throws<ArgumentException>(() => { NodeTreeHelper.CopyEnumProperty(FirstAnchoredType, DefaultExpression, nameof(AnchoredType.AnchorKind)); });
             Assert.Throws<ArgumentException>(() => { NodeTreeHelper.CopyEnumProperty(FirstAnchoredType, SecondAnchoredType, nameof(QueryExpression.Query)); });
             Assert.Throws<ArgumentException>(() => { NodeTreeHelper.CopyEnumProperty(FirstAnchoredType, SecondAnchoredType, nameof(AnchoredType.AnchoredName)); });
+
+#if !DEBUG
+            AnchoredType NullAnchoredType = null!;
+            string NullString = null!;
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.CopyEnumProperty(NullAnchoredType, SecondAnchoredType, nameof(AnchoredType.AnchorKind)); });
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.CopyEnumProperty(FirstAnchoredType, NullAnchoredType, nameof(AnchoredType.AnchorKind)); });
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.CopyEnumProperty(FirstAnchoredType, SecondAnchoredType, NullString); });
+#endif
         }
 
         [Test]
@@ -148,6 +311,13 @@
 
             Assert.Throws<ArgumentException>(() => { NodeTreeHelper.GetEnumRange(typeof(Inheritance), nameof(Inheritance.DiscontinueBlocks), out _, out _); });
             Assert.Throws<ArgumentException>(() => { NodeTreeHelper.GetEnumRange(typeof(Inheritance), nameof(QueryExpression.Query), out _, out _); });
+
+#if !DEBUG
+            Type NullType = null!;
+            string NullString = null!;
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.GetEnumRange(NullType, nameof(AnchoredType.AnchorKind), out _, out _); });
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.GetEnumRange(typeof(AnchoredType), NullString, out _, out _); });
+#endif
         }
 
         [Test]
@@ -160,6 +330,13 @@
 
             Assert.Throws<ArgumentException>(() => { NodeTreeHelper.GetGuid(NewClass, nameof(Class.ClassPath)); });
             Assert.Throws<ArgumentException>(() => { NodeTreeHelper.GetGuid(NewClass, nameof(QueryExpression.Query)); });
+
+#if !DEBUG
+            Class NullClass = null!;
+            string NullString = null!;
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.GetGuid(NullClass, nameof(Class.ClassGuid)); });
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.GetGuid(NewClass, NullString); });
+#endif
         }
 
         [Test]
@@ -171,6 +348,11 @@
 
             Result = NodeTreeHelper.GetCommentText(SimpleIdentifier);
             Assert.AreEqual(Result, string.Empty);
+
+#if !DEBUG
+            Identifier NullIdentifier = null!;
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.GetCommentText(NullIdentifier); });
+#endif
         }
 
         [Test]
@@ -180,6 +362,13 @@
 
             NodeTreeHelper.SetCommentText(SimpleIdentifier, "a");
             Assert.AreEqual(SimpleIdentifier.Documentation.Comment, "a");
+
+#if !DEBUG
+            Identifier NullIdentifier = null!;
+            string NullString = null!;
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.SetCommentText(NullIdentifier, "a"); });
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.SetCommentText(SimpleIdentifier, NullString); });
+#endif
         }
 
         [Test]
@@ -197,6 +386,13 @@
 
             Result = NodeTreeHelper.IsDocumentProperty(SimpleIdentifier, nameof(QueryExpression.Query));
             Assert.False(Result);
+
+#if !DEBUG
+            Identifier NullIdentifier = null!;
+            string NullString = null!;
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.IsDocumentProperty(NullIdentifier, nameof(Identifier.Documentation)); });
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.IsDocumentProperty(SimpleIdentifier, NullString); });
+#endif
         }
 
         [Test]
@@ -209,6 +405,13 @@
             NodeTreeHelper.SetDocumentation(SimpleIdentifier, SimpleDocumentation);
             Assert.AreEqual(SimpleIdentifier.Documentation.Comment, "a");
             Assert.AreEqual(SimpleIdentifier.Documentation.Uuid, NewGuid);
+
+#if !DEBUG
+            Identifier NullIdentifier = null!;
+            Document NullDocumentation = null!;
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.SetDocumentation(NullIdentifier, SimpleDocumentation); });
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.SetDocumentation(SimpleIdentifier, NullDocumentation); });
+#endif
         }
 
         [Test]
@@ -228,6 +431,12 @@
             QueryExpression DefaultExpression = (QueryExpression)NodeHelper.CreateDefaultExpression();
 
             Assert.Throws<ArgumentException>(() => { NodeTreeHelper.CopyDocumentation(FirstIdentifier, DefaultExpression, cloneCommentGuid: false); });
+
+#if !DEBUG
+            Identifier NullIdentifier = null!;
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.CopyDocumentation(NullIdentifier, SecondIdentifier, cloneCommentGuid: false); });
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.CopyDocumentation(FirstIdentifier, NullIdentifier, cloneCommentGuid: false); });
+#endif
         }
 
         [Test]
@@ -255,6 +464,12 @@
             IBlock SimpleExpressionBlock = (IBlock)SimpleExpressionBlockList.NodeBlockList[0];
 
             Assert.Throws<ArgumentException>(() => { NodeTreeHelper.CopyDocumentation(FirstIdentifierBlock, SimpleExpressionBlock, cloneCommentGuid: false); });
+
+#if !DEBUG
+            IBlock NullBlock = null!;
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.CopyDocumentation(NullBlock, SecondIdentifierBlock, cloneCommentGuid: false); });
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.CopyDocumentation(FirstIdentifierBlock, NullBlock, cloneCommentGuid: false); });
+#endif
         }
 
         [Test]
@@ -278,6 +493,12 @@
             IBlockList SimpleExpressionBlockList = (IBlockList)BlockListHelper.CreateSimpleBlockList(DefaultExpression);
 
             Assert.Throws<ArgumentException>(() => { NodeTreeHelper.CopyDocumentation(FirstIdentifierBlockList, SimpleExpressionBlockList, cloneCommentGuid: false); });
+
+#if !DEBUG
+            IBlockList NullBlockList = null!;
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.CopyDocumentation(NullBlockList, SecondIdentifierBlockList, cloneCommentGuid: false); });
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.CopyDocumentation(FirstIdentifierBlockList, NullBlockList, cloneCommentGuid: false); });
+#endif
         }
 
         [Test]
@@ -298,6 +519,13 @@
 
             Result = NodeTreeHelper.IsBooleanProperty(typeof(Inheritance), nameof(Inheritance.ForgetIndexer));
             Assert.True(Result);
+
+#if !DEBUG
+            Inheritance NullInheritance = null!;
+            string NullString = null!;
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.IsBooleanProperty(NullInheritance, nameof(Inheritance.ForgetIndexer)); });
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.IsBooleanProperty(NewInheritance, NullString); });
+#endif
         }
 
         [Test]
@@ -310,6 +538,13 @@
 
             Assert.Throws<ArgumentException>(() => { NodeTreeHelper.SetBooleanProperty(NewInheritance, nameof(QueryExpression.Query), true); });
             Assert.Throws<ArgumentException>(() => { NodeTreeHelper.SetBooleanProperty(NewInheritance, nameof(Inheritance.ForgetBlocks), true); });
+
+#if !DEBUG
+            Inheritance NullInheritance = null!;
+            string NullString = null!;
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.SetBooleanProperty(NullInheritance, nameof(Inheritance.ForgetIndexer), true); });
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.SetBooleanProperty(NewInheritance, NullString, true); });
+#endif
         }
 
         [Test]
@@ -318,16 +553,24 @@
             Inheritance FirstInheritance = NodeHelper.CreateSimpleInheritance("a");
             Inheritance SecondInheritance = NodeHelper.CreateSimpleInheritance("b");
 
-            SecondInheritance.ForgetIndexer = true;
+            FirstInheritance.ForgetIndexer = true;
 
             NodeTreeHelper.CopyBooleanProperty(FirstInheritance, SecondInheritance, nameof(Inheritance.ForgetIndexer));
-            Assert.True(FirstInheritance.ForgetIndexer);
+            Assert.True(SecondInheritance.ForgetIndexer);
 
             Expression DefaultExpression = NodeHelper.CreateDefaultExpression();
 
             Assert.Throws<ArgumentException>(() => { NodeTreeHelper.CopyBooleanProperty(FirstInheritance, DefaultExpression, nameof(Inheritance.ForgetIndexer)); });
             Assert.Throws<ArgumentException>(() => { NodeTreeHelper.CopyBooleanProperty(FirstInheritance, SecondInheritance, nameof(Inheritance.ForgetBlocks)); });
             Assert.Throws<ArgumentException>(() => { NodeTreeHelper.CopyBooleanProperty(FirstInheritance, SecondInheritance, nameof(QueryExpression.Query)); });
+
+#if !DEBUG
+            Inheritance NullInheritance = null!;
+            string NullString = null!;
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.CopyBooleanProperty(NullInheritance, SecondInheritance, nameof(Inheritance.ForgetIndexer)); });
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.CopyBooleanProperty(FirstInheritance, NullInheritance, nameof(Inheritance.ForgetIndexer)); });
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.CopyBooleanProperty(FirstInheritance, SecondInheritance, NullString); });
+#endif
         }
 
         [Test]
@@ -348,6 +591,13 @@
 
             Result = NodeTreeHelper.IsStringProperty(typeof(Identifier), nameof(Identifier.Text));
             Assert.True(Result);
+
+#if !DEBUG
+            Identifier NullIdentifier = null!;
+            string NullString = null!;
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.IsStringProperty(NullIdentifier, nameof(Identifier.Text)); });
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.IsStringProperty(SimpleIdentifier, NullString); });
+#endif
         }
 
         [Test]
@@ -368,6 +618,13 @@
 
             Result = NodeTreeHelper.IsGuidProperty(typeof(Class), nameof(Class.ClassGuid));
             Assert.True(Result);
+
+#if !DEBUG
+            Class NullClass = null!;
+            string NullString = null!;
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.IsGuidProperty(NullClass, nameof(Class.ClassGuid)); });
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.IsGuidProperty(NewClass, NullString); });
+#endif
         }
 
         [Test]
@@ -389,6 +646,13 @@
 
             Result = NodeTreeHelper.IsEnumProperty(typeof(AnchoredType), nameof(AnchoredType.AnchorKind));
             Assert.True(Result);
+
+#if !DEBUG
+            AnchoredType NullAnchoredType = null!;
+            string NullString = null!;
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.IsEnumProperty(NullAnchoredType, nameof(AnchoredType.AnchorKind)); });
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.IsEnumProperty(SimpleAnchoredType, NullString); });
+#endif
         }
     }
 }
