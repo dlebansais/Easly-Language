@@ -4,6 +4,7 @@
     using System.Diagnostics;
     using System.Reflection;
     using BaseNode;
+    using Contracts;
 
     /// <summary>
     /// Provides methods to manipulate child nodes in a program tree.
@@ -19,10 +20,11 @@
         /// <returns>True if the property is a child node; otherwise, false.</returns>
         public static bool IsChildNodeProperty(Node node, string propertyName, out Type childNodeType)
         {
-            if (node == null) throw new ArgumentNullException(nameof(node));
-            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
+            Contract.RequireNotNull(node, out Node Node);
+            Contract.RequireNotNull(propertyName, out string PropertyName);
 
-            return IsChildNodeProperty(node.GetType(), propertyName, out childNodeType);
+            Type NodeType = Node.GetType();
+            return IsChildNodeProperty(NodeType, PropertyName, out childNodeType);
         }
 
         /// <summary>
@@ -34,22 +36,22 @@
         /// <returns>True if the property is a child node; otherwise, false.</returns>
         public static bool IsChildNodeProperty(Type nodeType, string propertyName, out Type childNodeType)
         {
-            if (nodeType == null) throw new ArgumentNullException(nameof(nodeType));
-            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
+            Contract.RequireNotNull(nodeType, out Type NodeType);
+            Contract.RequireNotNull(propertyName, out string PropertyName);
 
-            childNodeType = null!;
+            if (SafeType.CheckAndGetPropertyOf(NodeType, PropertyName, out PropertyInfo Property))
+            {
+                Type PropertyType = Property.PropertyType;
 
-            if (!SafeType.CheckAndGetPropertyOf(nodeType, propertyName, out PropertyInfo Property))
-                return false;
+                if (NodeTreeHelper.IsNodeDescendantType(PropertyType))
+                {
+                    childNodeType = PropertyType;
+                    return true;
+                }
+            }
 
-            Type PropertyType = Property.PropertyType;
-
-            // if (!NodeTreeHelper.IsNodeInterfaceType(PropertyType))
-            if (!NodeTreeHelper.IsNodeDescendantType(PropertyType))
-                return false;
-
-            childNodeType = PropertyType;
-            return true;
+            Contract.Unused(out childNodeType);
+            return false;
         }
 
         /// <summary>
@@ -61,50 +63,22 @@
         /// <returns>True if <paramref name="childNode"/> is the value at the property of <paramref name="node"/> with name <paramref name="propertyName"/>; otherwise, false.</returns>
         public static bool IsChildNode(Node node, string propertyName, Node childNode)
         {
-            if (node == null) throw new ArgumentNullException(nameof(node));
-            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
-            if (childNode == null) throw new ArgumentNullException(nameof(childNode));
+            Contract.RequireNotNull(node, out Node Node);
+            Contract.RequireNotNull(propertyName, out string PropertyName);
+            Contract.RequireNotNull(childNode, out Node ChildNode);
 
-            Type ParentNodeType = node.GetType();
+            Type ParentNodeType = Node.GetType();
 
-            PropertyInfo? Property = ParentNodeType.GetProperty(propertyName);
-            if (Property == null)
-                return false;
+            if (SafeType.CheckAndGetPropertyOf(ParentNodeType, PropertyName, out PropertyInfo Property))
+            {
+                Type PropertyType = Property.PropertyType;
 
-            Type PropertyType = Property.PropertyType;
+                if (NodeTreeHelper.IsNodeDescendantType(PropertyType))
+                    if (Property.GetValue(Node) == ChildNode)
+                        return true;
+            }
 
-            // if (!NodeTreeHelper.IsNodeInterfaceType(PropertyType))
-            if (!NodeTreeHelper.IsNodeDescendantType(PropertyType))
-                return false;
-
-            if (Property.GetValue(node) != childNode)
-                return false;
-
-            return true;
-        }
-
-        /// <summary>
-        /// Gets the child node of a node at the given property.
-        /// </summary>
-        /// <param name="node">The node.</param>
-        /// <param name="propertyName">The property name.</param>
-        /// <param name="childNode">The child node upon return.</param>
-        public static void GetChildNode(Node node, string propertyName, out Node childNode)
-        {
-            if (node == null) throw new ArgumentNullException(nameof(node));
-            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
-
-            Type NodeType = node.GetType();
-            PropertyInfo Property = SafeType.GetProperty(NodeType, propertyName);
-
-            Type PropertyType = Property.PropertyType;
-
-            // Debug.Assert(NodeTreeHelper.IsNodeInterfaceType(PropertyType));
-            Debug.Assert(NodeTreeHelper.IsNodeDescendantType(PropertyType));
-
-            Node Result = SafeType.GetPropertyValue<Node>(Property, node);
-
-            childNode = Result;
+            return false;
         }
 
         /// <summary>
@@ -115,18 +89,44 @@
         /// <returns>The child node type.</returns>
         public static Type ChildInterfaceType(Node node, string propertyName)
         {
-            if (node == null) throw new ArgumentNullException(nameof(node));
-            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
+            Contract.RequireNotNull(node, out Node Node);
+            Contract.RequireNotNull(propertyName, out string PropertyName);
 
-            Type NodeType = node.GetType();
-            PropertyInfo Property = SafeType.GetProperty(NodeType, propertyName);
+            Type NodeType = Node.GetType();
 
-            Type InterfaceType = Property.PropertyType;
+            if (!SafeType.CheckAndGetPropertyOf(NodeType, PropertyName, out PropertyInfo Property))
+                throw new ArgumentException($"{nameof(propertyName)} must be the name of a property of {NodeType}");
 
-            // Debug.Assert(NodeTreeHelper.IsNodeInterfaceType(InterfaceType));
-            Debug.Assert(NodeTreeHelper.IsNodeDescendantType(InterfaceType));
+            Type PropertyType = Property.PropertyType;
 
-            return InterfaceType;
+            if (!NodeTreeHelper.IsNodeDescendantType(PropertyType))
+                throw new ArgumentException($"{nameof(propertyName)} must be the name of a node property of {NodeType}");
+
+            return PropertyType;
+        }
+
+        /// <summary>
+        /// Gets the child node of a node at the given property.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <param name="childNode">The child node upon return.</param>
+        public static void GetChildNode(Node node, string propertyName, out Node childNode)
+        {
+            Contract.RequireNotNull(node, out Node Node);
+            Contract.RequireNotNull(propertyName, out string PropertyName);
+
+            Type NodeType = Node.GetType();
+
+            if (!SafeType.CheckAndGetPropertyOf(NodeType, PropertyName, out PropertyInfo Property))
+                throw new ArgumentException($"{nameof(propertyName)} must be the name of a property of {NodeType}");
+
+            Type PropertyType = Property.PropertyType;
+
+            if (!NodeTreeHelper.IsNodeDescendantType(PropertyType))
+                throw new ArgumentException($"{nameof(propertyName)} must be the name of a node property of {NodeType}");
+
+            childNode = SafeType.GetPropertyValue<Node>(Property, Node);
         }
 
         /// <summary>
@@ -137,24 +137,21 @@
         /// <param name="newChildNode">The new child node.</param>
         public static void SetChildNode(Node node, string propertyName, Node newChildNode)
         {
-            if (node == null) throw new ArgumentNullException(nameof(node));
-            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
-            if (newChildNode == null) throw new ArgumentNullException(nameof(newChildNode));
+            Contract.RequireNotNull(node, out Node Node);
+            Contract.RequireNotNull(propertyName, out string PropertyName);
+            Contract.RequireNotNull(newChildNode, out Node NewChildNode);
 
-            Type NodeType = node.GetType();
-            PropertyInfo Property = SafeType.GetProperty(NodeType, propertyName);
+            Type NodeType = Node.GetType();
 
-            Type PropertyType = Property.PropertyType;
+            if (!SafeType.CheckAndGetPropertyOf(NodeType, PropertyName, out PropertyInfo Property))
+                throw new ArgumentException($"{nameof(propertyName)} must be the name of a property of {NodeType}");
 
-            // Debug.Assert(NodeTreeHelper.IsNodeInterfaceType(PropertyType));
-            Debug.Assert(NodeTreeHelper.IsNodeDescendantType(PropertyType));
+            Type ChildNodeType = NewChildNode.GetType();
 
-            Type ChildNodeType = newChildNode.GetType();
+            if (!Property.PropertyType.IsAssignableFrom(ChildNodeType))
+                throw new ArgumentException($"{nameof(propertyName)} must be the name of a property of {NodeType} of type {ChildNodeType}");
 
-            // Debug.Assert(ChildNodeType.GetInterface(Property.PropertyType.FullName) != null);
-            Debug.Assert(Property.PropertyType.IsAssignableFrom(ChildNodeType));
-
-            Property.SetValue(node, newChildNode);
+            Property.SetValue(Node, NewChildNode);
         }
     }
 }
