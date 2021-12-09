@@ -229,7 +229,7 @@
 
             Debug.Assert(nodeType != typeof(object));
 
-            if (nodeType != typeof(Node) && nodeType != typeof(Node))
+            if (nodeType != typeof(Node))
             {
                 ancestorType = nodeType;
                 return true;

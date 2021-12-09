@@ -10,7 +10,7 @@
     [TestFixture]
     public partial class NodeTreeHelperCoverage
     {
-        private class DescendantExpression : QueryExpression
+        private class PrivateNode : Node
         {
         };
 
@@ -27,9 +27,9 @@
             ChildNodePropertyList = NodeTreeHelper.EnumChildNodeProperties(typeof(QueryExpression));
             Assert.True(ChildNodePropertyList.Contains(nameof(Expression.Documentation)));
 
-            DescendantExpression NewDescendantExpression = new DescendantExpression();
+            PrivateNode NewPrivateNode = new PrivateNode();
 
-            ChildNodePropertyList = NodeTreeHelper.EnumChildNodeProperties(NewDescendantExpression);
+            ChildNodePropertyList = NodeTreeHelper.EnumChildNodeProperties(NewPrivateNode);
             Assert.True(ChildNodePropertyList.Contains(nameof(Expression.Documentation)));
 
             Assert.Throws<ArgumentException>(() => { NodeTreeHelper.EnumChildNodeProperties(typeof(string)); });
@@ -88,10 +88,26 @@
         {
             bool Result;
 
-            QueryExpression SimpleQueryExpression = NodeHelper.CreateSimpleQueryExpression("b");
-            QualifiedName SimpleQualifiedName = NodeHelper.CreateSimpleQualifiedName("a");
+            Class NewClass = NodeHelper.CreateSimpleClass("a");
+            Name SimpleName = NodeHelper.CreateSimpleName("b");
 
-            Result = NodeTreeHelper.IsAssignable(SimpleQueryExpression, nameof(QueryExpression.Query), SimpleQualifiedName);
+            Result = NodeTreeHelper.IsAssignable(NewClass, nameof(Class.EntityName), SimpleName);
+            Assert.True(Result);
+
+            Identifier SimpleIdentifier = NodeHelper.CreateSimpleIdentifier("c");
+
+            Result = NodeTreeHelper.IsAssignable(NewClass, nameof(Class.FromIdentifier), SimpleIdentifier);
+            Assert.True(Result);
+
+            Import NewImport = NodeHelper.CreateSimpleImport("a", "b", ImportType.Latest);
+            
+            Result = NodeTreeHelper.IsAssignable(NewClass, nameof(Class.ImportBlocks), NewImport);
+            Assert.True(Result);
+
+            GlobalReplicate NewGlobalReplicate = NodeHelper.CreateSimpleGlobalReplicate("a");
+            Pattern DefaultPattern = NodeHelper.CreateSimplePattern("b");
+
+            Result = NodeTreeHelper.IsAssignable(NewGlobalReplicate, nameof(GlobalReplicate.Patterns), DefaultPattern);
             Assert.True(Result);
 
 #if !DEBUG
