@@ -214,13 +214,13 @@
             string NodeFullName = SafeType.FullName(nodeType);
             string BaseNodeNamespace = FullName.Substring(0, FullName.IndexOf(".", StringComparison.InvariantCulture) + 1);
 
-            while (nodeType != typeof(object) && !NodeFullName.StartsWith(BaseNodeNamespace, StringComparison.InvariantCulture))
+            while (!NodeFullName.StartsWith(BaseNodeNamespace, StringComparison.InvariantCulture))
             {
+                Debug.Assert(nodeType != typeof(object));
+
                 nodeType = SafeType.GetBaseType(nodeType);
                 NodeFullName = SafeType.FullName(nodeType);
             }
-
-            Debug.Assert(nodeType != typeof(object));
 
             if (nodeType != typeof(Node))
             {
