@@ -173,7 +173,9 @@
             Contract.RequireNotNull(childNode, out Node ChildNode);
 
             Type ParentNodeType = Node.GetType();
-            PropertyInfo Property = SafeType.GetProperty(ParentNodeType, PropertyName);
+
+            if (!SafeType.CheckAndGetPropertyOf(ParentNodeType, PropertyName, out PropertyInfo Property))
+                throw new ArgumentException($"{nameof(propertyName)} must be the name of a property of {ParentNodeType}");
 
             Type NodeType = ChildNode.GetType();
             Type PropertyType = Property.PropertyType;
@@ -187,24 +189,15 @@
             else if (PropertyType.IsGenericType)
             {
                 Type[] GenericArguments = PropertyType.GetGenericArguments();
+                Debug.Assert(GenericArguments.Length == 1);
 
-                if (IsOptionalReferenceType(PropertyType))
-                {
-                    Debug.Assert(GenericArguments.Length == 1);
-                    AssignedType = GenericArguments[0];
-                }
-                else if (IsNodeListType(PropertyType))
-                {
-                    Debug.Assert(GenericArguments.Length == 1);
-                    AssignedType = GenericArguments[0];
-                }
-                else if (IsBlockListType(PropertyType))
-                {
-                    Debug.Assert(GenericArguments.Length == 1);
-                    AssignedType = GenericArguments[0];
-                }
-                else
-                    return false;
+                bool IsKnownGeneric = false;
+                IsKnownGeneric |= IsOptionalReferenceType(PropertyType);
+                IsKnownGeneric |= IsNodeListType(PropertyType);
+                IsKnownGeneric |= IsBlockListType(PropertyType);
+                Debug.Assert(IsKnownGeneric);
+
+                AssignedType = GenericArguments[0];
             }
             else
                 return false;
@@ -246,24 +239,8 @@
             PropertyInfo[] Properties = type.GetProperties();
             List<PropertyInfo> Result = new List<PropertyInfo>(Properties);
 
-            foreach (Type Interface in type.GetInterfaces())
-            {
-                PropertyInfo[] InterfaceProperties = Interface.GetProperties();
-
-                foreach (PropertyInfo NewProperty in InterfaceProperties)
-                {
-                    bool AlreadyListed = false;
-                    foreach (PropertyInfo ExistingProperty in Result)
-                        if (NewProperty.Name == ExistingProperty.Name)
-                        {
-                            AlreadyListed = true;
-                            break;
-                        }
-
-                    if (!AlreadyListed)
-                        Result.Add(NewProperty);
-                }
-            }
+            Type[] Interfaces = type.GetInterfaces();
+            Debug.Assert(Interfaces.Length == 0);
 
             return Result;
         }

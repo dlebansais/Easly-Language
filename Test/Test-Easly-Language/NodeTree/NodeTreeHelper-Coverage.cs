@@ -110,6 +110,14 @@
             Result = NodeTreeHelper.IsAssignable(NewGlobalReplicate, nameof(GlobalReplicate.Patterns), DefaultPattern);
             Assert.True(Result);
 
+            Assert.Throws<ArgumentException>(() => { NodeTreeHelper.IsAssignable(NewGlobalReplicate, nameof(QueryExpression.Query), DefaultPattern); });
+
+            Result = NodeTreeHelper.IsAssignable(NewClass, nameof(Class.CopySpecification), SimpleName);
+            Assert.False(Result);
+
+            Result = NodeTreeHelper.IsAssignable(NewClass, nameof(Class.EntityName), NewGlobalReplicate);
+            Assert.False(Result);
+
 #if !DEBUG
             QueryExpression NullQueryExpression = null!;
             QualifiedName NullQualifiedName = null!;
@@ -142,9 +150,16 @@
             IBlockList<Argument> EmptyArgumentBlockList = BlockListHelper.CreateEmptyBlockList<Argument>();
             PrecursorExpression NewPrecursorExpression = NodeHelper.CreatePrecursorExpression(EmptyArgumentBlockList);
 
-            NodeTreeHelper.GetArgumentBlocks(NewPrecursorExpression, out IDictionary<string, IBlockList<Argument>> ArgumentBlocksTable);
+            IDictionary<string, IBlockList<Argument>> ArgumentBlocksTable;
+
+            NodeTreeHelper.GetArgumentBlocks(NewPrecursorExpression, out ArgumentBlocksTable);
             Assert.True(ArgumentBlocksTable.ContainsKey(nameof(PrecursorExpression.ArgumentBlocks)));
             Assert.AreEqual(ArgumentBlocksTable.Count, 1);
+
+            Class NewClass = NodeHelper.CreateSimpleClass("a");
+
+            NodeTreeHelper.GetArgumentBlocks(NewClass, out ArgumentBlocksTable);
+            Assert.AreEqual(ArgumentBlocksTable.Count, 0);
 
 #if !DEBUG
             PrecursorExpression NullPrecursorExpression = null!;
