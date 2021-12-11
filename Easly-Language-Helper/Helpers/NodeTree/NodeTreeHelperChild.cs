@@ -75,7 +75,7 @@
         /// <param name="node">The node.</param>
         /// <param name="propertyName">The property name.</param>
         /// <returns>The child node type.</returns>
-        public static Type ChildInterfaceType(Node node, string propertyName)
+        public static Type ChildNodeType(Node node, string propertyName)
         {
             Contract.RequireNotNull(node, out Node Node);
             Contract.RequireNotNull(propertyName, out string PropertyName);
@@ -118,10 +118,11 @@
             if (!SafeType.CheckAndGetPropertyOf(NodeType, PropertyName, out PropertyInfo Property))
                 throw new ArgumentException($"{nameof(propertyName)} must be the name of a property of {NodeType}");
 
+            Type PropertyType = Property.PropertyType;
             Type ChildNodeType = NewChildNode.GetType();
 
-            if (!Property.PropertyType.IsAssignableFrom(ChildNodeType))
-                throw new ArgumentException($"{nameof(propertyName)} must be the name of a property of {NodeType} of type {ChildNodeType}");
+            if (!PropertyType.IsAssignableFrom(ChildNodeType))
+                throw new ArgumentException($"{nameof(newChildNode)} must conform to type {PropertyType}");
 
             Property.SetValue(Node, NewChildNode);
         }

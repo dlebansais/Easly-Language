@@ -81,17 +81,17 @@
 
             GlobalReplicate SimpleGlobalReplicate = NodeHelper.CreateSimpleGlobalReplicate("a");
 
-            Result = NodeTreeHelperList.ListInterfaceType(SimpleGlobalReplicate, nameof(GlobalReplicate.Patterns));
+            Result = NodeTreeHelperList.ListItemType(SimpleGlobalReplicate, nameof(GlobalReplicate.Patterns));
             Assert.AreEqual(Result, typeof(Pattern));
 
-            Assert.Throws<ArgumentException>(() => { NodeTreeHelperList.ListInterfaceType(SimpleGlobalReplicate, nameof(Identifier.Text)); });
-            Assert.Throws<ArgumentException>(() => { NodeTreeHelperList.ListInterfaceType(SimpleGlobalReplicate, nameof(GlobalReplicate.ReplicateName)); });
+            Assert.Throws<ArgumentException>(() => { NodeTreeHelperList.ListItemType(SimpleGlobalReplicate, nameof(Identifier.Text)); });
+            Assert.Throws<ArgumentException>(() => { NodeTreeHelperList.ListItemType(SimpleGlobalReplicate, nameof(GlobalReplicate.ReplicateName)); });
 
 #if !DEBUG
             GlobalReplicate NullGlobalReplicate = null!;
             string NullString = null!;
-            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperList.ListInterfaceType(NullGlobalReplicate, nameof(GlobalReplicate.Patterns)); });
-            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperList.ListInterfaceType(SimpleGlobalReplicate, NullString); });
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperList.ListItemType(NullGlobalReplicate, nameof(GlobalReplicate.Patterns)); });
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperList.ListItemType(SimpleGlobalReplicate, NullString); });
 #endif
         }
 

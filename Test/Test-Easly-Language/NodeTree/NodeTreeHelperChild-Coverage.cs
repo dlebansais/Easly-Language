@@ -77,17 +77,17 @@
 
             QueryExpression DefaultExpression = (QueryExpression)NodeHelper.CreateDefaultExpression();
 
-            Result = NodeTreeHelperChild.ChildInterfaceType(DefaultExpression, nameof(QueryExpression.Query));
+            Result = NodeTreeHelperChild.ChildNodeType(DefaultExpression, nameof(QueryExpression.Query));
             Assert.AreEqual(Result, typeof(QualifiedName));
 
-            Assert.Throws<ArgumentException>(() => { NodeTreeHelperChild.ChildInterfaceType(DefaultExpression, nameof(Identifier.Text)); });
-            Assert.Throws<ArgumentException>(() => { NodeTreeHelperChild.ChildInterfaceType(DefaultExpression, nameof(QueryExpression.ArgumentBlocks)); });
+            Assert.Throws<ArgumentException>(() => { NodeTreeHelperChild.ChildNodeType(DefaultExpression, nameof(Identifier.Text)); });
+            Assert.Throws<ArgumentException>(() => { NodeTreeHelperChild.ChildNodeType(DefaultExpression, nameof(QueryExpression.ArgumentBlocks)); });
 
 #if !DEBUG
             Expression NullExpression = null!;
             string NullString = null!;
-            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperChild.ChildInterfaceType(NullExpression, nameof(QueryExpression.Query)); });
-            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperChild.ChildInterfaceType(DefaultExpression, nameof(NullString)); });
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperChild.ChildNodeType(NullExpression, nameof(QueryExpression.Query)); });
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperChild.ChildNodeType(DefaultExpression, nameof(NullString)); });
 #endif
         }
 

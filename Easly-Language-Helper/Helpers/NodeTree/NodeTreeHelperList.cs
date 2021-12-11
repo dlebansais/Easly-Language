@@ -86,7 +86,7 @@
         /// <param name="node">The node.</param>
         /// <param name="propertyName">The property name.</param>
         /// <returns>The node list type.</returns>
-        public static Type ListInterfaceType(Node node, string propertyName)
+        public static Type ListItemType(Node node, string propertyName)
         {
             Contract.RequireNotNull(node, out Node Node);
             Contract.RequireNotNull(propertyName, out string PropertyName);
@@ -171,7 +171,7 @@
             GetCollection(Node, PropertyName, out PropertyInfo Property, out Type PropertyType, out _);
 
             if (!PropertyType.IsAssignableFrom(ChildNodeList.GetType()))
-                throw new ArgumentException($"{nameof(childNodeList)} must be of type {PropertyType}");
+                throw new ArgumentException($"{nameof(childNodeList)} must conform to type {PropertyType}");
 
             if (NodeHelper.IsCollectionNeverEmpty(Node, PropertyName) && childNodeList.Count == 0)
                 throw new ArgumentException($"Collection '{childNodeList}' must not be empty");

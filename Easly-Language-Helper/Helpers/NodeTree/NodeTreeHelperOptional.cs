@@ -53,35 +53,18 @@
         /// <returns>True if <paramref name="childNode"/> is the value of an optional node property in <paramref name="node"/>; otherwise, false.</returns>
         public static bool IsOptionalChildNode(Node node, string propertyName, Node childNode)
         {
-            if (node == null) throw new ArgumentNullException(nameof(node));
-            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
-            if (childNode == null) throw new ArgumentNullException(nameof(childNode));
+            Contract.RequireNotNull(node, out Node Node);
+            Contract.RequireNotNull(propertyName, out string PropertyName);
+            Contract.RequireNotNull(childNode, out Node ChildNode);
 
-            Type NodeType = node.GetType();
-
-            if (NodeType == null)
-                return false;
-
-            PropertyInfo? Property = NodeType.GetProperty(propertyName);
-            if (Property == null)
-                return false;
-
-            Type PropertyType = Property.PropertyType;
-
-            if (!NodeTreeHelper.IsOptionalReferenceType(PropertyType))
-                return false;
-
-            IOptionalReference Optional = SafeType.GetPropertyValue<IOptionalReference>(Property, node);
+            ToOptionalChildProperty(Node, PropertyName, out _, out _, out IOptionalReference Optional);
 
             if (!Optional.IsAssigned)
                 return false;
 
             Node NodeItem = (Node)Optional.Item;
 
-            if (NodeItem != childNode)
-                return false;
-
-            return true;
+            return NodeItem == ChildNode;
         }
 
         /// <summary>
@@ -94,14 +77,10 @@
         /// <param name="childNode">The child node upon return.</param>
         public static void GetChildNode(Node node, string propertyName, out bool isAssigned, out bool hasItem, out Node childNode)
         {
-            Type NodeType = node.GetType();
-            PropertyInfo Property = SafeType.GetProperty(NodeType, propertyName);
+            Contract.RequireNotNull(node, out Node Node);
+            Contract.RequireNotNull(propertyName, out string PropertyName);
 
-            Type PropertyType = Property.PropertyType;
-
-            Debug.Assert(NodeTreeHelper.IsOptionalReferenceType(PropertyType));
-
-            IOptionalReference Optional = SafeType.GetPropertyValue<IOptionalReference>(Property, node);
+            ToOptionalChildProperty(Node, PropertyName, out _, out _, out IOptionalReference Optional);
 
             isAssigned = Optional.IsAssigned;
             hasItem = Optional.HasItem;
@@ -111,6 +90,7 @@
             else
             {
                 Debug.Assert(!isAssigned);
+
                 Contract.Unused(out childNode);
             }
         }
@@ -123,19 +103,18 @@
         /// <param name="childNode">The child node upon return.</param>
         public static void GetChildNode(IOptionalReference optional, out bool isAssigned, out Node childNode)
         {
-            if (optional == null) throw new ArgumentNullException(nameof(optional));
+            Contract.RequireNotNull(optional, out IOptionalReference Optional);
 
-            isAssigned = false;
-            childNode = null!;
+            isAssigned = Optional.IsAssigned;
 
-            isAssigned = optional.IsAssigned;
-
-            if (optional.HasItem)
-                childNode = (Node)optional.Item;
+            if (Optional.HasItem)
+                childNode = (Node)Optional.Item;
             else
-                childNode = null!;
+            {
+                Debug.Assert(!isAssigned);
 
-            Debug.Assert(!isAssigned || childNode != null);
+                Contract.Unused(out childNode);
+            }
         }
 
         /// <summary>
@@ -144,28 +123,23 @@
         /// <param name="node">The node.</param>
         /// <param name="propertyName">The property name.</param>
         /// <returns>The childnode type.</returns>
-        public static Type OptionalChildInterfaceType(Node node, string propertyName)
+        public static Type OptionalItemType(Node node, string propertyName)
         {
-            if (node == null) throw new ArgumentNullException(nameof(node));
-            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
+            Contract.RequireNotNull(node, out Node Node);
+            Contract.RequireNotNull(propertyName, out string PropertyName);
 
-            Type NodeType = node.GetType();
-            PropertyInfo Property = SafeType.GetProperty(NodeType, propertyName);
-
-            Type PropertyType = Property.PropertyType;
-
-            Debug.Assert(NodeTreeHelper.IsOptionalReferenceType(PropertyType));
+            ToOptionalChildProperty(Node, PropertyName, out _, out Type PropertyType, out _);
 
             Debug.Assert(PropertyType.IsGenericType);
+
             Type[] GenericArguments = PropertyType.GetGenericArguments();
             Debug.Assert(GenericArguments.Length == 1);
 
-            Type InterfaceType = GenericArguments[0];
+            Type ChildNodeType = GenericArguments[0];
 
-            // Debug.Assert(NodeTreeHelper.IsNodeInterfaceType(InterfaceType));
-            Debug.Assert(NodeTreeHelper.IsNodeDescendantType(InterfaceType));
+            Debug.Assert(NodeTreeHelper.IsNodeDescendantType(ChildNodeType));
 
-            return InterfaceType;
+            return ChildNodeType;
         }
 
         /// <summary>
@@ -176,15 +150,10 @@
         /// <returns>The optional reference.</returns>
         public static IOptionalReference GetOptionalReference(Node node, string propertyName)
         {
-            if (node == null) throw new ArgumentNullException(nameof(node));
-            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
+            Contract.RequireNotNull(node, out Node Node);
+            Contract.RequireNotNull(propertyName, out string PropertyName);
 
-            Type NodeType = node.GetType();
-            PropertyInfo Property = SafeType.GetProperty(NodeType, propertyName);
-
-            Debug.Assert(NodeTreeHelper.IsOptionalReferenceType(Property.PropertyType));
-
-            IOptionalReference Optional = SafeType.GetPropertyValue<IOptionalReference>(Property, node);
+            ToOptionalChildProperty(Node, PropertyName, out _, out _, out IOptionalReference Optional);
 
             return Optional;
         }
@@ -197,16 +166,13 @@
         /// <param name="optional">The optional reference.</param>
         public static void SetOptionalReference(Node node, string propertyName, IOptionalReference optional)
         {
-            if (node == null) throw new ArgumentNullException(nameof(node));
-            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
-            if (optional == null) throw new ArgumentNullException(nameof(optional));
+            Contract.RequireNotNull(node, out Node Node);
+            Contract.RequireNotNull(propertyName, out string PropertyName);
+            Contract.RequireNotNull(optional, out IOptionalReference Optional);
 
-            Type NodeType = node.GetType();
-            PropertyInfo Property = SafeType.GetProperty(NodeType, propertyName);
+            ToOptionalChildProperty(Node, PropertyName, out PropertyInfo Property, out _, out _);
 
-            Debug.Assert(NodeTreeHelper.IsOptionalReferenceType(Property.PropertyType));
-
-            Property.SetValue(node, optional);
+            Property.SetValue(Node, Optional);
         }
 
         /// <summary>
@@ -217,63 +183,28 @@
         /// <param name="newChildNode">The child node.</param>
         public static void SetOptionalChildNode(Node node, string propertyName, Node newChildNode)
         {
-            if (node == null) throw new ArgumentNullException(nameof(node));
-            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
-            if (newChildNode == null) throw new ArgumentNullException(nameof(newChildNode));
+            Contract.RequireNotNull(node, out Node Node);
+            Contract.RequireNotNull(propertyName, out string PropertyName);
+            Contract.RequireNotNull(newChildNode, out Node NewChildNode);
 
-            Type ChildNodeType = newChildNode.GetType();
-
-            Type NodeType = node.GetType();
-            PropertyInfo Property = SafeType.GetProperty(NodeType, propertyName);
-
-            Type PropertyType = Property.PropertyType;
-
-            Debug.Assert(NodeTreeHelper.IsOptionalReferenceType(PropertyType));
+            ToOptionalChildProperty(Node, PropertyName, out _, out Type PropertyType, out IOptionalReference Optional);
 
             Debug.Assert(PropertyType.IsGenericType);
             Type[] GenericArguments = PropertyType.GetGenericArguments();
+
             Debug.Assert(GenericArguments.Length == 1);
 
-            Type InterfaceType = GenericArguments[0];
+            Type ChildNodeType = GenericArguments[0];
+            Type NewChildNodeType = NewChildNode.GetType();
 
-            // Debug.Assert(ChildNodeType.GetInterface(InterfaceType.FullName) != null);
-            Debug.Assert(InterfaceType.IsAssignableFrom(ChildNodeType));
-
-            IOptionalReference Optional = SafeType.GetPropertyValue<IOptionalReference>(Property, node);
+            if (!ChildNodeType.IsAssignableFrom(NewChildNodeType))
+                throw new ArgumentException($"{nameof(newChildNode)} must conform to type {ChildNodeType}");
 
             Type OptionalType = Optional.GetType();
             PropertyInfo ItemProperty = SafeType.GetProperty(OptionalType, nameof(OptionalReference<Node>.Item));
 
-            ItemProperty.SetValue(Optional, newChildNode);
+            ItemProperty.SetValue(Optional, NewChildNode);
             Optional.Assign();
-        }
-
-        /// <summary>
-        /// Clears the child node of a given optional reference property in a node.
-        /// </summary>
-        /// <param name="node">The node.</param>
-        /// <param name="propertyName">The property name.</param>
-        public static void ClearOptionalChildNode(Node node, string propertyName)
-        {
-            if (node == null) throw new ArgumentNullException(nameof(node));
-            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
-
-            Type NodeType = node.GetType();
-            PropertyInfo Property = SafeType.GetProperty(NodeType, propertyName);
-
-            Type PropertyType = Property.PropertyType;
-
-            Debug.Assert(NodeTreeHelper.IsOptionalReferenceType(PropertyType));
-
-            Debug.Assert(PropertyType.IsGenericType);
-            Type[] GenericArguments = PropertyType.GetGenericArguments();
-            Debug.Assert(GenericArguments.Length == 1);
-
-            IOptionalReference Optional = SafeType.GetPropertyValue<IOptionalReference>(Property, node);
-
-            Optional.Clear();
-
-            Debug.Assert(!Optional.HasItem);
         }
 
         /// <summary>
@@ -284,7 +215,10 @@
         /// <returns>True assigned; otherwise, false.</returns>
         public static bool IsChildNodeAssigned(Node node, string propertyName)
         {
-            IOptionalReference Optional = GetOptionalReference(node, propertyName);
+            Contract.RequireNotNull(node, out Node Node);
+            Contract.RequireNotNull(propertyName, out string PropertyName);
+
+            ToOptionalChildProperty(Node, PropertyName, out _, out _, out IOptionalReference Optional);
 
             return Optional.IsAssigned;
         }
@@ -296,7 +230,10 @@
         /// <param name="propertyName">The property name.</param>
         public static void AssignChildNode(Node node, string propertyName)
         {
-            IOptionalReference Optional = GetOptionalReference(node, propertyName);
+            Contract.RequireNotNull(node, out Node Node);
+            Contract.RequireNotNull(propertyName, out string PropertyName);
+
+            ToOptionalChildProperty(Node, PropertyName, out _, out _, out IOptionalReference Optional);
 
             Optional.Assign();
         }
@@ -308,9 +245,29 @@
         /// <param name="propertyName">The property name.</param>
         public static void UnassignChildNode(Node node, string propertyName)
         {
-            IOptionalReference Optional = GetOptionalReference(node, propertyName);
+            Contract.RequireNotNull(node, out Node Node);
+            Contract.RequireNotNull(propertyName, out string PropertyName);
+
+            ToOptionalChildProperty(Node, PropertyName, out _, out _, out IOptionalReference Optional);
 
             Optional.Unassign();
+        }
+
+        /// <summary>
+        /// Clears the child node of a given optional reference property in a node.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <param name="propertyName">The property name.</param>
+        public static void ClearOptionalChildNode(Node node, string propertyName)
+        {
+            Contract.RequireNotNull(node, out Node Node);
+            Contract.RequireNotNull(propertyName, out string PropertyName);
+
+            ToOptionalChildProperty(Node, PropertyName, out _, out _, out IOptionalReference Optional);
+
+            Optional.Clear();
+
+            Debug.Assert(!Optional.HasItem);
         }
 
         private static bool IsOptionalChildNodePropertyInternal(Type nodeType, string propertyName, out Type childNodeType)
@@ -334,6 +291,21 @@
 
             Contract.Unused(out childNodeType);
             return false;
+        }
+
+        private static void ToOptionalChildProperty(Node node, string propertyName, out PropertyInfo property, out Type propertyType, out IOptionalReference optional)
+        {
+            Type NodeType = node.GetType();
+
+            if (!SafeType.CheckAndGetPropertyOf(NodeType, propertyName, out property))
+                throw new ArgumentException($"{nameof(propertyName)} must be the name of a property of {NodeType}");
+
+            propertyType = property.PropertyType;
+
+            if (!NodeTreeHelper.IsOptionalReferenceType(propertyType))
+                throw new ArgumentException($"{nameof(propertyName)} must be the name of an optional node property of {NodeType}");
+
+            optional = SafeType.GetPropertyValue<IOptionalReference>(property, node);
         }
     }
 }
