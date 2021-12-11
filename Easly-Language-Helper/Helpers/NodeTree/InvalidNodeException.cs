@@ -14,7 +14,7 @@
         /// <param name="message">The message that describes the error.</param>
         /// <param name="rootNode">The node containing the invalid node.</param>
         /// <param name="invalidNode">The invalid node.</param>
-        public InvalidNodeException(string message, Node rootNode, Node invalidNode)
+        internal InvalidNodeException(string message, Node rootNode, Node invalidNode)
             : base($"Invalid Node: {message}")
         {
             RootNode = rootNode;
