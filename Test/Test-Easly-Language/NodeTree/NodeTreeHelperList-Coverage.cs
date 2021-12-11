@@ -182,8 +182,8 @@
             GlobalReplicate NullGlobalReplicate = null!;
             string NullString = null!;
             List<Pattern> NullPatternList = null!;
-            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperList.SetChildNodeList(NullGlobalReplicate, nameof(GlobalReplicate.Patterns), PatternList); });
-            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperList.SetChildNodeList(SimpleGlobalReplicate, NullString, PatternList); });
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperList.SetChildNodeList(NullGlobalReplicate, nameof(GlobalReplicate.Patterns), SimplePatternList); });
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperList.SetChildNodeList(SimpleGlobalReplicate, NullString, SimplePatternList); });
             Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperList.SetChildNodeList(SimpleGlobalReplicate, nameof(GlobalReplicate.Patterns), NullPatternList); });
 #endif
         }
@@ -238,7 +238,10 @@
             Assert.Throws<ArgumentOutOfRangeException>(() => { NodeTreeHelperList.RemoveFromList(SimpleGlobalReplicate, nameof(GlobalReplicate.Patterns), -1); });
             Assert.Throws<ArgumentOutOfRangeException>(() => { NodeTreeHelperList.RemoveFromList(SimpleGlobalReplicate, nameof(GlobalReplicate.Patterns), SimpleGlobalReplicate.Patterns.Count); });
 
-            Assert.Throws<NeverEmptyException>(() => { NodeTreeHelperList.RemoveFromList(SimpleGlobalReplicate, nameof(GlobalReplicate.Patterns), 0); });
+            NeverEmptyException? Exception = Assert.Throws<NeverEmptyException>(() => { NodeTreeHelperList.RemoveFromList(SimpleGlobalReplicate, nameof(GlobalReplicate.Patterns), 0); });
+            Assert.NotNull(Exception);
+            Assert.NotNull(Exception?.Node);
+            Assert.NotNull(Exception?.PropertyName);
 
 #if !DEBUG
             GlobalReplicate NullGlobalReplicate = null!;

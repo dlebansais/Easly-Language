@@ -87,7 +87,7 @@
             Expression NullExpression = null!;
             string NullString = null!;
             Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperChild.ChildNodeType(NullExpression, nameof(QueryExpression.Query)); });
-            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperChild.ChildNodeType(DefaultExpression, nameof(NullString)); });
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperChild.ChildNodeType(DefaultExpression, NullString); });
 #endif
         }
 

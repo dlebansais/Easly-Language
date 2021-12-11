@@ -119,12 +119,12 @@
             Assert.False(Result);
 
 #if !DEBUG
-            QueryExpression NullQueryExpression = null!;
-            QualifiedName NullQualifiedName = null!;
+            Class NullClass = null!;
             string NullString = null!;
-            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.IsAssignable(NullQueryExpression, nameof(QueryExpression.Query), SimpleQualifiedName); });
-            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.IsAssignable(SimpleQueryExpression, NullQualifiedName, SimpleQualifiedName); });
-            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.IsAssignable(SimpleQueryExpression, nameof(QueryExpression.Query), NullString); });
+            Name NullName = null!;
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.IsAssignable(NullClass, nameof(Class.EntityName), SimpleName); });
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.IsAssignable(NewClass, NullString, SimpleName); });
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.IsAssignable(NewClass, nameof(Class.EntityName), NullName); });
 #endif
         }
 
