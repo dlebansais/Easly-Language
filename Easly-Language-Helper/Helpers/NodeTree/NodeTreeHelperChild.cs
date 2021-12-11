@@ -1,7 +1,6 @@
 ﻿namespace BaseNodeHelper
 {
     using System;
-    using System.Diagnostics;
     using System.Reflection;
     using BaseNode;
     using Contracts;
@@ -24,7 +23,8 @@
             Contract.RequireNotNull(propertyName, out string PropertyName);
 
             Type NodeType = Node.GetType();
-            return IsChildNodeProperty(NodeType, PropertyName, out childNodeType);
+
+            return IsChildNodePropertyInternal(NodeType, PropertyName, out childNodeType);
         }
 
         /// <summary>
@@ -39,19 +39,7 @@
             Contract.RequireNotNull(nodeType, out Type NodeType);
             Contract.RequireNotNull(propertyName, out string PropertyName);
 
-            if (SafeType.CheckAndGetPropertyOf(NodeType, PropertyName, out PropertyInfo Property))
-            {
-                Type PropertyType = Property.PropertyType;
-
-                if (NodeTreeHelper.IsNodeDescendantType(PropertyType))
-                {
-                    childNodeType = PropertyType;
-                    return true;
-                }
-            }
-
-            Contract.Unused(out childNodeType);
-            return false;
+            return IsChildNodePropertyInternal(NodeType, PropertyName, out childNodeType);
         }
 
         /// <summary>
@@ -92,15 +80,7 @@
             Contract.RequireNotNull(node, out Node Node);
             Contract.RequireNotNull(propertyName, out string PropertyName);
 
-            Type NodeType = Node.GetType();
-
-            if (!SafeType.CheckAndGetPropertyOf(NodeType, PropertyName, out PropertyInfo Property))
-                throw new ArgumentException($"{nameof(propertyName)} must be the name of a property of {NodeType}");
-
-            Type PropertyType = Property.PropertyType;
-
-            if (!NodeTreeHelper.IsNodeDescendantType(PropertyType))
-                throw new ArgumentException($"{nameof(propertyName)} must be the name of a node property of {NodeType}");
+            ToChildProperty(Node, PropertyName, out _, out Type PropertyType);
 
             return PropertyType;
         }
@@ -116,15 +96,7 @@
             Contract.RequireNotNull(node, out Node Node);
             Contract.RequireNotNull(propertyName, out string PropertyName);
 
-            Type NodeType = Node.GetType();
-
-            if (!SafeType.CheckAndGetPropertyOf(NodeType, PropertyName, out PropertyInfo Property))
-                throw new ArgumentException($"{nameof(propertyName)} must be the name of a property of {NodeType}");
-
-            Type PropertyType = Property.PropertyType;
-
-            if (!NodeTreeHelper.IsNodeDescendantType(PropertyType))
-                throw new ArgumentException($"{nameof(propertyName)} must be the name of a node property of {NodeType}");
+            ToChildProperty(Node, PropertyName, out PropertyInfo Property, out _);
 
             childNode = SafeType.GetPropertyValue<Node>(Property, Node);
         }
@@ -152,6 +124,36 @@
                 throw new ArgumentException($"{nameof(propertyName)} must be the name of a property of {NodeType} of type {ChildNodeType}");
 
             Property.SetValue(Node, NewChildNode);
+        }
+
+        private static bool IsChildNodePropertyInternal(Type nodeType, string propertyName, out Type childNodeType)
+        {
+            if (SafeType.CheckAndGetPropertyOf(nodeType, propertyName, out PropertyInfo Property))
+            {
+                Type PropertyType = Property.PropertyType;
+
+                if (NodeTreeHelper.IsNodeDescendantType(PropertyType))
+                {
+                    childNodeType = PropertyType;
+                    return true;
+                }
+            }
+
+            Contract.Unused(out childNodeType);
+            return false;
+        }
+
+        private static void ToChildProperty(Node node, string propertyName, out PropertyInfo property, out Type propertyType)
+        {
+            Type NodeType = node.GetType();
+
+            if (!SafeType.CheckAndGetPropertyOf(NodeType, propertyName, out property))
+                throw new ArgumentException($"{nameof(propertyName)} must be the name of a property of {NodeType}");
+
+            propertyType = property.PropertyType;
+
+            if (!NodeTreeHelper.IsNodeDescendantType(propertyType))
+                throw new ArgumentException($"{nameof(propertyName)} must be the name of a node property of {NodeType}");
         }
     }
 }

@@ -21,10 +21,12 @@
         /// <returns>True if the property is that of an optional child node; otherwise, false.</returns>
         public static bool IsOptionalChildNodeProperty(Node node, string propertyName, out Type childNodeType)
         {
-            if (node == null) throw new ArgumentNullException(nameof(node));
-            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
+            Contract.RequireNotNull(node, out Node Node);
+            Contract.RequireNotNull(propertyName, out string PropertyName);
 
-            return IsOptionalChildNodeProperty(node.GetType(), propertyName, out childNodeType);
+            Type NodeType = Node.GetType();
+
+            return IsOptionalChildNodePropertyInternal(NodeType, PropertyName, out childNodeType);
         }
 
         /// <summary>
@@ -36,27 +38,10 @@
         /// <returns>True if the property is that of an optional child node; otherwise, false.</returns>
         public static bool IsOptionalChildNodeProperty(Type nodeType, string propertyName, out Type childNodeType)
         {
-            if (nodeType == null) throw new ArgumentNullException(nameof(nodeType));
-            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
+            Contract.RequireNotNull(nodeType, out Type NodeType);
+            Contract.RequireNotNull(propertyName, out string PropertyName);
 
-            childNodeType = null!;
-
-            if (!SafeType.CheckAndGetPropertyOf(nodeType, propertyName, out PropertyInfo Property))
-                return false;
-
-            Type PropertyType = Property.PropertyType;
-
-            if (!NodeTreeHelper.IsOptionalReferenceType(PropertyType))
-                return false;
-
-            Debug.Assert(PropertyType.IsGenericType);
-            Type[] GenericArguments = PropertyType.GetGenericArguments();
-            Debug.Assert(GenericArguments.Length == 1);
-
-            childNodeType = GenericArguments[0];
-
-            // return NodeTreeHelper.IsNodeInterfaceType(childNodeType);
-            return NodeTreeHelper.IsNodeDescendantType(childNodeType);
+            return IsOptionalChildNodePropertyInternal(NodeType, PropertyName, out childNodeType);
         }
 
         /// <summary>
@@ -326,6 +311,29 @@
             IOptionalReference Optional = GetOptionalReference(node, propertyName);
 
             Optional.Unassign();
+        }
+
+        private static bool IsOptionalChildNodePropertyInternal(Type nodeType, string propertyName, out Type childNodeType)
+        {
+            if (SafeType.CheckAndGetPropertyOf(nodeType, propertyName, out PropertyInfo Property))
+            {
+                Type PropertyType = Property.PropertyType;
+
+                if (NodeTreeHelper.IsOptionalReferenceType(PropertyType))
+                {
+                    Debug.Assert(PropertyType.IsGenericType);
+
+                    Type[] GenericArguments = PropertyType.GetGenericArguments();
+                    Debug.Assert(GenericArguments.Length == 1);
+
+                    childNodeType = GenericArguments[0];
+
+                    return NodeTreeHelper.IsNodeDescendantType(childNodeType);
+                }
+            }
+
+            Contract.Unused(out childNodeType);
+            return false;
         }
     }
 }

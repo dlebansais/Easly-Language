@@ -27,7 +27,7 @@
 
             Type NodeType = Node.GetType();
 
-            if (!IsNodeListProperty(NodeType, PropertyName, out childNodeType))
+            if (!IsNodeListPropertyInternal(NodeType, PropertyName, out childNodeType))
                 return false;
 
             PropertyInfo Property = SafeType.GetProperty(NodeType, PropertyName);
@@ -50,23 +50,7 @@
             Contract.RequireNotNull(nodeType, out Type NodeType);
             Contract.RequireNotNull(propertyName, out string PropertyName);
 
-            if (SafeType.CheckAndGetPropertyOf(NodeType, PropertyName, out PropertyInfo Property))
-            {
-                Type PropertyType = Property.PropertyType;
-                if (NodeTreeHelper.IsNodeListType(PropertyType))
-                {
-                    Debug.Assert(PropertyType.IsGenericType);
-                    Type[] GenericArguments = PropertyType.GetGenericArguments();
-                    Debug.Assert(GenericArguments.Length == 1);
-
-                    childNodeType = GenericArguments[0];
-
-                    return NodeTreeHelper.IsNodeDescendantType(childNodeType);
-                }
-            }
-
-            Contract.Unused(out childNodeType);
-            return false;
+            return IsNodeListPropertyInternal(NodeType, PropertyName, out childNodeType);
         }
 
         /// <summary>
@@ -83,22 +67,9 @@
             Contract.RequireNotNull(propertyName, out string PropertyName);
             Contract.RequireNotNull(childNode, out Node ChildNode);
 
-            if (index < 0)
-                throw new ArgumentOutOfRangeException(nameof(index));
+            GetCollection(Node, PropertyName, out _, out _, out IList Collection);
 
-            Type NodeType = Node.GetType();
-
-            if (!SafeType.CheckAndGetPropertyOf(NodeType, PropertyName, out PropertyInfo Property))
-                throw new ArgumentException($"{nameof(propertyName)} must be the name of a property of {NodeType}");
-
-            Type PropertyType = Property.PropertyType;
-
-            if (!NodeTreeHelper.IsNodeListType(PropertyType))
-                throw new ArgumentException($"{nameof(propertyName)} must be the name of a node list property of {NodeType}");
-
-            IList Collection = SafeType.GetPropertyValue<IList>(Property, Node);
-
-            if (index >= Collection.Count)
+            if (index < 0 || index >= Collection.Count)
                 throw new ArgumentOutOfRangeException(nameof(index));
 
             Debug.Assert(index >= 0);
@@ -120,18 +91,11 @@
             Contract.RequireNotNull(node, out Node Node);
             Contract.RequireNotNull(propertyName, out string PropertyName);
 
-            Type NodeType = Node.GetType();
-
-            if (!SafeType.CheckAndGetPropertyOf(NodeType, PropertyName, out PropertyInfo Property))
-                throw new ArgumentException($"{nameof(propertyName)} must be the name of a property of {NodeType}");
-
-            Type PropertyType = Property.PropertyType;
-
-            if (!NodeTreeHelper.IsNodeListType(PropertyType))
-                throw new ArgumentException($"{nameof(propertyName)} must be the name of a node list property of {NodeType}");
+            GetCollection(Node, PropertyName, out _, out Type PropertyType, out _);
 
             Debug.Assert(PropertyType.IsGenericType);
-            Type[] GenericArguments = Property.PropertyType.GetGenericArguments();
+
+            Type[] GenericArguments = PropertyType.GetGenericArguments();
             Debug.Assert(GenericArguments.Length == 1);
 
             Type ChildNodeType = GenericArguments[0];
@@ -152,17 +116,7 @@
             Contract.RequireNotNull(node, out Node Node);
             Contract.RequireNotNull(propertyName, out string PropertyName);
 
-            Type NodeType = Node.GetType();
-
-            if (!SafeType.CheckAndGetPropertyOf(NodeType, PropertyName, out PropertyInfo Property))
-                throw new ArgumentException($"{nameof(propertyName)} must be the name of a property of {NodeType}");
-
-            Type PropertyType = Property.PropertyType;
-
-            if (!NodeTreeHelper.IsNodeListType(PropertyType))
-                throw new ArgumentException($"{nameof(propertyName)} must be the name of a node list property of {NodeType}");
-
-            IList Collection = SafeType.GetPropertyValue<IList>(Property, Node);
+            GetCollection(Node, PropertyName, out _, out _, out IList Collection);
 
             List<Node> NodeList = new();
             foreach (Node Item in SafeType.Items<Node>(Collection))
@@ -181,17 +135,7 @@
             Contract.RequireNotNull(node, out Node Node);
             Contract.RequireNotNull(propertyName, out string PropertyName);
 
-            Type NodeType = Node.GetType();
-
-            if (!SafeType.CheckAndGetPropertyOf(NodeType, PropertyName, out PropertyInfo Property))
-                throw new ArgumentException($"{nameof(propertyName)} must be the name of a property of {NodeType}");
-
-            Type PropertyType = Property.PropertyType;
-
-            if (!NodeTreeHelper.IsNodeListType(PropertyType))
-                throw new ArgumentException($"{nameof(propertyName)} must be the name of a node list property of {NodeType}");
-
-            IList Collection = SafeType.GetPropertyValue<IList>(Property, Node);
+            GetCollection(Node, PropertyName, out _, out _, out IList Collection);
 
             Collection.Clear();
         }
@@ -207,17 +151,7 @@
             Contract.RequireNotNull(node, out Node Node);
             Contract.RequireNotNull(propertyName, out string PropertyName);
 
-            Type NodeType = Node.GetType();
-
-            if (!SafeType.CheckAndGetPropertyOf(NodeType, PropertyName, out PropertyInfo Property))
-                throw new ArgumentException($"{nameof(propertyName)} must be the name of a property of {NodeType}");
-
-            Type PropertyType = Property.PropertyType;
-
-            if (!NodeTreeHelper.IsNodeListType(PropertyType))
-                throw new ArgumentException($"{nameof(propertyName)} must be the name of a node list property of {NodeType}");
-
-            IList Collection = SafeType.GetPropertyValue<IList>(Property, Node);
+            GetCollection(Node, PropertyName, out _, out _, out IList Collection);
 
             lastIndex = Collection.Count;
         }
@@ -234,15 +168,7 @@
             Contract.RequireNotNull(propertyName, out string PropertyName);
             Contract.RequireNotNull(childNodeList, out IList ChildNodeList);
 
-            Type NodeType = Node.GetType();
-
-            if (!SafeType.CheckAndGetPropertyOf(NodeType, PropertyName, out PropertyInfo Property))
-                throw new ArgumentException($"{nameof(propertyName)} must be the name of a property of {NodeType}");
-
-            Type PropertyType = Property.PropertyType;
-
-            if (!NodeTreeHelper.IsNodeListType(PropertyType))
-                throw new ArgumentException($"{nameof(propertyName)} must be the name of a node list property of {NodeType}");
+            GetCollection(Node, PropertyName, out PropertyInfo Property, out Type PropertyType, out _);
 
             if (!PropertyType.IsAssignableFrom(ChildNodeList.GetType()))
                 throw new ArgumentException($"{nameof(childNodeList)} must be of type {PropertyType}");
@@ -266,22 +192,9 @@
             Contract.RequireNotNull(propertyName, out string PropertyName);
             Contract.RequireNotNull(childNode, out Node ChildNode);
 
-            if (index < 0)
-                throw new ArgumentOutOfRangeException(nameof(index));
+            GetCollection(Node, PropertyName, out _, out _, out IList Collection);
 
-            Type NodeType = Node.GetType();
-
-            if (!SafeType.CheckAndGetPropertyOf(NodeType, PropertyName, out PropertyInfo Property))
-                throw new ArgumentException($"{nameof(propertyName)} must be the name of a property of {NodeType}");
-
-            Type PropertyType = Property.PropertyType;
-
-            if (!NodeTreeHelper.IsNodeListType(PropertyType))
-                throw new ArgumentException($"{nameof(propertyName)} must be the name of a node list property of {NodeType}");
-
-            IList Collection = SafeType.GetPropertyValue<IList>(Property, Node);
-
-            if (index > Collection.Count)
+            if (index < 0 || index > Collection.Count)
                 throw new ArgumentOutOfRangeException(nameof(index));
 
             Debug.Assert(index >= 0);
@@ -301,26 +214,13 @@
             Contract.RequireNotNull(node, out Node Node);
             Contract.RequireNotNull(propertyName, out string PropertyName);
 
-            if (index < 0)
-                throw new ArgumentOutOfRangeException(nameof(index));
+            GetCollection(Node, PropertyName, out _, out Type PropertyType, out IList Collection);
 
-            Type NodeType = Node.GetType();
-
-            if (!SafeType.CheckAndGetPropertyOf(NodeType, PropertyName, out PropertyInfo Property))
-                throw new ArgumentException($"{nameof(propertyName)} must be the name of a property of {NodeType}");
-
-            Type PropertyType = Property.PropertyType;
-
-            if (!NodeTreeHelper.IsNodeListType(PropertyType))
-                throw new ArgumentException($"{nameof(propertyName)} must be the name of a node list property of {NodeType}");
-
-            IList Collection = SafeType.GetPropertyValue<IList>(Property, Node);
-
-            if (index >= Collection.Count)
+            if (index < 0 || index >= Collection.Count)
                 throw new ArgumentOutOfRangeException(nameof(index));
 
             if (Collection.Count == 1 && NodeHelper.IsCollectionNeverEmpty(Node, PropertyName))
-                throw new NeverEmptyException(NodeType, PropertyName);
+                throw new NeverEmptyException(Node, PropertyName);
 
             Debug.Assert(Collection.Count > 0);
             Debug.Assert(index >= 0);
@@ -342,22 +242,9 @@
             Contract.RequireNotNull(propertyName, out string PropertyName);
             Contract.RequireNotNull(childNode, out Node ChildNode);
 
-            if (index < 0)
-                throw new ArgumentOutOfRangeException(nameof(index));
+            GetCollection(Node, PropertyName, out _, out Type PropertyType, out IList Collection);
 
-            Type NodeType = Node.GetType();
-
-            if (!SafeType.CheckAndGetPropertyOf(NodeType, PropertyName, out PropertyInfo Property))
-                throw new ArgumentException($"{nameof(propertyName)} must be the name of a property of {NodeType}");
-
-            Type PropertyType = Property.PropertyType;
-
-            if (!NodeTreeHelper.IsNodeListType(PropertyType))
-                throw new ArgumentException($"{nameof(propertyName)} must be the name of a node list property of {NodeType}");
-
-            IList Collection = SafeType.GetPropertyValue<IList>(Property, Node);
-
-            if (index >= Collection.Count)
+            if (index < 0 || index >= Collection.Count)
                 throw new ArgumentOutOfRangeException(nameof(index));
 
             Debug.Assert(PropertyType.IsGenericType);
@@ -369,9 +256,7 @@
             Type ChildNodeType = ChildNode.GetType();
 
             if (!GenericType.IsAssignableFrom(ChildNodeType))
-            {
                 throw new ArgumentException($"{nameof(childNode)} must conform to type {GenericType}");
-            }
 
             Debug.Assert(index >= 0);
             Debug.Assert(index < Collection.Count);
@@ -391,27 +276,12 @@
             Contract.RequireNotNull(node, out Node Node);
             Contract.RequireNotNull(propertyName, out string PropertyName);
 
-            if (index < 0)
-                throw new ArgumentOutOfRangeException(nameof(index));
-            if (index + direction < 0)
-                throw new ArgumentOutOfRangeException(nameof(direction));
+            GetCollection(Node, PropertyName, out _, out _, out IList Collection);
 
-            Type NodeType = Node.GetType();
-
-            if (!SafeType.CheckAndGetPropertyOf(NodeType, PropertyName, out PropertyInfo Property))
-                throw new ArgumentException($"{nameof(propertyName)} must be the name of a property of {NodeType}");
-
-            Type PropertyType = Property.PropertyType;
-
-            if (!NodeTreeHelper.IsNodeListType(PropertyType))
-                throw new ArgumentException($"{nameof(propertyName)} must be the name of a node list property of {NodeType}");
-
-            IList Collection = SafeType.GetPropertyValue<IList>(Property, Node);
-
-            if (index >= Collection.Count)
+            if (index < 0 || index >= Collection.Count)
                 throw new ArgumentOutOfRangeException(nameof(index));
 
-            if (index + direction >= Collection.Count)
+            if (index + direction < 0 || index + direction >= Collection.Count)
                 throw new ArgumentOutOfRangeException(nameof(direction));
 
             Debug.Assert(index >= 0);
@@ -423,6 +293,42 @@
 
             Collection.RemoveAt(index);
             Collection.Insert(index + direction, ChildNode);
+        }
+
+        private static bool IsNodeListPropertyInternal(Type nodeType, string propertyName, out Type childNodeType)
+        {
+            if (SafeType.CheckAndGetPropertyOf(nodeType, propertyName, out PropertyInfo Property))
+            {
+                Type PropertyType = Property.PropertyType;
+                if (NodeTreeHelper.IsNodeListType(PropertyType))
+                {
+                    Debug.Assert(PropertyType.IsGenericType);
+                    Type[] GenericArguments = PropertyType.GetGenericArguments();
+                    Debug.Assert(GenericArguments.Length == 1);
+
+                    childNodeType = GenericArguments[0];
+
+                    return NodeTreeHelper.IsNodeDescendantType(childNodeType);
+                }
+            }
+
+            Contract.Unused(out childNodeType);
+            return false;
+        }
+
+        private static void GetCollection(Node node, string propertyName, out PropertyInfo property, out Type propertyType, out IList collection)
+        {
+            Type NodeType = node.GetType();
+
+            if (!SafeType.CheckAndGetPropertyOf(NodeType, propertyName, out property))
+                throw new ArgumentException($"{nameof(propertyName)} must be the name of a property of {NodeType}");
+
+            propertyType = property.PropertyType;
+
+            if (!NodeTreeHelper.IsNodeListType(propertyType))
+                throw new ArgumentException($"{nameof(propertyName)} must be the name of a node list property of {NodeType}");
+
+            collection = SafeType.GetPropertyValue<IList>(property, node);
         }
     }
 }

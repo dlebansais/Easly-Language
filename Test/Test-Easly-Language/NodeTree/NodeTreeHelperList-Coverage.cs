@@ -174,6 +174,10 @@
             List<Pattern> EmptyPatternList = new();
             Assert.Throws<ArgumentException>(() => { NodeTreeHelperList.SetChildNodeList(SimpleGlobalReplicate, nameof(GlobalReplicate.Patterns), EmptyPatternList); });
 
+            Root NewRoot = NodeHelper.CreateRoot(new List<Class>(), new List<Library>(), new List<GlobalReplicate>());
+            List<GlobalReplicate> EmptyGlobalReplicateList = new();
+            NodeTreeHelperList.SetChildNodeList(NewRoot, nameof(Root.Replicates), EmptyGlobalReplicateList);
+
 #if !DEBUG
             GlobalReplicate NullGlobalReplicate = null!;
             string NullString = null!;
