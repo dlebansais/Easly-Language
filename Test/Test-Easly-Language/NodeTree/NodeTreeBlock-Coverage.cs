@@ -17,7 +17,7 @@
             Library SimpleLibrary = NodeHelper.CreateSimpleLibrary("a");
             NodeTreeHelperBlockList.InsertIntoBlockList(SimpleLibrary, nameof(Library.ClassIdentifierBlocks), 0, SimpleIdentifierBlock);
 
-            NodeTreeHelperBlockList.GetChildBlockList(SimpleLibrary, nameof(Library.ClassIdentifierBlocks), out IReadOnlyList<NodeTreeBlock> ChildBlockList);
+            NodeTreeHelperBlockList.GetChildBlockList(SimpleLibrary, nameof(Library.ClassIdentifierBlocks), out IList<NodeTreeBlock> ChildBlockList);
             Assert.AreEqual(ChildBlockList.Count, 1);
 
             NodeTreeBlock FirstNodeTreeBlock = ChildBlockList[0];

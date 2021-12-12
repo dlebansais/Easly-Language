@@ -300,6 +300,7 @@
             if (SafeType.CheckAndGetPropertyOf(nodeType, propertyName, out PropertyInfo Property))
             {
                 Type PropertyType = Property.PropertyType;
+
                 if (NodeTreeHelper.IsNodeListType(PropertyType))
                 {
                     Debug.Assert(PropertyType.IsGenericType);
@@ -308,7 +309,7 @@
 
                     childNodeType = GenericArguments[0];
 
-                    return NodeTreeHelper.IsNodeDescendantType(childNodeType);
+                    return true;
                 }
             }
 

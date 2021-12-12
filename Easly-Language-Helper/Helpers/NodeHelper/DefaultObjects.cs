@@ -357,7 +357,7 @@
         /// <returns>True if the node property is an empty block list; otherwise, false.</returns>
         private static bool IsEmptyBlockList(Node node, string propertyName)
         {
-            NodeTreeHelperBlockList.GetChildBlockList(node, propertyName, out IReadOnlyList<NodeTreeBlock> ChildBlockList);
+            NodeTreeHelperBlockList.GetChildBlockList(node, propertyName, out IList<NodeTreeBlock> ChildBlockList);
 
             if (IsCollectionNeverEmpty(node, propertyName))
             {

@@ -68,7 +68,7 @@
 
         private static void NodeHashBlockList(Node node, string propertyName, ref ulong hash)
         {
-            NodeTreeHelperBlockList.GetChildBlockList(node, propertyName, out IReadOnlyList<NodeTreeBlock> ChildBlockList);
+            NodeTreeHelperBlockList.GetChildBlockList(node, propertyName, out IList<NodeTreeBlock> ChildBlockList);
 
             for (int i = 0; i < ChildBlockList.Count; i++)
             {
