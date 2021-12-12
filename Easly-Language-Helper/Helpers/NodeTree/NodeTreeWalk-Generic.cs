@@ -195,8 +195,9 @@
                 if (!callbacks.HandlerGuid(node, nodePropertyName, data))
                     return false;
             }
-            else if (NodeTreeHelper.IsDocumentProperty(node, nodePropertyName))
+            else
             {
+                Debug.Assert(NodeTreeHelper.IsDocumentProperty(node, nodePropertyName));
             }
 
             return true;

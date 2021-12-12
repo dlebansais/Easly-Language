@@ -183,6 +183,23 @@
             Result = NodeTreeWalk.Walk(NewTestRoot, NewWalkCallbacks, new TestContext());
             Assert.False(Result);
 
+
+            NewWalkCallbacks.HandlerNode = (Node node, Node parentNode, string propertyName, WalkCallbacks<TestContext> callback, TestContext data) => { return true; };
+
+            Inheritance SimpleInheritance = NodeHelper.CreateSimpleInheritance("a");
+
+            NewWalkCallbacks.BlockSubstitution = new KeyValuePair<string, string>(string.Empty, string.Empty);
+            NewWalkCallbacks.HandlerEnum = (Node node, string propertyName, TestContext data) => { return true; };
+
+            Result = NodeTreeWalk.Walk(SimpleInheritance, NewWalkCallbacks, new TestContext());
+            Assert.True(Result);
+
+            NewWalkCallbacks.HandlerEnum = (Node node, string propertyName, TestContext data) => { return propertyName != "ForgetIndexer"; };
+
+            Result = NodeTreeWalk.Walk(SimpleInheritance, NewWalkCallbacks, new TestContext());
+            Assert.False(Result);
+
+
 #if !DEBUG
             Expression NullExpression = null!;
             TestContext NullTestContext = null!;
