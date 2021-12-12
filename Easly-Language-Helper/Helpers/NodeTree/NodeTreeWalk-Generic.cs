@@ -122,7 +122,7 @@
                 string Key = callbacks.BlockSubstitution.Key;
                 string Value = callbacks.BlockSubstitution.Value;
 
-                if (Key != Value)
+                if (Key.Length > 0)
                     return WalkBlockListKeyWithSubstitution(node, callbacks, data, nodePropertyName, Key, Value);
                 else
                     return WalkBlockListKeyNull(node, callbacks, data, nodePropertyName, BlockList);
@@ -133,7 +133,7 @@
 
         private static bool WalkBlockListKeyWithSubstitution(Node node, WalkCallbacks<TContext> callbacks, TContext data, string nodePropertyName, string key, string value)
         {
-            Debug.Assert(key != value);
+            Debug.Assert(key.Length > 0);
 
             string ListPropertyName = nodePropertyName.Replace(key, value);
 
