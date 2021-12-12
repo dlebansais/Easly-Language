@@ -1,8 +1,9 @@
 ﻿namespace BaseNodeHelper
 {
-    using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using BaseNode;
+    using Contracts;
 
     /// <summary>
     /// Represents a block of nodes in the program tree.
@@ -16,14 +17,17 @@
         /// <param name="replicationPattern">The replication pattern.</param>
         /// <param name="sourceIdentifier">The source identifier.</param>
         /// <param name="nodeList">The list of nodes.</param>
-        public NodeTreeBlock(Pattern replicationPattern, Identifier sourceIdentifier, IReadOnlyList<Node> nodeList)
+        internal NodeTreeBlock(Pattern replicationPattern, Identifier sourceIdentifier, IReadOnlyList<Node> nodeList)
         {
-            if (nodeList == null) throw new ArgumentNullException(nameof(nodeList));
-            if (nodeList.Count == 0) throw new ArgumentException($"{nameof(nodeList)} must have at least one node");
+            Contract.RequireNotNull(replicationPattern, out Pattern ReplicationPattern);
+            Contract.RequireNotNull(sourceIdentifier, out Identifier SourceIdentifier);
+            Contract.RequireNotNull(nodeList, out IReadOnlyList<Node> NodeList);
 
-            ReplicationPattern = replicationPattern;
-            SourceIdentifier = sourceIdentifier;
-            NodeList = nodeList;
+            Debug.Assert(NodeList.Count > 0);
+
+            this.ReplicationPattern = ReplicationPattern;
+            this.SourceIdentifier = SourceIdentifier;
+            this.NodeList = NodeList;
         }
         #endregion
 

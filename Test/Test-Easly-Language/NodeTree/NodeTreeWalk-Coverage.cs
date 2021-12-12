@@ -27,6 +27,23 @@
         }
 
         [Test]
+        public static void TestWalkCallbacks()
+        {
+            WalkCallbacks<TestContext> WalkCallback1 = new WalkCallbacks<TestContext>();
+            WalkCallbacks<TestContext> WalkCallback2 = new WalkCallbacks<TestContext>();
+
+            Assert.AreEqual(WalkCallback1, WalkCallback1);
+            Assert.True(WalkCallback1 == WalkCallback2);
+            Assert.False(WalkCallback1 != WalkCallback2);
+            Assert.True(WalkCallback1.Equals(WalkCallback2));
+            Assert.False(WalkCallback1.Equals(string.Empty));
+
+            int HashCode1 = WalkCallback1.GetHashCode();
+            int HashCode2 = WalkCallback2.GetHashCode();
+            Assert.AreEqual(HashCode1, HashCode2);
+        }
+
+        [Test]
         public static void TestEnumChildNodeProperties()
         {
             bool Result;
@@ -37,7 +54,7 @@
             Class SimpleClass = NodeHelper.CreateSimpleClass("a");
             List<Class> SimpleClassList = new() { SimpleClass };
             List<Library> EmptyLibraryList = new();
-            GlobalReplicate SimpleGlobalReplicate = NodeHelper.CreateSimpleGlobalReplicate("a");
+            GlobalReplicate SimpleGlobalReplicate = NodeHelper.CreateSimpleGlobalReplicate("b");
             List<GlobalReplicate> SimpleGlobalReplicateList = new() { SimpleGlobalReplicate };
             Root NewRoot = NodeHelper.CreateRoot(SimpleClassList, EmptyLibraryList, SimpleGlobalReplicateList);
 
@@ -183,10 +200,9 @@
             Result = NodeTreeWalk.Walk(NewTestRoot, NewWalkCallbacks, new TestContext());
             Assert.False(Result);
 
-
             NewWalkCallbacks.HandlerNode = (Node node, Node parentNode, string propertyName, WalkCallbacks<TestContext> callback, TestContext data) => { return true; };
 
-            Inheritance SimpleInheritance = NodeHelper.CreateSimpleInheritance("a");
+            Inheritance SimpleInheritance = NodeHelper.CreateSimpleInheritance("c");
 
             NewWalkCallbacks.BlockSubstitution = new KeyValuePair<string, string>(string.Empty, string.Empty);
             NewWalkCallbacks.HandlerEnum = (Node node, string propertyName, TestContext data) => { return true; };
@@ -198,7 +214,6 @@
 
             Result = NodeTreeWalk.Walk(SimpleInheritance, NewWalkCallbacks, new TestContext());
             Assert.False(Result);
-
 
 #if !DEBUG
             Expression NullExpression = null!;
