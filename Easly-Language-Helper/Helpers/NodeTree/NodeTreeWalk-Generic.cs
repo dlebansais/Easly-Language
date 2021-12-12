@@ -123,15 +123,15 @@
                 string Value = callbacks.BlockSubstitution.Value;
 
                 if (Key.Length > 0)
-                    return WalkBlockListKeyWithSubstitution(node, callbacks, data, nodePropertyName, Key, Value);
+                    return WalkBlockListWithSubstitution(node, callbacks, data, nodePropertyName, Key, Value);
                 else
-                    return WalkBlockListKeyNull(node, callbacks, data, nodePropertyName, BlockList);
+                    return WalkBlockList(node, callbacks, data, nodePropertyName, BlockList);
             }
 
             return true;
         }
 
-        private static bool WalkBlockListKeyWithSubstitution(Node node, WalkCallbacks<TContext> callbacks, TContext data, string nodePropertyName, string key, string value)
+        private static bool WalkBlockListWithSubstitution(Node node, WalkCallbacks<TContext> callbacks, TContext data, string nodePropertyName, string key, string value)
         {
             Debug.Assert(key.Length > 0);
 
@@ -152,7 +152,7 @@
             return true;
         }
 
-        private static bool WalkBlockListKeyNull(Node node, WalkCallbacks<TContext> callbacks, TContext data, string nodePropertyName, IBlockList blockList)
+        private static bool WalkBlockList(Node node, WalkCallbacks<TContext> callbacks, TContext data, string nodePropertyName, IBlockList blockList)
         {
             for (int BlockIndex = 0; BlockIndex < blockList.NodeBlockList.Count; BlockIndex++)
             {
