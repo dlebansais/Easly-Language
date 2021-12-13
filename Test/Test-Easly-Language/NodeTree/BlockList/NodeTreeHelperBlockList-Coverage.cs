@@ -1,6 +1,7 @@
 ﻿namespace TestEaslyLanguage
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using BaseNode;
     using BaseNodeHelper;
@@ -9,6 +10,12 @@
     [TestFixture]
     public partial class NodeTreeHelperBlockListCoverage
     {
+        private class TestBlockList : IBlockList
+        {
+            public Document Documentation { get; } = new Document();
+            public IList NodeBlockList { get; } = new List<int>();
+        }
+
         [Test]
         public static void TestIsBlockListProperty()
         {
@@ -359,6 +366,49 @@
             IBlockList NullBlockList = null!;
             Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperBlockList.IsBlockListEmpty(NullBlockList); });
             Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperBlockList.IsBlockListSingle(NullBlockList); });
+#endif
+        }
+
+        [Test]
+        public static void TestCreateBlock()
+        {
+            IBlock Result;
+
+            Export SimpleExport = NodeHelper.CreateSimpleExport("a");
+            Pattern SimplePattern = NodeHelper.CreateSimplePattern("b");
+            Identifier SimpleIdentifier = NodeHelper.CreateSimpleIdentifier("c");
+
+            Result = NodeTreeHelperBlockList.CreateBlock(SimpleExport, nameof(Export.ClassIdentifierBlocks), ReplicationStatus.Normal, SimplePattern, SimpleIdentifier);
+            Assert.AreEqual(Result.GetType(), typeof(Block<Identifier>));
+
+            IBlockList ClassIdentifierBlocks = (IBlockList)SimpleExport.ClassIdentifierBlocks;
+
+            Result = NodeTreeHelperBlockList.CreateBlock(ClassIdentifierBlocks, ReplicationStatus.Normal, SimplePattern, SimpleIdentifier);
+            Assert.AreEqual(Result.GetType(), typeof(Block<Identifier>));
+
+            Result = NodeTreeHelperBlockList.CreateBlock(typeof(IBlockList<Identifier>), ReplicationStatus.Normal, SimplePattern, SimpleIdentifier);
+            Assert.AreEqual(Result.GetType(), typeof(Block<Identifier>));
+
+            Assert.Throws<ArgumentException>(() => { NodeTreeHelperBlockList.CreateBlock(new TestBlockList(), ReplicationStatus.Normal, SimplePattern, SimpleIdentifier); });
+            Assert.Throws<ArgumentException>(() => { NodeTreeHelperBlockList.CreateBlock(typeof(TestBlockList), ReplicationStatus.Normal, SimplePattern, SimpleIdentifier); });
+
+#if !DEBUG
+            Export NullExport = null!;
+            string NullString = null!;
+            Pattern NullPattern = null!;
+            Identifier NullIdentifier = null!;
+            IBlockList NullBlockList = null!;
+            Type NullType = null!;
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperBlockList.CreateBlock(NullExport, nameof(Export.ClassIdentifierBlocks), ReplicationStatus.Normal, SimplePattern, SimpleIdentifier); });
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperBlockList.CreateBlock(SimpleExport, NullString, ReplicationStatus.Normal, SimplePattern, SimpleIdentifier); });
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperBlockList.CreateBlock(SimpleExport, nameof(Export.ClassIdentifierBlocks), ReplicationStatus.Normal, NullPattern, SimpleIdentifier); });
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperBlockList.CreateBlock(SimpleExport, nameof(Export.ClassIdentifierBlocks), ReplicationStatus.Normal, SimplePattern, NullIdentifier); });
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperBlockList.CreateBlock(NullBlockList, ReplicationStatus.Normal, SimplePattern, SimpleIdentifier); });
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperBlockList.CreateBlock(ClassIdentifierBlocks, ReplicationStatus.Normal, NullPattern, SimpleIdentifier); });
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperBlockList.CreateBlock(ClassIdentifierBlocks, ReplicationStatus.Normal, SimplePattern, NullIdentifier); });
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperBlockList.CreateBlock(NullType, ReplicationStatus.Normal, SimplePattern, SimpleIdentifier); });
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperBlockList.CreateBlock(typeof(IBlockList<Identifier>), ReplicationStatus.Normal, NullPattern, SimpleIdentifier); });
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperBlockList.CreateBlock(typeof(IBlockList<Identifier>), ReplicationStatus.Normal, SimplePattern, NullIdentifier); });
 #endif
         }
     }

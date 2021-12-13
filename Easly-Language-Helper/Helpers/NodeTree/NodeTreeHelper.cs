@@ -105,11 +105,31 @@
         }
 
         /// <summary>
-        /// Checks whether the provided type is a <see cref="IBlockList"/>.
+        /// Checks whether the provided type is a <see cref="BlockList{T}"/>.
         /// </summary>
         /// <param name="type">The type to check.</param>
-        /// <returns>True if the provided type is a <see cref="IBlockList"/>; otherwise, false.</returns>
+        /// <returns>True if the provided type is a <see cref="BlockList{T}"/>; otherwise, false.</returns>
         public static bool IsBlockListType(Type type)
+        {
+            Contract.RequireNotNull(type, out Type Type);
+
+            if (Type.IsInterface || !Type.IsGenericType || Type.GetGenericTypeDefinition() != typeof(BlockList<>))
+                return false;
+
+            Type[] GenericArguments = Type.GetGenericArguments();
+            Debug.Assert(GenericArguments.Length == 1);
+
+            Type GenericType = GenericArguments[0];
+
+            return IsNodeDescendantType(GenericType);
+        }
+
+        /// <summary>
+        /// Checks whether the provided type is a <see cref="IBlockList{T}"/>.
+        /// </summary>
+        /// <param name="type">The type to check.</param>
+        /// <returns>True if the provided type is a <see cref="IBlockList{T}"/>; otherwise, false.</returns>
+        public static bool IsBlockListInterfaceType(Type type)
         {
             Contract.RequireNotNull(type, out Type Type);
 
@@ -125,15 +145,65 @@
         }
 
         /// <summary>
-        /// Checks whether the provided type is a <see cref="IBlock"/>.
+        /// Checks whether the provided type is a <see cref="Block{T}"/>.
         /// </summary>
         /// <param name="type">The type to check.</param>
-        /// <returns>True if the provided type is a <see cref="IBlock"/>; otherwise, false.</returns>
+        /// <returns>True if the provided type is a <see cref="Block{T}"/>; otherwise, false.</returns>
         public static bool IsBlockType(Type type)
         {
             Contract.RequireNotNull(type, out Type Type);
 
+            if (Type.IsInterface || !Type.IsGenericType || Type.GetGenericTypeDefinition() != typeof(Block<>))
+                return false;
+
+            Type[] GenericArguments = Type.GetGenericArguments();
+            Debug.Assert(GenericArguments.Length == 1);
+
+            Type GenericType = GenericArguments[0];
+            Debug.Assert(IsNodeDescendantType(GenericType));
+
+            return true;
+        }
+
+        /// <summary>
+        /// Checks whether the provided type is a <see cref="IBlock{T}"/>.
+        /// </summary>
+        /// <param name="type">The type to check.</param>
+        /// <returns>True if the provided type is a <see cref="IBlock{T}"/>; otherwise, false.</returns>
+        public static bool IsBlockInterfaceType(Type type)
+        {
+            Contract.RequireNotNull(type, out Type Type);
+
             if (!Type.IsInterface || !Type.IsGenericType || Type.GetGenericTypeDefinition() != typeof(IBlock<>))
+                return false;
+
+            Type[] GenericArguments = Type.GetGenericArguments();
+            Debug.Assert(GenericArguments.Length == 1);
+
+            Type GenericType = GenericArguments[0];
+            Debug.Assert(IsNodeDescendantType(GenericType));
+
+            return true;
+        }
+
+        /// <summary>
+        /// Checks whether the provided type is a <see cref="BlockList{T}"/>, a <see cref="Block{T}"/> or their interface.
+        /// </summary>
+        /// <param name="type">The type to check.</param>
+        /// <returns>True if the provided type is a <see cref="BlockList{T}"/>, a <see cref="Block{T}"/> or their interface; otherwise, false.</returns>
+        public static bool IsSomeBlockType(Type type)
+        {
+            Contract.RequireNotNull(type, out Type Type);
+
+            if (!Type.IsGenericType)
+                return false;
+
+            Type GenericTypeDefinition = Type.GetGenericTypeDefinition();
+
+            if (GenericTypeDefinition != typeof(Block<>) &&
+                GenericTypeDefinition != typeof(IBlock<>) &&
+                GenericTypeDefinition != typeof(BlockList<>) &&
+                GenericTypeDefinition != typeof(IBlockList<>))
                 return false;
 
             Type[] GenericArguments = Type.GetGenericArguments();
@@ -194,7 +264,7 @@
                 bool IsKnownGeneric = false;
                 IsKnownGeneric |= IsOptionalReferenceType(PropertyType);
                 IsKnownGeneric |= IsNodeListType(PropertyType);
-                IsKnownGeneric |= IsBlockListType(PropertyType);
+                IsKnownGeneric |= IsBlockListInterfaceType(PropertyType);
                 Debug.Assert(IsKnownGeneric);
 
                 AssignedType = GenericArguments[0];
@@ -291,7 +361,7 @@
                 Type PropertyType = Property.PropertyType;
                 string PropertyName = Property.Name;
 
-                if (IsBlockListType(PropertyType))
+                if (IsBlockListInterfaceType(PropertyType))
                 {
                     Debug.Assert(PropertyType.IsGenericType);
                     Type[] GenericArguments = PropertyType.GetGenericArguments();

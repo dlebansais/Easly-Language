@@ -6,6 +6,7 @@
     using System.Diagnostics;
     using System.Reflection;
     using BaseNode;
+    using Contracts;
 
     /// <summary>
     /// Provides methods to manipulate block lists of nodes.
@@ -23,18 +24,14 @@
         /// <returns>The created instance.</returns>
         public static IBlock CreateBlock(Node node, string propertyName, ReplicationStatus replication, Pattern replicationPattern, Identifier sourceIdentifier)
         {
-            if (node == null) throw new ArgumentNullException(nameof(node));
-            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
-            if (replicationPattern == null) throw new ArgumentNullException(nameof(replicationPattern));
-            if (sourceIdentifier == null) throw new ArgumentNullException(nameof(sourceIdentifier));
+            Contract.RequireNotNull(node, out Node Node);
+            Contract.RequireNotNull(propertyName, out string PropertyName);
+            Contract.RequireNotNull(replicationPattern, out Pattern ReplicationPattern);
+            Contract.RequireNotNull(sourceIdentifier, out Identifier SourceIdentifier);
 
-            Type NodeType = node.GetType();
-            PropertyInfo Property = SafeType.GetProperty(NodeType, propertyName);
+            GetBlockListInternal(Node, PropertyName, out _, out Type PropertyType, out _);
 
-            Type PropertyType = Property.PropertyType;
-            Debug.Assert(NodeTreeHelper.IsBlockListType(PropertyType));
-
-            return CreateBlock(PropertyType, replication, replicationPattern, sourceIdentifier);
+            return CreateBlockInternal(PropertyType, replication, ReplicationPattern, SourceIdentifier);
         }
 
         /// <summary>
@@ -47,11 +44,16 @@
         /// <returns>The created instance.</returns>
         public static IBlock CreateBlock(IBlockList blockList, ReplicationStatus replication, Pattern replicationPattern, Identifier sourceIdentifier)
         {
-            if (blockList == null) throw new ArgumentNullException(nameof(blockList));
-            if (replicationPattern == null) throw new ArgumentNullException(nameof(replicationPattern));
-            if (sourceIdentifier == null) throw new ArgumentNullException(nameof(sourceIdentifier));
+            Contract.RequireNotNull(blockList, out IBlockList BlockList);
+            Contract.RequireNotNull(replicationPattern, out Pattern ReplicationPattern);
+            Contract.RequireNotNull(sourceIdentifier, out Identifier SourceIdentifier);
 
-            return CreateBlock(blockList.GetType(), replication, replicationPattern, sourceIdentifier);
+            Type BlockListType = BlockList.GetType();
+
+            if (!NodeTreeHelper.IsSomeBlockType(BlockListType))
+                throw new ArgumentException($"{nameof(blockList)} must be a {typeof(BlockList<>)} type");
+
+            return CreateBlockInternal(BlockListType, replication, ReplicationPattern, SourceIdentifier);
         }
 
         /// <summary>
@@ -64,12 +66,20 @@
         /// <returns>The created instance.</returns>
         public static IBlock CreateBlock(Type propertyType, ReplicationStatus replication, Pattern replicationPattern, Identifier sourceIdentifier)
         {
-            if (propertyType == null) throw new ArgumentNullException(nameof(propertyType));
-            if (!propertyType.IsGenericType) throw new ArgumentException($"{nameof(propertyType)} must be a generic type");
-            Type GenericTypeDefinition = propertyType.GetGenericTypeDefinition();
-            if (GenericTypeDefinition != typeof(IBlockList<>) && GenericTypeDefinition != typeof(BlockList<>) && GenericTypeDefinition != typeof(IBlock<>) && GenericTypeDefinition != typeof(Block<>)) throw new ArgumentException($"{nameof(propertyType)} must be a block or block list type");
-            if (replicationPattern == null) throw new ArgumentNullException(nameof(replicationPattern));
-            if (sourceIdentifier == null) throw new ArgumentNullException(nameof(sourceIdentifier));
+            Contract.RequireNotNull(propertyType, out Type PropertyType);
+            Contract.RequireNotNull(replicationPattern, out Pattern ReplicationPattern);
+            Contract.RequireNotNull(sourceIdentifier, out Identifier SourceIdentifier);
+
+            if (!NodeTreeHelper.IsSomeBlockType(PropertyType))
+                throw new ArgumentException($"{nameof(propertyType)} must be a {typeof(Block<>)} or {typeof(BlockList<>)} type");
+
+            return CreateBlockInternal(PropertyType, replication, ReplicationPattern, SourceIdentifier);
+        }
+
+        private static IBlock CreateBlockInternal(Type propertyType, ReplicationStatus replication, Pattern replicationPattern, Identifier sourceIdentifier)
+        {
+            Debug.Assert(NodeTreeHelper.IsSomeBlockType(propertyType));
+            Debug.Assert(propertyType.IsGenericType);
 
             Type[] TypeArguments = propertyType.GetGenericArguments();
 

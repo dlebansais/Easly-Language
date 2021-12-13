@@ -41,12 +41,67 @@
         }
 
         [Test]
+        public static void TestIsBlockListType()
+        {
+            bool Result;
+
+            Result = NodeTreeHelper.IsBlockListType(typeof(BlockList<Identifier>));
+            Assert.True(Result);
+
+            Result = NodeTreeHelper.IsBlockListType(typeof(IBlockList<Identifier>));
+            Assert.False(Result);
+
+            Result = NodeTreeHelper.IsBlockListType(typeof(string));
+            Assert.False(Result);
+
+            Result = NodeTreeHelper.IsBlockListType(typeof(IDisposable));
+            Assert.False(Result);
+
+            Result = NodeTreeHelper.IsBlockListType(typeof(IEnumerable<int>));
+            Assert.False(Result);
+
+#if !DEBUG
+            Type NullType = null!;
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.IsBlockListType(NullType); });
+#endif
+        }
+
+        [Test]
+        public static void TestIsBlockListInterfaceType()
+        {
+            bool Result;
+
+            Result = NodeTreeHelper.IsBlockListInterfaceType(typeof(IBlockList<Identifier>));
+            Assert.True(Result);
+
+            Result = NodeTreeHelper.IsBlockListInterfaceType(typeof(BlockList<Identifier>));
+            Assert.False(Result);
+
+            Result = NodeTreeHelper.IsBlockListInterfaceType(typeof(string));
+            Assert.False(Result);
+
+            Result = NodeTreeHelper.IsBlockListInterfaceType(typeof(IDisposable));
+            Assert.False(Result);
+
+            Result = NodeTreeHelper.IsBlockListInterfaceType(typeof(IEnumerable<int>));
+            Assert.False(Result);
+
+#if !DEBUG
+            Type NullType = null!;
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.IsBlockListInterfaceType(NullType); });
+#endif
+        }
+
+        [Test]
         public static void TestIsBlockType()
         {
             bool Result;
 
-            Result = NodeTreeHelper.IsBlockType(typeof(IBlock<Identifier>));
+            Result = NodeTreeHelper.IsBlockType(typeof(Block<Identifier>));
             Assert.True(Result);
+
+            Result = NodeTreeHelper.IsBlockType(typeof(IBlock<Identifier>));
+            Assert.False(Result);
 
             Result = NodeTreeHelper.IsBlockType(typeof(string));
             Assert.False(Result);
@@ -60,6 +115,64 @@
 #if !DEBUG
             Type NullType = null!;
             Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.IsBlockType(NullType); });
+#endif
+        }
+
+        [Test]
+        public static void TestIsBlockInterfaceType()
+        {
+            bool Result;
+
+            Result = NodeTreeHelper.IsBlockInterfaceType(typeof(IBlock<Identifier>));
+            Assert.True(Result);
+
+            Result = NodeTreeHelper.IsBlockInterfaceType(typeof(Block<Identifier>));
+            Assert.False(Result);
+
+            Result = NodeTreeHelper.IsBlockInterfaceType(typeof(string));
+            Assert.False(Result);
+
+            Result = NodeTreeHelper.IsBlockInterfaceType(typeof(IDisposable));
+            Assert.False(Result);
+
+            Result = NodeTreeHelper.IsBlockInterfaceType(typeof(IEnumerable<int>));
+            Assert.False(Result);
+
+#if !DEBUG
+            Type NullType = null!;
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.IsBlockInterfaceType(NullType); });
+#endif
+        }
+
+        [Test]
+        public static void TestIsSomeBlockType()
+        {
+            bool Result;
+
+            Result = NodeTreeHelper.IsSomeBlockType(typeof(Block<Identifier>));
+            Assert.True(Result);
+
+            Result = NodeTreeHelper.IsSomeBlockType(typeof(IBlock<Identifier>));
+            Assert.True(Result);
+
+            Result = NodeTreeHelper.IsSomeBlockType(typeof(BlockList<Identifier>));
+            Assert.True(Result);
+
+            Result = NodeTreeHelper.IsSomeBlockType(typeof(IBlockList<Identifier>));
+            Assert.True(Result);
+
+            Result = NodeTreeHelper.IsSomeBlockType(typeof(string));
+            Assert.False(Result);
+
+            Result = NodeTreeHelper.IsSomeBlockType(typeof(IDisposable));
+            Assert.False(Result);
+
+            Result = NodeTreeHelper.IsSomeBlockType(typeof(IEnumerable<int>));
+            Assert.False(Result);
+
+#if !DEBUG
+            Type NullType = null!;
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.IsSomeBlockType(NullType); });
 #endif
         }
 

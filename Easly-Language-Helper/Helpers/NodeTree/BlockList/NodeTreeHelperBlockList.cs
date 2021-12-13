@@ -338,7 +338,7 @@
 
             Type PropertyType = Property.PropertyType;
 
-            if (!NodeTreeHelper.IsBlockListType(PropertyType))
+            if (!NodeTreeHelper.IsBlockListInterfaceType(PropertyType))
                 throw new ArgumentException($"{nameof(propertyName)} must be the name of a block list property of {NodeType}");
 
             if (!PropertyType.IsAssignableFrom(BlockList.GetType()))
@@ -392,7 +392,7 @@
             {
                 Type PropertyType = Property.PropertyType;
 
-                if (NodeTreeHelper.IsBlockListType(PropertyType))
+                if (NodeTreeHelper.IsBlockListInterfaceType(PropertyType))
                 {
                     Debug.Assert(PropertyType.IsGenericType);
 
@@ -418,7 +418,7 @@
 
             propertyType = property.PropertyType;
 
-            if (!NodeTreeHelper.IsBlockListType(propertyType))
+            if (!NodeTreeHelper.IsBlockListInterfaceType(propertyType))
                 throw new ArgumentException($"{nameof(propertyName)} must be the name of a block list property of {NodeType}");
 
             blockList = SafeType.GetPropertyValue<IBlockList>(property, node);
@@ -431,7 +431,7 @@
 
             Type PropertyType = Property.PropertyType;
 
-            if (!NodeTreeHelper.IsBlockListType(PropertyType))
+            if (!NodeTreeHelper.IsBlockListInterfaceType(PropertyType))
                 throw new ArgumentException($"{nameof(propertyName)} must be the name of a block list property of {nodeType}");
 
             Debug.Assert(PropertyType.IsGenericType);
@@ -451,7 +451,7 @@
 
             Type PropertyType = Property.PropertyType;
 
-            if (!NodeTreeHelper.IsBlockListType(PropertyType))
+            if (!NodeTreeHelper.IsBlockListInterfaceType(PropertyType))
                 throw new ArgumentException($"{nameof(propertyName)} must be the name of a block list property of {nodeType}");
 
             PropertyInfo NodeListProperty = SafeType.GetProperty(PropertyType, nameof(BlockList<Node>.NodeBlockList));

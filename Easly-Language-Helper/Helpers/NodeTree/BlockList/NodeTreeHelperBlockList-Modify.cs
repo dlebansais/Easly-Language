@@ -24,7 +24,7 @@
             Type NodeType = node.GetType();
             PropertyInfo Property = SafeType.GetProperty(NodeType, propertyName);
 
-            Debug.Assert(NodeTreeHelper.IsBlockListType(Property.PropertyType));
+            Debug.Assert(NodeTreeHelper.IsBlockListInterfaceType(Property.PropertyType));
 
             IBlockList BlockList = SafeType.GetPropertyValue<IBlockList>(Property, node);
 
@@ -52,7 +52,7 @@
             PropertyInfo Property = SafeType.GetProperty(NodeType, propertyName);
 
             Type PropertyType = Property.PropertyType;
-            Debug.Assert(NodeTreeHelper.IsBlockListType(PropertyType));
+            Debug.Assert(NodeTreeHelper.IsBlockListInterfaceType(PropertyType));
 
             IBlockList BlockList = SafeType.GetPropertyValue<IBlockList>(Property, node);
 
@@ -109,7 +109,7 @@
             PropertyInfo Property = SafeType.GetProperty(NodeType, propertyName);
 
             Type PropertyType = Property.PropertyType;
-            Debug.Assert(NodeTreeHelper.IsBlockListType(PropertyType));
+            Debug.Assert(NodeTreeHelper.IsBlockListInterfaceType(PropertyType));
 
             IBlockList BlockList = SafeType.GetPropertyValue<IBlockList>(Property, node);
 
@@ -154,7 +154,7 @@
             PropertyInfo Property = SafeType.GetProperty(NodeType, propertyName);
 
             Type PropertyType = Property.PropertyType;
-            Debug.Assert(NodeTreeHelper.IsBlockListType(Property.PropertyType));
+            Debug.Assert(NodeTreeHelper.IsBlockListInterfaceType(Property.PropertyType));
 
             IBlockList BlockList = SafeType.GetPropertyValue<IBlockList>(Property, node);
 
@@ -207,7 +207,7 @@
             PropertyInfo Property = SafeType.GetProperty(NodeType, propertyName);
 
             Type PropertyType = Property.PropertyType;
-            Debug.Assert(NodeTreeHelper.IsBlockListType(Property.PropertyType));
+            Debug.Assert(NodeTreeHelper.IsBlockListInterfaceType(Property.PropertyType));
 
             IBlockList BlockList = SafeType.GetPropertyValue<IBlockList>(Property, node);
 
@@ -234,7 +234,7 @@
             PropertyInfo Property = SafeType.GetProperty(NodeType, propertyName);
 
             Type PropertyType = Property.PropertyType;
-            Debug.Assert(NodeTreeHelper.IsBlockListType(Property.PropertyType));
+            Debug.Assert(NodeTreeHelper.IsBlockListInterfaceType(Property.PropertyType));
 
             IBlockList BlockList = SafeType.GetPropertyValue<IBlockList>(Property, node);
 
@@ -265,7 +265,7 @@
             PropertyInfo Property = SafeType.GetProperty(NodeType, propertyName);
 
             Type PropertyType = Property.PropertyType;
-            Debug.Assert(NodeTreeHelper.IsBlockListType(PropertyType));
+            Debug.Assert(NodeTreeHelper.IsBlockListInterfaceType(PropertyType));
 
             IBlockList BlockList = SafeType.GetPropertyValue<IBlockList>(Property, node);
 
@@ -318,7 +318,7 @@
             PropertyInfo Property = SafeType.GetProperty(NodeType, propertyName);
             Type PropertyType = Property.PropertyType;
 
-            Debug.Assert(NodeTreeHelper.IsBlockListType(PropertyType));
+            Debug.Assert(NodeTreeHelper.IsBlockListInterfaceType(PropertyType));
 
             IBlockList BlockList = SafeType.GetPropertyValue<IBlockList>(Property, node);
 
@@ -389,7 +389,7 @@
             PropertyInfo Property = SafeType.GetProperty(NodeType, propertyName);
 
             Type PropertyType = Property.PropertyType;
-            Debug.Assert(NodeTreeHelper.IsBlockListType(PropertyType));
+            Debug.Assert(NodeTreeHelper.IsBlockListInterfaceType(PropertyType));
 
             IBlockList BlockList = SafeType.GetPropertyValue<IBlockList>(Property, node);
 
