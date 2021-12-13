@@ -77,7 +77,7 @@
             Contract.RequireNotNull(node, out Node Node);
             Contract.RequireNotNull(propertyName, out string PropertyName);
 
-            GetBlockListInternal(Node, PropertyName, out PropertyInfo property, out Type propertyType, out IBlockList BlockList);
+            GetBlockListInternal(Node, PropertyName, out _, out _, out IBlockList BlockList);
 
             return BlockList;
         }
@@ -344,7 +344,10 @@
             if (!PropertyType.IsAssignableFrom(BlockList.GetType()))
                 throw new ArgumentException($"Property {nameof(blockList)} must conform to {PropertyType}");
 
-            Property.SetValue(node, BlockList);
+            if (BlockList.NodeBlockList.Count == 0 && NodeHelper.IsCollectionNeverEmpty(Node, PropertyName))
+                throw new NeverEmptyException(Node, PropertyName);
+
+            Property.SetValue(Node, BlockList);
         }
 
         /// <summary>

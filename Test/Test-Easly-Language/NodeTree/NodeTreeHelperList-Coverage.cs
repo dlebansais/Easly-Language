@@ -240,8 +240,8 @@
 
             NeverEmptyException? Exception = Assert.Throws<NeverEmptyException>(() => { NodeTreeHelperList.RemoveFromList(SimpleGlobalReplicate, nameof(GlobalReplicate.Patterns), 0); });
             Assert.NotNull(Exception);
-            Assert.NotNull(Exception?.Node);
-            Assert.NotNull(Exception?.PropertyName);
+            Assert.AreEqual(Exception?.Node, SimpleGlobalReplicate);
+            Assert.AreEqual(Exception?.PropertyName, nameof(GlobalReplicate.Patterns));
 
 #if !DEBUG
             GlobalReplicate NullGlobalReplicate = null!;
