@@ -5,6 +5,7 @@
     using System.Diagnostics;
     using System.Reflection;
     using BaseNode;
+    using Contracts;
 
     /// <summary>
     /// Provides methods to manipulate block lists of nodes.
@@ -18,15 +19,13 @@
         /// <param name="propertyName">The property name.</param>
         public static void ClearChildBlockList(Node node, string propertyName)
         {
-            if (node == null) throw new ArgumentNullException(nameof(node));
-            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
+            Contract.RequireNotNull(node, out Node Node);
+            Contract.RequireNotNull(propertyName, out string PropertyName);
 
-            Type NodeType = node.GetType();
-            PropertyInfo Property = SafeType.GetProperty(NodeType, propertyName);
+            GetBlockListInternal(Node, PropertyName, out _, out _, out IBlockList BlockList);
 
-            Debug.Assert(NodeTreeHelper.IsBlockListInterfaceType(Property.PropertyType));
-
-            IBlockList BlockList = SafeType.GetPropertyValue<IBlockList>(Property, node);
+            if (NodeHelper.IsCollectionNeverEmpty(Node, PropertyName))
+                throw new NeverEmptyException(Node, PropertyName);
 
             IList NodeBlockList = BlockList.NodeBlockList;
             NodeBlockList.Clear();
@@ -42,30 +41,13 @@
         /// <param name="childNode">The node to insert.</param>
         public static void InsertIntoBlock(Node node, string propertyName, int blockIndex, int index, Node childNode)
         {
-            if (node == null) throw new ArgumentNullException(nameof(node));
-            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
-            if (blockIndex < 0) throw new ArgumentOutOfRangeException(nameof(blockIndex));
-            if (index < 0) throw new ArgumentOutOfRangeException(nameof(index));
-            if (childNode == null) throw new ArgumentNullException(nameof(childNode));
+            Contract.RequireNotNull(node, out Node Node);
+            Contract.RequireNotNull(propertyName, out string PropertyName);
+            Contract.RequireNotNull(childNode, out Node ChildNode);
 
-            Type NodeType = node.GetType();
-            PropertyInfo Property = SafeType.GetProperty(NodeType, propertyName);
+            GetBlockNodeListInternal(Node, PropertyName, blockIndex, out _, index, isUpperIndexValid: true, out IList NodeList);
 
-            Type PropertyType = Property.PropertyType;
-            Debug.Assert(NodeTreeHelper.IsBlockListInterfaceType(PropertyType));
-
-            IBlockList BlockList = SafeType.GetPropertyValue<IBlockList>(Property, node);
-
-            IList NodeBlockList = BlockList.NodeBlockList;
-            Debug.Assert(blockIndex < NodeBlockList.Count);
-            if (blockIndex >= NodeBlockList.Count) throw new ArgumentOutOfRangeException(nameof(blockIndex));
-
-            IBlock Block = SafeType.ItemAt<IBlock>(NodeBlockList, blockIndex);
-            IList NodeList = Block.NodeList;
-            Debug.Assert(index <= NodeList.Count);
-            if (index > NodeList.Count) throw new ArgumentOutOfRangeException(nameof(index));
-
-            NodeList.Insert(index, childNode);
+            NodeList.Insert(index, ChildNode);
         }
 
         /// <summary>
@@ -76,15 +58,15 @@
         /// <param name="childNode">The node to insert.</param>
         public static void InsertIntoBlock(IBlock block, int index, Node childNode)
         {
-            if (block == null) throw new ArgumentNullException(nameof(block));
-            if (index < 0) throw new ArgumentOutOfRangeException(nameof(index));
-            if (childNode == null) throw new ArgumentNullException(nameof(childNode));
+            Contract.RequireNotNull(block, out IBlock Block);
+            Contract.RequireNotNull(childNode, out Node ChildNode);
 
-            IList NodeList = block.NodeList;
-            Debug.Assert(index <= NodeList.Count);
-            if (index > NodeList.Count) throw new ArgumentOutOfRangeException(nameof(index));
+            IList NodeList = Block.NodeList;
 
-            NodeList.Insert(index, childNode);
+            if (index < 0 || index > NodeList.Count)
+                throw new ArgumentOutOfRangeException(nameof(index));
+
+            NodeList.Insert(index, ChildNode);
         }
 
         /// <summary>
@@ -97,37 +79,19 @@
         /// <param name="isBlockRemoved">True upon return if the block was also removed because the node was the last in that block.</param>
         public static void RemoveFromBlock(Node node, string propertyName, int blockIndex, int index, out bool isBlockRemoved)
         {
-            if (node == null) throw new ArgumentNullException(nameof(node));
-            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
-            if (blockIndex < 0) throw new ArgumentOutOfRangeException(nameof(blockIndex));
-            if (index < 0) throw new ArgumentOutOfRangeException(nameof(index));
+            Contract.RequireNotNull(node, out Node Node);
+            Contract.RequireNotNull(propertyName, out string PropertyName);
 
-            Type NodeType = node.GetType();
+            GetBlockNodeListInternal(Node, PropertyName, blockIndex, out IBlockList BlockList, index, isUpperIndexValid: false, out IList NodeList);
 
-            isBlockRemoved = false;
-
-            PropertyInfo Property = SafeType.GetProperty(NodeType, propertyName);
-
-            Type PropertyType = Property.PropertyType;
-            Debug.Assert(NodeTreeHelper.IsBlockListInterfaceType(PropertyType));
-
-            IBlockList BlockList = SafeType.GetPropertyValue<IBlockList>(Property, node);
-
-            IList NodeBlockList = BlockList.NodeBlockList;
-
-            Debug.Assert(blockIndex < NodeBlockList.Count);
-            if (blockIndex >= NodeBlockList.Count) throw new ArgumentOutOfRangeException(nameof(blockIndex));
-
-            IBlock Block = SafeType.ItemAt<IBlock>(NodeBlockList, blockIndex);
-            IList NodeList = Block.NodeList;
-            Debug.Assert(index < NodeList.Count);
-            if (index >= NodeList.Count) throw new ArgumentOutOfRangeException(nameof(index));
+            if (BlockList.NodeBlockList.Count == 1 && NodeList.Count == 1 && NodeHelper.IsCollectionNeverEmpty(Node, PropertyName))
+                throw new NeverEmptyException(Node, PropertyName);
 
             NodeList.RemoveAt(index);
 
             if (NodeList.Count == 0)
             {
-                NodeBlockList.RemoveAt(blockIndex);
+                BlockList.NodeBlockList.RemoveAt(blockIndex);
                 isBlockRemoved = true;
             }
             else
@@ -144,30 +108,13 @@
         /// <param name="newChildNode">The node replacing the existing node.</param>
         public static void ReplaceNode(Node node, string propertyName, int blockIndex, int index, Node newChildNode)
         {
-            if (node == null) throw new ArgumentNullException(nameof(node));
-            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
-            if (blockIndex < 0) throw new ArgumentOutOfRangeException(nameof(blockIndex));
-            if (index < 0) throw new ArgumentOutOfRangeException(nameof(index));
-            if (newChildNode == null) throw new ArgumentNullException(nameof(newChildNode));
+            Contract.RequireNotNull(node, out Node Node);
+            Contract.RequireNotNull(propertyName, out string PropertyName);
+            Contract.RequireNotNull(newChildNode, out Node NewChildNode);
 
-            Type NodeType = node.GetType();
-            PropertyInfo Property = SafeType.GetProperty(NodeType, propertyName);
+            GetBlockNodeListInternal(Node, PropertyName, blockIndex, out _, index, isUpperIndexValid: false, out IList NodeList);
 
-            Type PropertyType = Property.PropertyType;
-            Debug.Assert(NodeTreeHelper.IsBlockListInterfaceType(Property.PropertyType));
-
-            IBlockList BlockList = SafeType.GetPropertyValue<IBlockList>(Property, node);
-
-            IList NodeBlockList = BlockList.NodeBlockList;
-            Debug.Assert(blockIndex < NodeBlockList.Count);
-            if (blockIndex >= NodeBlockList.Count) throw new ArgumentOutOfRangeException(nameof(blockIndex));
-
-            IBlock Block = SafeType.ItemAt<IBlock>(NodeBlockList, blockIndex);
-            IList NodeList = Block.NodeList;
-            Debug.Assert(index < NodeList.Count);
-            if (index >= NodeList.Count) throw new ArgumentOutOfRangeException(nameof(index));
-
-            NodeList[index] = newChildNode;
+            NodeList[index] = NewChildNode;
         }
 
         /// <summary>
@@ -178,15 +125,15 @@
         /// <param name="newChildNode">The node replacing the existing node.</param>
         public static void ReplaceInBlock(IBlock block, int index, Node newChildNode)
         {
-            if (block == null) throw new ArgumentNullException(nameof(block));
-            if (index < 0) throw new ArgumentOutOfRangeException(nameof(index));
-            if (newChildNode == null) throw new ArgumentNullException(nameof(newChildNode));
+            Contract.RequireNotNull(block, out IBlock Block);
+            Contract.RequireNotNull(newChildNode, out Node NewChildNode);
 
-            IList NodeList = block.NodeList;
-            Debug.Assert(index < NodeList.Count);
-            if (index >= NodeList.Count) throw new ArgumentOutOfRangeException(nameof(index));
+            IList NodeList = Block.NodeList;
 
-            NodeList[index] = newChildNode;
+            if (index < 0 || index >= NodeList.Count)
+                throw new ArgumentOutOfRangeException(nameof(index));
+
+            NodeList[index] = NewChildNode;
         }
 
         /// <summary>
@@ -198,24 +145,18 @@
         /// <param name="childBlock">The block to insert.</param>
         public static void InsertIntoBlockList(Node node, string propertyName, int blockIndex, IBlock childBlock)
         {
-            if (node == null) throw new ArgumentNullException(nameof(node));
-            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
-            if (blockIndex < 0) throw new ArgumentOutOfRangeException(nameof(blockIndex));
-            if (childBlock == null) throw new ArgumentNullException(nameof(childBlock));
+            Contract.RequireNotNull(node, out Node Node);
+            Contract.RequireNotNull(propertyName, out string PropertyName);
+            Contract.RequireNotNull(childBlock, out IBlock ChildBlock);
 
-            Type NodeType = node.GetType();
-            PropertyInfo Property = SafeType.GetProperty(NodeType, propertyName);
-
-            Type PropertyType = Property.PropertyType;
-            Debug.Assert(NodeTreeHelper.IsBlockListInterfaceType(Property.PropertyType));
-
-            IBlockList BlockList = SafeType.GetPropertyValue<IBlockList>(Property, node);
+            GetBlockListInternal(Node, PropertyName, out _, out _, out IBlockList BlockList);
 
             IList NodeBlockList = BlockList.NodeBlockList;
-            Debug.Assert(blockIndex <= NodeBlockList.Count);
-            if (blockIndex > NodeBlockList.Count) throw new ArgumentOutOfRangeException(nameof(blockIndex));
 
-            NodeBlockList.Insert(blockIndex, childBlock);
+            if (blockIndex < 0 || blockIndex > NodeBlockList.Count)
+                throw new ArgumentOutOfRangeException(nameof(blockIndex));
+
+            NodeBlockList.Insert(blockIndex, ChildBlock);
         }
 
         /// <summary>
@@ -226,21 +167,18 @@
         /// <param name="blockIndex">Index of the block where to remove.</param>
         public static void RemoveFromBlockList(Node node, string propertyName, int blockIndex)
         {
-            if (node == null) throw new ArgumentNullException(nameof(node));
-            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
-            if (blockIndex < 0) throw new ArgumentOutOfRangeException(nameof(blockIndex));
+            Contract.RequireNotNull(node, out Node Node);
+            Contract.RequireNotNull(propertyName, out string PropertyName);
 
-            Type NodeType = node.GetType();
-            PropertyInfo Property = SafeType.GetProperty(NodeType, propertyName);
-
-            Type PropertyType = Property.PropertyType;
-            Debug.Assert(NodeTreeHelper.IsBlockListInterfaceType(Property.PropertyType));
-
-            IBlockList BlockList = SafeType.GetPropertyValue<IBlockList>(Property, node);
+            GetBlockListInternal(Node, PropertyName, out _, out _, out IBlockList BlockList);
 
             IList NodeBlockList = BlockList.NodeBlockList;
-            Debug.Assert(blockIndex < NodeBlockList.Count);
-            if (blockIndex >= NodeBlockList.Count) throw new ArgumentOutOfRangeException(nameof(blockIndex));
+
+            if (blockIndex < 0 || blockIndex >= NodeBlockList.Count)
+                throw new ArgumentOutOfRangeException(nameof(blockIndex));
+
+            if (BlockList.NodeBlockList.Count == 1 && NodeHelper.IsCollectionNeverEmpty(Node, PropertyName))
+                throw new NeverEmptyException(Node, PropertyName);
 
             NodeBlockList.RemoveAt(blockIndex);
         }
@@ -255,37 +193,33 @@
         /// <param name="newChildBlock">The new block that will contains nodes appearing before <paramref name="index"/>.</param>
         public static void SplitBlock(Node node, string propertyName, int blockIndex, int index, IBlock newChildBlock)
         {
-            if (node == null) throw new ArgumentNullException(nameof(node));
-            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
-            if (blockIndex < 0) throw new ArgumentOutOfRangeException(nameof(blockIndex));
-            if (index <= 0) throw new ArgumentOutOfRangeException(nameof(index));
-            if (newChildBlock == null) throw new ArgumentNullException(nameof(newChildBlock));
+            Contract.RequireNotNull(node, out Node Node);
+            Contract.RequireNotNull(propertyName, out string PropertyName);
+            Contract.RequireNotNull(newChildBlock, out IBlock NewChildBlock);
 
-            Type NodeType = node.GetType();
-            PropertyInfo Property = SafeType.GetProperty(NodeType, propertyName);
-
-            Type PropertyType = Property.PropertyType;
-            Debug.Assert(NodeTreeHelper.IsBlockListInterfaceType(PropertyType));
-
-            IBlockList BlockList = SafeType.GetPropertyValue<IBlockList>(Property, node);
+            GetBlockListInternal(Node, PropertyName, out _, out _, out IBlockList BlockList);
 
             IList NodeBlockList = BlockList.NodeBlockList;
 
-            Debug.Assert(blockIndex <= NodeBlockList.Count);
-            if (blockIndex > NodeBlockList.Count) throw new ArgumentOutOfRangeException(nameof(blockIndex));
+            if (blockIndex < 0 || blockIndex >= NodeBlockList.Count)
+                throw new ArgumentOutOfRangeException(nameof(blockIndex));
 
             IBlock CurrentBlock = SafeType.ItemAt<IBlock>(NodeBlockList, blockIndex);
 
             IList CurrentNodeList = CurrentBlock.NodeList;
-            Debug.Assert(CurrentNodeList.Count > 1);
 
-            Debug.Assert(index < CurrentNodeList.Count);
-            if (index >= CurrentNodeList.Count) throw new ArgumentOutOfRangeException(nameof(index));
+            if (CurrentNodeList.Count < 2)
+                throw new ArgumentException($"{nameof(blockIndex)} must be the index of a block with two or more elements");
 
-            IList NewNodeList = newChildBlock.NodeList;
-            Debug.Assert(NewNodeList.Count == 0);
+            if (index <= 0 || index >= CurrentNodeList.Count)
+                throw new ArgumentOutOfRangeException(nameof(index));
 
-            NodeBlockList.Insert(blockIndex, newChildBlock);
+            IList NewNodeList = NewChildBlock.NodeList;
+
+            if (NewNodeList.Count > 0)
+                throw new ArgumentException($"{nameof(newChildBlock)} must be empty");
+
+            NodeBlockList.Insert(blockIndex, NewChildBlock);
 
             for (int i = 0; i < index; i++)
             {
@@ -307,25 +241,15 @@
         /// <param name="mergedBlock">The block that contains merged nodes upon return..</param>
         public static void MergeBlocks(Node node, string propertyName, int blockIndex, out IBlock mergedBlock)
         {
-            if (node == null) throw new ArgumentNullException(nameof(node));
-            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
-            if (blockIndex <= 0) throw new ArgumentOutOfRangeException(nameof(blockIndex));
+            Contract.RequireNotNull(node, out Node Node);
+            Contract.RequireNotNull(propertyName, out string PropertyName);
 
-            Type NodeType = node.GetType();
-
-            mergedBlock = null!;
-
-            PropertyInfo Property = SafeType.GetProperty(NodeType, propertyName);
-            Type PropertyType = Property.PropertyType;
-
-            Debug.Assert(NodeTreeHelper.IsBlockListInterfaceType(PropertyType));
-
-            IBlockList BlockList = SafeType.GetPropertyValue<IBlockList>(Property, node);
+            GetBlockListInternal(Node, PropertyName, out _, out _, out IBlockList BlockList);
 
             IList NodeBlockList = BlockList.NodeBlockList;
 
-            Debug.Assert(blockIndex < NodeBlockList.Count);
-            if (blockIndex >= NodeBlockList.Count) throw new ArgumentOutOfRangeException(nameof(blockIndex));
+            if (blockIndex <= 0 || blockIndex >= NodeBlockList.Count)
+                throw new ArgumentOutOfRangeException(nameof(blockIndex));
 
             IBlock BlockFromList = SafeType.ItemAt<IBlock>(NodeBlockList, blockIndex - 1);
 
@@ -354,16 +278,14 @@
         /// <param name="direction">The move direction.</param>
         public static void MoveNode(IBlock block, int index, int direction)
         {
-            if (block == null) throw new ArgumentNullException(nameof(block));
-            if (index < 0) throw new ArgumentOutOfRangeException(nameof(index));
-            if (index + direction < 0) throw new ArgumentOutOfRangeException(nameof(direction));
+            Contract.RequireNotNull(block, out IBlock Block);
 
-            IList NodeList = block.NodeList;
+            IList NodeList = Block.NodeList;
 
-            Debug.Assert(index < NodeList.Count);
-            if (index >= NodeList.Count) throw new ArgumentOutOfRangeException(nameof(index));
-            Debug.Assert(index + direction < NodeList.Count);
-            if (index + direction >= NodeList.Count) throw new ArgumentException($"The sum of {nameof(index)} and {nameof(direction)} must not equal or exceed the collection count");
+            if (index < 0 || index >= NodeList.Count)
+                throw new ArgumentOutOfRangeException(nameof(index));
+            if (index + direction < 0 || index + direction >= NodeList.Count)
+                throw new ArgumentOutOfRangeException(nameof(direction));
 
             Node ChildNode = SafeType.ItemAt<Node>(NodeList, index);
 
@@ -380,30 +302,38 @@
         /// <param name="direction">The move direction.</param>
         public static void MoveBlock(Node node, string propertyName, int blockIndex, int direction)
         {
-            if (node == null) throw new ArgumentNullException(nameof(node));
-            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
-            if (blockIndex < 0) throw new ArgumentOutOfRangeException(nameof(blockIndex));
-            if (blockIndex + direction < 0) throw new ArgumentOutOfRangeException(nameof(direction));
+            Contract.RequireNotNull(node, out Node Node);
+            Contract.RequireNotNull(propertyName, out string PropertyName);
 
-            Type NodeType = node.GetType();
-            PropertyInfo Property = SafeType.GetProperty(NodeType, propertyName);
-
-            Type PropertyType = Property.PropertyType;
-            Debug.Assert(NodeTreeHelper.IsBlockListInterfaceType(PropertyType));
-
-            IBlockList BlockList = SafeType.GetPropertyValue<IBlockList>(Property, node);
+            GetBlockListInternal(Node, PropertyName, out _, out _, out IBlockList BlockList);
 
             IList NodeBlockList = BlockList.NodeBlockList;
 
-            Debug.Assert(blockIndex < NodeBlockList.Count);
-            if (blockIndex >= NodeBlockList.Count) throw new ArgumentOutOfRangeException(nameof(blockIndex));
-            Debug.Assert(blockIndex + direction < NodeBlockList.Count);
-            if (blockIndex + direction >= NodeBlockList.Count) throw new ArgumentOutOfRangeException(nameof(direction));
+            if (blockIndex < 0 || blockIndex >= NodeBlockList.Count)
+                throw new ArgumentOutOfRangeException(nameof(blockIndex));
+            if (blockIndex + direction < 0 || blockIndex + direction >= NodeBlockList.Count)
+                throw new ArgumentOutOfRangeException(nameof(direction));
 
             IBlock MovedBlock = SafeType.ItemAt<IBlock>(NodeBlockList, blockIndex);
 
             NodeBlockList.RemoveAt(blockIndex);
             NodeBlockList.Insert(blockIndex + direction, MovedBlock);
+        }
+
+        private static void GetBlockNodeListInternal(Node node, string propertyName, int blockIndex, out IBlockList blockList, int index, bool isUpperIndexValid, out IList nodeList)
+        {
+            GetBlockListInternal(node, propertyName, out _, out _, out blockList);
+
+            IList NodeBlockList = blockList.NodeBlockList;
+
+            if (blockIndex < 0 || blockIndex >= NodeBlockList.Count)
+                throw new ArgumentOutOfRangeException(nameof(blockIndex));
+
+            IBlock Block = SafeType.ItemAt<IBlock>(NodeBlockList, blockIndex);
+            nodeList = Block.NodeList;
+
+            if (index < 0 || (!isUpperIndexValid && index >= nodeList.Count) || (isUpperIndexValid && index > nodeList.Count))
+                throw new ArgumentOutOfRangeException(nameof(index));
         }
     }
 }
