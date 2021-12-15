@@ -12,7 +12,7 @@
     {
         private class PrivateNode : Node
         {
-        };
+        }
 
         [Test]
         public static void TestEnumChildNodeProperties()
@@ -383,7 +383,7 @@
         private enum TestSetEnum: byte
         {
             TestValue,
-        };
+        }
 
         [Test]
         public static void TestSetEnumValue()

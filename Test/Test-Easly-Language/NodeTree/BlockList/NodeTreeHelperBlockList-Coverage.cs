@@ -692,6 +692,8 @@
             Assert.Throws<ArgumentOutOfRangeException>(() => { NodeTreeHelperBlockList.SplitBlock(SimpleClass, nameof(Class.ExportBlocks), SimpleClass.ExportBlocks.NodeBlockList.Count, 0, NewBlock); });
             Assert.Throws<ArgumentOutOfRangeException>(() => { NodeTreeHelperBlockList.SplitBlock(SimpleClass, nameof(Class.ExportBlocks), 0, 0, NewBlock); });
             Assert.Throws<ArgumentOutOfRangeException>(() => { NodeTreeHelperBlockList.SplitBlock(SimpleClass, nameof(Class.ExportBlocks), 0, SimpleClass.ExportBlocks.NodeBlockList[0].NodeList.Count, NewBlock); });
+            Assert.Throws<ArgumentOutOfRangeException>(() => { NodeTreeHelperBlockList.MergeBlocks(SimpleClass, nameof(Class.ExportBlocks), 0, out _); });
+            Assert.Throws<ArgumentOutOfRangeException>(() => { NodeTreeHelperBlockList.MergeBlocks(SimpleClass, nameof(Class.ExportBlocks), SimpleClass.ExportBlocks.NodeBlockList.Count, out _); });
 
             IBlock AnotherBlock = (IBlock)BlockListHelper.CreateBlock(new List<Export>() { FirstExport });
             AnotherBlock.NodeList.Clear();
@@ -718,6 +720,72 @@
             Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperBlockList.SplitBlock(NullClass, nameof(Class.ExportBlocks), 0, 0, NewBlock); });
             Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperBlockList.SplitBlock(SimpleClass, NullString, 0, 0, NewBlock); });
             Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperBlockList.SplitBlock(SimpleClass, nameof(Class.ExportBlocks), 0, 0, NullBlock); });
+#endif
+        }
+
+        [Test]
+        public static void TestMoveNode()
+        {
+            Export SimpleExport = NodeHelper.CreateSimpleExport("b");
+            Identifier SimpleIdentifier = NodeHelper.CreateSimpleIdentifier("c");
+
+            NodeTreeHelperBlockList.InsertIntoBlock(SimpleExport, nameof(Export.ClassIdentifierBlocks), 0, 1, SimpleIdentifier);
+            Assert.AreEqual(SimpleExport.ClassIdentifierBlocks.NodeBlockList.Count, 1);
+
+            IBlock FirstBlock = (IBlock)SimpleExport.ClassIdentifierBlocks.NodeBlockList[0];
+            Assert.AreEqual(FirstBlock.NodeList.Count, 2);
+            Assert.AreEqual(FirstBlock.NodeList[1], SimpleIdentifier);
+
+            NodeTreeHelperBlockList.MoveNode(FirstBlock, 1, -1);
+            Assert.AreEqual(FirstBlock.NodeList[0], SimpleIdentifier);
+
+            Assert.Throws<ArgumentOutOfRangeException>(() => { NodeTreeHelperBlockList.MoveNode(FirstBlock, -1, 0); });
+            Assert.Throws<ArgumentOutOfRangeException>(() => { NodeTreeHelperBlockList.MoveNode(FirstBlock, FirstBlock.NodeList.Count, 0); });
+            Assert.Throws<ArgumentOutOfRangeException>(() => { NodeTreeHelperBlockList.MoveNode(FirstBlock, 0, -1); });
+            Assert.Throws<ArgumentOutOfRangeException>(() => { NodeTreeHelperBlockList.MoveNode(FirstBlock, FirstBlock.NodeList.Count - 1, +1); });
+
+#if !DEBUG
+            IBlock NullBlock  = null!;
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperBlockList.MoveNode(NullBlock , 0, 0); });
+#endif
+        }
+
+        [Test]
+        public static void TestMoveBlock()
+        {
+            Export SimpleExport = NodeHelper.CreateSimpleExport("b");
+            Identifier SimpleIdentifier = NodeHelper.CreateSimpleIdentifier("c");
+
+            NodeTreeHelperBlockList.InsertIntoBlock(SimpleExport, nameof(Export.ClassIdentifierBlocks), 0, 1, SimpleIdentifier);
+            Assert.AreEqual(SimpleExport.ClassIdentifierBlocks.NodeBlockList.Count, 1);
+
+            IBlock NewBlock = (IBlock)BlockListHelper.CreateBlock(new List<Identifier>() { SimpleIdentifier });
+            NewBlock.NodeList.Clear();
+
+            NodeTreeHelperBlockList.SplitBlock(SimpleExport, nameof(Export.ClassIdentifierBlocks), 0, 1, NewBlock);
+            Assert.AreEqual(SimpleExport.ClassIdentifierBlocks.NodeBlockList.Count, 2);
+            Assert.AreEqual(SimpleExport.ClassIdentifierBlocks.NodeBlockList[0].NodeList.Count, 1);
+            Assert.AreEqual(SimpleExport.ClassIdentifierBlocks.NodeBlockList[1].NodeList.Count, 1);
+            Assert.AreEqual(NewBlock.NodeList.Count, 1);
+            Assert.AreNotEqual(NewBlock.NodeList[0], SimpleIdentifier);
+            Assert.AreEqual(SimpleExport.ClassIdentifierBlocks.NodeBlockList[1].NodeList[0], SimpleIdentifier);
+
+            NodeTreeHelperBlockList.MoveBlock(SimpleExport, nameof(Export.ClassIdentifierBlocks), 0, 1);
+
+            IBlock FirstBlock = (IBlock)SimpleExport.ClassIdentifierBlocks.NodeBlockList[0];
+            Assert.AreEqual(FirstBlock.NodeList.Count, 1);
+            Assert.AreEqual(FirstBlock.NodeList[0], SimpleIdentifier);
+
+            Assert.Throws<ArgumentOutOfRangeException>(() => { NodeTreeHelperBlockList.MoveBlock(SimpleExport, nameof(Export.ClassIdentifierBlocks), -1, 0); });
+            Assert.Throws<ArgumentOutOfRangeException>(() => { NodeTreeHelperBlockList.MoveBlock(SimpleExport, nameof(Export.ClassIdentifierBlocks), SimpleExport.ClassIdentifierBlocks.NodeBlockList.Count, 0); });
+            Assert.Throws<ArgumentOutOfRangeException>(() => { NodeTreeHelperBlockList.MoveBlock(SimpleExport, nameof(Export.ClassIdentifierBlocks), 0, -1); });
+            Assert.Throws<ArgumentOutOfRangeException>(() => { NodeTreeHelperBlockList.MoveBlock(SimpleExport, nameof(Export.ClassIdentifierBlocks), SimpleExport.ClassIdentifierBlocks.NodeBlockList.Count - 1, +1); });
+
+#if !DEBUG
+            Export NullExport = null!;
+            string NullString = null!;
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperBlockList.MoveBlock(NullExport, nameof(Export.ClassIdentifierBlocks), 0, 0); });
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperBlockList.MoveBlock(SimpleExport, NullString, 0, 0); });
 #endif
         }
     }
