@@ -745,7 +745,7 @@
             Assert.Throws<ArgumentOutOfRangeException>(() => { NodeTreeHelperBlockList.MoveNode(FirstBlock, FirstBlock.NodeList.Count - 1, +1); });
 
 #if !DEBUG
-            IBlock NullBlock  = null!;
+            IBlock NullBlock = null!;
             Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperBlockList.MoveNode(NullBlock , 0, 0); });
 #endif
         }
@@ -786,6 +786,164 @@
             string NullString = null!;
             Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperBlockList.MoveBlock(NullExport, nameof(Export.ClassIdentifierBlocks), 0, 0); });
             Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperBlockList.MoveBlock(SimpleExport, NullString, 0, 0); });
+#endif
+        }
+
+        [Test]
+        public static void TestIsBlockPatternNode()
+        {
+            bool Result;
+
+            Export SimpleExport = NodeHelper.CreateSimpleExport("b");
+            Pattern ReplicationPattern = SimpleExport.ClassIdentifierBlocks.NodeBlockList[0].ReplicationPattern;
+
+            Result = NodeTreeHelperBlockList.IsBlockPatternNode(SimpleExport, nameof(Export.ClassIdentifierBlocks), 0, ReplicationPattern);
+            Assert.True(Result);
+
+            Assert.Throws<ArgumentException>(() => { NodeTreeHelperBlockList.IsBlockPatternNode(SimpleExport, nameof(Identifier.Text), 0, ReplicationPattern); });
+            Assert.Throws<ArgumentException>(() => { NodeTreeHelperBlockList.IsBlockPatternNode(SimpleExport, nameof(Class.EntityName), 0, ReplicationPattern); });
+            Assert.Throws<ArgumentOutOfRangeException>(() => { NodeTreeHelperBlockList.IsBlockPatternNode(SimpleExport, nameof(Export.ClassIdentifierBlocks), -1, ReplicationPattern); });
+            Assert.Throws<ArgumentOutOfRangeException>(() => { NodeTreeHelperBlockList.IsBlockPatternNode(SimpleExport, nameof(Export.ClassIdentifierBlocks), SimpleExport.ClassIdentifierBlocks.NodeBlockList.Count, ReplicationPattern); });
+
+#if !DEBUG
+            Export NullExport = null!;
+            string NullString = null!;
+            Pattern NullPattern = null!;
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperBlockList.IsBlockPatternNode(NullExport, nameof(Export.ClassIdentifierBlocks), 0, ReplicationPattern); });
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperBlockList.IsBlockPatternNode(SimpleExport, NullString, 0, ReplicationPattern); });
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperBlockList.IsBlockPatternNode(SimpleExport, nameof(Export.ClassIdentifierBlocks), 0, NullPattern); });
+#endif
+        }
+
+        [Test]
+        public static void TestIsPatternNode()
+        {
+            bool Result;
+
+            Export SimpleExport = NodeHelper.CreateSimpleExport("b");
+            IBlock FirstBlock = (IBlock)SimpleExport.ClassIdentifierBlocks.NodeBlockList[0];
+            Pattern ReplicationPattern = FirstBlock.ReplicationPattern;
+
+            Result = NodeTreeHelperBlockList.IsPatternNode(FirstBlock, ReplicationPattern);
+            Assert.True(Result);
+
+#if !DEBUG
+            IBlock NullBlock = null!;
+            Pattern NullPattern = null!;
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperBlockList.IsPatternNode(NullBlock , ReplicationPattern); });
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperBlockList.IsPatternNode(FirstBlock, NullPattern); });
+#endif
+        }
+
+        [Test]
+        public static void TestSetGetPattern()
+        {
+            string Result;
+
+            Export SimpleExport = NodeHelper.CreateSimpleExport("b");
+            IBlock FirstBlock = (IBlock)SimpleExport.ClassIdentifierBlocks.NodeBlockList[0];
+
+            Result = NodeTreeHelperBlockList.GetPattern(FirstBlock);
+            Assert.AreEqual(Result, "*");
+
+            NodeTreeHelperBlockList.SetPattern(FirstBlock, "a");
+
+            Result = NodeTreeHelperBlockList.GetPattern(FirstBlock);
+            Assert.AreEqual(Result, "a");
+
+#if !DEBUG
+            IBlock NullBlock = null!;
+            string NullString = null!;
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperBlockList.GetPattern(NullBlock); });
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperBlockList.SetPattern(NullBlock, "a"); });
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperBlockList.SetPattern(FirstBlock, NullString); });
+#endif
+        }
+
+        [Test]
+        public static void TestIsBlockSourceNode()
+        {
+            bool Result;
+
+            Export SimpleExport = NodeHelper.CreateSimpleExport("b");
+            Identifier SourceIdentifier = SimpleExport.ClassIdentifierBlocks.NodeBlockList[0].SourceIdentifier;
+
+            Result = NodeTreeHelperBlockList.IsBlockSourceNode(SimpleExport, nameof(Export.ClassIdentifierBlocks), 0, SourceIdentifier);
+            Assert.True(Result);
+
+            Assert.Throws<ArgumentException>(() => { NodeTreeHelperBlockList.IsBlockSourceNode(SimpleExport, nameof(Identifier.Text), 0, SourceIdentifier); });
+            Assert.Throws<ArgumentException>(() => { NodeTreeHelperBlockList.IsBlockSourceNode(SimpleExport, nameof(Class.EntityName), 0, SourceIdentifier); });
+            Assert.Throws<ArgumentOutOfRangeException>(() => { NodeTreeHelperBlockList.IsBlockSourceNode(SimpleExport, nameof(Export.ClassIdentifierBlocks), -1, SourceIdentifier); });
+            Assert.Throws<ArgumentOutOfRangeException>(() => { NodeTreeHelperBlockList.IsBlockSourceNode(SimpleExport, nameof(Export.ClassIdentifierBlocks), SimpleExport.ClassIdentifierBlocks.NodeBlockList.Count, SourceIdentifier); });
+
+#if !DEBUG
+            Export NullExport = null!;
+            string NullString = null!;
+            Identifier NullIdentifier = null!;
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperBlockList.IsBlockSourceNode(NullExport, nameof(Export.ClassIdentifierBlocks), 0, SourceIdentifier); });
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperBlockList.IsBlockSourceNode(SimpleExport, NullString, 0, SourceIdentifier); });
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperBlockList.IsBlockSourceNode(SimpleExport, nameof(Export.ClassIdentifierBlocks), 0, NullIdentifier); });
+#endif
+        }
+
+        [Test]
+        public static void TestIsSourceNode()
+        {
+            bool Result;
+
+            Export SimpleExport = NodeHelper.CreateSimpleExport("b");
+            IBlock FirstBlock = (IBlock)SimpleExport.ClassIdentifierBlocks.NodeBlockList[0];
+            Identifier SourceIdentifier = FirstBlock.SourceIdentifier;
+
+            Result = NodeTreeHelperBlockList.IsSourceNode(FirstBlock, SourceIdentifier);
+            Assert.True(Result);
+
+#if !DEBUG
+            IBlock NullBlock = null!;
+            Identifier NullIdentifier = null!;
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperBlockList.IsSourceNode(NullBlock , SourceIdentifier); });
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperBlockList.IsSourceNode(FirstBlock, NullIdentifier); });
+#endif
+        }
+
+        [Test]
+        public static void TestSetGetSource()
+        {
+            string Result;
+
+            Export SimpleExport = NodeHelper.CreateSimpleExport("b");
+            IBlock FirstBlock = (IBlock)SimpleExport.ClassIdentifierBlocks.NodeBlockList[0];
+
+            Result = NodeTreeHelperBlockList.GetSource(FirstBlock);
+            Assert.AreEqual(Result, string.Empty);
+
+            NodeTreeHelperBlockList.SetSource(FirstBlock, "a");
+
+            Result = NodeTreeHelperBlockList.GetSource(FirstBlock);
+            Assert.AreEqual(Result, "a");
+
+#if !DEBUG
+            IBlock NullBlock = null!;
+            string NullString = null!;
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperBlockList.GetSource(NullBlock); });
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperBlockList.SetSource(NullBlock, "a"); });
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperBlockList.SetSource(FirstBlock, NullString); });
+#endif
+        }
+
+        [Test]
+        public static void TestSetReplication()
+        {
+            Export SimpleExport = NodeHelper.CreateSimpleExport("b");
+            IBlock FirstBlock = (IBlock)SimpleExport.ClassIdentifierBlocks.NodeBlockList[0];
+
+            Assert.AreEqual(FirstBlock.Replication, ReplicationStatus.Normal);
+            NodeTreeHelperBlockList.SetReplication(FirstBlock, ReplicationStatus.Replicated);
+            Assert.AreEqual(FirstBlock.Replication, ReplicationStatus.Replicated);
+
+#if !DEBUG
+            IBlock NullBlock = null!;
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperBlockList.SetReplication(NullBlock, ReplicationStatus.Replicated); });
 #endif
         }
     }

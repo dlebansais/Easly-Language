@@ -2,9 +2,9 @@
 {
     using System;
     using System.Collections;
-    using System.Diagnostics;
     using System.Reflection;
     using BaseNode;
+    using Contracts;
 
     /// <summary>
     /// Provides methods to manipulate block lists of nodes.
@@ -21,27 +21,19 @@
         /// <returns>True if the replication pattern in the block list has the provided value; otherwise, false.</returns>
         public static bool IsBlockPatternNode(Node node, string propertyName, int blockIndex, Pattern replicationPattern)
         {
-            if (node == null) throw new ArgumentNullException(nameof(node));
-            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
-            if (blockIndex < 0) throw new ArgumentOutOfRangeException(nameof(blockIndex));
-            if (replicationPattern == null) throw new ArgumentNullException(nameof(replicationPattern));
+            Contract.RequireNotNull(node, out Node Node);
+            Contract.RequireNotNull(propertyName, out string PropertyName);
+            Contract.RequireNotNull(replicationPattern, out Pattern ReplicationPattern);
 
-            Type NodeType = node.GetType();
-            PropertyInfo Property = SafeType.GetProperty(NodeType, propertyName);
-
-            Type PropertyType = Property.PropertyType;
-            Debug.Assert(NodeTreeHelper.IsBlockListInterfaceType(PropertyType));
-
-            IBlockList BlockList = SafeType.GetPropertyValue<IBlockList>(Property, node);
-
+            GetBlockListInternal(Node, PropertyName, out _, out _, out IBlockList BlockList);
             IList NodeBlockList = BlockList.NodeBlockList;
 
-            Debug.Assert(blockIndex < NodeBlockList.Count);
-            if (blockIndex >= NodeBlockList.Count) throw new ArgumentOutOfRangeException(nameof(blockIndex));
+            if (blockIndex < 0 || blockIndex >= NodeBlockList.Count)
+                throw new ArgumentOutOfRangeException(nameof(blockIndex));
 
             IBlock Block = SafeType.ItemAt<IBlock>(NodeBlockList, blockIndex);
 
-            return IsPatternNode(Block, replicationPattern);
+            return IsPatternNodeInternal(Block, ReplicationPattern);
         }
 
         /// <summary>
@@ -52,10 +44,10 @@
         /// <returns>True if the replication pattern has the provided value; otherwise, false.</returns>
         public static bool IsPatternNode(IBlock block, Pattern replicationPattern)
         {
-            if (block == null) throw new ArgumentNullException(nameof(block));
-            if (replicationPattern == null) throw new ArgumentNullException(nameof(replicationPattern));
+            Contract.RequireNotNull(block, out IBlock Block);
+            Contract.RequireNotNull(replicationPattern, out Pattern ReplicationPattern);
 
-            return replicationPattern == block.ReplicationPattern;
+            return IsPatternNodeInternal(Block, ReplicationPattern);
         }
 
         /// <summary>
@@ -65,9 +57,9 @@
         /// <returns>The replication pattern string.</returns>
         public static string GetPattern(IBlock block)
         {
-            if (block == null) throw new ArgumentNullException(nameof(block));
+            Contract.RequireNotNull(block, out IBlock Block);
 
-            Pattern ReplicationPattern = block.ReplicationPattern;
+            Pattern ReplicationPattern = Block.ReplicationPattern;
 
             return NodeTreeHelper.GetString(ReplicationPattern, nameof(Pattern.Text));
         }
@@ -79,12 +71,12 @@
         /// <param name="text">The replication pattern string.</param>
         public static void SetPattern(IBlock block, string text)
         {
-            if (block == null) throw new ArgumentNullException(nameof(block));
-            if (text == null) throw new ArgumentNullException(nameof(text));
+            Contract.RequireNotNull(block, out IBlock Block);
+            Contract.RequireNotNull(text, out string Text);
 
-            Pattern ReplicationPattern = block.ReplicationPattern;
+            Pattern ReplicationPattern = Block.ReplicationPattern;
 
-            NodeTreeHelper.SetString(ReplicationPattern, nameof(Pattern.Text), text);
+            NodeTreeHelper.SetString(ReplicationPattern, nameof(Pattern.Text), Text);
         }
 
         /// <summary>
@@ -97,27 +89,19 @@
         /// <returns>True if the source identifier in the block list has the provided value; otherwise, false.</returns>
         public static bool IsBlockSourceNode(Node node, string propertyName, int blockIndex, Identifier sourceIdentifier)
         {
-            if (node == null) throw new ArgumentNullException(nameof(node));
-            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
-            if (blockIndex < 0) throw new ArgumentOutOfRangeException(nameof(blockIndex));
-            if (sourceIdentifier == null) throw new ArgumentNullException(nameof(sourceIdentifier));
+            Contract.RequireNotNull(node, out Node Node);
+            Contract.RequireNotNull(propertyName, out string PropertyName);
+            Contract.RequireNotNull(sourceIdentifier, out Identifier SourceIdentifier);
 
-            Type NodeType = node.GetType();
-            PropertyInfo Property = SafeType.GetProperty(NodeType, propertyName);
-            Type PropertyType = Property.PropertyType;
-
-            Debug.Assert(NodeTreeHelper.IsBlockListInterfaceType(PropertyType));
-
-            IBlockList BlockList = SafeType.GetPropertyValue<IBlockList>(Property, node);
-
+            GetBlockListInternal(Node, PropertyName, out _, out _, out IBlockList BlockList);
             IList NodeBlockList = BlockList.NodeBlockList;
 
-            Debug.Assert(blockIndex < NodeBlockList.Count);
-            if (blockIndex >= NodeBlockList.Count) throw new ArgumentOutOfRangeException(nameof(blockIndex));
+            if (blockIndex < 0 || blockIndex >= NodeBlockList.Count)
+                throw new ArgumentOutOfRangeException(nameof(blockIndex));
 
             IBlock Block = SafeType.ItemAt<IBlock>(NodeBlockList, blockIndex);
 
-            return IsSourceNode(Block, sourceIdentifier);
+            return IsSourceNodeInternal(Block, SourceIdentifier);
         }
 
         /// <summary>
@@ -128,10 +112,10 @@
         /// <returns>True if the source identifier has the provided value; otherwise, false.</returns>
         public static bool IsSourceNode(IBlock block, Identifier sourceIdentifier)
         {
-            if (block == null) throw new ArgumentNullException(nameof(block));
-            if (sourceIdentifier == null) throw new ArgumentNullException(nameof(sourceIdentifier));
+            Contract.RequireNotNull(block, out IBlock Block);
+            Contract.RequireNotNull(sourceIdentifier, out Identifier SourceIdentifier);
 
-            return sourceIdentifier == block.SourceIdentifier;
+            return IsSourceNodeInternal(Block, SourceIdentifier);
         }
 
         /// <summary>
@@ -141,9 +125,9 @@
         /// <returns>The source identifier string.</returns>
         public static string GetSource(IBlock block)
         {
-            if (block == null) throw new ArgumentNullException(nameof(block));
+            Contract.RequireNotNull(block, out IBlock Block);
 
-            Identifier SourceIdentifier = block.SourceIdentifier;
+            Identifier SourceIdentifier = Block.SourceIdentifier;
 
             return NodeTreeHelper.GetString(SourceIdentifier, nameof(Identifier.Text));
         }
@@ -155,12 +139,12 @@
         /// <param name="text">The source identifier string.</param>
         public static void SetSource(IBlock block, string text)
         {
-            if (block == null) throw new ArgumentNullException(nameof(block));
-            if (text == null) throw new ArgumentNullException(nameof(text));
+            Contract.RequireNotNull(block, out IBlock Block);
+            Contract.RequireNotNull(text, out string Text);
 
-            Identifier SourceIdentifier = block.SourceIdentifier;
+            Identifier SourceIdentifier = Block.SourceIdentifier;
 
-            NodeTreeHelper.SetString(SourceIdentifier, nameof(Identifier.Text), text);
+            NodeTreeHelper.SetString(SourceIdentifier, nameof(Identifier.Text), Text);
         }
 
         /// <summary>
@@ -170,13 +154,22 @@
         /// <param name="replication">The replication status.</param>
         public static void SetReplication(IBlock block, ReplicationStatus replication)
         {
-            if (block == null) throw new ArgumentNullException(nameof(block));
+            Contract.RequireNotNull(block, out IBlock Block);
 
-            Type BlockType = block.GetType();
-
+            Type BlockType = Block.GetType();
             PropertyInfo ReplicationPropertyInfo = SafeType.GetProperty(BlockType, nameof(IBlock.Replication));
 
             ReplicationPropertyInfo.SetValue(block, replication);
+        }
+
+        private static bool IsPatternNodeInternal(IBlock block, Pattern replicationPattern)
+        {
+            return replicationPattern == block.ReplicationPattern;
+        }
+
+        private static bool IsSourceNodeInternal(IBlock block, Identifier sourceIdentifier)
+        {
+            return sourceIdentifier == block.SourceIdentifier;
         }
     }
 }
