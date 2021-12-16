@@ -94,21 +94,6 @@
         }
 
         /// <summary>
-        /// Gets the <see cref="Type"/> object with the specified name in the assembly instance.
-        /// The type must exist.
-        /// </summary>
-        /// <param name="assembly">The assembly.</param>
-        /// <param name="name">The full name of the type.</param>
-        /// <returns>An object that represents the specified class.</returns>
-        public static Type GetType(Assembly assembly, string name)
-        {
-            Type? Result = assembly.GetType(name);
-            Debug.Assert(Result != null);
-
-            return Result!;
-        }
-
-        /// <summary>
         /// Gets the type from which <paramref name="type"/> directly inherits.
         /// <paramref name="type"/> must not be <see cref="object"/>.
         /// </summary>
@@ -130,19 +115,7 @@
         /// <returns>True if the property exists; otherwise, false.</returns>
         public static bool IsPropertyOf(Type type, string name)
         {
-            PropertyInfo? Property = type.GetProperty(name);
-
-            if (Property != null)
-                return true;
-
-            foreach (Type Interface in type.GetInterfaces())
-            {
-                PropertyInfo? InterfaceProperty = Interface.GetProperty(name);
-                if (InterfaceProperty != null)
-                    return true;
-            }
-
-            return false;
+            return type.GetProperty(name) != null;
         }
 
         /// <summary>
@@ -155,23 +128,7 @@
         public static PropertyInfo GetProperty(Type type, string propertyName)
         {
             PropertyInfo? Result = type.GetProperty(propertyName);
-
-            if (Result == null)
-            {
-                foreach (Type Interface in type.GetInterfaces())
-                {
-                    PropertyInfo? InterfaceProperty = Interface.GetProperty(propertyName);
-                    if (InterfaceProperty != null)
-                        if (Result != null)
-                            throw new AmbiguousMatchException();
-                        else
-                            Result = InterfaceProperty;
-                }
-            }
-
-            if (Result == null)
-                throw new ArgumentException($"{nameof(propertyName)} must be the name of a property of {type}");
-
+            Debug.Assert(Result != null);
             Debug.Assert(IsPropertyOf(type, propertyName));
 
             return Result!;
@@ -194,16 +151,6 @@
                 return true;
             }
 
-            foreach (Type Interface in type.GetInterfaces())
-            {
-                PropertyInfo? InterfaceProperty = Interface.GetProperty(name);
-                if (InterfaceProperty != null)
-                {
-                    property = InterfaceProperty;
-                    return true;
-                }
-            }
-
             Contract.Unused(out property);
             return false;
         }
@@ -219,20 +166,6 @@
             where T : class
         {
             T? Result = property.GetValue(obj) as T;
-            Debug.Assert(Result != null);
-
-            return Result!;
-        }
-
-        /// <summary>
-        /// Returns the property value of a specified object. Does not support properties that can take a null value.
-        /// </summary>
-        /// <param name="property">The property.</param>
-        /// <param name="obj">The object whose property value will be returned.</param>
-        /// <returns>The property value of the specified object.</returns>
-        public static object GetPropertyValue(PropertyInfo property, object obj)
-        {
-            object? Result = property.GetValue(obj);
             Debug.Assert(Result != null);
 
             return Result!;
@@ -300,19 +233,6 @@
             Debug.Assert(Result != null);
 
             return Result!;
-        }
-
-        /// <summary>
-        /// Sets the element at the specified index in the specified collection.
-        /// </summary>
-        /// <typeparam name="T">The collection type.</typeparam>
-        /// <param name="list">The collection.</param>
-        /// <param name="index">The item index.</param>
-        /// <param name="item">The item to set.</param>
-        public static void SetAt<T>(System.Collections.IList list, int index, T item)
-            where T : notnull
-        {
-            list[index] = item;
         }
 
         /// <summary>
