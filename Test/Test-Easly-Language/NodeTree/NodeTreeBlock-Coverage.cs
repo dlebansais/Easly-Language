@@ -1,5 +1,8 @@
 ﻿namespace TestEaslyLanguage
 {
+#if !DEBUG
+    using System;
+#endif
     using System.Collections.Generic;
     using BaseNode;
     using BaseNodeHelper;

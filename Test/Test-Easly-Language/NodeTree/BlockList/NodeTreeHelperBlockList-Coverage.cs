@@ -268,8 +268,8 @@
 #if !DEBUG
             Export NullExport = null!;
             string NullString = null!;
-            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperBlockList.GetChildBlock(NullExport, nameof(Export.ClassIdentifierBlocks), 0, _); });
-            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperBlockList.GetChildBlock(SimpleExport, NullString, 0, _); });
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperBlockList.GetChildBlock(NullExport, nameof(Export.ClassIdentifierBlocks), 0, out _); });
+            Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperBlockList.GetChildBlock(SimpleExport, NullString, 0, out _); });
 #endif
         }
 
