@@ -5,6 +5,7 @@
     using System.Collections.Generic;
     using System.Reflection;
     using BaseNode;
+    using BaseNodeHelper;
     using Easly;
     using NUnit.Framework;
     using Range = BaseNode.Range;
@@ -12,113 +13,6 @@
     [TestFixture]
     public partial class CoverageSet
     {
-        [Test]
-        public static void TestNodeInitializers()
-        {
-            /*
-            Node[] InitializedObjects = new Node[]
-            {
-                new Assertion(),
-                new Attachment(),
-                new Class(),
-                new ClassReplicate(),
-                new CommandOverload(),
-                new CommandOverloadType(),
-                new Conditional(),
-                new Constraint(),
-                new Continuation(),
-                new Discrete(),
-                new EntityDeclaration(),
-                new ExceptionHandler(),
-                new Export(),
-                new ExportChange(),
-                new Generic(),
-                new GlobalReplicate(),
-                new Identifier(),
-                new Import(),
-                new Inheritance(),
-                new Library(),
-                new Name(),
-                new Pattern(),
-                new QualifiedName(),
-                new QueryOverload(),
-                new QueryOverloadType(),
-                new Range(),
-                new Rename(),
-                new Root(),
-                new Scope(),
-                new Typedef(),
-                new With(),
-                //new AssignmentArgument(),
-                new PositionalArgument(),
-                new DeferredBody(),
-                new EffectiveBody(),
-                new ExternBody(),
-                new PrecursorBody(),
-                new AgentExpression(),
-                new AssertionTagExpression(),
-                new BinaryConditionalExpression(),
-                new BinaryOperatorExpression(),
-                new ClassConstantExpression(),
-                new CloneOfExpression(),
-                new EntityExpression(),
-                new EqualityExpression(),
-                new IndexQueryExpression(),
-                new InitializedObjectExpression(),
-                new KeywordEntityExpression(),
-                new KeywordExpression(),
-                new ManifestCharacterExpression(),
-                new ManifestNumberExpression(),
-                new ManifestStringExpression(),
-                new NewExpression(),
-                new OldExpression(),
-                new PrecursorExpression(),
-                new PrecursorIndexExpression(),
-                new PreprocessorExpression(),
-                new QueryExpression(),
-                new ResultOfExpression(),
-                new UnaryNotExpression(),
-                new UnaryOperatorExpression(),
-                new IndexerFeature(),
-                new AttributeFeature(),
-                new ConstantFeature(),
-                new CreationFeature(),
-                new FunctionFeature(),
-                new ProcedureFeature(),
-                new PropertyFeature(),
-                new AsLongAsInstruction(),
-                new AssignmentInstruction(),
-                new AttachmentInstruction(),
-                new CheckInstruction(),
-                new CommandInstruction(),
-                new CreateInstruction(),
-                new DebugInstruction(),
-                new ForLoopInstruction(),
-                new IfThenElseInstruction(),
-                new IndexAssignmentInstruction(),
-                new InspectInstruction(),
-                new KeywordAssignmentInstruction(),
-                new OverLoopInstruction(),
-                new PrecursorIndexAssignmentInstruction(),
-                new PrecursorInstruction(),
-                new RaiseEventInstruction(),
-                new ReleaseInstruction(),
-                new ThrowInstruction(),
-                new AnchoredType(),
-                new FunctionType(),
-                new IndexerType(),
-                new KeywordAnchoredType(),
-                new ProcedureType(),
-                new PropertyType(),
-                new GenericType(),
-                new SimpleType(),
-                new TupleType(),
-                new AssignmentTypeArgument(),
-                new PositionalTypeArgument(),
-            };
-            */
-        }
-
         [Test]
         public static void TestBlockInitializers()
         {
@@ -136,6 +30,30 @@
 
             string Comment = TestDocument.Comment;
             Guid Uuid = TestDocument.Uuid;
+        }
+
+        [Test]
+        public static void TestMiscNodeInitializers()
+        {
+            Discrete NewDiscrete1 = NodeHelper.CreateSimpleDiscrete(string.Empty);
+
+            Expression DefaultExpression = NodeHelper.CreateDefaultExpression();
+            Discrete NewDiscrete2 = NodeHelper.CreateDiscrete(string.Empty, DefaultExpression);
+
+            Identifier EmptyIdentifier = NodeHelper.CreateEmptyIdentifier();
+            IBlockList<Identifier> EmptyIdentifierBlockList = BlockListHelper.CreateEmptyBlockList<Identifier>();
+            ExportChange NewExportChange = NodeHelper.CreateExportChange(EmptyIdentifier, EmptyIdentifierBlockList);
+
+            Generic NewGeneric1 = NodeHelper.CreateSimpleGeneric(string.Empty);
+
+            Name SimpleName = NodeHelper.CreateSimpleName(string.Empty);
+            ObjectType DefaultObjectType = NodeHelper.CreateDefaultObjectType();
+            IBlockList<Constraint> EmptyConstraintBlockList = BlockListHelper.CreateEmptyBlockList<Constraint>();
+            Generic NewGeneric2 = NodeHelper.CreateGeneric(SimpleName, DefaultObjectType, EmptyConstraintBlockList);
+
+            Rename NewRename = NodeHelper.CreateRename(string.Empty, string.Empty);
+
+            Typedef NewTypedef = NodeHelper.CreateTypedef(SimpleName, DefaultObjectType);
         }
     }
 }

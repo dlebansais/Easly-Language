@@ -101,6 +101,134 @@ public static partial class NodeHelper
     }
 
     /// <summary>
+    /// Creates a new instance of a <see cref="Discrete"/> with provided values.
+    /// </summary>
+    /// <param name="nameText">The discrete name.</param>
+    /// <returns>The created instance.</returns>
+    public static Discrete CreateSimpleDiscrete(string nameText)
+    {
+        Contract.RequireNotNull(nameText, out string NameText);
+
+        Document Documentation = CreateEmptyDocumentation();
+        Name EntityName = CreateSimpleName(NameText);
+        IOptionalReference<Expression> NumericValue = OptionalReferenceHelper<Expression>.CreateReference(CreateDefaultExpression());
+        Discrete SimpleDiscrete = new Discrete(Documentation, EntityName, NumericValue);
+
+        return SimpleDiscrete;
+    }
+
+    /// <summary>
+    /// Creates a new instance of a <see cref="Discrete"/> with provided values.
+    /// </summary>
+    /// <param name="nameText">The discrete name.</param>
+    /// <param name="numericValue">The discrete value.</param>
+    /// <returns>The created instance.</returns>
+    public static Discrete CreateDiscrete(string nameText, Expression numericValue)
+    {
+        Contract.RequireNotNull(nameText, out string NameText);
+        Contract.RequireNotNull(numericValue, out Expression NumericValue);
+
+        Document Documentation = CreateEmptyDocumentation();
+        Name EntityName = CreateSimpleName(NameText);
+        IOptionalReference<Expression> OptionalNumericValue = OptionalReferenceHelper<Expression>.CreateReference(NumericValue);
+        OptionalNumericValue.Assign();
+        Discrete Result = new Discrete(Documentation, EntityName, OptionalNumericValue);
+
+        return Result;
+    }
+
+    /// <summary>
+    /// Creates a new instance of a <see cref="ExportChange"/> with provided values.
+    /// </summary>
+    /// <param name="exportIdentifier">The modified export.</param>
+    /// <param name="identifierBlocks">The new class names.</param>
+    /// <returns>The created instance.</returns>
+    public static ExportChange CreateExportChange(Identifier exportIdentifier, IBlockList<Identifier> identifierBlocks)
+    {
+        Contract.RequireNotNull(exportIdentifier, out Identifier ExportIdentifier);
+        Contract.RequireNotNull(identifierBlocks, out IBlockList<Identifier> IdentifierBlocks);
+
+        Document Documentation = CreateEmptyDocumentation();
+        ExportChange Result = new ExportChange(Documentation, ExportIdentifier, IdentifierBlocks);
+
+        return Result;
+    }
+
+    /// <summary>
+    /// Creates a new instance of a <see cref="Generic"/> with provided values.
+    /// </summary>
+    /// <param name="nameText">The generic name.</param>
+    /// <returns>The created instance.</returns>
+    public static Generic CreateSimpleGeneric(string nameText)
+    {
+        Contract.RequireNotNull(nameText, out string NameText);
+
+        Document Documentation = CreateEmptyDocumentation();
+        Name EntityName = CreateSimpleName(NameText);
+        IOptionalReference<ObjectType> DefaultValue = OptionalReferenceHelper<ObjectType>.CreateReference(CreateDefaultObjectType());
+        IBlockList<Constraint> ConstraintBlocks = BlockListHelper<Constraint>.CreateEmptyBlockList();
+        Generic SimpleGeneric = new Generic(Documentation, EntityName, DefaultValue, ConstraintBlocks);
+
+        return SimpleGeneric;
+    }
+
+    /// <summary>
+    /// Creates a new instance of a <see cref="Generic"/> with provided values.
+    /// </summary>
+    /// <param name="entityName">The generic name.</param>
+    /// <param name="defaultValue">The generic default value.</param>
+    /// <param name="constraintBlocks">The constraints for this generic.</param>
+    /// <returns>The created instance.</returns>
+    public static Generic CreateGeneric(Name entityName, ObjectType defaultValue, IBlockList<Constraint> constraintBlocks)
+    {
+        Contract.RequireNotNull(entityName, out Name EntityName);
+        Contract.RequireNotNull(defaultValue, out ObjectType DefaultValue);
+        Contract.RequireNotNull(constraintBlocks, out IBlockList<Constraint> ConstraintBlocks);
+
+        Document Documentation = CreateEmptyDocumentation();
+        IOptionalReference<ObjectType> OptionalDefaultValue = OptionalReferenceHelper<ObjectType>.CreateReference(DefaultValue);
+        Generic Result = new Generic(Documentation, EntityName, OptionalDefaultValue, ConstraintBlocks);
+
+        return Result;
+    }
+
+    /// <summary>
+    /// Creates a new instance of a <see cref="Rename"/> with provided values.
+    /// </summary>
+    /// <param name="sourceIdentifierText">The feature to rename.</param>
+    /// <param name="destinationIdentifierText">The new name.</param>
+    /// <returns>The created instance.</returns>
+    public static Rename CreateRename(string sourceIdentifierText, string destinationIdentifierText)
+    {
+        Contract.RequireNotNull(sourceIdentifierText, out string SourceIdentifierText);
+        Contract.RequireNotNull(destinationIdentifierText, out string DestinationIdentifierText);
+
+        Document Documentation = CreateEmptyDocumentation();
+        Identifier SourceIdentifier = CreateSimpleIdentifier(SourceIdentifierText);
+        Identifier DestinationIdentifier = CreateSimpleIdentifier(DestinationIdentifierText);
+        Rename Result = new Rename(Documentation, SourceIdentifier, DestinationIdentifier);
+
+        return Result;
+    }
+
+    /// <summary>
+    /// Creates a new instance of a <see cref="Typedef"/> with provided values.
+    /// </summary>
+    /// <param name="entityName">The typedef name.</param>
+    /// <param name="definedType">The typedef type.</param>
+    /// <returns>The created instance.</returns>
+    public static Typedef CreateTypedef(Name entityName, ObjectType definedType)
+    {
+        Contract.RequireNotNull(entityName, out Name EntityName);
+        Contract.RequireNotNull(definedType, out ObjectType DefinedType);
+
+        Document Documentation = CreateEmptyDocumentation();
+        Typedef Result = new Typedef(Documentation, EntityName, DefinedType);
+
+        return Result;
+    }
+
+    /// <summary>
     /// Creates a new instance of a <see cref="With"/> with no instructions.
     /// </summary>
     /// <param name="expression">The expression.</param>

@@ -230,7 +230,9 @@
             Type Type = assembly.GetType(name)!;
             ConstructorInfo[] Constructors = Type.GetConstructors();
 
-            return Constructors.Length == 0 || Constructors[0].GetParameters().Length == 0;
+            Debug.Assert(Constructors.Length > 0);
+
+            return Constructors[0].GetParameters().Length == 0;
         }
 
         /// <summary>
