@@ -36,7 +36,6 @@
             
             SpecializedTypeEntity<Class> TestSpecializedTypeEntityClass = SpecializedTypeEntity<Class>.Singleton;
             TestSpecializedTypeEntityClass = SpecializedTypeEntity<Class>.Singleton; // Class twice to cover different branches in the code.
-            //Class? TestClass = TestSpecializedTypeEntityClass.CreateInstance() as Class;
 
             SpecializedTypeEntity<string> TestSpecializedTypeEntityString = SpecializedTypeEntity<string>.Singleton;
             TestSpecializedTypeEntityString.Procedure("CopyTo");
@@ -71,16 +70,6 @@
             PropertyInfo PropertyInfo = typeof(Name).GetProperty("Text")!;
 
             FunctionEntity TestFunctionEntity = new(FunctionInfo);
-
-            /*
-            PropertyInfo[] AllMembers = typeof(IList).GetProperties();
-            string MemberString = string.Empty;
-            foreach (PropertyInfo Item in AllMembers)
-                MemberString += "\n" + Item.Name;
-
-            System.Diagnostics.Debug.Assert(false, MemberString);
-            */
-
             IndexerEntity TestIndexerEntity = new(IndexerInfo);
             ProcedureEntity TestProcedureEntity = new(ProcedureInfo);
             PropertyEntity TestPropertyEntity = new(PropertyInfo);

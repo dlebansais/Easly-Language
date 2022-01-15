@@ -34,7 +34,13 @@
 
             StackFrame? Frame = Trace.GetFrame(1);
             MethodBase? Method = Frame?.GetMethod();
+
+#if DEBUG
+            Debug.Assert(Method?.DeclaringType is not null);
+            Type CallerType = Method?.DeclaringType!;
+#else
             Type CallerType = Method?.DeclaringType ?? throw new InvalidOperationException("Stack frame not available in release mode");
+#endif
 
             if (CallerType.IsGenericType)
                 throw new NotSupportedException("Static generic types not supported");
