@@ -23,7 +23,9 @@
 
             this.TypeInfo = TypeInfo;
             Name = typeInfo.Name;
-            FullName = typeInfo.FullName ?? throw new ArgumentException($"{nameof(typeInfo)} is not a supported type");
+
+            Debug.Assert(typeInfo.FullName is not null);
+            FullName = typeInfo.FullName!;
 
             SealableDictionary<string, MethodInfo> FlattenedMethodList = new SealableDictionary<string, MethodInfo>();
             RecursiveGetMethods(TypeInfo, FlattenedMethodList);

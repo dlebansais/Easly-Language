@@ -34,11 +34,10 @@
             TestIndexerEntity = new(IndexerInfoAsMethod);
             ReturnType = TestIndexerEntity.Type;
             
-            //SpecializedTypeEntity<Class> TestSpecializedTypeEntityClass = SpecializedTypeEntity<Class>.Singleton;
-            //TestSpecializedTypeEntityClass = SpecializedTypeEntity<Class>.Singleton; // Class twice to cover different branches in the code.
+            SpecializedTypeEntity<Class> TestSpecializedTypeEntityClass = SpecializedTypeEntity<Class>.Singleton;
+            TestSpecializedTypeEntityClass = SpecializedTypeEntity<Class>.Singleton; // Class twice to cover different branches in the code.
             //Class? TestClass = TestSpecializedTypeEntityClass.CreateInstance() as Class;
 
-            //System.Diagnostics.Debug.Assert(false);
             SpecializedTypeEntity<string> TestSpecializedTypeEntityString = SpecializedTypeEntity<string>.Singleton;
             TestSpecializedTypeEntityString.Procedure("CopyTo");
             TestSpecializedTypeEntityString.Function("CompareTo");
@@ -48,6 +47,7 @@
             Entity TestEntity = Entity.FromThis(TestFeature);
             Entity TestStaticEntity = Entity.FromStaticConstructor();
 
+            //System.Diagnostics.Debug.Assert(false);
             Assert.Throws<TypeInitializationException>(() => { StaticConstructorTest<string> TestObject = new(); });
 
             DateAndTime TestDateAndTime = new();
