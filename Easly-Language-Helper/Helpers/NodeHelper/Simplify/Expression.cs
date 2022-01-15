@@ -228,23 +228,15 @@
             QualifiedName Query = StringToQualifiedName(node.ClassIdentifier.Text);
 
             IBlockList<AssignmentArgument> ObjectBlockList = node.AssignmentBlocks;
-            BlockList<Argument> ArgumentBlocks = new BlockList<Argument>();
-            ArgumentBlocks.Documentation = NodeHelper.CreateDocumentationCopy(ObjectBlockList.Documentation);
-            ArgumentBlocks.NodeBlockList = new List<IBlock<Argument>>();
+
+            Document Documentation = NodeHelper.CreateDocumentationCopy(ObjectBlockList.Documentation);
+            List<IBlock<Argument>> NodeBlockList = new List<IBlock<Argument>>();
 
             for (int BlockIndex = 0; BlockIndex < ObjectBlockList.NodeBlockList.Count; BlockIndex++)
             {
                 IBlock<AssignmentArgument> Block = ObjectBlockList.NodeBlockList[BlockIndex];
 
-                Block<Argument> NewBlock = new Block<Argument>();
-                NewBlock.Documentation = CreateDocumentationCopy(Block.Documentation);
-                NewBlock.Replication = Block.Replication;
-
-                Pattern NewReplicationPattern = new Pattern(CreateDocumentationCopy(Block.ReplicationPattern.Documentation), Block.ReplicationPattern.Text);
-                NewBlock.ReplicationPattern = NewReplicationPattern;
-
-                Identifier NewSourceIdentifier = new Identifier(CreateDocumentationCopy(Block.SourceIdentifier.Documentation), Block.SourceIdentifier.Text);
-                NewBlock.SourceIdentifier = NewSourceIdentifier;
+                Document BlockDocumentation = CreateDocumentationCopy(Block.Documentation);
 
                 List<Argument> NewNodeList = new List<Argument>();
                 for (int Index = 0; Index < Block.NodeList.Count; Index++)
@@ -255,10 +247,15 @@
                     NewNodeList.Add(NewItem);
                 }
 
-                NewBlock.NodeList = NewNodeList;
+                Pattern NewReplicationPattern = new Pattern(CreateDocumentationCopy(Block.ReplicationPattern.Documentation), Block.ReplicationPattern.Text);
+                Identifier NewSourceIdentifier = new Identifier(CreateDocumentationCopy(Block.SourceIdentifier.Documentation), Block.SourceIdentifier.Text);
 
-                ArgumentBlocks.NodeBlockList.Add(NewBlock);
+                Block<Argument> NewBlock = new Block<Argument>(BlockDocumentation, NewNodeList, Block.Replication, NewReplicationPattern, NewSourceIdentifier);
+
+                NodeBlockList.Add(NewBlock);
             }
+
+            BlockList<Argument> ArgumentBlocks = new BlockList<Argument>(Documentation, NodeBlockList);
 
             simplifiedNode = CreateQueryExpression(Query, ArgumentBlocks);
             return true;

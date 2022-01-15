@@ -73,14 +73,31 @@ namespace BaseNode
         where TNode : Node
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="Block{TNode}"/> class.
+        /// </summary>
+        /// <param name="documentation">The block documentation.</param>
+        /// <param name="nodeList">The list of nodes in the block.</param>
+        /// <param name="replication">How nodes are replicated.</param>
+        /// <param name="replicationPattern">The pattern to use for replications.</param>
+        /// <param name="sourceIdentifier">The source to use for replication.</param>
+        internal Block(Document documentation, IList<TNode> nodeList, ReplicationStatus replication, Pattern replicationPattern, Identifier sourceIdentifier)
+        {
+            Documentation = documentation;
+            NodeList = nodeList;
+            Replication = replication;
+            ReplicationPattern = replicationPattern;
+            SourceIdentifier = sourceIdentifier;
+        }
+
+        /// <summary>
         /// Gets or sets the documentation.
         /// </summary>
-        public virtual Document Documentation { get; set; } = null!;
+        public virtual Document Documentation { get; set; }
 
         /// <summary>
         /// Gets or sets the list of nodes in the block.
         /// </summary>
-        public virtual IList<TNode> NodeList { get; set; } = null!;
+        public virtual IList<TNode> NodeList { get; set; }
 
         /// <inheritdoc/>
         IList IBlock.NodeList { get { return (IList)NodeList; } }
@@ -88,16 +105,16 @@ namespace BaseNode
         /// <summary>
         /// Gets or sets how nodes are replicated.
         /// </summary>
-        public virtual ReplicationStatus Replication { get; set; } = ReplicationStatus.Normal;
+        public virtual ReplicationStatus Replication { get; set; }
 
         /// <summary>
         /// Gets or sets the pattern to use for replications.
         /// </summary>
-        public virtual Pattern ReplicationPattern { get; set; } = null!;
+        public virtual Pattern ReplicationPattern { get; set; }
 
         /// <summary>
         /// Gets or sets the source to use for replication.
         /// </summary>
-        public virtual Identifier SourceIdentifier { get; set; } = null!;
+        public virtual Identifier SourceIdentifier { get; set; }
     }
 }

@@ -16,9 +16,8 @@
         [Test]
         public static void TestBlockInitializers()
         {
-            Block<Node> TestBlock = new();
-            BlockList<Node> TestBlockList = new();
-            TestBlockList.Documentation = new Document();
+            IBlock<Node> TestBlock = BlockListHelper.CreateBlock(new List<Node>() { NodeHelper.CreateEmptyIdentifier() });
+            IBlockList<Node> TestBlockList = BlockListHelper.CreateEmptyBlockList<Node>();
 
             IList<Node> NodeList = TestBlock.NodeList;
             IList NonGenericNodeList = ((IBlock)TestBlock).NodeList;

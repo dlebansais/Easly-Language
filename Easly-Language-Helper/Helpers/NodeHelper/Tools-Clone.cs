@@ -101,7 +101,7 @@
             Assembly BlockListAssembly = BlockListType.Assembly;
             string BlockListFullName = SafeType.FullName(BlockListType);
 
-            IBlockList ClonedBlockList = SafeType.CreateInstanceFromDefaultConstructor<IBlockList>(BlockListAssembly, BlockListFullName);
+            IBlockList ClonedBlockList = SafeType.CreateInstance<IBlockList>(BlockListAssembly, BlockListFullName);
 
             Type NodeListType = rootBlockList.NodeBlockList.GetType();
 

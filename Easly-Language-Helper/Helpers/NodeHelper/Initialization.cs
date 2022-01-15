@@ -78,7 +78,7 @@
             string FullName = SafeType.FullName(BlockListType);
 
             Assembly BlockListAssembly = BlockListType.Assembly;
-            IBlockList EmptyBlockList = SafeType.CreateInstanceFromDefaultConstructor<IBlockList>(BlockListAssembly, FullName);
+            IBlockList EmptyBlockList = SafeType.CreateInstance<IBlockList>(BlockListAssembly, FullName);
 
             Document EmptyEmptyDocumentation = CreateEmptyDocumentation();
 
@@ -114,7 +114,7 @@
             Assembly BlockTypeAssembly = BlockType.Assembly;
             string BlockTypeFullName = SafeType.FullName(BlockType);
 
-            IBlock EmptyBlock = SafeType.CreateInstanceFromDefaultConstructor<IBlock>(BlockTypeAssembly, BlockTypeFullName);
+            IBlock EmptyBlock = SafeType.CreateInstance<IBlock>(BlockTypeAssembly, BlockTypeFullName);
 
             Document EmptyEmptyDocumentation = CreateEmptyDocumentation();
 

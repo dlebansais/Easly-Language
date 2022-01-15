@@ -43,9 +43,20 @@ namespace BaseNode
         where TNode : Node
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="BlockList{TNode}"/> class.
+        /// </summary>
+        /// <param name="documentation">The block list documentation.</param>
+        /// <param name="nodeBlockList">The list of blocks.</param>
+        internal BlockList(Document documentation, IList<IBlock<TNode>> nodeBlockList)
+        {
+            Documentation = documentation;
+            NodeBlockList = nodeBlockList;
+        }
+
+        /// <summary>
         /// Gets or sets the documentation.
         /// </summary>
-        public virtual Document Documentation { get; set; } = null!;
+        public virtual Document Documentation { get; set; }
 
         /// <inheritdoc/>
         Document IBlockList.Documentation { get { return Documentation; } }
@@ -53,7 +64,7 @@ namespace BaseNode
         /// <summary>
         /// Gets or sets the list of blocks.
         /// </summary>
-        public virtual IList<IBlock<TNode>> NodeBlockList { get; set; } = null!;
+        public virtual IList<IBlock<TNode>> NodeBlockList { get; set; }
 
         /// <inheritdoc/>
         IList IBlockList.NodeBlockList { get { return (IList)NodeBlockList; } }

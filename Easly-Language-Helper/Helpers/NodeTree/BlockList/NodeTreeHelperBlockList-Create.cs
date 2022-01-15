@@ -86,7 +86,7 @@
             Type BlockType = typeof(Block<>).MakeGenericType(TypeArguments);
             string BlockTypeFullName = SafeType.FullName(BlockType);
 
-            IBlock NewBlock = SafeType.CreateInstanceFromDefaultConstructor<IBlock>(BlockType.Assembly, BlockTypeFullName);
+            IBlock NewBlock = SafeType.CreateInstance<IBlock>(BlockType.Assembly, BlockTypeFullName);
 
             Document EmptyComment = NodeHelper.CreateEmptyDocumentation();
 
