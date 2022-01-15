@@ -1,108 +1,107 @@
-﻿namespace BaseNodeHelper
+﻿namespace BaseNodeHelper;
+
+using System.Collections.Generic;
+using System.Diagnostics;
+using BaseNode;
+using Contracts;
+
+/// <summary>
+/// Provides methods to manipulate nodes.
+/// </summary>
+public static partial class NodeHelper
 {
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using BaseNode;
-    using Contracts;
-
-    /// <summary>
-    /// Provides methods to manipulate nodes.
-    /// </summary>
-    public static partial class NodeHelper
+    private static bool GetComplexifiedArgument(Argument node, out IList<Argument> complexifiedArgumentList)
     {
-        private static bool GetComplexifiedArgument(Argument node, out IList<Argument> complexifiedArgumentList)
+        Contract.Unused(out complexifiedArgumentList);
+
+        bool Result = false;
+        bool IsHandled = false;
+
+        switch (node)
         {
-            Contract.Unused(out complexifiedArgumentList);
+            case AssignmentArgument AsAssignmentArgument:
+                Result = GetComplexifiedAssignmentArgument(AsAssignmentArgument, out complexifiedArgumentList);
+                IsHandled = true;
+                break;
 
-            bool Result = false;
-            bool IsHandled = false;
-
-            switch (node)
-            {
-                case AssignmentArgument AsAssignmentArgument:
-                    Result = GetComplexifiedAssignmentArgument(AsAssignmentArgument, out complexifiedArgumentList);
-                    IsHandled = true;
-                    break;
-
-                case PositionalArgument AsPositionalArgument:
-                    Result = GetComplexifiedPositionalArgument(AsPositionalArgument, out complexifiedArgumentList);
-                    IsHandled = true;
-                    break;
-            }
-
-            Debug.Assert(IsHandled, $"All descendants of {nameof(Argument)} have been handled");
-
-            return Result;
+            case PositionalArgument AsPositionalArgument:
+                Result = GetComplexifiedPositionalArgument(AsPositionalArgument, out complexifiedArgumentList);
+                IsHandled = true;
+                break;
         }
 
-        private static bool GetComplexifiedAssignmentArgument(AssignmentArgument node, out IList<Argument> complexifiedArgumentList)
-        {
-            if (GetComplexifiedIdentifierBlockList(node.ParameterBlocks, out IBlockList<Identifier> ComplexifiedParameterBlocks))
-            {
-                complexifiedArgumentList = new List<Argument>();
+        Debug.Assert(IsHandled, $"All descendants of {nameof(Argument)} have been handled");
 
-                Expression ClonedSource = (Expression)DeepCloneNode(node.Source, cloneCommentGuid: false);
-                AssignmentArgument NewAssignmentArgument = CreateAssignmentArgument(ComplexifiedParameterBlocks, ClonedSource);
+        return Result;
+    }
+
+    private static bool GetComplexifiedAssignmentArgument(AssignmentArgument node, out IList<Argument> complexifiedArgumentList)
+    {
+        if (GetComplexifiedIdentifierBlockList(node.ParameterBlocks, out IBlockList<Identifier> ComplexifiedParameterBlocks))
+        {
+            complexifiedArgumentList = new List<Argument>();
+
+            Expression ClonedSource = (Expression)DeepCloneNode(node.Source, cloneCommentGuid: false);
+            AssignmentArgument NewAssignmentArgument = CreateAssignmentArgument(ComplexifiedParameterBlocks, ClonedSource);
+            complexifiedArgumentList.Add(NewAssignmentArgument);
+
+            return true;
+        }
+        else if (GetComplexifiedExpression(node.Source, out IList<Expression> ComplexifiedSourceList))
+        {
+            complexifiedArgumentList = new List<Argument>();
+
+            foreach (Expression ComplexifiedSource in ComplexifiedSourceList)
+            {
+                IBlockList<Identifier> ClonedParameterBlocks = (IBlockList<Identifier>)DeepCloneBlockList((IBlockList)node.ParameterBlocks, cloneCommentGuid: false);
+                AssignmentArgument NewAssignmentArgument = CreateAssignmentArgument(ClonedParameterBlocks, ComplexifiedSource);
                 complexifiedArgumentList.Add(NewAssignmentArgument);
-
-                return true;
-            }
-            else if (GetComplexifiedExpression(node.Source, out IList<Expression> ComplexifiedSourceList))
-            {
-                complexifiedArgumentList = new List<Argument>();
-
-                foreach (Expression ComplexifiedSource in ComplexifiedSourceList)
-                {
-                    IBlockList<Identifier> ClonedParameterBlocks = (IBlockList<Identifier>)DeepCloneBlockList((IBlockList)node.ParameterBlocks, cloneCommentGuid: false);
-                    AssignmentArgument NewAssignmentArgument = CreateAssignmentArgument(ClonedParameterBlocks, ComplexifiedSource);
-                    complexifiedArgumentList.Add(NewAssignmentArgument);
-                }
-
-                return true;
             }
 
-            Contract.Unused(out complexifiedArgumentList);
-            return false;
+            return true;
         }
 
-        private static bool GetComplexifiedPositionalArgument(PositionalArgument node, out IList<Argument> complexifiedArgumentList)
+        Contract.Unused(out complexifiedArgumentList);
+        return false;
+    }
+
+    private static bool GetComplexifiedPositionalArgument(PositionalArgument node, out IList<Argument> complexifiedArgumentList)
+    {
+        if (GetComplexifiedAsAssignmentArgument(node, out AssignmentArgument ComplexifiedAssignmentArgument))
         {
-            if (GetComplexifiedAsAssignmentArgument(node, out AssignmentArgument ComplexifiedAssignmentArgument))
-            {
-                complexifiedArgumentList = new List<Argument>() { ComplexifiedAssignmentArgument };
-                return true;
-            }
-            else if (GetComplexifiedExpression(node.Source, out IList<Expression> ComplexifiedSourceList))
-            {
-                complexifiedArgumentList = new List<Argument>();
-
-                foreach (Expression ComplexifiedSource in ComplexifiedSourceList)
-                {
-                    PositionalArgument NewPositionalArgument = CreatePositionalArgument(ComplexifiedSource);
-                    complexifiedArgumentList.Add(NewPositionalArgument);
-                }
-
-                return true;
-            }
-
-            Contract.Unused(out complexifiedArgumentList);
-            return false;
+            complexifiedArgumentList = new List<Argument>() { ComplexifiedAssignmentArgument };
+            return true;
         }
-
-        private static bool GetComplexifiedAsAssignmentArgument(PositionalArgument node, out AssignmentArgument complexifiedNode)
+        else if (GetComplexifiedExpression(node.Source, out IList<Expression> ComplexifiedSourceList))
         {
-            if (node.Source is QueryExpression AsQueryExpression)
-                if (ParsePattern(AsQueryExpression, ":=", out string BeforeText, out string AfterText))
-                {
-                    List<Identifier> ParameterList = new List<Identifier>() { CreateSimpleIdentifier(BeforeText) };
-                    CloneComplexifiedExpression(AsQueryExpression, AfterText, out Expression Source);
+            complexifiedArgumentList = new List<Argument>();
 
-                    complexifiedNode = CreateAssignmentArgument(ParameterList, Source);
-                    return true;
-                }
+            foreach (Expression ComplexifiedSource in ComplexifiedSourceList)
+            {
+                PositionalArgument NewPositionalArgument = CreatePositionalArgument(ComplexifiedSource);
+                complexifiedArgumentList.Add(NewPositionalArgument);
+            }
 
-            Contract.Unused(out complexifiedNode);
-            return false;
+            return true;
         }
+
+        Contract.Unused(out complexifiedArgumentList);
+        return false;
+    }
+
+    private static bool GetComplexifiedAsAssignmentArgument(PositionalArgument node, out AssignmentArgument complexifiedNode)
+    {
+        if (node.Source is QueryExpression AsQueryExpression)
+            if (ParsePattern(AsQueryExpression, ":=", out string BeforeText, out string AfterText))
+            {
+                List<Identifier> ParameterList = new List<Identifier>() { CreateSimpleIdentifier(BeforeText) };
+                CloneComplexifiedExpression(AsQueryExpression, AfterText, out Expression Source);
+
+                complexifiedNode = CreateAssignmentArgument(ParameterList, Source);
+                return true;
+            }
+
+        Contract.Unused(out complexifiedNode);
+        return false;
     }
 }

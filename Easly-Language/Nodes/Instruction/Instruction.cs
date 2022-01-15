@@ -1,17 +1,16 @@
-namespace BaseNode
+namespace BaseNode;
+
+/// <summary>
+/// Represents any instruction.
+/// </summary>
+public abstract class Instruction : Node
 {
     /// <summary>
-    /// Represents any instruction.
+    /// Initializes a new instance of the <see cref="Instruction"/> class.
     /// </summary>
-    public abstract class Instruction : Node
+    /// <param name="documentation">The node documentation.</param>
+    internal Instruction(Document documentation)
+        : base(documentation)
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Instruction"/> class.
-        /// </summary>
-        /// <param name="documentation">The node documentation.</param>
-        internal Instruction(Document documentation)
-            : base(documentation)
-        {
-        }
     }
 }

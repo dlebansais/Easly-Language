@@ -1,21 +1,20 @@
-﻿namespace Easly
-{
-    using System.Reflection;
+﻿namespace Easly;
 
+using System.Reflection;
+
+/// <summary>
+/// Represents an entity for procedures.
+/// </summary>
+public class ProcedureEntity : NamedFeatureEntity
+{
+    #region Init
     /// <summary>
-    /// Represents an entity for procedures.
+    /// Initializes a new instance of the <see cref="ProcedureEntity"/> class.
     /// </summary>
-    public class ProcedureEntity : NamedFeatureEntity
+    /// <param name="featureInfo">The feature information from reflection.</param>
+    public ProcedureEntity(MethodInfo featureInfo)
+        : base(featureInfo)
     {
-        #region Init
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ProcedureEntity"/> class.
-        /// </summary>
-        /// <param name="featureInfo">The feature information from reflection.</param>
-        public ProcedureEntity(MethodInfo featureInfo)
-            : base(featureInfo)
-        {
-        }
-        #endregion
     }
+    #endregion
 }

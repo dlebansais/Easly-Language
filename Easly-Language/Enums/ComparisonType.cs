@@ -1,18 +1,17 @@
-namespace BaseNode
+namespace BaseNode;
+
+/// <summary>
+/// Comparison type.
+/// </summary>
+public enum ComparisonType
 {
     /// <summary>
-    /// Comparison type.
+    /// Object equality.
     /// </summary>
-    public enum ComparisonType
-    {
-        /// <summary>
-        /// Object equality.
-        /// </summary>
-        Equal,
+    Equal,
 
-        /// <summary>
-        /// Object inequality.
-        /// </summary>
-        Different,
-    }
+    /// <summary>
+    /// Object inequality.
+    /// </summary>
+    Different,
 }

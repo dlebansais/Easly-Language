@@ -1,53 +1,52 @@
-namespace BaseNode
+namespace BaseNode;
+
+/// <summary>
+/// Processor macro.
+/// </summary>
+public enum PreprocessorMacro
 {
     /// <summary>
-    /// Processor macro.
+    /// Date and time.
     /// </summary>
-    public enum PreprocessorMacro
-    {
-        /// <summary>
-        /// Date and time.
-        /// </summary>
-        DateAndTime,
+    DateAndTime,
 
-        /// <summary>
-        /// Compilation Discrete Identifier.
-        /// </summary>
-        CompilationDiscreteIdentifier,
+    /// <summary>
+    /// Compilation Discrete Identifier.
+    /// </summary>
+    CompilationDiscreteIdentifier,
 
-        /// <summary>
-        /// Class path.
-        /// </summary>
-        ClassPath,
+    /// <summary>
+    /// Class path.
+    /// </summary>
+    ClassPath,
 
-        /// <summary>
-        /// Compiler version.
-        /// </summary>
-        CompilerVersion,
+    /// <summary>
+    /// Compiler version.
+    /// </summary>
+    CompilerVersion,
 
-        /// <summary>
-        /// Conformance to standard.
-        /// </summary>
-        ConformanceToStandard,
+    /// <summary>
+    /// Conformance to standard.
+    /// </summary>
+    ConformanceToStandard,
 
-        /// <summary>
-        /// Discrete Class Identifier.
-        /// </summary>
-        DiscreteClassIdentifier,
+    /// <summary>
+    /// Discrete Class Identifier.
+    /// </summary>
+    DiscreteClassIdentifier,
 
-        /// <summary>
-        /// Counter.
-        /// </summary>
-        Counter,
+    /// <summary>
+    /// Counter.
+    /// </summary>
+    Counter,
 
-        /// <summary>
-        /// Debugging.
-        /// </summary>
-        Debugging,
+    /// <summary>
+    /// Debugging.
+    /// </summary>
+    Debugging,
 
-        /// <summary>
-        /// Random integer.
-        /// </summary>
-        RandomInteger,
-    }
+    /// <summary>
+    /// Random integer.
+    /// </summary>
+    RandomInteger,
 }

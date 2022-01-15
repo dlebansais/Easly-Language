@@ -1,1010 +1,1009 @@
-﻿namespace TestEaslyLanguage
+﻿namespace TestEaslyLanguage;
+
+using System;
+using System.Collections.Generic;
+using BaseNode;
+using BaseNodeHelper;
+using Easly;
+using NUnit.Framework;
+using Range = BaseNode.Range;
+
+[TestFixture]
+public partial class SpecificObjectsCoverage
 {
-    using System;
-    using System.Collections.Generic;
-    using BaseNode;
-    using BaseNodeHelper;
-    using Easly;
-    using NUnit.Framework;
-    using Range = BaseNode.Range;
-
-    [TestFixture]
-    public partial class SpecificObjectsCoverage
+    [Test]
+    public static void TestArgument()
     {
-        [Test]
-        public static void TestArgument()
-        {
 #if !DEBUG
-            List<Identifier> NullIdentifierList = null!;
-            IBlockList<Identifier> NullBlockList = null!;
-            Expression NullSource = null!;
+        List<Identifier> NullIdentifierList = null!;
+        IBlockList<Identifier> NullBlockList = null!;
+        Expression NullSource = null!;
 #endif
 
-            List<Identifier> EmptyIdentifierList = new();
+        List<Identifier> EmptyIdentifierList = new();
 
-            Identifier EmptyIdentifier = NodeHelper.CreateEmptyIdentifier();
-            List<Identifier> SimpleIdentifierList = new() { EmptyIdentifier };
+        Identifier EmptyIdentifier = NodeHelper.CreateEmptyIdentifier();
+        List<Identifier> SimpleIdentifierList = new() { EmptyIdentifier };
 
-            Expression Source = NodeHelper.CreateDefaultExpression();
+        Expression Source = NodeHelper.CreateDefaultExpression();
 
-            AssignmentArgument Argument1 = NodeHelper.CreateAssignmentArgument(SimpleIdentifierList, Source);
-            Assert.AreEqual(Argument1.Source, Source);
+        AssignmentArgument Argument1 = NodeHelper.CreateAssignmentArgument(SimpleIdentifierList, Source);
+        Assert.AreEqual(Argument1.Source, Source);
 
-            CheckMustNotBeEmptyException("parameterList", () => { NodeHelper.CreateAssignmentArgument(EmptyIdentifierList, Source); });
-
-#if !DEBUG
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateAssignmentArgument(NullIdentifierList , Source); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateAssignmentArgument(SimpleIdentifierList, NullSource); });
-#endif
-
-            IBlockList<Identifier> EmptyBlockList = BlockListHelper.CreateEmptyBlockList<Identifier>();
-            IBlockList<Identifier> SimpleBlockList = BlockListHelper.CreateSimpleBlockList(EmptyIdentifier);
-
-            AssignmentArgument Argument2 = NodeHelper.CreateAssignmentArgument(SimpleBlockList, Source);
-            Assert.AreEqual(Argument2.ParameterBlocks, SimpleBlockList);
-            Assert.AreEqual(Argument2.Source, Source);
-
-            CheckMustNotBeEmptyException("parameterBlocks", () => { NodeHelper.CreateAssignmentArgument(EmptyBlockList, Source); });
+        CheckMustNotBeEmptyException("parameterList", () => { NodeHelper.CreateAssignmentArgument(EmptyIdentifierList, Source); });
 
 #if !DEBUG
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateAssignmentArgument(NullBlockList, Source); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateAssignmentArgument(SimpleBlockList, NullSource); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateAssignmentArgument(NullIdentifierList , Source); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateAssignmentArgument(SimpleIdentifierList, NullSource); });
 #endif
 
-            PositionalArgument Argument3 = NodeHelper.CreatePositionalArgument(Source);
-            Assert.AreEqual(Argument3.Source, Source);
+        IBlockList<Identifier> EmptyBlockList = BlockListHelper.CreateEmptyBlockList<Identifier>();
+        IBlockList<Identifier> SimpleBlockList = BlockListHelper.CreateSimpleBlockList(EmptyIdentifier);
+
+        AssignmentArgument Argument2 = NodeHelper.CreateAssignmentArgument(SimpleBlockList, Source);
+        Assert.AreEqual(Argument2.ParameterBlocks, SimpleBlockList);
+        Assert.AreEqual(Argument2.Source, Source);
+
+        CheckMustNotBeEmptyException("parameterBlocks", () => { NodeHelper.CreateAssignmentArgument(EmptyBlockList, Source); });
 
 #if !DEBUG
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreatePositionalArgument(NullSource); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateAssignmentArgument(NullBlockList, Source); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateAssignmentArgument(SimpleBlockList, NullSource); });
 #endif
-        }
 
-        [Test]
-        public static void TestBody()
-        {
-            DeferredBody Body1 = NodeHelper.CreateEmptyDeferredBody();
-            EffectiveBody Body2 = NodeHelper.CreateEmptyEffectiveBody();
-            ExternBody Body3 = NodeHelper.CreateEmptyExternBody();
-            PrecursorBody Body4 = NodeHelper.CreateEmptyPrecursorBody();
-
-            Document Documentation = NodeHelper.CreateEmptyDocumentation();
-            IBlockList<Assertion> EmptyRequireBlockList = BlockListHelper.CreateEmptyBlockList<Assertion>();
-            IBlockList<Assertion> EmptyEnsureBlockList = BlockListHelper.CreateEmptyBlockList<Assertion>();
-            IBlockList<Identifier> EmptyExceptionIdentifierBlockList = BlockListHelper.CreateEmptyBlockList<Identifier>();
-
-            Body Body5 = NodeHelper.CreateInitializedBody(typeof(DeferredBody), Documentation, EmptyRequireBlockList, EmptyEnsureBlockList, EmptyExceptionIdentifierBlockList);
-            Assert.That(Body5 is DeferredBody);
+        PositionalArgument Argument3 = NodeHelper.CreatePositionalArgument(Source);
+        Assert.AreEqual(Argument3.Source, Source);
 
 #if !DEBUG
-            Type NullNodeType = null!;
-            Document NullDocumentation = null!;
-            IBlockList<Assertion> NullRequireBlockList = null!;
-            IBlockList<Assertion> NullEnsureBlockList = null!;
-            IBlockList<Identifier> NullExceptionIdentifierBlockList = null!;
-
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedBody(NullNodeType, Documentation, EmptyRequireBlockList, EmptyEnsureBlockList, EmptyExceptionIdentifierBlockList); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedBody(typeof(DeferredBody), NullDocumentation, EmptyRequireBlockList, EmptyEnsureBlockList, EmptyExceptionIdentifierBlockList); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedBody(typeof(DeferredBody), Documentation, NullRequireBlockList, EmptyEnsureBlockList, EmptyExceptionIdentifierBlockList); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedBody(typeof(DeferredBody), Documentation, EmptyRequireBlockList, NullEnsureBlockList, EmptyExceptionIdentifierBlockList); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedBody(typeof(DeferredBody), Documentation, EmptyRequireBlockList, EmptyEnsureBlockList, NullExceptionIdentifierBlockList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreatePositionalArgument(NullSource); });
 #endif
+    }
 
-            IBlockList<EntityDeclaration> EmptyEntityDeclarationBlockList = BlockListHelper.CreateEmptyBlockList<EntityDeclaration>();
-            IBlockList<Instruction> EmptyInstructionBlockList = BlockListHelper.CreateEmptyBlockList<Instruction>();
-            IBlockList<ExceptionHandler> EmptyExceptionHandlerBlockList = BlockListHelper.CreateEmptyBlockList<ExceptionHandler>();
+    [Test]
+    public static void TestBody()
+    {
+        DeferredBody Body1 = NodeHelper.CreateEmptyDeferredBody();
+        EffectiveBody Body2 = NodeHelper.CreateEmptyEffectiveBody();
+        ExternBody Body3 = NodeHelper.CreateEmptyExternBody();
+        PrecursorBody Body4 = NodeHelper.CreateEmptyPrecursorBody();
 
-            Body Body6 = NodeHelper.CreateInitializedBody(typeof(EffectiveBody), Documentation, EmptyRequireBlockList, EmptyEnsureBlockList, EmptyExceptionIdentifierBlockList, EmptyEntityDeclarationBlockList, EmptyInstructionBlockList, EmptyExceptionHandlerBlockList);
-            Assert.That(Body6 is EffectiveBody);
+        Document Documentation = NodeHelper.CreateEmptyDocumentation();
+        IBlockList<Assertion> EmptyRequireBlockList = BlockListHelper.CreateEmptyBlockList<Assertion>();
+        IBlockList<Assertion> EmptyEnsureBlockList = BlockListHelper.CreateEmptyBlockList<Assertion>();
+        IBlockList<Identifier> EmptyExceptionIdentifierBlockList = BlockListHelper.CreateEmptyBlockList<Identifier>();
+
+        Body Body5 = NodeHelper.CreateInitializedBody(typeof(DeferredBody), Documentation, EmptyRequireBlockList, EmptyEnsureBlockList, EmptyExceptionIdentifierBlockList);
+        Assert.That(Body5 is DeferredBody);
 
 #if !DEBUG
-            IBlockList<EntityDeclaration> NullEntityDeclarationBlockList = null!;
-            IBlockList<Instruction> NullInstructionBlockList = null!;
-            IBlockList<ExceptionHandler> NullExceptionHandlerBlockList = null!;
+        Type NullNodeType = null!;
+        Document NullDocumentation = null!;
+        IBlockList<Assertion> NullRequireBlockList = null!;
+        IBlockList<Assertion> NullEnsureBlockList = null!;
+        IBlockList<Identifier> NullExceptionIdentifierBlockList = null!;
 
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedBody(typeof(EffectiveBody), Documentation, EmptyRequireBlockList, EmptyEnsureBlockList, EmptyExceptionIdentifierBlockList, NullEntityDeclarationBlockList, EmptyInstructionBlockList, EmptyExceptionHandlerBlockList); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedBody(typeof(EffectiveBody), Documentation, EmptyRequireBlockList, EmptyEnsureBlockList, EmptyExceptionIdentifierBlockList, EmptyEntityDeclarationBlockList, NullInstructionBlockList, EmptyExceptionHandlerBlockList); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedBody(typeof(EffectiveBody), Documentation, EmptyRequireBlockList, EmptyEnsureBlockList, EmptyExceptionIdentifierBlockList, EmptyEntityDeclarationBlockList, EmptyInstructionBlockList, NullExceptionHandlerBlockList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedBody(NullNodeType, Documentation, EmptyRequireBlockList, EmptyEnsureBlockList, EmptyExceptionIdentifierBlockList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedBody(typeof(DeferredBody), NullDocumentation, EmptyRequireBlockList, EmptyEnsureBlockList, EmptyExceptionIdentifierBlockList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedBody(typeof(DeferredBody), Documentation, NullRequireBlockList, EmptyEnsureBlockList, EmptyExceptionIdentifierBlockList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedBody(typeof(DeferredBody), Documentation, EmptyRequireBlockList, NullEnsureBlockList, EmptyExceptionIdentifierBlockList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedBody(typeof(DeferredBody), Documentation, EmptyRequireBlockList, EmptyEnsureBlockList, NullExceptionIdentifierBlockList); });
 #endif
 
-            Body Body7 = NodeHelper.CreateInitializedBody(typeof(ExternBody), Documentation, EmptyRequireBlockList, EmptyEnsureBlockList, EmptyExceptionIdentifierBlockList);
-            Assert.That(Body7 is ExternBody);
+        IBlockList<EntityDeclaration> EmptyEntityDeclarationBlockList = BlockListHelper.CreateEmptyBlockList<EntityDeclaration>();
+        IBlockList<Instruction> EmptyInstructionBlockList = BlockListHelper.CreateEmptyBlockList<Instruction>();
+        IBlockList<ExceptionHandler> EmptyExceptionHandlerBlockList = BlockListHelper.CreateEmptyBlockList<ExceptionHandler>();
 
-            IOptionalReference<ObjectType> AncestorType = OptionalReferenceHelper.CreateEmptyReference<ObjectType>();
-
-            Body Body8 = NodeHelper.CreateInitializedBody(typeof(PrecursorBody), Documentation, EmptyRequireBlockList, EmptyEnsureBlockList, EmptyExceptionIdentifierBlockList, null, null, null, AncestorType);
-            Assert.That(Body8 is PrecursorBody);
-
-            CheckWrongTypeException("nodeType", typeof(Body), () => { NodeHelper.CreateInitializedBody(typeof(Identifier), Documentation, EmptyRequireBlockList, EmptyEnsureBlockList, EmptyExceptionIdentifierBlockList); });
+        Body Body6 = NodeHelper.CreateInitializedBody(typeof(EffectiveBody), Documentation, EmptyRequireBlockList, EmptyEnsureBlockList, EmptyExceptionIdentifierBlockList, EmptyEntityDeclarationBlockList, EmptyInstructionBlockList, EmptyExceptionHandlerBlockList);
+        Assert.That(Body6 is EffectiveBody);
 
 #if !DEBUG
-            IOptionalReference<ObjectType> NullAncestorType = null!;
+        IBlockList<EntityDeclaration> NullEntityDeclarationBlockList = null!;
+        IBlockList<Instruction> NullInstructionBlockList = null!;
+        IBlockList<ExceptionHandler> NullExceptionHandlerBlockList = null!;
 
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedBody(typeof(PrecursorBody), Documentation, EmptyRequireBlockList, EmptyEnsureBlockList, EmptyExceptionIdentifierBlockList, null, null, null, NullAncestorType); });
-#endif
-        }
-
-        [Test]
-        public static void TestExpression()
-        {
-#if !DEBUG
-            Identifier NullIdentifier = null!;
-            ObjectType NullObjectType = null!;
-            Expression NullExpression = null!;
-            QualifiedName NullQualifiedName = null!;
-            List<Argument> NullArgumentList = null!;
-            IBlockList<Argument> NullArgumentBlockList = null!;
-            List<AssignmentArgument> NullAssignmentArgumentList = null!;
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedBody(typeof(EffectiveBody), Documentation, EmptyRequireBlockList, EmptyEnsureBlockList, EmptyExceptionIdentifierBlockList, NullEntityDeclarationBlockList, EmptyInstructionBlockList, EmptyExceptionHandlerBlockList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedBody(typeof(EffectiveBody), Documentation, EmptyRequireBlockList, EmptyEnsureBlockList, EmptyExceptionIdentifierBlockList, EmptyEntityDeclarationBlockList, NullInstructionBlockList, EmptyExceptionHandlerBlockList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedBody(typeof(EffectiveBody), Documentation, EmptyRequireBlockList, EmptyEnsureBlockList, EmptyExceptionIdentifierBlockList, EmptyEntityDeclarationBlockList, EmptyInstructionBlockList, NullExceptionHandlerBlockList); });
 #endif
 
-            Identifier EmptyIdentifier = NodeHelper.CreateEmptyIdentifier();
-            ObjectType DefaultObjectType = NodeHelper.CreateDefaultObjectType();
+        Body Body7 = NodeHelper.CreateInitializedBody(typeof(ExternBody), Documentation, EmptyRequireBlockList, EmptyEnsureBlockList, EmptyExceptionIdentifierBlockList);
+        Assert.That(Body7 is ExternBody);
 
-            AgentExpression Expression1 = NodeHelper.CreateAgentExpression(EmptyIdentifier);
-            AgentExpression Expression2 = NodeHelper.CreateAgentExpression(EmptyIdentifier, DefaultObjectType);
-            AssertionTagExpression Expression3 = NodeHelper.CreateAssertionTagExpression(EmptyIdentifier);
+        IOptionalReference<ObjectType> AncestorType = OptionalReferenceHelper.CreateEmptyReference<ObjectType>();
+
+        Body Body8 = NodeHelper.CreateInitializedBody(typeof(PrecursorBody), Documentation, EmptyRequireBlockList, EmptyEnsureBlockList, EmptyExceptionIdentifierBlockList, null, null, null, AncestorType);
+        Assert.That(Body8 is PrecursorBody);
+
+        CheckWrongTypeException("nodeType", typeof(Body), () => { NodeHelper.CreateInitializedBody(typeof(Identifier), Documentation, EmptyRequireBlockList, EmptyEnsureBlockList, EmptyExceptionIdentifierBlockList); });
 
 #if !DEBUG
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateAgentExpression(NullIdentifier); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateAgentExpression(EmptyIdentifier, NullObjectType); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateAssertionTagExpression(NullIdentifier); });
+        IOptionalReference<ObjectType> NullAncestorType = null!;
+
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedBody(typeof(PrecursorBody), Documentation, EmptyRequireBlockList, EmptyEnsureBlockList, EmptyExceptionIdentifierBlockList, null, null, null, NullAncestorType); });
+#endif
+    }
+
+    [Test]
+    public static void TestExpression()
+    {
+#if !DEBUG
+        Identifier NullIdentifier = null!;
+        ObjectType NullObjectType = null!;
+        Expression NullExpression = null!;
+        QualifiedName NullQualifiedName = null!;
+        List<Argument> NullArgumentList = null!;
+        IBlockList<Argument> NullArgumentBlockList = null!;
+        List<AssignmentArgument> NullAssignmentArgumentList = null!;
 #endif
 
-            Expression LeftExpression = NodeHelper.CreateDefaultExpression();
-            Expression RightExpression = NodeHelper.CreateDefaultExpression();
+        Identifier EmptyIdentifier = NodeHelper.CreateEmptyIdentifier();
+        ObjectType DefaultObjectType = NodeHelper.CreateDefaultObjectType();
 
-            BinaryConditionalExpression Expression4 = NodeHelper.CreateBinaryConditionalExpression(LeftExpression, ConditionalTypes.Or, RightExpression);
-            BinaryOperatorExpression Expression5 = NodeHelper.CreateBinaryOperatorExpression(LeftExpression, EmptyIdentifier, RightExpression);
+        AgentExpression Expression1 = NodeHelper.CreateAgentExpression(EmptyIdentifier);
+        AgentExpression Expression2 = NodeHelper.CreateAgentExpression(EmptyIdentifier, DefaultObjectType);
+        AssertionTagExpression Expression3 = NodeHelper.CreateAssertionTagExpression(EmptyIdentifier);
 
 #if !DEBUG
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateBinaryConditionalExpression(NullExpression, ConditionalTypes.Or, RightExpression); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateBinaryConditionalExpression(LeftExpression, ConditionalTypes.Or, NullExpression); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateBinaryOperatorExpression(NullExpression, EmptyIdentifier, RightExpression); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateBinaryOperatorExpression(LeftExpression, NullIdentifier, RightExpression); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateBinaryOperatorExpression(LeftExpression, EmptyIdentifier, NullExpression); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateAgentExpression(NullIdentifier); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateAgentExpression(EmptyIdentifier, NullObjectType); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateAssertionTagExpression(NullIdentifier); });
 #endif
 
-            Identifier EmptyClassIdentifier = NodeHelper.CreateEmptyIdentifier();
-            Identifier EmptyConstantIdentifier = NodeHelper.CreateEmptyIdentifier();
-            ClassConstantExpression Expression6 = NodeHelper.CreateClassConstantExpression(EmptyClassIdentifier, EmptyConstantIdentifier);
+        Expression LeftExpression = NodeHelper.CreateDefaultExpression();
+        Expression RightExpression = NodeHelper.CreateDefaultExpression();
+
+        BinaryConditionalExpression Expression4 = NodeHelper.CreateBinaryConditionalExpression(LeftExpression, ConditionalTypes.Or, RightExpression);
+        BinaryOperatorExpression Expression5 = NodeHelper.CreateBinaryOperatorExpression(LeftExpression, EmptyIdentifier, RightExpression);
 
 #if !DEBUG
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateClassConstantExpression(NullIdentifier, EmptyConstantIdentifier); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateClassConstantExpression(EmptyClassIdentifier, NullIdentifier); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateBinaryConditionalExpression(NullExpression, ConditionalTypes.Or, RightExpression); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateBinaryConditionalExpression(LeftExpression, ConditionalTypes.Or, NullExpression); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateBinaryOperatorExpression(NullExpression, EmptyIdentifier, RightExpression); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateBinaryOperatorExpression(LeftExpression, NullIdentifier, RightExpression); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateBinaryOperatorExpression(LeftExpression, EmptyIdentifier, NullExpression); });
 #endif
 
-            CloneOfExpression Expression7 = NodeHelper.CreateCloneOfExpression(CloneType.Shallow, LeftExpression);
+        Identifier EmptyClassIdentifier = NodeHelper.CreateEmptyIdentifier();
+        Identifier EmptyConstantIdentifier = NodeHelper.CreateEmptyIdentifier();
+        ClassConstantExpression Expression6 = NodeHelper.CreateClassConstantExpression(EmptyClassIdentifier, EmptyConstantIdentifier);
 
 #if !DEBUG
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateCloneOfExpression(CloneType.Shallow, NullExpression); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateClassConstantExpression(NullIdentifier, EmptyConstantIdentifier); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateClassConstantExpression(EmptyClassIdentifier, NullIdentifier); });
 #endif
 
-            QualifiedName EmptyQuery = NodeHelper.CreateEmptyQualifiedName();
-            EntityExpression Expression8 = NodeHelper.CreateEntityExpression(EmptyQuery);
+        CloneOfExpression Expression7 = NodeHelper.CreateCloneOfExpression(CloneType.Shallow, LeftExpression);
 
 #if !DEBUG
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateEntityExpression(NullQualifiedName); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateCloneOfExpression(CloneType.Shallow, NullExpression); });
 #endif
 
-            EqualityExpression Expression9 = NodeHelper.CreateEqualityExpression(LeftExpression, ComparisonType.Equal, EqualityType.Physical, RightExpression);
+        QualifiedName EmptyQuery = NodeHelper.CreateEmptyQualifiedName();
+        EntityExpression Expression8 = NodeHelper.CreateEntityExpression(EmptyQuery);
 
 #if !DEBUG
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateEqualityExpression(NullExpression, ComparisonType.Equal, EqualityType.Physical, RightExpression); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateEqualityExpression(LeftExpression, ComparisonType.Equal, EqualityType.Physical, NullExpression); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateEntityExpression(NullQualifiedName); });
 #endif
 
-            List<Argument> EmptyArgumentList = new();
-            Argument DefautArgument = NodeHelper.CreateDefaultArgument();
-            List<Argument> SimpleArgumentList = new() { DefautArgument };
-            IBlockList<Argument> EmptyArgumentBlockList = BlockListHelper.CreateEmptyBlockList<Argument>();
-            IBlockList<Argument> SimpleArgumentBlockList = BlockListHelper.CreateSimpleBlockList(DefautArgument);
-            IndexQueryExpression Expression10 = NodeHelper.CreateIndexQueryExpression(LeftExpression, SimpleArgumentList);
-            IndexQueryExpression Expression11 = NodeHelper.CreateIndexQueryExpression(LeftExpression, SimpleArgumentBlockList);
-
-            CheckMustNotBeEmptyException("argumentList", () => { NodeHelper.CreateIndexQueryExpression(LeftExpression, EmptyArgumentList); });
-            CheckMustNotBeEmptyException("argumentBlocks", () => { NodeHelper.CreateIndexQueryExpression(LeftExpression, EmptyArgumentBlockList); });
+        EqualityExpression Expression9 = NodeHelper.CreateEqualityExpression(LeftExpression, ComparisonType.Equal, EqualityType.Physical, RightExpression);
 
 #if !DEBUG
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateIndexQueryExpression(NullExpression, SimpleArgumentList); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateIndexQueryExpression(LeftExpression, NullArgumentList); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateIndexQueryExpression(LeftExpression, NullArgumentBlockList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateEqualityExpression(NullExpression, ComparisonType.Equal, EqualityType.Physical, RightExpression); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateEqualityExpression(LeftExpression, ComparisonType.Equal, EqualityType.Physical, NullExpression); });
 #endif
 
-            List<AssignmentArgument> EmptyAssignmentArgumentList = new();
-            IBlockList<AssignmentArgument> EmptyAssignmentArgumentBlockList = BlockListHelper.CreateEmptyBlockList<AssignmentArgument>();
-            InitializedObjectExpression Expression12 = NodeHelper.CreateInitializedObjectExpression(EmptyClassIdentifier, EmptyAssignmentArgumentList);
-            InitializedObjectExpression Expression13 = NodeHelper.CreateInitializedObjectExpression(EmptyClassIdentifier, EmptyAssignmentArgumentBlockList);
+        List<Argument> EmptyArgumentList = new();
+        Argument DefautArgument = NodeHelper.CreateDefaultArgument();
+        List<Argument> SimpleArgumentList = new() { DefautArgument };
+        IBlockList<Argument> EmptyArgumentBlockList = BlockListHelper.CreateEmptyBlockList<Argument>();
+        IBlockList<Argument> SimpleArgumentBlockList = BlockListHelper.CreateSimpleBlockList(DefautArgument);
+        IndexQueryExpression Expression10 = NodeHelper.CreateIndexQueryExpression(LeftExpression, SimpleArgumentList);
+        IndexQueryExpression Expression11 = NodeHelper.CreateIndexQueryExpression(LeftExpression, SimpleArgumentBlockList);
+
+        CheckMustNotBeEmptyException("argumentList", () => { NodeHelper.CreateIndexQueryExpression(LeftExpression, EmptyArgumentList); });
+        CheckMustNotBeEmptyException("argumentBlocks", () => { NodeHelper.CreateIndexQueryExpression(LeftExpression, EmptyArgumentBlockList); });
 
 #if !DEBUG
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedObjectExpression(NullIdentifier, EmptyAssignmentArgumentList); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedObjectExpression(EmptyClassIdentifier, NullAssignmentArgumentList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateIndexQueryExpression(NullExpression, SimpleArgumentList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateIndexQueryExpression(LeftExpression, NullArgumentList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateIndexQueryExpression(LeftExpression, NullArgumentBlockList); });
 #endif
 
-            KeywordEntityExpression Expression14 = NodeHelper.CreateKeywordEntityExpression(Keyword.Current);
-            KeywordExpression Expression15 = NodeHelper.CreateKeywordExpression(Keyword.Current);
-            ManifestCharacterExpression Expression16 = NodeHelper.CreateManifestCharacterExpression("*");
-            ManifestNumberExpression Expression17 = NodeHelper.CreateDefaultManifestNumberExpression();
-            ManifestNumberExpression Expression18 = NodeHelper.CreateSimpleManifestNumberExpression("0");
-            ManifestStringExpression Expression19 = NodeHelper.CreateManifestStringExpression(string.Empty);
+        List<AssignmentArgument> EmptyAssignmentArgumentList = new();
+        IBlockList<AssignmentArgument> EmptyAssignmentArgumentBlockList = BlockListHelper.CreateEmptyBlockList<AssignmentArgument>();
+        InitializedObjectExpression Expression12 = NodeHelper.CreateInitializedObjectExpression(EmptyClassIdentifier, EmptyAssignmentArgumentList);
+        InitializedObjectExpression Expression13 = NodeHelper.CreateInitializedObjectExpression(EmptyClassIdentifier, EmptyAssignmentArgumentBlockList);
 
 #if !DEBUG
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateManifestCharacterExpression(null!); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateSimpleManifestNumberExpression(null!); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateManifestStringExpression(null!); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedObjectExpression(NullIdentifier, EmptyAssignmentArgumentList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedObjectExpression(EmptyClassIdentifier, NullAssignmentArgumentList); });
 #endif
 
-            NewExpression Expression20 = NodeHelper.CreateNewExpression(EmptyQuery);
-            OldExpression Expression21 = NodeHelper.CreateOldExpression(EmptyQuery);
-            PrecursorExpression Expression22 = NodeHelper.CreatePrecursorExpression(EmptyArgumentList);
-            PrecursorExpression Expression23 = NodeHelper.CreatePrecursorExpression(EmptyArgumentBlockList);
-            PrecursorExpression Expression24 = NodeHelper.CreatePrecursorExpression(EmptyArgumentBlockList, DefaultObjectType);
+        KeywordEntityExpression Expression14 = NodeHelper.CreateKeywordEntityExpression(Keyword.Current);
+        KeywordExpression Expression15 = NodeHelper.CreateKeywordExpression(Keyword.Current);
+        ManifestCharacterExpression Expression16 = NodeHelper.CreateManifestCharacterExpression("*");
+        ManifestNumberExpression Expression17 = NodeHelper.CreateDefaultManifestNumberExpression();
+        ManifestNumberExpression Expression18 = NodeHelper.CreateSimpleManifestNumberExpression("0");
+        ManifestStringExpression Expression19 = NodeHelper.CreateManifestStringExpression(string.Empty);
 
 #if !DEBUG
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateNewExpression(NullQualifiedName); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateOldExpression(NullQualifiedName); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreatePrecursorExpression(NullArgumentList); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreatePrecursorExpression(NullArgumentBlockList); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreatePrecursorExpression(EmptyArgumentBlockList, NullObjectType); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateManifestCharacterExpression(null!); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateSimpleManifestNumberExpression(null!); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateManifestStringExpression(null!); });
 #endif
 
-            PrecursorIndexExpression Expression25 = NodeHelper.CreatePrecursorIndexExpression(SimpleArgumentList);
-            PrecursorIndexExpression Expression26 = NodeHelper.CreatePrecursorIndexExpression(SimpleArgumentBlockList);
-            PrecursorIndexExpression Expression27 = NodeHelper.CreatePrecursorIndexExpression(SimpleArgumentBlockList, DefaultObjectType);
-
-            CheckMustNotBeEmptyException("argumentList", () => { NodeHelper.CreatePrecursorIndexExpression(EmptyArgumentList); });
-            CheckMustNotBeEmptyException("argumentBlocks", () => { NodeHelper.CreatePrecursorIndexExpression(EmptyArgumentBlockList); });
-            CheckMustNotBeEmptyException("argumentBlocks", () => { NodeHelper.CreatePrecursorIndexExpression(EmptyArgumentBlockList, DefaultObjectType); });
+        NewExpression Expression20 = NodeHelper.CreateNewExpression(EmptyQuery);
+        OldExpression Expression21 = NodeHelper.CreateOldExpression(EmptyQuery);
+        PrecursorExpression Expression22 = NodeHelper.CreatePrecursorExpression(EmptyArgumentList);
+        PrecursorExpression Expression23 = NodeHelper.CreatePrecursorExpression(EmptyArgumentBlockList);
+        PrecursorExpression Expression24 = NodeHelper.CreatePrecursorExpression(EmptyArgumentBlockList, DefaultObjectType);
 
 #if !DEBUG
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreatePrecursorIndexExpression(NullArgumentList); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreatePrecursorIndexExpression(NullArgumentBlockList); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreatePrecursorIndexExpression(SimpleArgumentBlockList, NullObjectType); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateNewExpression(NullQualifiedName); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateOldExpression(NullQualifiedName); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreatePrecursorExpression(NullArgumentList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreatePrecursorExpression(NullArgumentBlockList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreatePrecursorExpression(EmptyArgumentBlockList, NullObjectType); });
 #endif
 
-            PreprocessorExpression Expression28 = NodeHelper.CreatePreprocessorExpression(PreprocessorMacro.DateAndTime);
-            QueryExpression Expression29 = NodeHelper.CreateQueryExpression(EmptyQuery, EmptyArgumentList);
-            QueryExpression Expression30 = NodeHelper.CreateQueryExpression(EmptyQuery, EmptyArgumentBlockList);
-            ResultOfExpression Expression31 = NodeHelper.CreateResultOfExpression(LeftExpression);
-            UnaryNotExpression Expression32 = NodeHelper.CreateUnaryNotExpression(RightExpression);
-            UnaryOperatorExpression Expression33 = NodeHelper.CreateUnaryOperatorExpression(EmptyIdentifier, RightExpression);
+        PrecursorIndexExpression Expression25 = NodeHelper.CreatePrecursorIndexExpression(SimpleArgumentList);
+        PrecursorIndexExpression Expression26 = NodeHelper.CreatePrecursorIndexExpression(SimpleArgumentBlockList);
+        PrecursorIndexExpression Expression27 = NodeHelper.CreatePrecursorIndexExpression(SimpleArgumentBlockList, DefaultObjectType);
+
+        CheckMustNotBeEmptyException("argumentList", () => { NodeHelper.CreatePrecursorIndexExpression(EmptyArgumentList); });
+        CheckMustNotBeEmptyException("argumentBlocks", () => { NodeHelper.CreatePrecursorIndexExpression(EmptyArgumentBlockList); });
+        CheckMustNotBeEmptyException("argumentBlocks", () => { NodeHelper.CreatePrecursorIndexExpression(EmptyArgumentBlockList, DefaultObjectType); });
 
 #if !DEBUG
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateQueryExpression(NullQualifiedName, EmptyArgumentList); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateQueryExpression(EmptyQuery, NullArgumentList); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateQueryExpression(EmptyQuery, NullArgumentBlockList); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateResultOfExpression(NullExpression); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateUnaryNotExpression(NullExpression); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateUnaryOperatorExpression(NullIdentifier, RightExpression); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateUnaryOperatorExpression(EmptyIdentifier, NullExpression); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreatePrecursorIndexExpression(NullArgumentList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreatePrecursorIndexExpression(NullArgumentBlockList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreatePrecursorIndexExpression(SimpleArgumentBlockList, NullObjectType); });
 #endif
-        }
 
-        [Test]
-        public static void TestFeature()
-        {
-            AttributeFeature Feature1 = NodeHelper.CreateEmptyAttributeFeature();
-            ConstantFeature Feature2 = NodeHelper.CreateEmptyConstantFeature();
-            CreationFeature Feature3 = NodeHelper.CreateEmptyCreationFeature();
-            FunctionFeature Feature4 = NodeHelper.CreateEmptyFunctionFeature();
-            IndexerFeature Feature5 = NodeHelper.CreateEmptyIndexerFeature();
-            ProcedureFeature Feature6 = NodeHelper.CreateEmptyProcedureFeature();
-            PropertyFeature Feature7 = NodeHelper.CreateEmptyPropertyFeature();
-
-            Document EmptyDocumentation = NodeHelper.CreateEmptyDocumentation();
-            Identifier EmptyExportIdentifier = NodeHelper.CreateEmptyIdentifier();
-            Name EmptyName = NodeHelper.CreateEmptyName();
-            ObjectType DefaultObjectType = NodeHelper.CreateDefaultObjectType();
-            IBlockList<Assertion> EmptyEnsureBlockList = BlockListHelper.CreateEmptyBlockList<Assertion>();
-            Expression DefaultExpression = NodeHelper.CreateDefaultExpression();
-            IBlockList<CommandOverload> EmptyCommandOverloadBlockList = BlockListHelper.CreateEmptyBlockList<CommandOverload>();
-            CommandOverload DefaultCommandOverload = NodeHelper.CreateEmptyCommandOverload();
-            IBlockList<CommandOverload> SimpleCommandOverloadBlockList = BlockListHelper.CreateSimpleBlockList(DefaultCommandOverload);
-            IBlockList<QueryOverload> EmptyQueryOverloadBlockList = BlockListHelper.CreateEmptyBlockList<QueryOverload>();
-            QueryOverload DefaultQueryOverload = NodeHelper.CreateEmptyQueryOverload();
-            IBlockList<QueryOverload> SimpleQueryOverloadBlockList = BlockListHelper.CreateSimpleBlockList(DefaultQueryOverload);
-            IBlockList<Identifier> EmptyIdentifierBlockList = BlockListHelper.CreateEmptyBlockList<Identifier>();
-            IOptionalReference<Body> EmptyGetter = OptionalReferenceHelper.CreateEmptyReference<Body>();
-            IOptionalReference<Body> EmptySetter = OptionalReferenceHelper.CreateEmptyReference<Body>();
-            IBlockList<EntityDeclaration> EmptyEntityDeclarationBlockList = BlockListHelper.CreateEmptyBlockList<EntityDeclaration>();
-            EntityDeclaration DefaultEntityDeclaration = NodeHelper.CreateEmptyEntityDeclaration();
-            IBlockList<EntityDeclaration> SimpleEntityDeclarationBlockList = BlockListHelper.CreateSimpleBlockList(DefaultEntityDeclaration);
-
-            Feature Feature8 = NodeHelper.CreateInitializedFeature(typeof(AttributeFeature), EmptyDocumentation, EmptyExportIdentifier, ExportStatus.Exported, EmptyName, DefaultObjectType, EmptyEnsureBlockList, null, null, OnceChoice.Normal, null, UtilityType.ReadOnly, null, null, null, null, ParameterEndStatus.Closed);
-            Feature Feature9 = NodeHelper.CreateInitializedFeature(typeof(ConstantFeature), EmptyDocumentation, EmptyExportIdentifier, ExportStatus.Exported, EmptyName, DefaultObjectType, null, DefaultExpression, null, OnceChoice.Normal, null, UtilityType.ReadOnly, null, null, null, null, ParameterEndStatus.Closed);
-            Feature Feature10 = NodeHelper.CreateInitializedFeature(typeof(CreationFeature), EmptyDocumentation, EmptyExportIdentifier, ExportStatus.Exported, EmptyName, null, null, null, SimpleCommandOverloadBlockList, OnceChoice.Normal, null, UtilityType.ReadOnly, null, null, null, null, ParameterEndStatus.Closed);
-            Feature Feature11 = NodeHelper.CreateInitializedFeature(typeof(FunctionFeature), EmptyDocumentation, EmptyExportIdentifier, ExportStatus.Exported, EmptyName, null, null, null, null, OnceChoice.Normal, SimpleQueryOverloadBlockList, UtilityType.ReadOnly, null, null, null, null, ParameterEndStatus.Closed);
-            Feature Feature12 = NodeHelper.CreateInitializedFeature(typeof(ProcedureFeature), EmptyDocumentation, EmptyExportIdentifier, ExportStatus.Exported, EmptyName, null, null, null, SimpleCommandOverloadBlockList, OnceChoice.Normal, null, UtilityType.ReadOnly, null, null, null, null, ParameterEndStatus.Closed);
-            Feature Feature13 = NodeHelper.CreateInitializedFeature(typeof(PropertyFeature), EmptyDocumentation, EmptyExportIdentifier, ExportStatus.Exported, EmptyName, DefaultObjectType, null, null, null, OnceChoice.Normal, null, UtilityType.ReadOnly, EmptyIdentifierBlockList, EmptyGetter, EmptySetter, null, ParameterEndStatus.Closed);
-            Feature Feature14 = NodeHelper.CreateInitializedFeature(typeof(IndexerFeature), EmptyDocumentation, EmptyExportIdentifier, ExportStatus.Exported, null, DefaultObjectType, null, null, null, OnceChoice.Normal, null, UtilityType.ReadOnly, EmptyIdentifierBlockList, EmptyGetter, EmptySetter, SimpleEntityDeclarationBlockList, ParameterEndStatus.Closed);
-
-            CheckWrongTypeException("nodeType", typeof(Feature), () => { NodeHelper.CreateInitializedFeature(typeof(Identifier), EmptyDocumentation, EmptyExportIdentifier, ExportStatus.Exported, null, null, null, null, null, OnceChoice.Normal, null, UtilityType.ReadOnly, null, null, null, null, ParameterEndStatus.Closed); });
-
-            CheckMustNotBeEmptyException("commandOverloadBlocks", () => { NodeHelper.CreateInitializedFeature(typeof(CreationFeature), EmptyDocumentation, EmptyExportIdentifier, ExportStatus.Exported, EmptyName, null, null, null, EmptyCommandOverloadBlockList, OnceChoice.Normal, null, UtilityType.ReadOnly, null, null, null, null, ParameterEndStatus.Closed); });
-            CheckMustNotBeEmptyException("queryOverloadBlocks", () => { NodeHelper.CreateInitializedFeature(typeof(FunctionFeature), EmptyDocumentation, EmptyExportIdentifier, ExportStatus.Exported, EmptyName, null, null, null, null, OnceChoice.Normal, EmptyQueryOverloadBlockList, UtilityType.ReadOnly, null, null, null, null, ParameterEndStatus.Closed); });
-            CheckMustNotBeEmptyException("commandOverloadBlocks", () => { NodeHelper.CreateInitializedFeature(typeof(ProcedureFeature), EmptyDocumentation, EmptyExportIdentifier, ExportStatus.Exported, EmptyName, null, null, null, EmptyCommandOverloadBlockList, OnceChoice.Normal, null, UtilityType.ReadOnly, null, null, null, null, ParameterEndStatus.Closed); });
-            CheckMustNotBeEmptyException("indexParameterBlocks", () => { NodeHelper.CreateInitializedFeature(typeof(IndexerFeature), EmptyDocumentation, EmptyExportIdentifier, ExportStatus.Exported, null, DefaultObjectType, null, null, null, OnceChoice.Normal, null, UtilityType.ReadOnly, EmptyIdentifierBlockList, EmptyGetter, EmptySetter, EmptyEntityDeclarationBlockList, ParameterEndStatus.Closed); });
+        PreprocessorExpression Expression28 = NodeHelper.CreatePreprocessorExpression(PreprocessorMacro.DateAndTime);
+        QueryExpression Expression29 = NodeHelper.CreateQueryExpression(EmptyQuery, EmptyArgumentList);
+        QueryExpression Expression30 = NodeHelper.CreateQueryExpression(EmptyQuery, EmptyArgumentBlockList);
+        ResultOfExpression Expression31 = NodeHelper.CreateResultOfExpression(LeftExpression);
+        UnaryNotExpression Expression32 = NodeHelper.CreateUnaryNotExpression(RightExpression);
+        UnaryOperatorExpression Expression33 = NodeHelper.CreateUnaryOperatorExpression(EmptyIdentifier, RightExpression);
 
 #if !DEBUG
-            Document NullDocumentation = null!;
-            Identifier NullExportIdentifier = null!;
-            Name NullName = null!;
-            ObjectType NullObjectType = null!;
-            IBlockList<Assertion> NullEnsureBlockList = null!;
-            Expression NullExpression = null!;
-            IBlockList<CommandOverload> NullCommandOverloadBlockList = null!;
-            IBlockList<QueryOverload> NullQueryOverloadBlockList = null!;
-            IBlockList<Identifier> NullIdentifierBlockList = null!;
-            IOptionalReference<Body> NullBodyReference = null!;
-            IBlockList<EntityDeclaration> NullEntityDeclarationBlockList = null!;
-
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedFeature(null!, EmptyDocumentation, EmptyExportIdentifier, ExportStatus.Exported, EmptyName, DefaultObjectType, EmptyEnsureBlockList, null, null, OnceChoice.Normal, null, UtilityType.ReadOnly, null, null, null, null, ParameterEndStatus.Closed); });
-
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedFeature(typeof(AttributeFeature), NullDocumentation, EmptyExportIdentifier, ExportStatus.Exported, EmptyName, DefaultObjectType, EmptyEnsureBlockList, null, null, OnceChoice.Normal, null, UtilityType.ReadOnly, null, null, null, null, ParameterEndStatus.Closed); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedFeature(typeof(AttributeFeature), EmptyDocumentation, NullExportIdentifier, ExportStatus.Exported, EmptyName, DefaultObjectType, EmptyEnsureBlockList, null, null, OnceChoice.Normal, null, UtilityType.ReadOnly, null, null, null, null, ParameterEndStatus.Closed); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedFeature(typeof(AttributeFeature), EmptyDocumentation, EmptyExportIdentifier, ExportStatus.Exported, NullName, DefaultObjectType, EmptyEnsureBlockList, null, null, OnceChoice.Normal, null, UtilityType.ReadOnly, null, null, null, null, ParameterEndStatus.Closed); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedFeature(typeof(AttributeFeature), EmptyDocumentation, EmptyExportIdentifier, ExportStatus.Exported, EmptyName, NullObjectType, NullEnsureBlockList, null, null, OnceChoice.Normal, null, UtilityType.ReadOnly, null, null, null, null, ParameterEndStatus.Closed); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedFeature(typeof(AttributeFeature), EmptyDocumentation, EmptyExportIdentifier, ExportStatus.Exported, EmptyName, DefaultObjectType, NullEnsureBlockList, null, null, OnceChoice.Normal, null, UtilityType.ReadOnly, null, null, null, null, ParameterEndStatus.Closed); });
-
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedFeature(typeof(ConstantFeature), NullDocumentation, EmptyExportIdentifier, ExportStatus.Exported, EmptyName, DefaultObjectType, null, DefaultExpression, null, OnceChoice.Normal, null, UtilityType.ReadOnly, null, null, null, null, ParameterEndStatus.Closed); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedFeature(typeof(ConstantFeature), EmptyDocumentation, NullExportIdentifier, ExportStatus.Exported, EmptyName, DefaultObjectType, null, DefaultExpression, null, OnceChoice.Normal, null, UtilityType.ReadOnly, null, null, null, null, ParameterEndStatus.Closed); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedFeature(typeof(ConstantFeature), EmptyDocumentation, EmptyExportIdentifier, ExportStatus.Exported, NullName, DefaultObjectType, null, DefaultExpression, null, OnceChoice.Normal, null, UtilityType.ReadOnly, null, null, null, null, ParameterEndStatus.Closed); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedFeature(typeof(ConstantFeature), EmptyDocumentation, EmptyExportIdentifier, ExportStatus.Exported, EmptyName, NullObjectType, null, DefaultExpression, null, OnceChoice.Normal, null, UtilityType.ReadOnly, null, null, null, null, ParameterEndStatus.Closed); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedFeature(typeof(ConstantFeature), EmptyDocumentation, EmptyExportIdentifier, ExportStatus.Exported, EmptyName, DefaultObjectType, null, NullExpression, null, OnceChoice.Normal, null, UtilityType.ReadOnly, null, null, null, null, ParameterEndStatus.Closed); });
-
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedFeature(typeof(CreationFeature), NullDocumentation, EmptyExportIdentifier, ExportStatus.Exported, EmptyName, null, null, null, SimpleCommandOverloadBlockList, OnceChoice.Normal, null, UtilityType.ReadOnly, null, null, null, null, ParameterEndStatus.Closed); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedFeature(typeof(CreationFeature), EmptyDocumentation, NullExportIdentifier, ExportStatus.Exported, EmptyName, null, null, null, SimpleCommandOverloadBlockList, OnceChoice.Normal, null, UtilityType.ReadOnly, null, null, null, null, ParameterEndStatus.Closed); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedFeature(typeof(CreationFeature), EmptyDocumentation, EmptyExportIdentifier, ExportStatus.Exported, NullName, null, null, null, SimpleCommandOverloadBlockList, OnceChoice.Normal, null, UtilityType.ReadOnly, null, null, null, null, ParameterEndStatus.Closed); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedFeature(typeof(CreationFeature), EmptyDocumentation, EmptyExportIdentifier, ExportStatus.Exported, EmptyName, null, null, null, NullCommandOverloadBlockList, OnceChoice.Normal, null, UtilityType.ReadOnly, null, null, null, null, ParameterEndStatus.Closed); });
-
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedFeature(typeof(FunctionFeature), NullDocumentation, EmptyExportIdentifier, ExportStatus.Exported, EmptyName, null, null, null, null, OnceChoice.Normal, SimpleQueryOverloadBlockList, UtilityType.ReadOnly, null, null, null, null, ParameterEndStatus.Closed); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedFeature(typeof(FunctionFeature), EmptyDocumentation, NullExportIdentifier, ExportStatus.Exported, EmptyName, null, null, null, null, OnceChoice.Normal, SimpleQueryOverloadBlockList, UtilityType.ReadOnly, null, null, null, null, ParameterEndStatus.Closed); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedFeature(typeof(FunctionFeature), EmptyDocumentation, EmptyExportIdentifier, ExportStatus.Exported, NullName, null, null, null, null, OnceChoice.Normal, SimpleQueryOverloadBlockList, UtilityType.ReadOnly, null, null, null, null, ParameterEndStatus.Closed); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedFeature(typeof(FunctionFeature), EmptyDocumentation, EmptyExportIdentifier, ExportStatus.Exported, EmptyName, null, null, null, null, OnceChoice.Normal, NullQueryOverloadBlockList, UtilityType.ReadOnly, null, null, null, null, ParameterEndStatus.Closed); });
-
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedFeature(typeof(ProcedureFeature), NullDocumentation, EmptyExportIdentifier, ExportStatus.Exported, EmptyName, null, null, null, SimpleCommandOverloadBlockList, OnceChoice.Normal, null, UtilityType.ReadOnly, null, null, null, null, ParameterEndStatus.Closed); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedFeature(typeof(ProcedureFeature), EmptyDocumentation, NullExportIdentifier, ExportStatus.Exported, EmptyName, null, null, null, SimpleCommandOverloadBlockList, OnceChoice.Normal, null, UtilityType.ReadOnly, null, null, null, null, ParameterEndStatus.Closed); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedFeature(typeof(ProcedureFeature), EmptyDocumentation, EmptyExportIdentifier, ExportStatus.Exported, NullName, null, null, null, SimpleCommandOverloadBlockList, OnceChoice.Normal, null, UtilityType.ReadOnly, null, null, null, null, ParameterEndStatus.Closed); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedFeature(typeof(ProcedureFeature), EmptyDocumentation, EmptyExportIdentifier, ExportStatus.Exported, EmptyName, null, null, null, NullCommandOverloadBlockList, OnceChoice.Normal, null, UtilityType.ReadOnly, null, null, null, null, ParameterEndStatus.Closed); });
-
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedFeature(typeof(PropertyFeature), NullDocumentation, EmptyExportIdentifier, ExportStatus.Exported, EmptyName, DefaultObjectType, null, null, null, OnceChoice.Normal, null, UtilityType.ReadOnly, EmptyIdentifierBlockList, EmptyGetter, EmptySetter, null, ParameterEndStatus.Closed); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedFeature(typeof(PropertyFeature), EmptyDocumentation, NullExportIdentifier, ExportStatus.Exported, EmptyName, DefaultObjectType, null, null, null, OnceChoice.Normal, null, UtilityType.ReadOnly, EmptyIdentifierBlockList, EmptyGetter, EmptySetter, null, ParameterEndStatus.Closed); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedFeature(typeof(PropertyFeature), EmptyDocumentation, EmptyExportIdentifier, ExportStatus.Exported, NullName, DefaultObjectType, null, null, null, OnceChoice.Normal, null, UtilityType.ReadOnly, EmptyIdentifierBlockList, EmptyGetter, EmptySetter, null, ParameterEndStatus.Closed); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedFeature(typeof(PropertyFeature), EmptyDocumentation, EmptyExportIdentifier, ExportStatus.Exported, EmptyName, NullObjectType, null, null, null, OnceChoice.Normal, null, UtilityType.ReadOnly, EmptyIdentifierBlockList, EmptyGetter, EmptySetter, null, ParameterEndStatus.Closed); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedFeature(typeof(PropertyFeature), EmptyDocumentation, EmptyExportIdentifier, ExportStatus.Exported, EmptyName, DefaultObjectType, null, null, null, OnceChoice.Normal, null, UtilityType.ReadOnly, NullIdentifierBlockList, EmptyGetter, EmptySetter, null, ParameterEndStatus.Closed); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedFeature(typeof(PropertyFeature), EmptyDocumentation, EmptyExportIdentifier, ExportStatus.Exported, EmptyName, DefaultObjectType, null, null, null, OnceChoice.Normal, null, UtilityType.ReadOnly, EmptyIdentifierBlockList, NullBodyReference, EmptySetter, null, ParameterEndStatus.Closed); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedFeature(typeof(PropertyFeature), EmptyDocumentation, EmptyExportIdentifier, ExportStatus.Exported, EmptyName, DefaultObjectType, null, null, null, OnceChoice.Normal, null, UtilityType.ReadOnly, EmptyIdentifierBlockList, EmptyGetter, NullBodyReference, null, ParameterEndStatus.Closed); });
-
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedFeature(typeof(IndexerFeature), NullDocumentation, EmptyExportIdentifier, ExportStatus.Exported, null, DefaultObjectType, null, null, null, OnceChoice.Normal, null, UtilityType.ReadOnly, EmptyIdentifierBlockList, EmptyGetter, EmptySetter, SimpleEntityDeclarationBlockList, ParameterEndStatus.Closed); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedFeature(typeof(IndexerFeature), EmptyDocumentation, NullExportIdentifier, ExportStatus.Exported, null, DefaultObjectType, null, null, null, OnceChoice.Normal, null, UtilityType.ReadOnly, EmptyIdentifierBlockList, EmptyGetter, EmptySetter, SimpleEntityDeclarationBlockList, ParameterEndStatus.Closed); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedFeature(typeof(IndexerFeature), EmptyDocumentation, EmptyExportIdentifier, ExportStatus.Exported, null, NullObjectType, null, null, null, OnceChoice.Normal, null, UtilityType.ReadOnly, EmptyIdentifierBlockList, EmptyGetter, EmptySetter, SimpleEntityDeclarationBlockList, ParameterEndStatus.Closed); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedFeature(typeof(IndexerFeature), EmptyDocumentation, EmptyExportIdentifier, ExportStatus.Exported, null, DefaultObjectType, null, null, null, OnceChoice.Normal, null, UtilityType.ReadOnly, NullIdentifierBlockList, EmptyGetter, EmptySetter, SimpleEntityDeclarationBlockList, ParameterEndStatus.Closed); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedFeature(typeof(IndexerFeature), EmptyDocumentation, EmptyExportIdentifier, ExportStatus.Exported, null, DefaultObjectType, null, null, null, OnceChoice.Normal, null, UtilityType.ReadOnly, EmptyIdentifierBlockList, NullBodyReference, EmptySetter, SimpleEntityDeclarationBlockList, ParameterEndStatus.Closed); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedFeature(typeof(IndexerFeature), EmptyDocumentation, EmptyExportIdentifier, ExportStatus.Exported, null, DefaultObjectType, null, null, null, OnceChoice.Normal, null, UtilityType.ReadOnly, EmptyIdentifierBlockList, EmptyGetter, NullBodyReference, SimpleEntityDeclarationBlockList, ParameterEndStatus.Closed); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedFeature(typeof(IndexerFeature), EmptyDocumentation, EmptyExportIdentifier, ExportStatus.Exported, null, DefaultObjectType, null, null, null, OnceChoice.Normal, null, UtilityType.ReadOnly, EmptyIdentifierBlockList, EmptyGetter, EmptySetter, NullEntityDeclarationBlockList, ParameterEndStatus.Closed); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateQueryExpression(NullQualifiedName, EmptyArgumentList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateQueryExpression(EmptyQuery, NullArgumentList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateQueryExpression(EmptyQuery, NullArgumentBlockList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateResultOfExpression(NullExpression); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateUnaryNotExpression(NullExpression); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateUnaryOperatorExpression(NullIdentifier, RightExpression); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateUnaryOperatorExpression(EmptyIdentifier, NullExpression); });
 #endif
-        }
+    }
 
-        [Test]
-        public static void TestInstruction()
-        {
-            Expression DefaultExpression = NodeHelper.CreateDefaultExpression();
-            IBlockList<Continuation> EmptyContinuationBlockList = BlockListHelper.CreateEmptyBlockList<Continuation>();
-            Continuation EmptyContinuation = NodeHelper.CreateEmptyContinuation();
-            IBlockList<Continuation> SimpleContinuationBlockList = BlockListHelper.CreateSimpleBlockList(EmptyContinuation);
-            Scope EmptyScope = NodeHelper.CreateEmptyScope();
-            Instruction DefaultInstruction = NodeHelper.CreateDefaultInstruction();
+    [Test]
+    public static void TestFeature()
+    {
+        AttributeFeature Feature1 = NodeHelper.CreateEmptyAttributeFeature();
+        ConstantFeature Feature2 = NodeHelper.CreateEmptyConstantFeature();
+        CreationFeature Feature3 = NodeHelper.CreateEmptyCreationFeature();
+        FunctionFeature Feature4 = NodeHelper.CreateEmptyFunctionFeature();
+        IndexerFeature Feature5 = NodeHelper.CreateEmptyIndexerFeature();
+        ProcedureFeature Feature6 = NodeHelper.CreateEmptyProcedureFeature();
+        PropertyFeature Feature7 = NodeHelper.CreateEmptyPropertyFeature();
+
+        Document EmptyDocumentation = NodeHelper.CreateEmptyDocumentation();
+        Identifier EmptyExportIdentifier = NodeHelper.CreateEmptyIdentifier();
+        Name EmptyName = NodeHelper.CreateEmptyName();
+        ObjectType DefaultObjectType = NodeHelper.CreateDefaultObjectType();
+        IBlockList<Assertion> EmptyEnsureBlockList = BlockListHelper.CreateEmptyBlockList<Assertion>();
+        Expression DefaultExpression = NodeHelper.CreateDefaultExpression();
+        IBlockList<CommandOverload> EmptyCommandOverloadBlockList = BlockListHelper.CreateEmptyBlockList<CommandOverload>();
+        CommandOverload DefaultCommandOverload = NodeHelper.CreateEmptyCommandOverload();
+        IBlockList<CommandOverload> SimpleCommandOverloadBlockList = BlockListHelper.CreateSimpleBlockList(DefaultCommandOverload);
+        IBlockList<QueryOverload> EmptyQueryOverloadBlockList = BlockListHelper.CreateEmptyBlockList<QueryOverload>();
+        QueryOverload DefaultQueryOverload = NodeHelper.CreateEmptyQueryOverload();
+        IBlockList<QueryOverload> SimpleQueryOverloadBlockList = BlockListHelper.CreateSimpleBlockList(DefaultQueryOverload);
+        IBlockList<Identifier> EmptyIdentifierBlockList = BlockListHelper.CreateEmptyBlockList<Identifier>();
+        IOptionalReference<Body> EmptyGetter = OptionalReferenceHelper.CreateEmptyReference<Body>();
+        IOptionalReference<Body> EmptySetter = OptionalReferenceHelper.CreateEmptyReference<Body>();
+        IBlockList<EntityDeclaration> EmptyEntityDeclarationBlockList = BlockListHelper.CreateEmptyBlockList<EntityDeclaration>();
+        EntityDeclaration DefaultEntityDeclaration = NodeHelper.CreateEmptyEntityDeclaration();
+        IBlockList<EntityDeclaration> SimpleEntityDeclarationBlockList = BlockListHelper.CreateSimpleBlockList(DefaultEntityDeclaration);
+
+        Feature Feature8 = NodeHelper.CreateInitializedFeature(typeof(AttributeFeature), EmptyDocumentation, EmptyExportIdentifier, ExportStatus.Exported, EmptyName, DefaultObjectType, EmptyEnsureBlockList, null, null, OnceChoice.Normal, null, UtilityType.ReadOnly, null, null, null, null, ParameterEndStatus.Closed);
+        Feature Feature9 = NodeHelper.CreateInitializedFeature(typeof(ConstantFeature), EmptyDocumentation, EmptyExportIdentifier, ExportStatus.Exported, EmptyName, DefaultObjectType, null, DefaultExpression, null, OnceChoice.Normal, null, UtilityType.ReadOnly, null, null, null, null, ParameterEndStatus.Closed);
+        Feature Feature10 = NodeHelper.CreateInitializedFeature(typeof(CreationFeature), EmptyDocumentation, EmptyExportIdentifier, ExportStatus.Exported, EmptyName, null, null, null, SimpleCommandOverloadBlockList, OnceChoice.Normal, null, UtilityType.ReadOnly, null, null, null, null, ParameterEndStatus.Closed);
+        Feature Feature11 = NodeHelper.CreateInitializedFeature(typeof(FunctionFeature), EmptyDocumentation, EmptyExportIdentifier, ExportStatus.Exported, EmptyName, null, null, null, null, OnceChoice.Normal, SimpleQueryOverloadBlockList, UtilityType.ReadOnly, null, null, null, null, ParameterEndStatus.Closed);
+        Feature Feature12 = NodeHelper.CreateInitializedFeature(typeof(ProcedureFeature), EmptyDocumentation, EmptyExportIdentifier, ExportStatus.Exported, EmptyName, null, null, null, SimpleCommandOverloadBlockList, OnceChoice.Normal, null, UtilityType.ReadOnly, null, null, null, null, ParameterEndStatus.Closed);
+        Feature Feature13 = NodeHelper.CreateInitializedFeature(typeof(PropertyFeature), EmptyDocumentation, EmptyExportIdentifier, ExportStatus.Exported, EmptyName, DefaultObjectType, null, null, null, OnceChoice.Normal, null, UtilityType.ReadOnly, EmptyIdentifierBlockList, EmptyGetter, EmptySetter, null, ParameterEndStatus.Closed);
+        Feature Feature14 = NodeHelper.CreateInitializedFeature(typeof(IndexerFeature), EmptyDocumentation, EmptyExportIdentifier, ExportStatus.Exported, null, DefaultObjectType, null, null, null, OnceChoice.Normal, null, UtilityType.ReadOnly, EmptyIdentifierBlockList, EmptyGetter, EmptySetter, SimpleEntityDeclarationBlockList, ParameterEndStatus.Closed);
+
+        CheckWrongTypeException("nodeType", typeof(Feature), () => { NodeHelper.CreateInitializedFeature(typeof(Identifier), EmptyDocumentation, EmptyExportIdentifier, ExportStatus.Exported, null, null, null, null, null, OnceChoice.Normal, null, UtilityType.ReadOnly, null, null, null, null, ParameterEndStatus.Closed); });
+
+        CheckMustNotBeEmptyException("commandOverloadBlocks", () => { NodeHelper.CreateInitializedFeature(typeof(CreationFeature), EmptyDocumentation, EmptyExportIdentifier, ExportStatus.Exported, EmptyName, null, null, null, EmptyCommandOverloadBlockList, OnceChoice.Normal, null, UtilityType.ReadOnly, null, null, null, null, ParameterEndStatus.Closed); });
+        CheckMustNotBeEmptyException("queryOverloadBlocks", () => { NodeHelper.CreateInitializedFeature(typeof(FunctionFeature), EmptyDocumentation, EmptyExportIdentifier, ExportStatus.Exported, EmptyName, null, null, null, null, OnceChoice.Normal, EmptyQueryOverloadBlockList, UtilityType.ReadOnly, null, null, null, null, ParameterEndStatus.Closed); });
+        CheckMustNotBeEmptyException("commandOverloadBlocks", () => { NodeHelper.CreateInitializedFeature(typeof(ProcedureFeature), EmptyDocumentation, EmptyExportIdentifier, ExportStatus.Exported, EmptyName, null, null, null, EmptyCommandOverloadBlockList, OnceChoice.Normal, null, UtilityType.ReadOnly, null, null, null, null, ParameterEndStatus.Closed); });
+        CheckMustNotBeEmptyException("indexParameterBlocks", () => { NodeHelper.CreateInitializedFeature(typeof(IndexerFeature), EmptyDocumentation, EmptyExportIdentifier, ExportStatus.Exported, null, DefaultObjectType, null, null, null, OnceChoice.Normal, null, UtilityType.ReadOnly, EmptyIdentifierBlockList, EmptyGetter, EmptySetter, EmptyEntityDeclarationBlockList, ParameterEndStatus.Closed); });
 
 #if !DEBUG
-            Expression NullExpression = null!;
-            Continuation NullContinuation = null!;
-            IBlockList<Continuation> NullContinuationBlockList = null!;
-            Scope NullScope = null!;
-            Instruction NullInstruction = null!;
+        Document NullDocumentation = null!;
+        Identifier NullExportIdentifier = null!;
+        Name NullName = null!;
+        ObjectType NullObjectType = null!;
+        IBlockList<Assertion> NullEnsureBlockList = null!;
+        Expression NullExpression = null!;
+        IBlockList<CommandOverload> NullCommandOverloadBlockList = null!;
+        IBlockList<QueryOverload> NullQueryOverloadBlockList = null!;
+        IBlockList<Identifier> NullIdentifierBlockList = null!;
+        IOptionalReference<Body> NullBodyReference = null!;
+        IBlockList<EntityDeclaration> NullEntityDeclarationBlockList = null!;
+
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedFeature(null!, EmptyDocumentation, EmptyExportIdentifier, ExportStatus.Exported, EmptyName, DefaultObjectType, EmptyEnsureBlockList, null, null, OnceChoice.Normal, null, UtilityType.ReadOnly, null, null, null, null, ParameterEndStatus.Closed); });
+
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedFeature(typeof(AttributeFeature), NullDocumentation, EmptyExportIdentifier, ExportStatus.Exported, EmptyName, DefaultObjectType, EmptyEnsureBlockList, null, null, OnceChoice.Normal, null, UtilityType.ReadOnly, null, null, null, null, ParameterEndStatus.Closed); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedFeature(typeof(AttributeFeature), EmptyDocumentation, NullExportIdentifier, ExportStatus.Exported, EmptyName, DefaultObjectType, EmptyEnsureBlockList, null, null, OnceChoice.Normal, null, UtilityType.ReadOnly, null, null, null, null, ParameterEndStatus.Closed); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedFeature(typeof(AttributeFeature), EmptyDocumentation, EmptyExportIdentifier, ExportStatus.Exported, NullName, DefaultObjectType, EmptyEnsureBlockList, null, null, OnceChoice.Normal, null, UtilityType.ReadOnly, null, null, null, null, ParameterEndStatus.Closed); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedFeature(typeof(AttributeFeature), EmptyDocumentation, EmptyExportIdentifier, ExportStatus.Exported, EmptyName, NullObjectType, NullEnsureBlockList, null, null, OnceChoice.Normal, null, UtilityType.ReadOnly, null, null, null, null, ParameterEndStatus.Closed); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedFeature(typeof(AttributeFeature), EmptyDocumentation, EmptyExportIdentifier, ExportStatus.Exported, EmptyName, DefaultObjectType, NullEnsureBlockList, null, null, OnceChoice.Normal, null, UtilityType.ReadOnly, null, null, null, null, ParameterEndStatus.Closed); });
+
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedFeature(typeof(ConstantFeature), NullDocumentation, EmptyExportIdentifier, ExportStatus.Exported, EmptyName, DefaultObjectType, null, DefaultExpression, null, OnceChoice.Normal, null, UtilityType.ReadOnly, null, null, null, null, ParameterEndStatus.Closed); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedFeature(typeof(ConstantFeature), EmptyDocumentation, NullExportIdentifier, ExportStatus.Exported, EmptyName, DefaultObjectType, null, DefaultExpression, null, OnceChoice.Normal, null, UtilityType.ReadOnly, null, null, null, null, ParameterEndStatus.Closed); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedFeature(typeof(ConstantFeature), EmptyDocumentation, EmptyExportIdentifier, ExportStatus.Exported, NullName, DefaultObjectType, null, DefaultExpression, null, OnceChoice.Normal, null, UtilityType.ReadOnly, null, null, null, null, ParameterEndStatus.Closed); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedFeature(typeof(ConstantFeature), EmptyDocumentation, EmptyExportIdentifier, ExportStatus.Exported, EmptyName, NullObjectType, null, DefaultExpression, null, OnceChoice.Normal, null, UtilityType.ReadOnly, null, null, null, null, ParameterEndStatus.Closed); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedFeature(typeof(ConstantFeature), EmptyDocumentation, EmptyExportIdentifier, ExportStatus.Exported, EmptyName, DefaultObjectType, null, NullExpression, null, OnceChoice.Normal, null, UtilityType.ReadOnly, null, null, null, null, ParameterEndStatus.Closed); });
+
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedFeature(typeof(CreationFeature), NullDocumentation, EmptyExportIdentifier, ExportStatus.Exported, EmptyName, null, null, null, SimpleCommandOverloadBlockList, OnceChoice.Normal, null, UtilityType.ReadOnly, null, null, null, null, ParameterEndStatus.Closed); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedFeature(typeof(CreationFeature), EmptyDocumentation, NullExportIdentifier, ExportStatus.Exported, EmptyName, null, null, null, SimpleCommandOverloadBlockList, OnceChoice.Normal, null, UtilityType.ReadOnly, null, null, null, null, ParameterEndStatus.Closed); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedFeature(typeof(CreationFeature), EmptyDocumentation, EmptyExportIdentifier, ExportStatus.Exported, NullName, null, null, null, SimpleCommandOverloadBlockList, OnceChoice.Normal, null, UtilityType.ReadOnly, null, null, null, null, ParameterEndStatus.Closed); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedFeature(typeof(CreationFeature), EmptyDocumentation, EmptyExportIdentifier, ExportStatus.Exported, EmptyName, null, null, null, NullCommandOverloadBlockList, OnceChoice.Normal, null, UtilityType.ReadOnly, null, null, null, null, ParameterEndStatus.Closed); });
+
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedFeature(typeof(FunctionFeature), NullDocumentation, EmptyExportIdentifier, ExportStatus.Exported, EmptyName, null, null, null, null, OnceChoice.Normal, SimpleQueryOverloadBlockList, UtilityType.ReadOnly, null, null, null, null, ParameterEndStatus.Closed); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedFeature(typeof(FunctionFeature), EmptyDocumentation, NullExportIdentifier, ExportStatus.Exported, EmptyName, null, null, null, null, OnceChoice.Normal, SimpleQueryOverloadBlockList, UtilityType.ReadOnly, null, null, null, null, ParameterEndStatus.Closed); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedFeature(typeof(FunctionFeature), EmptyDocumentation, EmptyExportIdentifier, ExportStatus.Exported, NullName, null, null, null, null, OnceChoice.Normal, SimpleQueryOverloadBlockList, UtilityType.ReadOnly, null, null, null, null, ParameterEndStatus.Closed); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedFeature(typeof(FunctionFeature), EmptyDocumentation, EmptyExportIdentifier, ExportStatus.Exported, EmptyName, null, null, null, null, OnceChoice.Normal, NullQueryOverloadBlockList, UtilityType.ReadOnly, null, null, null, null, ParameterEndStatus.Closed); });
+
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedFeature(typeof(ProcedureFeature), NullDocumentation, EmptyExportIdentifier, ExportStatus.Exported, EmptyName, null, null, null, SimpleCommandOverloadBlockList, OnceChoice.Normal, null, UtilityType.ReadOnly, null, null, null, null, ParameterEndStatus.Closed); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedFeature(typeof(ProcedureFeature), EmptyDocumentation, NullExportIdentifier, ExportStatus.Exported, EmptyName, null, null, null, SimpleCommandOverloadBlockList, OnceChoice.Normal, null, UtilityType.ReadOnly, null, null, null, null, ParameterEndStatus.Closed); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedFeature(typeof(ProcedureFeature), EmptyDocumentation, EmptyExportIdentifier, ExportStatus.Exported, NullName, null, null, null, SimpleCommandOverloadBlockList, OnceChoice.Normal, null, UtilityType.ReadOnly, null, null, null, null, ParameterEndStatus.Closed); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedFeature(typeof(ProcedureFeature), EmptyDocumentation, EmptyExportIdentifier, ExportStatus.Exported, EmptyName, null, null, null, NullCommandOverloadBlockList, OnceChoice.Normal, null, UtilityType.ReadOnly, null, null, null, null, ParameterEndStatus.Closed); });
+
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedFeature(typeof(PropertyFeature), NullDocumentation, EmptyExportIdentifier, ExportStatus.Exported, EmptyName, DefaultObjectType, null, null, null, OnceChoice.Normal, null, UtilityType.ReadOnly, EmptyIdentifierBlockList, EmptyGetter, EmptySetter, null, ParameterEndStatus.Closed); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedFeature(typeof(PropertyFeature), EmptyDocumentation, NullExportIdentifier, ExportStatus.Exported, EmptyName, DefaultObjectType, null, null, null, OnceChoice.Normal, null, UtilityType.ReadOnly, EmptyIdentifierBlockList, EmptyGetter, EmptySetter, null, ParameterEndStatus.Closed); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedFeature(typeof(PropertyFeature), EmptyDocumentation, EmptyExportIdentifier, ExportStatus.Exported, NullName, DefaultObjectType, null, null, null, OnceChoice.Normal, null, UtilityType.ReadOnly, EmptyIdentifierBlockList, EmptyGetter, EmptySetter, null, ParameterEndStatus.Closed); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedFeature(typeof(PropertyFeature), EmptyDocumentation, EmptyExportIdentifier, ExportStatus.Exported, EmptyName, NullObjectType, null, null, null, OnceChoice.Normal, null, UtilityType.ReadOnly, EmptyIdentifierBlockList, EmptyGetter, EmptySetter, null, ParameterEndStatus.Closed); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedFeature(typeof(PropertyFeature), EmptyDocumentation, EmptyExportIdentifier, ExportStatus.Exported, EmptyName, DefaultObjectType, null, null, null, OnceChoice.Normal, null, UtilityType.ReadOnly, NullIdentifierBlockList, EmptyGetter, EmptySetter, null, ParameterEndStatus.Closed); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedFeature(typeof(PropertyFeature), EmptyDocumentation, EmptyExportIdentifier, ExportStatus.Exported, EmptyName, DefaultObjectType, null, null, null, OnceChoice.Normal, null, UtilityType.ReadOnly, EmptyIdentifierBlockList, NullBodyReference, EmptySetter, null, ParameterEndStatus.Closed); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedFeature(typeof(PropertyFeature), EmptyDocumentation, EmptyExportIdentifier, ExportStatus.Exported, EmptyName, DefaultObjectType, null, null, null, OnceChoice.Normal, null, UtilityType.ReadOnly, EmptyIdentifierBlockList, EmptyGetter, NullBodyReference, null, ParameterEndStatus.Closed); });
+
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedFeature(typeof(IndexerFeature), NullDocumentation, EmptyExportIdentifier, ExportStatus.Exported, null, DefaultObjectType, null, null, null, OnceChoice.Normal, null, UtilityType.ReadOnly, EmptyIdentifierBlockList, EmptyGetter, EmptySetter, SimpleEntityDeclarationBlockList, ParameterEndStatus.Closed); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedFeature(typeof(IndexerFeature), EmptyDocumentation, NullExportIdentifier, ExportStatus.Exported, null, DefaultObjectType, null, null, null, OnceChoice.Normal, null, UtilityType.ReadOnly, EmptyIdentifierBlockList, EmptyGetter, EmptySetter, SimpleEntityDeclarationBlockList, ParameterEndStatus.Closed); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedFeature(typeof(IndexerFeature), EmptyDocumentation, EmptyExportIdentifier, ExportStatus.Exported, null, NullObjectType, null, null, null, OnceChoice.Normal, null, UtilityType.ReadOnly, EmptyIdentifierBlockList, EmptyGetter, EmptySetter, SimpleEntityDeclarationBlockList, ParameterEndStatus.Closed); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedFeature(typeof(IndexerFeature), EmptyDocumentation, EmptyExportIdentifier, ExportStatus.Exported, null, DefaultObjectType, null, null, null, OnceChoice.Normal, null, UtilityType.ReadOnly, NullIdentifierBlockList, EmptyGetter, EmptySetter, SimpleEntityDeclarationBlockList, ParameterEndStatus.Closed); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedFeature(typeof(IndexerFeature), EmptyDocumentation, EmptyExportIdentifier, ExportStatus.Exported, null, DefaultObjectType, null, null, null, OnceChoice.Normal, null, UtilityType.ReadOnly, EmptyIdentifierBlockList, NullBodyReference, EmptySetter, SimpleEntityDeclarationBlockList, ParameterEndStatus.Closed); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedFeature(typeof(IndexerFeature), EmptyDocumentation, EmptyExportIdentifier, ExportStatus.Exported, null, DefaultObjectType, null, null, null, OnceChoice.Normal, null, UtilityType.ReadOnly, EmptyIdentifierBlockList, EmptyGetter, NullBodyReference, SimpleEntityDeclarationBlockList, ParameterEndStatus.Closed); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInitializedFeature(typeof(IndexerFeature), EmptyDocumentation, EmptyExportIdentifier, ExportStatus.Exported, null, DefaultObjectType, null, null, null, OnceChoice.Normal, null, UtilityType.ReadOnly, EmptyIdentifierBlockList, EmptyGetter, EmptySetter, NullEntityDeclarationBlockList, ParameterEndStatus.Closed); });
 #endif
+    }
 
-            AsLongAsInstruction Instruction1 = NodeHelper.CreateAsLongAsInstruction(DefaultExpression, EmptyContinuation);
-            AsLongAsInstruction Instruction2 = NodeHelper.CreateAsLongAsInstruction(DefaultExpression, SimpleContinuationBlockList);
-            AsLongAsInstruction Instruction3 = NodeHelper.CreateAsLongAsInstruction(DefaultExpression, SimpleContinuationBlockList, EmptyScope);
-
-            CheckMustNotBeEmptyException("continuationBlocks", () => { NodeHelper.CreateAsLongAsInstruction(DefaultExpression, EmptyContinuationBlockList); });
-            CheckMustNotBeEmptyException("continuationBlocks", () => { NodeHelper.CreateAsLongAsInstruction(DefaultExpression, EmptyContinuationBlockList, EmptyScope); });
+    [Test]
+    public static void TestInstruction()
+    {
+        Expression DefaultExpression = NodeHelper.CreateDefaultExpression();
+        IBlockList<Continuation> EmptyContinuationBlockList = BlockListHelper.CreateEmptyBlockList<Continuation>();
+        Continuation EmptyContinuation = NodeHelper.CreateEmptyContinuation();
+        IBlockList<Continuation> SimpleContinuationBlockList = BlockListHelper.CreateSimpleBlockList(EmptyContinuation);
+        Scope EmptyScope = NodeHelper.CreateEmptyScope();
+        Instruction DefaultInstruction = NodeHelper.CreateDefaultInstruction();
 
 #if !DEBUG
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateAsLongAsInstruction(NullExpression, EmptyContinuation); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateAsLongAsInstruction(DefaultExpression, NullContinuation); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateAsLongAsInstruction(NullExpression, SimpleContinuationBlockList); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateAsLongAsInstruction(DefaultExpression, NullContinuationBlockList); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateAsLongAsInstruction(NullExpression, SimpleContinuationBlockList, EmptyScope); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateAsLongAsInstruction(DefaultExpression, NullContinuationBlockList, EmptyScope); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateAsLongAsInstruction(DefaultExpression, SimpleContinuationBlockList, NullScope); });
+        Expression NullExpression = null!;
+        Continuation NullContinuation = null!;
+        IBlockList<Continuation> NullContinuationBlockList = null!;
+        Scope NullScope = null!;
+        Instruction NullInstruction = null!;
 #endif
 
-            List<QualifiedName> EmptyQualifiedNameList = new();
-            QualifiedName EmptyQualifiedName = NodeHelper.CreateEmptyQualifiedName();
-            List<QualifiedName> SimpleQualifiedNameList = new() { EmptyQualifiedName };
-            IBlockList<QualifiedName> EmptyQualifiedNameBlockList = BlockListHelper.CreateEmptyBlockList<QualifiedName>();
-            IBlockList<QualifiedName> SimpleQualifiedNameBlockList = BlockListHelper.CreateSimpleBlockList(EmptyQualifiedName);
+        AsLongAsInstruction Instruction1 = NodeHelper.CreateAsLongAsInstruction(DefaultExpression, EmptyContinuation);
+        AsLongAsInstruction Instruction2 = NodeHelper.CreateAsLongAsInstruction(DefaultExpression, SimpleContinuationBlockList);
+        AsLongAsInstruction Instruction3 = NodeHelper.CreateAsLongAsInstruction(DefaultExpression, SimpleContinuationBlockList, EmptyScope);
 
-            AssignmentInstruction Instruction4 = NodeHelper.CreateAssignmentInstruction(SimpleQualifiedNameList, DefaultExpression);
-            AssignmentInstruction Instruction5 = NodeHelper.CreateAssignmentInstruction(SimpleQualifiedNameBlockList, DefaultExpression);
-
-            CheckMustNotBeEmptyException("assignmentList", () => { NodeHelper.CreateAssignmentInstruction(EmptyQualifiedNameList, DefaultExpression); });
-            CheckMustNotBeEmptyException("assignmentBlocks", () => { NodeHelper.CreateAssignmentInstruction(EmptyQualifiedNameBlockList, DefaultExpression); });
+        CheckMustNotBeEmptyException("continuationBlocks", () => { NodeHelper.CreateAsLongAsInstruction(DefaultExpression, EmptyContinuationBlockList); });
+        CheckMustNotBeEmptyException("continuationBlocks", () => { NodeHelper.CreateAsLongAsInstruction(DefaultExpression, EmptyContinuationBlockList, EmptyScope); });
 
 #if !DEBUG
-            List<QualifiedName> NullQualifiedNameList = null!;
-            IBlockList<QualifiedName> NullQualifiedNameBlockList = null!;
-
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateAssignmentInstruction(NullQualifiedNameList, DefaultExpression); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateAssignmentInstruction(SimpleQualifiedNameList, NullExpression); });
-
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateAssignmentInstruction(NullQualifiedNameBlockList, DefaultExpression); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateAssignmentInstruction(SimpleQualifiedNameBlockList, NullExpression); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateAsLongAsInstruction(NullExpression, EmptyContinuation); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateAsLongAsInstruction(DefaultExpression, NullContinuation); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateAsLongAsInstruction(NullExpression, SimpleContinuationBlockList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateAsLongAsInstruction(DefaultExpression, NullContinuationBlockList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateAsLongAsInstruction(NullExpression, SimpleContinuationBlockList, EmptyScope); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateAsLongAsInstruction(DefaultExpression, NullContinuationBlockList, EmptyScope); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateAsLongAsInstruction(DefaultExpression, SimpleContinuationBlockList, NullScope); });
 #endif
 
-            List<Name> EmptyNameList = new();
-            Name EmptyName = NodeHelper.CreateEmptyName();
-            List<Name> SimpleNameList = new() { EmptyName };
-            IBlockList<Name> EmptyNameBlockList = BlockListHelper.CreateEmptyBlockList<Name>();
-            IBlockList<Name> SimpleNameBlockList = BlockListHelper.CreateSimpleBlockList(EmptyName);
-            ObjectType DefaultObjectType = NodeHelper.CreateDefaultObjectType();
-            IBlockList<Attachment> EmptyAttachmentBlockList = BlockListHelper.CreateEmptyBlockList<Attachment>();
-            Attachment DefaultAttachment = NodeHelper.CreateAttachment(DefaultObjectType);
-            IBlockList<Attachment> SimpleAttachmentBlockList = BlockListHelper.CreateSimpleBlockList(DefaultAttachment);
-            AttachmentInstruction Instruction6 = NodeHelper.CreateAttachmentInstruction(DefaultExpression, SimpleNameList);
-            AttachmentInstruction Instruction7 = NodeHelper.CreateAttachmentInstruction(DefaultExpression, SimpleNameBlockList, SimpleAttachmentBlockList);
-            AttachmentInstruction Instruction8 = NodeHelper.CreateAttachmentInstruction(DefaultExpression, SimpleNameBlockList, SimpleAttachmentBlockList, EmptyScope);
+        List<QualifiedName> EmptyQualifiedNameList = new();
+        QualifiedName EmptyQualifiedName = NodeHelper.CreateEmptyQualifiedName();
+        List<QualifiedName> SimpleQualifiedNameList = new() { EmptyQualifiedName };
+        IBlockList<QualifiedName> EmptyQualifiedNameBlockList = BlockListHelper.CreateEmptyBlockList<QualifiedName>();
+        IBlockList<QualifiedName> SimpleQualifiedNameBlockList = BlockListHelper.CreateSimpleBlockList(EmptyQualifiedName);
 
-            CheckMustNotBeEmptyException("nameList", () => { NodeHelper.CreateAttachmentInstruction(DefaultExpression, EmptyNameList); });
-            CheckMustNotBeEmptyException("entityNameBlocks", () => { NodeHelper.CreateAttachmentInstruction(DefaultExpression, EmptyNameBlockList, SimpleAttachmentBlockList); });
-            CheckMustNotBeEmptyException("attachmentBlocks", () => { NodeHelper.CreateAttachmentInstruction(DefaultExpression, SimpleNameBlockList, EmptyAttachmentBlockList); });
-            CheckMustNotBeEmptyException("entityNameBlocks", () => { NodeHelper.CreateAttachmentInstruction(DefaultExpression, EmptyNameBlockList, SimpleAttachmentBlockList, EmptyScope); });
-            CheckMustNotBeEmptyException("attachmentBlocks", () => { NodeHelper.CreateAttachmentInstruction(DefaultExpression, SimpleNameBlockList, EmptyAttachmentBlockList, EmptyScope); });
+        AssignmentInstruction Instruction4 = NodeHelper.CreateAssignmentInstruction(SimpleQualifiedNameList, DefaultExpression);
+        AssignmentInstruction Instruction5 = NodeHelper.CreateAssignmentInstruction(SimpleQualifiedNameBlockList, DefaultExpression);
+
+        CheckMustNotBeEmptyException("assignmentList", () => { NodeHelper.CreateAssignmentInstruction(EmptyQualifiedNameList, DefaultExpression); });
+        CheckMustNotBeEmptyException("assignmentBlocks", () => { NodeHelper.CreateAssignmentInstruction(EmptyQualifiedNameBlockList, DefaultExpression); });
 
 #if !DEBUG
-            List<Name> NullNameList = null!;
-            IBlockList<Name> NullNameBlockList = null!;
-            IBlockList<Attachment> NullAttachmentBlockList = null!;
+        List<QualifiedName> NullQualifiedNameList = null!;
+        IBlockList<QualifiedName> NullQualifiedNameBlockList = null!;
 
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateAttachmentInstruction(NullExpression, SimpleNameList); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateAttachmentInstruction(DefaultExpression, NullNameList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateAssignmentInstruction(NullQualifiedNameList, DefaultExpression); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateAssignmentInstruction(SimpleQualifiedNameList, NullExpression); });
 
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateAttachmentInstruction(NullExpression, SimpleNameBlockList, SimpleAttachmentBlockList); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateAttachmentInstruction(DefaultExpression, NullNameBlockList, SimpleAttachmentBlockList); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateAttachmentInstruction(DefaultExpression, SimpleNameBlockList, NullAttachmentBlockList); });
-
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateAttachmentInstruction(NullExpression, SimpleNameBlockList, SimpleAttachmentBlockList, EmptyScope); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateAttachmentInstruction(DefaultExpression, NullNameBlockList, SimpleAttachmentBlockList, EmptyScope); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateAttachmentInstruction(DefaultExpression, SimpleNameBlockList, NullAttachmentBlockList, EmptyScope); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateAttachmentInstruction(DefaultExpression, SimpleNameBlockList, SimpleAttachmentBlockList, NullScope); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateAssignmentInstruction(NullQualifiedNameBlockList, DefaultExpression); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateAssignmentInstruction(SimpleQualifiedNameBlockList, NullExpression); });
 #endif
 
-            CheckInstruction Instruction9 = NodeHelper.CreateCheckInstruction(DefaultExpression);
+        List<Name> EmptyNameList = new();
+        Name EmptyName = NodeHelper.CreateEmptyName();
+        List<Name> SimpleNameList = new() { EmptyName };
+        IBlockList<Name> EmptyNameBlockList = BlockListHelper.CreateEmptyBlockList<Name>();
+        IBlockList<Name> SimpleNameBlockList = BlockListHelper.CreateSimpleBlockList(EmptyName);
+        ObjectType DefaultObjectType = NodeHelper.CreateDefaultObjectType();
+        IBlockList<Attachment> EmptyAttachmentBlockList = BlockListHelper.CreateEmptyBlockList<Attachment>();
+        Attachment DefaultAttachment = NodeHelper.CreateAttachment(DefaultObjectType);
+        IBlockList<Attachment> SimpleAttachmentBlockList = BlockListHelper.CreateSimpleBlockList(DefaultAttachment);
+        AttachmentInstruction Instruction6 = NodeHelper.CreateAttachmentInstruction(DefaultExpression, SimpleNameList);
+        AttachmentInstruction Instruction7 = NodeHelper.CreateAttachmentInstruction(DefaultExpression, SimpleNameBlockList, SimpleAttachmentBlockList);
+        AttachmentInstruction Instruction8 = NodeHelper.CreateAttachmentInstruction(DefaultExpression, SimpleNameBlockList, SimpleAttachmentBlockList, EmptyScope);
+
+        CheckMustNotBeEmptyException("nameList", () => { NodeHelper.CreateAttachmentInstruction(DefaultExpression, EmptyNameList); });
+        CheckMustNotBeEmptyException("entityNameBlocks", () => { NodeHelper.CreateAttachmentInstruction(DefaultExpression, EmptyNameBlockList, SimpleAttachmentBlockList); });
+        CheckMustNotBeEmptyException("attachmentBlocks", () => { NodeHelper.CreateAttachmentInstruction(DefaultExpression, SimpleNameBlockList, EmptyAttachmentBlockList); });
+        CheckMustNotBeEmptyException("entityNameBlocks", () => { NodeHelper.CreateAttachmentInstruction(DefaultExpression, EmptyNameBlockList, SimpleAttachmentBlockList, EmptyScope); });
+        CheckMustNotBeEmptyException("attachmentBlocks", () => { NodeHelper.CreateAttachmentInstruction(DefaultExpression, SimpleNameBlockList, EmptyAttachmentBlockList, EmptyScope); });
 
 #if !DEBUG
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateCheckInstruction(NullExpression); });
+        List<Name> NullNameList = null!;
+        IBlockList<Name> NullNameBlockList = null!;
+        IBlockList<Attachment> NullAttachmentBlockList = null!;
+
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateAttachmentInstruction(NullExpression, SimpleNameList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateAttachmentInstruction(DefaultExpression, NullNameList); });
+
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateAttachmentInstruction(NullExpression, SimpleNameBlockList, SimpleAttachmentBlockList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateAttachmentInstruction(DefaultExpression, NullNameBlockList, SimpleAttachmentBlockList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateAttachmentInstruction(DefaultExpression, SimpleNameBlockList, NullAttachmentBlockList); });
+
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateAttachmentInstruction(NullExpression, SimpleNameBlockList, SimpleAttachmentBlockList, EmptyScope); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateAttachmentInstruction(DefaultExpression, NullNameBlockList, SimpleAttachmentBlockList, EmptyScope); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateAttachmentInstruction(DefaultExpression, SimpleNameBlockList, NullAttachmentBlockList, EmptyScope); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateAttachmentInstruction(DefaultExpression, SimpleNameBlockList, SimpleAttachmentBlockList, NullScope); });
 #endif
 
-            List<Argument> EmptyArgumentList = new();
-            IBlockList<Argument> EmptyArgumentBlockList = BlockListHelper.CreateEmptyBlockList<Argument>();
-            CommandInstruction Instruction10 = NodeHelper.CreateCommandInstruction(EmptyQualifiedName, EmptyArgumentList);
-            CommandInstruction Instruction11 = NodeHelper.CreateCommandInstruction(EmptyQualifiedName, EmptyArgumentBlockList);
+        CheckInstruction Instruction9 = NodeHelper.CreateCheckInstruction(DefaultExpression);
 
 #if !DEBUG
-            QualifiedName NullQualifiedName = null!;
-            List<Argument> NullArgumentList = null!;
-            IBlockList<Argument> NullArgumentBlockList = null!;
-
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateCommandInstruction(NullQualifiedName, EmptyArgumentList); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateCommandInstruction(EmptyQualifiedName, NullArgumentList); });
-
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateCommandInstruction(NullQualifiedName, EmptyArgumentBlockList); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateCommandInstruction(EmptyQualifiedName, NullArgumentBlockList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateCheckInstruction(NullExpression); });
 #endif
 
-            Identifier EmptyEntityIdentifier = NodeHelper.CreateEmptyIdentifier();
-            Identifier CreationRoutineIdentifier = NodeHelper.CreateEmptyIdentifier();
-
-            CreateInstruction Instruction12 = NodeHelper.CreateCreateInstruction(EmptyEntityIdentifier, CreationRoutineIdentifier, EmptyArgumentList);
-            CreateInstruction Instruction13 = NodeHelper.CreateCreateInstruction(EmptyEntityIdentifier, CreationRoutineIdentifier, EmptyArgumentBlockList);
-            CreateInstruction Instruction14 = NodeHelper.CreateCreateInstruction(EmptyEntityIdentifier, CreationRoutineIdentifier, EmptyArgumentBlockList, EmptyQualifiedName);
+        List<Argument> EmptyArgumentList = new();
+        IBlockList<Argument> EmptyArgumentBlockList = BlockListHelper.CreateEmptyBlockList<Argument>();
+        CommandInstruction Instruction10 = NodeHelper.CreateCommandInstruction(EmptyQualifiedName, EmptyArgumentList);
+        CommandInstruction Instruction11 = NodeHelper.CreateCommandInstruction(EmptyQualifiedName, EmptyArgumentBlockList);
 
 #if !DEBUG
-            Identifier NullIdentifier = null!;
+        QualifiedName NullQualifiedName = null!;
+        List<Argument> NullArgumentList = null!;
+        IBlockList<Argument> NullArgumentBlockList = null!;
 
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateCreateInstruction(NullIdentifier, CreationRoutineIdentifier, EmptyArgumentList); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateCreateInstruction(EmptyEntityIdentifier, NullIdentifier, EmptyArgumentList); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateCreateInstruction(EmptyEntityIdentifier, CreationRoutineIdentifier, NullArgumentList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateCommandInstruction(NullQualifiedName, EmptyArgumentList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateCommandInstruction(EmptyQualifiedName, NullArgumentList); });
 
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateCreateInstruction(NullIdentifier, CreationRoutineIdentifier, EmptyArgumentBlockList); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateCreateInstruction(EmptyEntityIdentifier, NullIdentifier, EmptyArgumentBlockList); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateCreateInstruction(EmptyEntityIdentifier, CreationRoutineIdentifier, NullArgumentBlockList); });
-
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateCreateInstruction(NullIdentifier, CreationRoutineIdentifier, EmptyArgumentBlockList, EmptyQualifiedName); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateCreateInstruction(EmptyEntityIdentifier, NullIdentifier, EmptyArgumentBlockList, EmptyQualifiedName); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateCreateInstruction(EmptyEntityIdentifier, CreationRoutineIdentifier, NullArgumentBlockList, EmptyQualifiedName); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateCreateInstruction(EmptyEntityIdentifier, CreationRoutineIdentifier, EmptyArgumentBlockList, NullQualifiedName); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateCommandInstruction(NullQualifiedName, EmptyArgumentBlockList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateCommandInstruction(EmptyQualifiedName, NullArgumentBlockList); });
 #endif
 
-            DebugInstruction Instruction15 = NodeHelper.CreateEmptyDebugInstruction();
-            DebugInstruction Instruction16 = NodeHelper.CreateSimpleDebugInstruction(DefaultInstruction);
-            DebugInstruction Instruction16_1 = NodeHelper.CreateDebugInstruction(EmptyScope);
+        Identifier EmptyEntityIdentifier = NodeHelper.CreateEmptyIdentifier();
+        Identifier CreationRoutineIdentifier = NodeHelper.CreateEmptyIdentifier();
+
+        CreateInstruction Instruction12 = NodeHelper.CreateCreateInstruction(EmptyEntityIdentifier, CreationRoutineIdentifier, EmptyArgumentList);
+        CreateInstruction Instruction13 = NodeHelper.CreateCreateInstruction(EmptyEntityIdentifier, CreationRoutineIdentifier, EmptyArgumentBlockList);
+        CreateInstruction Instruction14 = NodeHelper.CreateCreateInstruction(EmptyEntityIdentifier, CreationRoutineIdentifier, EmptyArgumentBlockList, EmptyQualifiedName);
 
 #if !DEBUG
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateSimpleDebugInstruction(NullInstruction); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateDebugInstruction(NullScope); });
+        Identifier NullIdentifier = null!;
+
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateCreateInstruction(NullIdentifier, CreationRoutineIdentifier, EmptyArgumentList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateCreateInstruction(EmptyEntityIdentifier, NullIdentifier, EmptyArgumentList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateCreateInstruction(EmptyEntityIdentifier, CreationRoutineIdentifier, NullArgumentList); });
+
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateCreateInstruction(NullIdentifier, CreationRoutineIdentifier, EmptyArgumentBlockList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateCreateInstruction(EmptyEntityIdentifier, NullIdentifier, EmptyArgumentBlockList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateCreateInstruction(EmptyEntityIdentifier, CreationRoutineIdentifier, NullArgumentBlockList); });
+
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateCreateInstruction(NullIdentifier, CreationRoutineIdentifier, EmptyArgumentBlockList, EmptyQualifiedName); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateCreateInstruction(EmptyEntityIdentifier, NullIdentifier, EmptyArgumentBlockList, EmptyQualifiedName); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateCreateInstruction(EmptyEntityIdentifier, CreationRoutineIdentifier, NullArgumentBlockList, EmptyQualifiedName); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateCreateInstruction(EmptyEntityIdentifier, CreationRoutineIdentifier, EmptyArgumentBlockList, NullQualifiedName); });
 #endif
 
-            ForLoopInstruction Instruction17 = NodeHelper.CreateEmptyForLoopInstruction();
-            ForLoopInstruction Instruction18 = NodeHelper.CreateSimpleForLoopInstruction(DefaultInstruction);
+        DebugInstruction Instruction15 = NodeHelper.CreateEmptyDebugInstruction();
+        DebugInstruction Instruction16 = NodeHelper.CreateSimpleDebugInstruction(DefaultInstruction);
+        DebugInstruction Instruction16_1 = NodeHelper.CreateDebugInstruction(EmptyScope);
 
 #if !DEBUG
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateSimpleForLoopInstruction(NullInstruction); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateSimpleDebugInstruction(NullInstruction); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateDebugInstruction(NullScope); });
 #endif
 
-            Conditional EmptyConditional = NodeHelper.CreateEmptyConditional();
-            IfThenElseInstruction Instruction19 = NodeHelper.CreateIfThenElseInstruction(EmptyConditional);
+        ForLoopInstruction Instruction17 = NodeHelper.CreateEmptyForLoopInstruction();
+        ForLoopInstruction Instruction18 = NodeHelper.CreateSimpleForLoopInstruction(DefaultInstruction);
 
 #if !DEBUG
-            Conditional NullConditional = null!;
-
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateIfThenElseInstruction(NullConditional); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateSimpleForLoopInstruction(NullInstruction); });
 #endif
 
-            IBlockList<Conditional> EmptyConditionalBlockList = BlockListHelper.CreateEmptyBlockList<Conditional>();
-            IBlockList<Conditional> SimpleConditionalBlockList = BlockListHelper.CreateSimpleBlockList(EmptyConditional);
-            IfThenElseInstruction Instruction20 = NodeHelper.CreateIfThenElseInstruction(SimpleConditionalBlockList);
-            IfThenElseInstruction Instruction21 = NodeHelper.CreateIfThenElseInstruction(SimpleConditionalBlockList, EmptyScope);
-
-            CheckMustNotBeEmptyException("conditionalBlocks", () => { NodeHelper.CreateIfThenElseInstruction(EmptyConditionalBlockList); });
-            CheckMustNotBeEmptyException("conditionalBlocks", () => { NodeHelper.CreateIfThenElseInstruction(EmptyConditionalBlockList, EmptyScope); });
+        Conditional EmptyConditional = NodeHelper.CreateEmptyConditional();
+        IfThenElseInstruction Instruction19 = NodeHelper.CreateIfThenElseInstruction(EmptyConditional);
 
 #if !DEBUG
-            IBlockList<Conditional> NullConditionalBlockList = null!;
+        Conditional NullConditional = null!;
 
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateIfThenElseInstruction(NullConditionalBlockList); });
-
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateIfThenElseInstruction(NullConditionalBlockList, EmptyScope); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateIfThenElseInstruction(SimpleConditionalBlockList, NullScope); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateIfThenElseInstruction(NullConditional); });
 #endif
 
-            Argument DefaultArgument = NodeHelper.CreateDefaultArgument();
-            List<Argument> SimpleArgumentList = new() { DefaultArgument };
-            IBlockList<Argument> SimpleArgumentBlockList = BlockListHelper.CreateSimpleBlockList<Argument>(DefaultArgument);
-            IndexAssignmentInstruction Instruction22 = NodeHelper.CreateIndexAssignmentInstruction(EmptyQualifiedName, SimpleArgumentList, DefaultExpression);
-            IndexAssignmentInstruction Instruction23 = NodeHelper.CreateIndexAssignmentInstruction(EmptyQualifiedName, SimpleArgumentBlockList, DefaultExpression);
+        IBlockList<Conditional> EmptyConditionalBlockList = BlockListHelper.CreateEmptyBlockList<Conditional>();
+        IBlockList<Conditional> SimpleConditionalBlockList = BlockListHelper.CreateSimpleBlockList(EmptyConditional);
+        IfThenElseInstruction Instruction20 = NodeHelper.CreateIfThenElseInstruction(SimpleConditionalBlockList);
+        IfThenElseInstruction Instruction21 = NodeHelper.CreateIfThenElseInstruction(SimpleConditionalBlockList, EmptyScope);
 
-            CheckMustNotBeEmptyException("argumentList", () => { NodeHelper.CreateIndexAssignmentInstruction(EmptyQualifiedName, EmptyArgumentList, DefaultExpression); });
-            CheckMustNotBeEmptyException("argumentBlocks", () => { NodeHelper.CreateIndexAssignmentInstruction(EmptyQualifiedName, EmptyArgumentBlockList, DefaultExpression); });
+        CheckMustNotBeEmptyException("conditionalBlocks", () => { NodeHelper.CreateIfThenElseInstruction(EmptyConditionalBlockList); });
+        CheckMustNotBeEmptyException("conditionalBlocks", () => { NodeHelper.CreateIfThenElseInstruction(EmptyConditionalBlockList, EmptyScope); });
 
 #if !DEBUG
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateIndexAssignmentInstruction(NullQualifiedName, SimpleArgumentList, DefaultExpression); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateIndexAssignmentInstruction(EmptyQualifiedName, NullArgumentList, DefaultExpression); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateIndexAssignmentInstruction(EmptyQualifiedName, SimpleArgumentList, NullExpression); });
+        IBlockList<Conditional> NullConditionalBlockList = null!;
 
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateIndexAssignmentInstruction(NullQualifiedName, SimpleArgumentBlockList, DefaultExpression); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateIndexAssignmentInstruction(EmptyQualifiedName, NullArgumentBlockList, DefaultExpression); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateIndexAssignmentInstruction(EmptyQualifiedName, SimpleArgumentBlockList, NullExpression); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateIfThenElseInstruction(NullConditionalBlockList); });
+
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateIfThenElseInstruction(NullConditionalBlockList, EmptyScope); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateIfThenElseInstruction(SimpleConditionalBlockList, NullScope); });
 #endif
 
-            InspectInstruction Instruction24 = NodeHelper.CreateInspectInstruction(DefaultExpression);
+        Argument DefaultArgument = NodeHelper.CreateDefaultArgument();
+        List<Argument> SimpleArgumentList = new() { DefaultArgument };
+        IBlockList<Argument> SimpleArgumentBlockList = BlockListHelper.CreateSimpleBlockList<Argument>(DefaultArgument);
+        IndexAssignmentInstruction Instruction22 = NodeHelper.CreateIndexAssignmentInstruction(EmptyQualifiedName, SimpleArgumentList, DefaultExpression);
+        IndexAssignmentInstruction Instruction23 = NodeHelper.CreateIndexAssignmentInstruction(EmptyQualifiedName, SimpleArgumentBlockList, DefaultExpression);
 
-            Expression ConstantExpression = NodeHelper.CreateDefaultExpression();
-            With SimpleWith = NodeHelper.CreateSimpleWith(ConstantExpression);
-            InspectInstruction Instruction25 = NodeHelper.CreateInspectInstruction(DefaultExpression, SimpleWith);
-
-            IBlockList<With> EmptyWithBlockList = BlockListHelper.CreateEmptyBlockList<With>();
-            IBlockList<With> SimpleWithBlockList = BlockListHelper.CreateSimpleBlockList(SimpleWith);
-
-            InspectInstruction Instruction26 = NodeHelper.CreateInspectInstruction(ConstantExpression, SimpleWithBlockList);
-            InspectInstruction Instruction27 = NodeHelper.CreateInspectInstruction(ConstantExpression, SimpleWithBlockList, EmptyScope);
-
-            CheckMustNotBeEmptyException("withBlocks", () => { NodeHelper.CreateInspectInstruction(ConstantExpression, EmptyWithBlockList); });
-            CheckMustNotBeEmptyException("withBlocks", () => { NodeHelper.CreateInspectInstruction(ConstantExpression, EmptyWithBlockList, EmptyScope); });
+        CheckMustNotBeEmptyException("argumentList", () => { NodeHelper.CreateIndexAssignmentInstruction(EmptyQualifiedName, EmptyArgumentList, DefaultExpression); });
+        CheckMustNotBeEmptyException("argumentBlocks", () => { NodeHelper.CreateIndexAssignmentInstruction(EmptyQualifiedName, EmptyArgumentBlockList, DefaultExpression); });
 
 #if !DEBUG
-            With NullWith = null!;
-            IBlockList<With> NullWithBlockList = null!;
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateIndexAssignmentInstruction(NullQualifiedName, SimpleArgumentList, DefaultExpression); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateIndexAssignmentInstruction(EmptyQualifiedName, NullArgumentList, DefaultExpression); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateIndexAssignmentInstruction(EmptyQualifiedName, SimpleArgumentList, NullExpression); });
 
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInspectInstruction(NullExpression, SimpleWith); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInspectInstruction(DefaultExpression, NullWith); });
-
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInspectInstruction(NullExpression, SimpleWithBlockList); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInspectInstruction(ConstantExpression, NullWithBlockList); });
-
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInspectInstruction(NullExpression, SimpleWithBlockList, EmptyScope); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInspectInstruction(ConstantExpression, NullWithBlockList, EmptyScope); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInspectInstruction(ConstantExpression, SimpleWithBlockList, NullScope); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateIndexAssignmentInstruction(NullQualifiedName, SimpleArgumentBlockList, DefaultExpression); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateIndexAssignmentInstruction(EmptyQualifiedName, NullArgumentBlockList, DefaultExpression); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateIndexAssignmentInstruction(EmptyQualifiedName, SimpleArgumentBlockList, NullExpression); });
 #endif
 
-            KeywordAssignmentInstruction Instruction28 = NodeHelper.CreateKeywordAssignmentInstruction(Keyword.Result, DefaultExpression);
+        InspectInstruction Instruction24 = NodeHelper.CreateInspectInstruction(DefaultExpression);
+
+        Expression ConstantExpression = NodeHelper.CreateDefaultExpression();
+        With SimpleWith = NodeHelper.CreateSimpleWith(ConstantExpression);
+        InspectInstruction Instruction25 = NodeHelper.CreateInspectInstruction(DefaultExpression, SimpleWith);
+
+        IBlockList<With> EmptyWithBlockList = BlockListHelper.CreateEmptyBlockList<With>();
+        IBlockList<With> SimpleWithBlockList = BlockListHelper.CreateSimpleBlockList(SimpleWith);
+
+        InspectInstruction Instruction26 = NodeHelper.CreateInspectInstruction(ConstantExpression, SimpleWithBlockList);
+        InspectInstruction Instruction27 = NodeHelper.CreateInspectInstruction(ConstantExpression, SimpleWithBlockList, EmptyScope);
+
+        CheckMustNotBeEmptyException("withBlocks", () => { NodeHelper.CreateInspectInstruction(ConstantExpression, EmptyWithBlockList); });
+        CheckMustNotBeEmptyException("withBlocks", () => { NodeHelper.CreateInspectInstruction(ConstantExpression, EmptyWithBlockList, EmptyScope); });
 
 #if !DEBUG
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateKeywordAssignmentInstruction(Keyword.Result, NullExpression); });
+        With NullWith = null!;
+        IBlockList<With> NullWithBlockList = null!;
+
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInspectInstruction(NullExpression, SimpleWith); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInspectInstruction(DefaultExpression, NullWith); });
+
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInspectInstruction(NullExpression, SimpleWithBlockList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInspectInstruction(ConstantExpression, NullWithBlockList); });
+
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInspectInstruction(NullExpression, SimpleWithBlockList, EmptyScope); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInspectInstruction(ConstantExpression, NullWithBlockList, EmptyScope); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateInspectInstruction(ConstantExpression, SimpleWithBlockList, NullScope); });
 #endif
 
-            OverLoopInstruction Instruction29 = NodeHelper.CreateOverLoopInstruction(DefaultExpression, SimpleNameList);
-            OverLoopInstruction Instruction30 = NodeHelper.CreateOverLoopInstruction(DefaultExpression, SimpleNameList, DefaultInstruction);
-
-            IBlockList<Assertion> EmptyAssertionBlockList = BlockListHelper.CreateEmptyBlockList<Assertion>();
-            Identifier EmptyIdentifier = NodeHelper.CreateEmptyIdentifier();
-            OverLoopInstruction Instruction31 = NodeHelper.CreateOverLoopInstruction(DefaultExpression, SimpleNameBlockList, IterationType.Single, EmptyScope, EmptyAssertionBlockList);
-            OverLoopInstruction Instruction32 = NodeHelper.CreateOverLoopInstruction(DefaultExpression, SimpleNameBlockList, IterationType.Single, EmptyScope, EmptyIdentifier, EmptyAssertionBlockList);
-
-            CheckMustNotBeEmptyException("nameList", () => { NodeHelper.CreateOverLoopInstruction(DefaultExpression, EmptyNameList); });
-            CheckMustNotBeEmptyException("nameList", () => { NodeHelper.CreateOverLoopInstruction(DefaultExpression, EmptyNameList, DefaultInstruction); });
-            CheckMustNotBeEmptyException("indexerBlocks", () => { NodeHelper.CreateOverLoopInstruction(DefaultExpression, EmptyNameBlockList, IterationType.Single, EmptyScope, EmptyAssertionBlockList); });
-            CheckMustNotBeEmptyException("indexerBlocks", () => { NodeHelper.CreateOverLoopInstruction(DefaultExpression, EmptyNameBlockList, IterationType.Single, EmptyScope, EmptyIdentifier, EmptyAssertionBlockList); });
+        KeywordAssignmentInstruction Instruction28 = NodeHelper.CreateKeywordAssignmentInstruction(Keyword.Result, DefaultExpression);
 
 #if !DEBUG
-            IBlockList<Assertion> NullAssertionBlockList = null!;
-
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateOverLoopInstruction(NullExpression, SimpleNameList); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateOverLoopInstruction(DefaultExpression, NullNameList); });
-
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateOverLoopInstruction(NullExpression, SimpleNameList, DefaultInstruction); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateOverLoopInstruction(DefaultExpression, NullNameList, DefaultInstruction); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateOverLoopInstruction(DefaultExpression, SimpleNameList, NullInstruction); });
-
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateOverLoopInstruction(NullExpression, SimpleNameBlockList, IterationType.Single, EmptyScope, EmptyAssertionBlockList); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateOverLoopInstruction(DefaultExpression, NullNameBlockList, IterationType.Single, EmptyScope, EmptyAssertionBlockList); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateOverLoopInstruction(DefaultExpression, SimpleNameBlockList, IterationType.Single, NullScope, EmptyAssertionBlockList); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateOverLoopInstruction(DefaultExpression, SimpleNameBlockList, IterationType.Single, EmptyScope, NullAssertionBlockList); });
-
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateOverLoopInstruction(NullExpression, SimpleNameBlockList, IterationType.Single, EmptyScope, EmptyIdentifier, EmptyAssertionBlockList); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateOverLoopInstruction(DefaultExpression, NullNameBlockList, IterationType.Single, EmptyScope, EmptyIdentifier, EmptyAssertionBlockList); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateOverLoopInstruction(DefaultExpression, SimpleNameBlockList, IterationType.Single, NullScope, EmptyIdentifier, EmptyAssertionBlockList); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateOverLoopInstruction(DefaultExpression, SimpleNameBlockList, IterationType.Single, EmptyScope, NullIdentifier, EmptyAssertionBlockList); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateOverLoopInstruction(DefaultExpression, SimpleNameBlockList, IterationType.Single, EmptyScope, EmptyIdentifier, NullAssertionBlockList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateKeywordAssignmentInstruction(Keyword.Result, NullExpression); });
 #endif
 
-            PrecursorIndexAssignmentInstruction Instruction33 = NodeHelper.CreatePrecursorIndexAssignmentInstruction(SimpleArgumentList, DefaultExpression);
-            PrecursorIndexAssignmentInstruction Instruction34 = NodeHelper.CreatePrecursorIndexAssignmentInstruction(SimpleArgumentBlockList, DefaultExpression);
-            PrecursorIndexAssignmentInstruction Instruction35 = NodeHelper.CreatePrecursorIndexAssignmentInstruction(DefaultObjectType, SimpleArgumentBlockList, DefaultExpression);
+        OverLoopInstruction Instruction29 = NodeHelper.CreateOverLoopInstruction(DefaultExpression, SimpleNameList);
+        OverLoopInstruction Instruction30 = NodeHelper.CreateOverLoopInstruction(DefaultExpression, SimpleNameList, DefaultInstruction);
 
-            CheckMustNotBeEmptyException("argumentList", () => { NodeHelper.CreatePrecursorIndexAssignmentInstruction(EmptyArgumentList, DefaultExpression); });
-            CheckMustNotBeEmptyException("argumentBlocks", () => { NodeHelper.CreatePrecursorIndexAssignmentInstruction(EmptyArgumentBlockList, DefaultExpression); });
-            CheckMustNotBeEmptyException("argumentBlocks", () => { NodeHelper.CreatePrecursorIndexAssignmentInstruction(DefaultObjectType, EmptyArgumentBlockList, DefaultExpression); });
+        IBlockList<Assertion> EmptyAssertionBlockList = BlockListHelper.CreateEmptyBlockList<Assertion>();
+        Identifier EmptyIdentifier = NodeHelper.CreateEmptyIdentifier();
+        OverLoopInstruction Instruction31 = NodeHelper.CreateOverLoopInstruction(DefaultExpression, SimpleNameBlockList, IterationType.Single, EmptyScope, EmptyAssertionBlockList);
+        OverLoopInstruction Instruction32 = NodeHelper.CreateOverLoopInstruction(DefaultExpression, SimpleNameBlockList, IterationType.Single, EmptyScope, EmptyIdentifier, EmptyAssertionBlockList);
+
+        CheckMustNotBeEmptyException("nameList", () => { NodeHelper.CreateOverLoopInstruction(DefaultExpression, EmptyNameList); });
+        CheckMustNotBeEmptyException("nameList", () => { NodeHelper.CreateOverLoopInstruction(DefaultExpression, EmptyNameList, DefaultInstruction); });
+        CheckMustNotBeEmptyException("indexerBlocks", () => { NodeHelper.CreateOverLoopInstruction(DefaultExpression, EmptyNameBlockList, IterationType.Single, EmptyScope, EmptyAssertionBlockList); });
+        CheckMustNotBeEmptyException("indexerBlocks", () => { NodeHelper.CreateOverLoopInstruction(DefaultExpression, EmptyNameBlockList, IterationType.Single, EmptyScope, EmptyIdentifier, EmptyAssertionBlockList); });
 
 #if !DEBUG
-            ObjectType NullObjectType = null!;
+        IBlockList<Assertion> NullAssertionBlockList = null!;
 
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreatePrecursorIndexAssignmentInstruction(NullArgumentList, DefaultExpression); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreatePrecursorIndexAssignmentInstruction(EmptyArgumentList, NullExpression); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateOverLoopInstruction(NullExpression, SimpleNameList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateOverLoopInstruction(DefaultExpression, NullNameList); });
 
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreatePrecursorIndexAssignmentInstruction(NullArgumentBlockList, DefaultExpression); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreatePrecursorIndexAssignmentInstruction(EmptyArgumentBlockList, NullExpression); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateOverLoopInstruction(NullExpression, SimpleNameList, DefaultInstruction); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateOverLoopInstruction(DefaultExpression, NullNameList, DefaultInstruction); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateOverLoopInstruction(DefaultExpression, SimpleNameList, NullInstruction); });
 
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreatePrecursorIndexAssignmentInstruction(NullObjectType, EmptyArgumentBlockList, DefaultExpression); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreatePrecursorIndexAssignmentInstruction(DefaultObjectType, NullArgumentBlockList, DefaultExpression); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreatePrecursorIndexAssignmentInstruction(DefaultObjectType, EmptyArgumentBlockList, NullExpression); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateOverLoopInstruction(NullExpression, SimpleNameBlockList, IterationType.Single, EmptyScope, EmptyAssertionBlockList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateOverLoopInstruction(DefaultExpression, NullNameBlockList, IterationType.Single, EmptyScope, EmptyAssertionBlockList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateOverLoopInstruction(DefaultExpression, SimpleNameBlockList, IterationType.Single, NullScope, EmptyAssertionBlockList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateOverLoopInstruction(DefaultExpression, SimpleNameBlockList, IterationType.Single, EmptyScope, NullAssertionBlockList); });
+
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateOverLoopInstruction(NullExpression, SimpleNameBlockList, IterationType.Single, EmptyScope, EmptyIdentifier, EmptyAssertionBlockList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateOverLoopInstruction(DefaultExpression, NullNameBlockList, IterationType.Single, EmptyScope, EmptyIdentifier, EmptyAssertionBlockList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateOverLoopInstruction(DefaultExpression, SimpleNameBlockList, IterationType.Single, NullScope, EmptyIdentifier, EmptyAssertionBlockList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateOverLoopInstruction(DefaultExpression, SimpleNameBlockList, IterationType.Single, EmptyScope, NullIdentifier, EmptyAssertionBlockList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateOverLoopInstruction(DefaultExpression, SimpleNameBlockList, IterationType.Single, EmptyScope, EmptyIdentifier, NullAssertionBlockList); });
 #endif
 
-            PrecursorInstruction Instruction36 = NodeHelper.CreatePrecursorInstruction(EmptyArgumentList);
-            PrecursorInstruction Instruction37 = NodeHelper.CreatePrecursorInstruction(EmptyArgumentBlockList);
-            PrecursorInstruction Instruction38 = NodeHelper.CreatePrecursorInstruction(DefaultObjectType, EmptyArgumentBlockList);
+        PrecursorIndexAssignmentInstruction Instruction33 = NodeHelper.CreatePrecursorIndexAssignmentInstruction(SimpleArgumentList, DefaultExpression);
+        PrecursorIndexAssignmentInstruction Instruction34 = NodeHelper.CreatePrecursorIndexAssignmentInstruction(SimpleArgumentBlockList, DefaultExpression);
+        PrecursorIndexAssignmentInstruction Instruction35 = NodeHelper.CreatePrecursorIndexAssignmentInstruction(DefaultObjectType, SimpleArgumentBlockList, DefaultExpression);
+
+        CheckMustNotBeEmptyException("argumentList", () => { NodeHelper.CreatePrecursorIndexAssignmentInstruction(EmptyArgumentList, DefaultExpression); });
+        CheckMustNotBeEmptyException("argumentBlocks", () => { NodeHelper.CreatePrecursorIndexAssignmentInstruction(EmptyArgumentBlockList, DefaultExpression); });
+        CheckMustNotBeEmptyException("argumentBlocks", () => { NodeHelper.CreatePrecursorIndexAssignmentInstruction(DefaultObjectType, EmptyArgumentBlockList, DefaultExpression); });
 
 #if !DEBUG
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreatePrecursorInstruction(NullArgumentList); });
+        ObjectType NullObjectType = null!;
 
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreatePrecursorInstruction(NullArgumentBlockList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreatePrecursorIndexAssignmentInstruction(NullArgumentList, DefaultExpression); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreatePrecursorIndexAssignmentInstruction(EmptyArgumentList, NullExpression); });
 
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreatePrecursorInstruction(NullObjectType, EmptyArgumentBlockList); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreatePrecursorInstruction(DefaultObjectType, NullArgumentBlockList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreatePrecursorIndexAssignmentInstruction(NullArgumentBlockList, DefaultExpression); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreatePrecursorIndexAssignmentInstruction(EmptyArgumentBlockList, NullExpression); });
+
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreatePrecursorIndexAssignmentInstruction(NullObjectType, EmptyArgumentBlockList, DefaultExpression); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreatePrecursorIndexAssignmentInstruction(DefaultObjectType, NullArgumentBlockList, DefaultExpression); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreatePrecursorIndexAssignmentInstruction(DefaultObjectType, EmptyArgumentBlockList, NullExpression); });
 #endif
 
-            RaiseEventInstruction Instruction39 = NodeHelper.CreateRaiseEventInstruction(EmptyIdentifier);
-            ReleaseInstruction Instruction40 = NodeHelper.CreateReleaseInstruction(EmptyQualifiedName);
-            ThrowInstruction Instruction41 = NodeHelper.CreateThrowInstruction(DefaultObjectType, EmptyIdentifier, EmptyArgumentList);
-            ThrowInstruction Instruction42 = NodeHelper.CreateThrowInstruction(DefaultObjectType, EmptyIdentifier, EmptyArgumentBlockList);
+        PrecursorInstruction Instruction36 = NodeHelper.CreatePrecursorInstruction(EmptyArgumentList);
+        PrecursorInstruction Instruction37 = NodeHelper.CreatePrecursorInstruction(EmptyArgumentBlockList);
+        PrecursorInstruction Instruction38 = NodeHelper.CreatePrecursorInstruction(DefaultObjectType, EmptyArgumentBlockList);
 
 #if !DEBUG
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateRaiseEventInstruction(NullIdentifier); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreatePrecursorInstruction(NullArgumentList); });
 
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateReleaseInstruction(NullQualifiedName); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreatePrecursorInstruction(NullArgumentBlockList); });
 
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateThrowInstruction(NullObjectType, EmptyIdentifier, EmptyArgumentList); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateThrowInstruction(DefaultObjectType, NullIdentifier, EmptyArgumentList); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateThrowInstruction(DefaultObjectType, EmptyIdentifier, NullArgumentList); });
-
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateThrowInstruction(NullObjectType, EmptyIdentifier, EmptyArgumentBlockList); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateThrowInstruction(DefaultObjectType, NullIdentifier, EmptyArgumentBlockList); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateThrowInstruction(DefaultObjectType, EmptyIdentifier, NullArgumentBlockList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreatePrecursorInstruction(NullObjectType, EmptyArgumentBlockList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreatePrecursorInstruction(DefaultObjectType, NullArgumentBlockList); });
 #endif
-        }
 
-        [Test]
-        public static void TestOther()
-        {
-            ObjectType DefaultObjectType = NodeHelper.CreateDefaultObjectType();
-            Scope EmptyScope = NodeHelper.CreateEmptyScope();
-            Expression DefaultExpression = NodeHelper.CreateDefaultExpression();
-            Instruction DefaultInstruction = NodeHelper.CreateDefaultInstruction();
-            Name EmptyName = NodeHelper.CreateEmptyName();
+        RaiseEventInstruction Instruction39 = NodeHelper.CreateRaiseEventInstruction(EmptyIdentifier);
+        ReleaseInstruction Instruction40 = NodeHelper.CreateReleaseInstruction(EmptyQualifiedName);
+        ThrowInstruction Instruction41 = NodeHelper.CreateThrowInstruction(DefaultObjectType, EmptyIdentifier, EmptyArgumentList);
+        ThrowInstruction Instruction42 = NodeHelper.CreateThrowInstruction(DefaultObjectType, EmptyIdentifier, EmptyArgumentBlockList);
 
 #if !DEBUG
-            ObjectType NullObjectType = null!;
-            Scope NullScope = null!;
-            Expression NullExpression = null!;
-            Instruction NullInstruction = null!;
-            Name NullName = null!;
-            string NullText = null!;
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateRaiseEventInstruction(NullIdentifier); });
+
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateReleaseInstruction(NullQualifiedName); });
+
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateThrowInstruction(NullObjectType, EmptyIdentifier, EmptyArgumentList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateThrowInstruction(DefaultObjectType, NullIdentifier, EmptyArgumentList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateThrowInstruction(DefaultObjectType, EmptyIdentifier, NullArgumentList); });
+
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateThrowInstruction(NullObjectType, EmptyIdentifier, EmptyArgumentBlockList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateThrowInstruction(DefaultObjectType, NullIdentifier, EmptyArgumentBlockList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateThrowInstruction(DefaultObjectType, EmptyIdentifier, NullArgumentBlockList); });
 #endif
+    }
 
-            IBlockList<ObjectType> EmptyObjectTypeBlockList = BlockListHelper.CreateEmptyBlockList<ObjectType>();
-            IBlockList<ObjectType> SimpleObjectTypeBlockList = BlockListHelper.CreateSimpleBlockList(DefaultObjectType);
-
-            Attachment Attachment1 = NodeHelper.CreateAttachment(DefaultObjectType);
-            Attachment Attachment2 = NodeHelper.CreateAttachment(SimpleObjectTypeBlockList, EmptyScope);
-
-            CheckMustNotBeEmptyException("attachTypeBlocks", () => { NodeHelper.CreateAttachment(EmptyObjectTypeBlockList, EmptyScope); });
+    [Test]
+    public static void TestOther()
+    {
+        ObjectType DefaultObjectType = NodeHelper.CreateDefaultObjectType();
+        Scope EmptyScope = NodeHelper.CreateEmptyScope();
+        Expression DefaultExpression = NodeHelper.CreateDefaultExpression();
+        Instruction DefaultInstruction = NodeHelper.CreateDefaultInstruction();
+        Name EmptyName = NodeHelper.CreateEmptyName();
 
 #if !DEBUG
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateAttachment(NullObjectType); });
+        ObjectType NullObjectType = null!;
+        Scope NullScope = null!;
+        Expression NullExpression = null!;
+        Instruction NullInstruction = null!;
+        Name NullName = null!;
+        string NullText = null!;
 #endif
 
-            Conditional Conditional1 = NodeHelper.CreateConditional(DefaultExpression);
-            Conditional Conditional2 = NodeHelper.CreateConditional(DefaultExpression, DefaultInstruction);
-            Conditional Conditional3 = NodeHelper.CreateConditional(DefaultExpression, EmptyScope);
+        IBlockList<ObjectType> EmptyObjectTypeBlockList = BlockListHelper.CreateEmptyBlockList<ObjectType>();
+        IBlockList<ObjectType> SimpleObjectTypeBlockList = BlockListHelper.CreateSimpleBlockList(DefaultObjectType);
+
+        Attachment Attachment1 = NodeHelper.CreateAttachment(DefaultObjectType);
+        Attachment Attachment2 = NodeHelper.CreateAttachment(SimpleObjectTypeBlockList, EmptyScope);
+
+        CheckMustNotBeEmptyException("attachTypeBlocks", () => { NodeHelper.CreateAttachment(EmptyObjectTypeBlockList, EmptyScope); });
 
 #if !DEBUG
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateConditional(NullExpression); });
-
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateConditional(NullExpression, DefaultInstruction); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateConditional(DefaultExpression, NullInstruction); });
-
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateConditional(NullExpression, EmptyScope); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateConditional(DefaultExpression, NullScope); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateAttachment(NullObjectType); });
 #endif
 
-            With With1 = NodeHelper.CreateSimpleWith(DefaultExpression);
-            With With2 = NodeHelper.CreateSimpleWith(DefaultExpression, DefaultInstruction);
+        Conditional Conditional1 = NodeHelper.CreateConditional(DefaultExpression);
+        Conditional Conditional2 = NodeHelper.CreateConditional(DefaultExpression, DefaultInstruction);
+        Conditional Conditional3 = NodeHelper.CreateConditional(DefaultExpression, EmptyScope);
 
 #if !DEBUG
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateSimpleWith(NullExpression); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateConditional(NullExpression); });
 
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateSimpleWith(NullExpression, DefaultInstruction); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateSimpleWith(DefaultExpression, NullInstruction); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateConditional(NullExpression, DefaultInstruction); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateConditional(DefaultExpression, NullInstruction); });
+
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateConditional(NullExpression, EmptyScope); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateConditional(DefaultExpression, NullScope); });
 #endif
 
-            Range Range1 = NodeHelper.CreateSingleRange(DefaultExpression);
-            EntityDeclaration EntityDeclaration1 = NodeHelper.CreateEntityDeclaration(EmptyName, DefaultObjectType);
-            Identifier Identifier1 = NodeHelper.CreateEmptyExportIdentifier();
-            Export Export1 = NodeHelper.CreateSimpleExport(string.Empty);
-            Class Class1 = NodeHelper.CreateSimpleClass(string.Empty);
-            Library Library1 = NodeHelper.CreateSimpleLibrary(string.Empty);
-            GlobalReplicate GlobalReplicate1 = NodeHelper.CreateSimpleGlobalReplicate(string.Empty);
-            ClassReplicate ClassReplicate1 = NodeHelper.CreateSimpleClassReplicate(string.Empty);
-            Import Import1 = NodeHelper.CreateSimpleImport(string.Empty, string.Empty, ImportType.Latest);
+        With With1 = NodeHelper.CreateSimpleWith(DefaultExpression);
+        With With2 = NodeHelper.CreateSimpleWith(DefaultExpression, DefaultInstruction);
 
 #if !DEBUG
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateSingleRange(NullExpression); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateSimpleWith(NullExpression); });
 
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateEntityDeclaration(NullName, DefaultObjectType); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateEntityDeclaration(EmptyName, NullObjectType); });
-
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateSimpleExport(NullText); });
-
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateSimpleClass(NullText); });
-
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateSimpleGlobalReplicate(NullText); });
-
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateSimpleClassReplicate(NullText); });
-
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateSimpleImport(NullText, string.Empty, ImportType.Latest); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateSimpleImport(string.Empty, NullText, ImportType.Latest); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateSimpleWith(NullExpression, DefaultInstruction); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateSimpleWith(DefaultExpression, NullInstruction); });
 #endif
 
-            List<Class> EmptyClassList = new();
-            List<Library> EmptyLibraryList = new();
-            List<GlobalReplicate> EmptyGlobalReplicateList = new();
-            Root Root1 = NodeHelper.CreateRoot(EmptyClassList, EmptyLibraryList, EmptyGlobalReplicateList);
-
-            List<IBlock<Class>> EmptyBlockClassList = new();
-            List<IBlock<Library>> EmptyBlockLibraryList = new();
-            Root Root2 = NodeHelper.CreateRoot(EmptyBlockClassList, EmptyBlockLibraryList, EmptyGlobalReplicateList);
+        Range Range1 = NodeHelper.CreateSingleRange(DefaultExpression);
+        EntityDeclaration EntityDeclaration1 = NodeHelper.CreateEntityDeclaration(EmptyName, DefaultObjectType);
+        Identifier Identifier1 = NodeHelper.CreateEmptyExportIdentifier();
+        Export Export1 = NodeHelper.CreateSimpleExport(string.Empty);
+        Class Class1 = NodeHelper.CreateSimpleClass(string.Empty);
+        Library Library1 = NodeHelper.CreateSimpleLibrary(string.Empty);
+        GlobalReplicate GlobalReplicate1 = NodeHelper.CreateSimpleGlobalReplicate(string.Empty);
+        ClassReplicate ClassReplicate1 = NodeHelper.CreateSimpleClassReplicate(string.Empty);
+        Import Import1 = NodeHelper.CreateSimpleImport(string.Empty, string.Empty, ImportType.Latest);
 
 #if !DEBUG
-            List<Class> NullClassList = null!;
-            List<Library> NullLibraryList = null!;
-            List<GlobalReplicate> NullGlobalReplicateList = null!;
-            List<IBlock<Class>> NullBlockClassList = null!;
-            List<IBlock<Library>> NullBlockLibraryList = null!;
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateSingleRange(NullExpression); });
 
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateRoot(NullClassList, EmptyLibraryList, EmptyGlobalReplicateList); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateRoot(EmptyClassList, NullLibraryList, EmptyGlobalReplicateList); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateRoot(EmptyClassList, EmptyLibraryList, NullGlobalReplicateList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateEntityDeclaration(NullName, DefaultObjectType); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateEntityDeclaration(EmptyName, NullObjectType); });
 
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateRoot(NullBlockClassList, EmptyBlockLibraryList, EmptyGlobalReplicateList); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateRoot(EmptyBlockClassList, NullBlockLibraryList, EmptyGlobalReplicateList); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateRoot(EmptyBlockClassList, EmptyBlockLibraryList, NullGlobalReplicateList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateSimpleExport(NullText); });
+
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateSimpleClass(NullText); });
+
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateSimpleGlobalReplicate(NullText); });
+
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateSimpleClassReplicate(NullText); });
+
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateSimpleImport(NullText, string.Empty, ImportType.Latest); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateSimpleImport(string.Empty, NullText, ImportType.Latest); });
 #endif
-        }
 
-        [Test]
-        public static void TestObjectType()
-        {
-            QualifiedName EmptyQualifiedName = NodeHelper.CreateEmptyQualifiedName();
-            Identifier EmptyIdentifier = NodeHelper.CreateEmptyIdentifier();
-            EntityDeclaration EmptyEntityDeclaration = NodeHelper.CreateEmptyEntityDeclaration();
-            ObjectType DefaultObjectType1 = NodeHelper.CreateDefaultObjectType();
-            ObjectType DefaultObjectType2 = NodeHelper.CreateDefaultObjectType();
-            IBlockList<QueryOverloadType> EmptyQueryOverloadTypeBlockList = BlockListHelper.CreateEmptyBlockList<QueryOverloadType>();
-            QueryOverloadType DefaultQueryOverloadType = NodeHelper.CreateEmptyQueryOverloadType(DefaultObjectType2);
-            IBlockList<QueryOverloadType> SimpleQueryOverloadTypeBlockList = BlockListHelper.CreateSimpleBlockList(DefaultQueryOverloadType);
-            List<TypeArgument> EmptyTypeArgumentList = new();
-            TypeArgument DefaultTypeArgument = NodeHelper.CreateDefaultTypeArgument();
-            IBlockList<TypeArgument> EmptyTypeArgumentBlockList = BlockListHelper.CreateEmptyBlockList<TypeArgument>();
-            List<TypeArgument> SimpleTypeArgumentList = new() { DefaultTypeArgument };
-            IBlockList<EntityDeclaration> EmptyEntityDeclarationBlockList = BlockListHelper.CreateEmptyBlockList<EntityDeclaration>();
-            IBlockList<TypeArgument> SimpleTypeArgumentBlockList = BlockListHelper.CreateSimpleBlockList(DefaultTypeArgument);
-            IBlockList<EntityDeclaration> SimpleEntityDeclarationBlockList = BlockListHelper.CreateSimpleBlockList(EmptyEntityDeclaration);
-            IBlockList<Assertion> EmptyGetRequireBlockList = BlockListHelper.CreateEmptyBlockList<Assertion>();
-            IBlockList<Assertion> EmptyGetEnsureBlockList = BlockListHelper.CreateEmptyBlockList<Assertion>();
-            IBlockList<Identifier> EmptyGetIdentifierBlockList = BlockListHelper.CreateEmptyBlockList<Identifier>();
-            IBlockList<Assertion> EmptySetRequireBlockList = BlockListHelper.CreateEmptyBlockList<Assertion>();
-            IBlockList<Assertion> EmptySetEnsureBlockList = BlockListHelper.CreateEmptyBlockList<Assertion>();
-            IBlockList<Identifier> EmptySetIdentifierBlockList = BlockListHelper.CreateEmptyBlockList<Identifier>();
-            IBlockList<CommandOverloadType> EmptyCommandOverloadTypeBlockList = BlockListHelper.CreateEmptyBlockList<CommandOverloadType>();
-            CommandOverloadType EmptyCommandOverloadType = NodeHelper.CreateEmptyCommandOverloadType();
-            IBlockList<CommandOverloadType> SimpleCommandOverloadTypeBlockList = BlockListHelper.CreateSimpleBlockList(EmptyCommandOverloadType);
+        List<Class> EmptyClassList = new();
+        List<Library> EmptyLibraryList = new();
+        List<GlobalReplicate> EmptyGlobalReplicateList = new();
+        Root Root1 = NodeHelper.CreateRoot(EmptyClassList, EmptyLibraryList, EmptyGlobalReplicateList);
+
+        List<IBlock<Class>> EmptyBlockClassList = new();
+        List<IBlock<Library>> EmptyBlockLibraryList = new();
+        Root Root2 = NodeHelper.CreateRoot(EmptyBlockClassList, EmptyBlockLibraryList, EmptyGlobalReplicateList);
 
 #if !DEBUG
-            QualifiedName NullQualifiedName = null!;
-            Identifier NullIdentifier = null!;
-            EntityDeclaration NullEntityDeclaration = null!;
-            ObjectType NullObjectType = null!;
-            IBlockList<QueryOverloadType> NullQueryOverloadTypeBlockList = null!;
-            List<TypeArgument> NullTypeArgumentList = null!;
-            IBlockList<TypeArgument> NullTypeArgumentBlockList = null!;
-            IBlockList<EntityDeclaration> NullEntityDeclarationBlockList = null!;
-            IBlockList<Assertion> NullGetRequireBlockList = null!;
-            IBlockList<Assertion> NullGetEnsureBlockList = null!;
-            IBlockList<Identifier> NullGetIdentifierBlockList = null!;
-            IBlockList<Assertion> NullSetRequireBlockList = null!;
-            IBlockList<Assertion> NullSetEnsureBlockList = null!;
-            IBlockList<Identifier> NullSetIdentifierBlockList = null!;
-            IBlockList<CommandOverloadType> NullCommandOverloadTypeBlockList = null!;
-#endif
+        List<Class> NullClassList = null!;
+        List<Library> NullLibraryList = null!;
+        List<GlobalReplicate> NullGlobalReplicateList = null!;
+        List<IBlock<Class>> NullBlockClassList = null!;
+        List<IBlock<Library>> NullBlockLibraryList = null!;
 
-            AnchoredType AnchoredType1 = NodeHelper.CreateAnchoredType(EmptyQualifiedName, AnchorKinds.Declaration);
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateRoot(NullClassList, EmptyLibraryList, EmptyGlobalReplicateList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateRoot(EmptyClassList, NullLibraryList, EmptyGlobalReplicateList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateRoot(EmptyClassList, EmptyLibraryList, NullGlobalReplicateList); });
+
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateRoot(NullBlockClassList, EmptyBlockLibraryList, EmptyGlobalReplicateList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateRoot(EmptyBlockClassList, NullBlockLibraryList, EmptyGlobalReplicateList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateRoot(EmptyBlockClassList, EmptyBlockLibraryList, NullGlobalReplicateList); });
+#endif
+    }
+
+    [Test]
+    public static void TestObjectType()
+    {
+        QualifiedName EmptyQualifiedName = NodeHelper.CreateEmptyQualifiedName();
+        Identifier EmptyIdentifier = NodeHelper.CreateEmptyIdentifier();
+        EntityDeclaration EmptyEntityDeclaration = NodeHelper.CreateEmptyEntityDeclaration();
+        ObjectType DefaultObjectType1 = NodeHelper.CreateDefaultObjectType();
+        ObjectType DefaultObjectType2 = NodeHelper.CreateDefaultObjectType();
+        IBlockList<QueryOverloadType> EmptyQueryOverloadTypeBlockList = BlockListHelper.CreateEmptyBlockList<QueryOverloadType>();
+        QueryOverloadType DefaultQueryOverloadType = NodeHelper.CreateEmptyQueryOverloadType(DefaultObjectType2);
+        IBlockList<QueryOverloadType> SimpleQueryOverloadTypeBlockList = BlockListHelper.CreateSimpleBlockList(DefaultQueryOverloadType);
+        List<TypeArgument> EmptyTypeArgumentList = new();
+        TypeArgument DefaultTypeArgument = NodeHelper.CreateDefaultTypeArgument();
+        IBlockList<TypeArgument> EmptyTypeArgumentBlockList = BlockListHelper.CreateEmptyBlockList<TypeArgument>();
+        List<TypeArgument> SimpleTypeArgumentList = new() { DefaultTypeArgument };
+        IBlockList<EntityDeclaration> EmptyEntityDeclarationBlockList = BlockListHelper.CreateEmptyBlockList<EntityDeclaration>();
+        IBlockList<TypeArgument> SimpleTypeArgumentBlockList = BlockListHelper.CreateSimpleBlockList(DefaultTypeArgument);
+        IBlockList<EntityDeclaration> SimpleEntityDeclarationBlockList = BlockListHelper.CreateSimpleBlockList(EmptyEntityDeclaration);
+        IBlockList<Assertion> EmptyGetRequireBlockList = BlockListHelper.CreateEmptyBlockList<Assertion>();
+        IBlockList<Assertion> EmptyGetEnsureBlockList = BlockListHelper.CreateEmptyBlockList<Assertion>();
+        IBlockList<Identifier> EmptyGetIdentifierBlockList = BlockListHelper.CreateEmptyBlockList<Identifier>();
+        IBlockList<Assertion> EmptySetRequireBlockList = BlockListHelper.CreateEmptyBlockList<Assertion>();
+        IBlockList<Assertion> EmptySetEnsureBlockList = BlockListHelper.CreateEmptyBlockList<Assertion>();
+        IBlockList<Identifier> EmptySetIdentifierBlockList = BlockListHelper.CreateEmptyBlockList<Identifier>();
+        IBlockList<CommandOverloadType> EmptyCommandOverloadTypeBlockList = BlockListHelper.CreateEmptyBlockList<CommandOverloadType>();
+        CommandOverloadType EmptyCommandOverloadType = NodeHelper.CreateEmptyCommandOverloadType();
+        IBlockList<CommandOverloadType> SimpleCommandOverloadTypeBlockList = BlockListHelper.CreateSimpleBlockList(EmptyCommandOverloadType);
 
 #if !DEBUG
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateAnchoredType(NullQualifiedName, AnchorKinds.Declaration); });
+        QualifiedName NullQualifiedName = null!;
+        Identifier NullIdentifier = null!;
+        EntityDeclaration NullEntityDeclaration = null!;
+        ObjectType NullObjectType = null!;
+        IBlockList<QueryOverloadType> NullQueryOverloadTypeBlockList = null!;
+        List<TypeArgument> NullTypeArgumentList = null!;
+        IBlockList<TypeArgument> NullTypeArgumentBlockList = null!;
+        IBlockList<EntityDeclaration> NullEntityDeclarationBlockList = null!;
+        IBlockList<Assertion> NullGetRequireBlockList = null!;
+        IBlockList<Assertion> NullGetEnsureBlockList = null!;
+        IBlockList<Identifier> NullGetIdentifierBlockList = null!;
+        IBlockList<Assertion> NullSetRequireBlockList = null!;
+        IBlockList<Assertion> NullSetEnsureBlockList = null!;
+        IBlockList<Identifier> NullSetIdentifierBlockList = null!;
+        IBlockList<CommandOverloadType> NullCommandOverloadTypeBlockList = null!;
 #endif
 
-            FunctionType FunctionType1 = NodeHelper.CreateFunctionType(DefaultObjectType1, DefaultObjectType2);
-            FunctionType FunctionType2 = NodeHelper.CreateFunctionType(DefaultObjectType1, SimpleQueryOverloadTypeBlockList);
-
-            CheckMustNotBeEmptyException("overloadBlocks", () => { NodeHelper.CreateFunctionType(DefaultObjectType1, EmptyQueryOverloadTypeBlockList); });
+        AnchoredType AnchoredType1 = NodeHelper.CreateAnchoredType(EmptyQualifiedName, AnchorKinds.Declaration);
 
 #if !DEBUG
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateFunctionType(NullObjectType, DefaultObjectType2); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateFunctionType(DefaultObjectType1, NullObjectType); });
-
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateFunctionType(NullObjectType, SimpleQueryOverloadTypeBlockList); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateFunctionType(DefaultObjectType1, NullQueryOverloadTypeBlockList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateAnchoredType(NullQualifiedName, AnchorKinds.Declaration); });
 #endif
 
-            GenericType GenericType1 = NodeHelper.CreateGenericType(EmptyIdentifier, SimpleTypeArgumentList);
-            GenericType GenericType2 = NodeHelper.CreateGenericType(SharingType.NotShared, EmptyIdentifier, SimpleTypeArgumentBlockList);
+        FunctionType FunctionType1 = NodeHelper.CreateFunctionType(DefaultObjectType1, DefaultObjectType2);
+        FunctionType FunctionType2 = NodeHelper.CreateFunctionType(DefaultObjectType1, SimpleQueryOverloadTypeBlockList);
 
-            CheckMustNotBeEmptyException("typeArgumentList", () => { NodeHelper.CreateGenericType(EmptyIdentifier, EmptyTypeArgumentList); });
-            CheckMustNotBeEmptyException("typeArgumentBlocks", () => { NodeHelper.CreateGenericType(SharingType.NotShared, EmptyIdentifier, EmptyTypeArgumentBlockList); });
+        CheckMustNotBeEmptyException("overloadBlocks", () => { NodeHelper.CreateFunctionType(DefaultObjectType1, EmptyQueryOverloadTypeBlockList); });
 
 #if !DEBUG
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateGenericType(NullIdentifier, SimpleTypeArgumentList); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateGenericType(EmptyIdentifier, NullTypeArgumentList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateFunctionType(NullObjectType, DefaultObjectType2); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateFunctionType(DefaultObjectType1, NullObjectType); });
 
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateGenericType(SharingType.NotShared, NullIdentifier, SimpleTypeArgumentBlockList); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateGenericType(SharingType.NotShared, EmptyIdentifier, NullTypeArgumentBlockList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateFunctionType(NullObjectType, SimpleQueryOverloadTypeBlockList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateFunctionType(DefaultObjectType1, NullQueryOverloadTypeBlockList); });
 #endif
 
-            IndexerType IndexerType1 = NodeHelper.CreateIndexerType(DefaultObjectType1, DefaultObjectType2, EmptyEntityDeclaration);
+        GenericType GenericType1 = NodeHelper.CreateGenericType(EmptyIdentifier, SimpleTypeArgumentList);
+        GenericType GenericType2 = NodeHelper.CreateGenericType(SharingType.NotShared, EmptyIdentifier, SimpleTypeArgumentBlockList);
 
-            IndexerType IndexerType2 = NodeHelper.CreateIndexerType(DefaultObjectType1, DefaultObjectType2, SimpleEntityDeclarationBlockList, ParameterEndStatus.Closed, UtilityType.ReadWrite, EmptyGetRequireBlockList, EmptyGetEnsureBlockList, EmptyGetIdentifierBlockList, EmptySetRequireBlockList, EmptySetEnsureBlockList, EmptySetIdentifierBlockList);
-
-            CheckMustNotBeEmptyException("indexParameterBlocks", () => { NodeHelper.CreateIndexerType(DefaultObjectType1, DefaultObjectType2, EmptyEntityDeclarationBlockList, ParameterEndStatus.Closed, UtilityType.ReadWrite, EmptyGetRequireBlockList, EmptyGetEnsureBlockList, EmptyGetIdentifierBlockList, EmptySetRequireBlockList, EmptySetEnsureBlockList, EmptySetIdentifierBlockList); });
+        CheckMustNotBeEmptyException("typeArgumentList", () => { NodeHelper.CreateGenericType(EmptyIdentifier, EmptyTypeArgumentList); });
+        CheckMustNotBeEmptyException("typeArgumentBlocks", () => { NodeHelper.CreateGenericType(SharingType.NotShared, EmptyIdentifier, EmptyTypeArgumentBlockList); });
 
 #if !DEBUG
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateIndexerType(NullObjectType, DefaultObjectType2, EmptyEntityDeclaration); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateIndexerType(DefaultObjectType1, NullObjectType, EmptyEntityDeclaration); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateIndexerType(DefaultObjectType1, DefaultObjectType2, NullEntityDeclaration); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateGenericType(NullIdentifier, SimpleTypeArgumentList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateGenericType(EmptyIdentifier, NullTypeArgumentList); });
 
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateIndexerType(NullObjectType, DefaultObjectType2, SimpleEntityDeclarationBlockList, ParameterEndStatus.Closed, UtilityType.ReadWrite, EmptyGetRequireBlockList, EmptyGetEnsureBlockList, EmptyGetIdentifierBlockList, EmptySetRequireBlockList, EmptySetEnsureBlockList, EmptySetIdentifierBlockList); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateIndexerType(DefaultObjectType1, NullObjectType, SimpleEntityDeclarationBlockList, ParameterEndStatus.Closed, UtilityType.ReadWrite, EmptyGetRequireBlockList, EmptyGetEnsureBlockList, EmptyGetIdentifierBlockList, EmptySetRequireBlockList, EmptySetEnsureBlockList, EmptySetIdentifierBlockList); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateIndexerType(DefaultObjectType1, DefaultObjectType2, NullEntityDeclarationBlockList, ParameterEndStatus.Closed, UtilityType.ReadWrite, EmptyGetRequireBlockList, EmptyGetEnsureBlockList, EmptyGetIdentifierBlockList, EmptySetRequireBlockList, EmptySetEnsureBlockList, EmptySetIdentifierBlockList); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateIndexerType(DefaultObjectType1, DefaultObjectType2, SimpleEntityDeclarationBlockList, ParameterEndStatus.Closed, UtilityType.ReadWrite, NullGetRequireBlockList, EmptyGetEnsureBlockList, EmptyGetIdentifierBlockList, EmptySetRequireBlockList, EmptySetEnsureBlockList, EmptySetIdentifierBlockList); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateIndexerType(DefaultObjectType1, DefaultObjectType2, SimpleEntityDeclarationBlockList, ParameterEndStatus.Closed, UtilityType.ReadWrite, EmptyGetRequireBlockList, NullGetEnsureBlockList, EmptyGetIdentifierBlockList, EmptySetRequireBlockList, EmptySetEnsureBlockList, EmptySetIdentifierBlockList); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateIndexerType(DefaultObjectType1, DefaultObjectType2, SimpleEntityDeclarationBlockList, ParameterEndStatus.Closed, UtilityType.ReadWrite, EmptyGetRequireBlockList, EmptyGetEnsureBlockList, NullGetIdentifierBlockList, EmptySetRequireBlockList, EmptySetEnsureBlockList, EmptySetIdentifierBlockList); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateIndexerType(DefaultObjectType1, DefaultObjectType2, SimpleEntityDeclarationBlockList, ParameterEndStatus.Closed, UtilityType.ReadWrite, EmptyGetRequireBlockList, EmptyGetEnsureBlockList, EmptyGetIdentifierBlockList, NullSetRequireBlockList, EmptySetEnsureBlockList, EmptySetIdentifierBlockList); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateIndexerType(DefaultObjectType1, DefaultObjectType2, SimpleEntityDeclarationBlockList, ParameterEndStatus.Closed, UtilityType.ReadWrite, EmptyGetRequireBlockList, EmptyGetEnsureBlockList, EmptyGetIdentifierBlockList, EmptySetRequireBlockList, NullSetEnsureBlockList, EmptySetIdentifierBlockList); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateIndexerType(DefaultObjectType1, DefaultObjectType2, SimpleEntityDeclarationBlockList, ParameterEndStatus.Closed, UtilityType.ReadWrite, EmptyGetRequireBlockList, EmptyGetEnsureBlockList, EmptyGetIdentifierBlockList, EmptySetRequireBlockList, EmptySetEnsureBlockList, NullSetIdentifierBlockList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateGenericType(SharingType.NotShared, NullIdentifier, SimpleTypeArgumentBlockList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateGenericType(SharingType.NotShared, EmptyIdentifier, NullTypeArgumentBlockList); });
 #endif
 
-            KeywordAnchoredType KeywordAnchoredType1 = NodeHelper.CreateKeywordAnchoredType(Keyword.Current);
+        IndexerType IndexerType1 = NodeHelper.CreateIndexerType(DefaultObjectType1, DefaultObjectType2, EmptyEntityDeclaration);
 
-            ProcedureType ProcedureType1 = NodeHelper.CreateProcedureType(DefaultObjectType1);
-            ProcedureType ProcedureType2 = NodeHelper.CreateProcedureType(DefaultObjectType1, SimpleCommandOverloadTypeBlockList);
+        IndexerType IndexerType2 = NodeHelper.CreateIndexerType(DefaultObjectType1, DefaultObjectType2, SimpleEntityDeclarationBlockList, ParameterEndStatus.Closed, UtilityType.ReadWrite, EmptyGetRequireBlockList, EmptyGetEnsureBlockList, EmptyGetIdentifierBlockList, EmptySetRequireBlockList, EmptySetEnsureBlockList, EmptySetIdentifierBlockList);
 
-            CheckMustNotBeEmptyException("overloadBlocks", () => { NodeHelper.CreateProcedureType(DefaultObjectType1, EmptyCommandOverloadTypeBlockList); });
+        CheckMustNotBeEmptyException("indexParameterBlocks", () => { NodeHelper.CreateIndexerType(DefaultObjectType1, DefaultObjectType2, EmptyEntityDeclarationBlockList, ParameterEndStatus.Closed, UtilityType.ReadWrite, EmptyGetRequireBlockList, EmptyGetEnsureBlockList, EmptyGetIdentifierBlockList, EmptySetRequireBlockList, EmptySetEnsureBlockList, EmptySetIdentifierBlockList); });
 
 #if !DEBUG
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateProcedureType(NullObjectType); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateIndexerType(NullObjectType, DefaultObjectType2, EmptyEntityDeclaration); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateIndexerType(DefaultObjectType1, NullObjectType, EmptyEntityDeclaration); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateIndexerType(DefaultObjectType1, DefaultObjectType2, NullEntityDeclaration); });
 
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateProcedureType(NullObjectType, SimpleCommandOverloadTypeBlockList); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateProcedureType(DefaultObjectType1, NullCommandOverloadTypeBlockList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateIndexerType(NullObjectType, DefaultObjectType2, SimpleEntityDeclarationBlockList, ParameterEndStatus.Closed, UtilityType.ReadWrite, EmptyGetRequireBlockList, EmptyGetEnsureBlockList, EmptyGetIdentifierBlockList, EmptySetRequireBlockList, EmptySetEnsureBlockList, EmptySetIdentifierBlockList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateIndexerType(DefaultObjectType1, NullObjectType, SimpleEntityDeclarationBlockList, ParameterEndStatus.Closed, UtilityType.ReadWrite, EmptyGetRequireBlockList, EmptyGetEnsureBlockList, EmptyGetIdentifierBlockList, EmptySetRequireBlockList, EmptySetEnsureBlockList, EmptySetIdentifierBlockList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateIndexerType(DefaultObjectType1, DefaultObjectType2, NullEntityDeclarationBlockList, ParameterEndStatus.Closed, UtilityType.ReadWrite, EmptyGetRequireBlockList, EmptyGetEnsureBlockList, EmptyGetIdentifierBlockList, EmptySetRequireBlockList, EmptySetEnsureBlockList, EmptySetIdentifierBlockList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateIndexerType(DefaultObjectType1, DefaultObjectType2, SimpleEntityDeclarationBlockList, ParameterEndStatus.Closed, UtilityType.ReadWrite, NullGetRequireBlockList, EmptyGetEnsureBlockList, EmptyGetIdentifierBlockList, EmptySetRequireBlockList, EmptySetEnsureBlockList, EmptySetIdentifierBlockList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateIndexerType(DefaultObjectType1, DefaultObjectType2, SimpleEntityDeclarationBlockList, ParameterEndStatus.Closed, UtilityType.ReadWrite, EmptyGetRequireBlockList, NullGetEnsureBlockList, EmptyGetIdentifierBlockList, EmptySetRequireBlockList, EmptySetEnsureBlockList, EmptySetIdentifierBlockList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateIndexerType(DefaultObjectType1, DefaultObjectType2, SimpleEntityDeclarationBlockList, ParameterEndStatus.Closed, UtilityType.ReadWrite, EmptyGetRequireBlockList, EmptyGetEnsureBlockList, NullGetIdentifierBlockList, EmptySetRequireBlockList, EmptySetEnsureBlockList, EmptySetIdentifierBlockList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateIndexerType(DefaultObjectType1, DefaultObjectType2, SimpleEntityDeclarationBlockList, ParameterEndStatus.Closed, UtilityType.ReadWrite, EmptyGetRequireBlockList, EmptyGetEnsureBlockList, EmptyGetIdentifierBlockList, NullSetRequireBlockList, EmptySetEnsureBlockList, EmptySetIdentifierBlockList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateIndexerType(DefaultObjectType1, DefaultObjectType2, SimpleEntityDeclarationBlockList, ParameterEndStatus.Closed, UtilityType.ReadWrite, EmptyGetRequireBlockList, EmptyGetEnsureBlockList, EmptyGetIdentifierBlockList, EmptySetRequireBlockList, NullSetEnsureBlockList, EmptySetIdentifierBlockList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateIndexerType(DefaultObjectType1, DefaultObjectType2, SimpleEntityDeclarationBlockList, ParameterEndStatus.Closed, UtilityType.ReadWrite, EmptyGetRequireBlockList, EmptyGetEnsureBlockList, EmptyGetIdentifierBlockList, EmptySetRequireBlockList, EmptySetEnsureBlockList, NullSetIdentifierBlockList); });
 #endif
 
-            PropertyType PropertyType1 = NodeHelper.CreatePropertyType(DefaultObjectType1, DefaultObjectType2);
-            PropertyType PropertyType2 = NodeHelper.CreatePropertyType(DefaultObjectType1, DefaultObjectType2, UtilityType.ReadWrite, EmptyGetEnsureBlockList, EmptyGetIdentifierBlockList, EmptySetRequireBlockList, EmptySetIdentifierBlockList);
+        KeywordAnchoredType KeywordAnchoredType1 = NodeHelper.CreateKeywordAnchoredType(Keyword.Current);
+
+        ProcedureType ProcedureType1 = NodeHelper.CreateProcedureType(DefaultObjectType1);
+        ProcedureType ProcedureType2 = NodeHelper.CreateProcedureType(DefaultObjectType1, SimpleCommandOverloadTypeBlockList);
+
+        CheckMustNotBeEmptyException("overloadBlocks", () => { NodeHelper.CreateProcedureType(DefaultObjectType1, EmptyCommandOverloadTypeBlockList); });
 
 #if !DEBUG
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreatePropertyType(NullObjectType, DefaultObjectType2); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreatePropertyType(DefaultObjectType1, NullObjectType); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateProcedureType(NullObjectType); });
 
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreatePropertyType(NullObjectType, DefaultObjectType2, UtilityType.ReadWrite, EmptyGetEnsureBlockList, EmptyGetIdentifierBlockList, EmptySetRequireBlockList, EmptySetIdentifierBlockList); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreatePropertyType(DefaultObjectType1, NullObjectType, UtilityType.ReadWrite, EmptyGetEnsureBlockList, EmptyGetIdentifierBlockList, EmptySetRequireBlockList, EmptySetIdentifierBlockList); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreatePropertyType(DefaultObjectType1, DefaultObjectType2, UtilityType.ReadWrite, NullGetEnsureBlockList, EmptyGetIdentifierBlockList, EmptySetRequireBlockList, EmptySetIdentifierBlockList); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreatePropertyType(DefaultObjectType1, DefaultObjectType2, UtilityType.ReadWrite, EmptyGetEnsureBlockList, NullGetIdentifierBlockList, EmptySetRequireBlockList, EmptySetIdentifierBlockList); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreatePropertyType(DefaultObjectType1, DefaultObjectType2, UtilityType.ReadWrite, EmptyGetEnsureBlockList, EmptyGetIdentifierBlockList, NullSetRequireBlockList, EmptySetIdentifierBlockList); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreatePropertyType(DefaultObjectType1, DefaultObjectType2, UtilityType.ReadWrite, EmptyGetEnsureBlockList, EmptyGetIdentifierBlockList, EmptySetRequireBlockList, NullSetIdentifierBlockList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateProcedureType(NullObjectType, SimpleCommandOverloadTypeBlockList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateProcedureType(DefaultObjectType1, NullCommandOverloadTypeBlockList); });
 #endif
 
-            SimpleType SimpleType1 = NodeHelper.CreateSimpleType(SharingType.NotShared, EmptyIdentifier);
+        PropertyType PropertyType1 = NodeHelper.CreatePropertyType(DefaultObjectType1, DefaultObjectType2);
+        PropertyType PropertyType2 = NodeHelper.CreatePropertyType(DefaultObjectType1, DefaultObjectType2, UtilityType.ReadWrite, EmptyGetEnsureBlockList, EmptyGetIdentifierBlockList, EmptySetRequireBlockList, EmptySetIdentifierBlockList);
 
 #if !DEBUG
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateSimpleType(SharingType.NotShared, NullIdentifier); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreatePropertyType(NullObjectType, DefaultObjectType2); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreatePropertyType(DefaultObjectType1, NullObjectType); });
+
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreatePropertyType(NullObjectType, DefaultObjectType2, UtilityType.ReadWrite, EmptyGetEnsureBlockList, EmptyGetIdentifierBlockList, EmptySetRequireBlockList, EmptySetIdentifierBlockList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreatePropertyType(DefaultObjectType1, NullObjectType, UtilityType.ReadWrite, EmptyGetEnsureBlockList, EmptyGetIdentifierBlockList, EmptySetRequireBlockList, EmptySetIdentifierBlockList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreatePropertyType(DefaultObjectType1, DefaultObjectType2, UtilityType.ReadWrite, NullGetEnsureBlockList, EmptyGetIdentifierBlockList, EmptySetRequireBlockList, EmptySetIdentifierBlockList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreatePropertyType(DefaultObjectType1, DefaultObjectType2, UtilityType.ReadWrite, EmptyGetEnsureBlockList, NullGetIdentifierBlockList, EmptySetRequireBlockList, EmptySetIdentifierBlockList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreatePropertyType(DefaultObjectType1, DefaultObjectType2, UtilityType.ReadWrite, EmptyGetEnsureBlockList, EmptyGetIdentifierBlockList, NullSetRequireBlockList, EmptySetIdentifierBlockList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreatePropertyType(DefaultObjectType1, DefaultObjectType2, UtilityType.ReadWrite, EmptyGetEnsureBlockList, EmptyGetIdentifierBlockList, EmptySetRequireBlockList, NullSetIdentifierBlockList); });
 #endif
 
-            TupleType TupleType1 = NodeHelper.CreateTupleType(EmptyEntityDeclaration);
-            TupleType TupleType = NodeHelper.CreateTupleType(SharingType.NotShared, SimpleEntityDeclarationBlockList);
-
-            CheckMustNotBeEmptyException("entityDeclarationBlocks", () => { NodeHelper.CreateTupleType(SharingType.NotShared, EmptyEntityDeclarationBlockList); });
+        SimpleType SimpleType1 = NodeHelper.CreateSimpleType(SharingType.NotShared, EmptyIdentifier);
 
 #if !DEBUG
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateTupleType(NullEntityDeclaration); });
-
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateTupleType(SharingType.NotShared, NullEntityDeclarationBlockList); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateSimpleType(SharingType.NotShared, NullIdentifier); });
 #endif
-        }
 
-        [Test]
-        public static void TestTypeArgument()
-        {
-            Identifier EmptyIdentifier = NodeHelper.CreateEmptyIdentifier();
-            ObjectType DefaultObjectType = NodeHelper.CreateDefaultObjectType();
+        TupleType TupleType1 = NodeHelper.CreateTupleType(EmptyEntityDeclaration);
+        TupleType TupleType = NodeHelper.CreateTupleType(SharingType.NotShared, SimpleEntityDeclarationBlockList);
+
+        CheckMustNotBeEmptyException("entityDeclarationBlocks", () => { NodeHelper.CreateTupleType(SharingType.NotShared, EmptyEntityDeclarationBlockList); });
 
 #if !DEBUG
-            Identifier NullIdentifier = null!;
-            ObjectType NullObjectType = null!;
-#endif
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateTupleType(NullEntityDeclaration); });
 
-            AssignmentTypeArgument AssignmentTypeArgument1 = NodeHelper.CreateAssignmentTypeArgument(EmptyIdentifier, DefaultObjectType);
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateTupleType(SharingType.NotShared, NullEntityDeclarationBlockList); });
+#endif
+    }
+
+    [Test]
+    public static void TestTypeArgument()
+    {
+        Identifier EmptyIdentifier = NodeHelper.CreateEmptyIdentifier();
+        ObjectType DefaultObjectType = NodeHelper.CreateDefaultObjectType();
 
 #if !DEBUG
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateAssignmentTypeArgument(NullIdentifier, DefaultObjectType); });
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateAssignmentTypeArgument(EmptyIdentifier, NullObjectType); });
+        Identifier NullIdentifier = null!;
+        ObjectType NullObjectType = null!;
 #endif
 
-            PositionalTypeArgument PositionalTypeArgument1 = NodeHelper.CreatePositionalTypeArgument(DefaultObjectType);
+        AssignmentTypeArgument AssignmentTypeArgument1 = NodeHelper.CreateAssignmentTypeArgument(EmptyIdentifier, DefaultObjectType);
 
 #if !DEBUG
-            Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreatePositionalTypeArgument(NullObjectType); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateAssignmentTypeArgument(NullIdentifier, DefaultObjectType); });
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateAssignmentTypeArgument(EmptyIdentifier, NullObjectType); });
 #endif
-        }
 
-        private static void CheckMustNotBeEmptyException(string parameterName, TestDelegate code)
-        {
-            ArgumentException? MustNotBeEmptyException = Assert.Throws<ArgumentException>(code);
-            Assert.NotNull(MustNotBeEmptyException);
-            Assert.AreEqual(MustNotBeEmptyException?.Message, $"{parameterName} must not be empty");
-        }
+        PositionalTypeArgument PositionalTypeArgument1 = NodeHelper.CreatePositionalTypeArgument(DefaultObjectType);
 
-        private static void CheckWrongTypeException(string parameterName, Type baseType, TestDelegate code)
-        {
-            ArgumentException? WrongTypeException = Assert.Throws<ArgumentException>(code);
-            Assert.NotNull(WrongTypeException);
-            Assert.AreEqual(WrongTypeException?.Message, $"{parameterName} must inherit from {baseType.FullName}");
-        }
+#if !DEBUG
+        Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreatePositionalTypeArgument(NullObjectType); });
+#endif
+    }
+
+    private static void CheckMustNotBeEmptyException(string parameterName, TestDelegate code)
+    {
+        ArgumentException? MustNotBeEmptyException = Assert.Throws<ArgumentException>(code);
+        Assert.NotNull(MustNotBeEmptyException);
+        Assert.AreEqual(MustNotBeEmptyException?.Message, $"{parameterName} must not be empty");
+    }
+
+    private static void CheckWrongTypeException(string parameterName, Type baseType, TestDelegate code)
+    {
+        ArgumentException? WrongTypeException = Assert.Throws<ArgumentException>(code);
+        Assert.NotNull(WrongTypeException);
+        Assert.AreEqual(WrongTypeException?.Message, $"{parameterName} must inherit from {baseType.FullName}");
     }
 }

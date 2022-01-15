@@ -1,18 +1,17 @@
-namespace BaseNode
+namespace BaseNode;
+
+/// <summary>
+/// Event type.
+/// </summary>
+public enum EventType
 {
     /// <summary>
-    /// Event type.
+    /// Event can be reset after being signaled.
     /// </summary>
-    public enum EventType
-    {
-        /// <summary>
-        /// Event can be reset after being signaled.
-        /// </summary>
-        Single,
+    Single,
 
-        /// <summary>
-        /// Event can signaled only once and never reset.
-        /// </summary>
-        Forever,
-    }
+    /// <summary>
+    /// Event can signaled only once and never reset.
+    /// </summary>
+    Forever,
 }

@@ -1,31 +1,30 @@
-﻿namespace Easly
+﻿namespace Easly;
+
+using System.Reflection;
+
+/// <summary>
+/// Represents an entity for named features.
+/// </summary>
+public class NamedFeatureEntity : FeatureEntity
 {
-    using System.Reflection;
-
+    #region Init
     /// <summary>
-    /// Represents an entity for named features.
+    /// Initializes a new instance of the <see cref="NamedFeatureEntity"/> class.
     /// </summary>
-    public class NamedFeatureEntity : FeatureEntity
+    /// <param name="featureInfo">The feature information from reflection.</param>
+    public NamedFeatureEntity(MemberInfo featureInfo)
+        : base(featureInfo)
     {
-        #region Init
-        /// <summary>
-        /// Initializes a new instance of the <see cref="NamedFeatureEntity"/> class.
-        /// </summary>
-        /// <param name="featureInfo">The feature information from reflection.</param>
-        public NamedFeatureEntity(MemberInfo featureInfo)
-            : base(featureInfo)
-        {
-        }
-        #endregion
-
-        #region Properties
-        /// <summary>
-        /// Gets the feature name.
-        /// </summary>
-        public string Name
-        {
-            get { return FeatureInfo.Name; }
-        }
-        #endregion
     }
+    #endregion
+
+    #region Properties
+    /// <summary>
+    /// Gets the feature name.
+    /// </summary>
+    public string Name
+    {
+        get { return FeatureInfo.Name; }
+    }
+    #endregion
 }

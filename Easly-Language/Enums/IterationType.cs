@@ -1,18 +1,17 @@
-namespace BaseNode
+namespace BaseNode;
+
+/// <summary>
+/// Iteration type.
+/// </summary>
+public enum IterationType
 {
     /// <summary>
-    /// Iteration type.
+    /// All iterators are iterated at the same time (N iterations).
     /// </summary>
-    public enum IterationType
-    {
-        /// <summary>
-        /// All iterators are iterated at the same time (N iterations).
-        /// </summary>
-        Single,
+    Single,
 
-        /// <summary>
-        /// Nested iterators (N ^ P iterations).
-        /// </summary>
-        Nested,
-    }
+    /// <summary>
+    /// Nested iterators (N ^ P iterations).
+    /// </summary>
+    Nested,
 }

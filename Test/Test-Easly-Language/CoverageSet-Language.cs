@@ -1,421 +1,420 @@
-﻿namespace TestEaslyLanguage
+﻿namespace TestEaslyLanguage;
+
+using BaseNode;
+using BaseNodeHelper;
+using Easly;
+using NUnit.Framework;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
+
+[TestFixture]
+public partial class CoverageSet
 {
-    using BaseNode;
-    using BaseNodeHelper;
-    using Easly;
-    using NUnit.Framework;
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Reflection;
-    using System.Runtime.Serialization;
-    using System.Runtime.Serialization.Formatters.Binary;
-
-    [TestFixture]
-    public partial class CoverageSet
+    [Test]
+    public static void TestLanguageInitializers()
     {
-        [Test]
-        public static void TestLanguageInitializers()
-        {
-            MethodInfo FunctionInfo = (MethodInfo)typeof(IList).GetMember("IndexOf")[0];
-            PropertyInfo IndexerInfo = typeof(IList).GetProperty("Item")!;
-            MethodInfo ProcedureInfo = (MethodInfo)typeof(IList).GetMember("Clear")[0];
-            PropertyInfo PropertyInfo = typeof(Name).GetProperty("Text")!;
+        MethodInfo FunctionInfo = (MethodInfo)typeof(IList).GetMember("IndexOf")[0];
+        PropertyInfo IndexerInfo = typeof(IList).GetProperty("Item")!;
+        MethodInfo ProcedureInfo = (MethodInfo)typeof(IList).GetMember("Clear")[0];
+        PropertyInfo PropertyInfo = typeof(Name).GetProperty("Text")!;
 
-            FunctionEntity TestFunctionEntity = new(FunctionInfo);
-            IndexerEntity TestIndexerEntity = new(IndexerInfo);
-            ProcedureEntity TestProcedureEntity = new(ProcedureInfo);
-            PropertyEntity TestPropertyEntity = new(PropertyInfo);
+        FunctionEntity TestFunctionEntity = new(FunctionInfo);
+        IndexerEntity TestIndexerEntity = new(IndexerInfo);
+        ProcedureEntity TestProcedureEntity = new(ProcedureInfo);
+        PropertyEntity TestPropertyEntity = new(PropertyInfo);
 
-            TypeEntity ReturnType = TestIndexerEntity.Type;
+        TypeEntity ReturnType = TestIndexerEntity.Type;
 
-            MethodInfo IndexerInfoAsMethod = (MethodInfo)typeof(IList).GetMember("get_Item")[0];
-            TestIndexerEntity = new(IndexerInfoAsMethod);
-            ReturnType = TestIndexerEntity.Type;
+        MethodInfo IndexerInfoAsMethod = (MethodInfo)typeof(IList).GetMember("get_Item")[0];
+        TestIndexerEntity = new(IndexerInfoAsMethod);
+        ReturnType = TestIndexerEntity.Type;
             
-            SpecializedTypeEntity<Class> TestSpecializedTypeEntityClass = SpecializedTypeEntity<Class>.Singleton;
-            TestSpecializedTypeEntityClass = SpecializedTypeEntity<Class>.Singleton; // Class twice to cover different branches in the code.
+        SpecializedTypeEntity<Class> TestSpecializedTypeEntityClass = SpecializedTypeEntity<Class>.Singleton;
+        TestSpecializedTypeEntityClass = SpecializedTypeEntity<Class>.Singleton; // Class twice to cover different branches in the code.
 
-            SpecializedTypeEntity<string> TestSpecializedTypeEntityString = SpecializedTypeEntity<string>.Singleton;
-            TestSpecializedTypeEntityString.Procedure("CopyTo");
-            TestSpecializedTypeEntityString.Function("CompareTo");
-            TestSpecializedTypeEntityString.Property("Length");
+        SpecializedTypeEntity<string> TestSpecializedTypeEntityString = SpecializedTypeEntity<string>.Singleton;
+        TestSpecializedTypeEntityString.Procedure("CopyTo");
+        TestSpecializedTypeEntityString.Function("CompareTo");
+        TestSpecializedTypeEntityString.Property("Length");
 
-            PropertyFeature TestFeature = NodeHelper.CreateEmptyPropertyFeature();
-            Entity TestEntity = Entity.FromThis(TestFeature);
-            Entity TestStaticEntity = Entity.FromStaticConstructor();
+        PropertyFeature TestFeature = NodeHelper.CreateEmptyPropertyFeature();
+        Entity TestEntity = Entity.FromThis(TestFeature);
+        Entity TestStaticEntity = Entity.FromStaticConstructor();
 
-            //System.Diagnostics.Debug.Assert(false);
-            Assert.Throws<TypeInitializationException>(() => { StaticConstructorTest<string> TestObject = new(); });
+        //System.Diagnostics.Debug.Assert(false);
+        Assert.Throws<TypeInitializationException>(() => { StaticConstructorTest<string> TestObject = new(); });
 
-            DateAndTime TestDateAndTime = new();
-            Event TestEvent = new(isAutoReset: true);
+        DateAndTime TestDateAndTime = new();
+        Event TestEvent = new(isAutoReset: true);
 
-            DetachableReference<Node> TestDetachableReference = new();
-            OnceReference<Node> TestOnceReference = new();
-            OptionalReference<Node> TestOptionalReference = new();
-            StableReference<Node> TestStableReference = new();
+        DetachableReference<Node> TestDetachableReference = new();
+        OnceReference<Node> TestOnceReference = new();
+        OptionalReference<Node> TestOptionalReference = new();
+        StableReference<Node> TestStableReference = new();
 
-            SealableList<Node> TestSealableList = new();
-            SealableDictionary<string, Node> TestSealableDictionary = new();
-        }
+        SealableList<Node> TestSealableList = new();
+        SealableDictionary<string, Node> TestSealableDictionary = new();
+    }
 
-        [Test]
-        public static void TestLanguageClasses()
+    [Test]
+    public static void TestLanguageClasses()
+    {
+        MethodInfo FunctionInfo = (MethodInfo)typeof(IList).GetMember("IndexOf")[0];
+        PropertyInfo IndexerInfo = typeof(IList).GetProperty("Item")!;
+        MethodInfo ProcedureInfo = (MethodInfo)typeof(IList).GetMember("Clear")[0];
+        PropertyInfo PropertyInfo = typeof(Name).GetProperty("Text")!;
+
+        FunctionEntity TestFunctionEntity = new(FunctionInfo);
+        IndexerEntity TestIndexerEntity = new(IndexerInfo);
+        ProcedureEntity TestProcedureEntity = new(ProcedureInfo);
+        PropertyEntity TestPropertyEntity = new(PropertyInfo);
+
+        string TestName;
+        TypeEntity TestType;
+
+        TestName = TestFunctionEntity.Name;
+        TestType = TestFunctionEntity.Type;
+        TestType = TestIndexerEntity.Type;
+        TestType = TestPropertyEntity.Type;
+        TestName = TestType.Name;
+
+        Name TestObject = NodeHelper.CreateEmptyName();
+
+        var TestValue = TestPropertyEntity.GetValue(TestObject);
+        TestPropertyEntity.SetValue(TestObject, TestValue);
+    }
+
+    [Test]
+    public static void TestDetachableReference()
+    {
+        Name? TestObject = null;
+        bool IsAssigned;
+
+        DetachableReference<Name> TestDetachableReference = new();
+        IDetachableReference TestInterface = TestDetachableReference;
+
+        IsAssigned = TestDetachableReference.IsAssigned;
+        Assert.False(IsAssigned);
+
+        Assert.Throws<InvalidOperationException>(() => { TestObject = TestDetachableReference.Item; });
+        Assert.Throws<InvalidOperationException>(() => { TestObject = TestInterface.Item as Name; });
+
+        TestObject = NodeHelper.CreateEmptyName();
+
+        TestDetachableReference.Item = TestObject;
+        TestInterface.Item = TestObject;
+
+        IsAssigned = TestDetachableReference.IsAssigned;
+        Assert.True(IsAssigned);
+
+        TestObject = TestDetachableReference.Item;
+        Assert.NotNull(TestObject);
+
+        TestObject = TestInterface.Item as Name;
+        Assert.NotNull(TestObject);
+
+        Assert.Throws<InvalidOperationException>(() => { TestDetachableReference.Item = null!; });
+        Assert.Throws<InvalidOperationException>(() => { TestInterface.Item = null!; });
+
+        IsAssigned = TestDetachableReference.IsAssigned;
+        Assert.True(IsAssigned);
+
+        TestDetachableReference.Detach();
+
+        IsAssigned = TestDetachableReference.IsAssigned;
+        Assert.False(IsAssigned);
+    }
+
+    [Test]
+    public static void TestOnceReference()
+    {
+        Name? TestObject = null;
+        bool IsAssigned;
+
+        OnceReference<Name> TestOnceReference = new();
+        IOnceReference TestInterface = TestOnceReference;
+
+        IsAssigned = TestOnceReference.IsAssigned;
+        Assert.False(IsAssigned);
+
+        Assert.Throws<InvalidOperationException>(() => { TestObject = TestOnceReference.Item; });
+        Assert.Throws<InvalidOperationException>(() => { TestObject = TestInterface.Item as Name; });
+
+        Assert.Throws<InvalidOperationException>(() => { TestOnceReference.Item = null!; });
+        Assert.Throws<InvalidOperationException>(() => { TestInterface.Item = null!; });
+
+        TestObject = NodeHelper.CreateEmptyName();
+
+        TestInterface.Item = TestObject;
+        IsAssigned = TestInterface.IsAssigned;
+        Assert.True(IsAssigned);
+
+        Assert.Throws<InvalidOperationException>(() => { TestInterface.Item = TestObject; });
+
+        TestOnceReference = new();
+        TestOnceReference.Item = TestObject;
+
+        IsAssigned = TestOnceReference.IsAssigned;
+        Assert.True(IsAssigned);
+
+        TestObject = TestOnceReference.Item;
+        Assert.NotNull(TestObject);
+
+        TestObject = TestInterface.Item as Name;
+        Assert.NotNull(TestObject);
+
+        if (TestObject is not null)
         {
-            MethodInfo FunctionInfo = (MethodInfo)typeof(IList).GetMember("IndexOf")[0];
-            PropertyInfo IndexerInfo = typeof(IList).GetProperty("Item")!;
-            MethodInfo ProcedureInfo = (MethodInfo)typeof(IList).GetMember("Clear")[0];
-            PropertyInfo PropertyInfo = typeof(Name).GetProperty("Text")!;
-
-            FunctionEntity TestFunctionEntity = new(FunctionInfo);
-            IndexerEntity TestIndexerEntity = new(IndexerInfo);
-            ProcedureEntity TestProcedureEntity = new(ProcedureInfo);
-            PropertyEntity TestPropertyEntity = new(PropertyInfo);
-
-            string TestName;
-            TypeEntity TestType;
-
-            TestName = TestFunctionEntity.Name;
-            TestType = TestFunctionEntity.Type;
-            TestType = TestIndexerEntity.Type;
-            TestType = TestPropertyEntity.Type;
-            TestName = TestType.Name;
-
-            Name TestObject = NodeHelper.CreateEmptyName();
-
-            var TestValue = TestPropertyEntity.GetValue(TestObject);
-            TestPropertyEntity.SetValue(TestObject, TestValue);
-        }
-
-        [Test]
-        public static void TestDetachableReference()
-        {
-            Name? TestObject = null;
-            bool IsAssigned;
-
-            DetachableReference<Name> TestDetachableReference = new();
-            IDetachableReference TestInterface = TestDetachableReference;
-
-            IsAssigned = TestDetachableReference.IsAssigned;
-            Assert.False(IsAssigned);
-
-            Assert.Throws<InvalidOperationException>(() => { TestObject = TestDetachableReference.Item; });
-            Assert.Throws<InvalidOperationException>(() => { TestObject = TestInterface.Item as Name; });
+            Assert.Throws<InvalidOperationException>(() => { TestOnceReference.Item = TestObject; });
 
             TestObject = NodeHelper.CreateEmptyName();
 
-            TestDetachableReference.Item = TestObject;
-            TestInterface.Item = TestObject;
-
-            IsAssigned = TestDetachableReference.IsAssigned;
-            Assert.True(IsAssigned);
-
-            TestObject = TestDetachableReference.Item;
-            Assert.NotNull(TestObject);
-
-            TestObject = TestInterface.Item as Name;
-            Assert.NotNull(TestObject);
-
-            Assert.Throws<InvalidOperationException>(() => { TestDetachableReference.Item = null!; });
-            Assert.Throws<InvalidOperationException>(() => { TestInterface.Item = null!; });
-
-            IsAssigned = TestDetachableReference.IsAssigned;
-            Assert.True(IsAssigned);
-
-            TestDetachableReference.Detach();
-
-            IsAssigned = TestDetachableReference.IsAssigned;
-            Assert.False(IsAssigned);
+            Assert.Throws<InvalidOperationException>(() => { TestOnceReference.Item = TestObject; });
         }
+    }
 
-        [Test]
-        public static void TestOnceReference()
-        {
-            Name? TestObject = null;
-            bool IsAssigned;
+    [Test]
+    public static void TestOptionalReference()
+    {
+        Name? TestObject = null;
+        bool IsAssigned, HasItem;
 
-            OnceReference<Name> TestOnceReference = new();
-            IOnceReference TestInterface = TestOnceReference;
+        OptionalReference<Name> TestOptionalReference = new();
+        IOptionalReference TestInterface = TestOptionalReference;
 
-            IsAssigned = TestOnceReference.IsAssigned;
-            Assert.False(IsAssigned);
+        IsAssigned = TestOptionalReference.IsAssigned;
+        HasItem = TestOptionalReference.HasItem;
+        Assert.False(IsAssigned);
+        Assert.False(HasItem);
 
-            Assert.Throws<InvalidOperationException>(() => { TestObject = TestOnceReference.Item; });
-            Assert.Throws<InvalidOperationException>(() => { TestObject = TestInterface.Item as Name; });
+        Assert.Throws<InvalidOperationException>(() => { TestOptionalReference.Assign(); });
 
-            Assert.Throws<InvalidOperationException>(() => { TestOnceReference.Item = null!; });
-            Assert.Throws<InvalidOperationException>(() => { TestInterface.Item = null!; });
+        Assert.Throws<InvalidOperationException>(() => { TestObject = TestOptionalReference.Item; });
+        Assert.Throws<InvalidOperationException>(() => { TestObject = TestInterface.Item as Name; });
 
-            TestObject = NodeHelper.CreateEmptyName();
+        TestObject = NodeHelper.CreateEmptyName();
 
-            TestInterface.Item = TestObject;
-            IsAssigned = TestInterface.IsAssigned;
-            Assert.True(IsAssigned);
+        TestOptionalReference.Item = TestObject;
+        TestInterface.Item = TestObject;
 
-            Assert.Throws<InvalidOperationException>(() => { TestInterface.Item = TestObject; });
+        IsAssigned = TestOptionalReference.IsAssigned;
+        HasItem = TestOptionalReference.HasItem;
+        Assert.True(IsAssigned);
+        Assert.True(HasItem);
 
-            TestOnceReference = new();
-            TestOnceReference.Item = TestObject;
+        TestObject = TestOptionalReference.Item;
+        Assert.NotNull(TestObject);
 
-            IsAssigned = TestOnceReference.IsAssigned;
-            Assert.True(IsAssigned);
+        TestObject = TestInterface.Item as Name;
+        Assert.NotNull(TestObject);
 
-            TestObject = TestOnceReference.Item;
-            Assert.NotNull(TestObject);
+        Assert.Throws<InvalidOperationException>(() => { TestOptionalReference.Item = null!; });
+        Assert.Throws<InvalidOperationException>(() => { TestInterface.Item = null!; });
 
-            TestObject = TestInterface.Item as Name;
-            Assert.NotNull(TestObject);
+        TestOptionalReference.Unassign();
+        IsAssigned = TestOptionalReference.IsAssigned;
+        HasItem = TestOptionalReference.HasItem;
+        Assert.False(IsAssigned);
+        Assert.True(HasItem);
 
-            if (TestObject is not null)
-            {
-                Assert.Throws<InvalidOperationException>(() => { TestOnceReference.Item = TestObject; });
+        TestOptionalReference.Assign();
+        IsAssigned = TestOptionalReference.IsAssigned;
+        HasItem = TestOptionalReference.HasItem;
+        Assert.True(IsAssigned);
+        Assert.True(HasItem);
 
-                TestObject = NodeHelper.CreateEmptyName();
+        TestOptionalReference.Clear();
+        IsAssigned = TestOptionalReference.IsAssigned;
+        HasItem = TestOptionalReference.HasItem;
+        Assert.False(IsAssigned);
+        Assert.False(HasItem);
 
-                Assert.Throws<InvalidOperationException>(() => { TestOnceReference.Item = TestObject; });
-            }
-        }
+        TestObject = NodeHelper.CreateEmptyName();
+        TestOptionalReference = new(TestObject);
 
-        [Test]
-        public static void TestOptionalReference()
-        {
-            Name? TestObject = null;
-            bool IsAssigned, HasItem;
+        IsAssigned = TestOptionalReference.IsAssigned;
+        HasItem = TestOptionalReference.HasItem;
+        Assert.False(IsAssigned);
+        Assert.True(HasItem);
+    }
 
-            OptionalReference<Name> TestOptionalReference = new();
-            IOptionalReference TestInterface = TestOptionalReference;
+    [Test]
+    public static void TestStableReference()
+    {
+        Name? TestObject = null;
+        bool IsAssigned;
 
-            IsAssigned = TestOptionalReference.IsAssigned;
-            HasItem = TestOptionalReference.HasItem;
-            Assert.False(IsAssigned);
-            Assert.False(HasItem);
+        StableReference<Name> TestStableReference = new();
+        IStableReference TestInterface = TestStableReference;
 
-            Assert.Throws<InvalidOperationException>(() => { TestOptionalReference.Assign(); });
+        IsAssigned = TestStableReference.IsAssigned;
+        Assert.False(IsAssigned);
 
-            Assert.Throws<InvalidOperationException>(() => { TestObject = TestOptionalReference.Item; });
-            Assert.Throws<InvalidOperationException>(() => { TestObject = TestInterface.Item as Name; });
+        Assert.Throws<InvalidOperationException>(() => { TestObject = TestStableReference.Item; });
+        Assert.Throws<InvalidOperationException>(() => { TestObject = TestInterface.Item as Name; });
 
-            TestObject = NodeHelper.CreateEmptyName();
+        TestObject = NodeHelper.CreateEmptyName();
 
-            TestOptionalReference.Item = TestObject;
-            TestInterface.Item = TestObject;
+        TestInterface.Item = TestObject;
+        IsAssigned = TestInterface.IsAssigned;
+        Assert.True(IsAssigned);
 
-            IsAssigned = TestOptionalReference.IsAssigned;
-            HasItem = TestOptionalReference.HasItem;
-            Assert.True(IsAssigned);
-            Assert.True(HasItem);
+        TestStableReference = new();
+        TestStableReference.Item = TestObject;
 
-            TestObject = TestOptionalReference.Item;
-            Assert.NotNull(TestObject);
+        IsAssigned = TestStableReference.IsAssigned;
+        Assert.True(IsAssigned);
 
-            TestObject = TestInterface.Item as Name;
-            Assert.NotNull(TestObject);
+        TestObject = TestStableReference.Item;
+        Assert.NotNull(TestObject);
 
-            Assert.Throws<InvalidOperationException>(() => { TestOptionalReference.Item = null!; });
-            Assert.Throws<InvalidOperationException>(() => { TestInterface.Item = null!; });
+        TestObject = TestInterface.Item as Name;
+        Assert.NotNull(TestObject);
 
-            TestOptionalReference.Unassign();
-            IsAssigned = TestOptionalReference.IsAssigned;
-            HasItem = TestOptionalReference.HasItem;
-            Assert.False(IsAssigned);
-            Assert.True(HasItem);
+        Assert.Throws<InvalidOperationException>(() => { TestStableReference.Item = null!; });
+        Assert.Throws<InvalidOperationException>(() => { TestInterface.Item = null!; });
 
-            TestOptionalReference.Assign();
-            IsAssigned = TestOptionalReference.IsAssigned;
-            HasItem = TestOptionalReference.HasItem;
-            Assert.True(IsAssigned);
-            Assert.True(HasItem);
+        IsAssigned = TestStableReference.IsAssigned;
+        Assert.True(IsAssigned);
 
-            TestOptionalReference.Clear();
-            IsAssigned = TestOptionalReference.IsAssigned;
-            HasItem = TestOptionalReference.HasItem;
-            Assert.False(IsAssigned);
-            Assert.False(HasItem);
+        TestObject = NodeHelper.CreateEmptyName();
+        TestStableReference.Item = TestObject;
 
-            TestObject = NodeHelper.CreateEmptyName();
-            TestOptionalReference = new(TestObject);
+        IsAssigned = TestStableReference.IsAssigned;
+        Assert.True(IsAssigned);
+    }
 
-            IsAssigned = TestOptionalReference.IsAssigned;
-            HasItem = TestOptionalReference.HasItem;
-            Assert.False(IsAssigned);
-            Assert.True(HasItem);
-        }
+    [Test]
+    public static void TestEvent()
+    {
+        Event TestManualReset = new(isAutoReset: false, false);
+        Assert.False(TestManualReset.IsTrue);
+        Assert.False(TestManualReset.IsFalse);
 
-        [Test]
-        public static void TestStableReference()
-        {
-            Name? TestObject = null;
-            bool IsAssigned;
+        TestManualReset.Raise();
 
-            StableReference<Name> TestStableReference = new();
-            IStableReference TestInterface = TestStableReference;
+        Event TestAutoReset = new(isAutoReset: true, false);
+        Assert.False(TestAutoReset.IsTrue);
+        Assert.False(TestAutoReset.IsFalse);
 
-            IsAssigned = TestStableReference.IsAssigned;
-            Assert.False(IsAssigned);
+        TestAutoReset.Raise();
 
-            Assert.Throws<InvalidOperationException>(() => { TestObject = TestStableReference.Item; });
-            Assert.Throws<InvalidOperationException>(() => { TestObject = TestInterface.Item as Name; });
+        EventBase Result;
+        Result = TestManualReset & TestAutoReset;
+        Result = TestManualReset | TestAutoReset;
+        Result = TestManualReset ^ TestAutoReset;
+        Result = TestManualReset / TestAutoReset;
 
-            TestObject = NodeHelper.CreateEmptyName();
+        bool IsTrue, IsSignaled;
 
-            TestInterface.Item = TestObject;
-            IsAssigned = TestInterface.IsAssigned;
-            Assert.True(IsAssigned);
+        IsTrue = TestManualReset ? true : false;
+        Assert.That(!TestManualReset.IsTrue);
+        Assert.That(!TestManualReset.IsFalse);
 
-            TestStableReference = new();
-            TestStableReference.Item = TestObject;
+        Result = TestAutoReset && TestAutoReset;
+        Assert.That(!Result.IsTrue);
+        Assert.That(!Result.IsFalse);
 
-            IsAssigned = TestStableReference.IsAssigned;
-            Assert.True(IsAssigned);
+        TestManualReset.Wait();
+        TestAutoReset.Wait();
 
-            TestObject = TestStableReference.Item;
-            Assert.NotNull(TestObject);
+        IsSignaled = TestManualReset.IsSignaled;
+        Assert.True(IsSignaled);
 
-            TestObject = TestInterface.Item as Name;
-            Assert.NotNull(TestObject);
+        IsSignaled = TestAutoReset.IsSignaled;
+        Assert.False(IsSignaled);
+    }
 
-            Assert.Throws<InvalidOperationException>(() => { TestStableReference.Item = null!; });
-            Assert.Throws<InvalidOperationException>(() => { TestInterface.Item = null!; });
+    [Test]
+    public static void TestSealableDictionaryFromSerializer()
+    {
+        Dictionary<string, string> TestDictionary = new() { { "Test", "Test" } };
 
-            IsAssigned = TestStableReference.IsAssigned;
-            Assert.True(IsAssigned);
+        MemoryStream Stream = new MemoryStream();
+        BinaryFormatter Formatter = new BinaryFormatter(null, new StreamingContext());
+        Formatter.Serialize(Stream, TestDictionary);
 
-            TestObject = NodeHelper.CreateEmptyName();
-            TestStableReference.Item = TestObject;
+        Stream.Seek(0, SeekOrigin.Begin);
 
-            IsAssigned = TestStableReference.IsAssigned;
-            Assert.True(IsAssigned);
-        }
+        object Deserialized = Formatter.Deserialize(Stream);
+    }
 
-        [Test]
-        public static void TestEvent()
-        {
-            Event TestManualReset = new(isAutoReset: false, false);
-            Assert.False(TestManualReset.IsTrue);
-            Assert.False(TestManualReset.IsFalse);
+    [Test]
+    public static void TestSealableDictionary()
+    {
+        SealableDictionary<string, string> TestDictionary = new();
+        Assert.That(!TestDictionary.IsSealed);
 
-            TestManualReset.Raise();
+        TestDictionary.Add("Key1", "Value1");
+        TestDictionary.Add("Key2", "Value2");
 
-            Event TestAutoReset = new(isAutoReset: true, false);
-            Assert.False(TestAutoReset.IsTrue);
-            Assert.False(TestAutoReset.IsFalse);
+        ICollection<string> Indexes = TestDictionary.Indexes;
 
-            TestAutoReset.Raise();
+        TestDictionary.Seal();
+        Assert.That(TestDictionary.IsSealed);
 
-            EventBase Result;
-            Result = TestManualReset & TestAutoReset;
-            Result = TestManualReset | TestAutoReset;
-            Result = TestManualReset ^ TestAutoReset;
-            Result = TestManualReset / TestAutoReset;
+        Assert.Throws<InvalidOperationException>(() => { TestDictionary.Add("Key", "Value"); });
 
-            bool IsTrue, IsSignaled;
+        ISealableDictionary<string, string> CloneDictionary = TestDictionary.CloneUnsealed();
+        Assert.That(!CloneDictionary.IsSealed);
 
-            IsTrue = TestManualReset ? true : false;
-            Assert.That(!TestManualReset.IsTrue);
-            Assert.That(!TestManualReset.IsFalse);
+        Assert.Throws<InvalidOperationException>(() => { CloneDictionary.Add("Key1", "Value1"); });
 
-            Result = TestAutoReset && TestAutoReset;
-            Assert.That(!Result.IsTrue);
-            Assert.That(!Result.IsFalse);
+        CloneDictionary.ChangeKey("Key1", "OtherKey1");
 
-            TestManualReset.Wait();
-            TestAutoReset.Wait();
+        Assert.Throws<InvalidOperationException>(() => { CloneDictionary.ChangeKey("OtherKey1", "Key2"); });
+        Assert.Throws<InvalidOperationException>(() => { CloneDictionary.ChangeKey("OtherKey2", "Any"); });
 
-            IsSignaled = TestManualReset.IsSignaled;
-            Assert.True(IsSignaled);
+        SealableDictionary<string, string> OtherDictionary = new();
+        OtherDictionary.Add("Key3", "Value3");
 
-            IsSignaled = TestAutoReset.IsSignaled;
-            Assert.False(IsSignaled);
-        }
+        CloneDictionary.Merge(OtherDictionary);
 
-        [Test]
-        public static void TestSealableDictionaryFromSerializer()
-        {
-            Dictionary<string, string> TestDictionary = new() { { "Test", "Test" } };
+        Assert.Throws<InvalidOperationException>(() => { CloneDictionary.Merge(OtherDictionary); });
 
-            MemoryStream Stream = new MemoryStream();
-            BinaryFormatter Formatter = new BinaryFormatter(null, new StreamingContext());
-            Formatter.Serialize(Stream, TestDictionary);
+        OtherDictionary.Add("Key4", "Value4");
 
-            Stream.Seek(0, SeekOrigin.Begin);
+        CloneDictionary.MergeWithConflicts(OtherDictionary);
 
-            object Deserialized = Formatter.Deserialize(Stream);
-        }
+        CloneDictionary.Seal();
+        Assert.That(CloneDictionary.IsSealed);
 
-        [Test]
-        public static void TestSealableDictionary()
-        {
-            SealableDictionary<string, string> TestDictionary = new();
-            Assert.That(!TestDictionary.IsSealed);
+        Assert.Throws<InvalidOperationException>(() => { CloneDictionary.Merge(OtherDictionary); });
+        Assert.Throws<InvalidOperationException>(() => { CloneDictionary.MergeWithConflicts(OtherDictionary); });
+        Assert.Throws<InvalidOperationException>(() => { CloneDictionary.Seal(); });
+    }
 
-            TestDictionary.Add("Key1", "Value1");
-            TestDictionary.Add("Key2", "Value2");
+    [Test]
+    public static void TestSealableList()
+    {
+        SealableList<string> TestList = new();
+        Assert.That(!TestList.IsSealed);
 
-            ICollection<string> Indexes = TestDictionary.Indexes;
+        TestList.Add("Item1");
 
-            TestDictionary.Seal();
-            Assert.That(TestDictionary.IsSealed);
+        TestList.Seal();
+        Assert.That(TestList.IsSealed);
 
-            Assert.Throws<InvalidOperationException>(() => { TestDictionary.Add("Key", "Value"); });
+        Assert.Throws<InvalidOperationException>(() => { TestList.Add("Item1"); });
 
-            ISealableDictionary<string, string> CloneDictionary = TestDictionary.CloneUnsealed();
-            Assert.That(!CloneDictionary.IsSealed);
+        ISealableList<string> CloneList = TestList.CloneUnsealed();
+        Assert.That(!CloneList.IsSealed);
 
-            Assert.Throws<InvalidOperationException>(() => { CloneDictionary.Add("Key1", "Value1"); });
+        SealableList<string> OtherList = new();
+        OtherList.Add("Item2");
 
-            CloneDictionary.ChangeKey("Key1", "OtherKey1");
+        CloneList.AddRange(OtherList);
 
-            Assert.Throws<InvalidOperationException>(() => { CloneDictionary.ChangeKey("OtherKey1", "Key2"); });
-            Assert.Throws<InvalidOperationException>(() => { CloneDictionary.ChangeKey("OtherKey2", "Any"); });
+        CloneList.Seal();
+        Assert.That(CloneList.IsSealed);
 
-            SealableDictionary<string, string> OtherDictionary = new();
-            OtherDictionary.Add("Key3", "Value3");
-
-            CloneDictionary.Merge(OtherDictionary);
-
-            Assert.Throws<InvalidOperationException>(() => { CloneDictionary.Merge(OtherDictionary); });
-
-            OtherDictionary.Add("Key4", "Value4");
-
-            CloneDictionary.MergeWithConflicts(OtherDictionary);
-
-            CloneDictionary.Seal();
-            Assert.That(CloneDictionary.IsSealed);
-
-            Assert.Throws<InvalidOperationException>(() => { CloneDictionary.Merge(OtherDictionary); });
-            Assert.Throws<InvalidOperationException>(() => { CloneDictionary.MergeWithConflicts(OtherDictionary); });
-            Assert.Throws<InvalidOperationException>(() => { CloneDictionary.Seal(); });
-        }
-
-        [Test]
-        public static void TestSealableList()
-        {
-            SealableList<string> TestList = new();
-            Assert.That(!TestList.IsSealed);
-
-            TestList.Add("Item1");
-
-            TestList.Seal();
-            Assert.That(TestList.IsSealed);
-
-            Assert.Throws<InvalidOperationException>(() => { TestList.Add("Item1"); });
-
-            ISealableList<string> CloneList = TestList.CloneUnsealed();
-            Assert.That(!CloneList.IsSealed);
-
-            SealableList<string> OtherList = new();
-            OtherList.Add("Item2");
-
-            CloneList.AddRange(OtherList);
-
-            CloneList.Seal();
-            Assert.That(CloneList.IsSealed);
-
-            Assert.Throws<InvalidOperationException>(() => { CloneList.Add("Item3"); });
-            Assert.Throws<InvalidOperationException>(() => { CloneList.AddRange(OtherList); });
-            Assert.Throws<InvalidOperationException>(() => { CloneList.Seal(); });
-        }
+        Assert.Throws<InvalidOperationException>(() => { CloneList.Add("Item3"); });
+        Assert.Throws<InvalidOperationException>(() => { CloneList.AddRange(OtherList); });
+        Assert.Throws<InvalidOperationException>(() => { CloneList.Seal(); });
     }
 }

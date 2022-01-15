@@ -1,18 +1,17 @@
-namespace BaseNode
+namespace BaseNode;
+
+/// <summary>
+/// Equality type.
+/// </summary>
+public enum EqualityType
 {
     /// <summary>
-    /// Equality type.
+    /// Bit by bit equality.
     /// </summary>
-    public enum EqualityType
-    {
-        /// <summary>
-        /// Bit by bit equality.
-        /// </summary>
-        Physical,
+    Physical,
 
-        /// <summary>
-        /// Field equality, to all reference depths.
-        /// </summary>
-        Deep,
-    }
+    /// <summary>
+    /// Field equality, to all reference depths.
+    /// </summary>
+    Deep,
 }

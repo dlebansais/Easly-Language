@@ -1,23 +1,22 @@
-namespace BaseNode
+namespace BaseNode;
+
+/// <summary>
+/// Utility type.
+/// </summary>
+public enum UtilityType
 {
     /// <summary>
-    /// Utility type.
+    /// Read-only.
     /// </summary>
-    public enum UtilityType
-    {
-        /// <summary>
-        /// Read-only.
-        /// </summary>
-        ReadOnly,
+    ReadOnly,
 
-        /// <summary>
-        /// Write-only.
-        /// </summary>
-        WriteOnly,
+    /// <summary>
+    /// Write-only.
+    /// </summary>
+    WriteOnly,
 
-        /// <summary>
-        /// Read and write.
-        /// </summary>
-        ReadWrite,
-    }
+    /// <summary>
+    /// Read and write.
+    /// </summary>
+    ReadWrite,
 }

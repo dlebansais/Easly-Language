@@ -1,44 +1,43 @@
-﻿namespace TestEaslyLanguage
+﻿namespace TestEaslyLanguage;
+
+using BaseNode;
+using BaseNodeHelper;
+using NUnit.Framework;
+using System.Collections.Generic;
+
+[TestFixture]
+public partial class SimplifyArgumentCoverage
 {
-    using BaseNode;
-    using BaseNodeHelper;
-    using NUnit.Framework;
-    using System.Collections.Generic;
-
-    [TestFixture]
-    public partial class SimplifyArgumentCoverage
+    [Test]
+    [Category("Simplify")]
+    public static void TestAssignmentArgument()
     {
-        [Test]
-        [Category("Simplify")]
-        public static void TestAssignmentArgument()
-        {
-            bool Result;
-            Node SimplifiedNode;
+        bool Result;
+        Node SimplifiedNode;
 
-            //System.Diagnostics.Debugger.Launch();
-            Identifier EmptyIdentifier = NodeHelper.CreateEmptyIdentifier();
-            List<Identifier> SimpleParameterList = new() { EmptyIdentifier };
-            Expression DefaultExpression = NodeHelper.CreateDefaultExpression();
+        //System.Diagnostics.Debugger.Launch();
+        Identifier EmptyIdentifier = NodeHelper.CreateEmptyIdentifier();
+        List<Identifier> SimpleParameterList = new() { EmptyIdentifier };
+        Expression DefaultExpression = NodeHelper.CreateDefaultExpression();
 
-            AssignmentArgument Argument1 = NodeHelper.CreateAssignmentArgument(SimpleParameterList, DefaultExpression);
+        AssignmentArgument Argument1 = NodeHelper.CreateAssignmentArgument(SimpleParameterList, DefaultExpression);
 
-            Result = NodeHelper.GetSimplifiedArgument(Argument1, out SimplifiedNode);
-            Assert.True(Result);
-            Assert.That(SimplifiedNode is PositionalArgument);
-        }
+        Result = NodeHelper.GetSimplifiedArgument(Argument1, out SimplifiedNode);
+        Assert.True(Result);
+        Assert.That(SimplifiedNode is PositionalArgument);
+    }
 
-        [Test]
-        [Category("Simplify")]
-        public static void TestPositionalArgument()
-        {
-            bool Result;
+    [Test]
+    [Category("Simplify")]
+    public static void TestPositionalArgument()
+    {
+        bool Result;
 
-            Expression DefaultExpression = NodeHelper.CreateDefaultExpression();
+        Expression DefaultExpression = NodeHelper.CreateDefaultExpression();
 
-            PositionalArgument Argument1 = NodeHelper.CreatePositionalArgument(DefaultExpression);
+        PositionalArgument Argument1 = NodeHelper.CreatePositionalArgument(DefaultExpression);
 
-            Result = NodeHelper.GetSimplifiedArgument(Argument1, out _);
-            Assert.False(Result);
-        }
+        Result = NodeHelper.GetSimplifiedArgument(Argument1, out _);
+        Assert.False(Result);
     }
 }

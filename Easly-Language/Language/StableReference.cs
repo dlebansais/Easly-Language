@@ -1,105 +1,104 @@
-﻿namespace Easly
+﻿namespace Easly;
+
+using System;
+using System.Diagnostics;
+
+/// <summary>
+/// Represents a stable reference.
+/// </summary>
+public interface IStableReference
 {
-    using System;
-    using System.Diagnostics;
+    /// <summary>
+    /// Gets a value indicating whether the reference is assigned.
+    /// </summary>
+    bool IsAssigned { get; }
 
     /// <summary>
-    /// Represents a stable reference.
+    /// Gets or sets the reference.
     /// </summary>
-    public interface IStableReference
-    {
-        /// <summary>
-        /// Gets a value indicating whether the reference is assigned.
-        /// </summary>
-        bool IsAssigned { get; }
+    object Item { get; set; }
+}
 
-        /// <summary>
-        /// Gets or sets the reference.
-        /// </summary>
-        object Item { get; set; }
-    }
+/// <summary>
+/// Represents a stable reference to an object of type <typeparamref name="T"/>.
+/// </summary>
+/// <typeparam name="T">The type of the object.</typeparam>
+public interface IStableReference<T>
+    where T : class
+{
+    /// <summary>
+    /// Gets a value indicating whether the reference is assigned.
+    /// </summary>
+    bool IsAssigned { get; }
 
     /// <summary>
-    /// Represents a stable reference to an object of type <typeparamref name="T"/>.
+    /// Gets or sets the reference.
     /// </summary>
-    /// <typeparam name="T">The type of the object.</typeparam>
-    public interface IStableReference<T>
-        where T : class
-    {
-        /// <summary>
-        /// Gets a value indicating whether the reference is assigned.
-        /// </summary>
-        bool IsAssigned { get; }
+    T Item { get; set; }
+}
 
-        /// <summary>
-        /// Gets or sets the reference.
-        /// </summary>
-        T Item { get; set; }
-    }
+/// <summary>
+/// Represents a stable reference to an object of type <typeparamref name="T"/>.
+/// </summary>
+/// <typeparam name="T">The type of the object.</typeparam>
+public class StableReference<T> : IStableReference<T>, IStableReference
+    where T : class
+{
+    #region Properties
+    /// <summary>
+    /// Gets a value indicating whether the reference is assigned.
+    /// </summary>
+    public bool IsAssigned { get; private set; }
 
     /// <summary>
-    /// Represents a stable reference to an object of type <typeparamref name="T"/>.
+    /// Gets or sets the reference.
     /// </summary>
-    /// <typeparam name="T">The type of the object.</typeparam>
-    public class StableReference<T> : IStableReference<T>, IStableReference
-        where T : class
+    public T Item
     {
-        #region Properties
-        /// <summary>
-        /// Gets a value indicating whether the reference is assigned.
-        /// </summary>
-        public bool IsAssigned { get; private set; }
-
-        /// <summary>
-        /// Gets or sets the reference.
-        /// </summary>
-        public T Item
+        get
         {
-            get
-            {
-                T Result;
+            T Result;
 
-                Debug.Assert(IsAssigned == (ItemInternal is not null), $"{nameof(IsAssigned)} is always true if {nameof(ItemInternal)} has been assigned, and it can only be to a non-null value");
+            Debug.Assert(IsAssigned == (ItemInternal is not null), $"{nameof(IsAssigned)} is always true if {nameof(ItemInternal)} has been assigned, and it can only be to a non-null value");
 
-                if (ItemInternal is not null)
-                    Result = ItemInternal;
-                else
-                    throw new InvalidOperationException();
+            if (ItemInternal is not null)
+                Result = ItemInternal;
+            else
+                throw new InvalidOperationException();
 
-                return Result;
-            }
-            set
-            {
-                if (value is not null)
-                {
-                    ItemInternal = value;
-                    IsAssigned = true;
-                }
-                else
-                    throw new InvalidOperationException();
-            }
+            return Result;
         }
-
-        /// <inheritdoc/>
-        object IStableReference.Item
+        set
         {
-            get
+            if (value is not null)
             {
-                return Item;
+                ItemInternal = value;
+                IsAssigned = true;
             }
-            set
-            {
-                if (value is T AsItem)
-                {
-                    ItemInternal = AsItem;
-                    IsAssigned = true;
-                }
-                else
-                    throw new InvalidOperationException();
-            }
+            else
+                throw new InvalidOperationException();
         }
-
-        private T? ItemInternal;
-        #endregion
     }
+
+    /// <inheritdoc/>
+    object IStableReference.Item
+    {
+        get
+        {
+            return Item;
+        }
+        set
+        {
+            if (value is T AsItem)
+            {
+                ItemInternal = AsItem;
+                IsAssigned = true;
+            }
+            else
+                throw new InvalidOperationException();
+        }
+    }
+
+    private T? ItemInternal;
+    #endregion
 }

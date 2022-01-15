@@ -1,18 +1,17 @@
-namespace BaseNode
+namespace BaseNode;
+
+/// <summary>
+/// Clone type.
+/// </summary>
+public enum CloneType
 {
     /// <summary>
-    /// Clone type.
+    /// Limited to first level of reference.
     /// </summary>
-    public enum CloneType
-    {
-        /// <summary>
-        /// Limited to first level of reference.
-        /// </summary>
-        Shallow,
+    Shallow,
 
-        /// <summary>
-        /// Unlimited.
-        /// </summary>
-        Deep,
-    }
+    /// <summary>
+    /// Unlimited.
+    /// </summary>
+    Deep,
 }

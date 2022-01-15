@@ -1,18 +1,17 @@
-namespace BaseNode
+namespace BaseNode;
+
+/// <summary>
+/// Conformance.
+/// </summary>
+public enum ConformanceType
 {
     /// <summary>
-    /// Conformance.
+    /// Object is conformant.
     /// </summary>
-    public enum ConformanceType
-    {
-        /// <summary>
-        /// Object is conformant.
-        /// </summary>
-        Conformant,
+    Conformant,
 
-        /// <summary>
-        /// Object is not conformant.
-        /// </summary>
-        NonConformant,
-    }
+    /// <summary>
+    /// Object is not conformant.
+    /// </summary>
+    NonConformant,
 }

@@ -1,18 +1,17 @@
-namespace BaseNode
+namespace BaseNode;
+
+/// <summary>
+/// Comparable status.
+/// </summary>
+public enum ComparableStatus
 {
     /// <summary>
-    /// Comparable status.
+    /// Object instances can be compared.
     /// </summary>
-    public enum ComparableStatus
-    {
-        /// <summary>
-        /// Object instances can be compared.
-        /// </summary>
-        Comparable,
+    Comparable,
 
-        /// <summary>
-        /// Object instances are not allowed to be compared.
-        /// </summary>
-        Uncomparable,
-    }
+    /// <summary>
+    /// Object instances are not allowed to be compared.
+    /// </summary>
+    Uncomparable,
 }

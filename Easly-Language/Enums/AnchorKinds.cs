@@ -1,18 +1,17 @@
-namespace BaseNode
+namespace BaseNode;
+
+/// <summary>
+/// Anchor kinds.
+/// </summary>
+public enum AnchorKinds
 {
     /// <summary>
-    /// Anchor kinds.
+    /// Anchor at declaration.
     /// </summary>
-    public enum AnchorKinds
-    {
-        /// <summary>
-        /// Anchor at declaration.
-        /// </summary>
-        Declaration,
+    Declaration,
 
-        /// <summary>
-        /// Anchor at creation.
-        /// </summary>
-        Creation,
-    }
+    /// <summary>
+    /// Anchor at creation.
+    /// </summary>
+    Creation,
 }

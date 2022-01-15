@@ -1,812 +1,811 @@
-﻿namespace TestEaslyLanguage
+﻿namespace TestEaslyLanguage;
+
+using BaseNode;
+using BaseNodeHelper;
+using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+
+[TestFixture]
+public partial class ComplexifyInstructionCoverage
 {
-    using BaseNode;
-    using BaseNodeHelper;
-    using NUnit.Framework;
-    using System;
-    using System.Collections.Generic;
-
-    [TestFixture]
-    public partial class ComplexifyInstructionCoverage
+    [Test]
+    [Category("Complexify")]
+    public static void TestCommandInstruction()
     {
-        [Test]
-        [Category("Complexify")]
-        public static void TestCommandInstruction()
-        {
-            bool Result;
-            IList<Node> ComplexifiedNodeList;
+        bool Result;
+        IList<Node> ComplexifiedNodeList;
 
-            CommandInstruction Instruction1 = NodeHelper.CreateSimpleCommandInstruction(string.Empty);
+        CommandInstruction Instruction1 = NodeHelper.CreateSimpleCommandInstruction(string.Empty);
 
-            Result = NodeHelper.GetComplexifiedNode(Instruction1, out _);
-            Assert.False(Result);
+        Result = NodeHelper.GetComplexifiedNode(Instruction1, out _);
+        Assert.False(Result);
 
-            CommandInstruction Instruction2 = NodeHelper.CreateSimpleCommandInstruction("a.b");
+        CommandInstruction Instruction2 = NodeHelper.CreateSimpleCommandInstruction("a.b");
 
-            Result = NodeHelper.GetComplexifiedNode(Instruction2, out ComplexifiedNodeList);
-            Assert.True(Result);
-            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
-            Assert.That(ComplexifiedNodeList[0] is CommandInstruction);
+        Result = NodeHelper.GetComplexifiedNode(Instruction2, out ComplexifiedNodeList);
+        Assert.True(Result);
+        Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+        Assert.That(ComplexifiedNodeList[0] is CommandInstruction);
 
-            QualifiedName SimpleQualifiedName = NodeHelper.CreateSimpleQualifiedName("a");
-            CommandInstruction Instruction3 = NodeHelper.CreateCommandInstruction(SimpleQualifiedName, new List<Argument>() { NodeHelper.CreateSimplePositionalArgument("a,b")});
+        QualifiedName SimpleQualifiedName = NodeHelper.CreateSimpleQualifiedName("a");
+        CommandInstruction Instruction3 = NodeHelper.CreateCommandInstruction(SimpleQualifiedName, new List<Argument>() { NodeHelper.CreateSimplePositionalArgument("a,b")});
 
-            Result = NodeHelper.GetComplexifiedNode(Instruction3, out ComplexifiedNodeList);
-            Assert.True(Result);
-            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
-            Assert.That(ComplexifiedNodeList[0] is CommandInstruction);
+        Result = NodeHelper.GetComplexifiedNode(Instruction3, out ComplexifiedNodeList);
+        Assert.True(Result);
+        Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+        Assert.That(ComplexifiedNodeList[0] is CommandInstruction);
 
-            CommandInstruction Complexified3 = (CommandInstruction)ComplexifiedNodeList[0];
-            Assert.That(Complexified3.ArgumentBlocks.NodeBlockList.Count == 1 && Complexified3.ArgumentBlocks.NodeBlockList[0].NodeList.Count == 2);
+        CommandInstruction Complexified3 = (CommandInstruction)ComplexifiedNodeList[0];
+        Assert.That(Complexified3.ArgumentBlocks.NodeBlockList.Count == 1 && Complexified3.ArgumentBlocks.NodeBlockList[0].NodeList.Count == 2);
 
-            CommandInstruction Instruction4 = NodeHelper.CreateCommandInstruction(NodeHelper.CreateSimpleQualifiedName("a(b,c)"), new List<Argument>());
+        CommandInstruction Instruction4 = NodeHelper.CreateCommandInstruction(NodeHelper.CreateSimpleQualifiedName("a(b,c)"), new List<Argument>());
 
-            Result = NodeHelper.GetComplexifiedNode(Instruction4, out ComplexifiedNodeList);
-            Assert.True(Result);
-            Assert.AreEqual(ComplexifiedNodeList.Count, 2);
-            Assert.That(ComplexifiedNodeList[0] is CommandInstruction);
-            Assert.That(ComplexifiedNodeList[1] is CommandInstruction);
+        Result = NodeHelper.GetComplexifiedNode(Instruction4, out ComplexifiedNodeList);
+        Assert.True(Result);
+        Assert.AreEqual(ComplexifiedNodeList.Count, 2);
+        Assert.That(ComplexifiedNodeList[0] is CommandInstruction);
+        Assert.That(ComplexifiedNodeList[1] is CommandInstruction);
 
-            CommandInstruction Complexified4_0 = (CommandInstruction)ComplexifiedNodeList[0];
-            Assert.That(Complexified4_0.ArgumentBlocks.NodeBlockList.Count == 1 && Complexified4_0.ArgumentBlocks.NodeBlockList[0].NodeList.Count == 1);
+        CommandInstruction Complexified4_0 = (CommandInstruction)ComplexifiedNodeList[0];
+        Assert.That(Complexified4_0.ArgumentBlocks.NodeBlockList.Count == 1 && Complexified4_0.ArgumentBlocks.NodeBlockList[0].NodeList.Count == 1);
 
-            CommandInstruction Complexified4_1 = (CommandInstruction)ComplexifiedNodeList[1];
-            Assert.That(Complexified4_1.ArgumentBlocks.NodeBlockList.Count == 1 && Complexified4_1.ArgumentBlocks.NodeBlockList[0].NodeList.Count == 2);
+        CommandInstruction Complexified4_1 = (CommandInstruction)ComplexifiedNodeList[1];
+        Assert.That(Complexified4_1.ArgumentBlocks.NodeBlockList.Count == 1 && Complexified4_1.ArgumentBlocks.NodeBlockList[0].NodeList.Count == 2);
 
-            CommandInstruction Instruction5 = NodeHelper.CreateSimpleCommandInstruction("as long as a");
+        CommandInstruction Instruction5 = NodeHelper.CreateSimpleCommandInstruction("as long as a");
 
-            Result = NodeHelper.GetComplexifiedNode(Instruction5, out ComplexifiedNodeList);
-            Assert.True(Result);
-            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
-            Assert.That(ComplexifiedNodeList[0] is AsLongAsInstruction);
+        Result = NodeHelper.GetComplexifiedNode(Instruction5, out ComplexifiedNodeList);
+        Assert.True(Result);
+        Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+        Assert.That(ComplexifiedNodeList[0] is AsLongAsInstruction);
 
-            CommandInstruction Instruction6 = NodeHelper.CreateSimpleCommandInstruction("Result:=b");
+        CommandInstruction Instruction6 = NodeHelper.CreateSimpleCommandInstruction("Result:=b");
 
-            Result = NodeHelper.GetComplexifiedNode(Instruction6, out ComplexifiedNodeList);
-            Assert.True(Result);
-            Assert.AreEqual(ComplexifiedNodeList.Count, 2);
-            Assert.That(ComplexifiedNodeList[0] is AssignmentInstruction);
-            Assert.That(ComplexifiedNodeList[1] is KeywordAssignmentInstruction);
+        Result = NodeHelper.GetComplexifiedNode(Instruction6, out ComplexifiedNodeList);
+        Assert.True(Result);
+        Assert.AreEqual(ComplexifiedNodeList.Count, 2);
+        Assert.That(ComplexifiedNodeList[0] is AssignmentInstruction);
+        Assert.That(ComplexifiedNodeList[1] is KeywordAssignmentInstruction);
 
-            KeywordAssignmentInstruction Complexified6 = (KeywordAssignmentInstruction)ComplexifiedNodeList[1];
-            Assert.AreEqual(Complexified6.Destination, Keyword.Result);
+        KeywordAssignmentInstruction Complexified6 = (KeywordAssignmentInstruction)ComplexifiedNodeList[1];
+        Assert.AreEqual(Complexified6.Destination, Keyword.Result);
 
-            CommandInstruction Instruction7 = NodeHelper.CreateSimpleCommandInstruction("attach a");
+        CommandInstruction Instruction7 = NodeHelper.CreateSimpleCommandInstruction("attach a");
 
-            Result = NodeHelper.GetComplexifiedNode(Instruction7, out ComplexifiedNodeList);
-            Assert.True(Result);
-            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
-            Assert.That(ComplexifiedNodeList[0] is AttachmentInstruction);
+        Result = NodeHelper.GetComplexifiedNode(Instruction7, out ComplexifiedNodeList);
+        Assert.True(Result);
+        Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+        Assert.That(ComplexifiedNodeList[0] is AttachmentInstruction);
 
-            CommandInstruction Instruction8 = NodeHelper.CreateSimpleCommandInstruction("check a");
+        CommandInstruction Instruction8 = NodeHelper.CreateSimpleCommandInstruction("check a");
 
-            Result = NodeHelper.GetComplexifiedNode(Instruction8, out ComplexifiedNodeList);
-            Assert.True(Result);
-            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
-            Assert.That(ComplexifiedNodeList[0] is CheckInstruction);
+        Result = NodeHelper.GetComplexifiedNode(Instruction8, out ComplexifiedNodeList);
+        Assert.True(Result);
+        Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+        Assert.That(ComplexifiedNodeList[0] is CheckInstruction);
 
-            CommandInstruction Instruction9 = NodeHelper.CreateSimpleCommandInstruction("create a");
+        CommandInstruction Instruction9 = NodeHelper.CreateSimpleCommandInstruction("create a");
 
-            Result = NodeHelper.GetComplexifiedNode(Instruction9, out ComplexifiedNodeList);
-            Assert.True(Result);
-            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
-            Assert.That(ComplexifiedNodeList[0] is CreateInstruction);
+        Result = NodeHelper.GetComplexifiedNode(Instruction9, out ComplexifiedNodeList);
+        Assert.True(Result);
+        Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+        Assert.That(ComplexifiedNodeList[0] is CreateInstruction);
 
-            CommandInstruction Instruction10 = NodeHelper.CreateSimpleCommandInstruction("debug a");
+        CommandInstruction Instruction10 = NodeHelper.CreateSimpleCommandInstruction("debug a");
 
-            Result = NodeHelper.GetComplexifiedNode(Instruction10, out ComplexifiedNodeList);
-            Assert.True(Result);
-            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
-            Assert.That(ComplexifiedNodeList[0] is DebugInstruction);
+        Result = NodeHelper.GetComplexifiedNode(Instruction10, out ComplexifiedNodeList);
+        Assert.True(Result);
+        Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+        Assert.That(ComplexifiedNodeList[0] is DebugInstruction);
 
-            CommandInstruction Instruction11 = NodeHelper.CreateSimpleCommandInstruction("for a");
+        CommandInstruction Instruction11 = NodeHelper.CreateSimpleCommandInstruction("for a");
 
-            Result = NodeHelper.GetComplexifiedNode(Instruction11, out ComplexifiedNodeList);
-            Assert.True(Result);
-            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
-            Assert.That(ComplexifiedNodeList[0] is ForLoopInstruction);
+        Result = NodeHelper.GetComplexifiedNode(Instruction11, out ComplexifiedNodeList);
+        Assert.True(Result);
+        Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+        Assert.That(ComplexifiedNodeList[0] is ForLoopInstruction);
 
-            CommandInstruction Instruction12 = NodeHelper.CreateSimpleCommandInstruction("if a");
+        CommandInstruction Instruction12 = NodeHelper.CreateSimpleCommandInstruction("if a");
 
-            Result = NodeHelper.GetComplexifiedNode(Instruction12, out ComplexifiedNodeList);
-            Assert.True(Result);
-            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
-            Assert.That(ComplexifiedNodeList[0] is IfThenElseInstruction);
-
-            QualifiedName IndexQualifiedName = NodeHelper.CreateQualifiedName(new List<Identifier>() { NodeHelper.CreateSimpleIdentifier("a"), NodeHelper.CreateSimpleIdentifier("[]:=") });
-            CommandInstruction Instruction13 = NodeHelper.CreateCommandInstruction(IndexQualifiedName, new List<Argument>());
-
-            Result = NodeHelper.GetComplexifiedNode(Instruction13, out ComplexifiedNodeList);
-            Assert.True(Result);
-            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
-            Assert.That(ComplexifiedNodeList[0] is IndexAssignmentInstruction);
+        Result = NodeHelper.GetComplexifiedNode(Instruction12, out ComplexifiedNodeList);
+        Assert.True(Result);
+        Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+        Assert.That(ComplexifiedNodeList[0] is IfThenElseInstruction);
 
-            Identifier FirstIdentifier = NodeHelper.CreateSimpleIdentifier("inspect ");
-            Identifier SecondIdentifier = NodeHelper.CreateSimpleIdentifier("a");
-            QualifiedName SplittableQualifiedName = NodeHelper.CreateQualifiedName(new List<Identifier>() { FirstIdentifier, SecondIdentifier });
-            IBlockList<Argument> EmptyArgumentBlockList = BlockListHelper.CreateEmptyBlockList<Argument>();
-            CommandInstruction Instruction14 = NodeHelper.CreateCommandInstruction(SplittableQualifiedName, EmptyArgumentBlockList);
+        QualifiedName IndexQualifiedName = NodeHelper.CreateQualifiedName(new List<Identifier>() { NodeHelper.CreateSimpleIdentifier("a"), NodeHelper.CreateSimpleIdentifier("[]:=") });
+        CommandInstruction Instruction13 = NodeHelper.CreateCommandInstruction(IndexQualifiedName, new List<Argument>());
+
+        Result = NodeHelper.GetComplexifiedNode(Instruction13, out ComplexifiedNodeList);
+        Assert.True(Result);
+        Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+        Assert.That(ComplexifiedNodeList[0] is IndexAssignmentInstruction);
 
-            Result = NodeHelper.GetComplexifiedNode(Instruction14, out ComplexifiedNodeList);
-            Assert.True(Result);
-            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
-            Assert.That(ComplexifiedNodeList[0] is InspectInstruction);
+        Identifier FirstIdentifier = NodeHelper.CreateSimpleIdentifier("inspect ");
+        Identifier SecondIdentifier = NodeHelper.CreateSimpleIdentifier("a");
+        QualifiedName SplittableQualifiedName = NodeHelper.CreateQualifiedName(new List<Identifier>() { FirstIdentifier, SecondIdentifier });
+        IBlockList<Argument> EmptyArgumentBlockList = BlockListHelper.CreateEmptyBlockList<Argument>();
+        CommandInstruction Instruction14 = NodeHelper.CreateCommandInstruction(SplittableQualifiedName, EmptyArgumentBlockList);
 
-            CommandInstruction Instruction15 = NodeHelper.CreateSimpleCommandInstruction("over a");
+        Result = NodeHelper.GetComplexifiedNode(Instruction14, out ComplexifiedNodeList);
+        Assert.True(Result);
+        Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+        Assert.That(ComplexifiedNodeList[0] is InspectInstruction);
 
-            Result = NodeHelper.GetComplexifiedNode(Instruction15, out ComplexifiedNodeList);
-            Assert.True(Result);
-            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
-            Assert.That(ComplexifiedNodeList[0] is OverLoopInstruction);
+        CommandInstruction Instruction15 = NodeHelper.CreateSimpleCommandInstruction("over a");
 
-            QualifiedName PrecursorIndexQualifiedName = NodeHelper.CreateSimpleQualifiedName("precursor[]:=");
-            CommandInstruction Instruction16 = NodeHelper.CreateCommandInstruction(PrecursorIndexQualifiedName, new List<Argument>() { NodeHelper.CreateSimplePositionalArgument("a") });
+        Result = NodeHelper.GetComplexifiedNode(Instruction15, out ComplexifiedNodeList);
+        Assert.True(Result);
+        Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+        Assert.That(ComplexifiedNodeList[0] is OverLoopInstruction);
 
-            Result = NodeHelper.GetComplexifiedNode(Instruction16, out ComplexifiedNodeList);
-            Assert.True(Result);
-            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
-            Assert.That(ComplexifiedNodeList[0] is PrecursorIndexAssignmentInstruction);
+        QualifiedName PrecursorIndexQualifiedName = NodeHelper.CreateSimpleQualifiedName("precursor[]:=");
+        CommandInstruction Instruction16 = NodeHelper.CreateCommandInstruction(PrecursorIndexQualifiedName, new List<Argument>() { NodeHelper.CreateSimplePositionalArgument("a") });
 
-            CommandInstruction Instruction17 = NodeHelper.CreateSimpleCommandInstruction("precursor");
+        Result = NodeHelper.GetComplexifiedNode(Instruction16, out ComplexifiedNodeList);
+        Assert.True(Result);
+        Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+        Assert.That(ComplexifiedNodeList[0] is PrecursorIndexAssignmentInstruction);
 
-            Result = NodeHelper.GetComplexifiedNode(Instruction17, out ComplexifiedNodeList);
-            Assert.True(Result);
-            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
-            Assert.That(ComplexifiedNodeList[0] is PrecursorInstruction);
+        CommandInstruction Instruction17 = NodeHelper.CreateSimpleCommandInstruction("precursor");
 
-            CommandInstruction Instruction18 = NodeHelper.CreateSimpleCommandInstruction("raise a");
+        Result = NodeHelper.GetComplexifiedNode(Instruction17, out ComplexifiedNodeList);
+        Assert.True(Result);
+        Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+        Assert.That(ComplexifiedNodeList[0] is PrecursorInstruction);
 
-            Result = NodeHelper.GetComplexifiedNode(Instruction18, out ComplexifiedNodeList);
-            Assert.True(Result);
-            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
-            Assert.That(ComplexifiedNodeList[0] is RaiseEventInstruction);
+        CommandInstruction Instruction18 = NodeHelper.CreateSimpleCommandInstruction("raise a");
 
-            CommandInstruction Instruction19 = NodeHelper.CreateSimpleCommandInstruction("release a");
+        Result = NodeHelper.GetComplexifiedNode(Instruction18, out ComplexifiedNodeList);
+        Assert.True(Result);
+        Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+        Assert.That(ComplexifiedNodeList[0] is RaiseEventInstruction);
 
-            Result = NodeHelper.GetComplexifiedNode(Instruction19, out ComplexifiedNodeList);
-            Assert.True(Result);
-            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
-            Assert.That(ComplexifiedNodeList[0] is ReleaseInstruction);
+        CommandInstruction Instruction19 = NodeHelper.CreateSimpleCommandInstruction("release a");
 
-            CommandInstruction Instruction20 = NodeHelper.CreateSimpleCommandInstruction("throw a");
+        Result = NodeHelper.GetComplexifiedNode(Instruction19, out ComplexifiedNodeList);
+        Assert.True(Result);
+        Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+        Assert.That(ComplexifiedNodeList[0] is ReleaseInstruction);
 
-            Result = NodeHelper.GetComplexifiedNode(Instruction20, out ComplexifiedNodeList);
-            Assert.True(Result);
-            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
-            Assert.That(ComplexifiedNodeList[0] is ThrowInstruction);
+        CommandInstruction Instruction20 = NodeHelper.CreateSimpleCommandInstruction("throw a");
 
-            Identifier StartIdentifier = NodeHelper.CreateSimpleIdentifier("a");
-            Identifier MiddleIdentifier = NodeHelper.CreateSimpleIdentifier("b:=c");
-            Identifier EndIdentifier = NodeHelper.CreateSimpleIdentifier("d");
-            List<Identifier> AssignmentPathList = new() { StartIdentifier , MiddleIdentifier, EndIdentifier };
-            QualifiedName AssignmentPathQualifiedName = NodeHelper.CreateQualifiedName(AssignmentPathList);
-            CommandInstruction Instruction21 = NodeHelper.CreateCommandInstruction(AssignmentPathQualifiedName, new List<Argument>());
+        Result = NodeHelper.GetComplexifiedNode(Instruction20, out ComplexifiedNodeList);
+        Assert.True(Result);
+        Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+        Assert.That(ComplexifiedNodeList[0] is ThrowInstruction);
 
-            Result = NodeHelper.GetComplexifiedNode(Instruction21, out ComplexifiedNodeList);
-            Assert.True(Result);
-            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
-            Assert.That(ComplexifiedNodeList[0] is AssignmentInstruction);
+        Identifier StartIdentifier = NodeHelper.CreateSimpleIdentifier("a");
+        Identifier MiddleIdentifier = NodeHelper.CreateSimpleIdentifier("b:=c");
+        Identifier EndIdentifier = NodeHelper.CreateSimpleIdentifier("d");
+        List<Identifier> AssignmentPathList = new() { StartIdentifier , MiddleIdentifier, EndIdentifier };
+        QualifiedName AssignmentPathQualifiedName = NodeHelper.CreateQualifiedName(AssignmentPathList);
+        CommandInstruction Instruction21 = NodeHelper.CreateCommandInstruction(AssignmentPathQualifiedName, new List<Argument>());
 
-            CommandInstruction Instruction22 = NodeHelper.CreateSimpleCommandInstruction("attach a to b");
+        Result = NodeHelper.GetComplexifiedNode(Instruction21, out ComplexifiedNodeList);
+        Assert.True(Result);
+        Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+        Assert.That(ComplexifiedNodeList[0] is AssignmentInstruction);
 
-            Result = NodeHelper.GetComplexifiedNode(Instruction22, out ComplexifiedNodeList);
-            Assert.True(Result);
-            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
-            Assert.That(ComplexifiedNodeList[0] is AttachmentInstruction);
+        CommandInstruction Instruction22 = NodeHelper.CreateSimpleCommandInstruction("attach a to b");
 
-            CommandInstruction Instruction23 = NodeHelper.CreateCommandInstruction(IndexQualifiedName, new List<Argument>() { NodeHelper.CreateSimplePositionalArgument("a") });
+        Result = NodeHelper.GetComplexifiedNode(Instruction22, out ComplexifiedNodeList);
+        Assert.True(Result);
+        Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+        Assert.That(ComplexifiedNodeList[0] is AttachmentInstruction);
 
-            Result = NodeHelper.GetComplexifiedNode(Instruction23, out ComplexifiedNodeList);
-            Assert.True(Result);
-            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
-            Assert.That(ComplexifiedNodeList[0] is IndexAssignmentInstruction);
-        }
+        CommandInstruction Instruction23 = NodeHelper.CreateCommandInstruction(IndexQualifiedName, new List<Argument>() { NodeHelper.CreateSimplePositionalArgument("a") });
 
-        [Test]
-        [Category("Complexify")]
-        public static void TestAsLongAsInstruction()
-        {
-            bool Result;
-            IList<Node> ComplexifiedNodeList;
+        Result = NodeHelper.GetComplexifiedNode(Instruction23, out ComplexifiedNodeList);
+        Assert.True(Result);
+        Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+        Assert.That(ComplexifiedNodeList[0] is IndexAssignmentInstruction);
+    }
 
-            Expression DefaultExpression = NodeHelper.CreateDefaultExpression();
-            Continuation EmptyContinuation = NodeHelper.CreateEmptyContinuation();
+    [Test]
+    [Category("Complexify")]
+    public static void TestAsLongAsInstruction()
+    {
+        bool Result;
+        IList<Node> ComplexifiedNodeList;
 
-            AsLongAsInstruction Instruction1 = NodeHelper.CreateAsLongAsInstruction(DefaultExpression, EmptyContinuation);
+        Expression DefaultExpression = NodeHelper.CreateDefaultExpression();
+        Continuation EmptyContinuation = NodeHelper.CreateEmptyContinuation();
 
-            Result = NodeHelper.GetComplexifiedNode(Instruction1, out _);
-            Assert.False(Result);
+        AsLongAsInstruction Instruction1 = NodeHelper.CreateAsLongAsInstruction(DefaultExpression, EmptyContinuation);
 
-            Expression NumberExpression = NodeHelper.CreateSimpleQueryExpression("0");
+        Result = NodeHelper.GetComplexifiedNode(Instruction1, out _);
+        Assert.False(Result);
 
-            AsLongAsInstruction Instruction2 = NodeHelper.CreateAsLongAsInstruction(NumberExpression, EmptyContinuation);
+        Expression NumberExpression = NodeHelper.CreateSimpleQueryExpression("0");
 
-            Result = NodeHelper.GetComplexifiedNode(Instruction2, out ComplexifiedNodeList);
-            Assert.True(Result);
-            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
-            Assert.That(ComplexifiedNodeList[0] is AsLongAsInstruction);
+        AsLongAsInstruction Instruction2 = NodeHelper.CreateAsLongAsInstruction(NumberExpression, EmptyContinuation);
 
-            AsLongAsInstruction Complexified2 = (AsLongAsInstruction)ComplexifiedNodeList[0];
-            Assert.That(Complexified2.ContinueCondition is ManifestNumberExpression);
+        Result = NodeHelper.GetComplexifiedNode(Instruction2, out ComplexifiedNodeList);
+        Assert.True(Result);
+        Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+        Assert.That(ComplexifiedNodeList[0] is AsLongAsInstruction);
 
-            IBlockList<Continuation> SimpleContinuationBlockList = BlockListHelper.CreateSimpleBlockList(EmptyContinuation);
-            Scope EmptyScope = NodeHelper.CreateEmptyScope();
+        AsLongAsInstruction Complexified2 = (AsLongAsInstruction)ComplexifiedNodeList[0];
+        Assert.That(Complexified2.ContinueCondition is ManifestNumberExpression);
 
-            AsLongAsInstruction Instruction3 = NodeHelper.CreateAsLongAsInstruction(NumberExpression, SimpleContinuationBlockList, EmptyScope);
+        IBlockList<Continuation> SimpleContinuationBlockList = BlockListHelper.CreateSimpleBlockList(EmptyContinuation);
+        Scope EmptyScope = NodeHelper.CreateEmptyScope();
 
-            Result = NodeHelper.GetComplexifiedNode(Instruction3, out ComplexifiedNodeList);
-            Assert.True(Result);
-            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
-            Assert.That(ComplexifiedNodeList[0] is AsLongAsInstruction);
+        AsLongAsInstruction Instruction3 = NodeHelper.CreateAsLongAsInstruction(NumberExpression, SimpleContinuationBlockList, EmptyScope);
 
-            AsLongAsInstruction Complexified3 = (AsLongAsInstruction)ComplexifiedNodeList[0];
-            Assert.That(Complexified3.ContinueCondition is ManifestNumberExpression);
-        }
+        Result = NodeHelper.GetComplexifiedNode(Instruction3, out ComplexifiedNodeList);
+        Assert.True(Result);
+        Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+        Assert.That(ComplexifiedNodeList[0] is AsLongAsInstruction);
 
-        [Test]
-        [Category("Complexify")]
-        public static void TestAssignmentInstruction()
-        {
-            bool Result;
-            IList<Node> ComplexifiedNodeList;
+        AsLongAsInstruction Complexified3 = (AsLongAsInstruction)ComplexifiedNodeList[0];
+        Assert.That(Complexified3.ContinueCondition is ManifestNumberExpression);
+    }
 
-            QualifiedName EmptyQualifiedName = NodeHelper.CreateEmptyQualifiedName();
-            List<QualifiedName> SimpleQualifiedNameList = new() { EmptyQualifiedName };
-            Expression DefaultExpression = NodeHelper.CreateDefaultExpression();
+    [Test]
+    [Category("Complexify")]
+    public static void TestAssignmentInstruction()
+    {
+        bool Result;
+        IList<Node> ComplexifiedNodeList;
 
-            AssignmentInstruction Instruction1 = NodeHelper.CreateAssignmentInstruction(SimpleQualifiedNameList, DefaultExpression);
+        QualifiedName EmptyQualifiedName = NodeHelper.CreateEmptyQualifiedName();
+        List<QualifiedName> SimpleQualifiedNameList = new() { EmptyQualifiedName };
+        Expression DefaultExpression = NodeHelper.CreateDefaultExpression();
 
-            Result = NodeHelper.GetComplexifiedNode(Instruction1, out _);
-            Assert.False(Result);
+        AssignmentInstruction Instruction1 = NodeHelper.CreateAssignmentInstruction(SimpleQualifiedNameList, DefaultExpression);
 
-            QualifiedName SplittableQualifiedName = NodeHelper.CreateSimpleQualifiedName("a.b");
+        Result = NodeHelper.GetComplexifiedNode(Instruction1, out _);
+        Assert.False(Result);
 
-            AssignmentInstruction Instruction2 = NodeHelper.CreateAssignmentInstruction(new List<QualifiedName>() { SplittableQualifiedName }, DefaultExpression);
+        QualifiedName SplittableQualifiedName = NodeHelper.CreateSimpleQualifiedName("a.b");
 
-            Result = NodeHelper.GetComplexifiedNode(Instruction2, out ComplexifiedNodeList);
-            Assert.True(Result);
-            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
-            Assert.That(ComplexifiedNodeList[0] is AssignmentInstruction);
+        AssignmentInstruction Instruction2 = NodeHelper.CreateAssignmentInstruction(new List<QualifiedName>() { SplittableQualifiedName }, DefaultExpression);
 
-            AssignmentInstruction Complexified2 = (AssignmentInstruction)ComplexifiedNodeList[0];
-            Assert.That(Complexified2.DestinationBlocks.NodeBlockList.Count == 1 && Complexified2.DestinationBlocks.NodeBlockList[0].NodeList.Count == 1);
-            QualifiedName ComplexifiedQualifiedName = Complexified2.DestinationBlocks.NodeBlockList[0].NodeList[0];
-            Assert.That(ComplexifiedQualifiedName.Path.Count == 2);
+        Result = NodeHelper.GetComplexifiedNode(Instruction2, out ComplexifiedNodeList);
+        Assert.True(Result);
+        Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+        Assert.That(ComplexifiedNodeList[0] is AssignmentInstruction);
 
-            Expression NumberExpression = NodeHelper.CreateSimpleQueryExpression("0");
+        AssignmentInstruction Complexified2 = (AssignmentInstruction)ComplexifiedNodeList[0];
+        Assert.That(Complexified2.DestinationBlocks.NodeBlockList.Count == 1 && Complexified2.DestinationBlocks.NodeBlockList[0].NodeList.Count == 1);
+        QualifiedName ComplexifiedQualifiedName = Complexified2.DestinationBlocks.NodeBlockList[0].NodeList[0];
+        Assert.That(ComplexifiedQualifiedName.Path.Count == 2);
 
-            AssignmentInstruction Instruction3 = NodeHelper.CreateAssignmentInstruction(SimpleQualifiedNameList, NumberExpression);
+        Expression NumberExpression = NodeHelper.CreateSimpleQueryExpression("0");
 
-            Result = NodeHelper.GetComplexifiedNode(Instruction3, out ComplexifiedNodeList);
-            Assert.True(Result);
-            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
-            Assert.That(ComplexifiedNodeList[0] is AssignmentInstruction);
+        AssignmentInstruction Instruction3 = NodeHelper.CreateAssignmentInstruction(SimpleQualifiedNameList, NumberExpression);
 
-            AssignmentInstruction Complexified3 = (AssignmentInstruction)ComplexifiedNodeList[0];
-            Assert.That(Complexified3.Source is ManifestNumberExpression);
+        Result = NodeHelper.GetComplexifiedNode(Instruction3, out ComplexifiedNodeList);
+        Assert.True(Result);
+        Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+        Assert.That(ComplexifiedNodeList[0] is AssignmentInstruction);
 
-            QualifiedName ResultQualifiedName = NodeHelper.CreateSimpleQualifiedName("Result");
+        AssignmentInstruction Complexified3 = (AssignmentInstruction)ComplexifiedNodeList[0];
+        Assert.That(Complexified3.Source is ManifestNumberExpression);
 
-            AssignmentInstruction Instruction4 = NodeHelper.CreateAssignmentInstruction(new List<QualifiedName>() { ResultQualifiedName }, DefaultExpression);
+        QualifiedName ResultQualifiedName = NodeHelper.CreateSimpleQualifiedName("Result");
 
-            Result = NodeHelper.GetComplexifiedNode(Instruction4, out ComplexifiedNodeList);
-            Assert.True(Result);
-            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
-            Assert.That(ComplexifiedNodeList[0] is KeywordAssignmentInstruction);
+        AssignmentInstruction Instruction4 = NodeHelper.CreateAssignmentInstruction(new List<QualifiedName>() { ResultQualifiedName }, DefaultExpression);
 
-            KeywordAssignmentInstruction Complexified4 = (KeywordAssignmentInstruction)ComplexifiedNodeList[0];
-            Assert.AreEqual(Complexified4.Destination, Keyword.Result);
+        Result = NodeHelper.GetComplexifiedNode(Instruction4, out ComplexifiedNodeList);
+        Assert.True(Result);
+        Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+        Assert.That(ComplexifiedNodeList[0] is KeywordAssignmentInstruction);
 
-            QualifiedName RetryQualifiedName = NodeHelper.CreateSimpleQualifiedName("Retry");
+        KeywordAssignmentInstruction Complexified4 = (KeywordAssignmentInstruction)ComplexifiedNodeList[0];
+        Assert.AreEqual(Complexified4.Destination, Keyword.Result);
 
-            AssignmentInstruction Instruction5 = NodeHelper.CreateAssignmentInstruction(new List<QualifiedName>() { RetryQualifiedName }, DefaultExpression);
+        QualifiedName RetryQualifiedName = NodeHelper.CreateSimpleQualifiedName("Retry");
 
-            Result = NodeHelper.GetComplexifiedNode(Instruction5, out ComplexifiedNodeList);
-            Assert.True(Result);
-            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
-            Assert.That(ComplexifiedNodeList[0] is KeywordAssignmentInstruction);
+        AssignmentInstruction Instruction5 = NodeHelper.CreateAssignmentInstruction(new List<QualifiedName>() { RetryQualifiedName }, DefaultExpression);
 
-            KeywordAssignmentInstruction Complexified5 = (KeywordAssignmentInstruction)ComplexifiedNodeList[0];
-            Assert.AreEqual(Complexified5.Destination, Keyword.Retry);
+        Result = NodeHelper.GetComplexifiedNode(Instruction5, out ComplexifiedNodeList);
+        Assert.True(Result);
+        Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+        Assert.That(ComplexifiedNodeList[0] is KeywordAssignmentInstruction);
 
-            QualifiedName IndexQualifiedName = NodeHelper.CreateSimpleQualifiedName("a[b]");
+        KeywordAssignmentInstruction Complexified5 = (KeywordAssignmentInstruction)ComplexifiedNodeList[0];
+        Assert.AreEqual(Complexified5.Destination, Keyword.Retry);
 
-            AssignmentInstruction Instruction6 = NodeHelper.CreateAssignmentInstruction(new List<QualifiedName>() { IndexQualifiedName }, DefaultExpression);
+        QualifiedName IndexQualifiedName = NodeHelper.CreateSimpleQualifiedName("a[b]");
 
-            Result = NodeHelper.GetComplexifiedNode(Instruction6, out ComplexifiedNodeList);
-            Assert.True(Result);
-            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
-            Assert.That(ComplexifiedNodeList[0] is IndexAssignmentInstruction);
+        AssignmentInstruction Instruction6 = NodeHelper.CreateAssignmentInstruction(new List<QualifiedName>() { IndexQualifiedName }, DefaultExpression);
 
-            Identifier FirstIdentifier = NodeHelper.CreateSimpleIdentifier("a");
-            QualifiedName FirstQualifiedName = NodeHelper.CreateQualifiedName(new List<Identifier>() { FirstIdentifier });
-            IBlock<QualifiedName> FirstBlock = BlockListHelper.CreateBlock(new List<QualifiedName>() { FirstQualifiedName });
-            Identifier SecondIdentifier = NodeHelper.CreateSimpleIdentifier("b");
-            QualifiedName SecondQualifiedName = NodeHelper.CreateQualifiedName(new List<Identifier>() { SecondIdentifier });
-            IBlock<QualifiedName> SecondBlock = BlockListHelper.CreateBlock(new List<QualifiedName>() { SecondQualifiedName });
-            IBlockList<QualifiedName> NotSimpleBlockList = BlockListHelper.CreateBlockList(new List<IBlock<QualifiedName>>() { FirstBlock, SecondBlock});
+        Result = NodeHelper.GetComplexifiedNode(Instruction6, out ComplexifiedNodeList);
+        Assert.True(Result);
+        Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+        Assert.That(ComplexifiedNodeList[0] is IndexAssignmentInstruction);
 
-            AssignmentInstruction Instruction7 = NodeHelper.CreateAssignmentInstruction(NotSimpleBlockList, DefaultExpression);
+        Identifier FirstIdentifier = NodeHelper.CreateSimpleIdentifier("a");
+        QualifiedName FirstQualifiedName = NodeHelper.CreateQualifiedName(new List<Identifier>() { FirstIdentifier });
+        IBlock<QualifiedName> FirstBlock = BlockListHelper.CreateBlock(new List<QualifiedName>() { FirstQualifiedName });
+        Identifier SecondIdentifier = NodeHelper.CreateSimpleIdentifier("b");
+        QualifiedName SecondQualifiedName = NodeHelper.CreateQualifiedName(new List<Identifier>() { SecondIdentifier });
+        IBlock<QualifiedName> SecondBlock = BlockListHelper.CreateBlock(new List<QualifiedName>() { SecondQualifiedName });
+        IBlockList<QualifiedName> NotSimpleBlockList = BlockListHelper.CreateBlockList(new List<IBlock<QualifiedName>>() { FirstBlock, SecondBlock});
 
-            //System.Diagnostics.Debugger.Launch();
-            Result = NodeHelper.GetComplexifiedNode(Instruction7, out _);
-            Assert.False(Result);
-        }
+        AssignmentInstruction Instruction7 = NodeHelper.CreateAssignmentInstruction(NotSimpleBlockList, DefaultExpression);
 
-        [Test]
-        [Category("Complexify")]
-        public static void TestAttachmentInstruction()
-        {
-            bool Result;
-            IList<Node> ComplexifiedNodeList;
+        //System.Diagnostics.Debugger.Launch();
+        Result = NodeHelper.GetComplexifiedNode(Instruction7, out _);
+        Assert.False(Result);
+    }
 
-            Name EmptyName = NodeHelper.CreateEmptyName();
-            List<Name> SimpleNameList = new() { EmptyName };
-            Expression DefaultExpression = NodeHelper.CreateDefaultExpression();
+    [Test]
+    [Category("Complexify")]
+    public static void TestAttachmentInstruction()
+    {
+        bool Result;
+        IList<Node> ComplexifiedNodeList;
 
-            AttachmentInstruction Instruction1 = NodeHelper.CreateAttachmentInstruction(DefaultExpression, SimpleNameList);
+        Name EmptyName = NodeHelper.CreateEmptyName();
+        List<Name> SimpleNameList = new() { EmptyName };
+        Expression DefaultExpression = NodeHelper.CreateDefaultExpression();
 
-            Result = NodeHelper.GetComplexifiedNode(Instruction1, out _);
-            Assert.False(Result);
+        AttachmentInstruction Instruction1 = NodeHelper.CreateAttachmentInstruction(DefaultExpression, SimpleNameList);
 
-            Expression NumberExpression = NodeHelper.CreateSimpleQueryExpression("0");
+        Result = NodeHelper.GetComplexifiedNode(Instruction1, out _);
+        Assert.False(Result);
 
-            AttachmentInstruction Instruction2 = NodeHelper.CreateAttachmentInstruction(NumberExpression, SimpleNameList);
+        Expression NumberExpression = NodeHelper.CreateSimpleQueryExpression("0");
 
-            Result = NodeHelper.GetComplexifiedNode(Instruction2, out ComplexifiedNodeList);
-            Assert.True(Result);
-            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
-            Assert.That(ComplexifiedNodeList[0] is AttachmentInstruction);
+        AttachmentInstruction Instruction2 = NodeHelper.CreateAttachmentInstruction(NumberExpression, SimpleNameList);
 
-            IBlockList<Name> SimpleEntityNameBlockList = BlockListHelper.CreateSimpleBlockList(EmptyName);
-            ObjectType DefaultObjectType = NodeHelper.CreateDefaultObjectType();
-            Attachment EmptyAttachment = NodeHelper.CreateAttachment(DefaultObjectType);
-            IBlockList<Attachment> SimpleAttachmentBlockList = BlockListHelper.CreateSimpleBlockList(EmptyAttachment);
+        Result = NodeHelper.GetComplexifiedNode(Instruction2, out ComplexifiedNodeList);
+        Assert.True(Result);
+        Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+        Assert.That(ComplexifiedNodeList[0] is AttachmentInstruction);
 
-            Scope EmptyScope = NodeHelper.CreateEmptyScope();
-            AttachmentInstruction Instruction3 = NodeHelper.CreateAttachmentInstruction(NumberExpression, SimpleEntityNameBlockList, SimpleAttachmentBlockList, EmptyScope);
+        IBlockList<Name> SimpleEntityNameBlockList = BlockListHelper.CreateSimpleBlockList(EmptyName);
+        ObjectType DefaultObjectType = NodeHelper.CreateDefaultObjectType();
+        Attachment EmptyAttachment = NodeHelper.CreateAttachment(DefaultObjectType);
+        IBlockList<Attachment> SimpleAttachmentBlockList = BlockListHelper.CreateSimpleBlockList(EmptyAttachment);
 
-            Result = NodeHelper.GetComplexifiedNode(Instruction3, out ComplexifiedNodeList);
-            Assert.True(Result);
-            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
-            Assert.That(ComplexifiedNodeList[0] is AttachmentInstruction);
+        Scope EmptyScope = NodeHelper.CreateEmptyScope();
+        AttachmentInstruction Instruction3 = NodeHelper.CreateAttachmentInstruction(NumberExpression, SimpleEntityNameBlockList, SimpleAttachmentBlockList, EmptyScope);
 
-            Name SplittableName = NodeHelper.CreateSimpleName("a,b");
+        Result = NodeHelper.GetComplexifiedNode(Instruction3, out ComplexifiedNodeList);
+        Assert.True(Result);
+        Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+        Assert.That(ComplexifiedNodeList[0] is AttachmentInstruction);
 
-            AttachmentInstruction Instruction4 = NodeHelper.CreateAttachmentInstruction(DefaultExpression, new List<Name>() { SplittableName });
+        Name SplittableName = NodeHelper.CreateSimpleName("a,b");
 
-            Result = NodeHelper.GetComplexifiedNode(Instruction4, out ComplexifiedNodeList);
-            Assert.True(Result);
-            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
-            Assert.That(ComplexifiedNodeList[0] is AttachmentInstruction);
+        AttachmentInstruction Instruction4 = NodeHelper.CreateAttachmentInstruction(DefaultExpression, new List<Name>() { SplittableName });
 
-            IBlockList<Name> SplittableEntityNameBlockList = BlockListHelper.CreateSimpleBlockList(SplittableName);
+        Result = NodeHelper.GetComplexifiedNode(Instruction4, out ComplexifiedNodeList);
+        Assert.True(Result);
+        Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+        Assert.That(ComplexifiedNodeList[0] is AttachmentInstruction);
 
-            AttachmentInstruction Instruction5 = NodeHelper.CreateAttachmentInstruction(DefaultExpression, SplittableEntityNameBlockList, SimpleAttachmentBlockList, EmptyScope);
+        IBlockList<Name> SplittableEntityNameBlockList = BlockListHelper.CreateSimpleBlockList(SplittableName);
 
-            Result = NodeHelper.GetComplexifiedNode(Instruction5, out ComplexifiedNodeList);
-            Assert.True(Result);
-            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
-            Assert.That(ComplexifiedNodeList[0] is AttachmentInstruction);
-        }
+        AttachmentInstruction Instruction5 = NodeHelper.CreateAttachmentInstruction(DefaultExpression, SplittableEntityNameBlockList, SimpleAttachmentBlockList, EmptyScope);
 
-        [Test]
-        [Category("Complexify")]
-        public static void TestCheckInstruction()
-        {
-            bool Result;
-            IList<Node> ComplexifiedNodeList;
+        Result = NodeHelper.GetComplexifiedNode(Instruction5, out ComplexifiedNodeList);
+        Assert.True(Result);
+        Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+        Assert.That(ComplexifiedNodeList[0] is AttachmentInstruction);
+    }
 
-            Expression DefaultExpression = NodeHelper.CreateDefaultExpression();
+    [Test]
+    [Category("Complexify")]
+    public static void TestCheckInstruction()
+    {
+        bool Result;
+        IList<Node> ComplexifiedNodeList;
 
-            CheckInstruction Instruction1 = NodeHelper.CreateCheckInstruction(DefaultExpression);
+        Expression DefaultExpression = NodeHelper.CreateDefaultExpression();
 
-            Result = NodeHelper.GetComplexifiedNode(Instruction1, out _);
-            Assert.False(Result);
+        CheckInstruction Instruction1 = NodeHelper.CreateCheckInstruction(DefaultExpression);
 
-            Expression NumberExpression = NodeHelper.CreateSimpleQueryExpression("0");
+        Result = NodeHelper.GetComplexifiedNode(Instruction1, out _);
+        Assert.False(Result);
 
-            CheckInstruction Instruction2 = NodeHelper.CreateCheckInstruction(NumberExpression);
+        Expression NumberExpression = NodeHelper.CreateSimpleQueryExpression("0");
 
-            Result = NodeHelper.GetComplexifiedNode(Instruction2, out ComplexifiedNodeList);
-            Assert.True(Result);
-            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
-            Assert.That(ComplexifiedNodeList[0] is CheckInstruction);
-        }
+        CheckInstruction Instruction2 = NodeHelper.CreateCheckInstruction(NumberExpression);
 
-        [Test]
-        [Category("Complexify")]
-        public static void TestCreateInstruction()
-        {
-            bool Result;
-            IList<Node> ComplexifiedNodeList;
+        Result = NodeHelper.GetComplexifiedNode(Instruction2, out ComplexifiedNodeList);
+        Assert.True(Result);
+        Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+        Assert.That(ComplexifiedNodeList[0] is CheckInstruction);
+    }
 
-            Identifier EmptyClassIdentifier = NodeHelper.CreateEmptyIdentifier();
-            Identifier EmptyRoutineIdentifier = NodeHelper.CreateEmptyIdentifier();
-            List<Argument> EmptyArgumentList = new();
-            QualifiedName EmptyQualifiedName = NodeHelper.CreateEmptyQualifiedName();
-            IBlockList<Argument> EmptyArgumentBlockList = BlockListHelper.CreateEmptyBlockList<Argument>();
+    [Test]
+    [Category("Complexify")]
+    public static void TestCreateInstruction()
+    {
+        bool Result;
+        IList<Node> ComplexifiedNodeList;
 
-            CreateInstruction Instruction1 = NodeHelper.CreateCreateInstruction(EmptyClassIdentifier, EmptyRoutineIdentifier, EmptyArgumentList);
+        Identifier EmptyClassIdentifier = NodeHelper.CreateEmptyIdentifier();
+        Identifier EmptyRoutineIdentifier = NodeHelper.CreateEmptyIdentifier();
+        List<Argument> EmptyArgumentList = new();
+        QualifiedName EmptyQualifiedName = NodeHelper.CreateEmptyQualifiedName();
+        IBlockList<Argument> EmptyArgumentBlockList = BlockListHelper.CreateEmptyBlockList<Argument>();
 
-            Result = NodeHelper.GetComplexifiedNode(Instruction1, out _);
-            Assert.False(Result);
+        CreateInstruction Instruction1 = NodeHelper.CreateCreateInstruction(EmptyClassIdentifier, EmptyRoutineIdentifier, EmptyArgumentList);
 
-            Argument SplittableArgument = NodeHelper.CreateSimplePositionalArgument("a,b");
+        Result = NodeHelper.GetComplexifiedNode(Instruction1, out _);
+        Assert.False(Result);
 
-            CreateInstruction Instruction2 = NodeHelper.CreateCreateInstruction(EmptyClassIdentifier, EmptyRoutineIdentifier, new List<Argument>() { SplittableArgument });
+        Argument SplittableArgument = NodeHelper.CreateSimplePositionalArgument("a,b");
 
-            Result = NodeHelper.GetComplexifiedNode(Instruction2, out ComplexifiedNodeList);
-            Assert.True(Result);
-            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
-            Assert.That(ComplexifiedNodeList[0] is CreateInstruction);
+        CreateInstruction Instruction2 = NodeHelper.CreateCreateInstruction(EmptyClassIdentifier, EmptyRoutineIdentifier, new List<Argument>() { SplittableArgument });
 
-            IBlockList<Argument> SplittableArgumentBlockList = BlockListHelper.CreateSimpleBlockList(SplittableArgument);
+        Result = NodeHelper.GetComplexifiedNode(Instruction2, out ComplexifiedNodeList);
+        Assert.True(Result);
+        Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+        Assert.That(ComplexifiedNodeList[0] is CreateInstruction);
 
-            CreateInstruction Instruction3 = NodeHelper.CreateCreateInstruction(EmptyClassIdentifier, EmptyRoutineIdentifier, SplittableArgumentBlockList, EmptyQualifiedName);
+        IBlockList<Argument> SplittableArgumentBlockList = BlockListHelper.CreateSimpleBlockList(SplittableArgument);
 
-            Result = NodeHelper.GetComplexifiedNode(Instruction3, out ComplexifiedNodeList);
-            Assert.True(Result);
-            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
-            Assert.That(ComplexifiedNodeList[0] is CreateInstruction);
+        CreateInstruction Instruction3 = NodeHelper.CreateCreateInstruction(EmptyClassIdentifier, EmptyRoutineIdentifier, SplittableArgumentBlockList, EmptyQualifiedName);
 
-            QualifiedName SplittableQualifiedName = NodeHelper.CreateSimpleQualifiedName("a.b");
+        Result = NodeHelper.GetComplexifiedNode(Instruction3, out ComplexifiedNodeList);
+        Assert.True(Result);
+        Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+        Assert.That(ComplexifiedNodeList[0] is CreateInstruction);
 
-            CreateInstruction Instruction4 = NodeHelper.CreateCreateInstruction(EmptyClassIdentifier, EmptyRoutineIdentifier, EmptyArgumentBlockList, SplittableQualifiedName);
+        QualifiedName SplittableQualifiedName = NodeHelper.CreateSimpleQualifiedName("a.b");
 
-            Result = NodeHelper.GetComplexifiedNode(Instruction4, out ComplexifiedNodeList);
-            Assert.True(Result);
-            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
-            Assert.That(ComplexifiedNodeList[0] is CreateInstruction);
-        }
+        CreateInstruction Instruction4 = NodeHelper.CreateCreateInstruction(EmptyClassIdentifier, EmptyRoutineIdentifier, EmptyArgumentBlockList, SplittableQualifiedName);
 
-        [Test]
-        [Category("Complexify")]
-        public static void TestIfThenElseInstruction()
-        {
-            bool Result;
-            IList<Node> ComplexifiedNodeList;
+        Result = NodeHelper.GetComplexifiedNode(Instruction4, out ComplexifiedNodeList);
+        Assert.True(Result);
+        Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+        Assert.That(ComplexifiedNodeList[0] is CreateInstruction);
+    }
 
-            Conditional EmptyConditional = NodeHelper.CreateEmptyConditional();
+    [Test]
+    [Category("Complexify")]
+    public static void TestIfThenElseInstruction()
+    {
+        bool Result;
+        IList<Node> ComplexifiedNodeList;
 
-            IfThenElseInstruction Instruction1 = NodeHelper.CreateIfThenElseInstruction(EmptyConditional);
+        Conditional EmptyConditional = NodeHelper.CreateEmptyConditional();
 
-            Result = NodeHelper.GetComplexifiedNode(Instruction1, out _);
-            Assert.False(Result);
+        IfThenElseInstruction Instruction1 = NodeHelper.CreateIfThenElseInstruction(EmptyConditional);
 
-            Expression NumberExpression = NodeHelper.CreateSimpleQueryExpression("0");
-            Conditional NumberConditional = NodeHelper.CreateConditional(NumberExpression);
+        Result = NodeHelper.GetComplexifiedNode(Instruction1, out _);
+        Assert.False(Result);
 
-            IfThenElseInstruction Instruction2 = NodeHelper.CreateIfThenElseInstruction(NumberConditional);
+        Expression NumberExpression = NodeHelper.CreateSimpleQueryExpression("0");
+        Conditional NumberConditional = NodeHelper.CreateConditional(NumberExpression);
 
-            Result = NodeHelper.GetComplexifiedNode(Instruction2, out ComplexifiedNodeList);
-            Assert.True(Result);
-            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
-            Assert.That(ComplexifiedNodeList[0] is IfThenElseInstruction);
+        IfThenElseInstruction Instruction2 = NodeHelper.CreateIfThenElseInstruction(NumberConditional);
 
-            IBlockList<Conditional> NumberConditionalBlockList = BlockListHelper.CreateSimpleBlockList(NumberConditional);
-            Scope EmptyScope = NodeHelper.CreateEmptyScope();
-            IfThenElseInstruction Instruction3 = NodeHelper.CreateIfThenElseInstruction(NumberConditionalBlockList, EmptyScope);
+        Result = NodeHelper.GetComplexifiedNode(Instruction2, out ComplexifiedNodeList);
+        Assert.True(Result);
+        Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+        Assert.That(ComplexifiedNodeList[0] is IfThenElseInstruction);
 
-            Result = NodeHelper.GetComplexifiedNode(Instruction3, out ComplexifiedNodeList);
-            Assert.True(Result);
-            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
-            Assert.That(ComplexifiedNodeList[0] is IfThenElseInstruction);
-        }
+        IBlockList<Conditional> NumberConditionalBlockList = BlockListHelper.CreateSimpleBlockList(NumberConditional);
+        Scope EmptyScope = NodeHelper.CreateEmptyScope();
+        IfThenElseInstruction Instruction3 = NodeHelper.CreateIfThenElseInstruction(NumberConditionalBlockList, EmptyScope);
 
-        [Test]
-        [Category("Complexify")]
-        public static void TestIndexAssignmentInstruction()
-        {
-            bool Result;
-            IList<Node> ComplexifiedNodeList;
+        Result = NodeHelper.GetComplexifiedNode(Instruction3, out ComplexifiedNodeList);
+        Assert.True(Result);
+        Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+        Assert.That(ComplexifiedNodeList[0] is IfThenElseInstruction);
+    }
 
-            QualifiedName EmptyQualifiedName = NodeHelper.CreateEmptyQualifiedName();
-            Argument DefaultArgument = NodeHelper.CreateDefaultArgument();
-            IBlockList<Argument> SimpleArgumentBlockList = BlockListHelper.CreateSimpleBlockList(DefaultArgument);
-            Expression DefaultExpression = NodeHelper.CreateDefaultExpression();
+    [Test]
+    [Category("Complexify")]
+    public static void TestIndexAssignmentInstruction()
+    {
+        bool Result;
+        IList<Node> ComplexifiedNodeList;
 
-            IndexAssignmentInstruction Instruction1 = NodeHelper.CreateIndexAssignmentInstruction(EmptyQualifiedName, SimpleArgumentBlockList, DefaultExpression);
+        QualifiedName EmptyQualifiedName = NodeHelper.CreateEmptyQualifiedName();
+        Argument DefaultArgument = NodeHelper.CreateDefaultArgument();
+        IBlockList<Argument> SimpleArgumentBlockList = BlockListHelper.CreateSimpleBlockList(DefaultArgument);
+        Expression DefaultExpression = NodeHelper.CreateDefaultExpression();
 
-            Result = NodeHelper.GetComplexifiedNode(Instruction1, out _);
-            Assert.False(Result);
+        IndexAssignmentInstruction Instruction1 = NodeHelper.CreateIndexAssignmentInstruction(EmptyQualifiedName, SimpleArgumentBlockList, DefaultExpression);
 
-            QualifiedName SplittableQualifiedName = NodeHelper.CreateSimpleQualifiedName("a.b");
+        Result = NodeHelper.GetComplexifiedNode(Instruction1, out _);
+        Assert.False(Result);
 
-            IndexAssignmentInstruction Instruction2 = NodeHelper.CreateIndexAssignmentInstruction(SplittableQualifiedName, SimpleArgumentBlockList, DefaultExpression);
+        QualifiedName SplittableQualifiedName = NodeHelper.CreateSimpleQualifiedName("a.b");
 
-            Result = NodeHelper.GetComplexifiedNode(Instruction2, out ComplexifiedNodeList);
-            Assert.True(Result);
-            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
-            Assert.That(ComplexifiedNodeList[0] is IndexAssignmentInstruction);
+        IndexAssignmentInstruction Instruction2 = NodeHelper.CreateIndexAssignmentInstruction(SplittableQualifiedName, SimpleArgumentBlockList, DefaultExpression);
 
-            Argument SplittableArgument = NodeHelper.CreateSimplePositionalArgument("a,b");
-            IBlockList<Argument> SplittableArgumentBlockList = BlockListHelper.CreateSimpleBlockList(SplittableArgument);
+        Result = NodeHelper.GetComplexifiedNode(Instruction2, out ComplexifiedNodeList);
+        Assert.True(Result);
+        Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+        Assert.That(ComplexifiedNodeList[0] is IndexAssignmentInstruction);
 
-            IndexAssignmentInstruction Instruction3 = NodeHelper.CreateIndexAssignmentInstruction(EmptyQualifiedName, SplittableArgumentBlockList, DefaultExpression);
+        Argument SplittableArgument = NodeHelper.CreateSimplePositionalArgument("a,b");
+        IBlockList<Argument> SplittableArgumentBlockList = BlockListHelper.CreateSimpleBlockList(SplittableArgument);
 
-            Result = NodeHelper.GetComplexifiedNode(Instruction3, out ComplexifiedNodeList);
-            Assert.True(Result);
-            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
-            Assert.That(ComplexifiedNodeList[0] is IndexAssignmentInstruction);
+        IndexAssignmentInstruction Instruction3 = NodeHelper.CreateIndexAssignmentInstruction(EmptyQualifiedName, SplittableArgumentBlockList, DefaultExpression);
 
-            Expression NumberExpression = NodeHelper.CreateSimpleQueryExpression("0");
+        Result = NodeHelper.GetComplexifiedNode(Instruction3, out ComplexifiedNodeList);
+        Assert.True(Result);
+        Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+        Assert.That(ComplexifiedNodeList[0] is IndexAssignmentInstruction);
 
-            IndexAssignmentInstruction Instruction4 = NodeHelper.CreateIndexAssignmentInstruction(EmptyQualifiedName, SimpleArgumentBlockList, NumberExpression);
+        Expression NumberExpression = NodeHelper.CreateSimpleQueryExpression("0");
 
-            Result = NodeHelper.GetComplexifiedNode(Instruction4, out ComplexifiedNodeList);
-            Assert.True(Result);
-            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
-            Assert.That(ComplexifiedNodeList[0] is IndexAssignmentInstruction);
-        }
+        IndexAssignmentInstruction Instruction4 = NodeHelper.CreateIndexAssignmentInstruction(EmptyQualifiedName, SimpleArgumentBlockList, NumberExpression);
 
-        [Test]
-        [Category("Complexify")]
-        public static void TestInspectInstruction()
-        {
-            bool Result;
-            IList<Node> ComplexifiedNodeList;
+        Result = NodeHelper.GetComplexifiedNode(Instruction4, out ComplexifiedNodeList);
+        Assert.True(Result);
+        Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+        Assert.That(ComplexifiedNodeList[0] is IndexAssignmentInstruction);
+    }
 
-            Expression DefaultExpression = NodeHelper.CreateDefaultExpression();
+    [Test]
+    [Category("Complexify")]
+    public static void TestInspectInstruction()
+    {
+        bool Result;
+        IList<Node> ComplexifiedNodeList;
 
-            InspectInstruction Instruction1 = NodeHelper.CreateInspectInstruction(DefaultExpression);
+        Expression DefaultExpression = NodeHelper.CreateDefaultExpression();
 
-            Result = NodeHelper.GetComplexifiedNode(Instruction1, out _);
-            Assert.False(Result);
+        InspectInstruction Instruction1 = NodeHelper.CreateInspectInstruction(DefaultExpression);
 
-            Expression NumberExpression = NodeHelper.CreateSimpleQueryExpression("0");
+        Result = NodeHelper.GetComplexifiedNode(Instruction1, out _);
+        Assert.False(Result);
 
-            InspectInstruction Instruction2 = NodeHelper.CreateInspectInstruction(NumberExpression);
+        Expression NumberExpression = NodeHelper.CreateSimpleQueryExpression("0");
 
-            Result = NodeHelper.GetComplexifiedNode(Instruction2, out ComplexifiedNodeList);
-            Assert.True(Result);
-            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
-            Assert.That(ComplexifiedNodeList[0] is InspectInstruction);
+        InspectInstruction Instruction2 = NodeHelper.CreateInspectInstruction(NumberExpression);
 
-            With SimpleWith = NodeHelper.CreateSimpleWith(DefaultExpression);
-            IBlockList<With> SimpleWithBlockList = BlockListHelper.CreateSimpleBlockList(SimpleWith);
-            Scope EmptyScope = NodeHelper.CreateEmptyScope();
-            InspectInstruction Instruction3 = NodeHelper.CreateInspectInstruction(NumberExpression, SimpleWithBlockList, EmptyScope);
+        Result = NodeHelper.GetComplexifiedNode(Instruction2, out ComplexifiedNodeList);
+        Assert.True(Result);
+        Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+        Assert.That(ComplexifiedNodeList[0] is InspectInstruction);
 
-            Result = NodeHelper.GetComplexifiedNode(Instruction3, out ComplexifiedNodeList);
-            Assert.True(Result);
-            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
-            Assert.That(ComplexifiedNodeList[0] is InspectInstruction);
-        }
+        With SimpleWith = NodeHelper.CreateSimpleWith(DefaultExpression);
+        IBlockList<With> SimpleWithBlockList = BlockListHelper.CreateSimpleBlockList(SimpleWith);
+        Scope EmptyScope = NodeHelper.CreateEmptyScope();
+        InspectInstruction Instruction3 = NodeHelper.CreateInspectInstruction(NumberExpression, SimpleWithBlockList, EmptyScope);
 
-        [Test]
-        [Category("Complexify")]
-        public static void TestKeywordAssignmentInstruction()
-        {
-            bool Result;
-            IList<Node> ComplexifiedNodeList;
+        Result = NodeHelper.GetComplexifiedNode(Instruction3, out ComplexifiedNodeList);
+        Assert.True(Result);
+        Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+        Assert.That(ComplexifiedNodeList[0] is InspectInstruction);
+    }
 
-            Expression DefaultExpression = NodeHelper.CreateDefaultExpression();
+    [Test]
+    [Category("Complexify")]
+    public static void TestKeywordAssignmentInstruction()
+    {
+        bool Result;
+        IList<Node> ComplexifiedNodeList;
 
-            KeywordAssignmentInstruction Instruction1 = NodeHelper.CreateKeywordAssignmentInstruction(Keyword.Result, DefaultExpression);
+        Expression DefaultExpression = NodeHelper.CreateDefaultExpression();
 
-            Result = NodeHelper.GetComplexifiedNode(Instruction1, out _);
-            Assert.False(Result);
+        KeywordAssignmentInstruction Instruction1 = NodeHelper.CreateKeywordAssignmentInstruction(Keyword.Result, DefaultExpression);
 
-            Expression NumberExpression = NodeHelper.CreateSimpleQueryExpression("0");
+        Result = NodeHelper.GetComplexifiedNode(Instruction1, out _);
+        Assert.False(Result);
 
-            KeywordAssignmentInstruction Instruction2 = NodeHelper.CreateKeywordAssignmentInstruction(Keyword.Result, NumberExpression);
+        Expression NumberExpression = NodeHelper.CreateSimpleQueryExpression("0");
 
-            Result = NodeHelper.GetComplexifiedNode(Instruction2, out ComplexifiedNodeList);
-            Assert.True(Result);
-            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
-            Assert.That(ComplexifiedNodeList[0] is KeywordAssignmentInstruction);
-        }
+        KeywordAssignmentInstruction Instruction2 = NodeHelper.CreateKeywordAssignmentInstruction(Keyword.Result, NumberExpression);
 
-        [Test]
-        [Category("Complexify")]
-        public static void TestOverLoopInstruction()
-        {
-            bool Result;
-            IList<Node> ComplexifiedNodeList;
+        Result = NodeHelper.GetComplexifiedNode(Instruction2, out ComplexifiedNodeList);
+        Assert.True(Result);
+        Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+        Assert.That(ComplexifiedNodeList[0] is KeywordAssignmentInstruction);
+    }
 
-            Name EmptyName = NodeHelper.CreateEmptyName();
-            List<Name> SimpleNameList = new() { EmptyName };
-            Expression DefaultExpression = NodeHelper.CreateDefaultExpression();
+    [Test]
+    [Category("Complexify")]
+    public static void TestOverLoopInstruction()
+    {
+        bool Result;
+        IList<Node> ComplexifiedNodeList;
 
-            OverLoopInstruction Instruction1 = NodeHelper.CreateOverLoopInstruction(DefaultExpression, SimpleNameList);
+        Name EmptyName = NodeHelper.CreateEmptyName();
+        List<Name> SimpleNameList = new() { EmptyName };
+        Expression DefaultExpression = NodeHelper.CreateDefaultExpression();
 
-            Result = NodeHelper.GetComplexifiedNode(Instruction1, out _);
-            Assert.False(Result);
+        OverLoopInstruction Instruction1 = NodeHelper.CreateOverLoopInstruction(DefaultExpression, SimpleNameList);
 
-            Expression NumberExpression = NodeHelper.CreateSimpleQueryExpression("0");
+        Result = NodeHelper.GetComplexifiedNode(Instruction1, out _);
+        Assert.False(Result);
 
-            OverLoopInstruction Instruction2 = NodeHelper.CreateOverLoopInstruction(NumberExpression, SimpleNameList);
+        Expression NumberExpression = NodeHelper.CreateSimpleQueryExpression("0");
 
-            Result = NodeHelper.GetComplexifiedNode(Instruction2, out ComplexifiedNodeList);
-            Assert.True(Result);
-            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
-            Assert.That(ComplexifiedNodeList[0] is OverLoopInstruction);
+        OverLoopInstruction Instruction2 = NodeHelper.CreateOverLoopInstruction(NumberExpression, SimpleNameList);
 
-            IBlockList<Name> SimpleNameBlockList = BlockListHelper.CreateSimpleBlockList(EmptyName);
-            Scope EmptyScope = NodeHelper.CreateEmptyScope();
-            IBlockList<Assertion> EmptyAssertionBlockList = BlockListHelper.CreateEmptyBlockList<Assertion>();
-            Identifier EmptyIdentifier = NodeHelper.CreateEmptyIdentifier();
+        Result = NodeHelper.GetComplexifiedNode(Instruction2, out ComplexifiedNodeList);
+        Assert.True(Result);
+        Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+        Assert.That(ComplexifiedNodeList[0] is OverLoopInstruction);
 
-            OverLoopInstruction Instruction3 = NodeHelper.CreateOverLoopInstruction(NumberExpression, SimpleNameBlockList, IterationType.Single, EmptyScope, EmptyIdentifier, EmptyAssertionBlockList);
+        IBlockList<Name> SimpleNameBlockList = BlockListHelper.CreateSimpleBlockList(EmptyName);
+        Scope EmptyScope = NodeHelper.CreateEmptyScope();
+        IBlockList<Assertion> EmptyAssertionBlockList = BlockListHelper.CreateEmptyBlockList<Assertion>();
+        Identifier EmptyIdentifier = NodeHelper.CreateEmptyIdentifier();
 
-            Result = NodeHelper.GetComplexifiedNode(Instruction3, out ComplexifiedNodeList);
-            Assert.True(Result);
-            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
-            Assert.That(ComplexifiedNodeList[0] is OverLoopInstruction);
-        }
+        OverLoopInstruction Instruction3 = NodeHelper.CreateOverLoopInstruction(NumberExpression, SimpleNameBlockList, IterationType.Single, EmptyScope, EmptyIdentifier, EmptyAssertionBlockList);
 
-        [Test]
-        [Category("Complexify")]
-        public static void TestPrecursorIndexAssignmentInstruction()
-        {
-            bool Result;
-            IList<Node> ComplexifiedNodeList;
+        Result = NodeHelper.GetComplexifiedNode(Instruction3, out ComplexifiedNodeList);
+        Assert.True(Result);
+        Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+        Assert.That(ComplexifiedNodeList[0] is OverLoopInstruction);
+    }
 
-            ObjectType DefaultObjectType = NodeHelper.CreateDefaultObjectType();
-            Argument DefaultArgument = NodeHelper.CreateDefaultArgument();
-            IBlockList<Argument> SimpleArgumentBlockList = BlockListHelper.CreateSimpleBlockList(DefaultArgument);
-            Expression DefaultExpression = NodeHelper.CreateDefaultExpression();
+    [Test]
+    [Category("Complexify")]
+    public static void TestPrecursorIndexAssignmentInstruction()
+    {
+        bool Result;
+        IList<Node> ComplexifiedNodeList;
 
-            PrecursorIndexAssignmentInstruction Instruction1 = NodeHelper.CreatePrecursorIndexAssignmentInstruction(DefaultObjectType, SimpleArgumentBlockList, DefaultExpression);
+        ObjectType DefaultObjectType = NodeHelper.CreateDefaultObjectType();
+        Argument DefaultArgument = NodeHelper.CreateDefaultArgument();
+        IBlockList<Argument> SimpleArgumentBlockList = BlockListHelper.CreateSimpleBlockList(DefaultArgument);
+        Expression DefaultExpression = NodeHelper.CreateDefaultExpression();
 
-            Result = NodeHelper.GetComplexifiedNode(Instruction1, out _);
-            Assert.False(Result);
+        PrecursorIndexAssignmentInstruction Instruction1 = NodeHelper.CreatePrecursorIndexAssignmentInstruction(DefaultObjectType, SimpleArgumentBlockList, DefaultExpression);
 
-            ObjectType AnchorType = NodeHelper.CreateSimpleSimpleType("like b");
+        Result = NodeHelper.GetComplexifiedNode(Instruction1, out _);
+        Assert.False(Result);
 
-            PrecursorIndexAssignmentInstruction Instruction2 = NodeHelper.CreatePrecursorIndexAssignmentInstruction(AnchorType, SimpleArgumentBlockList, DefaultExpression);
+        ObjectType AnchorType = NodeHelper.CreateSimpleSimpleType("like b");
 
-            Result = NodeHelper.GetComplexifiedNode(Instruction2, out ComplexifiedNodeList);
-            Assert.True(Result);
-            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
-            Assert.That(ComplexifiedNodeList[0] is PrecursorIndexAssignmentInstruction);
+        PrecursorIndexAssignmentInstruction Instruction2 = NodeHelper.CreatePrecursorIndexAssignmentInstruction(AnchorType, SimpleArgumentBlockList, DefaultExpression);
 
-            PrecursorIndexAssignmentInstruction Complexified2 = (PrecursorIndexAssignmentInstruction)ComplexifiedNodeList[0];
-            Assert.That(Complexified2.AncestorType.IsAssigned);
-            Assert.That(Complexified2.AncestorType.Item is AnchoredType);
+        Result = NodeHelper.GetComplexifiedNode(Instruction2, out ComplexifiedNodeList);
+        Assert.True(Result);
+        Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+        Assert.That(ComplexifiedNodeList[0] is PrecursorIndexAssignmentInstruction);
 
-            Argument SplittableArgument = NodeHelper.CreateSimplePositionalArgument("a,b");
-            IBlockList<Argument> SplittableArgumentBlockList = BlockListHelper.CreateSimpleBlockList(SplittableArgument);
+        PrecursorIndexAssignmentInstruction Complexified2 = (PrecursorIndexAssignmentInstruction)ComplexifiedNodeList[0];
+        Assert.That(Complexified2.AncestorType.IsAssigned);
+        Assert.That(Complexified2.AncestorType.Item is AnchoredType);
 
-            PrecursorIndexAssignmentInstruction Instruction3 = NodeHelper.CreatePrecursorIndexAssignmentInstruction(SplittableArgumentBlockList, DefaultExpression);
+        Argument SplittableArgument = NodeHelper.CreateSimplePositionalArgument("a,b");
+        IBlockList<Argument> SplittableArgumentBlockList = BlockListHelper.CreateSimpleBlockList(SplittableArgument);
 
-            Result = NodeHelper.GetComplexifiedNode(Instruction3, out ComplexifiedNodeList);
-            Assert.True(Result);
-            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
-            Assert.That(ComplexifiedNodeList[0] is PrecursorIndexAssignmentInstruction);
+        PrecursorIndexAssignmentInstruction Instruction3 = NodeHelper.CreatePrecursorIndexAssignmentInstruction(SplittableArgumentBlockList, DefaultExpression);
 
-            PrecursorIndexAssignmentInstruction Instruction4 = NodeHelper.CreatePrecursorIndexAssignmentInstruction(DefaultObjectType, SplittableArgumentBlockList, DefaultExpression);
+        Result = NodeHelper.GetComplexifiedNode(Instruction3, out ComplexifiedNodeList);
+        Assert.True(Result);
+        Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+        Assert.That(ComplexifiedNodeList[0] is PrecursorIndexAssignmentInstruction);
 
-            Result = NodeHelper.GetComplexifiedNode(Instruction4, out ComplexifiedNodeList);
-            Assert.True(Result);
-            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
-            Assert.That(ComplexifiedNodeList[0] is PrecursorIndexAssignmentInstruction);
+        PrecursorIndexAssignmentInstruction Instruction4 = NodeHelper.CreatePrecursorIndexAssignmentInstruction(DefaultObjectType, SplittableArgumentBlockList, DefaultExpression);
 
-            Expression NumberExpression = NodeHelper.CreateSimpleQueryExpression("0");
+        Result = NodeHelper.GetComplexifiedNode(Instruction4, out ComplexifiedNodeList);
+        Assert.True(Result);
+        Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+        Assert.That(ComplexifiedNodeList[0] is PrecursorIndexAssignmentInstruction);
 
-            PrecursorIndexAssignmentInstruction Instruction5 = NodeHelper.CreatePrecursorIndexAssignmentInstruction(SimpleArgumentBlockList, NumberExpression);
+        Expression NumberExpression = NodeHelper.CreateSimpleQueryExpression("0");
 
-            Result = NodeHelper.GetComplexifiedNode(Instruction5, out ComplexifiedNodeList);
-            Assert.True(Result);
-            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
-            Assert.That(ComplexifiedNodeList[0] is PrecursorIndexAssignmentInstruction);
+        PrecursorIndexAssignmentInstruction Instruction5 = NodeHelper.CreatePrecursorIndexAssignmentInstruction(SimpleArgumentBlockList, NumberExpression);
 
-            PrecursorIndexAssignmentInstruction Instruction6 = NodeHelper.CreatePrecursorIndexAssignmentInstruction(DefaultObjectType, SimpleArgumentBlockList, NumberExpression);
+        Result = NodeHelper.GetComplexifiedNode(Instruction5, out ComplexifiedNodeList);
+        Assert.True(Result);
+        Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+        Assert.That(ComplexifiedNodeList[0] is PrecursorIndexAssignmentInstruction);
 
-            Result = NodeHelper.GetComplexifiedNode(Instruction6, out ComplexifiedNodeList);
-            Assert.True(Result);
-            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
-            Assert.That(ComplexifiedNodeList[0] is PrecursorIndexAssignmentInstruction);
-        }
+        PrecursorIndexAssignmentInstruction Instruction6 = NodeHelper.CreatePrecursorIndexAssignmentInstruction(DefaultObjectType, SimpleArgumentBlockList, NumberExpression);
 
-        [Test]
-        [Category("Complexify")]
-        public static void TestPrecursorInstruction()
-        {
-            bool Result;
-            IList<Node> ComplexifiedNodeList;
+        Result = NodeHelper.GetComplexifiedNode(Instruction6, out ComplexifiedNodeList);
+        Assert.True(Result);
+        Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+        Assert.That(ComplexifiedNodeList[0] is PrecursorIndexAssignmentInstruction);
+    }
 
-            ObjectType DefaultObjectType = NodeHelper.CreateDefaultObjectType();
-            IBlockList<Argument> EmptyArgumentBlockList = BlockListHelper.CreateEmptyBlockList<Argument>();
+    [Test]
+    [Category("Complexify")]
+    public static void TestPrecursorInstruction()
+    {
+        bool Result;
+        IList<Node> ComplexifiedNodeList;
 
-            PrecursorInstruction Instruction1 = NodeHelper.CreatePrecursorInstruction(DefaultObjectType, EmptyArgumentBlockList);
+        ObjectType DefaultObjectType = NodeHelper.CreateDefaultObjectType();
+        IBlockList<Argument> EmptyArgumentBlockList = BlockListHelper.CreateEmptyBlockList<Argument>();
 
-            Result = NodeHelper.GetComplexifiedNode(Instruction1, out _);
-            Assert.False(Result);
+        PrecursorInstruction Instruction1 = NodeHelper.CreatePrecursorInstruction(DefaultObjectType, EmptyArgumentBlockList);
 
-            ObjectType AnchorType = NodeHelper.CreateSimpleSimpleType("like b");
+        Result = NodeHelper.GetComplexifiedNode(Instruction1, out _);
+        Assert.False(Result);
 
-            PrecursorInstruction Instruction2 = NodeHelper.CreatePrecursorInstruction(AnchorType, EmptyArgumentBlockList);
+        ObjectType AnchorType = NodeHelper.CreateSimpleSimpleType("like b");
 
-            Result = NodeHelper.GetComplexifiedNode(Instruction2, out ComplexifiedNodeList);
-            Assert.True(Result);
-            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
-            Assert.That(ComplexifiedNodeList[0] is PrecursorInstruction);
+        PrecursorInstruction Instruction2 = NodeHelper.CreatePrecursorInstruction(AnchorType, EmptyArgumentBlockList);
 
-            PrecursorInstruction Complexified2 = (PrecursorInstruction)ComplexifiedNodeList[0];
-            Assert.That(Complexified2.AncestorType.IsAssigned);
-            Assert.That(Complexified2.AncestorType.Item is AnchoredType);
+        Result = NodeHelper.GetComplexifiedNode(Instruction2, out ComplexifiedNodeList);
+        Assert.True(Result);
+        Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+        Assert.That(ComplexifiedNodeList[0] is PrecursorInstruction);
 
-            Argument SplittableArgument = NodeHelper.CreateSimplePositionalArgument("a,b");
-            IBlockList<Argument> SplittableArgumentBlockList = BlockListHelper.CreateSimpleBlockList(SplittableArgument);
+        PrecursorInstruction Complexified2 = (PrecursorInstruction)ComplexifiedNodeList[0];
+        Assert.That(Complexified2.AncestorType.IsAssigned);
+        Assert.That(Complexified2.AncestorType.Item is AnchoredType);
 
-            PrecursorInstruction Instruction3 = NodeHelper.CreatePrecursorInstruction(SplittableArgumentBlockList);
+        Argument SplittableArgument = NodeHelper.CreateSimplePositionalArgument("a,b");
+        IBlockList<Argument> SplittableArgumentBlockList = BlockListHelper.CreateSimpleBlockList(SplittableArgument);
 
-            Result = NodeHelper.GetComplexifiedNode(Instruction3, out ComplexifiedNodeList);
-            Assert.True(Result);
-            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
-            Assert.That(ComplexifiedNodeList[0] is PrecursorInstruction);
+        PrecursorInstruction Instruction3 = NodeHelper.CreatePrecursorInstruction(SplittableArgumentBlockList);
 
-            PrecursorInstruction Instruction4 = NodeHelper.CreatePrecursorInstruction(DefaultObjectType, SplittableArgumentBlockList);
+        Result = NodeHelper.GetComplexifiedNode(Instruction3, out ComplexifiedNodeList);
+        Assert.True(Result);
+        Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+        Assert.That(ComplexifiedNodeList[0] is PrecursorInstruction);
 
-            Result = NodeHelper.GetComplexifiedNode(Instruction4, out ComplexifiedNodeList);
-            Assert.True(Result);
-            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
-            Assert.That(ComplexifiedNodeList[0] is PrecursorInstruction);
-        }
+        PrecursorInstruction Instruction4 = NodeHelper.CreatePrecursorInstruction(DefaultObjectType, SplittableArgumentBlockList);
 
-        [Test]
-        [Category("Complexify")]
-        public static void TestReleaseInstruction()
-        {
-            bool Result;
-            IList<Node> ComplexifiedNodeList;
+        Result = NodeHelper.GetComplexifiedNode(Instruction4, out ComplexifiedNodeList);
+        Assert.True(Result);
+        Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+        Assert.That(ComplexifiedNodeList[0] is PrecursorInstruction);
+    }
 
-            QualifiedName EmptyQualifiedName = NodeHelper.CreateEmptyQualifiedName();
+    [Test]
+    [Category("Complexify")]
+    public static void TestReleaseInstruction()
+    {
+        bool Result;
+        IList<Node> ComplexifiedNodeList;
 
-            ReleaseInstruction Instruction1 = NodeHelper.CreateReleaseInstruction(EmptyQualifiedName);
+        QualifiedName EmptyQualifiedName = NodeHelper.CreateEmptyQualifiedName();
 
-            Result = NodeHelper.GetComplexifiedNode(Instruction1, out _);
-            Assert.False(Result);
+        ReleaseInstruction Instruction1 = NodeHelper.CreateReleaseInstruction(EmptyQualifiedName);
 
-            QualifiedName SplittableQualifiedName = NodeHelper.CreateSimpleQualifiedName("a.b");
+        Result = NodeHelper.GetComplexifiedNode(Instruction1, out _);
+        Assert.False(Result);
 
-            ReleaseInstruction Instruction2 = NodeHelper.CreateReleaseInstruction(SplittableQualifiedName);
+        QualifiedName SplittableQualifiedName = NodeHelper.CreateSimpleQualifiedName("a.b");
 
-            Result = NodeHelper.GetComplexifiedNode(Instruction2, out ComplexifiedNodeList);
-            Assert.True(Result);
-            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
-            Assert.That(ComplexifiedNodeList[0] is ReleaseInstruction);
-        }
+        ReleaseInstruction Instruction2 = NodeHelper.CreateReleaseInstruction(SplittableQualifiedName);
 
-        [Test]
-        [Category("Complexify")]
-        public static void TestThrowInstruction()
-        {
-            bool Result;
-            IList<Node> ComplexifiedNodeList;
+        Result = NodeHelper.GetComplexifiedNode(Instruction2, out ComplexifiedNodeList);
+        Assert.True(Result);
+        Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+        Assert.That(ComplexifiedNodeList[0] is ReleaseInstruction);
+    }
 
-            ObjectType DefaultObjectType = NodeHelper.CreateDefaultObjectType();
-            Identifier EmptyIdentifier = NodeHelper.CreateEmptyIdentifier();
-            List<Argument> EmptyArgumentList = new();
+    [Test]
+    [Category("Complexify")]
+    public static void TestThrowInstruction()
+    {
+        bool Result;
+        IList<Node> ComplexifiedNodeList;
 
-            ThrowInstruction Instruction1 = NodeHelper.CreateThrowInstruction(DefaultObjectType, EmptyIdentifier, EmptyArgumentList);
+        ObjectType DefaultObjectType = NodeHelper.CreateDefaultObjectType();
+        Identifier EmptyIdentifier = NodeHelper.CreateEmptyIdentifier();
+        List<Argument> EmptyArgumentList = new();
 
-            Result = NodeHelper.GetComplexifiedNode(Instruction1, out _);
-            Assert.False(Result);
+        ThrowInstruction Instruction1 = NodeHelper.CreateThrowInstruction(DefaultObjectType, EmptyIdentifier, EmptyArgumentList);
 
-            ObjectType AnchorType = NodeHelper.CreateSimpleSimpleType("like b");
+        Result = NodeHelper.GetComplexifiedNode(Instruction1, out _);
+        Assert.False(Result);
 
-            ThrowInstruction Instruction2 = NodeHelper.CreateThrowInstruction(AnchorType, EmptyIdentifier, EmptyArgumentList);
+        ObjectType AnchorType = NodeHelper.CreateSimpleSimpleType("like b");
 
-            Result = NodeHelper.GetComplexifiedNode(Instruction2, out ComplexifiedNodeList);
-            Assert.True(Result);
-            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
-            Assert.That(ComplexifiedNodeList[0] is ThrowInstruction);
+        ThrowInstruction Instruction2 = NodeHelper.CreateThrowInstruction(AnchorType, EmptyIdentifier, EmptyArgumentList);
 
-            ThrowInstruction Complexified2 = (ThrowInstruction)ComplexifiedNodeList[0];
-            Assert.That(Complexified2.ExceptionType is AnchoredType);
+        Result = NodeHelper.GetComplexifiedNode(Instruction2, out ComplexifiedNodeList);
+        Assert.True(Result);
+        Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+        Assert.That(ComplexifiedNodeList[0] is ThrowInstruction);
 
-            Argument SplittableArgument = NodeHelper.CreateSimplePositionalArgument("a,b");
-            IBlockList<Argument> SplittableArgumentBlockList = BlockListHelper.CreateSimpleBlockList(SplittableArgument);
+        ThrowInstruction Complexified2 = (ThrowInstruction)ComplexifiedNodeList[0];
+        Assert.That(Complexified2.ExceptionType is AnchoredType);
 
-            ThrowInstruction Instruction3 = NodeHelper.CreateThrowInstruction(DefaultObjectType, EmptyIdentifier, SplittableArgumentBlockList);
+        Argument SplittableArgument = NodeHelper.CreateSimplePositionalArgument("a,b");
+        IBlockList<Argument> SplittableArgumentBlockList = BlockListHelper.CreateSimpleBlockList(SplittableArgument);
 
-            Result = NodeHelper.GetComplexifiedNode(Instruction3, out ComplexifiedNodeList);
-            Assert.True(Result);
-            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
-            Assert.That(ComplexifiedNodeList[0] is ThrowInstruction);
-        }
+        ThrowInstruction Instruction3 = NodeHelper.CreateThrowInstruction(DefaultObjectType, EmptyIdentifier, SplittableArgumentBlockList);
+
+        Result = NodeHelper.GetComplexifiedNode(Instruction3, out ComplexifiedNodeList);
+        Assert.True(Result);
+        Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+        Assert.That(ComplexifiedNodeList[0] is ThrowInstruction);
     }
 }

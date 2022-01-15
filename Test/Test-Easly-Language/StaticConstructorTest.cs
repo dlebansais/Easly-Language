@@ -1,15 +1,14 @@
-﻿namespace TestEaslyLanguage
+﻿namespace TestEaslyLanguage;
+
+using Easly;
+
+public class StaticConstructorTest<T>
+    where T : class
 {
-    using Easly;
-
-    public class StaticConstructorTest<T>
-        where T : class
+    static StaticConstructorTest()
     {
-        static StaticConstructorTest()
-        {
-            Entity.FromStaticConstructor();
-        }
-
-        public T Item { get; set; } = null!;
+        Entity.FromStaticConstructor();
     }
+
+    public T Item { get; set; } = null!;
 }

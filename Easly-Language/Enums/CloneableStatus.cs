@@ -1,18 +1,17 @@
-namespace BaseNode
+namespace BaseNode;
+
+/// <summary>
+/// Cloneable status.
+/// </summary>
+public enum CloneableStatus
 {
     /// <summary>
-    /// Cloneable status.
+    /// Object can be cloned.
     /// </summary>
-    public enum CloneableStatus
-    {
-        /// <summary>
-        /// Object can be cloned.
-        /// </summary>
-        Cloneable,
+    Cloneable,
 
-        /// <summary>
-        /// There can be only one instance of the object.
-        /// </summary>
-        Single,
-    }
+    /// <summary>
+    /// There can be only one instance of the object.
+    /// </summary>
+    Single,
 }

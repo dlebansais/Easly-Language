@@ -1,17 +1,16 @@
-namespace BaseNode
+namespace BaseNode;
+
+/// <summary>
+/// Represents any type argument (positional or assignment).
+/// </summary>
+public abstract class TypeArgument : Node
 {
     /// <summary>
-    /// Represents any type argument (positional or assignment).
+    /// Initializes a new instance of the <see cref="TypeArgument"/> class.
     /// </summary>
-    public abstract class TypeArgument : Node
+    /// <param name="documentation">The node documentation.</param>
+    internal TypeArgument(Document documentation)
+        : base(documentation)
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TypeArgument"/> class.
-        /// </summary>
-        /// <param name="documentation">The node documentation.</param>
-        internal TypeArgument(Document documentation)
-            : base(documentation)
-        {
-        }
     }
 }

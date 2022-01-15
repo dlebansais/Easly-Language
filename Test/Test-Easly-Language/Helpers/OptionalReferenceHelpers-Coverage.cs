@@ -1,29 +1,28 @@
-﻿namespace TestEaslyLanguage
+﻿namespace TestEaslyLanguage;
+
+using BaseNode;
+using BaseNodeHelper;
+using Easly;
+using NUnit.Framework;
+
+[TestFixture]
+public partial class OptionalReferenceHelpersCoverage
 {
-    using BaseNode;
-    using BaseNodeHelper;
-    using Easly;
-    using NUnit.Framework;
-
-    [TestFixture]
-    public partial class OptionalReferenceHelpersCoverage
+    [Test]
+    public static void Test()
     {
-        [Test]
-        public static void Test()
-        {
-            IOptionalReference<Identifier> EmptyEmptyReference = OptionalReferenceHelper.CreateEmptyReference<Identifier>();
+        IOptionalReference<Identifier> EmptyEmptyReference = OptionalReferenceHelper.CreateEmptyReference<Identifier>();
 
-            Identifier EmptyIdentifier = NodeHelper.CreateEmptyIdentifier();
-            IOptionalReference<Identifier> SimpleOptionalReference = OptionalReferenceHelper.CreateReference<Identifier>(EmptyIdentifier);
+        Identifier EmptyIdentifier = NodeHelper.CreateEmptyIdentifier();
+        IOptionalReference<Identifier> SimpleOptionalReference = OptionalReferenceHelper.CreateReference<Identifier>(EmptyIdentifier);
 
-            IOptionalReference<Identifier> AssignedOptionalReference = OptionalReferenceHelper.CreateReference<Identifier>(EmptyIdentifier);
-            AssignedOptionalReference.Assign();
+        IOptionalReference<Identifier> AssignedOptionalReference = OptionalReferenceHelper.CreateReference<Identifier>(EmptyIdentifier);
+        AssignedOptionalReference.Assign();
 
-            IOptionalReference<Identifier> OptionalReferenceCopy;
+        IOptionalReference<Identifier> OptionalReferenceCopy;
 
-            OptionalReferenceCopy = OptionalReferenceHelper.CreateReferenceCopy<Identifier>(EmptyEmptyReference);
-            OptionalReferenceCopy = OptionalReferenceHelper.CreateReferenceCopy<Identifier>(SimpleOptionalReference);
-            OptionalReferenceCopy = OptionalReferenceHelper.CreateReferenceCopy<Identifier>(AssignedOptionalReference);
-        }
+        OptionalReferenceCopy = OptionalReferenceHelper.CreateReferenceCopy<Identifier>(EmptyEmptyReference);
+        OptionalReferenceCopy = OptionalReferenceHelper.CreateReferenceCopy<Identifier>(SimpleOptionalReference);
+        OptionalReferenceCopy = OptionalReferenceHelper.CreateReferenceCopy<Identifier>(AssignedOptionalReference);
     }
 }

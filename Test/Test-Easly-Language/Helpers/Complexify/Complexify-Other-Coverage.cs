@@ -1,86 +1,85 @@
-﻿namespace TestEaslyLanguage
+﻿namespace TestEaslyLanguage;
+
+using BaseNode;
+using BaseNodeHelper;
+using Easly;
+using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+
+[TestFixture]
+public partial class ComplexifyOtherCoverage
 {
-    using BaseNode;
-    using BaseNodeHelper;
-    using Easly;
-    using NUnit.Framework;
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-
-    [TestFixture]
-    public partial class ComplexifyOtherCoverage
+    [Test]
+    [Category("Complexify")]
+    public static void TestAttachment()
     {
-        [Test]
-        [Category("Complexify")]
-        public static void TestAttachment()
-        {
-            bool Result;
-            IList<Node> ComplexifiedNodeList;
+        bool Result;
+        IList<Node> ComplexifiedNodeList;
 
-            ObjectType DefaultObjectType = NodeHelper.CreateDefaultObjectType();
+        ObjectType DefaultObjectType = NodeHelper.CreateDefaultObjectType();
 
-            Attachment Attachment1 = NodeHelper.CreateAttachment(DefaultObjectType);
+        Attachment Attachment1 = NodeHelper.CreateAttachment(DefaultObjectType);
 
-            Result = NodeHelper.GetComplexifiedNode(Attachment1, out _);
-            Assert.False(Result);
+        Result = NodeHelper.GetComplexifiedNode(Attachment1, out _);
+        Assert.False(Result);
 
-            ObjectType SplittableSimpleType = NodeHelper.CreateSimpleSimpleType("a,b");
-            IBlockList<ObjectType> SimpleObjectTypeBlockList = BlockListHelper.CreateSimpleBlockList(SplittableSimpleType);
-            Scope EmptyScope = NodeHelper.CreateEmptyScope();
+        ObjectType SplittableSimpleType = NodeHelper.CreateSimpleSimpleType("a,b");
+        IBlockList<ObjectType> SimpleObjectTypeBlockList = BlockListHelper.CreateSimpleBlockList(SplittableSimpleType);
+        Scope EmptyScope = NodeHelper.CreateEmptyScope();
 
-            Attachment Attachment2 = NodeHelper.CreateAttachment(SimpleObjectTypeBlockList, EmptyScope);
+        Attachment Attachment2 = NodeHelper.CreateAttachment(SimpleObjectTypeBlockList, EmptyScope);
 
-            Result = NodeHelper.GetComplexifiedNode(Attachment2, out ComplexifiedNodeList);
-            Assert.True(Result);
-            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
-            Assert.That(ComplexifiedNodeList[0] is Attachment);
+        Result = NodeHelper.GetComplexifiedNode(Attachment2, out ComplexifiedNodeList);
+        Assert.True(Result);
+        Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+        Assert.That(ComplexifiedNodeList[0] is Attachment);
 
-            ObjectType AnchorType = NodeHelper.CreateSimpleSimpleType("like a");
-            IBlockList<ObjectType> AnchorObjectTypeBlockList = BlockListHelper.CreateSimpleBlockList(AnchorType);
+        ObjectType AnchorType = NodeHelper.CreateSimpleSimpleType("like a");
+        IBlockList<ObjectType> AnchorObjectTypeBlockList = BlockListHelper.CreateSimpleBlockList(AnchorType);
 
-            Attachment Attachment3 = NodeHelper.CreateAttachment(AnchorObjectTypeBlockList, EmptyScope);
+        Attachment Attachment3 = NodeHelper.CreateAttachment(AnchorObjectTypeBlockList, EmptyScope);
 
-            Result = NodeHelper.GetComplexifiedNode(Attachment3, out ComplexifiedNodeList);
-            Assert.True(Result);
-            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
-            Assert.That(ComplexifiedNodeList[0] is Attachment);
-        }
+        Result = NodeHelper.GetComplexifiedNode(Attachment3, out ComplexifiedNodeList);
+        Assert.True(Result);
+        Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+        Assert.That(ComplexifiedNodeList[0] is Attachment);
+    }
 
-        [Test]
-        [Category("Complexify")]
-        public static void TestConditional()
-        {
-            bool Result;
-            IList<Node> ComplexifiedNodeList;
+    [Test]
+    [Category("Complexify")]
+    public static void TestConditional()
+    {
+        bool Result;
+        IList<Node> ComplexifiedNodeList;
 
-            Expression DefaultExpression = NodeHelper.CreateDefaultExpression();
+        Expression DefaultExpression = NodeHelper.CreateDefaultExpression();
 
-            Conditional Conditional1 = NodeHelper.CreateConditional(DefaultExpression);
+        Conditional Conditional1 = NodeHelper.CreateConditional(DefaultExpression);
 
-            Result = NodeHelper.GetComplexifiedNode(Conditional1, out ComplexifiedNodeList);
-            Assert.False(Result);
+        Result = NodeHelper.GetComplexifiedNode(Conditional1, out ComplexifiedNodeList);
+        Assert.False(Result);
 
-            Expression NumberExpression = NodeHelper.CreateSimpleQueryExpression("0");
+        Expression NumberExpression = NodeHelper.CreateSimpleQueryExpression("0");
 
-            Conditional Conditional2 = NodeHelper.CreateConditional(NumberExpression);
+        Conditional Conditional2 = NodeHelper.CreateConditional(NumberExpression);
 
-            Result = NodeHelper.GetComplexifiedNode(Conditional2, out ComplexifiedNodeList);
-            Assert.True(Result);
-            Assert.AreEqual(ComplexifiedNodeList.Count, 1);
-            Assert.That(ComplexifiedNodeList[0] is Conditional);
-        }
+        Result = NodeHelper.GetComplexifiedNode(Conditional2, out ComplexifiedNodeList);
+        Assert.True(Result);
+        Assert.AreEqual(ComplexifiedNodeList.Count, 1);
+        Assert.That(ComplexifiedNodeList[0] is Conditional);
+    }
 
-        [Test]
-        [Category("Complexify")]
-        public static void TestIdentifier()
-        {
-            bool Result;
+    [Test]
+    [Category("Complexify")]
+    public static void TestIdentifier()
+    {
+        bool Result;
 
-            Identifier SimpleIdentifier = NodeHelper.CreateSimpleIdentifier("a");
+        Identifier SimpleIdentifier = NodeHelper.CreateSimpleIdentifier("a");
 
-            Result = NodeHelper.GetComplexifiedNode(SimpleIdentifier, out _);
-            Assert.False(Result);
-        }
+        Result = NodeHelper.GetComplexifiedNode(SimpleIdentifier, out _);
+        Assert.False(Result);
     }
 }

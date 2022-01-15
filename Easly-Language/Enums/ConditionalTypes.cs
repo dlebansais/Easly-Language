@@ -1,28 +1,27 @@
-﻿namespace BaseNode
+﻿namespace BaseNode;
+
+/// <summary>
+/// Conditional types.
+/// </summary>
+public enum ConditionalTypes
 {
     /// <summary>
-    /// Conditional types.
+    /// Logical 'and'.
     /// </summary>
-    public enum ConditionalTypes
-    {
-        /// <summary>
-        /// Logical 'and'.
-        /// </summary>
-        And,
+    And,
 
-        /// <summary>
-        /// Logical 'or'.
-        /// </summary>
-        Or,
+    /// <summary>
+    /// Logical 'or'.
+    /// </summary>
+    Or,
 
-        /// <summary>
-        /// Logical 'exclusive or'.
-        /// </summary>
-        Xor,
+    /// <summary>
+    /// Logical 'exclusive or'.
+    /// </summary>
+    Xor,
 
-        /// <summary>
-        /// Implication.
-        /// </summary>
-        Implies,
-    }
+    /// <summary>
+    /// Implication.
+    /// </summary>
+    Implies,
 }

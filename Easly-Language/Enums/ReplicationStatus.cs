@@ -1,18 +1,17 @@
-namespace BaseNode
+namespace BaseNode;
+
+/// <summary>
+/// Replication status.
+/// </summary>
+public enum ReplicationStatus
 {
     /// <summary>
-    /// Replication status.
+    /// Normal.
     /// </summary>
-    public enum ReplicationStatus
-    {
-        /// <summary>
-        /// Normal.
-        /// </summary>
-        Normal,
+    Normal,
 
-        /// <summary>
-        /// Replicated.
-        /// </summary>
-        Replicated,
-    }
+    /// <summary>
+    /// Replicated.
+    /// </summary>
+    Replicated,
 }

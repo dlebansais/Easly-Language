@@ -1,23 +1,22 @@
-namespace BaseNode
+namespace BaseNode;
+
+/// <summary>
+/// Copy semantics.
+/// </summary>
+public enum CopySemantic
 {
     /// <summary>
-    /// Copy semantics.
+    /// Any type of copy.
     /// </summary>
-    public enum CopySemantic
-    {
-        /// <summary>
-        /// Any type of copy.
-        /// </summary>
-        Any,
+    Any,
 
-        /// <summary>
-        /// Copy by reference.
-        /// </summary>
-        Reference,
+    /// <summary>
+    /// Copy by reference.
+    /// </summary>
+    Reference,
 
-        /// <summary>
-        /// Copy by value.
-        /// </summary>
-        Value,
-    }
+    /// <summary>
+    /// Copy by value.
+    /// </summary>
+    Value,
 }

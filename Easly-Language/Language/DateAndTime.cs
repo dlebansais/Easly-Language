@@ -1,15 +1,14 @@
-﻿namespace Easly
+﻿namespace Easly;
+
+/// <summary>
+/// A date and time.
+/// </summary>
+public class DateAndTime
 {
+    #region Properties
     /// <summary>
-    /// A date and time.
+    /// Gets the date and time as a string.
     /// </summary>
-    public class DateAndTime
-    {
-        #region Properties
-        /// <summary>
-        /// Gets the date and time as a string.
-        /// </summary>
-        public virtual string ToUtcDateAndTime { get; } = string.Empty;
-        #endregion
-    }
+    public virtual string ToUtcDateAndTime { get; } = string.Empty;
+    #endregion
 }

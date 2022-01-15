@@ -1,24 +1,23 @@
-namespace BaseNode
+namespace BaseNode;
+
+/// <summary>
+/// Represents any shareable type.
+/// </summary>
+public abstract class ShareableType : ObjectType
 {
     /// <summary>
-    /// Represents any shareable type.
+    /// Initializes a new instance of the <see cref="ShareableType"/> class.
     /// </summary>
-    public abstract class ShareableType : ObjectType
+    /// <param name="documentation">The node documentation.</param>
+    /// <param name="sharing">How the type is shared.</param>
+    internal ShareableType(Document documentation, SharingType sharing)
+        : base(documentation)
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ShareableType"/> class.
-        /// </summary>
-        /// <param name="documentation">The node documentation.</param>
-        /// <param name="sharing">How the type is shared.</param>
-        internal ShareableType(Document documentation, SharingType sharing)
-            : base(documentation)
-        {
-            Sharing = sharing;
-        }
-
-        /// <summary>
-        /// Gets or sets how the type is shared.
-        /// </summary>
-        public virtual SharingType Sharing { get; set; }
+        Sharing = sharing;
     }
+
+    /// <summary>
+    /// Gets or sets how the type is shared.
+    /// </summary>
+    public virtual SharingType Sharing { get; set; }
 }

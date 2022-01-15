@@ -1,17 +1,16 @@
-namespace BaseNode
+namespace BaseNode;
+
+/// <summary>
+/// Represents any expression.
+/// </summary>
+public abstract class Expression : Node
 {
     /// <summary>
-    /// Represents any expression.
+    /// Initializes a new instance of the <see cref="Expression"/> class.
     /// </summary>
-    public abstract class Expression : Node
+    /// <param name="documentation">The node documentation.</param>
+    internal Expression(Document documentation)
+        : base(documentation)
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Expression"/> class.
-        /// </summary>
-        /// <param name="documentation">The node documentation.</param>
-        internal Expression(Document documentation)
-            : base(documentation)
-        {
-        }
     }
 }

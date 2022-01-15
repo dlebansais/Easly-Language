@@ -1,18 +1,17 @@
-namespace BaseNode
+namespace BaseNode;
+
+/// <summary>
+/// Parameter end status.
+/// </summary>
+public enum ParameterEndStatus
 {
     /// <summary>
-    /// Parameter end status.
+    /// No other parameters.
     /// </summary>
-    public enum ParameterEndStatus
-    {
-        /// <summary>
-        /// No other parameters.
-        /// </summary>
-        Closed,
+    Closed,
 
-        /// <summary>
-        /// Can have more parameters.
-        /// </summary>
-        Open,
-    }
+    /// <summary>
+    /// Can have more parameters.
+    /// </summary>
+    Open,
 }

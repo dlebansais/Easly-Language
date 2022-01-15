@@ -1,18 +1,17 @@
-namespace BaseNode
+namespace BaseNode;
+
+/// <summary>
+/// Export status.
+/// </summary>
+public enum ExportStatus
 {
     /// <summary>
-    /// Export status.
+    /// Feature is exported.
     /// </summary>
-    public enum ExportStatus
-    {
-        /// <summary>
-        /// Feature is exported.
-        /// </summary>
-        Exported,
+    Exported,
 
-        /// <summary>
-        /// Feature is private and not exported.
-        /// </summary>
-        Private,
-    }
+    /// <summary>
+    /// Feature is private and not exported.
+    /// </summary>
+    Private,
 }

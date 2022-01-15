@@ -1,23 +1,22 @@
-namespace BaseNode
+namespace BaseNode;
+
+/// <summary>
+/// Represents any node.
+/// </summary>
+[System.Serializable]
+public abstract class Node
 {
     /// <summary>
-    /// Represents any node.
+    /// Initializes a new instance of the <see cref="Node"/> class.
     /// </summary>
-    [System.Serializable]
-    public abstract class Node
+    /// <param name="documentation">The node documentation.</param>
+    internal Node(Document documentation)
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Node"/> class.
-        /// </summary>
-        /// <param name="documentation">The node documentation.</param>
-        internal Node(Document documentation)
-        {
-            Documentation = documentation;
-        }
-
-        /// <summary>
-        /// Gets or sets the node documentation.
-        /// </summary>
-        public virtual Document Documentation { get; set; }
+        Documentation = documentation;
     }
+
+    /// <summary>
+    /// Gets or sets the node documentation.
+    /// </summary>
+    public virtual Document Documentation { get; set; }
 }

@@ -1,28 +1,27 @@
-﻿namespace Easly
+﻿namespace Easly;
+
+using System.Reflection;
+
+/// <summary>
+/// Represents an entity for features.
+/// </summary>
+public abstract class FeatureEntity : Entity
 {
-    using System.Reflection;
-
+    #region Init
     /// <summary>
-    /// Represents an entity for features.
+    /// Initializes a new instance of the <see cref="FeatureEntity"/> class.
     /// </summary>
-    public abstract class FeatureEntity : Entity
+    /// <param name="featureInfo">The feature information from reflection.</param>
+    public FeatureEntity(MemberInfo featureInfo)
     {
-        #region Init
-        /// <summary>
-        /// Initializes a new instance of the <see cref="FeatureEntity"/> class.
-        /// </summary>
-        /// <param name="featureInfo">The feature information from reflection.</param>
-        public FeatureEntity(MemberInfo featureInfo)
-        {
-            FeatureInfo = featureInfo;
-        }
-        #endregion
-
-        #region Properties
-        /// <summary>
-        /// Gets the feature information from reflection.
-        /// </summary>
-        protected MemberInfo FeatureInfo { get; private set; }
-        #endregion
+        FeatureInfo = featureInfo;
     }
+    #endregion
+
+    #region Properties
+    /// <summary>
+    /// Gets the feature information from reflection.
+    /// </summary>
+    protected MemberInfo FeatureInfo { get; private set; }
+    #endregion
 }

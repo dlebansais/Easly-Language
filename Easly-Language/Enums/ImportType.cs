@@ -1,23 +1,22 @@
-namespace BaseNode
+namespace BaseNode;
+
+/// <summary>
+/// Import type.
+/// </summary>
+public enum ImportType
 {
     /// <summary>
-    /// Import type.
+    /// Latest version.
     /// </summary>
-    public enum ImportType
-    {
-        /// <summary>
-        /// Latest version.
-        /// </summary>
-        Latest,
+    Latest,
 
-        /// <summary>
-        /// One particular version and no other.
-        /// </summary>
-        Strict,
+    /// <summary>
+    /// One particular version and no other.
+    /// </summary>
+    Strict,
 
-        /// <summary>
-        /// Any version with a compatible interface.
-        /// </summary>
-        Stable,
-    }
+    /// <summary>
+    /// Any version with a compatible interface.
+    /// </summary>
+    Stable,
 }
