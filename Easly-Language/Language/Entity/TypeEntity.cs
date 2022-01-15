@@ -68,7 +68,7 @@
             Parents = new List<TypeEntity>();
             Ancestors = new List<TypeEntity>();
 
-            if (TypeInfo.BaseType != null && TypeInfo.BaseType != typeof(object))
+            if (TypeInfo.BaseType is not null && TypeInfo.BaseType != typeof(object))
             {
                 TypeEntity ParentEntity = BuiltTypeEntity(TypeInfo.BaseType);
 
@@ -211,7 +211,7 @@
                 if (!result.ContainsKey(Item.Name))
                     result.Add(Item.Name, Item);
 
-            if (typeInfo.BaseType != null)
+            if (typeInfo.BaseType is not null)
                 RecursiveGetMethods(typeInfo.BaseType, result);
 
             foreach (Type Item in typeInfo.GetInterfaces())
@@ -224,7 +224,7 @@
                 if (!result.ContainsKey(Item.Name))
                     result.Add(Item.Name, Item);
 
-            if (typeInfo.BaseType != null)
+            if (typeInfo.BaseType is not null)
                 RecursiveGetProperties(typeInfo.BaseType, result);
 
             foreach (Type Item in typeInfo.GetInterfaces())

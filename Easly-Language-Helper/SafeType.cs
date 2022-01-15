@@ -108,7 +108,7 @@
         /// <returns>True if the property exists; otherwise, false.</returns>
         public static bool IsPropertyOf(Type type, string name)
         {
-            return type.GetProperty(name) != null;
+            return type.GetProperty(name) is not null;
         }
 
         /// <summary>
@@ -137,7 +137,7 @@
         {
             PropertyInfo? Result = type.GetProperty(name);
 
-            if (Result != null)
+            if (Result is not null)
             {
                 property = Result;
                 return true;

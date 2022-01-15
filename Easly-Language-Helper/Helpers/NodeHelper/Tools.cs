@@ -29,7 +29,7 @@
 
             Type? FullType = RootAssembly.GetType(FullTypeName);
 
-            if (FullType != null)
+            if (FullType is not null)
             {
                 type = FullType;
                 return true;

@@ -112,7 +112,7 @@
         /// <summary>
         /// Gets a value indicating whether there is object reference to assign.
         /// </summary>
-        public bool HasItem { get { return ItemInternal != null; } }
+        public bool HasItem { get { return ItemInternal is not null; } }
 
         /// <summary>
         /// Gets or sets the reference.
@@ -122,14 +122,14 @@
         {
             get
             {
-                if (ItemInternal == null)
+                if (ItemInternal is null)
                     throw new InvalidOperationException();
                 else
                     return ItemInternal;
             }
             set
             {
-                if (value != null)
+                if (value is not null)
                 {
                     ItemInternal = value;
                     IsAssigned = true;
@@ -168,7 +168,7 @@
         /// </summary>
         public void Assign()
         {
-            if (ItemInternal == null)
+            if (ItemInternal is null)
                 throw new InvalidOperationException();
 
             IsAssigned = true;

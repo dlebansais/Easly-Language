@@ -147,10 +147,10 @@
         {
             Type? CurrentType = type;
 
-            while (CurrentType != null && CurrentType != typeof(Node))
+            while (CurrentType is not null && CurrentType != typeof(Node))
                 CurrentType = CurrentType.BaseType;
 
-            return CurrentType != null;
+            return CurrentType is not null;
         }
 
         /// <summary>

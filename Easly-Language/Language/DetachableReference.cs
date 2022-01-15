@@ -69,14 +69,14 @@
             {
                 CheckConsistency();
 
-                if (ItemInternal != null)
+                if (ItemInternal is not null)
                     return ItemInternal;
                 else
                     throw new InvalidOperationException();
             }
             set
             {
-                if (value != null)
+                if (value is not null)
                 {
                     ItemInternal = value;
                     IsAssigned = true;
@@ -120,7 +120,7 @@
         #region Implementation
         private void CheckConsistency()
         {
-            Debug.Assert(IsAssigned == (ItemInternal != null), $"{nameof(IsAssigned)} is always true if {nameof(ItemInternal)} has been assigned, and it can only be to a non-null value");
+            Debug.Assert(IsAssigned == (ItemInternal is not null), $"{nameof(IsAssigned)} is always true if {nameof(ItemInternal)} has been assigned, and it can only be to a non-null value");
         }
 
         private T? ItemInternal;

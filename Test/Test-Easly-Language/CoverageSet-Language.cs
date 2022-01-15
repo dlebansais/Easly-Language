@@ -168,7 +168,7 @@
             TestObject = TestInterface.Item as Name;
             Assert.NotNull(TestObject);
 
-            if (TestObject != null)
+            if (TestObject is not null)
             {
                 Assert.Throws<InvalidOperationException>(() => { TestOnceReference.Item = TestObject; });
 

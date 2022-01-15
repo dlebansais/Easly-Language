@@ -75,7 +75,7 @@
         /// <returns>The created instance.</returns>
         internal static IBlockList<TNode> CreateBlockListCopy(IBlockList<TNode> blockList)
         {
-            /*if (blockList == null)
+            /*if (blockList is null)
                 return CreateEmptyBlockList();*/
 
             Document Documentation = NodeHelper.CreateEmptyDocumentation();
