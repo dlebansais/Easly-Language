@@ -8,8 +8,19 @@ namespace BaseNode
     public class ResultOfExpression : Expression
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="ResultOfExpression"/> class.
+        /// </summary>
+        /// <param name="documentation">The node documentation.</param>
+        /// <param name="source">The path to the queried feature.</param>
+        internal ResultOfExpression(Document documentation, Expression source)
+            : base(documentation)
+        {
+            Source = source;
+        }
+
+        /// <summary>
         /// Gets or sets the source expression.
         /// </summary>
-        public virtual Expression Source { get; set; } = null!;
+        public virtual Expression Source { get; set; }
     }
 }

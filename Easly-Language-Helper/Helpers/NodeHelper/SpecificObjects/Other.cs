@@ -3,7 +3,9 @@
 using System;
 using System.Collections.Generic;
 using BaseNode;
+using Range = BaseNode.Range;
 using Contracts;
+using Easly;
 
 /// <summary>
 /// Provides methods to manipulate nodes.
@@ -19,10 +21,10 @@ public static partial class NodeHelper
     {
         Contract.RequireNotNull(attachType, out ObjectType AttachType);
 
-        Attachment Result = new Attachment();
-        Result.Documentation = CreateEmptyDocumentation();
-        Result.AttachTypeBlocks = BlockListHelper<ObjectType>.CreateSimpleBlockList(AttachType);
-        Result.Instructions = CreateEmptyScope();
+        Document Documentation = CreateEmptyDocumentation();
+        IBlockList<ObjectType> AttachTypeBlocks = BlockListHelper<ObjectType>.CreateSimpleBlockList(AttachType);
+        Scope Instructions = CreateEmptyScope();
+        Attachment Result = new Attachment(Documentation, AttachTypeBlocks, Instructions);
 
         return Result;
     }
@@ -41,10 +43,8 @@ public static partial class NodeHelper
         if (NodeTreeHelperBlockList.IsBlockListEmpty((IBlockList)AttachTypeBlocks))
             throw new ArgumentException($"{nameof(attachTypeBlocks)} must not be empty");
 
-        Attachment Result = new Attachment();
-        Result.Documentation = CreateEmptyDocumentation();
-        Result.AttachTypeBlocks = AttachTypeBlocks;
-        Result.Instructions = Instructions;
+        Document Documentation = CreateEmptyDocumentation();
+        Attachment Result = new Attachment(Documentation, AttachTypeBlocks, Instructions);
 
         return Result;
     }
@@ -58,10 +58,9 @@ public static partial class NodeHelper
     {
         Contract.RequireNotNull(booleanExpression, out Expression BooleanExpression);
 
-        Conditional SimpleConditional = new Conditional();
-        SimpleConditional.Documentation = CreateEmptyDocumentation();
-        SimpleConditional.BooleanExpression = BooleanExpression;
-        SimpleConditional.Instructions = CreateEmptyScope();
+        Document Documentation = CreateEmptyDocumentation();
+        Scope Instructions = CreateEmptyScope();
+        Conditional SimpleConditional = new Conditional(Documentation, BooleanExpression, Instructions);
 
         return SimpleConditional;
     }
@@ -77,10 +76,9 @@ public static partial class NodeHelper
         Contract.RequireNotNull(booleanExpression, out Expression BooleanExpression);
         Contract.RequireNotNull(instruction, out Instruction Instruction);
 
-        Conditional SimpleConditional = new Conditional();
-        SimpleConditional.Documentation = CreateEmptyDocumentation();
-        SimpleConditional.BooleanExpression = BooleanExpression;
-        SimpleConditional.Instructions = CreateSimpleScope(Instruction);
+        Document Documentation = CreateEmptyDocumentation();
+        Scope Instructions = CreateSimpleScope(Instruction);
+        Conditional SimpleConditional = new Conditional(Documentation, BooleanExpression, Instructions);
 
         return SimpleConditional;
     }
@@ -96,10 +94,8 @@ public static partial class NodeHelper
         Contract.RequireNotNull(booleanExpression, out Expression BooleanExpression);
         Contract.RequireNotNull(instructions, out Scope Instructions);
 
-        Conditional SimpleConditional = new Conditional();
-        SimpleConditional.Documentation = CreateEmptyDocumentation();
-        SimpleConditional.BooleanExpression = BooleanExpression;
-        SimpleConditional.Instructions = Instructions;
+        Document Documentation = CreateEmptyDocumentation();
+        Conditional SimpleConditional = new Conditional(Documentation, BooleanExpression, Instructions);
 
         return SimpleConditional;
     }
@@ -113,14 +109,13 @@ public static partial class NodeHelper
     {
         Contract.RequireNotNull(expression, out Expression Expression);
 
-        BaseNode.Range FirstRange = CreateSingleRange(Expression);
+        Document Documentation = CreateEmptyDocumentation();
+        Range FirstRange = CreateSingleRange(Expression);
+        IBlockList<Range> RangeBlocks = BlockListHelper<Range>.CreateSimpleBlockList(FirstRange);
+        Scope Instructions = CreateEmptyScope();
+        With SimpleWith = new With(Documentation, RangeBlocks, Instructions);
 
-        With Result = new With();
-        Result.Documentation = CreateEmptyDocumentation();
-        Result.RangeBlocks = BlockListHelper<BaseNode.Range>.CreateSimpleBlockList(FirstRange);
-        Result.Instructions = CreateEmptyScope();
-
-        return Result;
+        return SimpleWith;
     }
 
     /// <summary>
@@ -134,31 +129,29 @@ public static partial class NodeHelper
         Contract.RequireNotNull(expression, out Expression Expression);
         Contract.RequireNotNull(instruction, out Instruction Instruction);
 
-        BaseNode.Range FirstRange = CreateSingleRange(Expression);
+        Document Documentation = CreateEmptyDocumentation();
+        Range FirstRange = CreateSingleRange(Expression);
+        IBlockList<Range> RangeBlocks = BlockListHelper<Range>.CreateSimpleBlockList(FirstRange);
+        Scope Instructions = CreateSimpleScope(Instruction);
+        With SimpleWith = new With(Documentation, RangeBlocks, Instructions);
 
-        With Result = new With();
-        Result.Documentation = CreateEmptyDocumentation();
-        Result.RangeBlocks = BlockListHelper<BaseNode.Range>.CreateSimpleBlockList(FirstRange);
-        Result.Instructions = CreateSimpleScope(Instruction);
-
-        return Result;
+        return SimpleWith;
     }
 
     /// <summary>
-    /// Creates a new instance of a <see cref="BaseNode.Range"/> with a single value.
+    /// Creates a new instance of a <see cref="Range"/> with a single value.
     /// </summary>
     /// <param name="leftExpression">The value.</param>
     /// <returns>The created instance.</returns>
-    public static BaseNode.Range CreateSingleRange(Expression leftExpression)
+    public static Range CreateSingleRange(Expression leftExpression)
     {
         Contract.RequireNotNull(leftExpression, out Expression LeftExpression);
 
-        BaseNode.Range Result = new BaseNode.Range();
-        Result.Documentation = CreateEmptyDocumentation();
-        Result.LeftExpression = LeftExpression;
-        Result.RightExpression = OptionalReferenceHelper<Expression>.CreateReference(CreateDefaultExpression());
+        Document Documentation = CreateEmptyDocumentation();
+        IOptionalReference<Expression> RightExpression = OptionalReferenceHelper<Expression>.CreateReference(CreateDefaultExpression());
+        Range SingleRange = new Range(Documentation, LeftExpression, RightExpression);
 
-        return Result;
+        return SingleRange;
     }
 
     /// <summary>
@@ -172,13 +165,11 @@ public static partial class NodeHelper
         Contract.RequireNotNull(entityName, out Name EntityName);
         Contract.RequireNotNull(entityType, out ObjectType EntityType);
 
-        EntityDeclaration SimpleEntityDeclaration = new EntityDeclaration();
-        SimpleEntityDeclaration.Documentation = CreateEmptyDocumentation();
-        SimpleEntityDeclaration.EntityName = EntityName;
-        SimpleEntityDeclaration.EntityType = EntityType;
-        SimpleEntityDeclaration.DefaultValue = OptionalReferenceHelper<Expression>.CreateReference(CreateDefaultExpression());
+        Document Documentation = CreateEmptyDocumentation();
+        IOptionalReference<Expression> DefaultValue = OptionalReferenceHelper<Expression>.CreateReference(CreateDefaultExpression());
+        EntityDeclaration Result = new EntityDeclaration(Documentation, EntityName, EntityType, DefaultValue);
 
-        return SimpleEntityDeclaration;
+        return Result;
     }
 
     /// <summary>
@@ -199,12 +190,11 @@ public static partial class NodeHelper
     {
         Contract.RequireNotNull(nameText, out string NameText);
 
+        Document Documentation = CreateEmptyDocumentation();
+        Name EntityName = CreateSimpleName(NameText);
         Identifier FirstIdentifier = CreateEmptyIdentifier();
-
-        Export SimpleExport = new Export();
-        SimpleExport.Documentation = CreateEmptyDocumentation();
-        SimpleExport.EntityName = CreateSimpleName(NameText);
-        SimpleExport.ClassIdentifierBlocks = BlockListHelper<Identifier>.CreateSimpleBlockList(FirstIdentifier);
+        IBlockList<Identifier> ClassIdentifierBlocks = BlockListHelper<Identifier>.CreateSimpleBlockList(FirstIdentifier);
+        Export SimpleExport = new Export(Documentation, EntityName, ClassIdentifierBlocks);
 
         return SimpleExport;
     }
@@ -218,20 +208,16 @@ public static partial class NodeHelper
     {
         Contract.RequireNotNull(parentTypeName, out string ParentTypeName);
 
-        Inheritance Result = new Inheritance();
-        Result.Documentation = CreateEmptyDocumentation();
-        Result.ParentType = CreateSimpleSimpleType(ParentTypeName);
-        Result.Conformance = ConformanceType.Conformant;
-        Result.RenameBlocks = BlockListHelper<Rename>.CreateEmptyBlockList();
-        Result.ForgetIndexer = false;
-        Result.ForgetBlocks = BlockListHelper<Identifier>.CreateEmptyBlockList();
-        Result.KeepIndexer = false;
-        Result.KeepBlocks = BlockListHelper<Identifier>.CreateEmptyBlockList();
-        Result.DiscontinueIndexer = false;
-        Result.DiscontinueBlocks = BlockListHelper<Identifier>.CreateEmptyBlockList();
-        Result.ExportChangeBlocks = BlockListHelper<ExportChange>.CreateEmptyBlockList();
+        Document Documentation = CreateEmptyDocumentation();
+        ObjectType ParentType = CreateSimpleSimpleType(ParentTypeName);
+        IBlockList<Rename> RenameBlocks = BlockListHelper<Rename>.CreateEmptyBlockList();
+        IBlockList<Identifier> ForgetBlocks = BlockListHelper<Identifier>.CreateEmptyBlockList();
+        IBlockList<Identifier> KeepBlocks = BlockListHelper<Identifier>.CreateEmptyBlockList();
+        IBlockList<Identifier> DiscontinueBlocks = BlockListHelper<Identifier>.CreateEmptyBlockList();
+        IBlockList<ExportChange> ExportChangeBlocks = BlockListHelper<ExportChange>.CreateEmptyBlockList();
+        Inheritance SimpleInheritance = new Inheritance(Documentation, ParentType, ConformanceType.Conformant, RenameBlocks, forgetIndexer: false, ForgetBlocks, keepIndexer: false, KeepBlocks, discontinueIndexer: false, DiscontinueBlocks, ExportChangeBlocks);
 
-        return Result;
+        return SimpleInheritance;
     }
 
     /// <summary>
@@ -266,18 +252,8 @@ public static partial class NodeHelper
         Contract.RequireNotNull(discontinueBlocks, out IBlockList<Identifier> DiscontinueBlocks);
         Contract.RequireNotNull(exportChangeBlocks, out IBlockList<ExportChange> ExportChangeBlocks);
 
-        Inheritance Result = new Inheritance();
-        Result.Documentation = CreateEmptyDocumentation();
-        Result.ParentType = ParentType;
-        Result.Conformance = conformanceType;
-        Result.RenameBlocks = RenameBlocks;
-        Result.ForgetIndexer = forgetIndexer;
-        Result.ForgetBlocks = ForgetBlocks;
-        Result.KeepIndexer = keepIndexer;
-        Result.KeepBlocks = KeepBlocks;
-        Result.DiscontinueIndexer = discontinueIndexer;
-        Result.DiscontinueBlocks = DiscontinueBlocks;
-        Result.ExportChangeBlocks = ExportChangeBlocks;
+        Document Documentation = CreateEmptyDocumentation();
+        Inheritance Result = new Inheritance(Documentation, ParentType, conformanceType, RenameBlocks, forgetIndexer, ForgetBlocks, keepIndexer, KeepBlocks, discontinueIndexer, DiscontinueBlocks, ExportChangeBlocks);
 
         return Result;
     }
@@ -291,28 +267,21 @@ public static partial class NodeHelper
     {
         Contract.RequireNotNull(nameText, out string NameText);
 
+        Document Documentation = CreateEmptyDocumentation();
+        Name EntityName = CreateSimpleName(NameText);
+        IOptionalReference<Identifier> FromIdentifier = OptionalReferenceHelper<Identifier>.CreateReference(CreateEmptyIdentifier());
+        IBlockList<Import> ImportBlocks = BlockListHelper<Import>.CreateEmptyBlockList();
+        IBlockList<Generic> GenericBlocks = BlockListHelper<Generic>.CreateEmptyBlockList();
+        IBlockList<Export> ExportBlocks = BlockListHelper<Export>.CreateEmptyBlockList();
+        IBlockList<Typedef> TypedefBlocks = BlockListHelper<Typedef>.CreateEmptyBlockList();
+        IBlockList<Inheritance> InheritanceBlocks = BlockListHelper<Inheritance>.CreateEmptyBlockList();
+        IBlockList<Discrete> DiscreteBlocks = BlockListHelper<Discrete>.CreateEmptyBlockList();
+        IBlockList<ClassReplicate> ClassReplicateBlocks = BlockListHelper<ClassReplicate>.CreateEmptyBlockList();
+        IBlockList<Feature> FeatureBlocks = BlockListHelper<Feature>.CreateEmptyBlockList();
+        IBlockList<Identifier> ConversionBlocks = BlockListHelper<Identifier>.CreateEmptyBlockList();
+        IBlockList<Assertion> InvariantBlocks = BlockListHelper<Assertion>.CreateEmptyBlockList();
         Guid ClassGuid = Guid.NewGuid();
-
-        Class SimpleClass = new Class();
-        SimpleClass.Documentation = CreateEmptyDocumentation();
-        SimpleClass.EntityName = CreateSimpleName(NameText);
-        SimpleClass.FromIdentifier = OptionalReferenceHelper<Identifier>.CreateReference(CreateEmptyIdentifier());
-        SimpleClass.CopySpecification = CopySemantic.Reference;
-        SimpleClass.Cloneable = CloneableStatus.Cloneable;
-        SimpleClass.Comparable = ComparableStatus.Comparable;
-        SimpleClass.IsAbstract = false;
-        SimpleClass.ImportBlocks = BlockListHelper<Import>.CreateEmptyBlockList();
-        SimpleClass.GenericBlocks = BlockListHelper<Generic>.CreateEmptyBlockList();
-        SimpleClass.ExportBlocks = BlockListHelper<Export>.CreateEmptyBlockList();
-        SimpleClass.TypedefBlocks = BlockListHelper<Typedef>.CreateEmptyBlockList();
-        SimpleClass.InheritanceBlocks = BlockListHelper<Inheritance>.CreateEmptyBlockList();
-        SimpleClass.DiscreteBlocks = BlockListHelper<Discrete>.CreateEmptyBlockList();
-        SimpleClass.ClassReplicateBlocks = BlockListHelper<ClassReplicate>.CreateEmptyBlockList();
-        SimpleClass.FeatureBlocks = BlockListHelper<Feature>.CreateEmptyBlockList();
-        SimpleClass.ConversionBlocks = BlockListHelper<Identifier>.CreateEmptyBlockList();
-        SimpleClass.InvariantBlocks = BlockListHelper<Assertion>.CreateEmptyBlockList();
-        SimpleClass.ClassGuid = ClassGuid;
-        SimpleClass.ClassPath = string.Empty;
+        Class SimpleClass = new Class(Documentation, EntityName, FromIdentifier, CopySemantic.Reference, CloneableStatus.Cloneable, ComparableStatus.Comparable, isAbstract: false, ImportBlocks, GenericBlocks, ExportBlocks, TypedefBlocks, InheritanceBlocks, DiscreteBlocks, ClassReplicateBlocks, FeatureBlocks, ConversionBlocks, InvariantBlocks, ClassGuid, classPath: string.Empty);
 
         return SimpleClass;
     }
@@ -326,12 +295,12 @@ public static partial class NodeHelper
     {
         Contract.RequireNotNull(nameText, out string NameText);
 
-        Library SimpleLibrary = new Library();
-        SimpleLibrary.Documentation = CreateEmptyDocumentation();
-        SimpleLibrary.EntityName = CreateSimpleName(NameText);
-        SimpleLibrary.FromIdentifier = OptionalReferenceHelper<Identifier>.CreateReference(CreateEmptyIdentifier());
-        SimpleLibrary.ImportBlocks = BlockListHelper<Import>.CreateEmptyBlockList();
-        SimpleLibrary.ClassIdentifierBlocks = BlockListHelper<Identifier>.CreateEmptyBlockList();
+        Document Documentation = CreateEmptyDocumentation();
+        Name EntityName = CreateSimpleName(NameText);
+        IOptionalReference<Identifier> FromIdentifier = OptionalReferenceHelper<Identifier>.CreateReference(CreateEmptyIdentifier());
+        IBlockList<Import> ImportBlocks = BlockListHelper<Import>.CreateEmptyBlockList();
+        IBlockList<Identifier> ClassIdentifierBlocks = BlockListHelper<Identifier>.CreateEmptyBlockList();
+        Library SimpleLibrary = new Library(Documentation, EntityName, FromIdentifier, ImportBlocks, ClassIdentifierBlocks);
 
         return SimpleLibrary;
     }
@@ -345,12 +314,11 @@ public static partial class NodeHelper
     {
         Contract.RequireNotNull(nameText, out string NameText);
 
+        Document Documentation = CreateEmptyDocumentation();
+        Name ReplicateName = CreateSimpleName(NameText);
         Pattern FirstPattern = CreateEmptyPattern();
-
-        GlobalReplicate SimpleGlobalReplicate = new GlobalReplicate();
-        SimpleGlobalReplicate.Documentation = CreateEmptyDocumentation();
-        SimpleGlobalReplicate.ReplicateName = CreateSimpleName(NameText);
-        SimpleGlobalReplicate.Patterns = new List<Pattern>() { FirstPattern };
+        List<Pattern> Patterns = new List<Pattern>() { FirstPattern };
+        GlobalReplicate SimpleGlobalReplicate = new GlobalReplicate(Documentation, ReplicateName, Patterns);
 
         return SimpleGlobalReplicate;
     }
@@ -364,12 +332,11 @@ public static partial class NodeHelper
     {
         Contract.RequireNotNull(nameText, out string NameText);
 
-        ClassReplicate SimpleClassReplicate = new ClassReplicate();
-        SimpleClassReplicate.Documentation = CreateEmptyDocumentation();
-        SimpleClassReplicate.ReplicateName = CreateSimpleName(NameText);
-
+        Document Documentation = CreateEmptyDocumentation();
+        Name ReplicateName = CreateSimpleName(NameText);
         Pattern FirstPattern = CreateEmptyPattern();
-        SimpleClassReplicate.PatternBlocks = BlockListHelper<Pattern>.CreateSimpleBlockList(FirstPattern);
+        IBlockList<Pattern> PatternBlocks = BlockListHelper<Pattern>.CreateSimpleBlockList(FirstPattern);
+        ClassReplicate SimpleClassReplicate = new ClassReplicate(Documentation, ReplicateName, PatternBlocks);
 
         return SimpleClassReplicate;
     }
@@ -386,12 +353,11 @@ public static partial class NodeHelper
         Contract.RequireNotNull(identifierText, out string IdentifierText);
         Contract.RequireNotNull(fromText, out string FromText);
 
-        Import SimpleImport = new Import();
-        SimpleImport.Documentation = CreateEmptyDocumentation();
-        SimpleImport.LibraryIdentifier = CreateSimpleIdentifier(IdentifierText);
-        SimpleImport.FromIdentifier = OptionalReferenceHelper<Identifier>.CreateReference(CreateSimpleIdentifier(FromText));
-        SimpleImport.Type = importType;
-        SimpleImport.RenameBlocks = BlockListHelper<Rename>.CreateEmptyBlockList();
+        Document Documentation = CreateEmptyDocumentation();
+        Identifier LibraryIdentifier = CreateSimpleIdentifier(IdentifierText);
+        IOptionalReference<Identifier> FromIdentifier = OptionalReferenceHelper<Identifier>.CreateReference(CreateSimpleIdentifier(FromText));
+        IBlockList<Rename> RenameBlocks = BlockListHelper<Rename>.CreateEmptyBlockList();
+        Import SimpleImport = new Import(Documentation, LibraryIdentifier, FromIdentifier, importType, RenameBlocks);
 
         return SimpleImport;
     }
@@ -409,13 +375,12 @@ public static partial class NodeHelper
         Contract.RequireNotNull(libraryList, out IList<Library> LibraryList);
         Contract.RequireNotNull(globalReplicateList, out IList<GlobalReplicate> GlobalReplicateList);
 
-        Root EmptyRoot = new Root();
-        EmptyRoot.Documentation = CreateEmptyDocumentation();
-        EmptyRoot.ClassBlocks = BlockListHelper<Class>.CreateBlockListFromNodeList(ClassList);
-        EmptyRoot.LibraryBlocks = BlockListHelper<Library>.CreateBlockListFromNodeList(LibraryList);
-        EmptyRoot.Replicates = GlobalReplicateList;
+        Document Documentation = CreateEmptyDocumentation();
+        IBlockList<Class> ClassBlocks = BlockListHelper<Class>.CreateBlockListFromNodeList(ClassList);
+        IBlockList<Library> LibraryBlocks = BlockListHelper<Library>.CreateBlockListFromNodeList(LibraryList);
+        Root Result = new Root(Documentation, ClassBlocks, LibraryBlocks, GlobalReplicateList);
 
-        return EmptyRoot;
+        return Result;
     }
 
     /// <summary>
@@ -431,12 +396,11 @@ public static partial class NodeHelper
         Contract.RequireNotNull(libraryBlockList, out IList<IBlock<Library>> LibraryBlockList);
         Contract.RequireNotNull(globalReplicateList, out IList<GlobalReplicate> GlobalReplicateList);
 
-        Root EmptyRoot = new Root();
-        EmptyRoot.Documentation = CreateEmptyDocumentation();
-        EmptyRoot.ClassBlocks = BlockListHelper<Class>.CreateBlockListFromBlockList(ClassBlockList);
-        EmptyRoot.LibraryBlocks = BlockListHelper<Library>.CreateBlockListFromBlockList(LibraryBlockList);
-        EmptyRoot.Replicates = GlobalReplicateList;
+        Document Documentation = CreateEmptyDocumentation();
+        IBlockList<Class> ClassBlocks = BlockListHelper<Class>.CreateBlockListFromBlockList(ClassBlockList);
+        IBlockList<Library> LibraryBlocks = BlockListHelper<Library>.CreateBlockListFromBlockList(LibraryBlockList);
+        Root Result = new Root(Documentation, ClassBlocks, LibraryBlocks, GlobalReplicateList);
 
-        return EmptyRoot;
+        return Result;
     }
 }

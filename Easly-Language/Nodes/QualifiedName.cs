@@ -10,8 +10,19 @@ namespace BaseNode
     public class QualifiedName : Node
     {
         /// <summary>
-        /// Gets or sets list of feature identifiers to follow to reach the destination feature.
+        /// Initializes a new instance of the <see cref="QualifiedName"/> class.
         /// </summary>
-        public virtual IList<Identifier> Path { get; set; } = null!;
+        /// <param name="documentation">The node documentation.</param>
+        /// <param name="path">The list of feature identifiers to follow to reach the destination feature.</param>
+        internal QualifiedName(Document documentation, IList<Identifier> path)
+            : base(documentation)
+        {
+            Path = path;
+        }
+
+        /// <summary>
+        /// Gets or sets the list of feature identifiers to follow to reach the destination feature.
+        /// </summary>
+        public virtual IList<Identifier> Path { get; set; }
     }
 }

@@ -2,9 +2,7 @@
 {
     using BaseNode;
     using BaseNodeHelper;
-    using Easly;
     using NUnit.Framework;
-    using System;
     using System.Collections.Generic;
 
     [TestFixture]
@@ -16,12 +14,22 @@
 
         private class TestRoot : Root
         {
+            public TestRoot()
+                : base(NodeHelper.CreateEmptyDocumentation(), BlockListHelper.CreateEmptyBlockList<Class>(), BlockListHelper.CreateEmptyBlockList<Library>(), new List<GlobalReplicate>())
+            {
+            }
+
             public IList<Class> ClassList { get; set; } = new List<Class>();
             public IList<Library> LibraryList { get; set; } = new List<Library>();
         }
 
         private class TestLibrary : Library
         {
+            public TestLibrary()
+                : base(NodeHelper.CreateEmptyDocumentation(), NodeHelper.CreateEmptyName(), OptionalReferenceHelper.CreateEmptyReference<Identifier>(), BlockListHelper.CreateEmptyBlockList<Import>(), BlockListHelper.CreateEmptyBlockList<Identifier>())
+            {
+            }
+
             public IList<Import> ImportList { get; set; } = new List<Import>();
             public IList<Identifier> ClassIdentifierList { get; set; } = new List<Identifier>();
         }

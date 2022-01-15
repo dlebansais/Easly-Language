@@ -41,7 +41,8 @@
         public object GetValue(object o)
         {
             PropertyInfo AsPropertyInfo = (PropertyInfo)FeatureInfo;
-            return AsPropertyInfo.GetValue(o)!;
+            object? Value = AsPropertyInfo.GetValue(o);
+            return Value!;
         }
 
         /// <summary>

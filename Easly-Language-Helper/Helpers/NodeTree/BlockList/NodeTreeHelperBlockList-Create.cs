@@ -86,7 +86,7 @@
             Type BlockType = typeof(Block<>).MakeGenericType(TypeArguments);
             string BlockTypeFullName = SafeType.FullName(BlockType);
 
-            IBlock NewBlock = SafeType.CreateInstance<IBlock>(BlockType.Assembly, BlockTypeFullName);
+            IBlock NewBlock = SafeType.CreateInstanceFromDefaultConstructor<IBlock>(BlockType.Assembly, BlockTypeFullName);
 
             Document EmptyComment = NodeHelper.CreateEmptyDocumentation();
 
@@ -98,7 +98,7 @@
 
             string FullName = SafeType.FullName(NodeListType);
 
-            IList NewNodeList = SafeType.CreateInstance<IList>(NodeListType.Assembly, FullName);
+            IList NewNodeList = SafeType.CreateInstanceFromDefaultConstructor<IList>(NodeListType.Assembly, FullName);
 
             PropertyInfo ReplicationPropertyInfo = SafeType.GetProperty(BlockType, nameof(IBlock.Replication));
 

@@ -8,8 +8,19 @@ namespace BaseNode
     public class OldExpression : Expression
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="OldExpression"/> class.
+        /// </summary>
+        /// <param name="documentation">The node documentation.</param>
+        /// <param name="query">The name path to the object.</param>
+        internal OldExpression(Document documentation, QualifiedName query)
+            : base(documentation)
+        {
+            Query = query;
+        }
+
+        /// <summary>
         /// Gets or sets the name path to the object.
         /// </summary>
-        public virtual QualifiedName Query { get; set; } = null!;
+        public virtual QualifiedName Query { get; set; }
     }
 }

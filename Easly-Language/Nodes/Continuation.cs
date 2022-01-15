@@ -8,13 +8,26 @@ namespace BaseNode
     public class Continuation : Node
     {
         /// <summary>
-        /// Gets or sets instructions in this continuation.
+        /// Initializes a new instance of the <see cref="Continuation"/> class.
         /// </summary>
-        public virtual Scope Instructions { get; set; } = null!;
+        /// <param name="documentation">The node documentation.</param>
+        /// <param name="instructions">The instructions in this continuation.</param>
+        /// <param name="cleanupBlocks">The cleanup instructions.</param>
+        internal Continuation(Document documentation, Scope instructions, IBlockList<Instruction> cleanupBlocks)
+            : base(documentation)
+        {
+            Instructions = instructions;
+            CleanupBlocks = cleanupBlocks;
+        }
 
         /// <summary>
-        /// Gets or sets cleanup instructions.
+        /// Gets or sets the instructions in this continuation.
         /// </summary>
-        public virtual IBlockList<Instruction> CleanupBlocks { get; set; } = null!;
+        public virtual Scope Instructions { get; set; }
+
+        /// <summary>
+        /// Gets or sets the cleanup instructions.
+        /// </summary>
+        public virtual IBlockList<Instruction> CleanupBlocks { get; set; }
     }
 }

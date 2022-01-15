@@ -10,23 +10,40 @@ namespace BaseNode
     public class Import : Node
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="Import"/> class.
+        /// </summary>
+        /// <param name="documentation">The node documentation.</param>
+        /// <param name="libraryIdentifier">The library identifier.</param>
+        /// <param name="fromIdentifier">The set this library is from.</param>
+        /// <param name="type">The import type.</param>
+        /// <param name="renameBlocks">The list of renamed features.</param>
+        internal Import(Document documentation, Identifier libraryIdentifier, IOptionalReference<Identifier> fromIdentifier, ImportType type, IBlockList<Rename> renameBlocks)
+            : base(documentation)
+        {
+            LibraryIdentifier = libraryIdentifier;
+            FromIdentifier = fromIdentifier;
+            Type = type;
+            RenameBlocks = renameBlocks;
+        }
+
+        /// <summary>
         /// Gets or sets the library identifier.
         /// </summary>
-        public virtual Identifier LibraryIdentifier { get; set; } = null!;
+        public virtual Identifier LibraryIdentifier { get; set; }
 
         /// <summary>
         /// Gets or sets the set this library is from.
         /// </summary>
-        public virtual IOptionalReference<Identifier> FromIdentifier { get; set; } = null!;
+        public virtual IOptionalReference<Identifier> FromIdentifier { get; set; }
 
         /// <summary>
         /// Gets or sets the import type.
         /// </summary>
-        public virtual ImportType Type { get; set; } = ImportType.Latest;
+        public virtual ImportType Type { get; set; }
 
         /// <summary>
         /// Gets or sets the list of renamed features.
         /// </summary>
-        public virtual IBlockList<Rename> RenameBlocks { get; set; } = null!;
+        public virtual IBlockList<Rename> RenameBlocks { get; set; }
     }
 }

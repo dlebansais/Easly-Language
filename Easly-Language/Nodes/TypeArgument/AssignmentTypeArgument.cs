@@ -8,13 +8,26 @@ namespace BaseNode
     public class AssignmentTypeArgument : TypeArgument
     {
         /// <summary>
-        /// Gets or sets assigned parameter names.
+        /// Initializes a new instance of the <see cref="AssignmentTypeArgument"/> class.
         /// </summary>
-        public virtual Identifier ParameterIdentifier { get; set; } = null!;
+        /// <param name="documentation">The node documentation.</param>
+        /// <param name="parameterIdentifier">The assigned parameter name.</param>
+        /// <param name="source">The source type.</param>
+        internal AssignmentTypeArgument(Document documentation, Identifier parameterIdentifier, ObjectType source)
+            : base(documentation)
+        {
+            ParameterIdentifier = parameterIdentifier;
+            Source = source;
+        }
+
+        /// <summary>
+        /// Gets or sets the assigned parameter name.
+        /// </summary>
+        public virtual Identifier ParameterIdentifier { get; set; }
 
         /// <summary>
         /// Gets or sets the source type.
         /// </summary>
-        public virtual ObjectType Source { get; set; } = null!;
+        public virtual ObjectType Source { get; set; }
     }
 }

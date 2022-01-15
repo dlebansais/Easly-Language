@@ -32,12 +32,12 @@
         {
             StackTrace Trace = new StackTrace();
 
-            StackFrame Frame = Trace.GetFrame(1)!;
-            MethodBase? Method = Frame.GetMethod()!;
-            Type? CallerType = Method.DeclaringType !;
+            StackFrame? Frame = Trace.GetFrame(1);
+            MethodBase? Method = Frame?.GetMethod();
+            Type CallerType = Method?.DeclaringType ?? throw new InvalidOperationException("Stack frame not available in release mode");
 
             if (CallerType.IsGenericType)
-                throw new InvalidOperationException();
+                throw new NotSupportedException("Static generic types not supported");
 
             return TypeEntity.BuiltTypeEntity(CallerType);
         }

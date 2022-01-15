@@ -8,13 +8,27 @@ namespace BaseNode
     public class GenericType : ShareableType
     {
         /// <summary>
-        /// Gets or sets the type identifier.
+        /// Initializes a new instance of the <see cref="GenericType"/> class.
         /// </summary>
-        public virtual Identifier ClassIdentifier { get; set; } = null!;
+        /// <param name="documentation">The node documentation.</param>
+        /// <param name="sharing">How the type is shared.</param>
+        /// <param name="classIdentifier">The class identifier.</param>
+        /// <param name="typeArgumentBlocks">The list of generic parameters.</param>
+        internal GenericType(Document documentation, SharingType sharing, Identifier classIdentifier, IBlockList<TypeArgument> typeArgumentBlocks)
+            : base(documentation, sharing)
+        {
+            ClassIdentifier = classIdentifier;
+            TypeArgumentBlocks = typeArgumentBlocks;
+        }
+
+        /// <summary>
+        /// Gets or sets the class identifier.
+        /// </summary>
+        public virtual Identifier ClassIdentifier { get; set; }
 
         /// <summary>
         /// Gets or sets the list of generic parameters.
         /// </summary>
-        public virtual IBlockList<TypeArgument> TypeArgumentBlocks { get; set; } = null!;
+        public virtual IBlockList<TypeArgument> TypeArgumentBlocks { get; set; }
     }
 }

@@ -8,8 +8,19 @@ namespace BaseNode
     public class KeywordExpression : Expression
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="KeywordExpression"/> class.
+        /// </summary>
+        /// <param name="documentation">The node documentation.</param>
+        /// <param name="value">The keyword.</param>
+        internal KeywordExpression(Document documentation, Keyword value)
+            : base(documentation)
+        {
+            Value = value;
+        }
+
+        /// <summary>
         /// Gets or sets the keyword.
         /// </summary>
-        public virtual Keyword Value { get; set; } = Keyword.True;
+        public virtual Keyword Value { get; set; }
     }
 }

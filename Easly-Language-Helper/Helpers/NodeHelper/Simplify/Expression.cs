@@ -240,14 +240,10 @@
                 NewBlock.Documentation = CreateDocumentationCopy(Block.Documentation);
                 NewBlock.Replication = Block.Replication;
 
-                Pattern NewReplicationPattern = new Pattern();
-                NewReplicationPattern.Documentation = CreateDocumentationCopy(Block.ReplicationPattern.Documentation);
-                NewReplicationPattern.Text = Block.ReplicationPattern.Text;
+                Pattern NewReplicationPattern = new Pattern(CreateDocumentationCopy(Block.ReplicationPattern.Documentation), Block.ReplicationPattern.Text);
                 NewBlock.ReplicationPattern = NewReplicationPattern;
 
-                Identifier NewSourceIdentifier = new Identifier();
-                NewSourceIdentifier.Documentation = CreateDocumentationCopy(Block.SourceIdentifier.Documentation);
-                NewSourceIdentifier.Text = Block.SourceIdentifier.Text;
+                Identifier NewSourceIdentifier = new Identifier(CreateDocumentationCopy(Block.SourceIdentifier.Documentation), Block.SourceIdentifier.Text);
                 NewBlock.SourceIdentifier = NewSourceIdentifier;
 
                 List<Argument> NewNodeList = new List<Argument>();

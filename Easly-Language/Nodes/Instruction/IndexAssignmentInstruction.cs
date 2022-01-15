@@ -8,18 +8,33 @@ namespace BaseNode
     public class IndexAssignmentInstruction : Instruction
     {
         /// <summary>
-        /// Gets or sets the assigned variable.
+        /// Initializes a new instance of the <see cref="IndexAssignmentInstruction"/> class.
         /// </summary>
-        public virtual QualifiedName Destination { get; set; } = null!;
+        /// <param name="documentation">The node documentation.</param>
+        /// <param name="destination">The assigned variable.</param>
+        /// <param name="argumentBlocks">The call arguments.</param>
+        /// <param name="source">The index in the destination.</param>
+        internal IndexAssignmentInstruction(Document documentation, QualifiedName destination, IBlockList<Argument> argumentBlocks, Expression source)
+            : base(documentation)
+        {
+            Destination = destination;
+            ArgumentBlocks = argumentBlocks;
+            Source = source;
+        }
 
         /// <summary>
-        /// Gets or sets call arguments.
+        /// Gets or sets the assigned variable.
         /// </summary>
-        public virtual IBlockList<Argument> ArgumentBlocks { get; set; } = null!;
+        public virtual QualifiedName Destination { get; set; }
+
+        /// <summary>
+        /// Gets or sets the call arguments.
+        /// </summary>
+        public virtual IBlockList<Argument> ArgumentBlocks { get; set; }
 
         /// <summary>
         /// Gets or sets the index in the destination.
         /// </summary>
-        public virtual Expression Source { get; set; } = null!;
+        public virtual Expression Source { get; set; }
     }
 }

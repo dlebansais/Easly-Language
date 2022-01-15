@@ -10,13 +10,26 @@ namespace BaseNode
     public class GlobalReplicate : Node
     {
         /// <summary>
-        /// Gets or sets the replicate name.
+        /// Initializes a new instance of the <see cref="GlobalReplicate"/> class.
         /// </summary>
-        public virtual Name ReplicateName { get; set; } = null!;
+        /// <param name="documentation">The node documentation.</param>
+        /// <param name="replicateName">The replicate name.</param>
+        /// <param name="patterns">The patterns to use in the replication.</param>
+        internal GlobalReplicate(Document documentation, Name replicateName, IList<Pattern> patterns)
+            : base(documentation)
+        {
+            ReplicateName = replicateName;
+            Patterns = patterns;
+        }
 
         /// <summary>
-        /// Gets or sets patterns to use in the replication.
+        /// Gets or sets the replicate name.
         /// </summary>
-        public virtual IList<Pattern> Patterns { get; set; } = null!;
+        public virtual Name ReplicateName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the patterns to use in the replication.
+        /// </summary>
+        public virtual IList<Pattern> Patterns { get; set; }
     }
 }

@@ -8,13 +8,29 @@ namespace BaseNode
     public class AttributeFeature : NamedFeature
     {
         /// <summary>
-        /// Gets or sets the attribute type.
+        /// Initializes a new instance of the <see cref="AttributeFeature"/> class.
         /// </summary>
-        public virtual ObjectType EntityType { get; set; } = null!;
+        /// <param name="documentation">The node documentation.</param>
+        /// <param name="exportIdentifier">The export to which this feature belongs.</param>
+        /// <param name="export">The export type.</param>
+        /// <param name="entityName">The attribute name.</param>
+        /// <param name="entityType">The attribute type.</param>
+        /// <param name="ensureBlocks">Attribute guarantees.</param>
+        internal AttributeFeature(Document documentation, Identifier exportIdentifier, ExportStatus export, Name entityName, ObjectType entityType, IBlockList<Assertion> ensureBlocks)
+            : base(documentation, exportIdentifier, export, entityName)
+        {
+            EntityType = entityType;
+            EnsureBlocks = ensureBlocks;
+        }
 
         /// <summary>
-        /// Gets or sets attribute guaranties.
+        /// Gets or sets the attribute type.
         /// </summary>
-        public virtual IBlockList<Assertion> EnsureBlocks { get; set; } = null!;
+        public virtual ObjectType EntityType { get; set; }
+
+        /// <summary>
+        /// Gets or sets attribute guarantees.
+        /// </summary>
+        public virtual IBlockList<Assertion> EnsureBlocks { get; set; }
     }
 }

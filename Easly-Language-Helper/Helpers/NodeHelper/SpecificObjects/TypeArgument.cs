@@ -19,10 +19,8 @@
             Contract.RequireNotNull(parameterIdentifier, out Identifier ParameterIdentifier);
             Contract.RequireNotNull(source, out ObjectType Source);
 
-            AssignmentTypeArgument Result = new AssignmentTypeArgument();
-            Result.Documentation = CreateEmptyDocumentation();
-            Result.ParameterIdentifier = ParameterIdentifier;
-            Result.Source = Source;
+            Document Documentation = CreateEmptyDocumentation();
+            AssignmentTypeArgument Result = new AssignmentTypeArgument(Documentation, ParameterIdentifier, Source);
 
             return Result;
         }
@@ -36,9 +34,8 @@
         {
             Contract.RequireNotNull(source, out ObjectType Source);
 
-            PositionalTypeArgument Result = new PositionalTypeArgument();
-            Result.Documentation = CreateEmptyDocumentation();
-            Result.Source = Source;
+            Document Documentation = CreateEmptyDocumentation();
+            PositionalTypeArgument Result = new PositionalTypeArgument(Documentation, Source);
 
             return Result;
         }

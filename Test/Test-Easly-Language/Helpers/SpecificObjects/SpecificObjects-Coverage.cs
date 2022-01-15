@@ -1,11 +1,12 @@
 ﻿namespace TestEaslyLanguage
 {
+    using System;
+    using System.Collections.Generic;
     using BaseNode;
     using BaseNodeHelper;
     using Easly;
     using NUnit.Framework;
-    using System;
-    using System.Collections.Generic;
+    using Range = BaseNode.Range;
 
     [TestFixture]
     public partial class SpecificObjectsCoverage
@@ -765,7 +766,7 @@
             Assert.Throws<ArgumentNullException>(() => { NodeHelper.CreateSimpleWith(DefaultExpression, NullInstruction); });
 #endif
 
-            BaseNode.Range Range1 = NodeHelper.CreateSingleRange(DefaultExpression);
+            Range Range1 = NodeHelper.CreateSingleRange(DefaultExpression);
             EntityDeclaration EntityDeclaration1 = NodeHelper.CreateEntityDeclaration(EmptyName, DefaultObjectType);
             Identifier Identifier1 = NodeHelper.CreateEmptyExportIdentifier();
             Export Export1 = NodeHelper.CreateSimpleExport(string.Empty);

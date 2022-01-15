@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Globalization;
     using System.Reflection;
     using Contracts;
 
@@ -173,7 +174,7 @@
 
         /// <summary>
         /// Creates an instance of the specified type from this assembly using the system activator.
-        /// The specified type must have a default constructor.
+        /// The specified type must have a constructor.
         /// </summary>
         /// <typeparam name="T">The type of the instance to create.</typeparam>
         /// <param name="assembly">The assembly with the specified type.</param>
@@ -182,10 +183,54 @@
         public static T CreateInstance<T>(Assembly assembly, string name)
             where T : class
         {
+            Type? Type = assembly.GetType(name);
+            Debug.Assert(Type is not null);
+
+            ConstructorInfo[] Constructors = Type!.GetConstructors(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            Debug.Assert(Constructors.Length == 1);
+
+            int ParameterCount = Constructors[0].GetParameters().Length;
+            object[] Arguments = new object[ParameterCount];
+
+            T? Result = Activator.CreateInstance(Type, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance, binder: default, Arguments, culture: default) as T;
+            Debug.Assert(Result is not null);
+
+            return Result!;
+        }
+
+        /// <summary>
+        /// Creates an instance of the specified type from this assembly using the system activator.
+        /// The specified type must have a default constructor.
+        /// </summary>
+        /// <typeparam name="T">The type of the instance to create.</typeparam>
+        /// <param name="assembly">The assembly with the specified type.</param>
+        /// <param name="name">The <see cref="Type.FullName"/> of the specified type.</param>
+        /// <returns>An instance of the specified type created with the default constructor.</returns>
+        public static T CreateInstanceFromDefaultConstructor<T>(Assembly assembly, string name)
+            where T : class
+        {
+            Debug.Assert(TypeHasDefaultConstructor<T>(assembly, name));
+
             T? Result = assembly.CreateInstance(name) as T;
             Debug.Assert(Result != null);
 
             return Result!;
+        }
+
+        /// <summary>
+        /// Checkcs that a type has a default constructor.
+        /// </summary>
+        /// <typeparam name="T">The type of the instance to create.</typeparam>
+        /// <param name="assembly">The assembly with the specified type.</param>
+        /// <param name="name">The <see cref="Type.FullName"/> of the specified type.</param>
+        /// <returns>True if the specified type has a default constructor; otherwise, false.</returns>
+        public static bool TypeHasDefaultConstructor<T>(Assembly assembly, string name)
+            where T : class
+        {
+            Type Type = assembly.GetType(name)!;
+            ConstructorInfo[] Constructors = Type.GetConstructors();
+
+            return Constructors.Length == 0 || Constructors[0].GetParameters().Length == 0;
         }
 
         /// <summary>

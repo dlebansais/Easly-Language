@@ -8,13 +8,26 @@ namespace BaseNode
     public class ExceptionHandler : Node
     {
         /// <summary>
-        /// Gets or sets the identifier of the handled exception.
+        /// Initializes a new instance of the <see cref="ExceptionHandler"/> class.
         /// </summary>
-        public virtual Identifier ExceptionIdentifier { get; set; } = null!;
+        /// <param name="documentation">The node documentation.</param>
+        /// <param name="exceptionIdentifier">The identifier of the handled exception.</param>
+        /// <param name="instructions">The instructions to execute.</param>
+        internal ExceptionHandler(Document documentation, Identifier exceptionIdentifier, Scope instructions)
+            : base(documentation)
+        {
+            ExceptionIdentifier = exceptionIdentifier;
+            Instructions = instructions;
+        }
 
         /// <summary>
-        /// Gets or sets instructions to execute.
+        /// Gets or sets the identifier of the handled exception.
         /// </summary>
-        public virtual Scope Instructions { get; set; } = null!;
+        public virtual Identifier ExceptionIdentifier { get; set; }
+
+        /// <summary>
+        /// Gets or sets the instructions to execute.
+        /// </summary>
+        public virtual Scope Instructions { get; set; }
     }
 }

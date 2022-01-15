@@ -8,18 +8,33 @@ namespace BaseNode
     public class BinaryOperatorExpression : Expression
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="BinaryOperatorExpression"/> class.
+        /// </summary>
+        /// <param name="documentation">The node documentation.</param>
+        /// <param name="leftExpression">The left operand.</param>
+        /// <param name="operator">The operator.</param>
+        /// <param name="rightExpression">The right operand.</param>
+        internal BinaryOperatorExpression(Document documentation, Expression leftExpression, Identifier @operator, Expression rightExpression)
+            : base(documentation)
+        {
+            LeftExpression = leftExpression;
+            Operator = @operator;
+            RightExpression = rightExpression;
+        }
+
+        /// <summary>
         /// Gets or sets the left operand.
         /// </summary>
-        public virtual Expression LeftExpression { get; set; } = null!;
+        public virtual Expression LeftExpression { get; set; }
 
         /// <summary>
         /// Gets or sets the operator.
         /// </summary>
-        public virtual Identifier Operator { get; set; } = null!;
+        public virtual Identifier Operator { get; set; }
 
         /// <summary>
         /// Gets or sets the right operand.
         /// </summary>
-        public virtual Expression RightExpression { get; set; } = null!;
+        public virtual Expression RightExpression { get; set; }
     }
 }

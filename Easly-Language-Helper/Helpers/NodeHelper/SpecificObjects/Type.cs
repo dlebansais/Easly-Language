@@ -2,7 +2,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using BaseNode;
 using Contracts;
 
@@ -21,10 +20,8 @@ public static partial class NodeHelper
     {
         Contract.RequireNotNull(anchoredName, out QualifiedName AnchoredName);
 
-        AnchoredType Result = new AnchoredType();
-        Result.Documentation = CreateEmptyDocumentation();
-        Result.AnchoredName = AnchoredName;
-        Result.AnchorKind = anchorKinds;
+        Document Documentation = CreateEmptyDocumentation();
+        AnchoredType Result = new AnchoredType(Documentation, AnchoredName, anchorKinds);
 
         return Result;
     }
@@ -40,12 +37,10 @@ public static partial class NodeHelper
         Contract.RequireNotNull(baseType, out ObjectType BaseType);
         Contract.RequireNotNull(returnType, out ObjectType ReturnType);
 
+        Document Documentation = CreateEmptyDocumentation();
         QueryOverloadType FirstOverload = CreateEmptyQueryOverloadType(ReturnType);
-
-        FunctionType Result = new FunctionType();
-        Result.Documentation = CreateEmptyDocumentation();
-        Result.BaseType = BaseType;
-        Result.OverloadBlocks = BlockListHelper<QueryOverloadType>.CreateSimpleBlockList(FirstOverload);
+        IBlockList<QueryOverloadType> OverloadBlocks = BlockListHelper<QueryOverloadType>.CreateSimpleBlockList(FirstOverload);
+        FunctionType Result = new FunctionType(Documentation, BaseType, OverloadBlocks);
 
         return Result;
     }
@@ -64,10 +59,8 @@ public static partial class NodeHelper
         if (NodeTreeHelperBlockList.IsBlockListEmpty((IBlockList)OverloadBlocks))
             throw new ArgumentException($"{nameof(overloadBlocks)} must not be empty");
 
-        FunctionType Result = new FunctionType();
-        Result.Documentation = CreateEmptyDocumentation();
-        Result.BaseType = BaseType;
-        Result.OverloadBlocks = OverloadBlocks;
+        Document Documentation = CreateEmptyDocumentation();
+        FunctionType Result = new FunctionType(Documentation, BaseType, OverloadBlocks);
 
         return Result;
     }
@@ -86,10 +79,9 @@ public static partial class NodeHelper
         if (typeArgumentList.Count == 0)
             throw new ArgumentException($"{nameof(typeArgumentList)} must not be empty");
 
-        GenericType Result = new GenericType();
-        Result.Documentation = CreateEmptyDocumentation();
-        Result.ClassIdentifier = ClassIdentifier;
-        Result.TypeArgumentBlocks = BlockListHelper<TypeArgument>.CreateBlockListFromNodeList(TypeArgumentList);
+        Document Documentation = CreateEmptyDocumentation();
+        IBlockList<TypeArgument> TypeArgumentBlocks = BlockListHelper<TypeArgument>.CreateBlockListFromNodeList(TypeArgumentList);
+        GenericType Result = new GenericType(Documentation, SharingType.NotShared, ClassIdentifier, TypeArgumentBlocks);
 
         return Result;
     }
@@ -109,11 +101,8 @@ public static partial class NodeHelper
         if (NodeTreeHelperBlockList.IsBlockListEmpty((IBlockList)TypeArgumentBlocks))
             throw new ArgumentException($"{nameof(typeArgumentBlocks)} must not be empty");
 
-        GenericType Result = new GenericType();
-        Result.Documentation = CreateEmptyDocumentation();
-        Result.Sharing = sharing;
-        Result.ClassIdentifier = ClassIdentifier;
-        Result.TypeArgumentBlocks = TypeArgumentBlocks;
+        Document Documentation = CreateEmptyDocumentation();
+        GenericType Result = new GenericType(Documentation, sharing, ClassIdentifier, TypeArgumentBlocks);
 
         return Result;
     }
@@ -131,19 +120,15 @@ public static partial class NodeHelper
         Contract.RequireNotNull(entityType, out ObjectType EntityType);
         Contract.RequireNotNull(parameter, out EntityDeclaration Parameter);
 
-        IndexerType Result = new IndexerType();
-        Result.Documentation = CreateEmptyDocumentation();
-        Result.BaseType = BaseType;
-        Result.EntityType = EntityType;
-        Result.IndexParameterBlocks = BlockListHelper<EntityDeclaration>.CreateSimpleBlockList(Parameter);
-        Result.ParameterEnd = ParameterEndStatus.Closed;
-        Result.IndexerKind = UtilityType.ReadWrite;
-        Result.GetRequireBlocks = BlockListHelper<Assertion>.CreateEmptyBlockList();
-        Result.GetEnsureBlocks = BlockListHelper<Assertion>.CreateEmptyBlockList();
-        Result.GetExceptionIdentifierBlocks = BlockListHelper<Identifier>.CreateEmptyBlockList();
-        Result.SetRequireBlocks = BlockListHelper<Assertion>.CreateEmptyBlockList();
-        Result.SetEnsureBlocks = BlockListHelper<Assertion>.CreateEmptyBlockList();
-        Result.SetExceptionIdentifierBlocks = BlockListHelper<Identifier>.CreateEmptyBlockList();
+        Document Documentation = CreateEmptyDocumentation();
+        IBlockList<EntityDeclaration> IndexParameterBlocks = BlockListHelper<EntityDeclaration>.CreateSimpleBlockList(Parameter);
+        IBlockList<Assertion> GetRequireBlocks = BlockListHelper<Assertion>.CreateEmptyBlockList();
+        IBlockList<Assertion> GetEnsureBlocks = BlockListHelper<Assertion>.CreateEmptyBlockList();
+        IBlockList<Identifier> GetExceptionIdentifierBlocks = BlockListHelper<Identifier>.CreateEmptyBlockList();
+        IBlockList<Assertion> SetRequireBlocks = BlockListHelper<Assertion>.CreateEmptyBlockList();
+        IBlockList<Assertion> SetEnsureBlocks = BlockListHelper<Assertion>.CreateEmptyBlockList();
+        IBlockList<Identifier> SetExceptionIdentifierBlocks = BlockListHelper<Identifier>.CreateEmptyBlockList();
+        IndexerType Result = new IndexerType(Documentation, BaseType, EntityType, IndexParameterBlocks, ParameterEndStatus.Closed, UtilityType.ReadWrite, GetRequireBlocks, GetEnsureBlocks, GetExceptionIdentifierBlocks, SetRequireBlocks, SetEnsureBlocks, SetExceptionIdentifierBlocks);
 
         return Result;
     }
@@ -157,10 +142,10 @@ public static partial class NodeHelper
     /// <param name="parameterEnd">A value indicating whether the indexer accepts extra parameters.</param>
     /// <param name="indexerKind">The kind of indexer.</param>
     /// <param name="getRequireBlocks">The getter list of requirements.</param>
-    /// <param name="getEnsureBlocks">The getter list of guaranties.</param>
+    /// <param name="getEnsureBlocks">The getter list of guarantees.</param>
     /// <param name="getExceptionIdentifierBlocks">The getter list of exceptions.</param>
     /// <param name="setRequireBlocks">The setter list of requirements.</param>
-    /// <param name="setEnsureBlocks">The setter list of guaranties.</param>
+    /// <param name="setEnsureBlocks">The setter list of guarantees.</param>
     /// <param name="setExceptionIdentifierBlocks">The setter list of exceptions.</param>
     /// <returns>The created instance.</returns>
     public static IndexerType CreateIndexerType(ObjectType baseType, ObjectType entityType, IBlockList<EntityDeclaration> indexParameterBlocks, ParameterEndStatus parameterEnd, UtilityType indexerKind, IBlockList<Assertion> getRequireBlocks, IBlockList<Assertion> getEnsureBlocks, IBlockList<Identifier> getExceptionIdentifierBlocks, IBlockList<Assertion> setRequireBlocks, IBlockList<Assertion> setEnsureBlocks, IBlockList<Identifier> setExceptionIdentifierBlocks)
@@ -178,19 +163,8 @@ public static partial class NodeHelper
         if (NodeTreeHelperBlockList.IsBlockListEmpty((IBlockList)IndexParameterBlocks))
             throw new ArgumentException($"{nameof(indexParameterBlocks)} must not be empty");
 
-        IndexerType Result = new IndexerType();
-        Result.Documentation = CreateEmptyDocumentation();
-        Result.BaseType = BaseType;
-        Result.EntityType = EntityType;
-        Result.IndexParameterBlocks = IndexParameterBlocks;
-        Result.ParameterEnd = parameterEnd;
-        Result.IndexerKind = indexerKind;
-        Result.GetRequireBlocks = GetRequireBlocks;
-        Result.GetEnsureBlocks = GetEnsureBlocks;
-        Result.GetExceptionIdentifierBlocks = GetExceptionIdentifierBlocks;
-        Result.SetRequireBlocks = SetRequireBlocks;
-        Result.SetEnsureBlocks = SetEnsureBlocks;
-        Result.SetExceptionIdentifierBlocks = SetExceptionIdentifierBlocks;
+        Document Documentation = CreateEmptyDocumentation();
+        IndexerType Result = new IndexerType(Documentation, BaseType, EntityType, IndexParameterBlocks, parameterEnd, indexerKind, GetRequireBlocks, GetEnsureBlocks, GetExceptionIdentifierBlocks, SetRequireBlocks, SetEnsureBlocks, SetExceptionIdentifierBlocks);
 
         return Result;
     }
@@ -202,9 +176,8 @@ public static partial class NodeHelper
     /// <returns>The created instance.</returns>
     public static KeywordAnchoredType CreateKeywordAnchoredType(Keyword anchor)
     {
-        KeywordAnchoredType Result = new KeywordAnchoredType();
-        Result.Documentation = CreateEmptyDocumentation();
-        Result.Anchor = anchor;
+        Document Documentation = CreateEmptyDocumentation();
+        KeywordAnchoredType Result = new KeywordAnchoredType(Documentation, anchor);
 
         return Result;
     }
@@ -218,12 +191,10 @@ public static partial class NodeHelper
     {
         Contract.RequireNotNull(baseType, out ObjectType BaseType);
 
+        Document Documentation = CreateEmptyDocumentation();
         CommandOverloadType FirstOverload = CreateEmptyCommandOverloadType();
-
-        ProcedureType Result = new ProcedureType();
-        Result.Documentation = CreateEmptyDocumentation();
-        Result.BaseType = BaseType;
-        Result.OverloadBlocks = BlockListHelper<CommandOverloadType>.CreateSimpleBlockList(FirstOverload);
+        IBlockList<CommandOverloadType> OverloadBlocks = BlockListHelper<CommandOverloadType>.CreateSimpleBlockList(FirstOverload);
+        ProcedureType Result = new ProcedureType(Documentation, BaseType, OverloadBlocks);
 
         return Result;
     }
@@ -242,10 +213,8 @@ public static partial class NodeHelper
         if (NodeTreeHelperBlockList.IsBlockListEmpty((IBlockList)OverloadBlocks))
             throw new ArgumentException($"{nameof(overloadBlocks)} must not be empty");
 
-        ProcedureType Result = new ProcedureType();
-        Result.Documentation = CreateEmptyDocumentation();
-        Result.BaseType = BaseType;
-        Result.OverloadBlocks = OverloadBlocks;
+        Document Documentation = CreateEmptyDocumentation();
+        ProcedureType Result = new ProcedureType(Documentation, BaseType, OverloadBlocks);
 
         return Result;
     }
@@ -261,15 +230,12 @@ public static partial class NodeHelper
         Contract.RequireNotNull(baseType, out ObjectType BaseType);
         Contract.RequireNotNull(entityType, out ObjectType EntityType);
 
-        PropertyType Result = new PropertyType();
-        Result.Documentation = CreateEmptyDocumentation();
-        Result.BaseType = BaseType;
-        Result.EntityType = EntityType;
-        Result.PropertyKind = UtilityType.ReadWrite;
-        Result.GetEnsureBlocks = BlockListHelper<Assertion>.CreateEmptyBlockList();
-        Result.GetExceptionIdentifierBlocks = BlockListHelper<Identifier>.CreateEmptyBlockList();
-        Result.SetRequireBlocks = BlockListHelper<Assertion>.CreateEmptyBlockList();
-        Result.SetExceptionIdentifierBlocks = BlockListHelper<Identifier>.CreateEmptyBlockList();
+        Document Documentation = CreateEmptyDocumentation();
+        IBlockList<Assertion> GetEnsureBlocks = BlockListHelper<Assertion>.CreateEmptyBlockList();
+        IBlockList<Identifier> GetExceptionIdentifierBlocks = BlockListHelper<Identifier>.CreateEmptyBlockList();
+        IBlockList<Assertion> SetRequireBlocks = BlockListHelper<Assertion>.CreateEmptyBlockList();
+        IBlockList<Identifier> SetExceptionIdentifierBlocks = BlockListHelper<Identifier>.CreateEmptyBlockList();
+        PropertyType Result = new PropertyType(Documentation, BaseType, EntityType, UtilityType.ReadWrite, GetEnsureBlocks, GetExceptionIdentifierBlocks, SetRequireBlocks, SetExceptionIdentifierBlocks);
 
         return Result;
     }
@@ -280,7 +246,7 @@ public static partial class NodeHelper
     /// <param name="baseType">The base type.</param>
     /// <param name="entityType">The entity type.</param>
     /// <param name="propertyKind">The kind of property.</param>
-    /// <param name="getEnsureBlocks">The getter list of guaranties.</param>
+    /// <param name="getEnsureBlocks">The getter list of guarantees.</param>
     /// <param name="getExceptionIdentifierBlocks">The getter list of exceptions.</param>
     /// <param name="setRequireBlocks">The setter list of requirements.</param>
     /// <param name="setExceptionIdentifierBlocks">The setter list of exceptions.</param>
@@ -294,15 +260,8 @@ public static partial class NodeHelper
         Contract.RequireNotNull(setRequireBlocks, out IBlockList<Assertion> SetRequireBlocks);
         Contract.RequireNotNull(setExceptionIdentifierBlocks, out IBlockList<Identifier> SetExceptionIdentifierBlocks);
 
-        PropertyType Result = new PropertyType();
-        Result.Documentation = CreateEmptyDocumentation();
-        Result.BaseType = BaseType;
-        Result.EntityType = EntityType;
-        Result.PropertyKind = propertyKind;
-        Result.GetEnsureBlocks = GetEnsureBlocks;
-        Result.GetExceptionIdentifierBlocks = GetExceptionIdentifierBlocks;
-        Result.SetRequireBlocks = SetRequireBlocks;
-        Result.SetExceptionIdentifierBlocks = SetExceptionIdentifierBlocks;
+        Document Documentation = CreateEmptyDocumentation();
+        PropertyType Result = new PropertyType(Documentation, BaseType, EntityType, propertyKind, GetEnsureBlocks, GetExceptionIdentifierBlocks, SetRequireBlocks, SetExceptionIdentifierBlocks);
 
         return Result;
     }
@@ -317,12 +276,10 @@ public static partial class NodeHelper
     {
         Contract.RequireNotNull(classIdentifier, out Identifier ClassIdentifier);
 
-        SimpleType SimpleSimpleType = new SimpleType();
-        SimpleSimpleType.Documentation = CreateEmptyDocumentation();
-        SimpleSimpleType.Sharing = sharing;
-        SimpleSimpleType.ClassIdentifier = ClassIdentifier;
+        Document Documentation = CreateEmptyDocumentation();
+        SimpleType Result = new SimpleType(Documentation, sharing, ClassIdentifier);
 
-        return SimpleSimpleType;
+        return Result;
     }
 
     /// <summary>
@@ -334,9 +291,9 @@ public static partial class NodeHelper
     {
         Contract.RequireNotNull(entityDeclaration, out EntityDeclaration EntityDeclaration);
 
-        TupleType Result = new TupleType();
-        Result.Documentation = CreateEmptyDocumentation();
-        Result.EntityDeclarationBlocks = BlockListHelper<EntityDeclaration>.CreateSimpleBlockList(EntityDeclaration);
+        Document Documentation = CreateEmptyDocumentation();
+        IBlockList<EntityDeclaration> EntityDeclarationBlocks = BlockListHelper<EntityDeclaration>.CreateSimpleBlockList(EntityDeclaration);
+        TupleType Result = new TupleType(Documentation, SharingType.NotShared, EntityDeclarationBlocks);
 
         return Result;
     }
@@ -354,10 +311,8 @@ public static partial class NodeHelper
         if (NodeTreeHelperBlockList.IsBlockListEmpty((IBlockList)EntityDeclarationBlocks))
             throw new ArgumentException($"{nameof(entityDeclarationBlocks)} must not be empty");
 
-        TupleType Result = new TupleType();
-        Result.Documentation = CreateEmptyDocumentation();
-        Result.Sharing = sharing;
-        Result.EntityDeclarationBlocks = EntityDeclarationBlocks;
+        Document Documentation = CreateEmptyDocumentation();
+        TupleType Result = new TupleType(Documentation, sharing, EntityDeclarationBlocks);
 
         return Result;
     }

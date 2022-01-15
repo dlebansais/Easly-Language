@@ -1,7 +1,5 @@
 ﻿namespace BaseNode
 {
-    using Easly;
-
     /// <summary>
     /// Represents generic documentation.
     /// /Doc/Nodes/Document.md explains the semantic.

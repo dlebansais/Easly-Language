@@ -8,13 +8,26 @@ namespace BaseNode
     public class CloneOfExpression : Expression
     {
         /// <summary>
-        /// Gets or sets the close type.
+        /// Initializes a new instance of the <see cref="CloneOfExpression"/> class.
         /// </summary>
-        public virtual CloneType Type { get; set; } = CloneType.Shallow;
+        /// <param name="documentation">The node documentation.</param>
+        /// <param name="type">The clone type.</param>
+        /// <param name="source">The cloned source.</param>
+        internal CloneOfExpression(Document documentation, CloneType type, Expression source)
+            : base(documentation)
+        {
+            Type = type;
+            Source = source;
+        }
+
+        /// <summary>
+        /// Gets or sets the clone type.
+        /// </summary>
+        public virtual CloneType Type { get; set; }
 
         /// <summary>
         /// Gets or sets the cloned source.
         /// </summary>
-        public virtual Expression Source { get; set; } = null!;
+        public virtual Expression Source { get; set; }
     }
 }

@@ -39,7 +39,7 @@
             IsSimple = BlockListHelper.IsSimple(BlockListCopy);
             Assert.That(IsSimple);
 
-            IdentifierList.Add(new Identifier());
+            IdentifierList.Add(NodeHelper.CreateEmptyIdentifier());
             IsSimple = BlockListHelper.IsSimple(WithBlocksBlockList);
             Assert.That(!IsSimple);
 

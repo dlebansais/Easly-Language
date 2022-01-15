@@ -1,4 +1,7 @@
-﻿namespace System.Runtime.CompilerServices
+﻿[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Easly-Language-Helper")]
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Test-Easly-Language")]
+
+namespace System.Runtime.CompilerServices
 {
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 #pragma warning disable SA1600 // Elements should be documented

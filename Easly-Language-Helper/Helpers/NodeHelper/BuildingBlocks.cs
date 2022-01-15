@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using BaseNode;
     using Contracts;
+    using Easly;
 
     /// <summary>
     /// Provides methods to manipulate nodes.
@@ -16,11 +17,11 @@
         /// <returns>The created instance.</returns>
         public static Document CreateEmptyDocumentation()
         {
-            Document Documentation = new Document();
-            Documentation.Comment = string.Empty;
-            Documentation.Uuid = Guid.NewGuid();
+            Document EmptyDocumentation = new Document();
+            EmptyDocumentation.Comment = string.Empty;
+            EmptyDocumentation.Uuid = Guid.NewGuid();
 
-            return Documentation;
+            return EmptyDocumentation;
         }
 
         /// <summary>
@@ -33,11 +34,11 @@
         {
             Contract.RequireNotNull(comment, out string Comment);
 
-            Document Documentation = new Document();
-            Documentation.Comment = Comment;
-            Documentation.Uuid = uuid;
+            Document SimpleDocumentation = new Document();
+            SimpleDocumentation.Comment = Comment;
+            SimpleDocumentation.Uuid = uuid;
 
-            return Documentation;
+            return SimpleDocumentation;
         }
 
         /// <summary>
@@ -46,9 +47,9 @@
         /// <returns>The created instance.</returns>
         public static Pattern CreateEmptyPattern()
         {
-            Pattern EmptyPattern = new Pattern();
-            EmptyPattern.Documentation = CreateEmptyDocumentation();
-            EmptyPattern.Text = "*";
+            Document Documentation = CreateEmptyDocumentation();
+            string Text = "*";
+            Pattern EmptyPattern = new Pattern(Documentation, Text);
 
             return EmptyPattern;
         }
@@ -62,9 +63,8 @@
         {
             Contract.RequireNotNull(text, out string Text);
 
-            Pattern SimplePattern = new Pattern();
-            SimplePattern.Documentation = CreateEmptyDocumentation();
-            SimplePattern.Text = Text;
+            Document Documentation = CreateEmptyDocumentation();
+            Pattern SimplePattern = new Pattern(Documentation, Text);
 
             return SimplePattern;
         }
@@ -75,9 +75,9 @@
         /// <returns>The created instance.</returns>
         public static Identifier CreateEmptyIdentifier()
         {
-            Identifier EmptyIdentifier = new Identifier();
-            EmptyIdentifier.Documentation = CreateEmptyDocumentation();
-            EmptyIdentifier.Text = string.Empty;
+            Document Documentation = CreateEmptyDocumentation();
+            string Text = string.Empty;
+            Identifier EmptyIdentifier = new Identifier(Documentation, Text);
 
             return EmptyIdentifier;
         }
@@ -91,9 +91,8 @@
         {
             Contract.RequireNotNull(text, out string Text);
 
-            Identifier SimpleIdentifier = new Identifier();
-            SimpleIdentifier.Documentation = CreateEmptyDocumentation();
-            SimpleIdentifier.Text = Text;
+            Document Documentation = CreateEmptyDocumentation();
+            Identifier SimpleIdentifier = new Identifier(Documentation, Text);
 
             return SimpleIdentifier;
         }
@@ -104,9 +103,9 @@
         /// <returns>The created instance.</returns>
         public static Name CreateEmptyName()
         {
-            Name EmptyName = new Name();
-            EmptyName.Documentation = CreateEmptyDocumentation();
-            EmptyName.Text = string.Empty;
+            Document Documentation = CreateEmptyDocumentation();
+            string Text = string.Empty;
+            Name EmptyName = new Name(Documentation, Text);
 
             return EmptyName;
         }
@@ -120,9 +119,8 @@
         {
             Contract.RequireNotNull(text, out string Text);
 
-            Name SimpleName = new Name();
-            SimpleName.Documentation = CreateEmptyDocumentation();
-            SimpleName.Text = Text;
+            Document Documentation = CreateEmptyDocumentation();
+            Name SimpleName = new Name(Documentation, Text);
 
             return SimpleName;
         }
@@ -135,7 +133,9 @@
         {
             List<Identifier> Path = new List<Identifier>();
             Path.Add(CreateEmptyIdentifier());
-            return CreateQualifiedName(Path);
+            QualifiedName EmptyQualifiedName = CreateQualifiedName(Path);
+
+            return EmptyQualifiedName;
         }
 
         /// <summary>
@@ -150,7 +150,9 @@
             List<Identifier> Path = new List<Identifier>();
             Path.Add(CreateSimpleIdentifier(Text));
 
-            return CreateQualifiedName(Path);
+            QualifiedName SimpleQualifiedName = CreateQualifiedName(Path);
+
+            return SimpleQualifiedName;
         }
 
         /// <summary>
@@ -166,11 +168,10 @@
             if (Path.Count == 0)
                 throw new ArgumentException($"{nameof(path)} must be have at least one element");
 
-            QualifiedName DefaultQualifiedName = new QualifiedName();
-            DefaultQualifiedName.Documentation = CreateEmptyDocumentation();
-            DefaultQualifiedName.Path = Path;
+            Document Documentation = CreateEmptyDocumentation();
+            QualifiedName NewQualifiedName = new QualifiedName(Documentation, Path);
 
-            return DefaultQualifiedName;
+            return NewQualifiedName;
         }
 
         /// <summary>
@@ -179,10 +180,10 @@
         /// <returns>The created instance.</returns>
         public static QueryExpression CreateEmptyQueryExpression()
         {
-            QueryExpression EmptyQueryExpression = new QueryExpression();
-            EmptyQueryExpression.Documentation = CreateEmptyDocumentation();
-            EmptyQueryExpression.Query = CreateEmptyQualifiedName();
-            EmptyQueryExpression.ArgumentBlocks = BlockListHelper<Argument>.CreateEmptyBlockList();
+            Document Documentation = CreateEmptyDocumentation();
+            QualifiedName Query = CreateEmptyQualifiedName();
+            IBlockList<Argument> ArgumentBlocks = BlockListHelper<Argument>.CreateEmptyBlockList();
+            QueryExpression EmptyQueryExpression = new QueryExpression(Documentation, Query, ArgumentBlocks);
 
             return EmptyQueryExpression;
         }
@@ -196,10 +197,10 @@
         {
             Contract.RequireNotNull(text, out string Text);
 
-            QueryExpression SimpleQueryExpression = new QueryExpression();
-            SimpleQueryExpression.Documentation = CreateEmptyDocumentation();
-            SimpleQueryExpression.Query = CreateSimpleQualifiedName(Text);
-            SimpleQueryExpression.ArgumentBlocks = BlockListHelper<Argument>.CreateEmptyBlockList();
+            Document Documentation = CreateEmptyDocumentation();
+            QualifiedName Query = CreateSimpleQualifiedName(Text);
+            IBlockList<Argument> ArgumentBlocks = BlockListHelper<Argument>.CreateEmptyBlockList();
+            QueryExpression SimpleQueryExpression = new QueryExpression(Documentation, Query, ArgumentBlocks);
 
             return SimpleQueryExpression;
         }
@@ -210,10 +211,10 @@
         /// <returns>The created instance.</returns>
         public static CommandInstruction CreateEmptyCommandInstruction()
         {
-            CommandInstruction EmptyCommandInstruction = new CommandInstruction();
-            EmptyCommandInstruction.Documentation = CreateEmptyDocumentation();
-            EmptyCommandInstruction.Command = CreateEmptyQualifiedName();
-            EmptyCommandInstruction.ArgumentBlocks = BlockListHelper<Argument>.CreateEmptyBlockList();
+            Document Documentation = CreateEmptyDocumentation();
+            QualifiedName Command = CreateEmptyQualifiedName();
+            IBlockList<Argument> ArgumentBlocks = BlockListHelper<Argument>.CreateEmptyBlockList();
+            CommandInstruction EmptyCommandInstruction = new CommandInstruction(Documentation, Command, ArgumentBlocks);
 
             return EmptyCommandInstruction;
         }
@@ -227,10 +228,10 @@
         {
             Contract.RequireNotNull(text, out string Text);
 
-            CommandInstruction SimpleCommandInstruction = new CommandInstruction();
-            SimpleCommandInstruction.Documentation = CreateEmptyDocumentation();
-            SimpleCommandInstruction.Command = CreateSimpleQualifiedName(Text);
-            SimpleCommandInstruction.ArgumentBlocks = BlockListHelper<Argument>.CreateEmptyBlockList();
+            Document Documentation = CreateEmptyDocumentation();
+            QualifiedName Command = CreateSimpleQualifiedName(Text);
+            IBlockList<Argument> ArgumentBlocks = BlockListHelper<Argument>.CreateEmptyBlockList();
+            CommandInstruction SimpleCommandInstruction = new CommandInstruction(Documentation, Command, ArgumentBlocks);
 
             return SimpleCommandInstruction;
         }
@@ -241,9 +242,9 @@
         /// <returns>The created instance.</returns>
         public static PositionalArgument CreateEmptyPositionalArgument()
         {
-            PositionalArgument EmptyPositionalArgument = new PositionalArgument();
-            EmptyPositionalArgument.Documentation = CreateEmptyDocumentation();
-            EmptyPositionalArgument.Source = CreateDefaultExpression();
+            Document Documentation = CreateEmptyDocumentation();
+            Expression Source = CreateDefaultExpression();
+            PositionalArgument EmptyPositionalArgument = new PositionalArgument(Documentation, Source);
 
             return EmptyPositionalArgument;
         }
@@ -257,9 +258,9 @@
         {
             Contract.RequireNotNull(text, out string Text);
 
-            PositionalArgument SimplePositionalArgument = new PositionalArgument();
-            SimplePositionalArgument.Documentation = CreateEmptyDocumentation();
-            SimplePositionalArgument.Source = CreateSimpleQueryExpression(Text);
+            Document Documentation = CreateEmptyDocumentation();
+            Expression Source = CreateSimpleQueryExpression(Text);
+            PositionalArgument SimplePositionalArgument = new PositionalArgument(Documentation, Source);
 
             return SimplePositionalArgument;
         }
@@ -272,10 +273,10 @@
         {
             Identifier Parameter = CreateEmptyIdentifier();
 
-            AssignmentArgument EmptyAssignmentArgument = new AssignmentArgument();
-            EmptyAssignmentArgument.Documentation = CreateEmptyDocumentation();
-            EmptyAssignmentArgument.ParameterBlocks = BlockListHelper<Identifier>.CreateSimpleBlockList(Parameter);
-            EmptyAssignmentArgument.Source = CreateDefaultExpression();
+            Document Documentation = CreateEmptyDocumentation();
+            IBlockList<Identifier> ParameterBlocks = BlockListHelper<Identifier>.CreateSimpleBlockList(Parameter);
+            Expression Source = CreateDefaultExpression();
+            AssignmentArgument EmptyAssignmentArgument = new AssignmentArgument(Documentation, ParameterBlocks, Source);
 
             return EmptyAssignmentArgument;
         }
@@ -291,12 +292,11 @@
             Contract.RequireNotNull(destinationText, out string DestinationText);
             Contract.RequireNotNull(sourceText, out string SourceText);
 
+            Document Documentation = CreateEmptyDocumentation();
             Identifier Parameter = CreateSimpleIdentifier(DestinationText);
-
-            AssignmentArgument SimpleAssignmentArgument = new AssignmentArgument();
-            SimpleAssignmentArgument.Documentation = CreateEmptyDocumentation();
-            SimpleAssignmentArgument.ParameterBlocks = BlockListHelper<Identifier>.CreateSimpleBlockList(Parameter);
-            SimpleAssignmentArgument.Source = CreateSimpleQueryExpression(SourceText);
+            IBlockList<Identifier> ParameterBlocks = BlockListHelper<Identifier>.CreateSimpleBlockList(Parameter);
+            Expression Source = CreateSimpleQueryExpression(SourceText);
+            AssignmentArgument SimpleAssignmentArgument = new AssignmentArgument(Documentation, ParameterBlocks, Source);
 
             return SimpleAssignmentArgument;
         }
@@ -307,9 +307,9 @@
         /// <returns>The created instance.</returns>
         public static PositionalTypeArgument CreateEmptyPositionalTypeArgument()
         {
-            PositionalTypeArgument EmptyPositionalTypeArgument = new PositionalTypeArgument();
-            EmptyPositionalTypeArgument.Documentation = CreateEmptyDocumentation();
-            EmptyPositionalTypeArgument.Source = CreateEmptySimpleType();
+            Document Documentation = CreateEmptyDocumentation();
+            ObjectType Source = CreateEmptySimpleType();
+            PositionalTypeArgument EmptyPositionalTypeArgument = new PositionalTypeArgument(Documentation, Source);
 
             return EmptyPositionalTypeArgument;
         }
@@ -323,9 +323,9 @@
         {
             Contract.RequireNotNull(text, out string Text);
 
-            PositionalTypeArgument SimplePositionalTypeArgument = new PositionalTypeArgument();
-            SimplePositionalTypeArgument.Documentation = CreateEmptyDocumentation();
-            SimplePositionalTypeArgument.Source = CreateSimpleSimpleType(Text);
+            Document Documentation = CreateEmptyDocumentation();
+            ObjectType Source = CreateSimpleSimpleType(Text);
+            PositionalTypeArgument SimplePositionalTypeArgument = new PositionalTypeArgument(Documentation, Source);
 
             return SimplePositionalTypeArgument;
         }
@@ -336,9 +336,9 @@
         /// <returns>The created instance.</returns>
         public static SimpleType CreateEmptySimpleType()
         {
-            SimpleType EmptySimpleType = new SimpleType();
-            EmptySimpleType.Documentation = CreateEmptyDocumentation();
-            EmptySimpleType.ClassIdentifier = CreateEmptyIdentifier();
+            Document Documentation = CreateEmptyDocumentation();
+            Identifier ClassIdentifier = CreateEmptyIdentifier();
+            SimpleType EmptySimpleType = new SimpleType(Documentation, SharingType.NotShared, ClassIdentifier);
 
             return EmptySimpleType;
         }
@@ -352,9 +352,9 @@
         {
             Contract.RequireNotNull(text, out string Text);
 
-            SimpleType SimpleSimpleType = new SimpleType();
-            SimpleSimpleType.Documentation = CreateEmptyDocumentation();
-            SimpleSimpleType.ClassIdentifier = CreateSimpleIdentifier(Text);
+            Document Documentation = CreateEmptyDocumentation();
+            Identifier ClassIdentifier = CreateSimpleIdentifier(Text);
+            SimpleType SimpleSimpleType = new SimpleType(Documentation, SharingType.NotShared, ClassIdentifier);
 
             return SimpleSimpleType;
         }
@@ -365,10 +365,10 @@
         /// <returns>The created instance.</returns>
         public static Scope CreateEmptyScope()
         {
-            Scope EmptyScope = new Scope();
-            EmptyScope.Documentation = CreateEmptyDocumentation();
-            EmptyScope.EntityDeclarationBlocks = BlockListHelper<EntityDeclaration>.CreateEmptyBlockList();
-            EmptyScope.InstructionBlocks = BlockListHelper<Instruction>.CreateEmptyBlockList();
+            Document Documentation = CreateEmptyDocumentation();
+            IBlockList<EntityDeclaration> EntityDeclarationBlocks = BlockListHelper<EntityDeclaration>.CreateEmptyBlockList();
+            IBlockList<Instruction> InstructionBlocks = BlockListHelper<Instruction>.CreateEmptyBlockList();
+            Scope EmptyScope = new Scope(Documentation, EntityDeclarationBlocks, InstructionBlocks);
 
             return EmptyScope;
         }
@@ -382,12 +382,12 @@
         {
             Contract.RequireNotNull(instruction, out Instruction Instruction);
 
-            Scope EmptyScope = new Scope();
-            EmptyScope.Documentation = CreateEmptyDocumentation();
-            EmptyScope.EntityDeclarationBlocks = BlockListHelper<EntityDeclaration>.CreateEmptyBlockList();
-            EmptyScope.InstructionBlocks = BlockListHelper<Instruction>.CreateSimpleBlockList(Instruction);
+            Document Documentation = CreateEmptyDocumentation();
+            IBlockList<EntityDeclaration> EntityDeclarationBlocks = BlockListHelper<EntityDeclaration>.CreateEmptyBlockList();
+            IBlockList<Instruction> InstructionBlocks = BlockListHelper<Instruction>.CreateSimpleBlockList(Instruction);
+            Scope SimpleScope = new Scope(Documentation, EntityDeclarationBlocks, InstructionBlocks);
 
-            return EmptyScope;
+            return SimpleScope;
         }
 
         /// <summary>
@@ -396,10 +396,10 @@
         /// <returns>The created instance.</returns>
         public static Conditional CreateEmptyConditional()
         {
-            Conditional EmptyConditional = new Conditional();
-            EmptyConditional.Documentation = CreateEmptyDocumentation();
-            EmptyConditional.BooleanExpression = CreateDefaultExpression();
-            EmptyConditional.Instructions = CreateEmptyScope();
+            Document Documentation = CreateEmptyDocumentation();
+            Expression BooleanExpression = CreateDefaultExpression();
+            Scope Instructions = CreateEmptyScope();
+            Conditional EmptyConditional = new Conditional(Documentation, BooleanExpression, Instructions);
 
             return EmptyConditional;
         }
@@ -412,14 +412,14 @@
         {
             EntityDeclaration FirstResult = CreateEmptyEntityDeclaration();
 
-            QueryOverload EmptyQueryOverload = new QueryOverload();
-            EmptyQueryOverload.Documentation = CreateEmptyDocumentation();
-            EmptyQueryOverload.ParameterBlocks = BlockListHelper<EntityDeclaration>.CreateEmptyBlockList();
-            EmptyQueryOverload.ParameterEnd = ParameterEndStatus.Closed;
-            EmptyQueryOverload.ResultBlocks = BlockListHelper<EntityDeclaration>.CreateSimpleBlockList(FirstResult);
-            EmptyQueryOverload.ModifiedQueryBlocks = BlockListHelper<Identifier>.CreateEmptyBlockList();
-            EmptyQueryOverload.Variant = OptionalReferenceHelper<Expression>.CreateReference(CreateDefaultExpression());
-            EmptyQueryOverload.QueryBody = CreateDefaultBody();
+            Document Documentation = CreateEmptyDocumentation();
+            IBlockList<EntityDeclaration> ParameterBlocks = BlockListHelper<EntityDeclaration>.CreateEmptyBlockList();
+            ParameterEndStatus ParameterEnd = ParameterEndStatus.Closed;
+            IBlockList<EntityDeclaration> ResultBlocks = BlockListHelper<EntityDeclaration>.CreateSimpleBlockList(FirstResult);
+            IBlockList<Identifier> ModifiedQueryBlocks = BlockListHelper<Identifier>.CreateEmptyBlockList();
+            IOptionalReference<Expression> Variant = OptionalReferenceHelper<Expression>.CreateReference(CreateDefaultExpression());
+            Body QueryBody = CreateDefaultBody();
+            QueryOverload EmptyQueryOverload = new QueryOverload(Documentation, ParameterBlocks, ParameterEnd, ResultBlocks, ModifiedQueryBlocks, Variant, QueryBody);
 
             return EmptyQueryOverload;
         }
@@ -430,11 +430,11 @@
         /// <returns>The created instance.</returns>
         public static CommandOverload CreateEmptyCommandOverload()
         {
-            CommandOverload EmptyCommandOverload = new CommandOverload();
-            EmptyCommandOverload.Documentation = CreateEmptyDocumentation();
-            EmptyCommandOverload.ParameterBlocks = BlockListHelper<EntityDeclaration>.CreateEmptyBlockList();
-            EmptyCommandOverload.ParameterEnd = ParameterEndStatus.Closed;
-            EmptyCommandOverload.CommandBody = CreateDefaultBody();
+            Document Documentation = CreateEmptyDocumentation();
+            IBlockList<EntityDeclaration> ParameterBlocks = BlockListHelper<EntityDeclaration>.CreateEmptyBlockList();
+            ParameterEndStatus ParameterEnd = ParameterEndStatus.Closed;
+            Body CommandBody = CreateDefaultBody();
+            CommandOverload EmptyCommandOverload = new CommandOverload(Documentation, ParameterBlocks, ParameterEnd, CommandBody);
 
             return EmptyCommandOverload;
         }
@@ -448,16 +448,16 @@
         {
             Contract.RequireNotNull(returnType, out ObjectType ReturnType);
 
+            Document Documentation = CreateEmptyDocumentation();
+            IBlockList<EntityDeclaration> ParameterBlocks = BlockListHelper<EntityDeclaration>.CreateEmptyBlockList();
+            ParameterEndStatus ParameterEnd = ParameterEndStatus.Closed;
             Name EntityName = CreateSimpleName("Result");
             EntityDeclaration ResultEntity = CreateEntityDeclaration(EntityName, ReturnType);
-            QueryOverloadType EmptyQueryOverloadType = new QueryOverloadType();
-            EmptyQueryOverloadType.Documentation = CreateEmptyDocumentation();
-            EmptyQueryOverloadType.ParameterBlocks = BlockListHelper<EntityDeclaration>.CreateEmptyBlockList();
-            EmptyQueryOverloadType.ParameterEnd = ParameterEndStatus.Closed;
-            EmptyQueryOverloadType.ResultBlocks = BlockListHelper<EntityDeclaration>.CreateSimpleBlockList(ResultEntity);
-            EmptyQueryOverloadType.RequireBlocks = BlockListHelper<Assertion>.CreateEmptyBlockList();
-            EmptyQueryOverloadType.EnsureBlocks = BlockListHelper<Assertion>.CreateEmptyBlockList();
-            EmptyQueryOverloadType.ExceptionIdentifierBlocks = BlockListHelper<Identifier>.CreateEmptyBlockList();
+            IBlockList<EntityDeclaration> ResultBlocks = BlockListHelper<EntityDeclaration>.CreateSimpleBlockList(ResultEntity);
+            IBlockList<Assertion> RequireBlocks = BlockListHelper<Assertion>.CreateEmptyBlockList();
+            IBlockList<Assertion> EnsureBlocks = BlockListHelper<Assertion>.CreateEmptyBlockList();
+            IBlockList<Identifier> ExceptionIdentifierBlocks = BlockListHelper<Identifier>.CreateEmptyBlockList();
+            QueryOverloadType EmptyQueryOverloadType = new QueryOverloadType(Documentation, ParameterBlocks, ParameterEnd, ResultBlocks, RequireBlocks, EnsureBlocks, ExceptionIdentifierBlocks);
 
             return EmptyQueryOverloadType;
         }
@@ -468,13 +468,13 @@
         /// <returns>The created instance.</returns>
         public static CommandOverloadType CreateEmptyCommandOverloadType()
         {
-            CommandOverloadType EmptyCommandOverloadType = new CommandOverloadType();
-            EmptyCommandOverloadType.Documentation = CreateEmptyDocumentation();
-            EmptyCommandOverloadType.ParameterBlocks = BlockListHelper<EntityDeclaration>.CreateEmptyBlockList();
-            EmptyCommandOverloadType.ParameterEnd = ParameterEndStatus.Closed;
-            EmptyCommandOverloadType.RequireBlocks = BlockListHelper<Assertion>.CreateEmptyBlockList();
-            EmptyCommandOverloadType.EnsureBlocks = BlockListHelper<Assertion>.CreateEmptyBlockList();
-            EmptyCommandOverloadType.ExceptionIdentifierBlocks = BlockListHelper<Identifier>.CreateEmptyBlockList();
+            Document Documentation = CreateEmptyDocumentation();
+            IBlockList<EntityDeclaration> ParameterBlocks = BlockListHelper<EntityDeclaration>.CreateEmptyBlockList();
+            ParameterEndStatus ParameterEnd = ParameterEndStatus.Closed;
+            IBlockList<Assertion> RequireBlocks = BlockListHelper<Assertion>.CreateEmptyBlockList();
+            IBlockList<Assertion> EnsureBlocks = BlockListHelper<Assertion>.CreateEmptyBlockList();
+            IBlockList<Identifier> ExceptionIdentifierBlocks = BlockListHelper<Identifier>.CreateEmptyBlockList();
+            CommandOverloadType EmptyCommandOverloadType = new CommandOverloadType(Documentation, ParameterBlocks, ParameterEnd, RequireBlocks, EnsureBlocks, ExceptionIdentifierBlocks);
 
             return EmptyCommandOverloadType;
         }
@@ -485,11 +485,11 @@
         /// <returns>The created instance.</returns>
         public static EntityDeclaration CreateEmptyEntityDeclaration()
         {
-            EntityDeclaration EmptyEntityDeclaration = new EntityDeclaration();
-            EmptyEntityDeclaration.Documentation = CreateEmptyDocumentation();
-            EmptyEntityDeclaration.EntityName = CreateEmptyName();
-            EmptyEntityDeclaration.EntityType = CreateDefaultObjectType();
-            EmptyEntityDeclaration.DefaultValue = OptionalReferenceHelper<Expression>.CreateReference(CreateDefaultExpression());
+            Document Documentation = CreateEmptyDocumentation();
+            Name EntityName = CreateEmptyName();
+            ObjectType EntityType = CreateDefaultObjectType();
+            IOptionalReference<Expression> DefaultValue = OptionalReferenceHelper<Expression>.CreateReference(CreateDefaultExpression());
+            EntityDeclaration EmptyEntityDeclaration = new EntityDeclaration(Documentation, EntityName, EntityType, DefaultValue);
 
             return EmptyEntityDeclaration;
         }

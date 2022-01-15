@@ -25,12 +25,11 @@ public static partial class NodeHelper
         if (ParameterList.Count == 0)
             throw new ArgumentException($"{nameof(parameterList)} must not be empty");
 
-        AssignmentArgument Result = new AssignmentArgument();
-        Result.Documentation = CreateEmptyDocumentation();
-        Result.ParameterBlocks = BlockListHelper<Identifier>.CreateBlockListFromNodeList(ParameterList);
-        Result.Source = Source;
+        Document Documentation = CreateEmptyDocumentation();
+        IBlockList<Identifier> ParameterBlocks = BlockListHelper<Identifier>.CreateBlockListFromNodeList(ParameterList);
+        AssignmentArgument NewAssignmentArgument = new AssignmentArgument(Documentation, ParameterBlocks, Source);
 
-        return Result;
+        return NewAssignmentArgument;
     }
 
     /// <summary>
@@ -47,12 +46,10 @@ public static partial class NodeHelper
         if (NodeTreeHelperBlockList.IsBlockListEmpty((IBlockList)ParameterBlocks))
             throw new ArgumentException($"{nameof(parameterBlocks)} must not be empty");
 
-        AssignmentArgument Result = new AssignmentArgument();
-        Result.Documentation = CreateEmptyDocumentation();
-        Result.ParameterBlocks = ParameterBlocks;
-        Result.Source = Source;
+        Document Documentation = CreateEmptyDocumentation();
+        AssignmentArgument NewAssignmentArgument = new AssignmentArgument(Documentation, ParameterBlocks, Source);
 
-        return Result;
+        return NewAssignmentArgument;
     }
 
     /// <summary>
@@ -64,10 +61,9 @@ public static partial class NodeHelper
     {
         Contract.RequireNotNull(source, out Expression Source);
 
-        PositionalArgument Result = new PositionalArgument();
-        Result.Documentation = CreateEmptyDocumentation();
-        Result.Source = Source;
+        Document Documentation = CreateEmptyDocumentation();
+        PositionalArgument NewPositionalArgument = new PositionalArgument(Documentation, Source);
 
-        return Result;
+        return NewPositionalArgument;
     }
 }

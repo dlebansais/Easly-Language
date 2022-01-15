@@ -12,6 +12,10 @@
     {
         private class PrivateNode : Node
         {
+            public PrivateNode()
+                : base(NodeHelper.CreateEmptyDocumentation())
+            { 
+            }
         }
 
         [Test]

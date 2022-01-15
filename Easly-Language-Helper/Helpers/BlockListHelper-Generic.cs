@@ -90,14 +90,10 @@
                 NewBlock.Documentation = NodeHelper.CreateDocumentationCopy(Block.Documentation);
                 NewBlock.Replication = Block.Replication;
 
-                Pattern NewReplicationPattern = new Pattern();
-                NewReplicationPattern.Documentation = NodeHelper.CreateDocumentationCopy(Block.ReplicationPattern.Documentation);
-                NewReplicationPattern.Text = Block.ReplicationPattern.Text;
+                Pattern NewReplicationPattern = new Pattern(NodeHelper.CreateDocumentationCopy(Block.ReplicationPattern.Documentation), Block.ReplicationPattern.Text);
                 NewBlock.ReplicationPattern = NewReplicationPattern;
 
-                Identifier NewSourceIdentifier = new Identifier();
-                NewSourceIdentifier.Documentation = NodeHelper.CreateDocumentationCopy(Block.SourceIdentifier.Documentation);
-                NewSourceIdentifier.Text = Block.SourceIdentifier.Text;
+                Identifier NewSourceIdentifier = new Identifier(NodeHelper.CreateDocumentationCopy(Block.SourceIdentifier.Documentation), Block.SourceIdentifier.Text);
                 NewBlock.SourceIdentifier = NewSourceIdentifier;
 
                 List<TNode> NewNodeList = new List<TNode>();

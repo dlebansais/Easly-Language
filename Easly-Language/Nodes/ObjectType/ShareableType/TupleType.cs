@@ -8,8 +8,20 @@ namespace BaseNode
     public class TupleType : ShareableType
     {
         /// <summary>
-        /// Gets or sets how the type is shared.
+        /// Initializes a new instance of the <see cref="TupleType"/> class.
         /// </summary>
-        public virtual IBlockList<EntityDeclaration> EntityDeclarationBlocks { get; set; } = null!;
+        /// <param name="documentation">The node documentation.</param>
+        /// <param name="sharing">How the type is shared.</param>
+        /// <param name="entityDeclarationBlocks">The list of elements in the tuple.</param>
+        internal TupleType(Document documentation, SharingType sharing, IBlockList<EntityDeclaration> entityDeclarationBlocks)
+            : base(documentation, sharing)
+        {
+            EntityDeclarationBlocks = entityDeclarationBlocks;
+        }
+
+        /// <summary>
+        /// Gets or sets the list of elements in the tuple.
+        /// </summary>
+        public virtual IBlockList<EntityDeclaration> EntityDeclarationBlocks { get; set; }
     }
 }

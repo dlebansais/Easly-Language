@@ -38,7 +38,7 @@
 
             Assembly ReferenceAssembly = ReferenceType.Assembly;
 
-            IOptionalReference EmptyReference = SafeType.CreateInstance<IOptionalReference>(ReferenceAssembly, FullName);
+            IOptionalReference EmptyReference = SafeType.CreateInstanceFromDefaultConstructor<IOptionalReference>(ReferenceAssembly, FullName);
 
             ItemProperty.SetValue(node, EmptyReference);
         }
@@ -51,7 +51,7 @@
 
             Assembly ListAssembly = ListType.Assembly;
 
-            IList EmptyList = SafeType.CreateInstance<IList>(ListAssembly, FullName);
+            IList EmptyList = SafeType.CreateInstanceFromDefaultConstructor<IList>(ListAssembly, FullName);
 
             Type NodeType = node.GetType();
             PropertyInfo ReferenceProperty = SafeType.GetProperty(NodeType, propertyName);
@@ -78,7 +78,7 @@
             string FullName = SafeType.FullName(BlockListType);
 
             Assembly BlockListAssembly = BlockListType.Assembly;
-            IBlockList EmptyBlockList = SafeType.CreateInstance<IBlockList>(BlockListAssembly, FullName);
+            IBlockList EmptyBlockList = SafeType.CreateInstanceFromDefaultConstructor<IBlockList>(BlockListAssembly, FullName);
 
             Document EmptyEmptyDocumentation = CreateEmptyDocumentation();
 
@@ -92,7 +92,7 @@
             FullName = SafeType.FullName(ListOfBlockType);
 
             BlockListAssembly = ListOfBlockType.Assembly;
-            IList EmptyListOfBlock = SafeType.CreateInstance<IList>(BlockListAssembly, FullName);
+            IList EmptyListOfBlock = SafeType.CreateInstanceFromDefaultConstructor<IList>(BlockListAssembly, FullName);
 
             PropertyInfo NodeBlockListProperty = SafeType.GetProperty(EmptyBlockListType, nameof(BlockList<Node>.NodeBlockList));
 
@@ -114,7 +114,7 @@
             Assembly BlockTypeAssembly = BlockType.Assembly;
             string BlockTypeFullName = SafeType.FullName(BlockType);
 
-            IBlock EmptyBlock = SafeType.CreateInstance<IBlock>(BlockTypeAssembly, BlockTypeFullName);
+            IBlock EmptyBlock = SafeType.CreateInstanceFromDefaultConstructor<IBlock>(BlockTypeAssembly, BlockTypeFullName);
 
             Document EmptyEmptyDocumentation = CreateEmptyDocumentation();
 
@@ -145,7 +145,7 @@
             string NodeListFullName = SafeType.FullName(NodeListType);
 
             Assembly NodeListAssembly = NodeListType.Assembly;
-            IList NodeList = SafeType.CreateInstance<IList>(NodeListAssembly, NodeListFullName);
+            IList NodeList = SafeType.CreateInstanceFromDefaultConstructor<IList>(NodeListAssembly, NodeListFullName);
 
             PropertyInfo NodeListProperty = SafeType.GetProperty(EmptyBlockType, nameof(Block<Node>.NodeList));
 

@@ -9,7 +9,7 @@
         /// <summary>
         /// Gets the date and time as a string.
         /// </summary>
-        public virtual string ToUtcDateAndTime { get; } = default!;
+        public virtual string ToUtcDateAndTime { get; } = string.Empty;
         #endregion
     }
 }

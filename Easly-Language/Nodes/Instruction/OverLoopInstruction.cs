@@ -10,33 +10,54 @@ namespace BaseNode
     public class OverLoopInstruction : Instruction
     {
         /// <summary>
-        /// Gets or sets the collection(s) to loop over.
+        /// Initializes a new instance of the <see cref="OverLoopInstruction"/> class.
         /// </summary>
-        public virtual Expression OverList { get; set; } = null!;
+        /// <param name="documentation">The node documentation.</param>
+        /// <param name="overList">The collection(s) to loop over.</param>
+        /// <param name="indexerBlocks">The created indexes for each collection.</param>
+        /// <param name="iteration">Whether the iteration is parallel or recursive.</param>
+        /// <param name="loopInstructions">Instructions within the loop.</param>
+        /// <param name="exitEntityName">The identifier of a variable to check and exit if true.</param>
+        /// <param name="invariantBlocks">The loop invariants.</param>
+        internal OverLoopInstruction(Document documentation, Expression overList, IBlockList<Name> indexerBlocks, IterationType iteration, Scope loopInstructions, IOptionalReference<Identifier> exitEntityName, IBlockList<Assertion> invariantBlocks)
+            : base(documentation)
+        {
+            OverList = overList;
+            IndexerBlocks = indexerBlocks;
+            Iteration = iteration;
+            LoopInstructions = loopInstructions;
+            ExitEntityName = exitEntityName;
+            InvariantBlocks = invariantBlocks;
+        }
 
         /// <summary>
-        /// Gets or sets created indexes for each collection.
+        /// Gets or sets the collection(s) to loop over.
         /// </summary>
-        public virtual IBlockList<Name> IndexerBlocks { get; set; } = null!;
+        public virtual Expression OverList { get; set; }
+
+        /// <summary>
+        /// Gets or sets the created indexes for each collection.
+        /// </summary>
+        public virtual IBlockList<Name> IndexerBlocks { get; set; }
 
         /// <summary>
         /// Gets or sets whether the iteration is parallel or recursive.
         /// </summary>
-        public virtual IterationType Iteration { get; set; } = IterationType.Single;
+        public virtual IterationType Iteration { get; set; }
 
         /// <summary>
         /// Gets or sets instructions within the loop.
         /// </summary>
-        public virtual Scope LoopInstructions { get; set; } = null!;
+        public virtual Scope LoopInstructions { get; set; }
 
         /// <summary>
         /// Gets or sets the identifier of a variable to check and exit if true.
         /// </summary>
-        public virtual IOptionalReference<Identifier> ExitEntityName { get; set; } = null!;
+        public virtual IOptionalReference<Identifier> ExitEntityName { get; set; }
 
         /// <summary>
         /// Gets or sets the loop invariants.
         /// </summary>
-        public virtual IBlockList<Assertion> InvariantBlocks { get; set; } = null!;
+        public virtual IBlockList<Assertion> InvariantBlocks { get; set; }
     }
 }

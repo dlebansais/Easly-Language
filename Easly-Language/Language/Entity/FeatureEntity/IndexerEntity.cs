@@ -17,6 +17,7 @@
         public IndexerEntity(MethodInfo featureInfo)
             : base(featureInfo)
         {
+            TypeEntityConstructor = () => { return TypeEntity.BuiltTypeEntity(((MethodInfo)FeatureInfo).ReturnType); };
         }
 
         /// <summary>
@@ -26,6 +27,7 @@
         public IndexerEntity(PropertyInfo featureInfo)
             : base(featureInfo)
         {
+            TypeEntityConstructor = () => { return TypeEntity.BuiltTypeEntity(((PropertyInfo)FeatureInfo).PropertyType); };
         }
         #endregion
 
@@ -33,27 +35,11 @@
         /// <summary>
         /// Gets the entity of the return type.
         /// </summary>
-        public TypeEntity Type
-        {
-            get
-            {
-                TypeEntity? Result = null!;
+        public TypeEntity Type { get { return TypeEntityConstructor(); } }
+        #endregion
 
-                switch (FeatureInfo)
-                {
-                    case PropertyInfo AsPropertyInfo:
-                        Result = TypeEntity.BuiltTypeEntity(AsPropertyInfo.PropertyType);
-                        break;
-                    case MethodInfo AsMethodInfo:
-                        Result = TypeEntity.BuiltTypeEntity(AsMethodInfo.ReturnType);
-                        break;
-                }
-
-                Debug.Assert(Result != null);
-
-                return Result!;
-            }
-        }
+        #region Implementation
+        private Func<TypeEntity> TypeEntityConstructor;
         #endregion
     }
 }

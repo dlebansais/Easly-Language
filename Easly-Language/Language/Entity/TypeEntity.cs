@@ -2,8 +2,10 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Globalization;
     using System.Reflection;
+    using Contracts;
 
     /// <summary>
     /// Represents the entity of a type.
@@ -17,7 +19,11 @@
         /// <param name="typeInfo">The type information from reflection.</param>
         public TypeEntity(Type typeInfo)
         {
-            TypeInfo = typeInfo;
+            Contract.RequireNotNull(typeInfo, out Type TypeInfo);
+
+            this.TypeInfo = TypeInfo;
+            Name = typeInfo.Name;
+            FullName = typeInfo.FullName ?? throw new ArgumentException($"{nameof(typeInfo)} is not a supported type");
 
             SealableDictionary<string, MethodInfo> FlattenedMethodList = new SealableDictionary<string, MethodInfo>();
             RecursiveGetMethods(TypeInfo, FlattenedMethodList);
@@ -75,12 +81,14 @@
 
         #region Properties
         /// <summary>
+        /// Gets the type information from reflection.
+        /// </summary>
+        public Type TypeInfo { get; private set; }
+
+        /// <summary>
         /// Gets the type name.
         /// </summary>
-        public string Name
-        {
-            get { return TypeInfo.Name; }
-        }
+        public string Name { get; }
 
         /// <summary>
         /// Gets the table of procedures of the type.
@@ -116,11 +124,6 @@
         /// Gets the list of ancestors of the type.
         /// </summary>
         public List<TypeEntity> Ancestors { get; private set; }
-
-        /// <summary>
-        /// Gets the type information from reflection.
-        /// </summary>
-        public Type TypeInfo { get; private set; }
         #endregion
 
         #region Client Interface
@@ -179,15 +182,26 @@
             return Properties[name];
         }
 
+        /*
         /// <summary>
         /// Creates an object of the type associated to this entity.
         /// </summary>
         /// <returns>The created object.</returns>
         public object CreateInstance()
         {
-            string FullName = TypeInfo.FullName !;
-            return TypeInfo.Assembly.CreateInstance(FullName)!;
+            Activator.CreateInstance(TypeInfo);
+
+            ConstructorInfo[] Constructors = TypeInfo.GetConstructors(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            Debug.Assert(Constructors.Length == 1);
+
+            int ParameterCount = Constructors[0].GetParameters().Length;
+            object[] Arguments = new object[ParameterCount];
+
+            object Result = Activator.CreateInstance(TypeInfo, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance, binder: default, Arguments, culture: default);
+
+            return Result;
         }
+        */
         #endregion
 
         #region Implementation
@@ -230,6 +244,8 @@
             else*/
                 return name;
         }
+
+        private string FullName;
         #endregion
     }
 }

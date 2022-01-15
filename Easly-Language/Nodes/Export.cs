@@ -8,13 +8,26 @@ namespace BaseNode
     public class Export : Node
     {
         /// <summary>
-        /// Gets or sets the export name.
+        /// Initializes a new instance of the <see cref="Export"/> class.
         /// </summary>
-        public virtual Name EntityName { get; set; } = null!;
+        /// <param name="documentation">The node documentation.</param>
+        /// <param name="entityName">The export name.</param>
+        /// <param name="classIdentifierBlocks">The classes exported to by name.</param>
+        internal Export(Document documentation, Name entityName, IBlockList<Identifier> classIdentifierBlocks)
+            : base(documentation)
+        {
+            EntityName = entityName;
+            ClassIdentifierBlocks = classIdentifierBlocks;
+        }
 
         /// <summary>
-        /// Gets or sets classes exported to by name.
+        /// Gets or sets the export name.
         /// </summary>
-        public virtual IBlockList<Identifier> ClassIdentifierBlocks { get; set; } = null!;
+        public virtual Name EntityName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the classes exported to by name.
+        /// </summary>
+        public virtual IBlockList<Identifier> ClassIdentifierBlocks { get; set; }
     }
 }
