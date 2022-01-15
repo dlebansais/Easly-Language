@@ -168,7 +168,7 @@ public class SealableDictionary<TKey, TValue> : Dictionary<TKey, TValue>, ISeala
     /// <returns>The copy.</returns>
     public ISealableDictionary<TKey, TValue> CloneUnsealed()
     {
-        SealableDictionary<TKey, TValue> CloneTable = new SealableDictionary<TKey, TValue>();
+        SealableDictionary<TKey, TValue> CloneTable = new();
 
         foreach (KeyValuePair<TKey, TValue> Entry in this)
             CloneTable.Add(Entry.Key, Entry.Value);

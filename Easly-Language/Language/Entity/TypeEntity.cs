@@ -25,7 +25,7 @@ public abstract class TypeEntity : Entity
         Name = typeInfo.Name;
         FullName = Contract.NullSupressed(typeInfo.FullName);
 
-        SealableDictionary<string, MethodInfo> FlattenedMethodList = new SealableDictionary<string, MethodInfo>();
+        SealableDictionary<string, MethodInfo> FlattenedMethodList = new();
         RecursiveGetMethods(TypeInfo, FlattenedMethodList);
 
         Features = new List<FeatureEntity>();
@@ -51,14 +51,14 @@ public abstract class TypeEntity : Entity
 
         Indexer = new OnceReference<IndexerEntity>();
 
-        SealableDictionary<string, PropertyInfo> FlattenedPropertyList = new SealableDictionary<string, PropertyInfo>();
+        SealableDictionary<string, PropertyInfo> FlattenedPropertyList = new();
         RecursiveGetProperties(TypeInfo, FlattenedPropertyList);
 
         Properties = new SealableDictionary<string, PropertyEntity>();
 
         foreach (KeyValuePair<string, PropertyInfo> Item in FlattenedPropertyList)
         {
-            PropertyEntity FeatureEntity = new PropertyEntity(Item.Value);
+            PropertyEntity FeatureEntity = new(Item.Value);
             Features.Add(FeatureEntity);
             Properties.Add(OverloadedName(Properties, Item.Key), FeatureEntity);
         }

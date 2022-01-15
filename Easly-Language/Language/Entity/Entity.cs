@@ -30,7 +30,7 @@ public abstract class Entity
     /// <returns>The entity of the current object.</returns>
     public static TypeEntity FromStaticConstructor()
     {
-        StackTrace Trace = new StackTrace();
+        StackTrace Trace = new();
 
 #if DEBUG
         StackFrame Frame = Contract.NullSupressed(Trace.GetFrame(1));

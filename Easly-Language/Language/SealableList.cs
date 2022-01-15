@@ -96,7 +96,7 @@ public class SealableList<TItem> : List<TItem>, ISealableList<TItem>, ISealableL
     /// <returns>The unsealed copy.</returns>
     public SealableList<TItem> CloneUnsealed()
     {
-        SealableList<TItem> CloneTable = new SealableList<TItem>();
+        SealableList<TItem> CloneTable = new();
 
         foreach (TItem Item in this)
             CloneTable.Add(Item);

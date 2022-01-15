@@ -17,9 +17,11 @@ public static partial class NodeHelper
     /// <returns>The created instance.</returns>
     public static Document CreateEmptyDocumentation()
     {
-        Document EmptyDocumentation = new Document();
-        EmptyDocumentation.Comment = string.Empty;
-        EmptyDocumentation.Uuid = Guid.NewGuid();
+        Document EmptyDocumentation = new Document
+        {
+            Comment = string.Empty,
+            Uuid = Guid.NewGuid(),
+        };
 
         return EmptyDocumentation;
     }
@@ -34,9 +36,11 @@ public static partial class NodeHelper
     {
         Contract.RequireNotNull(comment, out string Comment);
 
-        Document SimpleDocumentation = new Document();
-        SimpleDocumentation.Comment = Comment;
-        SimpleDocumentation.Uuid = uuid;
+        Document SimpleDocumentation = new Document
+        {
+            Comment = Comment,
+            Uuid = uuid,
+        };
 
         return SimpleDocumentation;
     }
@@ -49,7 +53,7 @@ public static partial class NodeHelper
     {
         Document Documentation = CreateEmptyDocumentation();
         string Text = "*";
-        Pattern EmptyPattern = new Pattern(Documentation, Text);
+        Pattern EmptyPattern = new(Documentation, Text);
 
         return EmptyPattern;
     }
@@ -64,7 +68,7 @@ public static partial class NodeHelper
         Contract.RequireNotNull(text, out string Text);
 
         Document Documentation = CreateEmptyDocumentation();
-        Pattern SimplePattern = new Pattern(Documentation, Text);
+        Pattern SimplePattern = new(Documentation, Text);
 
         return SimplePattern;
     }
@@ -77,7 +81,7 @@ public static partial class NodeHelper
     {
         Document Documentation = CreateEmptyDocumentation();
         string Text = string.Empty;
-        Identifier EmptyIdentifier = new Identifier(Documentation, Text);
+        Identifier EmptyIdentifier = new(Documentation, Text);
 
         return EmptyIdentifier;
     }

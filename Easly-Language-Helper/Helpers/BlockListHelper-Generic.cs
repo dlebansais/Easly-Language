@@ -42,7 +42,7 @@ public static class BlockListHelper<TNode>
     internal static IBlockList<TNode> CreateBlockListFromNodeList(IList<TNode> nodeList)
     {
         Document Documentation = NodeHelper.CreateEmptyDocumentation();
-        List<IBlock<TNode>> NodeBlockList = new List<IBlock<TNode>>();
+        List<IBlock<TNode>> NodeBlockList = new();
 
         if (nodeList.Count > 0)
         {
@@ -50,7 +50,7 @@ public static class BlockListHelper<TNode>
             NodeBlockList.Add(Block);
         }
 
-        BlockList<TNode> Result = new BlockList<TNode>(Documentation, NodeBlockList);
+        BlockList<TNode> Result = new(Documentation, NodeBlockList);
 
         return Result;
     }
@@ -63,7 +63,7 @@ public static class BlockListHelper<TNode>
     internal static IBlockList<TNode> CreateBlockListFromBlockList(IList<IBlock<TNode>> nodeBlockList)
     {
         Document Documentation = NodeHelper.CreateEmptyDocumentation();
-        BlockList<TNode> Result = new BlockList<TNode>(Documentation, nodeBlockList);
+        BlockList<TNode> Result = new(Documentation, nodeBlockList);
 
         return Result;
     }
@@ -79,7 +79,7 @@ public static class BlockListHelper<TNode>
             return CreateEmptyBlockList();*/
 
         Document Documentation = NodeHelper.CreateEmptyDocumentation();
-        List<IBlock<TNode>> NodeBlockList = new List<IBlock<TNode>>();
+        List<IBlock<TNode>> NodeBlockList = new();
 
         for (int BlockIndex = 0; BlockIndex < blockList.NodeBlockList.Count; BlockIndex++)
         {
@@ -87,7 +87,7 @@ public static class BlockListHelper<TNode>
 
             Document BlockDocumentation = NodeHelper.CreateDocumentationCopy(Block.Documentation);
 
-            List<TNode> NewNodeList = new List<TNode>();
+            List<TNode> NewNodeList = new();
             for (int Index = 0; Index < Block.NodeList.Count; Index++)
             {
                 TNode Item = Block.NodeList[Index];
@@ -95,14 +95,14 @@ public static class BlockListHelper<TNode>
                 NewNodeList.Add(NewItem);
             }
 
-            Pattern NewReplicationPattern = new Pattern(NodeHelper.CreateDocumentationCopy(Block.ReplicationPattern.Documentation), Block.ReplicationPattern.Text);
-            Identifier NewSourceIdentifier = new Identifier(NodeHelper.CreateDocumentationCopy(Block.SourceIdentifier.Documentation), Block.SourceIdentifier.Text);
+            Pattern NewReplicationPattern = new(NodeHelper.CreateDocumentationCopy(Block.ReplicationPattern.Documentation), Block.ReplicationPattern.Text);
+            Identifier NewSourceIdentifier = new(NodeHelper.CreateDocumentationCopy(Block.SourceIdentifier.Documentation), Block.SourceIdentifier.Text);
 
-            Block<TNode> NewBlock = new Block<TNode>(BlockDocumentation, NewNodeList, Block.Replication, NewReplicationPattern, NewSourceIdentifier);
+            Block<TNode> NewBlock = new(BlockDocumentation, NewNodeList, Block.Replication, NewReplicationPattern, NewSourceIdentifier);
             NodeBlockList.Add(NewBlock);
         }
 
-        BlockList<TNode> Result = new BlockList<TNode>(Documentation, NodeBlockList);
+        BlockList<TNode> Result = new(Documentation, NodeBlockList);
 
         return Result;
     }
@@ -128,7 +128,7 @@ public static class BlockListHelper<TNode>
     internal static IBlock<TNode> CreateBlock(IList<TNode> nodeList, ReplicationStatus replication, Pattern replicationPattern, Identifier sourceIdentifier)
     {
         Document Documentation = NodeHelper.CreateEmptyDocumentation();
-        Block<TNode> Result = new Block<TNode>(Documentation, nodeList, replication, replicationPattern, sourceIdentifier);
+        Block<TNode> Result = new(Documentation, nodeList, replication, replicationPattern, sourceIdentifier);
 
         return Result;
     }

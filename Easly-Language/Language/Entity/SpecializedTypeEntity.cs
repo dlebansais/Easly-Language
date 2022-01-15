@@ -31,7 +31,7 @@ public class SpecializedTypeEntity<T> : TypeEntity
 
             if (!SpecializedTypeEntityInternal.SingletonSet.ContainsKey(t))
             {
-                SpecializedTypeEntity<T> NewEntity = new SpecializedTypeEntity<T>(t);
+                SpecializedTypeEntity<T> NewEntity = new(t);
                 SpecializedTypeEntityInternal.SingletonSet.Add(t, NewEntity);
             }
 
