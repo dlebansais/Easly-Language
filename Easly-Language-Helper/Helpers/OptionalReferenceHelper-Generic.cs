@@ -2,6 +2,7 @@
 {
     using System.Diagnostics;
     using BaseNode;
+    using Contracts;
     using Easly;
 
     /// <summary>
@@ -49,13 +50,9 @@
 
             if (optional.HasItem)
             {
-                Debug.Assert(optional.Item != null, $"If {nameof(OptionalReference<TNode>.HasItem)} is true, {nameof(OptionalReference<TNode>.Item)} is never null");
-                TNode Item = optional.Item!;
-
+                TNode Item = Contract.NullSupressed(optional.Item);
                 TNode ClonedItem = (TNode)NodeHelper.DeepCloneNode(Item, cloneCommentGuid: false);
-                Debug.Assert(ClonedItem != null, "A clone reference is never null");
-
-                Result.Item = ClonedItem!;
+                Result.Item = Contract.NullSupressed(ClonedItem);
             }
 
             if (optional.IsAssigned)

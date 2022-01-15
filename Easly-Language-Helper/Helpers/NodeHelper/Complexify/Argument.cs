@@ -61,7 +61,7 @@
                 return true;
             }
 
-            complexifiedArgumentList = null!;
+            Contract.Unused(out complexifiedArgumentList);
             return false;
         }
 
@@ -85,7 +85,7 @@
                 return true;
             }
 
-            complexifiedArgumentList = null!;
+            Contract.Unused(out complexifiedArgumentList);
             return false;
         }
 
@@ -101,7 +101,7 @@
                     return true;
                 }
 
-            complexifiedNode = null!;
+            Contract.Unused(out complexifiedNode);
             return false;
         }
     }

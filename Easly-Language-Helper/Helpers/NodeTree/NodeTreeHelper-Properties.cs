@@ -100,12 +100,12 @@
 
             if (PropertyType == typeof(bool))
             {
-                bool BoolValue = (bool)Property.GetValue(Node)!;
+                bool BoolValue = (bool)Contract.NullSupressed(Property.GetValue(Node));
 
                 Result = BoolValue ? 1 : 0;
             }
             else
-                Result = (int)Property.GetValue(Node)!;
+                Result = (int)Contract.NullSupressed(Property.GetValue(Node));
 
             Debug.Assert(Result >= min);
             Debug.Assert(Result <= max);
@@ -216,7 +216,7 @@
             if (PropertyType != typeof(Guid))
                 throw new ArgumentException($"{nameof(propertyName)} must be the name of a {typeof(Guid)} property");
 
-            Guid Result = (Guid)Property.GetValue(Node)!;
+            Guid Result = (Guid)Contract.NullSupressed(Property.GetValue(Node));
 
             return Result;
         }
@@ -662,7 +662,7 @@
                 min = int.MaxValue;
                 foreach (object? Value in Values)
                 {
-                    int ValueInt = (int)Value!;
+                    int ValueInt = (int)Contract.NullSupressed(Value);
 
                     Debug.Assert(max < ValueInt);
                     max = ValueInt;

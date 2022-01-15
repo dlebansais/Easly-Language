@@ -23,9 +23,7 @@
 
             this.TypeInfo = TypeInfo;
             Name = typeInfo.Name;
-
-            Debug.Assert(typeInfo.FullName is not null);
-            FullName = typeInfo.FullName!;
+            FullName = Contract.NullSupressed(typeInfo.FullName);
 
             SealableDictionary<string, MethodInfo> FlattenedMethodList = new SealableDictionary<string, MethodInfo>();
             RecursiveGetMethods(TypeInfo, FlattenedMethodList);
@@ -143,8 +141,8 @@
                 Type[] GenericArguments = new Type[] { t };
                 Type BoundType = typeof(SpecializedTypeEntity<>).MakeGenericType(GenericArguments);
 
-                PropertyInfo BoundTypePropertyInfo = BoundType.GetProperty(nameof(SpecializedTypeEntity<object>.Singleton))!;
-                object BoundTypePropertyValue = BoundTypePropertyInfo.GetValue(null)!;
+                PropertyInfo BoundTypePropertyInfo = Contract.NullSupressed(BoundType.GetProperty(nameof(SpecializedTypeEntity<object>.Singleton)));
+                object BoundTypePropertyValue = Contract.NullSupressed(BoundTypePropertyInfo.GetValue(null));
 
                 Result = (TypeEntity)BoundTypePropertyValue;
             }

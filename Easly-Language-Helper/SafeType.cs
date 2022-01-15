@@ -27,9 +27,7 @@
             Debug.Assert(!HasUnsolvedGenericParameters(type));
 
             string? Result = type.FullName;
-            Debug.Assert(Result != null);
-
-            return Result!;
+            return Contract.NullSupressed(Result);
         }
 
         /// <summary>
@@ -75,9 +73,7 @@
             Debug.Assert(!IsGenericTypeParameter(type));
 
             string? Result = type.AssemblyQualifiedName;
-            Debug.Assert(Result != null);
-
-            return Result!;
+            return Contract.NullSupressed(Result);
         }
 
         /// <summary>
@@ -89,9 +85,7 @@
         public static Type GetType(string typeName)
         {
             Type? Result = Type.GetType(typeName);
-            Debug.Assert(Result != null);
-
-            return Result!;
+            return Contract.NullSupressed(Result);
         }
 
         /// <summary>
@@ -103,9 +97,7 @@
         public static Type GetBaseType(Type type)
         {
             Type? Result = type.BaseType;
-            Debug.Assert(Result != null);
-
-            return Result!;
+            return Contract.NullSupressed(Result);
         }
 
         /// <summary>
@@ -128,11 +120,10 @@
         /// <exception cref="AmbiguousMatchException">More than one property is found with the specified name.</exception>
         public static PropertyInfo GetProperty(Type type, string propertyName)
         {
-            PropertyInfo? Result = type.GetProperty(propertyName);
-            Debug.Assert(Result != null);
             Debug.Assert(IsPropertyOf(type, propertyName));
 
-            return Result!;
+            PropertyInfo? Result = type.GetProperty(propertyName);
+            return Contract.NullSupressed(Result);
         }
 
         /// <summary>
@@ -167,9 +158,8 @@
             where T : class
         {
             T? Result = property.GetValue(obj) as T;
-            Debug.Assert(Result != null);
 
-            return Result!;
+            return Contract.NullSupressed(Result);
         }
 
         /// <summary>
@@ -183,19 +173,17 @@
         public static T CreateInstance<T>(Assembly assembly, string name)
             where T : class
         {
-            Type? Type = assembly.GetType(name);
-            Debug.Assert(Type is not null);
+            Type Type = Contract.NullSupressed(assembly.GetType(name));
 
-            ConstructorInfo[] Constructors = Type!.GetConstructors(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            ConstructorInfo[] Constructors = Type.GetConstructors(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
             Debug.Assert(Constructors.Length == 1);
 
             int ParameterCount = Constructors[0].GetParameters().Length;
             object[] Arguments = new object[ParameterCount];
 
             T? Result = Activator.CreateInstance(Type, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance, binder: default, Arguments, culture: default) as T;
-            Debug.Assert(Result is not null);
 
-            return Result!;
+            return Contract.NullSupressed(Result);
         }
 
         /// <summary>
@@ -212,9 +200,7 @@
             Debug.Assert(TypeHasDefaultConstructor<T>(assembly, name));
 
             T? Result = assembly.CreateInstance(name) as T;
-            Debug.Assert(Result != null);
-
-            return Result!;
+            return Contract.NullSupressed(Result);
         }
 
         /// <summary>
@@ -227,7 +213,7 @@
         public static bool TypeHasDefaultConstructor<T>(Assembly assembly, string name)
             where T : class
         {
-            Type Type = assembly.GetType(name)!;
+            Type Type = Contract.NullSupressed(assembly.GetType(name));
             ConstructorInfo[] Constructors = Type.GetConstructors();
 
             Debug.Assert(Constructors.Length > 0);
@@ -242,11 +228,11 @@
         /// <param name="list">The collection.</param>
         /// <returns>Elements in the collection.</returns>
         public static IEnumerable<T> Items<T>(System.Collections.IList list)
+            where T : class
         {
             foreach (T? Item in list)
             {
-                Debug.Assert(Item != null);
-                yield return Item!;
+                yield return Contract.NullSupressed(Item);
             }
         }
 
@@ -261,9 +247,7 @@
             where T : class
         {
             T? Result = list[index] as T;
-            Debug.Assert(Result != null);
-
-            return Result!;
+            return Contract.NullSupressed(Result);
         }
 
         /// <summary>
@@ -276,10 +260,8 @@
         public static T ItemAt<T>(IList<T> list, int index)
             where T : class
         {
-            T? Result = list[index] as T;
-            Debug.Assert(Result != null);
-
-            return Result!;
+            T? Result = list[index];
+            return Contract.NullSupressed(Result);
         }
 
         /// <summary>

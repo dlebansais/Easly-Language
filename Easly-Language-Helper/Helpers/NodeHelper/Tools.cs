@@ -185,7 +185,7 @@
             }
             else
             {
-                text = null!;
+                Contract.Unused(out text);
                 return false;
             }
         }

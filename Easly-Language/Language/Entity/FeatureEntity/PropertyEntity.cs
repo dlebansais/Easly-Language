@@ -1,6 +1,7 @@
 ﻿namespace Easly
 {
     using System.Reflection;
+    using Contracts;
 
     /// <summary>
     /// Represents an entity for properties.
@@ -42,7 +43,7 @@
         {
             PropertyInfo AsPropertyInfo = (PropertyInfo)FeatureInfo;
             object? Value = AsPropertyInfo.GetValue(o);
-            return Value!;
+            return Contract.NullSupressed(Value);
         }
 
         /// <summary>

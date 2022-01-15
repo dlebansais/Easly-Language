@@ -5,6 +5,7 @@
     using System.Diagnostics;
     using System.Reflection;
     using BaseNode;
+    using Contracts;
 
     /// <summary>
     /// Provides methods to manipulate nodes.
@@ -94,13 +95,13 @@
 
             if (Info.PropertyType == typeof(bool))
             {
-                bool PropertyValue = (bool)Info.GetValue(node)!;
+                bool PropertyValue = (bool)Contract.NullSupressed(Info.GetValue(node));
 
                 MergeHash(ref hash, ValueHash(PropertyValue));
             }
             else if (Info.PropertyType.IsEnum)
             {
-                int PropertyValue = (int)Info.GetValue(node)!;
+                int PropertyValue = (int)Contract.NullSupressed(Info.GetValue(node));
 
                 MergeHash(ref hash, ValueHash(PropertyValue));
             }
@@ -112,7 +113,7 @@
             }
             else if (Info.PropertyType == typeof(Guid))
             {
-                Guid PropertyValue = (Guid)Info.GetValue(node)!;
+                Guid PropertyValue = (Guid)Contract.NullSupressed(Info.GetValue(node));
 
                 MergeHash(ref hash, ValueHash(PropertyValue));
             }

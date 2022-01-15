@@ -126,8 +126,6 @@
 
         private static bool GetComplexifiedIndexerType(IndexerType node, out IList<ObjectType> complexifiedObjectTypeList)
         {
-            complexifiedObjectTypeList = null!;
-
             if (GetComplexifiedObjectType(node.BaseType, out IList<ObjectType> ComplexifiedBaseTypeList))
             {
                 complexifiedObjectTypeList = new List<ObjectType>();

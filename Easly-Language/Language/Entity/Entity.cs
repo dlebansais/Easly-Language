@@ -32,21 +32,15 @@
         {
             StackTrace Trace = new StackTrace();
 
-            StackFrame? Frame = Trace.GetFrame(1);
 #if DEBUG
-            Debug.Assert(Frame is not null);
-
-            MethodBase? Method = Frame!.GetMethod();
-            Debug.Assert(Method is not null);
-
-            Type? DeclaringType = Method!.DeclaringType;
-            Debug.Assert(DeclaringType is not null);
-
-            Type CallerType = DeclaringType!;
+            StackFrame Frame = Contract.NullSupressed(Trace.GetFrame(1));
+            MethodBase Method = Contract.NullSupressed(Frame.GetMethod());
+            Type CallerType = Contract.NullSupressed(Method.DeclaringType);
 #else
+            StackFrame? Frame = Trace.GetFrame(1);
             MethodBase? Method = Frame?.GetMethod();
             Type? DeclaringType = Method?.DeclaringType;
-            Type CallerType = DeclaringType ?? throw new InvalidOperationException("Stack frame not available in release mode");
+            Type CallerType = DeclaringType ?? throw new NotSupportedException("Stack frame not available in release mode");
 #endif
 
             if (CallerType.IsGenericType)

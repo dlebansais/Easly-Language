@@ -147,7 +147,7 @@
             Type RootType = root.GetType();
             NodeTreeHelper.GetEnumRange(RootType, propertyName, out int Min, out int Max);
             PropertyInfo EnumPropertyInfo = SafeType.GetProperty(RootType, propertyName);
-            int Value = (int)EnumPropertyInfo.GetValue(root)!;
+            int Value = (int)Contract.NullSupressed(EnumPropertyInfo.GetValue(root));
 
             if (Value < Min || Value > Max)
                 return FailIsValidCheck(throwOnInvalid, $"Value of property '{propertyName}' is out of range", originalRoot, root);
