@@ -31,7 +31,7 @@ public partial class NodeTreeHelperCoverage
         ChildNodePropertyList = NodeTreeHelper.EnumChildNodeProperties(typeof(QueryExpression));
         Assert.True(ChildNodePropertyList.Contains(nameof(Expression.Documentation)));
 
-        PrivateNode NewPrivateNode = new PrivateNode();
+        PrivateNode NewPrivateNode = new();
 
         ChildNodePropertyList = NodeTreeHelper.EnumChildNodeProperties(NewPrivateNode);
         Assert.True(ChildNodePropertyList.Contains(nameof(Expression.Documentation)));
@@ -547,7 +547,7 @@ public partial class NodeTreeHelperCoverage
     public static void TestSetDocumentation()
     {
         Identifier SimpleIdentifier = NodeHelper.CreateSimpleIdentifier("a");
-        Guid NewGuid = new Guid();
+        Guid NewGuid = new();
         Document SimpleDocumentation = NodeHelper.CreateSimpleDocumentation("a", NewGuid);
 
         NodeTreeHelper.SetDocumentation(SimpleIdentifier, SimpleDocumentation);

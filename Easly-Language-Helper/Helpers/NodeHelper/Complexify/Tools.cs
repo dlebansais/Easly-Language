@@ -239,14 +239,14 @@ public static partial class NodeHelper
 
             if (Text.EndsWith(rightSymbol.ToString(), StringComparison.InvariantCulture))
             {
-                List<Identifier> CommandIdentifierList = new List<Identifier>();
+                List<Identifier> CommandIdentifierList = new();
                 for (int i = 0; i < BreakPathIndex; i++)
                     CommandIdentifierList.Add(CreateSimpleIdentifier(qualifiedName.Path[i].Text));
                 CommandIdentifierList.Add(CreateSimpleIdentifier(BeforeText));
 
                 newQualifiedName = CreateQualifiedName(CommandIdentifierList);
 
-                List<Identifier> ArgumentIdentifierList = new List<Identifier>();
+                List<Identifier> ArgumentIdentifierList = new();
 
                 if (BreakPathIndex + 1 < qualifiedName.Path.Count)
                 {

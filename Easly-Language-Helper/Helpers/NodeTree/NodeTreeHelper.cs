@@ -307,7 +307,7 @@ public static partial class NodeTreeHelper
     private static IList<PropertyInfo> GetTypeProperties(Type type)
     {
         PropertyInfo[] Properties = type.GetProperties();
-        List<PropertyInfo> Result = new List<PropertyInfo>(Properties);
+        List<PropertyInfo> Result = new(Properties);
 
         Type[] Interfaces = type.GetInterfaces();
         Debug.Assert(Interfaces.Length == 0);

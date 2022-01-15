@@ -26,7 +26,7 @@ public static partial class NodeHelper
         Document Documentation = CreateEmptyDocumentation();
         IBlockList<Continuation> ContinuationBlocks = BlockListHelper<Continuation>.CreateSimpleBlockList(Continuation);
         IOptionalReference<Scope> ElseInstructions = OptionalReferenceHelper<Scope>.CreateReference(CreateEmptyScope());
-        AsLongAsInstruction Result = new AsLongAsInstruction(Documentation, ContinueCondition, ContinuationBlocks, ElseInstructions);
+        AsLongAsInstruction Result = new(Documentation, ContinueCondition, ContinuationBlocks, ElseInstructions);
 
         return Result;
     }
@@ -47,7 +47,7 @@ public static partial class NodeHelper
 
         Document Documentation = CreateEmptyDocumentation();
         IOptionalReference<Scope> ElseInstructions = OptionalReferenceHelper<Scope>.CreateReference(CreateEmptyScope());
-        AsLongAsInstruction Result = new AsLongAsInstruction(Documentation, ContinueCondition, ContinuationBlocks, ElseInstructions);
+        AsLongAsInstruction Result = new(Documentation, ContinueCondition, ContinuationBlocks, ElseInstructions);
 
         return Result;
     }
@@ -71,7 +71,7 @@ public static partial class NodeHelper
         Document Documentation = CreateEmptyDocumentation();
         IOptionalReference<Scope> OptionalElseInstructions = OptionalReferenceHelper<Scope>.CreateReference(ElseInstructions);
         OptionalElseInstructions.Assign();
-        AsLongAsInstruction Result = new AsLongAsInstruction(Documentation, ContinueCondition, ContinuationBlocks, OptionalElseInstructions);
+        AsLongAsInstruction Result = new(Documentation, ContinueCondition, ContinuationBlocks, OptionalElseInstructions);
 
         return Result;
     }
@@ -85,7 +85,7 @@ public static partial class NodeHelper
         Document Documentation = CreateEmptyDocumentation();
         Scope Instructions = CreateEmptyScope();
         IBlockList<Instruction> CleanupBlocks = BlockListHelper<Instruction>.CreateEmptyBlockList();
-        Continuation EmptyContinuation = new Continuation(Documentation, Instructions, CleanupBlocks);
+        Continuation EmptyContinuation = new(Documentation, Instructions, CleanupBlocks);
 
         return EmptyContinuation;
     }
@@ -106,7 +106,7 @@ public static partial class NodeHelper
 
         Document Documentation = CreateEmptyDocumentation();
         IBlockList<QualifiedName> DestinationBlocks = BlockListHelper<QualifiedName>.CreateBlockListFromNodeList(AssignmentList);
-        AssignmentInstruction Result = new AssignmentInstruction(Documentation, DestinationBlocks, Source);
+        AssignmentInstruction Result = new(Documentation, DestinationBlocks, Source);
 
         return Result;
     }
@@ -126,7 +126,7 @@ public static partial class NodeHelper
             throw new ArgumentException($"{nameof(assignmentBlocks)} must not be empty");
 
         Document Documentation = CreateEmptyDocumentation();
-        AssignmentInstruction Result = new AssignmentInstruction(Documentation, AssignmentBlocks, Source);
+        AssignmentInstruction Result = new(Documentation, AssignmentBlocks, Source);
 
         return Result;
     }
@@ -151,7 +151,7 @@ public static partial class NodeHelper
         Attachment FirstAttachment = CreateAttachment(AttachType);
         IBlockList<Attachment> AttachmentBlocks = BlockListHelper<Attachment>.CreateSimpleBlockList(FirstAttachment);
         IOptionalReference<Scope> ElseInstructions = OptionalReferenceHelper<Scope>.CreateReference(CreateEmptyScope());
-        AttachmentInstruction Result = new AttachmentInstruction(Documentation, Source, EntityNameBlocks, AttachmentBlocks, ElseInstructions);
+        AttachmentInstruction Result = new(Documentation, Source, EntityNameBlocks, AttachmentBlocks, ElseInstructions);
 
         return Result;
     }
@@ -177,7 +177,7 @@ public static partial class NodeHelper
 
         Document Documentation = CreateEmptyDocumentation();
         IOptionalReference<Scope> ElseInstructions = OptionalReferenceHelper<Scope>.CreateReference(CreateEmptyScope());
-        AttachmentInstruction Result = new AttachmentInstruction(Documentation, Source, EntityNameBlocks, AttachmentBlocks, ElseInstructions);
+        AttachmentInstruction Result = new(Documentation, Source, EntityNameBlocks, AttachmentBlocks, ElseInstructions);
 
         return Result;
     }
@@ -206,7 +206,7 @@ public static partial class NodeHelper
         Document Documentation = CreateEmptyDocumentation();
         IOptionalReference<Scope> OptionalElseInstructions = OptionalReferenceHelper<Scope>.CreateReference(ElseInstructions);
         OptionalElseInstructions.Assign();
-        AttachmentInstruction Result = new AttachmentInstruction(Documentation, Source, EntityNameBlocks, AttachmentBlocks, OptionalElseInstructions);
+        AttachmentInstruction Result = new(Documentation, Source, EntityNameBlocks, AttachmentBlocks, OptionalElseInstructions);
 
         return Result;
     }
@@ -221,7 +221,7 @@ public static partial class NodeHelper
         Contract.RequireNotNull(booleanExpression, out Expression BooleanExpression);
 
         Document Documentation = CreateEmptyDocumentation();
-        CheckInstruction Result = new CheckInstruction(Documentation, BooleanExpression);
+        CheckInstruction Result = new(Documentation, BooleanExpression);
 
         return Result;
     }
@@ -239,7 +239,7 @@ public static partial class NodeHelper
 
         Document Documentation = CreateEmptyDocumentation();
         IBlockList<Argument> ArgumentBlocks = BlockListHelper<Argument>.CreateBlockListFromNodeList(ArgumentList);
-        CommandInstruction Result = new CommandInstruction(Documentation, Command, ArgumentBlocks);
+        CommandInstruction Result = new(Documentation, Command, ArgumentBlocks);
 
         return Result;
     }
@@ -256,7 +256,7 @@ public static partial class NodeHelper
         Contract.RequireNotNull(argumentBlocks, out IBlockList<Argument> ArgumentBlocks);
 
         Document Documentation = CreateEmptyDocumentation();
-        CommandInstruction Result = new CommandInstruction(Documentation, Command, ArgumentBlocks);
+        CommandInstruction Result = new(Documentation, Command, ArgumentBlocks);
 
         return Result;
     }
@@ -277,7 +277,7 @@ public static partial class NodeHelper
         Document Documentation = CreateEmptyDocumentation();
         IBlockList<Argument> ArgumentBlocks = BlockListHelper<Argument>.CreateBlockListFromNodeList(ArgumentList);
         IOptionalReference<QualifiedName> Processor = OptionalReferenceHelper<QualifiedName>.CreateReference(CreateEmptyQualifiedName());
-        CreateInstruction Result = new CreateInstruction(Documentation, EntityIdentifier, CreationRoutineIdentifier, ArgumentBlocks, Processor);
+        CreateInstruction Result = new(Documentation, EntityIdentifier, CreationRoutineIdentifier, ArgumentBlocks, Processor);
 
         return Result;
     }
@@ -297,7 +297,7 @@ public static partial class NodeHelper
 
         Document Documentation = CreateEmptyDocumentation();
         IOptionalReference<QualifiedName> Processor = OptionalReferenceHelper<QualifiedName>.CreateReference(CreateEmptyQualifiedName());
-        CreateInstruction Result = new CreateInstruction(Documentation, EntityIdentifier, CreationRoutineIdentifier, ArgumentBlocks, Processor);
+        CreateInstruction Result = new(Documentation, EntityIdentifier, CreationRoutineIdentifier, ArgumentBlocks, Processor);
 
         return Result;
     }
@@ -320,7 +320,7 @@ public static partial class NodeHelper
         Document Documentation = CreateEmptyDocumentation();
         IOptionalReference<QualifiedName> OptionalProcessor = OptionalReferenceHelper<QualifiedName>.CreateReference(Processor);
         OptionalProcessor.Assign();
-        CreateInstruction Result = new CreateInstruction(Documentation, EntityIdentifier, CreationRoutineIdentifier, ArgumentBlocks, OptionalProcessor);
+        CreateInstruction Result = new(Documentation, EntityIdentifier, CreationRoutineIdentifier, ArgumentBlocks, OptionalProcessor);
 
         return Result;
     }
@@ -333,7 +333,7 @@ public static partial class NodeHelper
     {
         Document Documentation = CreateEmptyDocumentation();
         Scope Instructions = CreateEmptyScope();
-        DebugInstruction EmptyDebugInstruction = new DebugInstruction(Documentation, Instructions);
+        DebugInstruction EmptyDebugInstruction = new(Documentation, Instructions);
 
         return EmptyDebugInstruction;
     }
@@ -349,7 +349,7 @@ public static partial class NodeHelper
 
         Document Documentation = CreateEmptyDocumentation();
         Scope Instructions = CreateSimpleScope(Instruction);
-        DebugInstruction SimpleDebugInstruction = new DebugInstruction(Documentation, Instructions);
+        DebugInstruction SimpleDebugInstruction = new(Documentation, Instructions);
 
         return SimpleDebugInstruction;
     }
@@ -364,7 +364,7 @@ public static partial class NodeHelper
         Contract.RequireNotNull(instructions, out Scope Instructions);
 
         Document Documentation = CreateEmptyDocumentation();
-        DebugInstruction Result = new DebugInstruction(Documentation, Instructions);
+        DebugInstruction Result = new(Documentation, Instructions);
 
         return Result;
     }
@@ -383,7 +383,7 @@ public static partial class NodeHelper
         IBlockList<Instruction> IterationInstructionBlocks = BlockListHelper<Instruction>.CreateEmptyBlockList();
         IBlockList<Assertion> InvariantBlocks = BlockListHelper<Assertion>.CreateEmptyBlockList();
         IOptionalReference<Expression> Variant = OptionalReferenceHelper<Expression>.CreateReference(CreateDefaultExpression());
-        ForLoopInstruction EmptyForLoopInstruction = new ForLoopInstruction(Documentation, EntityDeclarationBlocks, InitInstructionBlocks, WhileCondition, LoopInstructionBlocks, IterationInstructionBlocks, InvariantBlocks, Variant);
+        ForLoopInstruction EmptyForLoopInstruction = new(Documentation, EntityDeclarationBlocks, InitInstructionBlocks, WhileCondition, LoopInstructionBlocks, IterationInstructionBlocks, InvariantBlocks, Variant);
 
         return EmptyForLoopInstruction;
     }
@@ -405,7 +405,7 @@ public static partial class NodeHelper
         IBlockList<Instruction> IterationInstructionBlocks = BlockListHelper<Instruction>.CreateEmptyBlockList();
         IBlockList<Assertion> InvariantBlocks = BlockListHelper<Assertion>.CreateEmptyBlockList();
         IOptionalReference<Expression> Variant = OptionalReferenceHelper<Expression>.CreateReference(CreateDefaultExpression());
-        ForLoopInstruction SimpleForLoopInstruction = new ForLoopInstruction(Documentation, EntityDeclarationBlocks, InitInstructionBlocks, WhileCondition, LoopInstructionBlocks, IterationInstructionBlocks, InvariantBlocks, Variant);
+        ForLoopInstruction SimpleForLoopInstruction = new(Documentation, EntityDeclarationBlocks, InitInstructionBlocks, WhileCondition, LoopInstructionBlocks, IterationInstructionBlocks, InvariantBlocks, Variant);
 
         return SimpleForLoopInstruction;
     }
@@ -432,7 +432,7 @@ public static partial class NodeHelper
         Contract.RequireNotNull(variant, out IOptionalReference<Expression> Variant);
 
         Document Documentation = CreateEmptyDocumentation();
-        ForLoopInstruction Result = new ForLoopInstruction(Documentation, EntityDeclarationBlocks, InitInstructionBlocks, WhileCondition, LoopInstructionBlocks, IterationInstructionBlocks, InvariantBlocks, Variant);
+        ForLoopInstruction Result = new(Documentation, EntityDeclarationBlocks, InitInstructionBlocks, WhileCondition, LoopInstructionBlocks, IterationInstructionBlocks, InvariantBlocks, Variant);
 
         return Result;
     }
@@ -449,7 +449,7 @@ public static partial class NodeHelper
         Document Documentation = CreateEmptyDocumentation();
         IBlockList<Conditional> ConditionalBlocks = BlockListHelper<Conditional>.CreateSimpleBlockList(Conditional);
         IOptionalReference<Scope> ElseInstructions = OptionalReferenceHelper<Scope>.CreateReference(CreateEmptyScope());
-        IfThenElseInstruction Result = new IfThenElseInstruction(Documentation, ConditionalBlocks, ElseInstructions);
+        IfThenElseInstruction Result = new(Documentation, ConditionalBlocks, ElseInstructions);
 
         return Result;
     }
@@ -468,7 +468,7 @@ public static partial class NodeHelper
 
         Document Documentation = CreateEmptyDocumentation();
         IOptionalReference<Scope> ElseInstructions = OptionalReferenceHelper<Scope>.CreateReference(CreateEmptyScope());
-        IfThenElseInstruction Result = new IfThenElseInstruction(Documentation, ConditionalBlocks, ElseInstructions);
+        IfThenElseInstruction Result = new(Documentation, ConditionalBlocks, ElseInstructions);
 
         return Result;
     }
@@ -490,7 +490,7 @@ public static partial class NodeHelper
         Document Documentation = CreateEmptyDocumentation();
         IOptionalReference<Scope> OptionalElseInstructions = OptionalReferenceHelper<Scope>.CreateReference(ElseInstructions);
         OptionalElseInstructions.Assign();
-        IfThenElseInstruction Result = new IfThenElseInstruction(Documentation, ConditionalBlocks, OptionalElseInstructions);
+        IfThenElseInstruction Result = new(Documentation, ConditionalBlocks, OptionalElseInstructions);
 
         return Result;
     }
@@ -513,7 +513,7 @@ public static partial class NodeHelper
 
         Document Documentation = CreateEmptyDocumentation();
         IBlockList<Argument> ArgumentBlocks = BlockListHelper<Argument>.CreateBlockListFromNodeList(ArgumentList);
-        IndexAssignmentInstruction Result = new IndexAssignmentInstruction(Documentation, Destination, ArgumentBlocks, Source);
+        IndexAssignmentInstruction Result = new(Documentation, Destination, ArgumentBlocks, Source);
 
         return Result;
     }
@@ -535,7 +535,7 @@ public static partial class NodeHelper
             throw new ArgumentException($"{nameof(argumentBlocks)} must not be empty");
 
         Document Documentation = CreateEmptyDocumentation();
-        IndexAssignmentInstruction Result = new IndexAssignmentInstruction(Documentation, Destination, ArgumentBlocks, Source);
+        IndexAssignmentInstruction Result = new(Documentation, Destination, ArgumentBlocks, Source);
 
         return Result;
     }
@@ -554,7 +554,7 @@ public static partial class NodeHelper
         With FirstWith = CreateSimpleWith(FirstExpression);
         IBlockList<With> WithBlocks = BlockListHelper<With>.CreateSimpleBlockList(FirstWith);
         IOptionalReference<Scope> ElseInstructions = OptionalReferenceHelper<Scope>.CreateReference(CreateEmptyScope());
-        InspectInstruction Result = new InspectInstruction(Documentation, Source, WithBlocks, ElseInstructions);
+        InspectInstruction Result = new(Documentation, Source, WithBlocks, ElseInstructions);
 
         return Result;
     }
@@ -573,7 +573,7 @@ public static partial class NodeHelper
         Document Documentation = CreateEmptyDocumentation();
         IBlockList<With> WithBlocks = BlockListHelper<With>.CreateSimpleBlockList(With);
         IOptionalReference<Scope> ElseInstructions = OptionalReferenceHelper<Scope>.CreateReference(CreateEmptyScope());
-        InspectInstruction Result = new InspectInstruction(Documentation, Source, WithBlocks, ElseInstructions);
+        InspectInstruction Result = new(Documentation, Source, WithBlocks, ElseInstructions);
 
         return Result;
     }
@@ -594,7 +594,7 @@ public static partial class NodeHelper
 
         Document Documentation = CreateEmptyDocumentation();
         IOptionalReference<Scope> ElseInstructions = OptionalReferenceHelper<Scope>.CreateReference(CreateEmptyScope());
-        InspectInstruction Result = new InspectInstruction(Documentation, Source, WithBlocks, ElseInstructions);
+        InspectInstruction Result = new(Documentation, Source, WithBlocks, ElseInstructions);
 
         return Result;
     }
@@ -618,7 +618,7 @@ public static partial class NodeHelper
         Document Documentation = CreateEmptyDocumentation();
         IOptionalReference<Scope> OptionalElseInstructions = OptionalReferenceHelper<Scope>.CreateReference(ElseInstructions);
         OptionalElseInstructions.Assign();
-        InspectInstruction Result = new InspectInstruction(Documentation, Source, WithBlocks, OptionalElseInstructions);
+        InspectInstruction Result = new(Documentation, Source, WithBlocks, OptionalElseInstructions);
 
         return Result;
     }
@@ -634,7 +634,7 @@ public static partial class NodeHelper
         Contract.RequireNotNull(source, out Expression Source);
 
         Document Documentation = CreateEmptyDocumentation();
-        KeywordAssignmentInstruction Result = new KeywordAssignmentInstruction(Documentation, destination, Source);
+        KeywordAssignmentInstruction Result = new(Documentation, destination, Source);
 
         return Result;
     }
@@ -658,7 +658,7 @@ public static partial class NodeHelper
         Scope LoopInstructions = CreateEmptyScope();
         IOptionalReference<Identifier> ExitEntityName = OptionalReferenceHelper<Identifier>.CreateReference(CreateEmptyIdentifier());
         IBlockList<Assertion> InvariantBlocks = BlockListHelper<Assertion>.CreateEmptyBlockList();
-        OverLoopInstruction Result = new OverLoopInstruction(Documentation, OverList, IndexerBlocks, IterationType.Single, LoopInstructions, ExitEntityName, InvariantBlocks);
+        OverLoopInstruction Result = new(Documentation, OverList, IndexerBlocks, IterationType.Single, LoopInstructions, ExitEntityName, InvariantBlocks);
 
         return Result;
     }
@@ -684,7 +684,7 @@ public static partial class NodeHelper
         Scope LoopInstructions = CreateSimpleScope(Instruction);
         IOptionalReference<Identifier> ExitEntityName = OptionalReferenceHelper<Identifier>.CreateReference(CreateEmptyIdentifier());
         IBlockList<Assertion> InvariantBlocks = BlockListHelper<Assertion>.CreateEmptyBlockList();
-        OverLoopInstruction Result = new OverLoopInstruction(Documentation, OverList, IndexerBlocks, IterationType.Single, LoopInstructions, ExitEntityName, InvariantBlocks);
+        OverLoopInstruction Result = new(Documentation, OverList, IndexerBlocks, IterationType.Single, LoopInstructions, ExitEntityName, InvariantBlocks);
 
         return Result;
     }
@@ -710,7 +710,7 @@ public static partial class NodeHelper
 
         Document Documentation = CreateEmptyDocumentation();
         IOptionalReference<Identifier> ExitEntityName = OptionalReferenceHelper<Identifier>.CreateReference(CreateEmptyIdentifier());
-        OverLoopInstruction Result = new OverLoopInstruction(Documentation, OverList, IndexerBlocks, iterationType, LoopInstructions, ExitEntityName, InvariantBlocks);
+        OverLoopInstruction Result = new(Documentation, OverList, IndexerBlocks, iterationType, LoopInstructions, ExitEntityName, InvariantBlocks);
 
         return Result;
     }
@@ -739,7 +739,7 @@ public static partial class NodeHelper
         Document Documentation = CreateEmptyDocumentation();
         IOptionalReference<Identifier> OptionalExitEntityName = OptionalReferenceHelper<Identifier>.CreateReference(ExitEntityName);
         OptionalExitEntityName.Assign();
-        OverLoopInstruction Result = new OverLoopInstruction(Documentation, OverList, IndexerBlocks, iterationType, LoopInstructions, OptionalExitEntityName, InvariantBlocks);
+        OverLoopInstruction Result = new(Documentation, OverList, IndexerBlocks, iterationType, LoopInstructions, OptionalExitEntityName, InvariantBlocks);
 
         return Result;
     }
@@ -761,7 +761,7 @@ public static partial class NodeHelper
         Document Documentation = CreateEmptyDocumentation();
         IOptionalReference<ObjectType> AncestorType = OptionalReferenceHelper<ObjectType>.CreateReference(CreateDefaultObjectType());
         IBlockList<Argument> ArgumentBlocks = BlockListHelper<Argument>.CreateBlockListFromNodeList(ArgumentList);
-        PrecursorIndexAssignmentInstruction Result = new PrecursorIndexAssignmentInstruction(Documentation, AncestorType, ArgumentBlocks, Source);
+        PrecursorIndexAssignmentInstruction Result = new(Documentation, AncestorType, ArgumentBlocks, Source);
 
         return Result;
     }
@@ -782,7 +782,7 @@ public static partial class NodeHelper
 
         Document Documentation = CreateEmptyDocumentation();
         IOptionalReference<ObjectType> AncestorType = OptionalReferenceHelper<ObjectType>.CreateReference(CreateDefaultObjectType());
-        PrecursorIndexAssignmentInstruction Result = new PrecursorIndexAssignmentInstruction(Documentation, AncestorType, ArgumentBlocks, Source);
+        PrecursorIndexAssignmentInstruction Result = new(Documentation, AncestorType, ArgumentBlocks, Source);
 
         return Result;
     }
@@ -806,7 +806,7 @@ public static partial class NodeHelper
         Document Documentation = CreateEmptyDocumentation();
         IOptionalReference<ObjectType> OptionalAncestorType = OptionalReferenceHelper<ObjectType>.CreateReference(AncestorType);
         OptionalAncestorType.Assign();
-        PrecursorIndexAssignmentInstruction Result = new PrecursorIndexAssignmentInstruction(Documentation, OptionalAncestorType, ArgumentBlocks, Source);
+        PrecursorIndexAssignmentInstruction Result = new(Documentation, OptionalAncestorType, ArgumentBlocks, Source);
 
         return Result;
     }
@@ -823,7 +823,7 @@ public static partial class NodeHelper
         Document Documentation = CreateEmptyDocumentation();
         IOptionalReference<ObjectType> AncestorType = OptionalReferenceHelper<ObjectType>.CreateReference(CreateDefaultObjectType());
         IBlockList<Argument> ArgumentBlocks = BlockListHelper<Argument>.CreateBlockListFromNodeList(ArgumentList);
-        PrecursorInstruction Result = new PrecursorInstruction(Documentation, AncestorType, ArgumentBlocks);
+        PrecursorInstruction Result = new(Documentation, AncestorType, ArgumentBlocks);
 
         return Result;
     }
@@ -839,7 +839,7 @@ public static partial class NodeHelper
 
         Document Documentation = CreateEmptyDocumentation();
         IOptionalReference<ObjectType> AncestorType = OptionalReferenceHelper<ObjectType>.CreateReference(CreateDefaultObjectType());
-        PrecursorInstruction Result = new PrecursorInstruction(Documentation, AncestorType, ArgumentBlocks);
+        PrecursorInstruction Result = new(Documentation, AncestorType, ArgumentBlocks);
 
         return Result;
     }
@@ -858,7 +858,7 @@ public static partial class NodeHelper
         Document Documentation = CreateEmptyDocumentation();
         IOptionalReference<ObjectType> OptionalAncestorType = OptionalReferenceHelper<ObjectType>.CreateReference(AncestorType);
         OptionalAncestorType.Assign();
-        PrecursorInstruction Result = new PrecursorInstruction(Documentation, OptionalAncestorType, ArgumentBlocks);
+        PrecursorInstruction Result = new(Documentation, OptionalAncestorType, ArgumentBlocks);
 
         return Result;
     }
@@ -873,7 +873,7 @@ public static partial class NodeHelper
         Contract.RequireNotNull(queryIdentifier, out Identifier QueryIdentifier);
 
         Document Documentation = CreateEmptyDocumentation();
-        RaiseEventInstruction Result = new RaiseEventInstruction(Documentation, QueryIdentifier, EventType.Single);
+        RaiseEventInstruction Result = new(Documentation, QueryIdentifier, EventType.Single);
 
         return Result;
     }
@@ -888,7 +888,7 @@ public static partial class NodeHelper
         Contract.RequireNotNull(entityName, out QualifiedName EntityName);
 
         Document Documentation = CreateEmptyDocumentation();
-        ReleaseInstruction Result = new ReleaseInstruction(Documentation, EntityName);
+        ReleaseInstruction Result = new(Documentation, EntityName);
 
         return Result;
     }
@@ -908,7 +908,7 @@ public static partial class NodeHelper
 
         Document Documentation = CreateEmptyDocumentation();
         IBlockList<Argument> ArgumentBlocks = BlockListHelper<Argument>.CreateBlockListFromNodeList(ArgumentList);
-        ThrowInstruction Result = new ThrowInstruction(Documentation, ExceptionType, CreationRoutineIdentifier, ArgumentBlocks);
+        ThrowInstruction Result = new(Documentation, ExceptionType, CreationRoutineIdentifier, ArgumentBlocks);
 
         return Result;
     }
@@ -927,7 +927,7 @@ public static partial class NodeHelper
         Contract.RequireNotNull(argumentBlocks, out IBlockList<Argument> ArgumentBlocks);
 
         Document Documentation = CreateEmptyDocumentation();
-        ThrowInstruction Result = new ThrowInstruction(Documentation, ExceptionType, CreationRoutineIdentifier, ArgumentBlocks);
+        ThrowInstruction Result = new(Documentation, ExceptionType, CreationRoutineIdentifier, ArgumentBlocks);
 
         return Result;
     }

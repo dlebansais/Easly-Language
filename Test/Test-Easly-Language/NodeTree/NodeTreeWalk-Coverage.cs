@@ -38,8 +38,8 @@ public partial class NodeTreeWalkCoverage
     [Test]
     public static void TestWalkCallbacks()
     {
-        WalkCallbacks<TestContext> WalkCallback1 = new WalkCallbacks<TestContext>();
-        WalkCallbacks<TestContext> WalkCallback2 = new WalkCallbacks<TestContext>();
+        WalkCallbacks<TestContext> WalkCallback1 = new();
+        WalkCallbacks<TestContext> WalkCallback2 = new();
 
         Assert.AreEqual(WalkCallback1, WalkCallback1);
         Assert.True(WalkCallback1 == WalkCallback2);
@@ -58,7 +58,7 @@ public partial class NodeTreeWalkCoverage
         bool Result;
 
         Expression DefaultExpression = NodeHelper.CreateDefaultExpression();
-        WalkCallbacks<TestContext> NewWalkCallbacks = new WalkCallbacks<TestContext>();
+        WalkCallbacks<TestContext> NewWalkCallbacks = new();
 
         Class SimpleClass = NodeHelper.CreateSimpleClass("a");
         List<Class> SimpleClassList = new() { SimpleClass };

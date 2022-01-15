@@ -22,7 +22,7 @@ public static class NodeTreeDiagnostic
     {
         Contract.RequireNotNull(root, out Node Root);
 
-        List<Guid> GuidList = new List<Guid>();
+        List<Guid> GuidList = new();
         return IsValid(GuidList, Root, Root, throwOnInvalid);
     }
 

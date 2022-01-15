@@ -230,7 +230,7 @@ public static partial class NodeHelper
         IBlockList<AssignmentArgument> ObjectBlockList = node.AssignmentBlocks;
 
         Document Documentation = NodeHelper.CreateDocumentationCopy(ObjectBlockList.Documentation);
-        List<IBlock<Argument>> NodeBlockList = new List<IBlock<Argument>>();
+        List<IBlock<Argument>> NodeBlockList = new();
 
         for (int BlockIndex = 0; BlockIndex < ObjectBlockList.NodeBlockList.Count; BlockIndex++)
         {
@@ -238,7 +238,7 @@ public static partial class NodeHelper
 
             Document BlockDocumentation = CreateDocumentationCopy(Block.Documentation);
 
-            List<Argument> NewNodeList = new List<Argument>();
+            List<Argument> NewNodeList = new();
             for (int Index = 0; Index < Block.NodeList.Count; Index++)
             {
                 Argument Item = Block.NodeList[Index];
@@ -247,15 +247,15 @@ public static partial class NodeHelper
                 NewNodeList.Add(NewItem);
             }
 
-            Pattern NewReplicationPattern = new Pattern(CreateDocumentationCopy(Block.ReplicationPattern.Documentation), Block.ReplicationPattern.Text);
-            Identifier NewSourceIdentifier = new Identifier(CreateDocumentationCopy(Block.SourceIdentifier.Documentation), Block.SourceIdentifier.Text);
+            Pattern NewReplicationPattern = new(CreateDocumentationCopy(Block.ReplicationPattern.Documentation), Block.ReplicationPattern.Text);
+            Identifier NewSourceIdentifier = new(CreateDocumentationCopy(Block.SourceIdentifier.Documentation), Block.SourceIdentifier.Text);
 
-            Block<Argument> NewBlock = new Block<Argument>(BlockDocumentation, NewNodeList, Block.Replication, NewReplicationPattern, NewSourceIdentifier);
+            Block<Argument> NewBlock = new(BlockDocumentation, NewNodeList, Block.Replication, NewReplicationPattern, NewSourceIdentifier);
 
             NodeBlockList.Add(NewBlock);
         }
 
-        BlockList<Argument> ArgumentBlocks = new BlockList<Argument>(Documentation, NodeBlockList);
+        BlockList<Argument> ArgumentBlocks = new(Documentation, NodeBlockList);
 
         simplifiedNode = CreateQueryExpression(Query, ArgumentBlocks);
         return true;

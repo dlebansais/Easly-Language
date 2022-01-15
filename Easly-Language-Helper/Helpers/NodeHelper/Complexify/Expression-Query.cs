@@ -151,7 +151,7 @@ public static partial class NodeHelper
                         Expression Source = CreateSimpleQueryExpression(SourceText.Substring(0, SourceText.Length - 1));
                         AssignmentArgument FirstArgument = CreateAssignmentArgument(new List<Identifier>() { ParameterIdentifier }, Source);
 
-                        List<AssignmentArgument> ArgumentList = new List<AssignmentArgument>();
+                        List<AssignmentArgument> ArgumentList = new();
                         ArgumentList.Add(FirstArgument);
 
                         complexifiedNode = CreateInitializedObjectExpression(ClassIdentifier, ArgumentList);

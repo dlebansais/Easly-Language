@@ -35,13 +35,13 @@ public abstract class TypeEntity : Entity
         foreach (KeyValuePair<string, MethodInfo> Item in FlattenedMethodList)
             if (Item.Value.ReturnType == typeof(void))
             {
-                ProcedureEntity FeatureEntity = new ProcedureEntity(Item.Value);
+                ProcedureEntity FeatureEntity = new(Item.Value);
                 Features.Add(FeatureEntity);
                 Procedures.Add(OverloadedName(Procedures, Item.Key), FeatureEntity);
             }
             else
             {
-                FunctionEntity FeatureEntity = new FunctionEntity(Item.Value);
+                FunctionEntity FeatureEntity = new(Item.Value);
                 Features.Add(FeatureEntity);
                 Functions.Add(OverloadedName(Functions, Item.Key), FeatureEntity);
             }

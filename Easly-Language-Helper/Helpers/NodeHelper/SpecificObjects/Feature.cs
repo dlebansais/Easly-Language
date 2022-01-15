@@ -23,7 +23,7 @@ public static partial class NodeHelper
         Name EntityName = CreateEmptyName();
         ObjectType EntityType = CreateDefaultObjectType();
         IBlockList<Assertion> EnsureBlocks = BlockListHelper<Assertion>.CreateEmptyBlockList();
-        AttributeFeature EmptyAttributeFeature = new AttributeFeature(Documentation, ExportIdentifier, Export, EntityName, EntityType, EnsureBlocks);
+        AttributeFeature EmptyAttributeFeature = new(Documentation, ExportIdentifier, Export, EntityName, EntityType, EnsureBlocks);
 
         return EmptyAttributeFeature;
     }
@@ -40,7 +40,7 @@ public static partial class NodeHelper
         Name EntityName = CreateEmptyName();
         ObjectType EntityType = CreateDefaultObjectType();
         Expression ConstantValue = CreateDefaultExpression();
-        ConstantFeature EmptyConstantFeature = new ConstantFeature(Documentation, ExportIdentifier, Export, EntityName, EntityType, ConstantValue);
+        ConstantFeature EmptyConstantFeature = new(Documentation, ExportIdentifier, Export, EntityName, EntityType, ConstantValue);
 
         return EmptyConstantFeature;
     }
@@ -58,7 +58,7 @@ public static partial class NodeHelper
         ExportStatus Export = ExportStatus.Exported;
         Name EntityName = CreateEmptyName();
         IBlockList<CommandOverload> OverloadBlocks = BlockListHelper<CommandOverload>.CreateSimpleBlockList(FirstOverload);
-        CreationFeature EmptyCreationFeature = new CreationFeature(Documentation, ExportIdentifier, Export, EntityName, OverloadBlocks);
+        CreationFeature EmptyCreationFeature = new(Documentation, ExportIdentifier, Export, EntityName, OverloadBlocks);
 
         return EmptyCreationFeature;
     }
@@ -77,7 +77,7 @@ public static partial class NodeHelper
         Name EntityName = CreateEmptyName();
         OnceChoice Once = OnceChoice.Normal;
         IBlockList<QueryOverload> OverloadBlocks = BlockListHelper<QueryOverload>.CreateSimpleBlockList(FirstOverload);
-        FunctionFeature EmptyFunctionFeature = new FunctionFeature(Documentation, ExportIdentifier, Export, EntityName, Once, OverloadBlocks);
+        FunctionFeature EmptyFunctionFeature = new(Documentation, ExportIdentifier, Export, EntityName, Once, OverloadBlocks);
 
         return EmptyFunctionFeature;
     }
@@ -100,7 +100,7 @@ public static partial class NodeHelper
         IOptionalReference<Body> GetterBody = OptionalReferenceHelper<Body>.CreateReference(CreateDefaultBody());
         GetterBody.Assign();
         IOptionalReference<Body> SetterBody = OptionalReferenceHelper<Body>.CreateReference(CreateDefaultBody());
-        IndexerFeature EmptyIndexerFeature = new IndexerFeature(Documentation, ExportIdentifier, Export, EntityType, IndexParameterBlocks, ParameterEnd, ModifiedQueryBlocks, GetterBody, SetterBody);
+        IndexerFeature EmptyIndexerFeature = new(Documentation, ExportIdentifier, Export, EntityType, IndexParameterBlocks, ParameterEnd, ModifiedQueryBlocks, GetterBody, SetterBody);
 
         return EmptyIndexerFeature;
     }
@@ -118,7 +118,7 @@ public static partial class NodeHelper
         ExportStatus Export = ExportStatus.Exported;
         Name EntityName = CreateEmptyName();
         IBlockList<CommandOverload> OverloadBlocks = BlockListHelper<CommandOverload>.CreateSimpleBlockList(FirstOverload);
-        ProcedureFeature EmptyProcedureFeature = new ProcedureFeature(Documentation, ExportIdentifier, Export, EntityName, OverloadBlocks);
+        ProcedureFeature EmptyProcedureFeature = new(Documentation, ExportIdentifier, Export, EntityName, OverloadBlocks);
 
         return EmptyProcedureFeature;
     }
@@ -138,7 +138,7 @@ public static partial class NodeHelper
         IBlockList<Identifier> ModifiedQueryBlocks = BlockListHelper<Identifier>.CreateEmptyBlockList();
         IOptionalReference<Body> GetterBody = OptionalReferenceHelper<Body>.CreateReference(CreateDefaultBody());
         IOptionalReference<Body> SetterBody = OptionalReferenceHelper<Body>.CreateReference(CreateDefaultBody());
-        PropertyFeature EmptyPropertyFeature = new PropertyFeature(Documentation, ExportIdentifier, Export, EntityName, EntityType, PropertyKind, ModifiedQueryBlocks, GetterBody, SetterBody);
+        PropertyFeature EmptyPropertyFeature = new(Documentation, ExportIdentifier, Export, EntityName, EntityType, PropertyKind, ModifiedQueryBlocks, GetterBody, SetterBody);
 
         return EmptyPropertyFeature;
     }
@@ -199,7 +199,7 @@ public static partial class NodeHelper
         Name ClonedEntityName = (Name)DeepCloneNode(EntityName, cloneCommentGuid: false);
         ObjectType ClonedEntityType = (ObjectType)DeepCloneNode(EntityType, cloneCommentGuid: false);
         IBlockList<Assertion> ClonedEnsureBlocks = BlockListHelper<Assertion>.CreateBlockListCopy(EnsureBlocks);
-        AttributeFeature Result = new AttributeFeature(Documentation, ExportIdentifier, export, ClonedEntityName, ClonedEntityType, ClonedEnsureBlocks);
+        AttributeFeature Result = new(Documentation, ExportIdentifier, export, ClonedEntityName, ClonedEntityType, ClonedEnsureBlocks);
 
         return Result;
     }
@@ -215,7 +215,7 @@ public static partial class NodeHelper
         Name ClonedEntityName = (Name)DeepCloneNode(EntityName, cloneCommentGuid: false);
         ObjectType ClonedEntityType = (ObjectType)DeepCloneNode(EntityType, cloneCommentGuid: false);
         Expression ClonedConstantValue = (Expression)DeepCloneNode(ConstantValue, cloneCommentGuid: false);
-        ConstantFeature Result = new ConstantFeature(Documentation, ExportIdentifier, export, ClonedEntityName, ClonedEntityType, ClonedConstantValue);
+        ConstantFeature Result = new(Documentation, ExportIdentifier, export, ClonedEntityName, ClonedEntityType, ClonedConstantValue);
 
         return Result;
     }
@@ -232,7 +232,7 @@ public static partial class NodeHelper
         Identifier ExportIdentifier = (Identifier)DeepCloneNode(exportIdentifier, cloneCommentGuid: false);
         Name ClonedEntityName = (Name)DeepCloneNode(EntityName, cloneCommentGuid: false);
         IBlockList<CommandOverload> ClonedOverloadBlocks = BlockListHelper<CommandOverload>.CreateBlockListCopy(CommandOverloadBlocks);
-        CreationFeature Result = new CreationFeature(Documentation, ExportIdentifier, export, ClonedEntityName, ClonedOverloadBlocks);
+        CreationFeature Result = new(Documentation, ExportIdentifier, export, ClonedEntityName, ClonedOverloadBlocks);
 
         return Result;
     }
@@ -249,7 +249,7 @@ public static partial class NodeHelper
         Identifier ExportIdentifier = (Identifier)DeepCloneNode(exportIdentifier, cloneCommentGuid: false);
         Name ClonedEntityName = (Name)DeepCloneNode(EntityName, cloneCommentGuid: false);
         IBlockList<QueryOverload> ClonedOverloadBlocks = BlockListHelper<QueryOverload>.CreateBlockListCopy(QueryOverloadBlocks);
-        FunctionFeature Result = new FunctionFeature(Documentation, ExportIdentifier, export, ClonedEntityName, once, ClonedOverloadBlocks);
+        FunctionFeature Result = new(Documentation, ExportIdentifier, export, ClonedEntityName, once, ClonedOverloadBlocks);
 
         return Result;
     }
@@ -266,7 +266,7 @@ public static partial class NodeHelper
         Identifier ExportIdentifier = (Identifier)DeepCloneNode(exportIdentifier, cloneCommentGuid: false);
         Name ClonedEntityName = (Name)DeepCloneNode(EntityName, cloneCommentGuid: false);
         IBlockList<CommandOverload> ClonedOverloadBlocks = BlockListHelper<CommandOverload>.CreateBlockListCopy(CommandOverloadBlocks);
-        ProcedureFeature Result = new ProcedureFeature(Documentation, ExportIdentifier, export, ClonedEntityName, ClonedOverloadBlocks);
+        ProcedureFeature Result = new(Documentation, ExportIdentifier, export, ClonedEntityName, ClonedOverloadBlocks);
 
         return Result;
     }
@@ -286,7 +286,7 @@ public static partial class NodeHelper
         IBlockList<Identifier> ClonedModifiedQueryBlocks = BlockListHelper<Identifier>.CreateBlockListCopy(ModifiedQueryBlocks);
         IOptionalReference<Body> OptionalGetterBody = OptionalReferenceHelper<Body>.CreateReferenceCopy(GetterBody);
         IOptionalReference<Body> OptionalSetterBody = OptionalReferenceHelper<Body>.CreateReferenceCopy(SetterBody);
-        PropertyFeature Result = new PropertyFeature(Documentation, ExportIdentifier, export, ClonedEntityName, ClonedEntityType, propertyKind, ClonedModifiedQueryBlocks, OptionalGetterBody, OptionalSetterBody);
+        PropertyFeature Result = new(Documentation, ExportIdentifier, export, ClonedEntityName, ClonedEntityType, propertyKind, ClonedModifiedQueryBlocks, OptionalGetterBody, OptionalSetterBody);
 
         return Result;
     }
@@ -309,7 +309,7 @@ public static partial class NodeHelper
         IBlockList<Identifier> ClonedModifiedQueryBlocks = BlockListHelper<Identifier>.CreateBlockListCopy(ModifiedQueryBlocks);
         IOptionalReference<Body> OptionalGetterBody = OptionalReferenceHelper<Body>.CreateReferenceCopy(GetterBody);
         IOptionalReference<Body> OptionalSetterBody = OptionalReferenceHelper<Body>.CreateReferenceCopy(SetterBody);
-        IndexerFeature Result = new IndexerFeature(Documentation, ExportIdentifier, export, ClonedEntityType, ClonedIndexParameterBlocks, parameterEnd, ClonedModifiedQueryBlocks, OptionalGetterBody, OptionalSetterBody);
+        IndexerFeature Result = new(Documentation, ExportIdentifier, export, ClonedEntityType, ClonedIndexParameterBlocks, parameterEnd, ClonedModifiedQueryBlocks, OptionalGetterBody, OptionalSetterBody);
 
         return Result;
     }

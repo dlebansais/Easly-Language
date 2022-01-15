@@ -94,7 +94,7 @@ public static partial class NodeHelper
         if (node.Source is QueryExpression AsQueryExpression)
             if (ParsePattern(AsQueryExpression, ":=", out string BeforeText, out string AfterText))
             {
-                List<Identifier> ParameterList = new List<Identifier>() { CreateSimpleIdentifier(BeforeText) };
+                List<Identifier> ParameterList = new() { CreateSimpleIdentifier(BeforeText) };
                 CloneComplexifiedExpression(AsQueryExpression, AfterText, out Expression Source);
 
                 complexifiedNode = CreateAssignmentArgument(ParameterList, Source);

@@ -21,7 +21,7 @@ public static partial class NodeHelper
         IBlockList<Assertion> RequireBlocks = BlockListHelper<Assertion>.CreateEmptyBlockList();
         IBlockList<Assertion> EnsureBlocks = BlockListHelper<Assertion>.CreateEmptyBlockList();
         IBlockList<Identifier> ExceptionIdentifierBlocks = BlockListHelper<Identifier>.CreateEmptyBlockList();
-        DeferredBody Result = new DeferredBody(Documentation, RequireBlocks, EnsureBlocks, ExceptionIdentifierBlocks);
+        DeferredBody Result = new(Documentation, RequireBlocks, EnsureBlocks, ExceptionIdentifierBlocks);
 
         return Result;
     }
@@ -39,7 +39,7 @@ public static partial class NodeHelper
         IBlockList<EntityDeclaration> EntityDeclarationBlocks = BlockListHelper<EntityDeclaration>.CreateEmptyBlockList();
         IBlockList<Instruction> BodyInstructionBlocks = BlockListHelper<Instruction>.CreateEmptyBlockList();
         IBlockList<ExceptionHandler> ExceptionHandlerBlocks = BlockListHelper<ExceptionHandler>.CreateEmptyBlockList();
-        EffectiveBody Result = new EffectiveBody(Documentation, RequireBlocks, EnsureBlocks, ExceptionIdentifierBlocks, EntityDeclarationBlocks, BodyInstructionBlocks, ExceptionHandlerBlocks);
+        EffectiveBody Result = new(Documentation, RequireBlocks, EnsureBlocks, ExceptionIdentifierBlocks, EntityDeclarationBlocks, BodyInstructionBlocks, ExceptionHandlerBlocks);
 
         return Result;
     }
@@ -54,7 +54,7 @@ public static partial class NodeHelper
         IBlockList<Assertion> RequireBlocks = BlockListHelper<Assertion>.CreateEmptyBlockList();
         IBlockList<Assertion> EnsureBlocks = BlockListHelper<Assertion>.CreateEmptyBlockList();
         IBlockList<Identifier> ExceptionIdentifierBlocks = BlockListHelper<Identifier>.CreateEmptyBlockList();
-        ExternBody Result = new ExternBody(Documentation, RequireBlocks, EnsureBlocks, ExceptionIdentifierBlocks);
+        ExternBody Result = new(Documentation, RequireBlocks, EnsureBlocks, ExceptionIdentifierBlocks);
 
         return Result;
     }
@@ -70,7 +70,7 @@ public static partial class NodeHelper
         IBlockList<Assertion> EnsureBlocks = BlockListHelper<Assertion>.CreateEmptyBlockList();
         IBlockList<Identifier> ExceptionIdentifierBlocks = BlockListHelper<Identifier>.CreateEmptyBlockList();
         IOptionalReference<ObjectType> AncestorType = OptionalReferenceHelper<ObjectType>.CreateReference(CreateDefaultObjectType());
-        PrecursorBody Result = new PrecursorBody(Documentation, RequireBlocks, EnsureBlocks, ExceptionIdentifierBlocks, AncestorType);
+        PrecursorBody Result = new(Documentation, RequireBlocks, EnsureBlocks, ExceptionIdentifierBlocks, AncestorType);
 
         return Result;
     }
@@ -114,7 +114,7 @@ public static partial class NodeHelper
         IBlockList<Assertion> RequireBlocks = BlockListHelper<Assertion>.CreateBlockListCopy(requireBlocks);
         IBlockList<Assertion> EnsureBlocks = BlockListHelper<Assertion>.CreateBlockListCopy(ensureBlocks);
         IBlockList<Identifier> ExceptionIdentifierBlocks = BlockListHelper<Identifier>.CreateBlockListCopy(exceptionIdentifierBlocks);
-        DeferredBody Result = new DeferredBody(Documentation, RequireBlocks, EnsureBlocks, ExceptionIdentifierBlocks);
+        DeferredBody Result = new(Documentation, RequireBlocks, EnsureBlocks, ExceptionIdentifierBlocks);
 
         return Result;
     }
@@ -132,7 +132,7 @@ public static partial class NodeHelper
         IBlockList<EntityDeclaration> ClonedEntityDeclarationBlocks = BlockListHelper<EntityDeclaration>.CreateBlockListCopy(EntityDeclarationBlocks);
         IBlockList<Instruction> ClonedBodyInstructionBlocks = BlockListHelper<Instruction>.CreateBlockListCopy(BodyInstructionBlocks);
         IBlockList<ExceptionHandler> ClonedExceptionHandlerBlocks = BlockListHelper<ExceptionHandler>.CreateBlockListCopy(ExceptionHandlerBlocks);
-        EffectiveBody Result = new EffectiveBody(Documentation, RequireBlocks, EnsureBlocks, ExceptionIdentifierBlocks, ClonedEntityDeclarationBlocks, ClonedBodyInstructionBlocks, ClonedExceptionHandlerBlocks);
+        EffectiveBody Result = new(Documentation, RequireBlocks, EnsureBlocks, ExceptionIdentifierBlocks, ClonedEntityDeclarationBlocks, ClonedBodyInstructionBlocks, ClonedExceptionHandlerBlocks);
 
         return Result;
     }
@@ -143,7 +143,7 @@ public static partial class NodeHelper
         IBlockList<Assertion> RequireBlocks = BlockListHelper<Assertion>.CreateBlockListCopy(requireBlocks);
         IBlockList<Assertion> EnsureBlocks = BlockListHelper<Assertion>.CreateBlockListCopy(ensureBlocks);
         IBlockList<Identifier> ExceptionIdentifierBlocks = BlockListHelper<Identifier>.CreateBlockListCopy(exceptionIdentifierBlocks);
-        ExternBody Result = new ExternBody(Documentation, RequireBlocks, EnsureBlocks, ExceptionIdentifierBlocks);
+        ExternBody Result = new(Documentation, RequireBlocks, EnsureBlocks, ExceptionIdentifierBlocks);
 
         return Result;
     }
@@ -157,7 +157,7 @@ public static partial class NodeHelper
         IBlockList<Assertion> EnsureBlocks = BlockListHelper<Assertion>.CreateBlockListCopy(ensureBlocks);
         IBlockList<Identifier> ExceptionIdentifierBlocks = BlockListHelper<Identifier>.CreateBlockListCopy(exceptionIdentifierBlocks);
         IOptionalReference<ObjectType> ClonedAncestorType = OptionalReferenceHelper<ObjectType>.CreateReferenceCopy(AncestorType);
-        PrecursorBody Result = new PrecursorBody(Documentation, RequireBlocks, EnsureBlocks, ExceptionIdentifierBlocks, ClonedAncestorType);
+        PrecursorBody Result = new(Documentation, RequireBlocks, EnsureBlocks, ExceptionIdentifierBlocks, ClonedAncestorType);
 
         return Result;
     }

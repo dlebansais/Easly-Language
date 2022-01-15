@@ -18,7 +18,7 @@ public static class OptionalReferenceHelper<TNode>
     /// <returns>The created instance.</returns>
     internal static IOptionalReference<TNode> CreateEmptyReference()
     {
-        OptionalReference<TNode> Result = new OptionalReference<TNode>();
+        OptionalReference<TNode> Result = new();
         Debug.Assert(!Result.IsAssigned, "An empty reference is never assigned");
         Debug.Assert(!Result.HasItem, "An empty reference is empty");
 
@@ -32,7 +32,7 @@ public static class OptionalReferenceHelper<TNode>
     /// <returns>The created instance.</returns>
     internal static IOptionalReference<TNode> CreateReference(TNode childNode)
     {
-        OptionalReference<TNode> Result = new OptionalReference<TNode>();
+        OptionalReference<TNode> Result = new();
         Result.Item = childNode;
         Result.Unassign();
 
@@ -46,7 +46,7 @@ public static class OptionalReferenceHelper<TNode>
     /// <returns>The created instance.</returns>
     internal static IOptionalReference<TNode> CreateReferenceCopy(IOptionalReference<TNode> optional)
     {
-        OptionalReference<TNode> Result = new OptionalReference<TNode>();
+        OptionalReference<TNode> Result = new();
 
         if (optional.HasItem)
         {

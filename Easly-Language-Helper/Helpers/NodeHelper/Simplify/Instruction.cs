@@ -120,7 +120,7 @@ public static partial class NodeHelper
 
             if (ClonedInstruction.Source is QueryExpression AsQueryExpression)
             {
-                List<Identifier> IdentifierList = new List<Identifier>();
+                List<Identifier> IdentifierList = new();
                 for (int i = 0; i + 1 < Target.Path.Count; i++)
                     IdentifierList.Add(Target.Path[i]);
 
@@ -266,7 +266,7 @@ public static partial class NodeHelper
     {
         Identifier KeywordIdentifier = CreateSimpleIdentifier(node.Destination.ToString());
 
-        List<Identifier> IdentifierList = new List<Identifier>();
+        List<Identifier> IdentifierList = new();
         IdentifierList.Add(KeywordIdentifier);
 
         IBlockList<Argument> ArgumentBlocks;

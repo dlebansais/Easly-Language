@@ -156,7 +156,7 @@ public partial class CoverageSet
 
         Assert.Throws<InvalidOperationException>(() => { TestInterface.Item = TestObject; });
 
-        TestOnceReference = new();
+        TestOnceReference = new OnceReference<Name>();
         TestOnceReference.Item = TestObject;
 
         IsAssigned = TestOnceReference.IsAssigned;
@@ -264,7 +264,7 @@ public partial class CoverageSet
         IsAssigned = TestInterface.IsAssigned;
         Assert.True(IsAssigned);
 
-        TestStableReference = new();
+        TestStableReference = new StableReference<Name>();
         TestStableReference.Item = TestObject;
 
         IsAssigned = TestStableReference.IsAssigned;
@@ -335,8 +335,8 @@ public partial class CoverageSet
     {
         Dictionary<string, string> TestDictionary = new() { { "Test", "Test" } };
 
-        MemoryStream Stream = new MemoryStream();
-        BinaryFormatter Formatter = new BinaryFormatter(null, new StreamingContext());
+        MemoryStream Stream = new();
+        BinaryFormatter Formatter = new(null, new StreamingContext());
         Formatter.Serialize(Stream, TestDictionary);
 
         Stream.Seek(0, SeekOrigin.Begin);

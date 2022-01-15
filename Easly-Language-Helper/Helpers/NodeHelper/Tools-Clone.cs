@@ -81,7 +81,7 @@ public static partial class NodeHelper
 
     private static IList<Node> DeepCloneNodeList(IEnumerable<Node> rootList, bool cloneCommentGuid)
     {
-        List<Node> Result = new List<Node>();
+        List<Node> Result = new();
 
         foreach (Node ChildNode in rootList)
         {

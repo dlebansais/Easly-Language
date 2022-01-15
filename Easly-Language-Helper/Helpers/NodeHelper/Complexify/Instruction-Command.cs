@@ -119,14 +119,14 @@ public static partial class NodeHelper
         {
             string BeforeText = node.Command.Path[BreakIndex].Text.Substring(0, BreakTextIndex).Trim();
 
-            List<Identifier> TargetIdentifierList = new List<Identifier>();
+            List<Identifier> TargetIdentifierList = new();
             for (int i = 0; i < BreakIndex; i++)
                 TargetIdentifierList.Add(CreateSimpleIdentifier(node.Command.Path[i].Text));
             TargetIdentifierList.Add(CreateSimpleIdentifier(BeforeText));
 
             string AfterText = node.Command.Path[BreakIndex].Text.Substring(BreakTextIndex + 2).Trim();
 
-            List<Identifier> SourceIdentifierList = new List<Identifier>();
+            List<Identifier> SourceIdentifierList = new();
             SourceIdentifierList.Add(CreateSimpleIdentifier(AfterText));
             for (int i = BreakIndex + 1; i < node.Command.Path.Count; i++)
                 SourceIdentifierList.Add(CreateSimpleIdentifier(node.Command.Path[i].Text));
