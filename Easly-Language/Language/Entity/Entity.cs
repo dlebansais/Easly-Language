@@ -42,7 +42,7 @@
             Type? DeclaringType = Method!.DeclaringType;
             Debug.Assert(DeclaringType is not null);
 
-            Type CallerType = Method?.DeclaringType!;
+            Type CallerType = DeclaringType!;
 #else
             MethodBase? Method = Frame?.GetMethod();
             Type? DeclaringType = Method?.DeclaringType;
