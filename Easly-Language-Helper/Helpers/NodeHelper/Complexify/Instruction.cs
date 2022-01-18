@@ -91,7 +91,7 @@ public static partial class NodeHelper
 
             foreach (Expression ComplexifiedContinueCondition in ComplexifiedContinueConditionList)
             {
-                IBlockList<Continuation> ClonedContinuationBlocks = (IBlockList<Continuation>)DeepCloneBlockList((IBlockList)node.ContinuationBlocks, cloneCommentGuid: false);
+                IBlockList<Continuation> ClonedContinuationBlocks = (IBlockList<Continuation>)DeepCloneBlockListInternal((IBlockList)node.ContinuationBlocks, cloneCommentGuid: false);
 
                 AsLongAsInstruction NewAsLongAsInstruction;
 
@@ -128,7 +128,7 @@ public static partial class NodeHelper
 
             foreach (Expression ComplexifiedSource in ComplexifiedSourceList)
             {
-                IBlockList<QualifiedName> ClonedDestinationBlocks = (IBlockList<QualifiedName>)DeepCloneBlockList((IBlockList)node.DestinationBlocks, cloneCommentGuid: false);
+                IBlockList<QualifiedName> ClonedDestinationBlocks = (IBlockList<QualifiedName>)DeepCloneBlockListInternal((IBlockList)node.DestinationBlocks, cloneCommentGuid: false);
                 AssignmentInstruction NewAssignmentInstruction = CreateAssignmentInstruction(ClonedDestinationBlocks, ComplexifiedSource);
                 complexifiedInstructionList.Add(NewAssignmentInstruction);
             }
@@ -208,8 +208,8 @@ public static partial class NodeHelper
 
             foreach (Expression ComplexifiedSource in ComplexifiedSourceList)
             {
-                IBlockList<Name> ClonedEntityNameBlocks = (IBlockList<Name>)DeepCloneBlockList((IBlockList)node.EntityNameBlocks, cloneCommentGuid: false);
-                IBlockList<Attachment> ClonedAttachmentBlocks = (IBlockList<Attachment>)DeepCloneBlockList((IBlockList)node.AttachmentBlocks, cloneCommentGuid: false);
+                IBlockList<Name> ClonedEntityNameBlocks = (IBlockList<Name>)DeepCloneBlockListInternal((IBlockList)node.EntityNameBlocks, cloneCommentGuid: false);
+                IBlockList<Attachment> ClonedAttachmentBlocks = (IBlockList<Attachment>)DeepCloneBlockListInternal((IBlockList)node.AttachmentBlocks, cloneCommentGuid: false);
 
                 AttachmentInstruction NewAttachmentInstruction;
 
@@ -229,7 +229,7 @@ public static partial class NodeHelper
         else if (GetComplexifiedNameBlockList(node.EntityNameBlocks, out IBlockList<Name> ComplexifiedEntityNameBlocks))
         {
             Expression ClonedSource = (Expression)DeepCloneNode(node.Source, cloneCommentGuid: false);
-            IBlockList<Attachment> ClonedAttachmentBlocks = (IBlockList<Attachment>)DeepCloneBlockList((IBlockList)node.AttachmentBlocks, cloneCommentGuid: false);
+            IBlockList<Attachment> ClonedAttachmentBlocks = (IBlockList<Attachment>)DeepCloneBlockListInternal((IBlockList)node.AttachmentBlocks, cloneCommentGuid: false);
 
             AttachmentInstruction NewAttachmentInstruction;
 
@@ -292,7 +292,7 @@ public static partial class NodeHelper
         {
             Identifier ClonedEntityIdentifier = (Identifier)DeepCloneNode(node.EntityIdentifier, cloneCommentGuid: false);
             Identifier ClonedCreationRoutineIdentifier = (Identifier)DeepCloneNode(node.CreationRoutineIdentifier, cloneCommentGuid: false);
-            IBlockList<Argument> ClonedArgumentBlocks = (IBlockList<Argument>)DeepCloneBlockList((IBlockList)node.ArgumentBlocks, cloneCommentGuid: false);
+            IBlockList<Argument> ClonedArgumentBlocks = (IBlockList<Argument>)DeepCloneBlockListInternal((IBlockList)node.ArgumentBlocks, cloneCommentGuid: false);
 
             CreateInstruction NewCreateInstruction = CreateCreateInstruction(ClonedEntityIdentifier, ClonedCreationRoutineIdentifier, ClonedArgumentBlocks, ComplexifiedPropcessor);
             complexifiedInstructionList = new List<Instruction>() { NewCreateInstruction };
@@ -314,7 +314,7 @@ public static partial class NodeHelper
 
             foreach (Conditional ComplexifiedConditional in ComplexifiedConditionalList)
             {
-                IBlockList<Conditional> ClonedConditionalBlocks = (IBlockList<Conditional>)DeepCloneBlockList((IBlockList)node.ConditionalBlocks, cloneCommentGuid: false);
+                IBlockList<Conditional> ClonedConditionalBlocks = (IBlockList<Conditional>)DeepCloneBlockListInternal((IBlockList)node.ConditionalBlocks, cloneCommentGuid: false);
                 ClonedConditionalBlocks.NodeBlockList[0].NodeList[0] = ComplexifiedConditional;
 
                 IfThenElseInstruction NewIfThenElseInstruction;
@@ -341,7 +341,7 @@ public static partial class NodeHelper
     {
         if (ComplexifyQualifiedName(node.Destination, out QualifiedName ComplexifiedDestination))
         {
-            IBlockList<Argument> ClonedArgumentBlocks = (IBlockList<Argument>)DeepCloneBlockList((IBlockList)node.ArgumentBlocks, cloneCommentGuid: false);
+            IBlockList<Argument> ClonedArgumentBlocks = (IBlockList<Argument>)DeepCloneBlockListInternal((IBlockList)node.ArgumentBlocks, cloneCommentGuid: false);
             Expression ClonedSource = (Expression)DeepCloneNode(node.Source, cloneCommentGuid: false);
             IndexAssignmentInstruction NewIndexAssignmentInstruction = CreateIndexAssignmentInstruction(ComplexifiedDestination, ClonedArgumentBlocks, ClonedSource);
             complexifiedInstructionList = new List<Instruction>() { NewIndexAssignmentInstruction };
@@ -362,7 +362,7 @@ public static partial class NodeHelper
             foreach (Expression ComplexifiedSource in ComplexifiedSourceList)
             {
                 QualifiedName ClonedDestination = (QualifiedName)DeepCloneNode(node.Destination, cloneCommentGuid: false);
-                IBlockList<Argument> ClonedArgumentBlocks = (IBlockList<Argument>)DeepCloneBlockList((IBlockList)node.ArgumentBlocks, cloneCommentGuid: false);
+                IBlockList<Argument> ClonedArgumentBlocks = (IBlockList<Argument>)DeepCloneBlockListInternal((IBlockList)node.ArgumentBlocks, cloneCommentGuid: false);
                 IndexAssignmentInstruction NewIndexAssignmentInstruction = CreateIndexAssignmentInstruction(ClonedDestination, ClonedArgumentBlocks, ComplexifiedSource);
                 complexifiedInstructionList.Add(NewIndexAssignmentInstruction);
             }
@@ -382,7 +382,7 @@ public static partial class NodeHelper
 
             foreach (Expression ComplexifiedSource in ComplexifiedSourceList)
             {
-                IBlockList<With> ClonedWithBlocks = (IBlockList<With>)DeepCloneBlockList((IBlockList)node.WithBlocks, cloneCommentGuid: false);
+                IBlockList<With> ClonedWithBlocks = (IBlockList<With>)DeepCloneBlockListInternal((IBlockList)node.WithBlocks, cloneCommentGuid: false);
                 InspectInstruction NewInspectInstruction;
 
                 if (node.ElseInstructions.IsAssigned)
@@ -430,9 +430,9 @@ public static partial class NodeHelper
 
             foreach (Expression ComplexifiedOverList in ComplexifiedOverListList)
             {
-                IBlockList<Name> ClonedIndexerBlocks = (IBlockList<Name>)DeepCloneBlockList((IBlockList)node.IndexerBlocks, cloneCommentGuid: false);
+                IBlockList<Name> ClonedIndexerBlocks = (IBlockList<Name>)DeepCloneBlockListInternal((IBlockList)node.IndexerBlocks, cloneCommentGuid: false);
                 Scope ClonedLoopInstructions = (Scope)DeepCloneNode(node.LoopInstructions, cloneCommentGuid: false);
-                IBlockList<Assertion> ClonedInvariantBlocks = (IBlockList<Assertion>)DeepCloneBlockList((IBlockList)node.InvariantBlocks, cloneCommentGuid: false);
+                IBlockList<Assertion> ClonedInvariantBlocks = (IBlockList<Assertion>)DeepCloneBlockListInternal((IBlockList)node.InvariantBlocks, cloneCommentGuid: false);
 
                 OverLoopInstruction NewOverLoopInstruction;
 
@@ -462,7 +462,7 @@ public static partial class NodeHelper
 
             foreach (ObjectType ComplexifiedAncestorType in ComplexifiedAncestorTypeList)
             {
-                IBlockList<Argument> ClonedArgumentBlocks = (IBlockList<Argument>)DeepCloneBlockList((IBlockList)node.ArgumentBlocks, cloneCommentGuid: false);
+                IBlockList<Argument> ClonedArgumentBlocks = (IBlockList<Argument>)DeepCloneBlockListInternal((IBlockList)node.ArgumentBlocks, cloneCommentGuid: false);
                 Expression ClonedSource = (Expression)DeepCloneNode(node.Source, cloneCommentGuid: false);
 
                 PrecursorIndexAssignmentInstruction NewPrecursorIndexAssignmentInstruction = CreatePrecursorIndexAssignmentInstruction(ComplexifiedAncestorType, ClonedArgumentBlocks, ClonedSource);
@@ -494,7 +494,7 @@ public static partial class NodeHelper
 
             foreach (Expression ComplexifiedSource in ComplexifiedSourceList)
             {
-                IBlockList<Argument> ClonedArgumentBlocks = (IBlockList<Argument>)DeepCloneBlockList((IBlockList)node.ArgumentBlocks, cloneCommentGuid: false);
+                IBlockList<Argument> ClonedArgumentBlocks = (IBlockList<Argument>)DeepCloneBlockListInternal((IBlockList)node.ArgumentBlocks, cloneCommentGuid: false);
 
                 PrecursorIndexAssignmentInstruction NewPrecursorIndexAssignmentInstruction;
 
@@ -524,7 +524,7 @@ public static partial class NodeHelper
 
             foreach (ObjectType ComplexifiedAncestorType in ComplexifiedAncestorTypeList)
             {
-                IBlockList<Argument> ClonedArgumentBlocks = (IBlockList<Argument>)DeepCloneBlockList((IBlockList)node.ArgumentBlocks, cloneCommentGuid: false);
+                IBlockList<Argument> ClonedArgumentBlocks = (IBlockList<Argument>)DeepCloneBlockListInternal((IBlockList)node.ArgumentBlocks, cloneCommentGuid: false);
 
                 PrecursorInstruction NewPrecursorInstruction = CreatePrecursorInstruction(ComplexifiedAncestorType, ClonedArgumentBlocks);
                 complexifiedInstructionList.Add(NewPrecursorInstruction);
@@ -574,7 +574,7 @@ public static partial class NodeHelper
             foreach (ObjectType ComplexifiedExceptionType in ComplexifiedExceptionTypeList)
             {
                 Identifier ClonedCreationRoutine = (Identifier)DeepCloneNode(node.CreationRoutine, cloneCommentGuid: false);
-                IBlockList<Argument> ClonedArgumentBlocks = (IBlockList<Argument>)DeepCloneBlockList((IBlockList)node.ArgumentBlocks, cloneCommentGuid: false);
+                IBlockList<Argument> ClonedArgumentBlocks = (IBlockList<Argument>)DeepCloneBlockListInternal((IBlockList)node.ArgumentBlocks, cloneCommentGuid: false);
 
                 ThrowInstruction NewThrowInstruction = CreateThrowInstruction(ComplexifiedExceptionType, ClonedCreationRoutine, ClonedArgumentBlocks);
                 complexifiedInstructionList.Add(NewThrowInstruction);

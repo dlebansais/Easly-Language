@@ -287,7 +287,7 @@ public static partial class NodeHelper
         {
             foreach (Expression ComplexifiedIndexedExpression in ComplexifiedIndexedExpressionList)
             {
-                IBlockList<Argument> ClonedArgumentBlocks = (IBlockList<Argument>)DeepCloneBlockList((IBlockList)node.ArgumentBlocks, cloneCommentGuid: false);
+                IBlockList<Argument> ClonedArgumentBlocks = (IBlockList<Argument>)DeepCloneBlockListInternal((IBlockList)node.ArgumentBlocks, cloneCommentGuid: false);
                 IndexQueryExpression NewIndexQueryExpression = CreateIndexQueryExpression(ComplexifiedIndexedExpression, ClonedArgumentBlocks);
                 ByIndexedExpressionList.Add(NewIndexQueryExpression);
             }
@@ -351,7 +351,7 @@ public static partial class NodeHelper
         {
             foreach (ObjectType ComplexifiedAncestorType in ComplexifiedAncestorTypeList)
             {
-                IBlockList<Argument> ClonedArgumentBlocks = (IBlockList<Argument>)DeepCloneBlockList((IBlockList)node.ArgumentBlocks, cloneCommentGuid: false);
+                IBlockList<Argument> ClonedArgumentBlocks = (IBlockList<Argument>)DeepCloneBlockListInternal((IBlockList)node.ArgumentBlocks, cloneCommentGuid: false);
                 PrecursorExpression NewPrecursorExpression = CreatePrecursorExpression(ClonedArgumentBlocks, ComplexifiedAncestorType);
                 ByAncestorTypeList.Add(NewPrecursorExpression);
             }
@@ -368,7 +368,7 @@ public static partial class NodeHelper
         {
             foreach (ObjectType ComplexifiedAncestorType in ComplexifiedAncestorTypeList)
             {
-                IBlockList<Argument> ClonedArgumentBlocks = (IBlockList<Argument>)DeepCloneBlockList((IBlockList)node.ArgumentBlocks, cloneCommentGuid: false);
+                IBlockList<Argument> ClonedArgumentBlocks = (IBlockList<Argument>)DeepCloneBlockListInternal((IBlockList)node.ArgumentBlocks, cloneCommentGuid: false);
                 PrecursorIndexExpression NewPrecursorIndexExpression = CreatePrecursorIndexExpression(ClonedArgumentBlocks, ComplexifiedAncestorType);
                 ByAncestorTypeList.Add(NewPrecursorIndexExpression);
             }

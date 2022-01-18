@@ -20,7 +20,7 @@ public static partial class NodeHelper
                 Identifier Identifier = Block.NodeList[NodeIndex];
                 if (SplitIdentifier(Identifier, ',', ',', out IList<Identifier> Split))
                 {
-                    newBlockList = (IBlockList<Identifier>)DeepCloneBlockList((IBlockList)identifierBlockList, cloneCommentGuid: false);
+                    newBlockList = (IBlockList<Identifier>)DeepCloneBlockListInternal((IBlockList)identifierBlockList, cloneCommentGuid: false);
 
                     newBlockList.NodeBlockList[BlockIndex].NodeList.RemoveAt(NodeIndex);
                     for (int i = 0; i < Split.Count; i++)
@@ -46,7 +46,7 @@ public static partial class NodeHelper
                 Name Name = Block.NodeList[NodeIndex];
                 if (SplitName(Name, ',', ',', out IList<Name> Split))
                 {
-                    newBlockList = (IBlockList<Name>)DeepCloneBlockList((IBlockList)nameBlockList, cloneCommentGuid: false);
+                    newBlockList = (IBlockList<Name>)DeepCloneBlockListInternal((IBlockList)nameBlockList, cloneCommentGuid: false);
 
                     newBlockList.NodeBlockList[BlockIndex].NodeList.RemoveAt(NodeIndex);
                     for (int i = 0; i < Split.Count; i++)
@@ -94,7 +94,7 @@ public static partial class NodeHelper
 
                 if (SplitArgument(Argument, out IList<Argument> SplitArgumentList))
                 {
-                    newArgumentBlocks = (IBlockList<Argument>)DeepCloneBlockList((IBlockList)argumentBlocks, cloneCommentGuid: false);
+                    newArgumentBlocks = (IBlockList<Argument>)DeepCloneBlockListInternal((IBlockList)argumentBlocks, cloneCommentGuid: false);
 
                     Block = newArgumentBlocks.NodeBlockList[BlockIndex];
                     Block.NodeList.RemoveAt(NodeIndex);
@@ -117,7 +117,7 @@ public static partial class NodeHelper
                 if (GetComplexifiedArgument(Argument, out IList<Argument> ComplexifiedArgumentList))
                 {
                     Argument ComplexifiedArgument = ComplexifiedArgumentList[0];
-                    newArgumentBlocks = (IBlockList<Argument>)DeepCloneBlockList((IBlockList)argumentBlocks, cloneCommentGuid: false);
+                    newArgumentBlocks = (IBlockList<Argument>)DeepCloneBlockListInternal((IBlockList)argumentBlocks, cloneCommentGuid: false);
 
                     Block = newArgumentBlocks.NodeBlockList[BlockIndex];
                     Block.NodeList[NodeIndex] = ComplexifiedArgument;
@@ -144,7 +144,7 @@ public static partial class NodeHelper
                 {
                     AssignmentArgument ComplexifiedAssignmentArgument = (AssignmentArgument)SafeType.ItemAt<Argument>(ComplexifiedAssignmentArgumentList, 0);
 
-                    newAssignmentArgumentBlocks = (IBlockList<AssignmentArgument>)DeepCloneBlockList((IBlockList)argumentBlocks, cloneCommentGuid: false);
+                    newAssignmentArgumentBlocks = (IBlockList<AssignmentArgument>)DeepCloneBlockListInternal((IBlockList)argumentBlocks, cloneCommentGuid: false);
 
                     Block = newAssignmentArgumentBlocks.NodeBlockList[BlockIndex];
                     IList<AssignmentArgument> NodeList = Block.NodeList;
@@ -172,7 +172,7 @@ public static partial class NodeHelper
                 if (GetComplexifiedQualifiedName(QualifiedName, out IList<QualifiedName> ComplexifiedQualifiedNameList))
                 {
                     QualifiedName ComplexifiedQualifiedName = ComplexifiedQualifiedNameList[0];
-                    newQualifiedNameBlocks = (IBlockList<QualifiedName>)DeepCloneBlockList((IBlockList)argumentBlocks, cloneCommentGuid: false);
+                    newQualifiedNameBlocks = (IBlockList<QualifiedName>)DeepCloneBlockListInternal((IBlockList)argumentBlocks, cloneCommentGuid: false);
 
                     Block = newQualifiedNameBlocks.NodeBlockList[BlockIndex];
                     Block.NodeList[NodeIndex] = ComplexifiedQualifiedName;
@@ -196,7 +196,7 @@ public static partial class NodeHelper
                 EntityDeclaration EntityDeclaration = Block.NodeList[NodeIndex];
                 if (SplitEntityDeclaration(EntityDeclaration, out IList<EntityDeclaration> Split))
                 {
-                    newBlockList = (IBlockList<EntityDeclaration>)DeepCloneBlockList((IBlockList)identifierBlockList, cloneCommentGuid: false);
+                    newBlockList = (IBlockList<EntityDeclaration>)DeepCloneBlockListInternal((IBlockList)identifierBlockList, cloneCommentGuid: false);
 
                     newBlockList.NodeBlockList[BlockIndex].NodeList.RemoveAt(NodeIndex);
                     for (int i = 0; i < Split.Count; i++)
@@ -223,7 +223,7 @@ public static partial class NodeHelper
 
                 if (SplitTypeArgument(TypeArgument, out IList<TypeArgument> SplitTypeArgumentList))
                 {
-                    newTypeArgumentBlocks = (IBlockList<TypeArgument>)DeepCloneBlockList((IBlockList)typeArgumentBlocks, cloneCommentGuid: false);
+                    newTypeArgumentBlocks = (IBlockList<TypeArgument>)DeepCloneBlockListInternal((IBlockList)typeArgumentBlocks, cloneCommentGuid: false);
 
                     Block = newTypeArgumentBlocks.NodeBlockList[BlockIndex];
                     Block.NodeList.RemoveAt(NodeIndex);
@@ -246,7 +246,7 @@ public static partial class NodeHelper
                 if (GetComplexifiedTypeArgument(TypeArgument, out IList<TypeArgument> ComplexifiedTypeArgumentList))
                 {
                     TypeArgument ComplexifiedTypeArgument = ComplexifiedTypeArgumentList[0];
-                    newTypeArgumentBlocks = (IBlockList<TypeArgument>)DeepCloneBlockList((IBlockList)typeArgumentBlocks, cloneCommentGuid: false);
+                    newTypeArgumentBlocks = (IBlockList<TypeArgument>)DeepCloneBlockListInternal((IBlockList)typeArgumentBlocks, cloneCommentGuid: false);
 
                     Block = newTypeArgumentBlocks.NodeBlockList[BlockIndex];
                     Block.NodeList[NodeIndex] = ComplexifiedTypeArgument;
@@ -271,7 +271,7 @@ public static partial class NodeHelper
 
                 if (SplitObjectType(ObjectType, out IList<ObjectType> SplitObjectTypeList))
                 {
-                    newObjectTypeBlocks = (IBlockList<ObjectType>)DeepCloneBlockList((IBlockList)objectTypeBlocks, cloneCommentGuid: false);
+                    newObjectTypeBlocks = (IBlockList<ObjectType>)DeepCloneBlockListInternal((IBlockList)objectTypeBlocks, cloneCommentGuid: false);
 
                     Block = newObjectTypeBlocks.NodeBlockList[BlockIndex];
                     Block.NodeList.RemoveAt(NodeIndex);
@@ -294,7 +294,7 @@ public static partial class NodeHelper
                 if (GetComplexifiedObjectType(ObjectType, out IList<ObjectType> ComplexifiedObjectTypeList))
                 {
                     ObjectType ComplexifiedObjectType = ComplexifiedObjectTypeList[0];
-                    newObjectTypeBlocks = (IBlockList<ObjectType>)DeepCloneBlockList((IBlockList)objectTypeBlocks, cloneCommentGuid: false);
+                    newObjectTypeBlocks = (IBlockList<ObjectType>)DeepCloneBlockListInternal((IBlockList)objectTypeBlocks, cloneCommentGuid: false);
 
                     Block = newObjectTypeBlocks.NodeBlockList[BlockIndex];
                     Block.NodeList[NodeIndex] = ComplexifiedObjectType;

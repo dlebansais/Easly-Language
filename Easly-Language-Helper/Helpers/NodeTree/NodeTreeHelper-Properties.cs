@@ -408,6 +408,36 @@ public static partial class NodeTreeHelper
     }
 
     /// <summary>
+    /// Checks whether the property of a node exists.
+    /// </summary>
+    /// <param name="node">The node.</param>
+    /// <param name="propertyName">The property name.</param>
+    /// <returns>True if <paramref name="propertyName"/> is a property of <paramref name="node"/>; otherwise, false.</returns>
+    public static bool IsProperty(Node node, string propertyName)
+    {
+        Contract.RequireNotNull(node, out Node Node);
+        Contract.RequireNotNull(propertyName, out string PropertyName);
+
+        Type NodeType = Node.GetType();
+
+        return SafeType.CheckAndGetPropertyOf(NodeType, PropertyName, out _);
+    }
+
+    /// <summary>
+    /// Checks whether the property of a node exists.
+    /// </summary>
+    /// <param name="nodeType">The node type.</param>
+    /// <param name="propertyName">The property name.</param>
+    /// <returns>True if <paramref name="propertyName"/> is a property of <paramref name="nodeType"/>; otherwise, false.</returns>
+    public static bool IsProperty(Type nodeType, string propertyName)
+    {
+        Contract.RequireNotNull(nodeType, out Type NodeType);
+        Contract.RequireNotNull(propertyName, out string PropertyName);
+
+        return SafeType.CheckAndGetPropertyOf(NodeType, PropertyName, out _);
+    }
+
+    /// <summary>
     /// Checks whether the property of a node is a <see cref="bool"/>.
     /// </summary>
     /// <param name="node">The node.</param>
@@ -501,8 +531,9 @@ public static partial class NodeTreeHelper
     {
         Contract.RequireNotNull(node, out Node Node);
         Contract.RequireNotNull(propertyName, out string PropertyName);
+        Contract.RequireNotNull(value, out string Value);
 
-        SetValueProperty(Node, PropertyName, value);
+        SetValueProperty(Node, PropertyName, Value);
     }
 
     /// <summary>
@@ -609,6 +640,22 @@ public static partial class NodeTreeHelper
         Type PropertyType = Property.PropertyType;
 
         return PropertyType.IsEnum;
+    }
+
+    /// <summary>
+    /// Sets the value of a enum property of a node.
+    /// </summary>
+    /// <typeparam name="T">The enum type.</typeparam>
+    /// <param name="node">The node.</param>
+    /// <param name="propertyName">The property name.</param>
+    /// <param name="value">The new value.</param>
+    public static void SetEnumProperty<T>(Node node, string propertyName, T value)
+        where T : struct, Enum
+    {
+        Contract.RequireNotNull(node, out Node Node);
+        Contract.RequireNotNull(propertyName, out string PropertyName);
+
+        SetValueProperty(Node, PropertyName, value);
     }
 
     /// <summary>

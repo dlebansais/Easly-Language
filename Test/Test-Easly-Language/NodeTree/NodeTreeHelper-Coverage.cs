@@ -650,6 +650,36 @@ public partial class NodeTreeHelperCoverage
     }
 
     [Test]
+    public static void TestIsProperty()
+    {
+        bool Result;
+
+        Inheritance NewInheritance = NodeHelper.CreateSimpleInheritance("a");
+
+        Result = NodeTreeHelper.IsProperty(NewInheritance, nameof(Inheritance.ForgetIndexer));
+        Assert.True(Result);
+
+        Result = NodeTreeHelper.IsProperty(NewInheritance, nameof(Inheritance.DiscontinueBlocks));
+        Assert.True(Result);
+
+        Result = NodeTreeHelper.IsProperty(NewInheritance, nameof(QueryExpression.Query));
+        Assert.False(Result);
+
+        Result = NodeTreeHelper.IsProperty(typeof(Inheritance), nameof(Inheritance.ForgetIndexer));
+        Assert.True(Result);
+
+#if !DEBUG
+        Inheritance NullInheritance = null!;
+        Type NullInheritanceType = null!;
+        string NullString = null!;
+        Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.IsProperty(NullInheritance, nameof(Inheritance.ForgetIndexer)); });
+        Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.IsProperty(NewInheritance, NullString); });
+        Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.IsProperty(NullInheritanceType, nameof(Inheritance.ForgetIndexer)); });
+        Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.IsProperty(typeof(Inheritance), NullString); });
+#endif
+    }
+
+    [Test]
     public static void TestIsBooleanProperty()
     {
         bool Result;
@@ -670,9 +700,12 @@ public partial class NodeTreeHelperCoverage
 
 #if !DEBUG
         Inheritance NullInheritance = null!;
+        Type NullInheritanceType = null!;
         string NullString = null!;
         Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.IsBooleanProperty(NullInheritance, nameof(Inheritance.ForgetIndexer)); });
         Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.IsBooleanProperty(NewInheritance, NullString); });
+        Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.IsBooleanProperty(NullInheritanceType, nameof(Inheritance.ForgetIndexer)); });
+        Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.IsBooleanProperty(typeof(Inheritance), NullString); });
 #endif
     }
 
@@ -740,11 +773,33 @@ public partial class NodeTreeHelperCoverage
         Result = NodeTreeHelper.IsStringProperty(typeof(Identifier), nameof(Identifier.Text));
         Assert.True(Result);
 
+        NodeTreeHelper.SetStringProperty(SimpleIdentifier, nameof(Identifier.Text), string.Empty);
+
 #if !DEBUG
         Identifier NullIdentifier = null!;
         string NullString = null!;
         Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.IsStringProperty(NullIdentifier, nameof(Identifier.Text)); });
         Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.IsStringProperty(SimpleIdentifier, NullString); });
+#endif
+    }
+
+    [Test]
+    public static void TestSetStringProperty()
+    {
+        Identifier SimpleIdentifier = NodeHelper.CreateSimpleIdentifier("a");
+
+        NodeTreeHelper.SetStringProperty(SimpleIdentifier, nameof(Identifier.Text), "test");
+        Assert.AreEqual("test", SimpleIdentifier.Text);
+
+        Assert.Throws<ArgumentException>(() => { NodeTreeHelper.SetStringProperty(SimpleIdentifier, nameof(QueryExpression.Query), string.Empty); });
+        Assert.Throws<ArgumentException>(() => { NodeTreeHelper.SetStringProperty(SimpleIdentifier, nameof(Identifier.Documentation), string.Empty); });
+
+#if !DEBUG
+        Identifier NullIdentifier = null!;
+        string NullString = null!;
+        Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.SetStringProperty(NullIdentifier, nameof(Identifier.Text), string.Empty); });
+        Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.SetStringProperty(SimpleIdentifier, NullString, string.Empty); });
+        Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.SetStringProperty(SimpleIdentifier, nameof(Identifier.Text), NullString); });
 #endif
     }
 
@@ -776,6 +831,25 @@ public partial class NodeTreeHelperCoverage
     }
 
     [Test]
+    public static void TestSetGuidProperty()
+    {
+        Class NewClass = NodeHelper.CreateSimpleClass("a");
+
+        NodeTreeHelper.SetGuidProperty(NewClass, nameof(Class.ClassGuid), Guid.Empty);
+        Assert.AreEqual(Guid.Empty, NewClass.ClassGuid);
+
+        Assert.Throws<ArgumentException>(() => { NodeTreeHelper.SetGuidProperty(NewClass, nameof(Class.EntityName), Guid.Empty); });
+        Assert.Throws<ArgumentException>(() => { NodeTreeHelper.SetGuidProperty(NewClass, nameof(QueryExpression.Query), Guid.Empty); });
+
+#if !DEBUG
+        Class NullClass = null!;
+        string NullString = null!;
+        Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.SetGuidProperty(NullClass, nameof(Class.ClassGuid), Guid.Empty); });
+        Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.SetGuidProperty(NewClass, NullString, Guid.Empty); });
+#endif
+    }
+
+    [Test]
     public static void TestIsEnumProperty()
     {
         bool Result;
@@ -800,6 +874,25 @@ public partial class NodeTreeHelperCoverage
         string NullString = null!;
         Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.IsEnumProperty(NullAnchoredType, nameof(AnchoredType.AnchorKind)); });
         Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.IsEnumProperty(SimpleAnchoredType, NullString); });
+#endif
+    }
+
+    [Test]
+    public static void TestSetEnumProperty()
+    {
+        Class NewClass = NodeHelper.CreateSimpleClass("a");
+
+        NodeTreeHelper.SetEnumProperty(NewClass, nameof(Class.CopySpecification), CopySemantic.Reference);
+        Assert.AreEqual(CopySemantic.Reference, NewClass.CopySpecification);
+
+        Assert.Throws<ArgumentException>(() => { NodeTreeHelper.SetEnumProperty(NewClass, nameof(Class.EntityName), CopySemantic.Reference); });
+        Assert.Throws<ArgumentException>(() => { NodeTreeHelper.SetEnumProperty(NewClass, nameof(QueryExpression.Query), CopySemantic.Reference); });
+
+#if !DEBUG
+        Class NullClass = null!;
+        string NullString = null!;
+        Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.SetEnumProperty(NullClass, nameof(Class.ClassGuid), CopySemantic.Reference); });
+        Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.SetEnumProperty(NewClass, NullString, CopySemantic.Reference); });
 #endif
     }
 }

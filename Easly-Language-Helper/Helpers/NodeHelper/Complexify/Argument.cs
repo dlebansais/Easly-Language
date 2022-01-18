@@ -53,7 +53,7 @@ public static partial class NodeHelper
 
             foreach (Expression ComplexifiedSource in ComplexifiedSourceList)
             {
-                IBlockList<Identifier> ClonedParameterBlocks = (IBlockList<Identifier>)DeepCloneBlockList((IBlockList)node.ParameterBlocks, cloneCommentGuid: false);
+                IBlockList<Identifier> ClonedParameterBlocks = (IBlockList<Identifier>)DeepCloneBlockListInternal((IBlockList)node.ParameterBlocks, cloneCommentGuid: false);
                 AssignmentArgument NewAssignmentArgument = CreateAssignmentArgument(ClonedParameterBlocks, ComplexifiedSource);
                 complexifiedArgumentList.Add(NewAssignmentArgument);
             }

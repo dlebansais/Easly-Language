@@ -16,7 +16,7 @@ public static partial class NodeHelper
     {
         if (GetComplexifiedNode(node.Query, out IList<Node> ComplexifiedQueryList) && ComplexifiedQueryList[0] is QualifiedName AsComplexifiedQuery)
         {
-            IBlockList<Argument> ClonedArgumentBlocks = (IBlockList<Argument>)DeepCloneBlockList((IBlockList)node.ArgumentBlocks, cloneCommentGuid: false);
+            IBlockList<Argument> ClonedArgumentBlocks = (IBlockList<Argument>)DeepCloneBlockListInternal((IBlockList)node.ArgumentBlocks, cloneCommentGuid: false);
             QueryExpression NewQueryExpression = CreateQueryExpression(AsComplexifiedQuery, ClonedArgumentBlocks);
             complexifiedExpressionList = new List<Expression>() { NewQueryExpression };
         }

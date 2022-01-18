@@ -25,7 +25,7 @@ public partial class ToolsCoverage
     [Test]
     public static void TestCreateNodeDictionary()
     {
-        IDictionary<Type, string> Table = NodeHelper.CreateNodeDictionary(string.Empty);
+        IList<Type> Table = NodeHelper.GetNodeKeys();
         Assert.That(Table.Count > 0);
     }
 

@@ -10,7 +10,7 @@ public abstract class Node
     /// Initializes a new instance of the <see cref="Node"/> class.
     /// </summary>
     /// <param name="documentation">The node documentation.</param>
-    internal Node(Document documentation)
+    public Node(Document documentation)
     {
         Documentation = documentation;
     }

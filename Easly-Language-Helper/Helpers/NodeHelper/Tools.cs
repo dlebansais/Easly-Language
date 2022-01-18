@@ -40,20 +40,18 @@ public static partial class NodeHelper
     }
 
     /// <summary>
-    /// Creates a dictionary of nodes indexed by types.
+    /// Get keys to create a dictionary of nodes indexed by types.
     /// </summary>
-    /// <typeparam name="TValue">The dictionary value type.</typeparam>
-    /// <param name="defaultValue">The default value to associate to each type.</param>
     /// <returns>The created instance.</returns>
-    public static IDictionary<Type, TValue> CreateNodeDictionary<TValue>(TValue defaultValue)
+    public static IList<Type> GetNodeKeys()
     {
-        IDictionary<Type, TValue> Result = new Dictionary<Type, TValue>();
+        List<Type> Result = new();
         Assembly LanguageAssembly = typeof(Root).Assembly;
         Type[] LanguageTypes = LanguageAssembly.GetTypes();
 
         foreach (Type Item in LanguageTypes)
             if (!Item.IsInterface && !Item.IsAbstract && Item.IsSubclassOf(typeof(Node)))
-                Result.Add(Item, defaultValue);
+                Result.Add(Item);
 
         return Result;
     }

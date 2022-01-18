@@ -102,7 +102,7 @@ public static partial class NodeHelper
             {
                 Identifier AssignmentTarget = CreateSimpleIdentifier(BeforeText);
                 Identifier NewClassIdentifier = CreateSimpleIdentifier(AfterText);
-                IBlockList<TypeArgument> ClonedTypeArgumentBlocks = (IBlockList<TypeArgument>)DeepCloneBlockList((IBlockList)AsGenericType.TypeArgumentBlocks, cloneCommentGuid: false);
+                IBlockList<TypeArgument> ClonedTypeArgumentBlocks = (IBlockList<TypeArgument>)DeepCloneBlockListInternal((IBlockList)AsGenericType.TypeArgumentBlocks, cloneCommentGuid: false);
                 GenericType NewGenericType = CreateGenericType(SharingType.NotShared, NewClassIdentifier, ClonedTypeArgumentBlocks);
 
                 complexifiedNode = CreateAssignmentTypeArgument(AssignmentTarget, NewGenericType);

@@ -19,7 +19,7 @@ public static partial class NodeHelper
         }
         else if (ComplexifyQualifiedName(node.Command, out QualifiedName ComplexifiedCommand))
         {
-            IBlockList<Argument> ClonedArgumentBlocks = (IBlockList<Argument>)DeepCloneBlockList((IBlockList)node.ArgumentBlocks, cloneCommentGuid: false);
+            IBlockList<Argument> ClonedArgumentBlocks = (IBlockList<Argument>)DeepCloneBlockListInternal((IBlockList)node.ArgumentBlocks, cloneCommentGuid: false);
             CommandInstruction NewCommandInstruction = CreateCommandInstruction(ComplexifiedCommand, ClonedArgumentBlocks);
             complexifiedInstructionList = new List<Instruction>() { NewCommandInstruction };
         }
