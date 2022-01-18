@@ -1,10 +1,11 @@
 ﻿namespace TestEaslyLanguage;
 
+using System;
+using System.Collections.Generic;
 using BaseNode;
 using BaseNodeHelper;
 using Easly;
 using NUnit.Framework;
-using System.Collections.Generic;
 
 [TestFixture]
 public partial class ToolsCloneCoverage
