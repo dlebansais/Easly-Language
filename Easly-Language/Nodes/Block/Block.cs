@@ -72,6 +72,19 @@ public interface IBlock<TNode>
 public class Block<TNode> : IBlock<TNode>, IBlock
     where TNode : Node
 {
+#if !NO_PARAMETERLESS_CONSTRUCTOR
+#pragma warning disable SA1600 // Elements should be documented
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    public Block()
+#pragma warning restore SA1600 // Elements should be documented
+    {
+        Documentation = default!;
+        NodeList = default!;
+        Replication = default!;
+        ReplicationPattern = default!;
+        SourceIdentifier = default!;
+    }
+#endif
     /// <summary>
     /// Initializes a new instance of the <see cref="Block{TNode}"/> class.
     /// </summary>

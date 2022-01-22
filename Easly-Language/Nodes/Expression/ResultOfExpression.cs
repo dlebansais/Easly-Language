@@ -7,6 +7,16 @@ namespace BaseNode;
 [System.Serializable]
 public class ResultOfExpression : Expression
 {
+#if !NO_PARAMETERLESS_CONSTRUCTOR
+#pragma warning disable SA1600 // Elements should be documented
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    public ResultOfExpression()
+#pragma warning restore SA1600 // Elements should be documented
+        : base(default!)
+    {
+        Source = default!;
+    }
+#endif
     /// <summary>
     /// Initializes a new instance of the <see cref="ResultOfExpression"/> class.
     /// </summary>

@@ -9,6 +9,21 @@ using Easly;
 [System.Serializable]
 public class QueryOverload : Node
 {
+#if !NO_PARAMETERLESS_CONSTRUCTOR
+#pragma warning disable SA1600 // Elements should be documented
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    public QueryOverload()
+#pragma warning restore SA1600 // Elements should be documented
+        : base(default!)
+    {
+        ParameterBlocks = default!;
+        ParameterEnd = default!;
+        ResultBlocks = default!;
+        ModifiedQueryBlocks = default!;
+        Variant = default!;
+        QueryBody = default!;
+    }
+#endif
     /// <summary>
     /// Initializes a new instance of the <see cref="QueryOverload"/> class.
     /// </summary>

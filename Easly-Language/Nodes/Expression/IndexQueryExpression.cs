@@ -7,6 +7,17 @@ namespace BaseNode;
 [System.Serializable]
 public class IndexQueryExpression : Expression
 {
+#if !NO_PARAMETERLESS_CONSTRUCTOR
+#pragma warning disable SA1600 // Elements should be documented
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    public IndexQueryExpression()
+#pragma warning restore SA1600 // Elements should be documented
+        : base(default!)
+    {
+        IndexedExpression = default!;
+        ArgumentBlocks = default!;
+    }
+#endif
     /// <summary>
     /// Initializes a new instance of the <see cref="IndexQueryExpression"/> class.
     /// </summary>

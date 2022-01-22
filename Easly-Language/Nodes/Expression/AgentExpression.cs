@@ -9,6 +9,17 @@ using Easly;
 [System.Serializable]
 public class AgentExpression : Expression
 {
+#if !NO_PARAMETERLESS_CONSTRUCTOR
+#pragma warning disable SA1600 // Elements should be documented
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    public AgentExpression()
+#pragma warning restore SA1600 // Elements should be documented
+        : base(default!)
+    {
+        Delegated = default!;
+        BaseType = default!;
+    }
+#endif
     /// <summary>
     /// Initializes a new instance of the <see cref="AgentExpression"/> class.
     /// </summary>

@@ -9,6 +9,21 @@ using Easly;
 [System.Serializable]
 public class OverLoopInstruction : Instruction
 {
+#if !NO_PARAMETERLESS_CONSTRUCTOR
+#pragma warning disable SA1600 // Elements should be documented
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    public OverLoopInstruction()
+#pragma warning restore SA1600 // Elements should be documented
+        : base(default!)
+    {
+        OverList = default!;
+        IndexerBlocks = default!;
+        Iteration = default!;
+        LoopInstructions = default!;
+        ExitEntityName = default!;
+        InvariantBlocks = default!;
+    }
+#endif
     /// <summary>
     /// Initializes a new instance of the <see cref="OverLoopInstruction"/> class.
     /// </summary>

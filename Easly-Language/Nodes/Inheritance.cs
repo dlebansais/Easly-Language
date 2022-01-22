@@ -7,6 +7,25 @@ namespace BaseNode;
 [System.Serializable]
 public class Inheritance : Node
 {
+#if !NO_PARAMETERLESS_CONSTRUCTOR
+#pragma warning disable SA1600 // Elements should be documented
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    public Inheritance()
+#pragma warning restore SA1600 // Elements should be documented
+        : base(default!)
+    {
+        ParentType = default!;
+        Conformance = default!;
+        RenameBlocks = default!;
+        ForgetIndexer = default!;
+        ForgetBlocks = default!;
+        KeepIndexer = default!;
+        KeepBlocks = default!;
+        DiscontinueIndexer = default!;
+        DiscontinueBlocks = default!;
+        ExportChangeBlocks = default!;
+    }
+#endif
     /// <summary>
     /// Initializes a new instance of the <see cref="Inheritance"/> class.
     /// </summary>

@@ -7,6 +7,16 @@ namespace BaseNode;
 [System.Serializable]
 public class KeywordAnchoredType : ObjectType
 {
+#if !NO_PARAMETERLESS_CONSTRUCTOR
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+#pragma warning disable SA1600 // Elements should be documented
+    public KeywordAnchoredType()
+#pragma warning restore SA1600 // Elements should be documented
+        : base(default!)
+    {
+        Anchor = default!;
+    }
+#endif
     /// <summary>
     /// Initializes a new instance of the <see cref="KeywordAnchoredType"/> class.
     /// </summary>

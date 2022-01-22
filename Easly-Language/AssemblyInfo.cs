@@ -1,5 +1,6 @@
 ﻿[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Easly-Language-Helper")]
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Test-Easly-Language")]
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Test-Easly-Controller")]
 
 namespace System.Runtime.CompilerServices;
 

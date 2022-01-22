@@ -9,6 +9,34 @@ using Easly;
 [System.Serializable]
 public class Class : Node
 {
+#if !NO_PARAMETERLESS_CONSTRUCTOR
+#pragma warning disable SA1600 // Elements should be documented
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    public Class()
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+#pragma warning restore SA1600 // Elements should be documented
+        : base(default!)
+    {
+        EntityName = default!;
+        FromIdentifier = default!;
+        CopySpecification = default!;
+        Cloneable = default!;
+        Comparable = default!;
+        IsAbstract = default!;
+        ImportBlocks = default!;
+        GenericBlocks = default!;
+        ExportBlocks = default!;
+        TypedefBlocks = default!;
+        InheritanceBlocks = default!;
+        DiscreteBlocks = default!;
+        ClassReplicateBlocks = default!;
+        FeatureBlocks = default!;
+        ConversionBlocks = default!;
+        InvariantBlocks = default!;
+        ClassGuid = default!;
+        ClassPath = default!;
+    }
+#endif
     /// <summary>
     /// Initializes a new instance of the <see cref="Class"/> class.
     /// </summary>
@@ -31,6 +59,7 @@ public class Class : Node
     /// <param name="invariantBlocks">The class invariants.</param>
     /// <param name="classGuid">The class unique ID.</param>
     /// <param name="classPath">The class path.</param>
+    [PolySerializer.Serializable(Constructor = "Documentation,EntityName,FromIdentifier,CopySpecification,Cloneable,Comparable,IsAbstract,ImportBlocks,GenericBlocks,ExportBlocks,TypedefBlocks, InheritanceBlocks,DiscreteBlocks,ClassReplicateBlocks,FeatureBlocks,ConversionBlocks,InvariantBlocks,ClassGuid,ClassPath")]
     internal Class(Document documentation, Name entityName, IOptionalReference<Identifier> fromIdentifier, CopySemantic copySpecification, CloneableStatus cloneable, ComparableStatus comparable, bool isAbstract, IBlockList<Import> importBlocks, IBlockList<Generic> genericBlocks, IBlockList<Export> exportBlocks, IBlockList<Typedef> typedefBlocks, IBlockList<Inheritance> inheritanceBlocks, IBlockList<Discrete> discreteBlocks, IBlockList<ClassReplicate> classReplicateBlocks, IBlockList<Feature> featureBlocks, IBlockList<Identifier> conversionBlocks, IBlockList<Assertion> invariantBlocks, System.Guid classGuid, string classPath)
         : base(documentation)
     {

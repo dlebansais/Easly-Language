@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using BaseNode;
 using Contracts;
-using EaslyNumber;
 
 /// <summary>
 /// Provides methods to manipulate nodes.
@@ -207,7 +206,7 @@ public static partial class NodeHelper
 
             if (Text.Length >= 1)
             {
-                FormattedNumber fn = FormattedNumber.Parse(Text);
+                EaslyNumber.FormattedNumber fn = EaslyNumber.FormattedNumber.Parse(Text);
                 if (fn.IsValid)
                 {
                     complexifiedNode = CreateSimpleManifestNumberExpression(Text);

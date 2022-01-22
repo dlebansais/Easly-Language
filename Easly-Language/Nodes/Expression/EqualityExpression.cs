@@ -7,6 +7,19 @@ namespace BaseNode;
 [System.Serializable]
 public class EqualityExpression : Expression
 {
+#if !NO_PARAMETERLESS_CONSTRUCTOR
+#pragma warning disable SA1600 // Elements should be documented
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    public EqualityExpression()
+#pragma warning restore SA1600 // Elements should be documented
+        : base(default!)
+    {
+        LeftExpression = default!;
+        Comparison = default!;
+        Equality = default!;
+        RightExpression = default!;
+    }
+#endif
     /// <summary>
     /// Initializes a new instance of the <see cref="EqualityExpression"/> class.
     /// </summary>

@@ -179,10 +179,13 @@ public static class NodeTreeDiagnostic
 
     private static bool IsValidBlock(List<Guid> guidList, IBlock block, Node originalRoot, Node root, bool throwOnInvalid)
     {
-        if (!IsValidGuid(guidList, block.Documentation.Uuid, originalRoot, root, throwOnInvalid))
-            return false;
+        if (block.Documentation.Uuid != System.Guid.Empty)
+        {
+            if (!IsValidGuid(guidList, block.Documentation.Uuid, originalRoot, root, throwOnInvalid))
+                return false;
 
-        guidList.Add(block.Documentation.Uuid);
+            guidList.Add(block.Documentation.Uuid);
+        }
 
         if (block.NodeList.Count == 0)
             return FailIsValidCheck(throwOnInvalid, "Node list must not be empty", originalRoot, root);

@@ -7,6 +7,26 @@ namespace BaseNode;
 [System.Serializable]
 public class IndexerType : ObjectType
 {
+#if !NO_PARAMETERLESS_CONSTRUCTOR
+#pragma warning disable SA1600 // Elements should be documented
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    public IndexerType()
+#pragma warning restore SA1600 // Elements should be documented
+        : base(default!)
+    {
+        BaseType = default!;
+        EntityType = default!;
+        IndexParameterBlocks = default!;
+        ParameterEnd = default!;
+        IndexerKind = default!;
+        GetRequireBlocks = default!;
+        GetEnsureBlocks = default!;
+        GetExceptionIdentifierBlocks = default!;
+        SetRequireBlocks = default!;
+        SetEnsureBlocks = default!;
+        SetExceptionIdentifierBlocks = default!;
+    }
+#endif
     /// <summary>
     /// Initializes a new instance of the <see cref="IndexerType"/> class.
     /// </summary>

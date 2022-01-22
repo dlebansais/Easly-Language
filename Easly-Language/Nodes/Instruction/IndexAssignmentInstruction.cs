@@ -7,6 +7,18 @@ namespace BaseNode;
 [System.Serializable]
 public class IndexAssignmentInstruction : Instruction
 {
+#if !NO_PARAMETERLESS_CONSTRUCTOR
+#pragma warning disable SA1600 // Elements should be documented
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    public IndexAssignmentInstruction()
+#pragma warning restore SA1600 // Elements should be documented
+        : base(default!)
+    {
+        Destination = default!;
+        ArgumentBlocks = default!;
+        Source = default!;
+    }
+#endif
     /// <summary>
     /// Initializes a new instance of the <see cref="IndexAssignmentInstruction"/> class.
     /// </summary>
