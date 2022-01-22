@@ -12,8 +12,8 @@
     <Product />
     <Description>Easly language AST description and helpers</Description>
     <Copyright>Copyright © 2019 David Le Bansais</Copyright>
-    <AssemblyVersion>1.0.5.31</AssemblyVersion>
-    <FileVersion>1.0.5.12</FileVersion>
+    <AssemblyVersion>1.0.5.32</AssemblyVersion>
+    <FileVersion>1.0.5.13</FileVersion>
     <RepositoryUrl>https://github.com/dlebansais/Easly-Language</RepositoryUrl>
     <NeutralLanguage>en-US</NeutralLanguage>
     <RootNamespace>BaseNodeHelper</RootNamespace>
