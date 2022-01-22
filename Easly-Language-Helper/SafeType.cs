@@ -175,12 +175,22 @@ internal static class SafeType
         Type Type = Contract.NullSupressed(assembly.GetType(name));
 
         ConstructorInfo[] Constructors = Type.GetConstructors(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+
+#if !NO_PARAMETERLESS_CONSTRUCTOR
+        Debug.Assert(Constructors.Length > 0);
+
+        int ParameterCount = Constructors[Constructors.Length - 1].GetParameters().Length;
+        object[] Arguments = new object[ParameterCount];
+
+        T? Result = Activator.CreateInstance(Type, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance, binder: default, Arguments, culture: default) as T;
+#else
         Debug.Assert(Constructors.Length == 1);
 
         int ParameterCount = Constructors[0].GetParameters().Length;
         object[] Arguments = new object[ParameterCount];
 
         T? Result = Activator.CreateInstance(Type, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance, binder: default, Arguments, culture: default) as T;
+#endif
 
         return Contract.NullSupressed(Result);
     }

@@ -24,6 +24,10 @@ public static partial class NodeHelper
 
         switch (nodeObjectType)
         {
+            case SimpleType AsSimpleType:
+                Result = false;
+                IsHandled = true;
+                break;
             case AnchoredType AsAnchoredType:
                 Result = SimplifyAnchoredType(AsAnchoredType, out simplifiedNode);
                 IsHandled = true;
