@@ -39,15 +39,12 @@ public static partial class NodeHelper
             }
             else if (NodeTreeHelperOptional.IsOptionalChildNodeProperty(Root, PropertyName, out _))
             {
-                NodeTreeHelperOptional.GetChildNode(Root, PropertyName, out bool IsAssigned, out bool HasItem, out Node ChildNode);
+                NodeTreeHelperOptional.GetChildNode(Root, PropertyName, out bool IsAssigned, out Node ChildNode);
 
-                if (HasItem)
-                {
-                    Node ClonedChildNode = DeepCloneNode(ChildNode, cloneCommentGuid);
-                    NodeTreeHelperOptional.SetOptionalChildNode(ClonedRoot, PropertyName, ClonedChildNode);
-                    if (!IsAssigned)
-                        NodeTreeHelperOptional.UnassignChildNode(ClonedRoot, PropertyName);
-                }
+                Node ClonedChildNode = DeepCloneNode(ChildNode, cloneCommentGuid);
+                NodeTreeHelperOptional.SetOptionalChildNode(ClonedRoot, PropertyName, ClonedChildNode);
+                if (!IsAssigned)
+                    NodeTreeHelperOptional.UnassignChildNode(ClonedRoot, PropertyName);
             }
             else if (NodeTreeHelperList.IsNodeListProperty(Root, PropertyName, out _))
             {

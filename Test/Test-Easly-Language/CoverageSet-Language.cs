@@ -54,7 +54,6 @@ public partial class CoverageSet
 
         DetachableReference<Node> TestDetachableReference = new();
         OnceReference<Node> TestOnceReference = new();
-        OptionalReference<Node> TestOptionalReference = new();
         StableReference<Node> TestStableReference = new();
 
         SealableList<Node> TestSealableList = new();
@@ -181,31 +180,20 @@ public partial class CoverageSet
     [Test]
     public static void TestOptionalReference()
     {
-        Name? TestObject = null;
-        bool IsAssigned, HasItem;
+        Name? TestObject = NodeHelper.CreateEmptyName();
+        bool IsAssigned;
 
-        OptionalReference<Name> TestOptionalReference = new();
+        OptionalReference<Name> TestOptionalReference = new(TestObject);
         IOptionalReference TestInterface = TestOptionalReference;
 
         IsAssigned = TestOptionalReference.IsAssigned;
-        HasItem = TestOptionalReference.HasItem;
         Assert.False(IsAssigned);
-        Assert.False(HasItem);
-
-        Assert.Throws<InvalidOperationException>(() => { TestOptionalReference.Assign(); });
-
-        Assert.Throws<InvalidOperationException>(() => { TestObject = TestOptionalReference.Item; });
-        Assert.Throws<InvalidOperationException>(() => { TestObject = TestInterface.Item as Name; });
-
-        TestObject = NodeHelper.CreateEmptyName();
 
         TestOptionalReference.Item = TestObject;
         TestInterface.Item = TestObject;
 
         IsAssigned = TestOptionalReference.IsAssigned;
-        HasItem = TestOptionalReference.HasItem;
         Assert.True(IsAssigned);
-        Assert.True(HasItem);
 
         TestObject = TestOptionalReference.Item;
         Assert.NotNull(TestObject);
@@ -213,34 +201,23 @@ public partial class CoverageSet
         TestObject = TestInterface.Item as Name;
         Assert.NotNull(TestObject);
 
-        Assert.Throws<InvalidOperationException>(() => { TestOptionalReference.Item = null!; });
-        Assert.Throws<InvalidOperationException>(() => { TestInterface.Item = null!; });
-
         TestOptionalReference.Unassign();
         IsAssigned = TestOptionalReference.IsAssigned;
-        HasItem = TestOptionalReference.HasItem;
         Assert.False(IsAssigned);
-        Assert.True(HasItem);
 
         TestOptionalReference.Assign();
         IsAssigned = TestOptionalReference.IsAssigned;
-        HasItem = TestOptionalReference.HasItem;
         Assert.True(IsAssigned);
-        Assert.True(HasItem);
 
-        TestOptionalReference.Clear();
-        IsAssigned = TestOptionalReference.IsAssigned;
-        HasItem = TestOptionalReference.HasItem;
-        Assert.False(IsAssigned);
-        Assert.False(HasItem);
+        Identifier? WrongTestObject = NodeHelper.CreateEmptyIdentifier();
 
-        TestObject = NodeHelper.CreateEmptyName();
-        TestOptionalReference = new(TestObject);
+        Assert.Throws<InvalidOperationException>(() => { TestInterface.Item = WrongTestObject; });
 
-        IsAssigned = TestOptionalReference.IsAssigned;
-        HasItem = TestOptionalReference.HasItem;
-        Assert.False(IsAssigned);
-        Assert.True(HasItem);
+#if !DEBUG
+        Name NullName = null!;
+        Assert.Throws<ArgumentNullException>(() => { TestOptionalReference.Item = NullName; });
+        Assert.Throws<ArgumentNullException>(() => { TestInterface.Item = NullName; });
+#endif
     }
 
     [Test]

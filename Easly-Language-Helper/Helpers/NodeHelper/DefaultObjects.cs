@@ -317,7 +317,7 @@ public static partial class NodeHelper
     /// <returns>True if the node property is an unassigned optional child node; otherwise, false.</returns>
     private static bool IsEmptyOptionalChildNode(Node node, string propertyName)
     {
-        NodeTreeHelperOptional.GetChildNode(node, propertyName, out bool IsAssigned, out _, out _);
+        NodeTreeHelperOptional.GetChildNode(node, propertyName, out bool IsAssigned, out _);
         return !IsAssigned;
     }
 

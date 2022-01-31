@@ -109,7 +109,7 @@ public partial class SpecificObjectsCoverage
         Body Body7 = NodeHelper.CreateInitializedBody(typeof(ExternBody), Documentation, EmptyRequireBlockList, EmptyEnsureBlockList, EmptyExceptionIdentifierBlockList);
         Assert.That(Body7 is ExternBody);
 
-        IOptionalReference<ObjectType> AncestorType = OptionalReferenceHelper.CreateEmptyReference<ObjectType>();
+        IOptionalReference<ObjectType> AncestorType = OptionalReferenceHelper.CreateReference(NodeHelper.CreateDefaultObjectType());
 
         Body Body8 = NodeHelper.CreateInitializedBody(typeof(PrecursorBody), Documentation, EmptyRequireBlockList, EmptyEnsureBlockList, EmptyExceptionIdentifierBlockList, null, null, null, AncestorType);
         Assert.That(Body8 is PrecursorBody);
@@ -302,8 +302,8 @@ public partial class SpecificObjectsCoverage
         QueryOverload DefaultQueryOverload = NodeHelper.CreateEmptyQueryOverload();
         IBlockList<QueryOverload> SimpleQueryOverloadBlockList = BlockListHelper.CreateSimpleBlockList(DefaultQueryOverload);
         IBlockList<Identifier> EmptyIdentifierBlockList = BlockListHelper.CreateEmptyBlockList<Identifier>();
-        IOptionalReference<Body> EmptyGetter = OptionalReferenceHelper.CreateEmptyReference<Body>();
-        IOptionalReference<Body> EmptySetter = OptionalReferenceHelper.CreateEmptyReference<Body>();
+        IOptionalReference<Body> EmptyGetter = OptionalReferenceHelper.CreateReference(NodeHelper.CreateDefaultBody());
+        IOptionalReference<Body> EmptySetter = OptionalReferenceHelper.CreateReference(NodeHelper.CreateDefaultBody());
         IBlockList<EntityDeclaration> EmptyEntityDeclarationBlockList = BlockListHelper.CreateEmptyBlockList<EntityDeclaration>();
         EntityDeclaration DefaultEntityDeclaration = NodeHelper.CreateEmptyEntityDeclaration();
         IBlockList<EntityDeclaration> SimpleEntityDeclarationBlockList = BlockListHelper.CreateSimpleBlockList(DefaultEntityDeclaration);

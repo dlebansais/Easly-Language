@@ -38,7 +38,7 @@ public static partial class NodeHelper
 
         Assembly ReferenceAssembly = ReferenceType.Assembly;
 
-        IOptionalReference EmptyReference = SafeType.CreateInstanceFromDefaultConstructor<IOptionalReference>(ReferenceAssembly, FullName);
+        IOptionalReference EmptyReference = SafeType.CreateInstance<IOptionalReference>(ReferenceAssembly, FullName);
 
         ItemProperty.SetValue(node, EmptyReference);
     }

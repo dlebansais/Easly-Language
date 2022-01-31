@@ -26,8 +26,6 @@ public partial class ToolsCloneCoverage
         SimpleClass.FromIdentifier.Assign();
         Assert.That(NodeHelper.IsOptionalAssignedToDefault((IOptionalReference)SimpleClass.FromIdentifier));
 
-        SimpleClass.FromIdentifier.Clear();
-
         Class ClassClone;
 
         ClassClone = (Class)NodeHelper.DeepCloneNode(SimpleClass, false);

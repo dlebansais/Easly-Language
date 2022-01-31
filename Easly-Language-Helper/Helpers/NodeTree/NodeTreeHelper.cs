@@ -45,7 +45,8 @@ public static partial class NodeTreeHelper
 
         List<string> Result = new();
         foreach (PropertyInfo Property in Properties)
-            Result.Add(Property.Name);
+            if (Property.PropertyType != nodeType)
+                Result.Add(Property.Name);
 
         Result.Sort();
 

@@ -8,6 +8,11 @@
 public class Document
 {
     /// <summary>
+    /// Gets the default <see cref="Document"/> object.
+    /// </summary>
+    public static Document Default { get; } = new();
+
+    /// <summary>
     /// Gets or sets the text comment.
     /// </summary>
     public virtual string Comment { get; set; } = string.Empty;

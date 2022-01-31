@@ -7,16 +7,19 @@ namespace BaseNode;
 [System.Serializable]
 public class Identifier : Node
 {
-#if !NO_PARAMETERLESS_CONSTRUCTOR
-#pragma warning disable SA1600 // Elements should be documented
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-    public Identifier()
-#pragma warning restore SA1600 // Elements should be documented
-        : base(default!)
+    /// <summary>
+    /// Gets the default <see cref="Identifier"/> object.
+    /// </summary>
+    public static new Identifier Default { get; } = new();
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Identifier"/> class.
+    /// </summary>
+    protected Identifier()
     {
-        Text = default!;
+        Text = string.Empty;
     }
-#endif
+
     /// <summary>
     /// Initializes a new instance of the <see cref="Identifier"/> class.
     /// </summary>

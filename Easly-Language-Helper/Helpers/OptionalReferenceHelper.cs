@@ -9,13 +9,6 @@ using Easly;
 /// </summary>
 public static class OptionalReferenceHelper
 {
-    /// <inheritdoc cref="OptionalReferenceHelper{TNode}.CreateEmptyReference"/>
-    public static IOptionalReference<TNode> CreateEmptyReference<TNode>()
-        where TNode : Node
-    {
-        return OptionalReferenceHelper<TNode>.CreateEmptyReference();
-    }
-
     /// <inheritdoc cref="OptionalReferenceHelper{TNode}.CreateReference"/>
     public static IOptionalReference<TNode> CreateReference<TNode>(TNode item)
         where TNode : Node

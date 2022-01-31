@@ -77,44 +77,32 @@ public partial class NodeTreeHelperOptionalCoverage
     {
         Class NewClass = NodeHelper.CreateSimpleClass("a");
         bool IsAssigned;
-        bool HasItem;
         Node ChildNode;
 
-        NodeTreeHelperOptional.GetChildNode(NewClass, nameof(Class.FromIdentifier), out IsAssigned, out HasItem, out _);
+        NodeTreeHelperOptional.GetChildNode(NewClass, nameof(Class.FromIdentifier), out IsAssigned, out _);
         Assert.False(IsAssigned);
-        Assert.True(HasItem);
 
         NodeTreeHelperOptional.GetChildNode((IOptionalReference)NewClass.FromIdentifier, out IsAssigned, out _);
         Assert.False(IsAssigned);
 
         NodeTreeHelperOptional.AssignChildNode(NewClass, nameof(Class.FromIdentifier));
 
-        NodeTreeHelperOptional.GetChildNode(NewClass, nameof(Class.FromIdentifier), out IsAssigned, out HasItem, out ChildNode);
+        NodeTreeHelperOptional.GetChildNode(NewClass, nameof(Class.FromIdentifier), out IsAssigned, out ChildNode);
         Assert.True(IsAssigned);
-        Assert.True(HasItem);
         Assert.AreEqual(ChildNode, NewClass.FromIdentifier.Item);
 
         NodeTreeHelperOptional.GetChildNode((IOptionalReference)NewClass.FromIdentifier, out IsAssigned, out ChildNode);
         Assert.True(IsAssigned);
         Assert.AreEqual(ChildNode, NewClass.FromIdentifier.Item);
 
-        NodeTreeHelperOptional.ClearOptionalChildNode(NewClass, nameof(Class.FromIdentifier));
-
-        NodeTreeHelperOptional.GetChildNode(NewClass, nameof(Class.FromIdentifier), out IsAssigned, out HasItem, out _);
-        Assert.False(IsAssigned);
-        Assert.False(HasItem);
-
-        NodeTreeHelperOptional.GetChildNode((IOptionalReference)NewClass.FromIdentifier, out IsAssigned, out _);
-        Assert.False(IsAssigned);
-
-        Assert.Throws<ArgumentException>(() => { NodeTreeHelperOptional.GetChildNode(NewClass, nameof(Identifier.Text), out _, out _, out _); });
-        Assert.Throws<ArgumentException>(() => { NodeTreeHelperOptional.GetChildNode(NewClass, nameof(Class.EntityName), out _, out _, out _); });
+        Assert.Throws<ArgumentException>(() => { NodeTreeHelperOptional.GetChildNode(NewClass, nameof(Identifier.Text), out _, out _); });
+        Assert.Throws<ArgumentException>(() => { NodeTreeHelperOptional.GetChildNode(NewClass, nameof(Class.EntityName), out _, out _); });
 
 #if !DEBUG
         Class NullClass = null!;
         string NullString = null!;
-        Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperOptional.GetChildNode(NullClass, nameof(Class.FromIdentifier), out _, out _, out _); });
-        Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperOptional.GetChildNode(NewClass, NullString, out _, out _, out _); });
+        Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperOptional.GetChildNode(NullClass, nameof(Class.FromIdentifier), out _, out _); });
+        Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperOptional.GetChildNode(NewClass, NullString, out _, out _); });
 #endif
     }
 
@@ -190,7 +178,6 @@ public partial class NodeTreeHelperOptionalCoverage
         Identifier SimpleIdentifier = NodeHelper.CreateSimpleIdentifier("b");
 
         NodeTreeHelperOptional.SetOptionalChildNode(NewClass, nameof(Class.FromIdentifier), SimpleIdentifier);
-        Assert.True(NewClass.FromIdentifier.HasItem);
         Assert.True(NewClass.FromIdentifier.IsAssigned);
         Assert.AreEqual(NewClass.FromIdentifier.Item, SimpleIdentifier);
 
@@ -279,28 +266,6 @@ public partial class NodeTreeHelperOptionalCoverage
         string NullString = null!;
         Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperOptional.UnassignChildNode(NullClass, nameof(Class.FromIdentifier)); });
         Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperOptional.UnassignChildNode(NewClass, NullString); });
-#endif
-    }
-
-    [Test]
-    public static void TestClearOptionalChildNode()
-    {
-        Class NewClass = NodeHelper.CreateSimpleClass("a");
-
-        Assert.True(NewClass.FromIdentifier.HasItem);
-        Assert.False(NewClass.FromIdentifier.IsAssigned);
-
-        NodeTreeHelperOptional.ClearOptionalChildNode(NewClass, nameof(Class.FromIdentifier));
-        Assert.False(NewClass.FromIdentifier.HasItem);
-
-        Assert.Throws<ArgumentException>(() => { NodeTreeHelperOptional.ClearOptionalChildNode(NewClass, nameof(Identifier.Text)); });
-        Assert.Throws<ArgumentException>(() => { NodeTreeHelperOptional.ClearOptionalChildNode(NewClass, nameof(Class.EntityName)); });
-
-#if !DEBUG
-        Class NullClass = null!;
-        string NullString = null!;
-        Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperOptional.ClearOptionalChildNode(NullClass, nameof(Class.FromIdentifier)); });
-        Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperOptional.ClearOptionalChildNode(NewClass, NullString); });
 #endif
     }
 }

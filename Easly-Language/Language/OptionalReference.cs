@@ -1,6 +1,7 @@
 ﻿namespace Easly;
 
 using System;
+using Contracts;
 
 /// <summary>
 /// Represents an optional reference.
@@ -11,11 +12,6 @@ public interface IOptionalReference
     /// Gets a value indicating whether the reference is assigned.
     /// </summary>
     bool IsAssigned { get; }
-
-    /// <summary>
-    /// Gets a value indicating whether there is a reference to assign.
-    /// </summary>
-    bool HasItem { get; }
 
     /// <summary>
     /// Gets or sets the reference.
@@ -31,11 +27,6 @@ public interface IOptionalReference
     /// Unassigns the reference.
     /// </summary>
     void Unassign();
-
-    /// <summary>
-    /// Clears the reference.
-    /// </summary>
-    void Clear();
 }
 
 /// <summary>
@@ -51,11 +42,6 @@ public interface IOptionalReference<T>
     bool IsAssigned { get; }
 
     /// <summary>
-    /// Gets a value indicating whether there is a reference to assign.
-    /// </summary>
-    bool HasItem { get; }
-
-    /// <summary>
     /// Gets or sets the reference.
     /// </summary>
     T Item { get; set; }
@@ -69,11 +55,6 @@ public interface IOptionalReference<T>
     /// Unassigns the reference.
     /// </summary>
     void Unassign();
-
-    /// <summary>
-    /// Clears the reference.
-    /// </summary>
-    void Clear();
 }
 
 /// <summary>
@@ -85,14 +66,6 @@ public class OptionalReference<T> : IOptionalReference<T>, IOptionalReference
     where T : class
 {
     #region Init
-    /// <summary>
-    /// Initializes a new instance of the <see cref="OptionalReference{T}"/> class.
-    /// </summary>
-    public OptionalReference()
-    {
-        ItemInternal = null;
-    }
-
     /// <summary>
     /// Initializes a new instance of the <see cref="OptionalReference{T}"/> class.
     /// </summary>
@@ -110,45 +83,30 @@ public class OptionalReference<T> : IOptionalReference<T>, IOptionalReference
     public bool IsAssigned { get; private set; }
 
     /// <summary>
-    /// Gets a value indicating whether there is object reference to assign.
-    /// </summary>
-    public bool HasItem { get { return ItemInternal is not null; } }
-
-    /// <summary>
     /// Gets or sets the reference.
     /// </summary>
     [PolySerializer.Serializable(Condition = nameof(IsAssigned))]
     public T Item
     {
-        get
-        {
-            if (ItemInternal is null)
-                throw new InvalidOperationException();
-            else
-                return ItemInternal;
-        }
+        get { return ItemInternal; }
         set
         {
-            if (value is not null)
-            {
-                ItemInternal = value;
-                IsAssigned = true;
-            }
-            else
-                throw new InvalidOperationException();
+            Contract.RequireNotNull(value, out T Value);
+
+            ItemInternal = Value;
+            IsAssigned = true;
         }
     }
 
     /// <inheritdoc/>
     object IOptionalReference.Item
     {
-        get
-        {
-            return Item;
-        }
+        get { return Item; }
         set
         {
-            if (value is T AsItem)
+            Contract.RequireNotNull(value, out object Value);
+
+            if (Value is T AsItem)
             {
                 ItemInternal = AsItem;
                 IsAssigned = true;
@@ -159,7 +117,7 @@ public class OptionalReference<T> : IOptionalReference<T>, IOptionalReference
     }
 
     [PolySerializer.Serializable(Exclude = true)]
-    private T? ItemInternal;
+    private T ItemInternal;
     #endregion
 
     #region Assignment
@@ -168,9 +126,6 @@ public class OptionalReference<T> : IOptionalReference<T>, IOptionalReference
     /// </summary>
     public void Assign()
     {
-        if (ItemInternal is null)
-            throw new InvalidOperationException();
-
         IsAssigned = true;
     }
 
@@ -180,15 +135,6 @@ public class OptionalReference<T> : IOptionalReference<T>, IOptionalReference
     public void Unassign()
     {
         IsAssigned = false;
-    }
-
-    /// <summary>
-    /// Clears the reference.
-    /// </summary>
-    public void Clear()
-    {
-        IsAssigned = false;
-        ItemInternal = null;
     }
     #endregion
 }

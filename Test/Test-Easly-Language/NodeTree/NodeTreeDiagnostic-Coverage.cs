@@ -38,10 +38,6 @@ public partial class NodeTreeDiagnosticCoverage
         Result = NodeTreeDiagnostic.IsValid(NewPrecursorExpression, throwOnInvalid: true);
         Assert.True(Result);
 
-        NewPrecursorExpression.AncestorType.Clear();
-        Result = NodeTreeDiagnostic.IsValid(NewPrecursorExpression, throwOnInvalid: true);
-        Assert.True(Result);
-
         Inheritance NewInheritance = NodeHelper.CreateSimpleInheritance("a");
         Result = NodeTreeDiagnostic.IsValid(NewInheritance, throwOnInvalid: true);
         Assert.True(Result);

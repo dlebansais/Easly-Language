@@ -11,18 +11,20 @@ public partial class OptionalReferenceHelpersCoverage
     [Test]
     public static void Test()
     {
-        IOptionalReference<Identifier> EmptyEmptyReference = OptionalReferenceHelper.CreateEmptyReference<Identifier>();
-
         Identifier EmptyIdentifier = NodeHelper.CreateEmptyIdentifier();
-        IOptionalReference<Identifier> SimpleOptionalReference = OptionalReferenceHelper.CreateReference<Identifier>(EmptyIdentifier);
+        IOptionalReference<Identifier> EmptyOptionalReference = OptionalReferenceHelper.CreateReference(EmptyIdentifier);
 
-        IOptionalReference<Identifier> AssignedOptionalReference = OptionalReferenceHelper.CreateReference<Identifier>(EmptyIdentifier);
+        Identifier SimpleIdentifier = NodeHelper.CreateSimpleIdentifier("test");
+        IOptionalReference<Identifier> AssignedOptionalReference = OptionalReferenceHelper.CreateReference(SimpleIdentifier);
         AssignedOptionalReference.Assign();
 
         IOptionalReference<Identifier> OptionalReferenceCopy;
 
-        OptionalReferenceCopy = OptionalReferenceHelper.CreateReferenceCopy<Identifier>(EmptyEmptyReference);
-        OptionalReferenceCopy = OptionalReferenceHelper.CreateReferenceCopy<Identifier>(SimpleOptionalReference);
-        OptionalReferenceCopy = OptionalReferenceHelper.CreateReferenceCopy<Identifier>(AssignedOptionalReference);
+        OptionalReferenceCopy = OptionalReferenceHelper.CreateReferenceCopy(EmptyOptionalReference);
+        Assert.IsFalse(OptionalReferenceCopy.IsAssigned);
+
+        OptionalReferenceCopy = OptionalReferenceHelper.CreateReferenceCopy(AssignedOptionalReference);
+        Assert.IsTrue(OptionalReferenceCopy.IsAssigned);
+        Assert.AreEqual(OptionalReferenceCopy.Item.Text, AssignedOptionalReference.Item.Text);
     }
 }

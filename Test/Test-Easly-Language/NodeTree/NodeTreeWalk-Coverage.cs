@@ -27,7 +27,7 @@ public partial class NodeTreeWalkCoverage
     private class TestLibrary : Library
     {
         public TestLibrary()
-            : base(NodeHelper.CreateEmptyDocumentation(), NodeHelper.CreateEmptyName(), OptionalReferenceHelper.CreateEmptyReference<Identifier>(), BlockListHelper.CreateEmptyBlockList<Import>(), BlockListHelper.CreateEmptyBlockList<Identifier>())
+            : base(NodeHelper.CreateEmptyDocumentation(), NodeHelper.CreateEmptyName(), OptionalReferenceHelper.CreateReference(NodeHelper.CreateEmptyIdentifier()), BlockListHelper.CreateEmptyBlockList<Import>(), BlockListHelper.CreateEmptyBlockList<Identifier>())
         {
         }
 
@@ -197,7 +197,7 @@ public partial class NodeTreeWalkCoverage
         NewTestLibrary.ImportBlocks = BlockListHelper.CreateEmptyBlockList<Import>();
         NewTestLibrary.ClassIdentifierBlocks = BlockListHelper.CreateEmptyBlockList<Identifier>();
         NewTestLibrary.EntityName = NodeHelper.CreateSimpleName("a");
-        NewTestLibrary.FromIdentifier = OptionalReferenceHelper.CreateEmptyReference<Identifier>();
+        NewTestLibrary.FromIdentifier = OptionalReferenceHelper.CreateReference(NodeHelper.CreateEmptyIdentifier());
 
         NewTestRoot.LibraryList.Add(NewTestLibrary);
 

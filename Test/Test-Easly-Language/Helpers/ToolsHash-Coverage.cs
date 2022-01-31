@@ -25,8 +25,6 @@ public partial class ToolsHashCoverage
         SimpleClass.FromIdentifier.Assign();
         Assert.That(NodeHelper.IsOptionalAssignedToDefault((IOptionalReference)SimpleClass.FromIdentifier));
 
-        SimpleClass.FromIdentifier.Clear();
-
         ulong ClassHash;
 
         ClassHash = NodeHelper.NodeHash(SimpleClass);

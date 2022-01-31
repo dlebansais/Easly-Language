@@ -20,7 +20,6 @@ public static partial class NodeHelper
         if (!optional.IsAssigned)
             return false;
 
-        Debug.Assert(optional.HasItem);
         Node Node = (Node)optional.Item;
 
         return IsDefaultNode(Node);

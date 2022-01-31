@@ -72,9 +72,8 @@ public static class NodeTreeHelperOptional
     /// <param name="node">The node.</param>
     /// <param name="propertyName">The property name.</param>
     /// <param name="isAssigned">A value indicating whether the child node is assigned upon return.</param>
-    /// <param name="hasItem">A value indicating whether there is a child node upon return.</param>
     /// <param name="childNode">The child node upon return.</param>
-    public static void GetChildNode(Node node, string propertyName, out bool isAssigned, out bool hasItem, out Node childNode)
+    public static void GetChildNode(Node node, string propertyName, out bool isAssigned, out Node childNode)
     {
         Contract.RequireNotNull(node, out Node Node);
         Contract.RequireNotNull(propertyName, out string PropertyName);
@@ -82,16 +81,7 @@ public static class NodeTreeHelperOptional
         ToOptionalChildProperty(Node, PropertyName, out _, out _, out IOptionalReference Optional);
 
         isAssigned = Optional.IsAssigned;
-        hasItem = Optional.HasItem;
-
-        if (hasItem)
-            childNode = (Node)Optional.Item;
-        else
-        {
-            Debug.Assert(!isAssigned);
-
-            Contract.Unused(out childNode);
-        }
+        childNode = (Node)Optional.Item;
     }
 
     /// <summary>
@@ -105,15 +95,7 @@ public static class NodeTreeHelperOptional
         Contract.RequireNotNull(optional, out IOptionalReference Optional);
 
         isAssigned = Optional.IsAssigned;
-
-        if (Optional.HasItem)
-            childNode = (Node)Optional.Item;
-        else
-        {
-            Debug.Assert(!isAssigned);
-
-            Contract.Unused(out childNode);
-        }
+        childNode = (Node)Optional.Item;
     }
 
     /// <summary>
@@ -250,23 +232,6 @@ public static class NodeTreeHelperOptional
         ToOptionalChildProperty(Node, PropertyName, out _, out _, out IOptionalReference Optional);
 
         Optional.Unassign();
-    }
-
-    /// <summary>
-    /// Clears the child node of a given optional reference property in a node.
-    /// </summary>
-    /// <param name="node">The node.</param>
-    /// <param name="propertyName">The property name.</param>
-    public static void ClearOptionalChildNode(Node node, string propertyName)
-    {
-        Contract.RequireNotNull(node, out Node Node);
-        Contract.RequireNotNull(propertyName, out string PropertyName);
-
-        ToOptionalChildProperty(Node, PropertyName, out _, out _, out IOptionalReference Optional);
-
-        Optional.Clear();
-
-        Debug.Assert(!Optional.HasItem);
     }
 
     private static bool IsOptionalChildNodePropertyInternal(Type nodeType, string propertyName, out Type childNodeType)

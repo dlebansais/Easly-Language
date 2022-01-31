@@ -86,13 +86,10 @@ public static class NodeTreeDiagnostic
 
     private static bool IsValidOptionalChildNode(List<Guid> guidList, Node originalRoot, Node root, bool throwOnInvalid, string propertyName)
     {
-        NodeTreeHelperOptional.GetChildNode(root, propertyName, out _, out bool HasItem, out Node ChildNode);
+        NodeTreeHelperOptional.GetChildNode(root, propertyName, out _, out Node ChildNode);
 
-        if (HasItem)
-        {
-            if (!IsValid(guidList, originalRoot, ChildNode, throwOnInvalid))
-                return false;
-        }
+        if (!IsValid(guidList, originalRoot, ChildNode, throwOnInvalid))
+            return false;
 
         return true;
     }
