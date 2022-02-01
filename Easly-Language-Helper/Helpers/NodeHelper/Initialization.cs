@@ -14,8 +14,8 @@ public static partial class NodeHelper
 {
     private static void InitializeDocumentation(Node node)
     {
-        Document EmptyDocumentation = CreateEmptyDocumentation();
-        ((Node)node).Documentation = EmptyDocumentation;
+        Document EmptyDocument = CreateEmptyDocument();
+        ((Node)node).Documentation = EmptyDocument;
     }
 
     private static void InitializeChildNode(Node node, string propertyName, Node childNode)
@@ -71,21 +71,21 @@ public static partial class NodeHelper
         NodeList.Add(firstNode);
     }
 
-    private static void InitializeEmptyBlockList(Node node, string propertyName, /*Type childInterfaceType,*/ Type childNodeType)
+    private static void InitializeEmptyBlockList(Node node, string propertyName, Type childNodeType)
     {
-        Type[] Generics = new Type[] { /*childInterfaceType,*/ childNodeType };
+        Type[] Generics = new Type[] { childNodeType };
         Type BlockListType = typeof(BlockList<>).MakeGenericType(Generics);
         string FullName = SafeType.FullName(BlockListType);
 
         Assembly BlockListAssembly = BlockListType.Assembly;
         IBlockList EmptyBlockList = SafeType.CreateInstance<IBlockList>(BlockListAssembly, FullName);
 
-        Document EmptyEmptyDocumentation = CreateEmptyDocumentation();
+        Document EmptyDocument = CreateEmptyDocument();
 
         Type EmptyBlockListType = EmptyBlockList.GetType();
         PropertyInfo DocumentationProperty = SafeType.GetProperty(EmptyBlockListType, nameof(Node.Documentation));
 
-        DocumentationProperty.SetValue(EmptyBlockList, EmptyEmptyDocumentation);
+        DocumentationProperty.SetValue(EmptyBlockList, EmptyDocument);
 
         Type ListOfBlockType = typeof(List<>).MakeGenericType(new Type[] { typeof(IBlock<>).MakeGenericType(Generics) });
 
@@ -104,11 +104,11 @@ public static partial class NodeHelper
         ItemProperty.SetValue(node, EmptyBlockList);
     }
 
-    private static void InitializeSimpleBlockList(Node node, string propertyName, /*Type childInterfaceType,*/ Type childNodeType, Node firstNode)
+    private static void InitializeSimpleBlockList(Node node, string propertyName, Type childNodeType, Node firstNode)
     {
-        InitializeEmptyBlockList(node, propertyName, /*childInterfaceType,*/ childNodeType);
+        InitializeEmptyBlockList(node, propertyName, childNodeType);
 
-        Type[] Generics = new Type[] { /*childInterfaceType,*/ childNodeType };
+        Type[] Generics = new Type[] { childNodeType };
         Type BlockType = typeof(Block<>).MakeGenericType(Generics);
 
         Assembly BlockTypeAssembly = BlockType.Assembly;
@@ -116,13 +116,13 @@ public static partial class NodeHelper
 
         IBlock EmptyBlock = SafeType.CreateInstance<IBlock>(BlockTypeAssembly, BlockTypeFullName);
 
-        Document EmptyEmptyDocumentation = CreateEmptyDocumentation();
+        Document EmptyDocumentation = CreateEmptyDocument();
 
         Type EmptyBlockType = EmptyBlock.GetType();
 
         PropertyInfo DocumentationProperty = SafeType.GetProperty(EmptyBlockType, nameof(Node.Documentation));
 
-        DocumentationProperty.SetValue(EmptyBlock, EmptyEmptyDocumentation);
+        DocumentationProperty.SetValue(EmptyBlock, EmptyDocumentation);
 
         PropertyInfo ReplicationProperty = SafeType.GetProperty(EmptyBlockType, nameof(IBlock.Replication));
 

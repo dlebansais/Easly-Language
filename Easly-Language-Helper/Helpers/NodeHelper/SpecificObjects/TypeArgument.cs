@@ -19,8 +19,8 @@ public static partial class NodeHelper
         Contract.RequireNotNull(parameterIdentifier, out Identifier ParameterIdentifier);
         Contract.RequireNotNull(source, out ObjectType Source);
 
-        Document Documentation = CreateEmptyDocumentation();
-        AssignmentTypeArgument Result = new(Documentation, ParameterIdentifier, Source);
+        Document Document = CreateEmptyDocument();
+        AssignmentTypeArgument Result = new(Document, ParameterIdentifier, Source);
 
         return Result;
     }
@@ -34,8 +34,8 @@ public static partial class NodeHelper
     {
         Contract.RequireNotNull(source, out ObjectType Source);
 
-        Document Documentation = CreateEmptyDocumentation();
-        PositionalTypeArgument Result = new(Documentation, Source);
+        Document Document = CreateEmptyDocument();
+        PositionalTypeArgument Result = new(Document, Source);
 
         return Result;
     }

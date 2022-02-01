@@ -1,10 +1,9 @@
 @echo off
-echo Starting Tests...
 
+echo ************************************************************** Building...
 dotnet build -v quiet -c Debug
 rem dotnet build -v quiet -c Release
 
-rem dotnet test --no-build -c Debug --filter TestCategory="Complexify"
-
-dotnet test --no-build -c Debug
-rem dotnet test --no-build -c Release
+echo ************************************************************** Starting Tests...
+dotnet test --no-build -l "console;verbosity=detailed" -c Debug
+rem dotnet test --no-build -l "console;verbosity=detailed" -c Release

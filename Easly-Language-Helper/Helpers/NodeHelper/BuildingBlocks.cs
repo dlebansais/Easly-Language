@@ -15,15 +15,15 @@ public static partial class NodeHelper
     /// Creates a new instance of <see cref="Document"/> with empty text.
     /// </summary>
     /// <returns>The created instance.</returns>
-    public static Document CreateEmptyDocumentation()
+    public static Document CreateEmptyDocument()
     {
-        Document EmptyDocumentation = new()
+        Document EmptyDocument = new()
         {
             Comment = string.Empty,
             Uuid = Guid.NewGuid(),
         };
 
-        return EmptyDocumentation;
+        return EmptyDocument;
     }
 
     /// <summary>
@@ -32,17 +32,20 @@ public static partial class NodeHelper
     /// <param name="comment">The text comment.</param>
     /// <param name="uuid">The comment id.</param>
     /// <returns>The created instance.</returns>
-    public static Document CreateSimpleDocumentation(string comment, Guid uuid)
+    public static Document CreateSimpleDocument(string comment, Guid uuid)
     {
         Contract.RequireNotNull(comment, out string Comment);
 
-        Document SimpleDocumentation = new()
+        if (uuid == Guid.Empty)
+            throw new ArgumentException($"{nameof(uuid)} must not be {Guid.Empty}");
+
+        Document SimpleDocument = new()
         {
             Comment = Comment,
             Uuid = uuid,
         };
 
-        return SimpleDocumentation;
+        return SimpleDocument;
     }
 
     /// <summary>
@@ -51,9 +54,9 @@ public static partial class NodeHelper
     /// <returns>The created instance.</returns>
     public static Pattern CreateEmptyPattern()
     {
-        Document Documentation = CreateEmptyDocumentation();
+        Document Document = CreateEmptyDocument();
         string Text = "*";
-        Pattern EmptyPattern = new(Documentation, Text);
+        Pattern EmptyPattern = new(Document, Text);
 
         return EmptyPattern;
     }
@@ -67,8 +70,8 @@ public static partial class NodeHelper
     {
         Contract.RequireNotNull(text, out string Text);
 
-        Document Documentation = CreateEmptyDocumentation();
-        Pattern SimplePattern = new(Documentation, Text);
+        Document Document = CreateEmptyDocument();
+        Pattern SimplePattern = new(Document, Text);
 
         return SimplePattern;
     }
@@ -79,9 +82,9 @@ public static partial class NodeHelper
     /// <returns>The created instance.</returns>
     public static Identifier CreateEmptyIdentifier()
     {
-        Document Documentation = CreateEmptyDocumentation();
+        Document Document = CreateEmptyDocument();
         string Text = string.Empty;
-        Identifier EmptyIdentifier = new(Documentation, Text);
+        Identifier EmptyIdentifier = new(Document, Text);
 
         return EmptyIdentifier;
     }
@@ -95,8 +98,8 @@ public static partial class NodeHelper
     {
         Contract.RequireNotNull(text, out string Text);
 
-        Document Documentation = CreateEmptyDocumentation();
-        Identifier SimpleIdentifier = new(Documentation, Text);
+        Document Document = CreateEmptyDocument();
+        Identifier SimpleIdentifier = new(Document, Text);
 
         return SimpleIdentifier;
     }
@@ -107,9 +110,9 @@ public static partial class NodeHelper
     /// <returns>The created instance.</returns>
     public static Name CreateEmptyName()
     {
-        Document Documentation = CreateEmptyDocumentation();
+        Document Document = CreateEmptyDocument();
         string Text = string.Empty;
-        Name EmptyName = new(Documentation, Text);
+        Name EmptyName = new(Document, Text);
 
         return EmptyName;
     }
@@ -123,8 +126,8 @@ public static partial class NodeHelper
     {
         Contract.RequireNotNull(text, out string Text);
 
-        Document Documentation = CreateEmptyDocumentation();
-        Name SimpleName = new(Documentation, Text);
+        Document Document = CreateEmptyDocument();
+        Name SimpleName = new(Document, Text);
 
         return SimpleName;
     }
@@ -172,8 +175,8 @@ public static partial class NodeHelper
         if (Path.Count == 0)
             throw new ArgumentException($"{nameof(path)} must be have at least one element");
 
-        Document Documentation = CreateEmptyDocumentation();
-        QualifiedName NewQualifiedName = new(Documentation, Path);
+        Document Document = CreateEmptyDocument();
+        QualifiedName NewQualifiedName = new(Document, Path);
 
         return NewQualifiedName;
     }
@@ -184,10 +187,10 @@ public static partial class NodeHelper
     /// <returns>The created instance.</returns>
     public static QueryExpression CreateEmptyQueryExpression()
     {
-        Document Documentation = CreateEmptyDocumentation();
+        Document Document = CreateEmptyDocument();
         QualifiedName Query = CreateEmptyQualifiedName();
         IBlockList<Argument> ArgumentBlocks = BlockListHelper<Argument>.CreateEmptyBlockList();
-        QueryExpression EmptyQueryExpression = new(Documentation, Query, ArgumentBlocks);
+        QueryExpression EmptyQueryExpression = new(Document, Query, ArgumentBlocks);
 
         return EmptyQueryExpression;
     }
@@ -201,10 +204,10 @@ public static partial class NodeHelper
     {
         Contract.RequireNotNull(text, out string Text);
 
-        Document Documentation = CreateEmptyDocumentation();
+        Document Document = CreateEmptyDocument();
         QualifiedName Query = CreateSimpleQualifiedName(Text);
         IBlockList<Argument> ArgumentBlocks = BlockListHelper<Argument>.CreateEmptyBlockList();
-        QueryExpression SimpleQueryExpression = new(Documentation, Query, ArgumentBlocks);
+        QueryExpression SimpleQueryExpression = new(Document, Query, ArgumentBlocks);
 
         return SimpleQueryExpression;
     }
@@ -215,10 +218,10 @@ public static partial class NodeHelper
     /// <returns>The created instance.</returns>
     public static CommandInstruction CreateEmptyCommandInstruction()
     {
-        Document Documentation = CreateEmptyDocumentation();
+        Document Document = CreateEmptyDocument();
         QualifiedName Command = CreateEmptyQualifiedName();
         IBlockList<Argument> ArgumentBlocks = BlockListHelper<Argument>.CreateEmptyBlockList();
-        CommandInstruction EmptyCommandInstruction = new(Documentation, Command, ArgumentBlocks);
+        CommandInstruction EmptyCommandInstruction = new(Document, Command, ArgumentBlocks);
 
         return EmptyCommandInstruction;
     }
@@ -232,10 +235,10 @@ public static partial class NodeHelper
     {
         Contract.RequireNotNull(text, out string Text);
 
-        Document Documentation = CreateEmptyDocumentation();
+        Document Document = CreateEmptyDocument();
         QualifiedName Command = CreateSimpleQualifiedName(Text);
         IBlockList<Argument> ArgumentBlocks = BlockListHelper<Argument>.CreateEmptyBlockList();
-        CommandInstruction SimpleCommandInstruction = new(Documentation, Command, ArgumentBlocks);
+        CommandInstruction SimpleCommandInstruction = new(Document, Command, ArgumentBlocks);
 
         return SimpleCommandInstruction;
     }
@@ -246,9 +249,9 @@ public static partial class NodeHelper
     /// <returns>The created instance.</returns>
     public static PositionalArgument CreateEmptyPositionalArgument()
     {
-        Document Documentation = CreateEmptyDocumentation();
+        Document Document = CreateEmptyDocument();
         Expression Source = CreateDefaultExpression();
-        PositionalArgument EmptyPositionalArgument = new(Documentation, Source);
+        PositionalArgument EmptyPositionalArgument = new(Document, Source);
 
         return EmptyPositionalArgument;
     }
@@ -262,9 +265,9 @@ public static partial class NodeHelper
     {
         Contract.RequireNotNull(text, out string Text);
 
-        Document Documentation = CreateEmptyDocumentation();
+        Document Document = CreateEmptyDocument();
         Expression Source = CreateSimpleQueryExpression(Text);
-        PositionalArgument SimplePositionalArgument = new(Documentation, Source);
+        PositionalArgument SimplePositionalArgument = new(Document, Source);
 
         return SimplePositionalArgument;
     }
@@ -277,10 +280,10 @@ public static partial class NodeHelper
     {
         Identifier Parameter = CreateEmptyIdentifier();
 
-        Document Documentation = CreateEmptyDocumentation();
+        Document Document = CreateEmptyDocument();
         IBlockList<Identifier> ParameterBlocks = BlockListHelper<Identifier>.CreateSimpleBlockList(Parameter);
         Expression Source = CreateDefaultExpression();
-        AssignmentArgument EmptyAssignmentArgument = new(Documentation, ParameterBlocks, Source);
+        AssignmentArgument EmptyAssignmentArgument = new(Document, ParameterBlocks, Source);
 
         return EmptyAssignmentArgument;
     }
@@ -296,11 +299,11 @@ public static partial class NodeHelper
         Contract.RequireNotNull(destinationText, out string DestinationText);
         Contract.RequireNotNull(sourceText, out string SourceText);
 
-        Document Documentation = CreateEmptyDocumentation();
+        Document Document = CreateEmptyDocument();
         Identifier Parameter = CreateSimpleIdentifier(DestinationText);
         IBlockList<Identifier> ParameterBlocks = BlockListHelper<Identifier>.CreateSimpleBlockList(Parameter);
         Expression Source = CreateSimpleQueryExpression(SourceText);
-        AssignmentArgument SimpleAssignmentArgument = new(Documentation, ParameterBlocks, Source);
+        AssignmentArgument SimpleAssignmentArgument = new(Document, ParameterBlocks, Source);
 
         return SimpleAssignmentArgument;
     }
@@ -311,9 +314,9 @@ public static partial class NodeHelper
     /// <returns>The created instance.</returns>
     public static PositionalTypeArgument CreateEmptyPositionalTypeArgument()
     {
-        Document Documentation = CreateEmptyDocumentation();
+        Document Document = CreateEmptyDocument();
         ObjectType Source = CreateEmptySimpleType();
-        PositionalTypeArgument EmptyPositionalTypeArgument = new(Documentation, Source);
+        PositionalTypeArgument EmptyPositionalTypeArgument = new(Document, Source);
 
         return EmptyPositionalTypeArgument;
     }
@@ -327,9 +330,9 @@ public static partial class NodeHelper
     {
         Contract.RequireNotNull(text, out string Text);
 
-        Document Documentation = CreateEmptyDocumentation();
+        Document Document = CreateEmptyDocument();
         ObjectType Source = CreateSimpleSimpleType(Text);
-        PositionalTypeArgument SimplePositionalTypeArgument = new(Documentation, Source);
+        PositionalTypeArgument SimplePositionalTypeArgument = new(Document, Source);
 
         return SimplePositionalTypeArgument;
     }
@@ -340,9 +343,9 @@ public static partial class NodeHelper
     /// <returns>The created instance.</returns>
     public static SimpleType CreateEmptySimpleType()
     {
-        Document Documentation = CreateEmptyDocumentation();
+        Document Document = CreateEmptyDocument();
         Identifier ClassIdentifier = CreateEmptyIdentifier();
-        SimpleType EmptySimpleType = new(Documentation, SharingType.NotShared, ClassIdentifier);
+        SimpleType EmptySimpleType = new(Document, SharingType.NotShared, ClassIdentifier);
 
         return EmptySimpleType;
     }
@@ -356,9 +359,9 @@ public static partial class NodeHelper
     {
         Contract.RequireNotNull(text, out string Text);
 
-        Document Documentation = CreateEmptyDocumentation();
+        Document Document = CreateEmptyDocument();
         Identifier ClassIdentifier = CreateSimpleIdentifier(Text);
-        SimpleType SimpleSimpleType = new(Documentation, SharingType.NotShared, ClassIdentifier);
+        SimpleType SimpleSimpleType = new(Document, SharingType.NotShared, ClassIdentifier);
 
         return SimpleSimpleType;
     }
@@ -369,10 +372,10 @@ public static partial class NodeHelper
     /// <returns>The created instance.</returns>
     public static Scope CreateEmptyScope()
     {
-        Document Documentation = CreateEmptyDocumentation();
+        Document Document = CreateEmptyDocument();
         IBlockList<EntityDeclaration> EntityDeclarationBlocks = BlockListHelper<EntityDeclaration>.CreateEmptyBlockList();
         IBlockList<Instruction> InstructionBlocks = BlockListHelper<Instruction>.CreateEmptyBlockList();
-        Scope EmptyScope = new(Documentation, EntityDeclarationBlocks, InstructionBlocks);
+        Scope EmptyScope = new(Document, EntityDeclarationBlocks, InstructionBlocks);
 
         return EmptyScope;
     }
@@ -386,10 +389,10 @@ public static partial class NodeHelper
     {
         Contract.RequireNotNull(instruction, out Instruction Instruction);
 
-        Document Documentation = CreateEmptyDocumentation();
+        Document Document = CreateEmptyDocument();
         IBlockList<EntityDeclaration> EntityDeclarationBlocks = BlockListHelper<EntityDeclaration>.CreateEmptyBlockList();
         IBlockList<Instruction> InstructionBlocks = BlockListHelper<Instruction>.CreateSimpleBlockList(Instruction);
-        Scope SimpleScope = new(Documentation, EntityDeclarationBlocks, InstructionBlocks);
+        Scope SimpleScope = new(Document, EntityDeclarationBlocks, InstructionBlocks);
 
         return SimpleScope;
     }
@@ -400,10 +403,10 @@ public static partial class NodeHelper
     /// <returns>The created instance.</returns>
     public static Conditional CreateEmptyConditional()
     {
-        Document Documentation = CreateEmptyDocumentation();
+        Document Document = CreateEmptyDocument();
         Expression BooleanExpression = CreateDefaultExpression();
         Scope Instructions = CreateEmptyScope();
-        Conditional EmptyConditional = new(Documentation, BooleanExpression, Instructions);
+        Conditional EmptyConditional = new(Document, BooleanExpression, Instructions);
 
         return EmptyConditional;
     }
@@ -416,14 +419,14 @@ public static partial class NodeHelper
     {
         EntityDeclaration FirstResult = CreateEmptyEntityDeclaration();
 
-        Document Documentation = CreateEmptyDocumentation();
+        Document Document = CreateEmptyDocument();
         IBlockList<EntityDeclaration> ParameterBlocks = BlockListHelper<EntityDeclaration>.CreateEmptyBlockList();
         ParameterEndStatus ParameterEnd = ParameterEndStatus.Closed;
         IBlockList<EntityDeclaration> ResultBlocks = BlockListHelper<EntityDeclaration>.CreateSimpleBlockList(FirstResult);
         IBlockList<Identifier> ModifiedQueryBlocks = BlockListHelper<Identifier>.CreateEmptyBlockList();
         IOptionalReference<Expression> Variant = OptionalReferenceHelper<Expression>.CreateReference(CreateDefaultExpression());
         Body QueryBody = CreateDefaultBody();
-        QueryOverload EmptyQueryOverload = new(Documentation, ParameterBlocks, ParameterEnd, ResultBlocks, ModifiedQueryBlocks, Variant, QueryBody);
+        QueryOverload EmptyQueryOverload = new(Document, ParameterBlocks, ParameterEnd, ResultBlocks, ModifiedQueryBlocks, Variant, QueryBody);
 
         return EmptyQueryOverload;
     }
@@ -434,11 +437,11 @@ public static partial class NodeHelper
     /// <returns>The created instance.</returns>
     public static CommandOverload CreateEmptyCommandOverload()
     {
-        Document Documentation = CreateEmptyDocumentation();
+        Document Document = CreateEmptyDocument();
         IBlockList<EntityDeclaration> ParameterBlocks = BlockListHelper<EntityDeclaration>.CreateEmptyBlockList();
         ParameterEndStatus ParameterEnd = ParameterEndStatus.Closed;
         Body CommandBody = CreateDefaultBody();
-        CommandOverload EmptyCommandOverload = new(Documentation, ParameterBlocks, ParameterEnd, CommandBody);
+        CommandOverload EmptyCommandOverload = new(Document, ParameterBlocks, ParameterEnd, CommandBody);
 
         return EmptyCommandOverload;
     }
@@ -452,7 +455,7 @@ public static partial class NodeHelper
     {
         Contract.RequireNotNull(returnType, out ObjectType ReturnType);
 
-        Document Documentation = CreateEmptyDocumentation();
+        Document Document = CreateEmptyDocument();
         IBlockList<EntityDeclaration> ParameterBlocks = BlockListHelper<EntityDeclaration>.CreateEmptyBlockList();
         ParameterEndStatus ParameterEnd = ParameterEndStatus.Closed;
         Name EntityName = CreateSimpleName("Result");
@@ -461,7 +464,7 @@ public static partial class NodeHelper
         IBlockList<Assertion> RequireBlocks = BlockListHelper<Assertion>.CreateEmptyBlockList();
         IBlockList<Assertion> EnsureBlocks = BlockListHelper<Assertion>.CreateEmptyBlockList();
         IBlockList<Identifier> ExceptionIdentifierBlocks = BlockListHelper<Identifier>.CreateEmptyBlockList();
-        QueryOverloadType EmptyQueryOverloadType = new(Documentation, ParameterBlocks, ParameterEnd, ResultBlocks, RequireBlocks, EnsureBlocks, ExceptionIdentifierBlocks);
+        QueryOverloadType EmptyQueryOverloadType = new(Document, ParameterBlocks, ParameterEnd, ResultBlocks, RequireBlocks, EnsureBlocks, ExceptionIdentifierBlocks);
 
         return EmptyQueryOverloadType;
     }
@@ -472,13 +475,13 @@ public static partial class NodeHelper
     /// <returns>The created instance.</returns>
     public static CommandOverloadType CreateEmptyCommandOverloadType()
     {
-        Document Documentation = CreateEmptyDocumentation();
+        Document Document = CreateEmptyDocument();
         IBlockList<EntityDeclaration> ParameterBlocks = BlockListHelper<EntityDeclaration>.CreateEmptyBlockList();
         ParameterEndStatus ParameterEnd = ParameterEndStatus.Closed;
         IBlockList<Assertion> RequireBlocks = BlockListHelper<Assertion>.CreateEmptyBlockList();
         IBlockList<Assertion> EnsureBlocks = BlockListHelper<Assertion>.CreateEmptyBlockList();
         IBlockList<Identifier> ExceptionIdentifierBlocks = BlockListHelper<Identifier>.CreateEmptyBlockList();
-        CommandOverloadType EmptyCommandOverloadType = new(Documentation, ParameterBlocks, ParameterEnd, RequireBlocks, EnsureBlocks, ExceptionIdentifierBlocks);
+        CommandOverloadType EmptyCommandOverloadType = new(Document, ParameterBlocks, ParameterEnd, RequireBlocks, EnsureBlocks, ExceptionIdentifierBlocks);
 
         return EmptyCommandOverloadType;
     }
@@ -489,11 +492,11 @@ public static partial class NodeHelper
     /// <returns>The created instance.</returns>
     public static EntityDeclaration CreateEmptyEntityDeclaration()
     {
-        Document Documentation = CreateEmptyDocumentation();
+        Document Document = CreateEmptyDocument();
         Name EntityName = CreateEmptyName();
         ObjectType EntityType = CreateDefaultObjectType();
         IOptionalReference<Expression> DefaultValue = OptionalReferenceHelper<Expression>.CreateReference(CreateDefaultExpression());
-        EntityDeclaration EmptyEntityDeclaration = new(Documentation, EntityName, EntityType, DefaultValue);
+        EntityDeclaration EmptyEntityDeclaration = new(Document, EntityName, EntityType, DefaultValue);
 
         return EmptyEntityDeclaration;
     }

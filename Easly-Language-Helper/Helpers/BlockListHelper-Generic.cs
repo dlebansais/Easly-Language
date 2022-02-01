@@ -41,7 +41,7 @@ public static class BlockListHelper<TNode>
     /// <returns>The created instance.</returns>
     internal static IBlockList<TNode> CreateBlockListFromNodeList(IList<TNode> nodeList)
     {
-        Document Documentation = NodeHelper.CreateEmptyDocumentation();
+        Document Document = NodeHelper.CreateEmptyDocument();
         List<IBlock<TNode>> NodeBlockList = new();
 
         if (nodeList.Count > 0)
@@ -50,7 +50,7 @@ public static class BlockListHelper<TNode>
             NodeBlockList.Add(Block);
         }
 
-        BlockList<TNode> Result = new(Documentation, NodeBlockList);
+        BlockList<TNode> Result = new(Document, NodeBlockList);
 
         return Result;
     }
@@ -62,8 +62,8 @@ public static class BlockListHelper<TNode>
     /// <returns>The created instance.</returns>
     internal static IBlockList<TNode> CreateBlockListFromBlockList(IList<IBlock<TNode>> nodeBlockList)
     {
-        Document Documentation = NodeHelper.CreateEmptyDocumentation();
-        BlockList<TNode> Result = new(Documentation, nodeBlockList);
+        Document Document = NodeHelper.CreateEmptyDocument();
+        BlockList<TNode> Result = new(Document, nodeBlockList);
 
         return Result;
     }
@@ -78,7 +78,7 @@ public static class BlockListHelper<TNode>
         /*if (blockList is null)
             return CreateEmptyBlockList();*/
 
-        Document Documentation = NodeHelper.CreateEmptyDocumentation();
+        Document Document = NodeHelper.CreateEmptyDocument();
         List<IBlock<TNode>> NodeBlockList = new();
 
         for (int BlockIndex = 0; BlockIndex < blockList.NodeBlockList.Count; BlockIndex++)
@@ -102,7 +102,7 @@ public static class BlockListHelper<TNode>
             NodeBlockList.Add(NewBlock);
         }
 
-        BlockList<TNode> Result = new(Documentation, NodeBlockList);
+        BlockList<TNode> Result = new(Document, NodeBlockList);
 
         return Result;
     }
@@ -127,8 +127,8 @@ public static class BlockListHelper<TNode>
     /// <returns>The created instance.</returns>
     internal static IBlock<TNode> CreateBlock(IList<TNode> nodeList, ReplicationStatus replication, Pattern replicationPattern, Identifier sourceIdentifier)
     {
-        Document Documentation = NodeHelper.CreateEmptyDocumentation();
-        Block<TNode> Result = new(Documentation, nodeList, replication, replicationPattern, sourceIdentifier);
+        Document Document = NodeHelper.CreateEmptyDocument();
+        Block<TNode> Result = new(Document, nodeList, replication, replicationPattern, sourceIdentifier);
 
         return Result;
     }

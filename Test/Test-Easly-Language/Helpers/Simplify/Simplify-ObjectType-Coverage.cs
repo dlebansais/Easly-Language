@@ -2,15 +2,25 @@
 
 using BaseNode;
 using BaseNodeHelper;
-using Easly;
 using NUnit.Framework;
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 
 [TestFixture]
 public partial class SimplifyObjectTypeCoverage
 {
+    [Test]
+    [Category("Simplify")]
+    public static void TestSimpleType()
+    {
+        bool Result;
+        Node SimplifiedNode;
+
+        SimpleType ObjectType1 = NodeHelper.CreateSimpleSimpleType("a");
+
+        Result = NodeHelper.GetSimplifiedObjectType(ObjectType1, out SimplifiedNode);
+        Assert.IsFalse(Result);
+    }
+
     [Test]
     [Category("Simplify")]
     public static void TestAnchoredType()

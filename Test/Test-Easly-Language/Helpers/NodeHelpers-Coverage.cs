@@ -13,8 +13,8 @@ public partial class NodeHelperCoverage
     [Test]
     public static void TestBuilding()
     {
-        Document Documentation = NodeHelper.CreateEmptyDocumentation();
-        Documentation = NodeHelper.CreateSimpleDocumentation(string.Empty, Guid.Empty);
+        Document Document = NodeHelper.CreateEmptyDocument();
+        Document = NodeHelper.CreateSimpleDocument(string.Empty, Guid.NewGuid());
 
         Pattern Pattern = NodeHelper.CreateEmptyPattern();
         Pattern = NodeHelper.CreateSimplePattern(string.Empty);

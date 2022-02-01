@@ -13,7 +13,7 @@ public partial class NodeTreeHelperCoverage
     private class PrivateNode : Node
     {
         public PrivateNode()
-            : base(NodeHelper.CreateEmptyDocumentation())
+            : base(NodeHelper.CreateEmptyDocument())
         { 
         }
     }
@@ -547,18 +547,18 @@ public partial class NodeTreeHelperCoverage
     public static void TestSetDocumentation()
     {
         Identifier SimpleIdentifier = NodeHelper.CreateSimpleIdentifier("a");
-        Guid NewGuid = new();
-        Document SimpleDocumentation = NodeHelper.CreateSimpleDocumentation("a", NewGuid);
+        Guid NewGuid = Guid.NewGuid();
+        Document SimpleDocument = NodeHelper.CreateSimpleDocument("a", NewGuid);
 
-        NodeTreeHelper.SetDocumentation(SimpleIdentifier, SimpleDocumentation);
+        NodeTreeHelper.SetDocumentation(SimpleIdentifier, SimpleDocument);
         Assert.AreEqual(SimpleIdentifier.Documentation.Comment, "a");
         Assert.AreEqual(SimpleIdentifier.Documentation.Uuid, NewGuid);
 
 #if !DEBUG
         Identifier NullIdentifier = null!;
-        Document NullDocumentation = null!;
-        Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.SetDocumentation(NullIdentifier, SimpleDocumentation); });
-        Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.SetDocumentation(SimpleIdentifier, NullDocumentation); });
+        Document NullDocument = null!;
+        Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.SetDocumentation(NullIdentifier, SimpleDocument); });
+        Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.SetDocumentation(SimpleIdentifier, NullDocument); });
 #endif
     }
 

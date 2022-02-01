@@ -20,9 +20,9 @@ public static partial class NodeHelper
     {
         Contract.RequireNotNull(delegated, out Identifier Delegated);
 
-        Document Documentation = CreateEmptyDocumentation();
+        Document Document = CreateEmptyDocument();
         IOptionalReference<ObjectType> BaseType = OptionalReferenceHelper<ObjectType>.CreateReference(CreateDefaultObjectType());
-        AgentExpression Result = new(Documentation, Delegated, BaseType);
+        AgentExpression Result = new(Document, Delegated, BaseType);
 
         return Result;
     }
@@ -38,10 +38,10 @@ public static partial class NodeHelper
         Contract.RequireNotNull(delegated, out Identifier Delegated);
         Contract.RequireNotNull(baseType, out ObjectType BaseType);
 
-        Document Documentation = CreateEmptyDocumentation();
+        Document Document = CreateEmptyDocument();
         IOptionalReference<ObjectType> OptionalBaseType = OptionalReferenceHelper<ObjectType>.CreateReference(BaseType);
         OptionalBaseType.Assign();
-        AgentExpression Result = new(Documentation, Delegated, OptionalBaseType);
+        AgentExpression Result = new(Document, Delegated, OptionalBaseType);
 
         return Result;
     }
@@ -55,8 +55,8 @@ public static partial class NodeHelper
     {
         Contract.RequireNotNull(tagIdentifier, out Identifier TagIdentifier);
 
-        Document Documentation = CreateEmptyDocumentation();
-        AssertionTagExpression Result = new(Documentation, TagIdentifier);
+        Document Document = CreateEmptyDocument();
+        AssertionTagExpression Result = new(Document, TagIdentifier);
 
         return Result;
     }
@@ -73,8 +73,8 @@ public static partial class NodeHelper
         Contract.RequireNotNull(leftExpression, out Expression LeftExpression);
         Contract.RequireNotNull(rightExpression, out Expression RightExpression);
 
-        Document Documentation = CreateEmptyDocumentation();
-        BinaryConditionalExpression Result = new(Documentation, LeftExpression, conditional, RightExpression);
+        Document Document = CreateEmptyDocument();
+        BinaryConditionalExpression Result = new(Document, LeftExpression, conditional, RightExpression);
 
         return Result;
     }
@@ -92,8 +92,8 @@ public static partial class NodeHelper
         Contract.RequireNotNull(operatorName, out Identifier OperatorName);
         Contract.RequireNotNull(rightExpression, out Expression RightExpression);
 
-        Document Documentation = CreateEmptyDocumentation();
-        BinaryOperatorExpression Result = new(Documentation, LeftExpression, OperatorName, RightExpression);
+        Document Document = CreateEmptyDocument();
+        BinaryOperatorExpression Result = new(Document, LeftExpression, OperatorName, RightExpression);
 
         return Result;
     }
@@ -109,8 +109,8 @@ public static partial class NodeHelper
         Contract.RequireNotNull(classIdentifier, out Identifier ClassIdentifier);
         Contract.RequireNotNull(constantIdentifier, out Identifier ConstantIdentifier);
 
-        Document Documentation = CreateEmptyDocumentation();
-        ClassConstantExpression Result = new(Documentation, ClassIdentifier, ConstantIdentifier);
+        Document Document = CreateEmptyDocument();
+        ClassConstantExpression Result = new(Document, ClassIdentifier, ConstantIdentifier);
 
         return Result;
     }
@@ -125,8 +125,8 @@ public static partial class NodeHelper
     {
         Contract.RequireNotNull(source, out Expression Source);
 
-        Document Documentation = CreateEmptyDocumentation();
-        CloneOfExpression Result = new(Documentation, type, Source);
+        Document Document = CreateEmptyDocument();
+        CloneOfExpression Result = new(Document, type, Source);
 
         return Result;
     }
@@ -140,8 +140,8 @@ public static partial class NodeHelper
     {
         Contract.RequireNotNull(query, out QualifiedName Query);
 
-        Document Documentation = CreateEmptyDocumentation();
-        EntityExpression Result = new(Documentation, Query);
+        Document Document = CreateEmptyDocument();
+        EntityExpression Result = new(Document, Query);
 
         return Result;
     }
@@ -159,8 +159,8 @@ public static partial class NodeHelper
         Contract.RequireNotNull(leftExpression, out Expression LeftExpression);
         Contract.RequireNotNull(rightExpression, out Expression RightExpression);
 
-        Document Documentation = CreateEmptyDocumentation();
-        EqualityExpression Result = new(Documentation, LeftExpression, comparison, equality, RightExpression);
+        Document Document = CreateEmptyDocument();
+        EqualityExpression Result = new(Document, LeftExpression, comparison, equality, RightExpression);
 
         return Result;
     }
@@ -179,9 +179,9 @@ public static partial class NodeHelper
         if (ArgumentList.Count == 0)
             throw new ArgumentException($"{nameof(argumentList)} must not be empty");
 
-        Document Documentation = CreateEmptyDocumentation();
+        Document Document = CreateEmptyDocument();
         IBlockList<Argument> ArgumentBlocks = BlockListHelper<Argument>.CreateBlockListFromNodeList(ArgumentList);
-        IndexQueryExpression Result = new(Documentation, IndexedExpression, ArgumentBlocks);
+        IndexQueryExpression Result = new(Document, IndexedExpression, ArgumentBlocks);
 
         return Result;
     }
@@ -200,8 +200,8 @@ public static partial class NodeHelper
         if (NodeTreeHelperBlockList.IsBlockListEmpty((IBlockList)ArgumentBlocks))
             throw new ArgumentException($"{nameof(argumentBlocks)} must not be empty");
 
-        Document Documentation = CreateEmptyDocumentation();
-        IndexQueryExpression Result = new(Documentation, IndexedExpression, ArgumentBlocks);
+        Document Document = CreateEmptyDocument();
+        IndexQueryExpression Result = new(Document, IndexedExpression, ArgumentBlocks);
 
         return Result;
     }
@@ -217,9 +217,9 @@ public static partial class NodeHelper
         Contract.RequireNotNull(classIdentifier, out Identifier ClassIdentifier);
         Contract.RequireNotNull(assignmentArgumentList, out List<AssignmentArgument> AssignmentArgumentList);
 
-        Document Documentation = CreateEmptyDocumentation();
+        Document Document = CreateEmptyDocument();
         IBlockList<AssignmentArgument> AssignmentBlocks = BlockListHelper<AssignmentArgument>.CreateBlockListFromNodeList(AssignmentArgumentList);
-        InitializedObjectExpression Result = new(Documentation, ClassIdentifier, AssignmentBlocks);
+        InitializedObjectExpression Result = new(Document, ClassIdentifier, AssignmentBlocks);
 
         return Result;
     }
@@ -235,8 +235,8 @@ public static partial class NodeHelper
         Contract.RequireNotNull(classIdentifier, out Identifier ClassIdentifier);
         Contract.RequireNotNull(assignmentBlocks, out IBlockList<AssignmentArgument> AssignmentBlocks);
 
-        Document Documentation = CreateEmptyDocumentation();
-        InitializedObjectExpression Result = new(Documentation, ClassIdentifier, AssignmentBlocks);
+        Document Document = CreateEmptyDocument();
+        InitializedObjectExpression Result = new(Document, ClassIdentifier, AssignmentBlocks);
 
         return Result;
     }
@@ -248,8 +248,8 @@ public static partial class NodeHelper
     /// <returns>The created instance.</returns>
     public static KeywordEntityExpression CreateKeywordEntityExpression(Keyword value)
     {
-        Document Documentation = CreateEmptyDocumentation();
-        KeywordEntityExpression Result = new(Documentation, value);
+        Document Document = CreateEmptyDocument();
+        KeywordEntityExpression Result = new(Document, value);
 
         return Result;
     }
@@ -261,8 +261,8 @@ public static partial class NodeHelper
     /// <returns>The created instance.</returns>
     public static KeywordExpression CreateKeywordExpression(Keyword value)
     {
-        Document Documentation = CreateEmptyDocumentation();
-        KeywordExpression Result = new(Documentation, value);
+        Document Document = CreateEmptyDocument();
+        KeywordExpression Result = new(Document, value);
 
         return Result;
     }
@@ -276,8 +276,8 @@ public static partial class NodeHelper
     {
         Contract.RequireNotNull(text, out string Text);
 
-        Document Documentation = CreateEmptyDocumentation();
-        ManifestCharacterExpression Result = new(Documentation, Text);
+        Document Document = CreateEmptyDocument();
+        ManifestCharacterExpression Result = new(Document, Text);
 
         return Result;
     }
@@ -288,9 +288,9 @@ public static partial class NodeHelper
     /// <returns>The created instance.</returns>
     public static ManifestNumberExpression CreateDefaultManifestNumberExpression()
     {
-        Document Documentation = CreateEmptyDocumentation();
+        Document Document = CreateEmptyDocument();
         string Text = "0";
-        ManifestNumberExpression Result = new(Documentation, Text);
+        ManifestNumberExpression Result = new(Document, Text);
 
         return Result;
     }
@@ -304,8 +304,8 @@ public static partial class NodeHelper
     {
         Contract.RequireNotNull(numberText, out string NumberText);
 
-        Document Documentation = CreateEmptyDocumentation();
-        ManifestNumberExpression Result = new(Documentation, NumberText);
+        Document Document = CreateEmptyDocument();
+        ManifestNumberExpression Result = new(Document, NumberText);
 
         return Result;
     }
@@ -319,8 +319,8 @@ public static partial class NodeHelper
     {
         Contract.RequireNotNull(text, out string Text);
 
-        Document Documentation = CreateEmptyDocumentation();
-        ManifestStringExpression Result = new(Documentation, Text);
+        Document Document = CreateEmptyDocument();
+        ManifestStringExpression Result = new(Document, Text);
 
         return Result;
     }
@@ -334,8 +334,8 @@ public static partial class NodeHelper
     {
         Contract.RequireNotNull(objectName, out QualifiedName ObjectName);
 
-        Document Documentation = CreateEmptyDocumentation();
-        NewExpression Result = new(Documentation, ObjectName);
+        Document Document = CreateEmptyDocument();
+        NewExpression Result = new(Document, ObjectName);
 
         return Result;
     }
@@ -349,8 +349,8 @@ public static partial class NodeHelper
     {
         Contract.RequireNotNull(query, out QualifiedName Query);
 
-        Document Documentation = CreateEmptyDocumentation();
-        OldExpression Result = new(Documentation, Query);
+        Document Document = CreateEmptyDocument();
+        OldExpression Result = new(Document, Query);
 
         return Result;
     }
@@ -364,10 +364,10 @@ public static partial class NodeHelper
     {
         Contract.RequireNotNull(argumentList, out List<Argument> ArgumentList);
 
-        Document Documentation = CreateEmptyDocumentation();
+        Document Document = CreateEmptyDocument();
         IOptionalReference<ObjectType> AncestorType = OptionalReferenceHelper<ObjectType>.CreateReference(CreateDefaultObjectType());
         IBlockList<Argument> ArgumentBlocks = BlockListHelper<Argument>.CreateBlockListFromNodeList(ArgumentList);
-        PrecursorExpression Result = new(Documentation, AncestorType, ArgumentBlocks);
+        PrecursorExpression Result = new(Document, AncestorType, ArgumentBlocks);
 
         return Result;
     }
@@ -381,9 +381,9 @@ public static partial class NodeHelper
     {
         Contract.RequireNotNull(argumentBlocks, out IBlockList<Argument> ArgumentBlocks);
 
-        Document Documentation = CreateEmptyDocumentation();
+        Document Document = CreateEmptyDocument();
         IOptionalReference<ObjectType> AncestorType = OptionalReferenceHelper<ObjectType>.CreateReference(CreateDefaultObjectType());
-        PrecursorExpression Result = new(Documentation, AncestorType, ArgumentBlocks);
+        PrecursorExpression Result = new(Document, AncestorType, ArgumentBlocks);
 
         return Result;
     }
@@ -399,10 +399,10 @@ public static partial class NodeHelper
         Contract.RequireNotNull(argumentBlocks, out IBlockList<Argument> ArgumentBlocks);
         Contract.RequireNotNull(ancestorType, out ObjectType AncestorType);
 
-        Document Documentation = CreateEmptyDocumentation();
+        Document Document = CreateEmptyDocument();
         IOptionalReference<ObjectType> OptionalAncestorType = OptionalReferenceHelper<ObjectType>.CreateReference(AncestorType);
         OptionalAncestorType.Assign();
-        PrecursorExpression Result = new(Documentation, OptionalAncestorType, ArgumentBlocks);
+        PrecursorExpression Result = new(Document, OptionalAncestorType, ArgumentBlocks);
 
         return Result;
     }
@@ -419,10 +419,10 @@ public static partial class NodeHelper
         if (ArgumentList.Count == 0)
             throw new ArgumentException($"{nameof(argumentList)} must not be empty");
 
-        Document Documentation = CreateEmptyDocumentation();
+        Document Document = CreateEmptyDocument();
         IOptionalReference<ObjectType> AncestorType = OptionalReferenceHelper<ObjectType>.CreateReference(CreateDefaultObjectType());
         IBlockList<Argument> ArgumentBlocks = BlockListHelper<Argument>.CreateBlockListFromNodeList(ArgumentList);
-        PrecursorIndexExpression Result = new(Documentation, AncestorType, ArgumentBlocks);
+        PrecursorIndexExpression Result = new(Document, AncestorType, ArgumentBlocks);
 
         return Result;
     }
@@ -439,9 +439,9 @@ public static partial class NodeHelper
         if (NodeTreeHelperBlockList.IsBlockListEmpty((IBlockList)ArgumentBlocks))
             throw new ArgumentException($"{nameof(argumentBlocks)} must not be empty");
 
-        Document Documentation = CreateEmptyDocumentation();
+        Document Document = CreateEmptyDocument();
         IOptionalReference<ObjectType> AncestorType = OptionalReferenceHelper<ObjectType>.CreateReference(CreateDefaultObjectType());
-        PrecursorIndexExpression Result = new(Documentation, AncestorType, ArgumentBlocks);
+        PrecursorIndexExpression Result = new(Document, AncestorType, ArgumentBlocks);
 
         return Result;
     }
@@ -460,10 +460,10 @@ public static partial class NodeHelper
         if (NodeTreeHelperBlockList.IsBlockListEmpty((IBlockList)ArgumentBlocks))
             throw new ArgumentException($"{nameof(argumentBlocks)} must not be empty");
 
-        Document Documentation = CreateEmptyDocumentation();
+        Document Document = CreateEmptyDocument();
         IOptionalReference<ObjectType> OptionalAncestorType = OptionalReferenceHelper<ObjectType>.CreateReference(AncestorType);
         OptionalAncestorType.Assign();
-        PrecursorIndexExpression Result = new(Documentation, OptionalAncestorType, ArgumentBlocks);
+        PrecursorIndexExpression Result = new(Document, OptionalAncestorType, ArgumentBlocks);
 
         return Result;
     }
@@ -475,8 +475,8 @@ public static partial class NodeHelper
     /// <returns>The created instance.</returns>
     public static PreprocessorExpression CreatePreprocessorExpression(PreprocessorMacro value)
     {
-        Document Documentation = CreateEmptyDocumentation();
-        PreprocessorExpression Result = new(Documentation, value);
+        Document Document = CreateEmptyDocument();
+        PreprocessorExpression Result = new(Document, value);
 
         return Result;
     }
@@ -492,9 +492,9 @@ public static partial class NodeHelper
         Contract.RequireNotNull(query, out QualifiedName Query);
         Contract.RequireNotNull(argumentList, out List<Argument> ArgumentList);
 
-        Document Documentation = CreateEmptyDocumentation();
+        Document Document = CreateEmptyDocument();
         IBlockList<Argument> ArgumentBlocks = BlockListHelper<Argument>.CreateBlockListFromNodeList(ArgumentList);
-        QueryExpression SimpleQueryExpression = new(Documentation, Query, ArgumentBlocks);
+        QueryExpression SimpleQueryExpression = new(Document, Query, ArgumentBlocks);
 
         return SimpleQueryExpression;
     }
@@ -510,8 +510,8 @@ public static partial class NodeHelper
         Contract.RequireNotNull(query, out QualifiedName Query);
         Contract.RequireNotNull(argumentBlocks, out IBlockList<Argument> ArgumentBlocks);
 
-        Document Documentation = CreateEmptyDocumentation();
-        QueryExpression SimpleQueryExpression = new(Documentation, Query, ArgumentBlocks);
+        Document Document = CreateEmptyDocument();
+        QueryExpression SimpleQueryExpression = new(Document, Query, ArgumentBlocks);
 
         return SimpleQueryExpression;
     }
@@ -525,8 +525,8 @@ public static partial class NodeHelper
     {
         Contract.RequireNotNull(source, out Expression Source);
 
-        Document Documentation = CreateEmptyDocumentation();
-        ResultOfExpression Result = new(Documentation, Source);
+        Document Document = CreateEmptyDocument();
+        ResultOfExpression Result = new(Document, Source);
 
         return Result;
     }
@@ -540,8 +540,8 @@ public static partial class NodeHelper
     {
         Contract.RequireNotNull(rightExpression, out Expression RightExpression);
 
-        Document Documentation = CreateEmptyDocumentation();
-        UnaryNotExpression Result = new(Documentation, RightExpression);
+        Document Document = CreateEmptyDocument();
+        UnaryNotExpression Result = new(Document, RightExpression);
 
         return Result;
     }
@@ -557,8 +557,8 @@ public static partial class NodeHelper
         Contract.RequireNotNull(operatorName, out Identifier OperatorName);
         Contract.RequireNotNull(rightExpression, out Expression RightExpression);
 
-        Document Documentation = CreateEmptyDocumentation();
-        UnaryOperatorExpression Result = new(Documentation, OperatorName, RightExpression);
+        Document Document = CreateEmptyDocument();
+        UnaryOperatorExpression Result = new(Document, OperatorName, RightExpression);
 
         return Result;
     }

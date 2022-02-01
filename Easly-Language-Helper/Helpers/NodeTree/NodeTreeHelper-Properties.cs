@@ -349,7 +349,7 @@ public static partial class NodeTreeHelper
         Debug.Assert(PropertyType == typeof(Document));
 
         Guid GuidCopy = cloneCommentGuid ? SourceNode.Documentation.Uuid : Guid.NewGuid();
-        Document DocumentCopy = NodeHelper.CreateSimpleDocumentation(SourceNode.Documentation.Comment, GuidCopy);
+        Document DocumentCopy = NodeHelper.CreateSimpleDocument(SourceNode.Documentation.Comment, GuidCopy);
         Property.SetValue(DestinationNode, DocumentCopy);
     }
 
@@ -376,7 +376,7 @@ public static partial class NodeTreeHelper
         Debug.Assert(PropertyType == typeof(Document));
 
         Guid GuidCopy = cloneCommentGuid ? SourceBlock.Documentation.Uuid : Guid.NewGuid();
-        Document DocumentCopy = NodeHelper.CreateSimpleDocumentation(SourceBlock.Documentation.Comment, GuidCopy);
+        Document DocumentCopy = NodeHelper.CreateSimpleDocument(SourceBlock.Documentation.Comment, GuidCopy);
         Property.SetValue(DestinationBlock, DocumentCopy);
     }
 
@@ -403,7 +403,7 @@ public static partial class NodeTreeHelper
         Debug.Assert(PropertyType == typeof(Document));
 
         Guid GuidCopy = cloneCommentGuid ? SourceBlockList.Documentation.Uuid : Guid.NewGuid();
-        Document DocumentCopy = NodeHelper.CreateSimpleDocumentation(SourceBlockList.Documentation.Comment, GuidCopy);
+        Document DocumentCopy = NodeHelper.CreateSimpleDocument(SourceBlockList.Documentation.Comment, GuidCopy);
         Property.SetValue(DestinationBlockList, DocumentCopy);
     }
 

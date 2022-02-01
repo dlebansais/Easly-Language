@@ -16,7 +16,7 @@ public partial class NodeTreeWalkCoverage
     private class TestRoot : Root
     {
         public TestRoot()
-            : base(NodeHelper.CreateEmptyDocumentation(), BlockListHelper.CreateEmptyBlockList<Class>(), BlockListHelper.CreateEmptyBlockList<Library>(), new List<GlobalReplicate>())
+            : base(NodeHelper.CreateEmptyDocument(), BlockListHelper.CreateEmptyBlockList<Class>(), BlockListHelper.CreateEmptyBlockList<Library>(), new List<GlobalReplicate>())
         {
         }
 
@@ -27,7 +27,7 @@ public partial class NodeTreeWalkCoverage
     private class TestLibrary : Library
     {
         public TestLibrary()
-            : base(NodeHelper.CreateEmptyDocumentation(), NodeHelper.CreateEmptyName(), OptionalReferenceHelper.CreateReference(NodeHelper.CreateEmptyIdentifier()), BlockListHelper.CreateEmptyBlockList<Import>(), BlockListHelper.CreateEmptyBlockList<Identifier>())
+            : base(NodeHelper.CreateEmptyDocument(), NodeHelper.CreateEmptyName(), OptionalReferenceHelper.CreateReference(NodeHelper.CreateEmptyIdentifier()), BlockListHelper.CreateEmptyBlockList<Import>(), BlockListHelper.CreateEmptyBlockList<Identifier>())
         {
         }
 

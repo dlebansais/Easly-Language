@@ -25,9 +25,9 @@ public static partial class NodeHelper
         if (ParameterList.Count == 0)
             throw new ArgumentException($"{nameof(parameterList)} must not be empty");
 
-        Document Documentation = CreateEmptyDocumentation();
+        Document Document = CreateEmptyDocument();
         IBlockList<Identifier> ParameterBlocks = BlockListHelper<Identifier>.CreateBlockListFromNodeList(ParameterList);
-        AssignmentArgument NewAssignmentArgument = new(Documentation, ParameterBlocks, Source);
+        AssignmentArgument NewAssignmentArgument = new(Document, ParameterBlocks, Source);
 
         return NewAssignmentArgument;
     }
@@ -46,8 +46,8 @@ public static partial class NodeHelper
         if (NodeTreeHelperBlockList.IsBlockListEmpty((IBlockList)ParameterBlocks))
             throw new ArgumentException($"{nameof(parameterBlocks)} must not be empty");
 
-        Document Documentation = CreateEmptyDocumentation();
-        AssignmentArgument NewAssignmentArgument = new(Documentation, ParameterBlocks, Source);
+        Document Document = CreateEmptyDocument();
+        AssignmentArgument NewAssignmentArgument = new(Document, ParameterBlocks, Source);
 
         return NewAssignmentArgument;
     }
@@ -61,8 +61,8 @@ public static partial class NodeHelper
     {
         Contract.RequireNotNull(source, out Expression Source);
 
-        Document Documentation = CreateEmptyDocumentation();
-        PositionalArgument NewPositionalArgument = new(Documentation, Source);
+        Document Document = CreateEmptyDocument();
+        PositionalArgument NewPositionalArgument = new(Document, Source);
 
         return NewPositionalArgument;
     }

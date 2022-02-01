@@ -88,7 +88,7 @@ public static partial class NodeTreeHelperBlockList
 
         IBlock NewBlock = SafeType.CreateInstance<IBlock>(BlockType.Assembly, BlockTypeFullName);
 
-        Document EmptyComment = NodeHelper.CreateEmptyDocumentation();
+        Document EmptyComment = NodeHelper.CreateEmptyDocument();
 
         PropertyInfo DocumentationPropertyInfo = SafeType.GetProperty(BlockType, nameof(Node.Documentation));
 

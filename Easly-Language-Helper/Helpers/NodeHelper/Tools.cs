@@ -130,13 +130,13 @@ public static partial class NodeHelper
     /// <summary>
     /// Creates a new instance of a <see cref="Document"/> as a copy of the provided value.
     /// </summary>
-    /// <param name="documentation">The documentation to copy.</param>
+    /// <param name="document">The documentation to copy.</param>
     /// <returns>The created instance.</returns>
-    public static Document CreateDocumentationCopy(Document documentation)
+    public static Document CreateDocumentationCopy(Document document)
     {
-        Contract.RequireNotNull(documentation, out Document Documentation);
+        Contract.RequireNotNull(document, out Document Document);
 
-        return CreateSimpleDocumentation(Documentation.Comment, documentation.Uuid);
+        return CreateSimpleDocument(Document.Comment, Document.Uuid);
     }
 
     /// <summary>

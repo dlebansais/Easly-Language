@@ -17,13 +17,13 @@ public static partial class NodeHelper
     /// <returns>The created instance.</returns>
     public static AttributeFeature CreateEmptyAttributeFeature()
     {
-        Document Documentation = CreateEmptyDocumentation();
+        Document Document = CreateEmptyDocument();
         Identifier ExportIdentifier = CreateEmptyExportIdentifier();
         ExportStatus Export = ExportStatus.Exported;
         Name EntityName = CreateEmptyName();
         ObjectType EntityType = CreateDefaultObjectType();
         IBlockList<Assertion> EnsureBlocks = BlockListHelper<Assertion>.CreateEmptyBlockList();
-        AttributeFeature EmptyAttributeFeature = new(Documentation, ExportIdentifier, Export, EntityName, EntityType, EnsureBlocks);
+        AttributeFeature EmptyAttributeFeature = new(Document, ExportIdentifier, Export, EntityName, EntityType, EnsureBlocks);
 
         return EmptyAttributeFeature;
     }
@@ -34,13 +34,13 @@ public static partial class NodeHelper
     /// <returns>The created instance.</returns>
     public static ConstantFeature CreateEmptyConstantFeature()
     {
-        Document Documentation = CreateEmptyDocumentation();
+        Document Document = CreateEmptyDocument();
         Identifier ExportIdentifier = CreateEmptyExportIdentifier();
         ExportStatus Export = ExportStatus.Exported;
         Name EntityName = CreateEmptyName();
         ObjectType EntityType = CreateDefaultObjectType();
         Expression ConstantValue = CreateDefaultExpression();
-        ConstantFeature EmptyConstantFeature = new(Documentation, ExportIdentifier, Export, EntityName, EntityType, ConstantValue);
+        ConstantFeature EmptyConstantFeature = new(Document, ExportIdentifier, Export, EntityName, EntityType, ConstantValue);
 
         return EmptyConstantFeature;
     }
@@ -53,12 +53,12 @@ public static partial class NodeHelper
     {
         CommandOverload FirstOverload = CreateEmptyCommandOverload();
 
-        Document Documentation = CreateEmptyDocumentation();
+        Document Document = CreateEmptyDocument();
         Identifier ExportIdentifier = CreateEmptyExportIdentifier();
         ExportStatus Export = ExportStatus.Exported;
         Name EntityName = CreateEmptyName();
         IBlockList<CommandOverload> OverloadBlocks = BlockListHelper<CommandOverload>.CreateSimpleBlockList(FirstOverload);
-        CreationFeature EmptyCreationFeature = new(Documentation, ExportIdentifier, Export, EntityName, OverloadBlocks);
+        CreationFeature EmptyCreationFeature = new(Document, ExportIdentifier, Export, EntityName, OverloadBlocks);
 
         return EmptyCreationFeature;
     }
@@ -71,13 +71,13 @@ public static partial class NodeHelper
     {
         QueryOverload FirstOverload = CreateEmptyQueryOverload();
 
-        Document Documentation = CreateEmptyDocumentation();
+        Document Document = CreateEmptyDocument();
         Identifier ExportIdentifier = CreateEmptyExportIdentifier();
         ExportStatus Export = ExportStatus.Exported;
         Name EntityName = CreateEmptyName();
         OnceChoice Once = OnceChoice.Normal;
         IBlockList<QueryOverload> OverloadBlocks = BlockListHelper<QueryOverload>.CreateSimpleBlockList(FirstOverload);
-        FunctionFeature EmptyFunctionFeature = new(Documentation, ExportIdentifier, Export, EntityName, Once, OverloadBlocks);
+        FunctionFeature EmptyFunctionFeature = new(Document, ExportIdentifier, Export, EntityName, Once, OverloadBlocks);
 
         return EmptyFunctionFeature;
     }
@@ -90,7 +90,7 @@ public static partial class NodeHelper
     {
         EntityDeclaration FirstParameter = CreateEmptyEntityDeclaration();
 
-        Document Documentation = CreateEmptyDocumentation();
+        Document Document = CreateEmptyDocument();
         Identifier ExportIdentifier = CreateEmptyExportIdentifier();
         ExportStatus Export = ExportStatus.Exported;
         ObjectType EntityType = CreateDefaultObjectType();
@@ -100,7 +100,7 @@ public static partial class NodeHelper
         IOptionalReference<Body> GetterBody = OptionalReferenceHelper<Body>.CreateReference(CreateDefaultBody());
         GetterBody.Assign();
         IOptionalReference<Body> SetterBody = OptionalReferenceHelper<Body>.CreateReference(CreateDefaultBody());
-        IndexerFeature EmptyIndexerFeature = new(Documentation, ExportIdentifier, Export, EntityType, IndexParameterBlocks, ParameterEnd, ModifiedQueryBlocks, GetterBody, SetterBody);
+        IndexerFeature EmptyIndexerFeature = new(Document, ExportIdentifier, Export, EntityType, IndexParameterBlocks, ParameterEnd, ModifiedQueryBlocks, GetterBody, SetterBody);
 
         return EmptyIndexerFeature;
     }
@@ -113,12 +113,12 @@ public static partial class NodeHelper
     {
         CommandOverload FirstOverload = CreateEmptyCommandOverload();
 
-        Document Documentation = CreateEmptyDocumentation();
+        Document Document = CreateEmptyDocument();
         Identifier ExportIdentifier = CreateEmptyExportIdentifier();
         ExportStatus Export = ExportStatus.Exported;
         Name EntityName = CreateEmptyName();
         IBlockList<CommandOverload> OverloadBlocks = BlockListHelper<CommandOverload>.CreateSimpleBlockList(FirstOverload);
-        ProcedureFeature EmptyProcedureFeature = new(Documentation, ExportIdentifier, Export, EntityName, OverloadBlocks);
+        ProcedureFeature EmptyProcedureFeature = new(Document, ExportIdentifier, Export, EntityName, OverloadBlocks);
 
         return EmptyProcedureFeature;
     }
@@ -129,7 +129,7 @@ public static partial class NodeHelper
     /// <returns>The created instance.</returns>
     public static PropertyFeature CreateEmptyPropertyFeature()
     {
-        Document Documentation = CreateEmptyDocumentation();
+        Document Document = CreateEmptyDocument();
         Identifier ExportIdentifier = CreateEmptyExportIdentifier();
         ExportStatus Export = ExportStatus.Exported;
         Name EntityName = CreateEmptyName();
@@ -138,7 +138,7 @@ public static partial class NodeHelper
         IBlockList<Identifier> ModifiedQueryBlocks = BlockListHelper<Identifier>.CreateEmptyBlockList();
         IOptionalReference<Body> GetterBody = OptionalReferenceHelper<Body>.CreateReference(CreateDefaultBody());
         IOptionalReference<Body> SetterBody = OptionalReferenceHelper<Body>.CreateReference(CreateDefaultBody());
-        PropertyFeature EmptyPropertyFeature = new(Documentation, ExportIdentifier, Export, EntityName, EntityType, PropertyKind, ModifiedQueryBlocks, GetterBody, SetterBody);
+        PropertyFeature EmptyPropertyFeature = new(Document, ExportIdentifier, Export, EntityName, EntityType, PropertyKind, ModifiedQueryBlocks, GetterBody, SetterBody);
 
         return EmptyPropertyFeature;
     }
