@@ -12,7 +12,7 @@ public partial class NodeTreeHelperBlockListCoverage
 {
     private class TestBlockList : IBlockList
     {
-        public Document Documentation { get; } = new Document();
+        public Document Documentation { get; } = NodeHelper.CreateEmptyDocument();
         public IList NodeBlockList { get; } = new List<int>();
     }
 

@@ -17,11 +17,7 @@ public static partial class NodeHelper
     /// <returns>The created instance.</returns>
     public static Document CreateEmptyDocument()
     {
-        Document EmptyDocument = new()
-        {
-            Comment = string.Empty,
-            Uuid = Guid.NewGuid(),
-        };
+        Document EmptyDocument = new(string.Empty, Guid.NewGuid());
 
         return EmptyDocument;
     }
@@ -39,11 +35,7 @@ public static partial class NodeHelper
         if (uuid == Guid.Empty)
             throw new ArgumentException($"{nameof(uuid)} must not be {Guid.Empty}");
 
-        Document SimpleDocument = new()
-        {
-            Comment = Comment,
-            Uuid = uuid,
-        };
+        Document SimpleDocument = new(Comment, uuid);
 
         return SimpleDocument;
     }

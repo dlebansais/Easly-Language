@@ -1,10 +1,12 @@
 ﻿namespace BaseNode;
 
+using System;
+
 /// <summary>
 /// Represents generic documentation.
 /// /Doc/Nodes/Document.md explains the semantic.
 /// </summary>
-[System.Serializable]
+[Serializable]
 public class Document
 {
     /// <summary>
@@ -13,12 +15,32 @@ public class Document
     public static Document Default { get; } = new();
 
     /// <summary>
-    /// Gets or sets the text comment.
+    /// Initializes a new instance of the <see cref="Document"/> class.
     /// </summary>
-    public virtual string Comment { get; set; } = string.Empty;
+    private Document()
+    {
+        Comment = string.Empty;
+        Uuid = Guid.Empty;
+    }
 
     /// <summary>
-    /// Gets or sets a unique ID.
+    /// Initializes a new instance of the <see cref="Document"/> class.
     /// </summary>
-    public virtual System.Guid Uuid { get; set; } = System.Guid.Empty;
+    /// <param name="comment">The text comment.</param>
+    /// <param name="uuid">The unique ID.</param>
+    internal Document(string comment, Guid uuid)
+    {
+        Comment = comment;
+        Uuid = uuid;
+    }
+
+    /// <summary>
+    /// Gets or sets the text comment.
+    /// </summary>
+    public virtual string Comment { get; set; }
+
+    /// <summary>
+    /// Gets or sets the unique ID.
+    /// </summary>
+    public virtual Guid Uuid { get; set; }
 }
