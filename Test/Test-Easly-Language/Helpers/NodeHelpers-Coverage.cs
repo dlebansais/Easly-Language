@@ -16,6 +16,8 @@ public partial class NodeHelperCoverage
         Document Document = NodeHelper.CreateEmptyDocument();
         Document = NodeHelper.CreateSimpleDocument(string.Empty, Guid.NewGuid());
 
+        Assert.Throws<ArgumentException>(() => { NodeHelper.CreateSimpleDocument(string.Empty, Guid.Empty); });
+
         Pattern Pattern = NodeHelper.CreateEmptyPattern();
         Pattern = NodeHelper.CreateSimplePattern(string.Empty);
 

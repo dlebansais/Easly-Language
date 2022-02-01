@@ -11,6 +11,16 @@ using System.Collections.Generic;
 public partial class DefaultObjectsCoverage
 {
     [Test]
+    public static void TestDefault()
+    {
+        Document DefaultDocument = Document.Default;
+        Node DefaultNode = Node.Default;
+        Identifier DefaultIdentifier = Identifier.Default;
+        Pattern DefaultPattern = Pattern.Default;
+        IBlock DefaultBlock = (IBlock)Block<Node>.Default;
+    }
+
+    [Test]
     public static void Test()
     {
         Argument DefaultArgument = NodeHelper.CreateDefaultArgument();

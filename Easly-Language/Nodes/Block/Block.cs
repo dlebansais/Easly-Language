@@ -80,7 +80,7 @@ public class Block<TNode> : IBlock<TNode>, IBlock
     /// <summary>
     /// Initializes a new instance of the <see cref="Block{TNode}"/> class.
     /// </summary>
-    private Block()
+    protected Block()
     {
         Documentation = Document.Default;
         NodeList = new List<TNode>();
