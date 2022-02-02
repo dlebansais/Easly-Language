@@ -65,6 +65,16 @@ public interface IOptionalReference<T>
 public class OptionalReference<T> : IOptionalReference<T>, IOptionalReference
     where T : class
 {
+#if !NO_PARAMETERLESS_CONSTRUCTOR
+#pragma warning disable SA1600 // Elements should be documented
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    public OptionalReference()
+#pragma warning restore SA1600 // Elements should be documented
+    {
+        ItemInternal = default!;
+    }
+#endif
+
     #region Init
     /// <summary>
     /// Initializes a new instance of the <see cref="OptionalReference{T}"/> class.

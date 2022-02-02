@@ -50,7 +50,7 @@ public static partial class NodeHelper
         Type[] LanguageTypes = LanguageAssembly.GetTypes();
 
         foreach (Type Item in LanguageTypes)
-            if (!Item.IsInterface && !Item.IsAbstract && Item.IsSubclassOf(typeof(Node)))
+            if (!Item.IsInterface && !Item.IsAbstract && Item.IsSubclassOf(typeof(Node)) && Item.IsPublic)
                 Result.Add(Item);
 
         return Result;

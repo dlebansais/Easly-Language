@@ -14,14 +14,25 @@ public class Document
     /// </summary>
     public static Document Default { get; } = new();
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="Document"/> class.
-    /// </summary>
-    private Document()
+#if !NO_PARAMETERLESS_CONSTRUCTOR
+#pragma warning disable SA1600 // Elements should be documented
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    public Document()
+#pragma warning restore SA1600 // Elements should be documented
     {
         Comment = string.Empty;
         Uuid = Guid.Empty;
     }
+#else
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Document"/> class.
+    /// </summary>
+    protected Document()
+    {
+        Comment = string.Empty;
+        Uuid = Guid.Empty;
+    }
+#endif
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Document"/> class.
