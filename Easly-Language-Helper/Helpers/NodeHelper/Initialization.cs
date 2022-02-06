@@ -3,6 +3,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Reflection;
 using BaseNode;
 using Easly;
@@ -30,8 +31,9 @@ public static partial class NodeHelper
         Type NodeType = node.GetType();
         PropertyInfo ItemProperty = SafeType.GetProperty(NodeType, propertyName);
 
-        Type ItemType = ItemProperty.PropertyType;
-        Type[] Generics = ItemType.GetGenericArguments();
+        Type PropertyType = ItemProperty.PropertyType;
+        Type[] Generics = PropertyType.GetGenericArguments();
+        Debug.Assert(Generics.Length == 1);
 
         Type ReferenceType = typeof(OptionalReference<>).MakeGenericType(Generics);
         string FullName = SafeType.FullName(ReferenceType);
@@ -39,6 +41,11 @@ public static partial class NodeHelper
         Assembly ReferenceAssembly = ReferenceType.Assembly;
 
         IOptionalReference EmptyReference = SafeType.CreateInstance<IOptionalReference>(ReferenceAssembly, FullName);
+
+        Type ItemType = Generics[0];
+        Node ItemNode = CreateDefaultFromType(ItemType);
+        EmptyReference.Item = ItemNode;
+        EmptyReference.Unassign();
 
         ItemProperty.SetValue(node, EmptyReference);
     }
