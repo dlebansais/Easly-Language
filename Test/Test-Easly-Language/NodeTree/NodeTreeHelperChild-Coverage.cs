@@ -1,8 +1,10 @@
 ﻿namespace TestEaslyLanguage;
+
+using ArgumentException = System.ArgumentException;
 using BaseNode;
 using BaseNodeHelper;
+using NotNullReflection;
 using NUnit.Framework;
-using System;
 
 [TestFixture]
 public partial class NodeTreeHelperChildCoverage
@@ -17,16 +19,16 @@ public partial class NodeTreeHelperChildCoverage
 
         Result = NodeTreeHelperChild.IsChildNodeProperty(DefaultExpression, nameof(QueryExpression.Query), out ChildNodeType);
         Assert.True(Result);
-        Assert.AreEqual(ChildNodeType, typeof(QualifiedName));
+        Assert.AreEqual(ChildNodeType, Type.FromTypeof<QualifiedName>());
 
-        Result = NodeTreeHelperChild.IsChildNodeProperty(typeof(QueryExpression), nameof(QueryExpression.Query), out ChildNodeType);
+        Result = NodeTreeHelperChild.IsChildNodeProperty(Type.FromTypeof<QueryExpression>(), nameof(QueryExpression.Query), out ChildNodeType);
         Assert.True(Result);
-        Assert.AreEqual(ChildNodeType, typeof(QualifiedName));
+        Assert.AreEqual(ChildNodeType, Type.FromTypeof<QualifiedName>());
 
-        Result = NodeTreeHelperChild.IsChildNodeProperty(typeof(Identifier), nameof(QueryExpression.Query), out _);
+        Result = NodeTreeHelperChild.IsChildNodeProperty(Type.FromTypeof<Identifier>(), nameof(QueryExpression.Query), out _);
         Assert.False(Result);
 
-        Result = NodeTreeHelperChild.IsChildNodeProperty(typeof(QueryExpression), nameof(QueryExpression.ArgumentBlocks), out _);
+        Result = NodeTreeHelperChild.IsChildNodeProperty(Type.FromTypeof<QueryExpression>(), nameof(QueryExpression.ArgumentBlocks), out _);
         Assert.False(Result);
 
 #if !DEBUG
@@ -36,7 +38,7 @@ public partial class NodeTreeHelperChildCoverage
         Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperChild.IsChildNodeProperty(NullExpression, nameof(QueryExpression.Query), out _); });
         Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperChild.IsChildNodeProperty(DefaultExpression, NullString, out _); });
         Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperChild.IsChildNodeProperty(NullType, nameof(QueryExpression.Query), out _); });
-        Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperChild.IsChildNodeProperty(typeof(QueryExpression), NullString, out _); });
+        Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperChild.IsChildNodeProperty(Type.FromTypeof<QueryExpression>(), NullString, out _); });
 #endif
     }
 
@@ -77,7 +79,7 @@ public partial class NodeTreeHelperChildCoverage
         QueryExpression DefaultExpression = (QueryExpression)NodeHelper.CreateDefaultExpression();
 
         Result = NodeTreeHelperChild.ChildNodeType(DefaultExpression, nameof(QueryExpression.Query));
-        Assert.AreEqual(Result, typeof(QualifiedName));
+        Assert.AreEqual(Result, Type.FromTypeof<QualifiedName>());
 
         Assert.Throws<ArgumentException>(() => { NodeTreeHelperChild.ChildNodeType(DefaultExpression, nameof(Identifier.Text)); });
         Assert.Throws<ArgumentException>(() => { NodeTreeHelperChild.ChildNodeType(DefaultExpression, nameof(QueryExpression.ArgumentBlocks)); });

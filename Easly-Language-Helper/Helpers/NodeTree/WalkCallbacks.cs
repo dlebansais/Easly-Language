@@ -12,6 +12,13 @@ public struct WalkCallbacks<TContext> : IEquatable<WalkCallbacks<TContext>>
     where TContext : class
 {
     /// <summary>
+    /// Initializes a new instance of the <see cref="WalkCallbacks{TContext}"/> struct.
+    /// </summary>
+    public WalkCallbacks()
+    {
+    }
+
+    /// <summary>
     /// The default value of <see cref="HandlerRoot"/>.
     /// </summary>
     internal static Func<Node, WalkCallbacks<TContext>, TContext, bool> DefaultHandlerRoot = (Node root, WalkCallbacks<TContext> callback, TContext data) => { return true; };
@@ -94,7 +101,7 @@ public struct WalkCallbacks<TContext> : IEquatable<WalkCallbacks<TContext>>
     /// <summary>
     /// Gets or sets a value indicating whether the callback are handling parameters recursively.
     /// </summary>
-    public bool IsRecursive { get; set; }
+    public bool IsRecursive { get; set; } = false;
 
     /// <summary>
     /// Gets or sets a pair of strings to substitute in blocks.

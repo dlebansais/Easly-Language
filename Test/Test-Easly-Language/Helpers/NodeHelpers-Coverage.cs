@@ -1,11 +1,12 @@
 ﻿namespace TestEaslyLanguage;
 
+using System.Collections.Generic;
+using ArgumentException = System.ArgumentException;
+using Guid = System.Guid;
 using BaseNode;
 using BaseNodeHelper;
-using Easly;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
+using NotNullReflection;
 
 [TestFixture]
 public partial class NodeHelperCoverage
@@ -78,9 +79,9 @@ public partial class NodeHelperCoverage
         Feature Feature = NodeHelper.CreateDefaultFeature();
         ObjectType ObjectType = NodeHelper.CreateDefaultObjectType();
 
-        Node Default = NodeHelper.CreateDefault(typeof(PositionalArgument));
-        Default = NodeHelper.CreateDefaultFromType(typeof(PositionalArgument));
+        Node Default = NodeHelper.CreateDefault(Type.FromTypeof<PositionalArgument>());
+        Default = NodeHelper.CreateDefaultFromType(Type.FromTypeof<PositionalArgument>());
 
-        Type DefaultType = NodeHelper.GetDefaultItemType(typeof(Argument));
+        Type DefaultType = NodeHelper.GetDefaultItemType(Type.FromTypeof<Argument>());
     }
 }

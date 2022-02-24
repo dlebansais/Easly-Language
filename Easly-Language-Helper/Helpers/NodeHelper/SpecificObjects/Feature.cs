@@ -1,10 +1,10 @@
 ﻿namespace BaseNodeHelper;
 
-using System;
-using System.Diagnostics;
+using ArgumentException = System.ArgumentException;
 using BaseNode;
 using Contracts;
 using Easly;
+using NotNullReflection;
 
 /// <summary>
 /// Provides methods to manipulate nodes.
@@ -170,22 +170,22 @@ public static partial class NodeHelper
         Contract.RequireNotNull(documentation, out Document Documentation);
         Contract.RequireNotNull(exportIdentifier, out Identifier ExportIdentifier);
 
-        if (NodeType == typeof(AttributeFeature))
+        if (NodeType.IsTypeof<AttributeFeature>())
             return CreateInitializedAttributeFeature(Documentation, ExportIdentifier, export, entityName, entityType, ensureBlocks);
-        else if (NodeType == typeof(ConstantFeature))
+        else if (NodeType.IsTypeof<ConstantFeature>())
             return CreateInitializedConstantFeature(Documentation, ExportIdentifier, export, entityName, entityType, constantValue);
-        else if (NodeType == typeof(CreationFeature))
+        else if (NodeType.IsTypeof<CreationFeature>())
             return CreateInitializedCreationFeature(Documentation, ExportIdentifier, export, entityName, commandOverloadBlocks);
-        else if (NodeType == typeof(FunctionFeature))
+        else if (NodeType.IsTypeof<FunctionFeature>())
             return CreateInitializedFunctionFeature(Documentation, ExportIdentifier, export, entityName, once, queryOverloadBlocks);
-        else if (NodeType == typeof(ProcedureFeature))
+        else if (NodeType.IsTypeof<ProcedureFeature>())
             return CreateInitializedProcedureFeature(Documentation, ExportIdentifier, export, entityName, commandOverloadBlocks);
-        else if (NodeType == typeof(PropertyFeature))
+        else if (NodeType.IsTypeof<PropertyFeature>())
             return CreateInitializedPropertyFeature(Documentation, ExportIdentifier, export, entityName, entityType, propertyKind, modifiedQueryBlocks, getterBody, setterBody);
-        else if (NodeType == typeof(IndexerFeature))
+        else if (NodeType.IsTypeof<IndexerFeature>())
             return CreateInitializedIndexerFeature(Documentation, ExportIdentifier, export, entityType, modifiedQueryBlocks, getterBody, setterBody, indexParameterBlocks, parameterEnd);
         else
-            throw new ArgumentException($"{nameof(nodeType)} must inherit from {typeof(Feature).FullName}");
+            throw new ArgumentException($"{nameof(nodeType)} must inherit from {Type.FromTypeof<Feature>().FullName}");
     }
 
     private static AttributeFeature CreateInitializedAttributeFeature(Document documentation, Identifier exportIdentifier, ExportStatus export, Name? entityName, ObjectType? entityType, IBlockList<Assertion>? ensureBlocks)

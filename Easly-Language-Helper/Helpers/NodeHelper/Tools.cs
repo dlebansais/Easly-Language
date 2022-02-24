@@ -1,11 +1,12 @@
 ﻿namespace BaseNodeHelper;
 
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Reflection;
+using Array = System.Array;
+using BindingFlags = System.Reflection.BindingFlags;
 using BaseNode;
 using Contracts;
+using NotNullReflection;
 
 /// <summary>
 /// Provides methods to manipulate nodes.
@@ -20,16 +21,14 @@ public static partial class NodeHelper
     /// <returns>True if the type could be found; otherwise, false.</returns>
     public static bool GetNodeType(string typeName, out Type type)
     {
-        string RootName = SafeType.FullName(typeof(Root));
+        string RootName = Type.FromTypeof<Root>().FullName;
 
         int Index = RootName.LastIndexOf('.');
         string FullTypeName = RootName.Substring(0, Index + 1) + typeName;
 
-        Assembly RootAssembly = typeof(Root).Assembly;
+        Assembly RootAssembly = Type.FromTypeof<Root>().Assembly;
 
-        Type? FullType = RootAssembly.GetType(FullTypeName);
-
-        if (FullType is not null)
+        if (RootAssembly.HasType(FullTypeName, out Type FullType))
         {
             type = FullType;
             return true;
@@ -46,11 +45,11 @@ public static partial class NodeHelper
     public static IList<Type> GetNodeKeys()
     {
         List<Type> Result = new();
-        Assembly LanguageAssembly = typeof(Root).Assembly;
+        Assembly LanguageAssembly = Type.FromTypeof<Root>().Assembly;
         Type[] LanguageTypes = LanguageAssembly.GetTypes();
 
         foreach (Type Item in LanguageTypes)
-            if (!Item.IsInterface && !Item.IsAbstract && Item.IsSubclassOf(typeof(Node)) && Item.IsPublic)
+            if (!Item.IsInterface && !Item.IsAbstract && Item.IsSubclassOf(Type.FromTypeof<Node>()) && Item.IsPublic)
                 Result.Add(Item);
 
         return Result;
@@ -67,7 +66,7 @@ public static partial class NodeHelper
         Contract.RequireNotNull(node, out Node Node);
         Contract.RequireNotNull(propertyName, out string PropertyName);
 
-        return IsCollectionNeverEmpty(Node.GetType(), PropertyName);
+        return IsCollectionNeverEmpty(Type.FromGetType(Node), PropertyName);
     }
 
     /// <summary>
@@ -102,7 +101,7 @@ public static partial class NodeHelper
         Contract.RequireNotNull(node, out Node Node);
         Contract.RequireNotNull(propertyName, out string PropertyName);
 
-        return IsCollectionWithExpand(Node.GetType(), PropertyName);
+        return IsCollectionWithExpand(Type.FromGetType(Node), PropertyName);
     }
 
     /// <summary>
@@ -186,5 +185,69 @@ public static partial class NodeHelper
             Contract.Unused(out text);
             return false;
         }
+    }
+
+    /// <summary>
+    /// Creates an instance of the specified type from this assembly using the system activator.
+    /// The specified type must have a constructor.
+    /// </summary>
+    /// <typeparam name="T">The type to return.</typeparam>
+    /// <param name="t">The type of the instance to create.</param>
+    /// <returns>An instance of the specified type created with the default constructor.</returns>
+    internal static T CreateInstance<T>(Type t)
+        where T : class
+    {
+        ConstructorInfo[] Constructors = t.GetConstructors(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+
+#if !NO_PARAMETERLESS_CONSTRUCTOR
+        Debug.Assert(Constructors.Length > 0);
+
+        int ParameterCount = Constructors[Constructors.Length - 1].GetParameters().Length;
+        object[] Arguments = new object[ParameterCount];
+
+        T? Result = System.Activator.CreateInstance(t.Origin, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance, binder: default, Arguments, culture: default) as T;
+#else
+        Debug.Assert(Constructors.Length == 1);
+
+        int ParameterCount = Constructors[0].GetParameters().Length;
+        object[] Arguments = new object[ParameterCount];
+
+        T? Result = Activator.CreateInstance(Type, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance, binder: default, Arguments, culture: default) as T;
+#endif
+
+        return Contract.NullSupressed(Result);
+    }
+
+    /// <summary>
+    /// Creates an instance of the specified type from this assembly using the system activator.
+    /// The specified type must have a default constructor.
+    /// </summary>
+    /// <typeparam name="T">The type to return.</typeparam>
+    /// <param name="t">The type of the instance to create.</param>
+    /// <returns>An instance of the specified type created with the default constructor.</returns>
+    internal static T CreateInstanceFromDefaultConstructor<T>(Type t)
+        where T : class
+    {
+        Debug.Assert(TypeHasDefaultConstructor<T>(t));
+
+        T? Result = t.Assembly.CreateInstance(t.FullName) as T;
+        return Contract.NullSupressed(Result);
+    }
+
+    /// <summary>
+    /// Checkcs that a type has a default constructor.
+    /// </summary>
+    /// <typeparam name="T">The type constrait.</typeparam>
+    /// <param name="t">The type of the instance to create.</param>
+    /// <returns>True if the specified type has a default constructor; otherwise, false.</returns>
+    internal static bool TypeHasDefaultConstructor<T>(Type t)
+        where T : class
+    {
+        Type Type = Contract.NullSupressed(t.Assembly.GetType(t.FullName));
+        ConstructorInfo[] Constructors = Type.GetConstructors();
+
+        Debug.Assert(Constructors.Length > 0);
+
+        return Constructors[0].GetParameters().Length == 0;
     }
 }

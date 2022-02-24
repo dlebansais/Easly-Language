@@ -1,10 +1,11 @@
 ﻿namespace BaseNodeHelper;
 
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using StringComparison = System.StringComparison;
 using BaseNode;
 using Contracts;
+using NotNullReflection;
 
 /// <summary>
 /// Provides methods to manipulate nodes.
@@ -411,7 +412,7 @@ public static partial class NodeHelper
         {
             text = text.Substring(0, 1).ToUpperInvariant() + text.Substring(1);
 
-            string[] Names = typeof(Keyword).GetEnumNames();
+            string[] Names = Type.FromTypeof<Keyword>().GetEnumNames();
 
             for (int i = 0; i < Names.Length; i++)
             {

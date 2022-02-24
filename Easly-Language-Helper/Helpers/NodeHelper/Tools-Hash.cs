@@ -1,11 +1,11 @@
 ﻿namespace BaseNodeHelper;
 
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Reflection;
+using Guid = System.Guid;
 using BaseNode;
 using Contracts;
+using NotNullReflection;
 
 /// <summary>
 /// Provides methods to manipulate nodes.
@@ -89,11 +89,11 @@ public static partial class NodeHelper
 
     private static void NodeHashOther(Node node, string propertyName, ref ulong hash)
     {
-        Type NodeType = node.GetType();
+        Type NodeType = Type.FromGetType(node);
 
-        PropertyInfo Info = SafeType.GetProperty(NodeType, propertyName);
+        PropertyInfo Info = NodeType.GetProperty(propertyName);
 
-        if (Info.PropertyType == typeof(bool))
+        if (Info.PropertyType.IsTypeof<bool>())
         {
             bool PropertyValue = (bool)Contract.NullSupressed(Info.GetValue(node));
 
@@ -105,13 +105,13 @@ public static partial class NodeHelper
 
             MergeHash(ref hash, ValueHash(PropertyValue));
         }
-        else if (Info.PropertyType == typeof(string))
+        else if (Info.PropertyType.IsTypeof<string>())
         {
-            string PropertyValue = SafeType.GetPropertyValue<string>(Info, node);
+            string PropertyValue = (string)Info.GetValue(node);
 
             MergeHash(ref hash, ValueHash(PropertyValue));
         }
-        else if (Info.PropertyType == typeof(Guid))
+        else if (Info.PropertyType.IsTypeof<Guid>())
         {
             Guid PropertyValue = (Guid)Contract.NullSupressed(Info.GetValue(node));
 
@@ -119,9 +119,9 @@ public static partial class NodeHelper
         }
         else
         {
-            Debug.Assert(Info.PropertyType == typeof(Document));
+            Debug.Assert(Info.PropertyType.IsTypeof<Document>());
 
-            Document Documentation = SafeType.GetPropertyValue<Document>(Info, node);
+            Document Documentation = (Document)Info.GetValue(node);
 
             MergeHash(ref hash, ValueHash(Documentation.Comment));
             MergeHash(ref hash, ValueHash(Documentation.Uuid));

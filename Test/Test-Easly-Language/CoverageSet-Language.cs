@@ -1,16 +1,17 @@
 ﻿namespace TestEaslyLanguage;
 
-using BaseNode;
-using BaseNodeHelper;
-using Easly;
-using NUnit.Framework;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
+using TypeInitializationException = System.TypeInitializationException;
+using InvalidOperationException = System.InvalidOperationException;
+using BaseNode;
+using BaseNodeHelper;
+using Easly;
+using NotNullReflection;
+using NUnit.Framework;
 
 [TestFixture]
 public partial class CoverageSet
@@ -18,10 +19,10 @@ public partial class CoverageSet
     [Test]
     public static void TestLanguageInitializers()
     {
-        MethodInfo FunctionInfo = (MethodInfo)typeof(IList).GetMember("IndexOf")[0];
-        PropertyInfo IndexerInfo = typeof(IList).GetProperty("Item")!;
-        MethodInfo ProcedureInfo = (MethodInfo)typeof(IList).GetMember("Clear")[0];
-        PropertyInfo PropertyInfo = typeof(Name).GetProperty("Text")!;
+        MethodInfo FunctionInfo = (MethodInfo)Type.FromTypeof<IList>().GetMember("IndexOf")[0];
+        PropertyInfo IndexerInfo = Type.FromTypeof<IList>().GetProperty("Item");
+        MethodInfo ProcedureInfo = (MethodInfo)Type.FromTypeof<IList>().GetMember("Clear")[0];
+        PropertyInfo PropertyInfo = Type.FromTypeof<Name>().GetProperty("Text");
 
         FunctionEntity TestFunctionEntity = new(FunctionInfo);
         IndexerEntity TestIndexerEntity = new(IndexerInfo);
@@ -30,7 +31,7 @@ public partial class CoverageSet
 
         TypeEntity ReturnType = TestIndexerEntity.Type;
 
-        MethodInfo IndexerInfoAsMethod = (MethodInfo)typeof(IList).GetMember("get_Item")[0];
+        MethodInfo IndexerInfoAsMethod = (MethodInfo)Type.FromTypeof<IList>().GetMember("get_Item")[0];
         TestIndexerEntity = new(IndexerInfoAsMethod);
         ReturnType = TestIndexerEntity.Type;
             
@@ -63,10 +64,10 @@ public partial class CoverageSet
     [Test]
     public static void TestLanguageClasses()
     {
-        MethodInfo FunctionInfo = (MethodInfo)typeof(IList).GetMember("IndexOf")[0];
-        PropertyInfo IndexerInfo = typeof(IList).GetProperty("Item")!;
-        MethodInfo ProcedureInfo = (MethodInfo)typeof(IList).GetMember("Clear")[0];
-        PropertyInfo PropertyInfo = typeof(Name).GetProperty("Text")!;
+        MethodInfo FunctionInfo = (MethodInfo)Type.FromTypeof<IList>().GetMember("IndexOf")[0];
+        PropertyInfo IndexerInfo = Type.FromTypeof<IList>().GetProperty("Item");
+        MethodInfo ProcedureInfo = (MethodInfo)Type.FromTypeof<IList>().GetMember("Clear")[0];
+        PropertyInfo PropertyInfo = Type.FromTypeof<Name>().GetProperty("Text");
 
         FunctionEntity TestFunctionEntity = new(FunctionInfo);
         IndexerEntity TestIndexerEntity = new(IndexerInfo);

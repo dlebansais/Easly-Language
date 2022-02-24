@@ -1,11 +1,11 @@
 ﻿namespace TestEaslyLanguage;
 
+using System.Collections.Generic;
+using ArgumentException = System.ArgumentException;
 using BaseNode;
 using BaseNodeHelper;
-using Easly;
+using NotNullReflection;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
 
 [TestFixture]
 public partial class DefaultObjectsCoverage
@@ -48,127 +48,127 @@ public partial class DefaultObjectsCoverage
     [Test]
     public static void TestDefaultNode()
     {
-        Assert.Throws<ArgumentException>(() => { NodeHelper.CreateDefault(typeof(CoverageSet)); });
+        Assert.Throws<ArgumentException>(() => { NodeHelper.CreateDefault(Type.FromTypeof<CoverageSet>()); });
 
-        Node DefaultBody = NodeHelper.CreateDefault(typeof(Body));
+        Node DefaultBody = NodeHelper.CreateDefault(Type.FromTypeof<Body>());
         Assert.That(NodeHelper.IsDefaultNode(DefaultBody));
 
-        Node DefaultExpression = NodeHelper.CreateDefault(typeof(Expression));
+        Node DefaultExpression = NodeHelper.CreateDefault(Type.FromTypeof<Expression>());
         Assert.That(NodeHelper.IsDefaultNode(DefaultExpression));
 
-        Node DefaultInstruction = NodeHelper.CreateDefault(typeof(Instruction));
+        Node DefaultInstruction = NodeHelper.CreateDefault(Type.FromTypeof<Instruction>());
         Assert.That(NodeHelper.IsDefaultNode(DefaultInstruction));
 
-        Node DefaultFeature = NodeHelper.CreateDefault(typeof(Feature));
+        Node DefaultFeature = NodeHelper.CreateDefault(Type.FromTypeof<Feature>());
         Assert.That(NodeHelper.IsDefaultNode(DefaultFeature));
 
-        Node DefaultObjectType = NodeHelper.CreateDefault(typeof(ObjectType));
+        Node DefaultObjectType = NodeHelper.CreateDefault(Type.FromTypeof<ObjectType>());
         Assert.That(NodeHelper.IsDefaultNode(DefaultObjectType));
 
-        Node DefaultArgument = NodeHelper.CreateDefault(typeof(Argument));
+        Node DefaultArgument = NodeHelper.CreateDefault(Type.FromTypeof<Argument>());
         Assert.That(NodeHelper.IsDefaultNode(DefaultArgument));
 
-        Node DefaultTypeArgument = NodeHelper.CreateDefault(typeof(TypeArgument));
+        Node DefaultTypeArgument = NodeHelper.CreateDefault(Type.FromTypeof<TypeArgument>());
         Assert.That(NodeHelper.IsDefaultNode(DefaultTypeArgument));
 
-        Node DefaultName = NodeHelper.CreateDefault(typeof(Name));
+        Node DefaultName = NodeHelper.CreateDefault(Type.FromTypeof<Name>());
         Assert.That(NodeHelper.IsDefaultNode(DefaultName));
 
-        Node DefaultIdentifier = NodeHelper.CreateDefault(typeof(Identifier));
+        Node DefaultIdentifier = NodeHelper.CreateDefault(Type.FromTypeof<Identifier>());
         Assert.That(NodeHelper.IsDefaultNode(DefaultIdentifier));
 
-        Node DefaultQualifiedName = NodeHelper.CreateDefault(typeof(QualifiedName));
+        Node DefaultQualifiedName = NodeHelper.CreateDefault(Type.FromTypeof<QualifiedName>());
         Assert.That(NodeHelper.IsDefaultNode(DefaultQualifiedName));
 
-        Node DefaultScope = NodeHelper.CreateDefault(typeof(Scope));
+        Node DefaultScope = NodeHelper.CreateDefault(Type.FromTypeof<Scope>());
         Assert.That(NodeHelper.IsDefaultNode(DefaultScope));
 
-        Node DefaultImport = NodeHelper.CreateDefault(typeof(Import));
+        Node DefaultImport = NodeHelper.CreateDefault(Type.FromTypeof<Import>());
         Assert.That(NodeHelper.IsDefaultNode(DefaultImport));
     }
 
     [Test]
     public static void TestDefaultNodeType()
     {
-        Type DefaultArgumentType = NodeHelper.GetDefaultItemType(typeof(Argument));
-        Assert.That(DefaultArgumentType.IsSubclassOf(typeof(Argument)));
+        Type DefaultArgumentType = NodeHelper.GetDefaultItemType(Type.FromTypeof<Argument>());
+        Assert.That(DefaultArgumentType.IsSubclassOf(Type.FromTypeof<Argument>()));
 
-        Type DefaultTypeArgumentType = NodeHelper.GetDefaultItemType(typeof(TypeArgument));
-        Assert.That(DefaultTypeArgumentType.IsSubclassOf(typeof(TypeArgument)));
+        Type DefaultTypeArgumentType = NodeHelper.GetDefaultItemType(Type.FromTypeof<TypeArgument>());
+        Assert.That(DefaultTypeArgumentType.IsSubclassOf(Type.FromTypeof<TypeArgument>()));
 
-        Type DefaultBodyType = NodeHelper.GetDefaultItemType(typeof(Body));
-        Assert.That(DefaultBodyType.IsSubclassOf(typeof(Body)));
+        Type DefaultBodyType = NodeHelper.GetDefaultItemType(Type.FromTypeof<Body>());
+        Assert.That(DefaultBodyType.IsSubclassOf(Type.FromTypeof<Body>()));
 
-        Type DefaultExpressionType = NodeHelper.GetDefaultItemType(typeof(Expression));
-        Assert.That(DefaultExpressionType.IsSubclassOf(typeof(Expression)));
+        Type DefaultExpressionType = NodeHelper.GetDefaultItemType(Type.FromTypeof<Expression>());
+        Assert.That(DefaultExpressionType.IsSubclassOf(Type.FromTypeof<Expression>()));
 
-        Type DefaultInstructionType = NodeHelper.GetDefaultItemType(typeof(Instruction));
-        Assert.That(DefaultInstructionType.IsSubclassOf(typeof(Instruction)));
+        Type DefaultInstructionType = NodeHelper.GetDefaultItemType(Type.FromTypeof<Instruction>());
+        Assert.That(DefaultInstructionType.IsSubclassOf(Type.FromTypeof<Instruction>()));
 
-        Type DefaultFeatureType = NodeHelper.GetDefaultItemType(typeof(Feature));
-        Assert.That(DefaultFeatureType.IsSubclassOf(typeof(Feature)));
+        Type DefaultFeatureType = NodeHelper.GetDefaultItemType(Type.FromTypeof<Feature>());
+        Assert.That(DefaultFeatureType.IsSubclassOf(Type.FromTypeof<Feature>()));
 
-        Type DefaultObjectTypeType = NodeHelper.GetDefaultItemType(typeof(ObjectType));
-        Assert.That(DefaultObjectTypeType.IsSubclassOf(typeof(ObjectType)));
+        Type DefaultObjectTypeType = NodeHelper.GetDefaultItemType(Type.FromTypeof<ObjectType>());
+        Assert.That(DefaultObjectTypeType.IsSubclassOf(Type.FromTypeof<ObjectType>()));
 
-        Type DefaultOtherType = NodeHelper.GetDefaultItemType(typeof(CoverageSet));
-        Assert.AreEqual(DefaultOtherType, typeof(CoverageSet));
+        Type DefaultOtherType = NodeHelper.GetDefaultItemType(Type.FromTypeof<CoverageSet>());
+        Assert.AreEqual(DefaultOtherType, Type.FromTypeof<CoverageSet>());
     }
 
     [Test]
     public static void TestDefaultNodeFromType()
     {
-        Node DefaultBody = NodeHelper.CreateDefaultFromType(typeof(Body));
-        Node DefaultExpression = NodeHelper.CreateDefaultFromType(typeof(Expression));
-        Node DefaultInstruction = NodeHelper.CreateDefaultFromType(typeof(Instruction));
-        Node DefaultFeature = NodeHelper.CreateDefaultFromType(typeof(Feature));
-        Node DefaultObjectType = NodeHelper.CreateDefaultFromType(typeof(ObjectType));
+        Node DefaultBody = NodeHelper.CreateDefaultFromType(Type.FromTypeof<Body>());
+        Node DefaultExpression = NodeHelper.CreateDefaultFromType(Type.FromTypeof<Expression>());
+        Node DefaultInstruction = NodeHelper.CreateDefaultFromType(Type.FromTypeof<Instruction>());
+        Node DefaultFeature = NodeHelper.CreateDefaultFromType(Type.FromTypeof<Feature>());
+        Node DefaultObjectType = NodeHelper.CreateDefaultFromType(Type.FromTypeof<ObjectType>());
 
-        Node DefaultArgument = NodeHelper.CreateDefaultFromType(typeof(Argument));
-        Node DefaultTypeArgument = NodeHelper.CreateDefaultFromType(typeof(TypeArgument));
+        Node DefaultArgument = NodeHelper.CreateDefaultFromType(Type.FromTypeof<Argument>());
+        Node DefaultTypeArgument = NodeHelper.CreateDefaultFromType(Type.FromTypeof<TypeArgument>());
 
-        Node DefaultName = NodeHelper.CreateDefaultFromType(typeof(Name));
-        Node DefaultIdentifier = NodeHelper.CreateDefaultFromType(typeof(Identifier));
-        Node DefaultQualifiedName = NodeHelper.CreateDefaultFromType(typeof(QualifiedName));
-        Node DefaultScope = NodeHelper.CreateDefaultFromType(typeof(Scope));
-        Node DefaultImport = NodeHelper.CreateDefaultFromType(typeof(Import));
+        Node DefaultName = NodeHelper.CreateDefaultFromType(Type.FromTypeof<Name>());
+        Node DefaultIdentifier = NodeHelper.CreateDefaultFromType(Type.FromTypeof<Identifier>());
+        Node DefaultQualifiedName = NodeHelper.CreateDefaultFromType(Type.FromTypeof<QualifiedName>());
+        Node DefaultScope = NodeHelper.CreateDefaultFromType(Type.FromTypeof<Scope>());
+        Node DefaultImport = NodeHelper.CreateDefaultFromType(Type.FromTypeof<Import>());
 
-        Node DefaultConstraint = NodeHelper.CreateDefaultFromType(typeof(Constraint));
+        Node DefaultConstraint = NodeHelper.CreateDefaultFromType(Type.FromTypeof<Constraint>());
 
-        Assert.Throws<ArgumentException>(() => { NodeHelper.CreateEmptyNode(typeof(CoverageSet)); });
-        Assert.Throws<ArgumentException>(() => { NodeHelper.CreateEmptyNode(typeof(Argument)); });
+        Assert.Throws<ArgumentException>(() => { NodeHelper.CreateEmptyNode(Type.FromTypeof<CoverageSet>()); });
+        Assert.Throws<ArgumentException>(() => { NodeHelper.CreateEmptyNode(Type.FromTypeof<Argument>()); });
 
-        Class DefaultClass = (Class)NodeHelper.CreateEmptyNode(typeof(Class));
+        Class DefaultClass = (Class)NodeHelper.CreateEmptyNode(Type.FromTypeof<Class>());
         Assert.That(NodeHelper.IsEmptyNode(DefaultClass));
 
-        Library DefaultLibrary = (Library)NodeHelper.CreateEmptyNode(typeof(Library));
+        Library DefaultLibrary = (Library)NodeHelper.CreateEmptyNode(Type.FromTypeof<Library>());
         Assert.That(NodeHelper.IsEmptyNode(DefaultLibrary));
 
-        GlobalReplicate DefaultGlobalReplicate = (GlobalReplicate)NodeHelper.CreateEmptyNode(typeof(GlobalReplicate));
+        GlobalReplicate DefaultGlobalReplicate = (GlobalReplicate)NodeHelper.CreateEmptyNode(Type.FromTypeof<GlobalReplicate>());
         Assert.That(NodeHelper.IsEmptyNode(DefaultGlobalReplicate));
 
-        InspectInstruction DefaultInspectInstruction = (InspectInstruction)NodeHelper.CreateEmptyNode(typeof(InspectInstruction));
+        InspectInstruction DefaultInspectInstruction = (InspectInstruction)NodeHelper.CreateEmptyNode(Type.FromTypeof<InspectInstruction>());
         Assert.That(NodeHelper.IsEmptyNode(DefaultInspectInstruction));
 
-        AttachmentInstruction DefaultAttachmentInstruction = (AttachmentInstruction)NodeHelper.CreateEmptyNode(typeof(AttachmentInstruction));
+        AttachmentInstruction DefaultAttachmentInstruction = (AttachmentInstruction)NodeHelper.CreateEmptyNode(Type.FromTypeof<AttachmentInstruction>());
         Assert.That(NodeHelper.IsEmptyNode(DefaultAttachmentInstruction));
 
         Attachment Attachment0 = DefaultAttachmentInstruction.AttachmentBlocks.NodeBlockList[0].NodeList[0];
         Attachment0.Instructions = NodeHelper.CreateSimpleScope(DefaultInspectInstruction);
         Assert.That(!NodeHelper.IsEmptyNode(DefaultAttachmentInstruction));
 
-        Attachment DefaultAttachment1 = (Attachment)NodeHelper.CreateEmptyNode(typeof(Attachment));
+        Attachment DefaultAttachment1 = (Attachment)NodeHelper.CreateEmptyNode(Type.FromTypeof<Attachment>());
 
         DefaultAttachmentInstruction.AttachmentBlocks.NodeBlockList[0].NodeList.Add(DefaultAttachment1);
         Assert.That(!NodeHelper.IsEmptyNode(DefaultAttachmentInstruction));
 
-        Attachment DefaultAttachment2 = (Attachment)NodeHelper.CreateEmptyNode(typeof(Attachment));
+        Attachment DefaultAttachment2 = (Attachment)NodeHelper.CreateEmptyNode(Type.FromTypeof<Attachment>());
         List<Attachment> AttachmentList = new() { DefaultAttachment2 };
         IBlock<Attachment> SimpleBlock = BlockListHelper.CreateBlock<Attachment>(AttachmentList);
         DefaultAttachmentInstruction.AttachmentBlocks.NodeBlockList.Add(SimpleBlock);
         Assert.That(!NodeHelper.IsEmptyNode(DefaultAttachmentInstruction));
 
-        Root DefaultRoot = (Root)NodeHelper.CreateEmptyNode(typeof(Root));
+        Root DefaultRoot = (Root)NodeHelper.CreateEmptyNode(Type.FromTypeof<Root>());
         Assert.That(NodeHelper.IsEmptyNode(DefaultRoot));
 
         DefaultRoot.Replicates.Add(DefaultGlobalReplicate);
@@ -187,33 +187,33 @@ public partial class DefaultObjectsCoverage
     [Test]
     public static void TestIsNodeType()
     {
-        Assert.That(NodeHelper.IsNodeType(typeof(Identifier)));
-        Assert.That(!NodeHelper.IsNodeType(typeof(CoverageSet)));
+        Assert.That(NodeHelper.IsNodeType(Type.FromTypeof<Identifier>()));
+        Assert.That(!NodeHelper.IsNodeType(Type.FromTypeof<CoverageSet>()));
     }
 
     [Test]
     public static void TestNonDefault()
     {
-        Name NameNode = (Name)NodeHelper.CreateDefault(typeof(Name));
+        Name NameNode = (Name)NodeHelper.CreateDefault(Type.FromTypeof<Name>());
         Assert.That(NodeHelper.IsDefaultNode(NameNode));
 
         NameNode.Text = "Foo";
         Assert.That(!NodeHelper.IsDefaultNode(NameNode));
 
-        Identifier IdentifierNode = (Identifier)NodeHelper.CreateDefault(typeof(Identifier));
+        Identifier IdentifierNode = (Identifier)NodeHelper.CreateDefault(Type.FromTypeof<Identifier>());
         Assert.That(NodeHelper.IsDefaultNode(IdentifierNode));
 
         IdentifierNode.Text = "Foo";
         Assert.That(!NodeHelper.IsDefaultNode(IdentifierNode));
 
-        Scope ScopeNode = (Scope)NodeHelper.CreateDefault(typeof(Scope));
+        Scope ScopeNode = (Scope)NodeHelper.CreateDefault(Type.FromTypeof<Scope>());
         Assert.That(NodeHelper.IsDefaultNode(ScopeNode));
 
-        Instruction DefaultInstruction = (Instruction)NodeHelper.CreateDefaultFromType(typeof(Instruction));
+        Instruction DefaultInstruction = (Instruction)NodeHelper.CreateDefaultFromType(Type.FromTypeof<Instruction>());
         List<Instruction> InstructionList = new() { DefaultInstruction };
         IBlock<Instruction> InstructionBlock = BlockListHelper.CreateBlock(InstructionList);
 
-        EntityDeclaration DefaultEntityDeclaration = (EntityDeclaration)NodeHelper.CreateDefaultFromType(typeof(EntityDeclaration));
+        EntityDeclaration DefaultEntityDeclaration = (EntityDeclaration)NodeHelper.CreateDefaultFromType(Type.FromTypeof<EntityDeclaration>());
         List<EntityDeclaration> EntityDeclarationList = new() { DefaultEntityDeclaration };
         IBlock<EntityDeclaration> EntityDeclarationBlock = BlockListHelper.CreateBlock(EntityDeclarationList);
 
@@ -225,7 +225,7 @@ public partial class DefaultObjectsCoverage
         Assert.That(!NodeHelper.IsDefaultNode(ScopeNode));
         ScopeNode.EntityDeclarationBlocks.NodeBlockList.Remove(EntityDeclarationBlock);
 
-        QualifiedName QualifiedNameNode = (QualifiedName)NodeHelper.CreateDefault(typeof(QualifiedName));
+        QualifiedName QualifiedNameNode = (QualifiedName)NodeHelper.CreateDefault(Type.FromTypeof<QualifiedName>());
         Assert.That(NodeHelper.IsDefaultNode(QualifiedNameNode));
 
         QualifiedNameNode.Path[0].Text = "Foo";
@@ -237,7 +237,7 @@ public partial class DefaultObjectsCoverage
         AnchoredType AnchoredTypeNode = NodeHelper.CreateAnchoredType(QualifiedNameNode, AnchorKinds.Declaration);
         Assert.That(!NodeHelper.IsDefaultNode(AnchoredTypeNode));
 
-        SimpleType SimpleTypeNode = (SimpleType)NodeHelper.CreateDefault(typeof(SimpleType));
+        SimpleType SimpleTypeNode = (SimpleType)NodeHelper.CreateDefault(Type.FromTypeof<SimpleType>());
         Assert.That(NodeHelper.IsDefaultNode(SimpleTypeNode));
 
         SimpleTypeNode.ClassIdentifier.Text = "Foo";
@@ -258,7 +258,7 @@ public partial class DefaultObjectsCoverage
 
         Assert.That(NodeHelper.IsDefaultNode(AttributeFeatureNode));
 
-        Assertion AssertionNode = (Assertion)NodeHelper.CreateDefaultFromType(typeof(Assertion));
+        Assertion AssertionNode = (Assertion)NodeHelper.CreateDefaultFromType(Type.FromTypeof<Assertion>());
         Assert.That(NodeHelper.IsDefaultNode(AssertionNode));
         List<Assertion> AssertionList = new() { AssertionNode };
         IBlock<Assertion> AssertionBlock = BlockListHelper.CreateBlock(AssertionList);
@@ -269,13 +269,13 @@ public partial class DefaultObjectsCoverage
         AttributeFeatureNode.ExportIdentifier.Text = "Foo";
         Assert.That(!NodeHelper.IsDefaultNode(AttributeFeatureNode));
 
-        Expression ExpressionNode = (Expression)NodeHelper.CreateDefaultFromType(typeof(Expression));
+        Expression ExpressionNode = (Expression)NodeHelper.CreateDefaultFromType(Type.FromTypeof<Expression>());
         Assert.That(ExpressionNode is QueryExpression);
 
         QueryExpression QueryExpressionNode = (QueryExpression)ExpressionNode;
         Assert.That(NodeHelper.IsDefaultNode(QueryExpressionNode));
 
-        Argument ArgumentNode = (Argument)NodeHelper.CreateDefaultFromType(typeof(Argument));
+        Argument ArgumentNode = (Argument)NodeHelper.CreateDefaultFromType(Type.FromTypeof<Argument>());
         Assert.That(ArgumentNode is PositionalArgument);
 
         PositionalArgument PositionalArgumentNode = (PositionalArgument)ArgumentNode;
@@ -287,19 +287,19 @@ public partial class DefaultObjectsCoverage
         QueryExpressionNode.ArgumentBlocks.NodeBlockList.Add(ArgumentBlock);
         Assert.That(!NodeHelper.IsDefaultNode(QueryExpressionNode));
 
-        ManifestCharacterExpression ManifestCharacterExpressionNode = (ManifestCharacterExpression)NodeHelper.CreateDefaultFromType(typeof(ManifestCharacterExpression));
+        ManifestCharacterExpression ManifestCharacterExpressionNode = (ManifestCharacterExpression)NodeHelper.CreateDefaultFromType(Type.FromTypeof<ManifestCharacterExpression>());
         Assert.That(NodeHelper.IsDefaultNode(ManifestCharacterExpressionNode));
 
-        ManifestNumberExpression ManifestNumberExpressionNode = (ManifestNumberExpression)NodeHelper.CreateDefaultFromType(typeof(ManifestNumberExpression));
+        ManifestNumberExpression ManifestNumberExpressionNode = (ManifestNumberExpression)NodeHelper.CreateDefaultFromType(Type.FromTypeof<ManifestNumberExpression>());
         Assert.That(NodeHelper.IsDefaultNode(ManifestNumberExpressionNode));
 
-        ManifestStringExpression ManifestStringExpressionNode = (ManifestStringExpression)NodeHelper.CreateDefaultFromType(typeof(ManifestStringExpression));
+        ManifestStringExpression ManifestStringExpressionNode = (ManifestStringExpression)NodeHelper.CreateDefaultFromType(Type.FromTypeof<ManifestStringExpression>());
         Assert.That(NodeHelper.IsDefaultNode(ManifestStringExpressionNode));
 
-        PreprocessorExpression PreprocessorExpressionNode = (PreprocessorExpression)NodeHelper.CreateDefaultFromType(typeof(PreprocessorExpression));
+        PreprocessorExpression PreprocessorExpressionNode = (PreprocessorExpression)NodeHelper.CreateDefaultFromType(Type.FromTypeof<PreprocessorExpression>());
         Assert.That(!NodeHelper.IsDefaultNode(PreprocessorExpressionNode));
 
-        AssignmentArgument AssignmentArgumentNode = (AssignmentArgument)NodeHelper.CreateDefaultFromType(typeof(AssignmentArgument));
+        AssignmentArgument AssignmentArgumentNode = (AssignmentArgument)NodeHelper.CreateDefaultFromType(Type.FromTypeof<AssignmentArgument>());
         Assert.That(!NodeHelper.IsDefaultNode(AssignmentArgumentNode));
 
         Assert.That(PositionalArgumentNode.Source is QueryExpression);
@@ -328,35 +328,35 @@ public partial class DefaultObjectsCoverage
 
         Assert.That(NodeHelper.IsDefaultNode(EffectiveBodyNode));
 
-        ExceptionHandler DefaultExceptionHandler = (ExceptionHandler)NodeHelper.CreateDefaultFromType(typeof(ExceptionHandler));
+        ExceptionHandler DefaultExceptionHandler = (ExceptionHandler)NodeHelper.CreateDefaultFromType(Type.FromTypeof<ExceptionHandler>());
         List<ExceptionHandler> ExceptionHandlerList = new() { DefaultExceptionHandler };
         IBlock<ExceptionHandler> ExceptionHandlerBlock = BlockListHelper.CreateBlock(ExceptionHandlerList);
 
         EffectiveBodyNode.ExceptionHandlerBlocks.NodeBlockList.Add(ExceptionHandlerBlock);
         Assert.That(!NodeHelper.IsDefaultNode(EffectiveBodyNode));
 
-        Instruction DefaultInstruction = (Instruction)NodeHelper.CreateDefaultFromType(typeof(Instruction));
+        Instruction DefaultInstruction = (Instruction)NodeHelper.CreateDefaultFromType(Type.FromTypeof<Instruction>());
         List<Instruction> InstructionList = new() { DefaultInstruction };
         IBlock<Instruction> InstructionBlock = BlockListHelper.CreateBlock(InstructionList);
 
         EffectiveBodyNode.BodyInstructionBlocks.NodeBlockList.Add(InstructionBlock);
         Assert.That(!NodeHelper.IsDefaultNode(EffectiveBodyNode));
 
-        EntityDeclaration DefaultEntityDeclaration = (EntityDeclaration)NodeHelper.CreateDefaultFromType(typeof(EntityDeclaration));
+        EntityDeclaration DefaultEntityDeclaration = (EntityDeclaration)NodeHelper.CreateDefaultFromType(Type.FromTypeof<EntityDeclaration>());
         List<EntityDeclaration> EntityDeclarationList = new() { DefaultEntityDeclaration };
         IBlock<EntityDeclaration> EntityDeclarationBlock = BlockListHelper.CreateBlock(EntityDeclarationList);
 
         EffectiveBodyNode.EntityDeclarationBlocks.NodeBlockList.Add(EntityDeclarationBlock);
         Assert.That(!NodeHelper.IsDefaultNode(EffectiveBodyNode));
 
-        Identifier DefaultIdentifier = (Identifier)NodeHelper.CreateDefaultFromType(typeof(Identifier));
+        Identifier DefaultIdentifier = (Identifier)NodeHelper.CreateDefaultFromType(Type.FromTypeof<Identifier>());
         List<Identifier> IdentifierList = new() { DefaultIdentifier };
         IBlock<Identifier> IdentifierBlock = BlockListHelper.CreateBlock(IdentifierList);
 
         EffectiveBodyNode.ExceptionIdentifierBlocks.NodeBlockList.Add(IdentifierBlock);
         Assert.That(!NodeHelper.IsDefaultNode(EffectiveBodyNode));
 
-        Assertion DefaultAssertion = (Assertion)NodeHelper.CreateDefaultFromType(typeof(Assertion));
+        Assertion DefaultAssertion = (Assertion)NodeHelper.CreateDefaultFromType(Type.FromTypeof<Assertion>());
         List<Assertion> AssertionList = new() { DefaultAssertion };
         IBlock<Assertion> AssertionBlock = BlockListHelper.CreateBlock(AssertionList);
 

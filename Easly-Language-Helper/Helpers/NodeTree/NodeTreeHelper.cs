@@ -1,12 +1,13 @@
 ﻿namespace BaseNodeHelper;
 
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Reflection;
+using ArgumentException = System.ArgumentException;
+using StringComparison = System.StringComparison;
 using BaseNode;
 using Contracts;
 using Easly;
+using NotNullReflection;
 
 /// <summary>
 /// Provides methods to manipulate a tree of nodes.
@@ -22,7 +23,7 @@ public static partial class NodeTreeHelper
     {
         Contract.RequireNotNull(node, out Node Node);
 
-        Type NodeType = Node.GetType();
+        Type NodeType = Type.FromGetType(Node);
         return EnumChildNodeProperties(NodeType);
     }
 
@@ -62,7 +63,7 @@ public static partial class NodeTreeHelper
     {
         Contract.RequireNotNull(type, out Type Type);
 
-        return Type.IsSubclassOf(typeof(Node));
+        return Type.IsSubclassOf(Type.FromTypeof<Node>());
     }
 
     /// <summary>
@@ -74,7 +75,7 @@ public static partial class NodeTreeHelper
     {
         Contract.RequireNotNull(type, out Type Type);
 
-        if (!Type.IsInterface || !Type.IsGenericType || Type.GetGenericTypeDefinition() != typeof(IOptionalReference<>))
+        if (!Type.IsInterface || !Type.IsGenericType || Type.GetGenericTypeDefinition().Origin != typeof(IOptionalReference<>))
             return false;
 
         Type[] GenericArguments = Type.GetGenericArguments();
@@ -94,7 +95,7 @@ public static partial class NodeTreeHelper
     {
         Contract.RequireNotNull(type, out Type Type);
 
-        if (!Type.IsInterface || !Type.IsGenericType || Type.GetGenericTypeDefinition() != typeof(IList<>))
+        if (!Type.IsInterface || !Type.IsGenericType || Type.GetGenericTypeDefinition().Origin != typeof(IList<>))
             return false;
 
         Type[] GenericArguments = Type.GetGenericArguments();
@@ -114,7 +115,7 @@ public static partial class NodeTreeHelper
     {
         Contract.RequireNotNull(type, out Type Type);
 
-        if (Type.IsInterface || !Type.IsGenericType || Type.GetGenericTypeDefinition() != typeof(BlockList<>))
+        if (Type.IsInterface || !Type.IsGenericType || Type.GetGenericTypeDefinition().Origin != typeof(BlockList<>))
             return false;
 
         Type[] GenericArguments = Type.GetGenericArguments();
@@ -134,7 +135,7 @@ public static partial class NodeTreeHelper
     {
         Contract.RequireNotNull(type, out Type Type);
 
-        if (!Type.IsInterface || !Type.IsGenericType || Type.GetGenericTypeDefinition() != typeof(IBlockList<>))
+        if (!Type.IsInterface || !Type.IsGenericType || Type.GetGenericTypeDefinition().Origin != typeof(IBlockList<>))
             return false;
 
         Type[] GenericArguments = Type.GetGenericArguments();
@@ -154,7 +155,7 @@ public static partial class NodeTreeHelper
     {
         Contract.RequireNotNull(type, out Type Type);
 
-        if (Type.IsInterface || !Type.IsGenericType || Type.GetGenericTypeDefinition() != typeof(Block<>))
+        if (Type.IsInterface || !Type.IsGenericType || Type.GetGenericTypeDefinition().Origin != typeof(Block<>))
             return false;
 
         Type[] GenericArguments = Type.GetGenericArguments();
@@ -175,7 +176,7 @@ public static partial class NodeTreeHelper
     {
         Contract.RequireNotNull(type, out Type Type);
 
-        if (!Type.IsInterface || !Type.IsGenericType || Type.GetGenericTypeDefinition() != typeof(IBlock<>))
+        if (!Type.IsInterface || !Type.IsGenericType || Type.GetGenericTypeDefinition().Origin != typeof(IBlock<>))
             return false;
 
         Type[] GenericArguments = Type.GetGenericArguments();
@@ -201,10 +202,10 @@ public static partial class NodeTreeHelper
 
         Type GenericTypeDefinition = Type.GetGenericTypeDefinition();
 
-        if (GenericTypeDefinition != typeof(Block<>) &&
-            GenericTypeDefinition != typeof(IBlock<>) &&
-            GenericTypeDefinition != typeof(BlockList<>) &&
-            GenericTypeDefinition != typeof(IBlockList<>))
+        if (GenericTypeDefinition.Origin != typeof(Block<>) &&
+            GenericTypeDefinition.Origin != typeof(IBlock<>) &&
+            GenericTypeDefinition.Origin != typeof(BlockList<>) &&
+            GenericTypeDefinition.Origin != typeof(IBlockList<>))
             return false;
 
         Type[] GenericArguments = Type.GetGenericArguments();
@@ -225,9 +226,9 @@ public static partial class NodeTreeHelper
     {
         Contract.RequireNotNull(node, out Node Node);
 
-        Type NodeType = Node.GetType();
+        Type NodeType = Type.FromGetType(Node);
 
-        return SafeType.IsPropertyOf(NodeType, nameof(Identifier.Text));
+        return NodeType.IsProperty(nameof(Identifier.Text), out _);
     }
 
     /// <summary>
@@ -243,12 +244,12 @@ public static partial class NodeTreeHelper
         Contract.RequireNotNull(propertyName, out string PropertyName);
         Contract.RequireNotNull(childNode, out Node ChildNode);
 
-        Type ParentNodeType = Node.GetType();
+        Type ParentNodeType = Type.FromGetType(Node);
 
-        if (!SafeType.CheckAndGetPropertyOf(ParentNodeType, PropertyName, out PropertyInfo Property))
+        if (!ParentNodeType.IsProperty(PropertyName, out PropertyInfo Property))
             throw new ArgumentException($"{nameof(propertyName)} must be the name of a property of {ParentNodeType}");
 
-        Type NodeType = ChildNode.GetType();
+        Type NodeType = Type.FromGetType(ChildNode);
         Type PropertyType = Property.PropertyType;
 
         Type AssignedType;
@@ -281,19 +282,19 @@ public static partial class NodeTreeHelper
 
     private static bool GetBaseNodeAncestor(Type nodeType, out Type ancestorType)
     {
-        string FullName = SafeType.FullName(typeof(Node));
-        string NodeFullName = SafeType.FullName(nodeType);
+        string FullName = Type.FromTypeof<Node>().FullName;
+        string NodeFullName = nodeType.FullName;
         string BaseNodeNamespace = FullName.Substring(0, FullName.IndexOf(".", StringComparison.InvariantCulture) + 1);
 
         while (!NodeFullName.StartsWith(BaseNodeNamespace, StringComparison.InvariantCulture))
         {
-            Debug.Assert(nodeType != typeof(object));
+            Debug.Assert(!nodeType.IsTypeof<object>());
 
-            nodeType = SafeType.GetBaseType(nodeType);
-            NodeFullName = SafeType.FullName(nodeType);
+            nodeType = nodeType.BaseType;
+            NodeFullName = nodeType.FullName;
         }
 
-        if (nodeType != typeof(Node))
+        if (!nodeType.IsTypeof<Node>())
         {
             ancestorType = nodeType;
             return true;
@@ -327,7 +328,7 @@ public static partial class NodeTreeHelper
 
         optionalNodesTable = new Dictionary<string, IOptionalReference>();
 
-        Type NodeType = Node.GetType();
+        Type NodeType = Type.FromGetType(Node);
         IList<PropertyInfo> Properties = GetTypeProperties(NodeType);
 
         foreach (PropertyInfo Property in Properties)
@@ -337,7 +338,7 @@ public static partial class NodeTreeHelper
 
             if (IsOptionalReferenceType(PropertyType))
             {
-                IOptionalReference Optional = SafeType.GetPropertyValue<IOptionalReference>(Property, Node);
+                IOptionalReference Optional = (IOptionalReference)Property.GetValue(Node);
                 optionalNodesTable.Add(PropertyName, Optional);
             }
         }
@@ -354,7 +355,7 @@ public static partial class NodeTreeHelper
 
         argumentBlocksTable = new Dictionary<string, IBlockList<Argument>>();
 
-        Type NodeType = Node.GetType();
+        Type NodeType = Type.FromGetType(Node);
         IList<PropertyInfo> Properties = GetTypeProperties(NodeType);
 
         foreach (PropertyInfo Property in Properties)
@@ -369,9 +370,9 @@ public static partial class NodeTreeHelper
 
                 Debug.Assert(GenericArguments.Length == 1);
 
-                if (GenericArguments[0] == typeof(Argument))
+                if (GenericArguments[0].IsTypeof<Argument>())
                 {
-                    IBlockList<Argument>? ArgumentBlocks = SafeType.GetPropertyValue<IBlockList<Argument>>(Property, Node);
+                    IBlockList<Argument> ArgumentBlocks = (IBlockList<Argument>)Property.GetValue(Node);
 
                     argumentBlocksTable.Add(PropertyName, ArgumentBlocks);
                 }

@@ -1,10 +1,14 @@
 ﻿namespace BaseNodeHelper;
 
-using System;
 using System.Diagnostics;
-using System.Reflection;
+using Enum = System.Enum;
+using Guid = System.Guid;
+using Array = System.Array;
+using ArgumentException = System.ArgumentException;
+using ArgumentOutOfRangeException = System.ArgumentOutOfRangeException;
 using BaseNode;
 using Contracts;
+using NotNullReflection;
 
 /// <summary>
 /// Provides methods to manipulate a tree of nodes.
@@ -22,15 +26,15 @@ public static partial class NodeTreeHelper
         Contract.RequireNotNull(node, out Node Node);
         Contract.RequireNotNull(propertyName, out string PropertyName);
 
-        Type NodeType = Node.GetType();
+        Type NodeType = Type.FromGetType(Node);
 
-        if (!SafeType.CheckAndGetPropertyOf(NodeType, PropertyName, out PropertyInfo Property))
+        if (!NodeType.IsProperty(PropertyName, out PropertyInfo Property))
             throw new ArgumentException($"{nameof(propertyName)} must be the name of a property of {NodeType}");
 
-        if (Property.PropertyType != typeof(string))
+        if (!Property.PropertyType.IsTypeof<string>())
             throw new ArgumentException($"{nameof(propertyName)} must be the name of a string property");
 
-        string Text = SafeType.GetPropertyValue<string>(Property, Node);
+        string Text = (string)Property.GetValue(Node);
 
         return Text;
     }
@@ -47,12 +51,12 @@ public static partial class NodeTreeHelper
         Contract.RequireNotNull(propertyName, out string PropertyName);
         Contract.RequireNotNull(text, out string Text);
 
-        Type NodeType = Node.GetType();
+        Type NodeType = Type.FromGetType(Node);
 
-        if (!SafeType.CheckAndGetPropertyOf(NodeType, PropertyName, out PropertyInfo Property))
+        if (!NodeType.IsProperty(PropertyName, out PropertyInfo Property))
             throw new ArgumentException($"{nameof(propertyName)} must be the name of a property of {NodeType}");
 
-        if (Property.PropertyType != typeof(string))
+        if (!Property.PropertyType.IsTypeof<string>())
             throw new ArgumentException($"{nameof(propertyName)} must be the name of a string property");
 
         Property.SetValue(Node, Text);
@@ -85,9 +89,9 @@ public static partial class NodeTreeHelper
         Contract.RequireNotNull(node, out Node Node);
         Contract.RequireNotNull(propertyName, out string PropertyName);
 
-        Type NodeType = Node.GetType();
+        Type NodeType = Type.FromGetType(Node);
 
-        if (!SafeType.CheckAndGetPropertyOf(NodeType, PropertyName, out PropertyInfo Property))
+        if (!NodeType.IsProperty(PropertyName, out PropertyInfo Property))
             throw new ArgumentException($"{nameof(propertyName)} must be the name of a property of {NodeType}");
 
         Type PropertyType = Property.PropertyType;
@@ -98,7 +102,7 @@ public static partial class NodeTreeHelper
         GetEnumMinMax(PropertyType, out min, out max);
         int Result;
 
-        if (PropertyType == typeof(bool))
+        if (PropertyType.IsTypeof<bool>())
         {
             bool BoolValue = (bool)Contract.NullSupressed(Property.GetValue(Node));
 
@@ -123,7 +127,7 @@ public static partial class NodeTreeHelper
     public static void SetEnumValue<TEnum>(Node node, string propertyName, TEnum value)
         where TEnum : struct, System.Enum
     {
-        if (typeof(TEnum).GetEnumUnderlyingType() != typeof(int))
+        if (!Type.FromTypeof<TEnum>().GetEnumUnderlyingType().IsTypeof<int>())
             throw new ArgumentException($"{nameof(value)} must be of an enumeration value type");
 
         SetEnumValue(node, propertyName, (int)(object)value);
@@ -151,9 +155,9 @@ public static partial class NodeTreeHelper
         Contract.RequireNotNull(node, out Node Node);
         Contract.RequireNotNull(propertyName, out string PropertyName);
 
-        Type NodeType = Node.GetType();
+        Type NodeType = Type.FromGetType(Node);
 
-        if (!SafeType.CheckAndGetPropertyOf(NodeType, PropertyName, out PropertyInfo Property))
+        if (!NodeType.IsProperty(PropertyName, out PropertyInfo Property))
             throw new ArgumentException($"{nameof(propertyName)} must be the name of a property of {NodeType}");
 
         Type PropertyType = Property.PropertyType;
@@ -166,7 +170,7 @@ public static partial class NodeTreeHelper
         if (Min > value || value > Max)
             throw new ArgumentOutOfRangeException(nameof(value));
 
-        if (PropertyType == typeof(bool))
+        if (PropertyType.IsTypeof<bool>())
             Property.SetValue(Node, value == 1 ? true : false);
         else
             Property.SetValue(Node, value);
@@ -184,7 +188,7 @@ public static partial class NodeTreeHelper
         Contract.RequireNotNull(nodeType, out Type NodeType);
         Contract.RequireNotNull(propertyName, out string PropertyName);
 
-        if (!SafeType.CheckAndGetPropertyOf(NodeType, PropertyName, out PropertyInfo Property))
+        if (!NodeType.IsProperty(PropertyName, out PropertyInfo Property))
             throw new ArgumentException($"{nameof(propertyName)} must be the name of a property of {NodeType}");
 
         Type PropertyType = Property.PropertyType;
@@ -206,15 +210,15 @@ public static partial class NodeTreeHelper
         Contract.RequireNotNull(node, out Node Node);
         Contract.RequireNotNull(propertyName, out string PropertyName);
 
-        Type NodeType = Node.GetType();
+        Type NodeType = Type.FromGetType(Node);
 
-        if (!SafeType.CheckAndGetPropertyOf(NodeType, PropertyName, out PropertyInfo Property))
+        if (!NodeType.IsProperty(PropertyName, out PropertyInfo Property))
             throw new ArgumentException($"{nameof(propertyName)} must be the name of a property of {NodeType}");
 
         Type PropertyType = Property.PropertyType;
 
-        if (PropertyType != typeof(Guid))
-            throw new ArgumentException($"{nameof(propertyName)} must be the name of a {typeof(Guid)} property");
+        if (!PropertyType.IsTypeof<Guid>())
+            throw new ArgumentException($"{nameof(propertyName)} must be the name of a {Type.FromTypeof<Guid>()} property");
 
         Guid Result = (Guid)Contract.NullSupressed(Property.GetValue(Node));
 
@@ -268,8 +272,8 @@ public static partial class NodeTreeHelper
         Contract.RequireNotNull(documentation, out Document Documentation);
         Contract.RequireNotNull(text, out string Text);
 
-        Type DocumentationType = Documentation.GetType();
-        PropertyInfo CommentProperty = SafeType.GetProperty(DocumentationType, nameof(Document.Comment));
+        Type DocumentationType = Type.FromGetType(Documentation);
+        PropertyInfo CommentProperty = DocumentationType.GetProperty(nameof(Document.Comment));
 
         CommentProperty.SetValue(Documentation, Text);
     }
@@ -285,7 +289,7 @@ public static partial class NodeTreeHelper
         Contract.RequireNotNull(node, out Node Node);
         Contract.RequireNotNull(propertyName, out string PropertyName);
 
-        Type NodeType = Node.GetType();
+        Type NodeType = Type.FromGetType(Node);
         return IsDocumentProperty(NodeType, PropertyName);
     }
 
@@ -300,11 +304,11 @@ public static partial class NodeTreeHelper
         Contract.RequireNotNull(nodeType, out Type NodeType);
         Contract.RequireNotNull(propertyName, out string PropertyName);
 
-        if (!SafeType.CheckAndGetPropertyOf(NodeType, PropertyName, out PropertyInfo Property))
+        if (!NodeType.IsProperty(PropertyName, out PropertyInfo Property))
             return false;
 
         Type PropertyType = Property.PropertyType;
-        return PropertyType == typeof(Document);
+        return PropertyType.IsTypeof<Document>();
     }
 
     /// <summary>
@@ -317,11 +321,11 @@ public static partial class NodeTreeHelper
         Contract.RequireNotNull(node, out Node Node);
         Contract.RequireNotNull(document, out Document Document);
 
-        Type NodeType = Node.GetType();
-        PropertyInfo Property = SafeType.GetProperty(NodeType, nameof(Node.Documentation));
+        Type NodeType = Type.FromGetType(Node);
+        PropertyInfo Property = NodeType.GetProperty(nameof(Node.Documentation));
 
         Type PropertyType = Property.PropertyType;
-        Debug.Assert(PropertyType == typeof(Document));
+        Debug.Assert(PropertyType.IsTypeof<Document>());
 
         Property.SetValue(Node, Document);
     }
@@ -337,16 +341,16 @@ public static partial class NodeTreeHelper
         Contract.RequireNotNull(sourceNode, out Node SourceNode);
         Contract.RequireNotNull(destinationNode, out Node DestinationNode);
 
-        Type SourceNodeType = SourceNode.GetType();
-        Type DestinationNodeType = DestinationNode.GetType();
+        Type SourceNodeType = Type.FromGetType(SourceNode);
+        Type DestinationNodeType = Type.FromGetType(DestinationNode);
 
         if (SourceNodeType != DestinationNodeType)
             throw new ArgumentException($"{nameof(sourceNode)} and {nameof(destinationNode)} must be of the same type");
 
-        PropertyInfo Property = SafeType.GetProperty(SourceNodeType, nameof(Node.Documentation));
+        PropertyInfo Property = SourceNodeType.GetProperty(nameof(Node.Documentation));
 
         Type PropertyType = Property.PropertyType;
-        Debug.Assert(PropertyType == typeof(Document));
+        Debug.Assert(PropertyType.IsTypeof<Document>());
 
         Guid GuidCopy = cloneCommentGuid ? SourceNode.Documentation.Uuid : Guid.NewGuid();
         Document DocumentCopy = NodeHelper.CreateSimpleDocument(SourceNode.Documentation.Comment, GuidCopy);
@@ -364,16 +368,16 @@ public static partial class NodeTreeHelper
         Contract.RequireNotNull(sourceBlock, out IBlock SourceBlock);
         Contract.RequireNotNull(destinationBlock, out IBlock DestinationBlock);
 
-        Type SourceBlockType = SourceBlock.GetType();
-        Type DestinationBlockType = DestinationBlock.GetType();
+        Type SourceBlockType = Type.FromGetType(SourceBlock);
+        Type DestinationBlockType = Type.FromGetType(DestinationBlock);
 
         if (SourceBlockType != DestinationBlockType)
             throw new ArgumentException($"{nameof(sourceBlock)} and {nameof(destinationBlock)} must be of the same type");
 
-        PropertyInfo Property = SafeType.GetProperty(SourceBlockType, nameof(IBlock.Documentation));
+        PropertyInfo Property = SourceBlockType.GetProperty(nameof(IBlock.Documentation));
 
         Type PropertyType = Property.PropertyType;
-        Debug.Assert(PropertyType == typeof(Document));
+        Debug.Assert(PropertyType.IsTypeof<Document>());
 
         Guid GuidCopy = cloneCommentGuid ? SourceBlock.Documentation.Uuid : Guid.NewGuid();
         Document DocumentCopy = NodeHelper.CreateSimpleDocument(SourceBlock.Documentation.Comment, GuidCopy);
@@ -391,16 +395,16 @@ public static partial class NodeTreeHelper
         Contract.RequireNotNull(sourceBlockList, out IBlockList SourceBlockList);
         Contract.RequireNotNull(destinationBlockList, out IBlockList DestinationBlockList);
 
-        Type SourceBlockListType = SourceBlockList.GetType();
-        Type DestinationBlockListType = DestinationBlockList.GetType();
+        Type SourceBlockListType = Type.FromGetType(SourceBlockList);
+        Type DestinationBlockListType = Type.FromGetType(DestinationBlockList);
 
         if (SourceBlockListType != DestinationBlockListType)
             throw new ArgumentException($"{nameof(sourceBlockList)} and {nameof(destinationBlockList)} must be of the same type");
 
-        PropertyInfo Property = SafeType.GetProperty(SourceBlockListType, nameof(IBlock.Documentation));
+        PropertyInfo Property = SourceBlockListType.GetProperty(nameof(IBlock.Documentation));
 
         Type PropertyType = Property.PropertyType;
-        Debug.Assert(PropertyType == typeof(Document));
+        Debug.Assert(PropertyType.IsTypeof<Document>());
 
         Guid GuidCopy = cloneCommentGuid ? SourceBlockList.Documentation.Uuid : Guid.NewGuid();
         Document DocumentCopy = NodeHelper.CreateSimpleDocument(SourceBlockList.Documentation.Comment, GuidCopy);
@@ -418,9 +422,9 @@ public static partial class NodeTreeHelper
         Contract.RequireNotNull(node, out Node Node);
         Contract.RequireNotNull(propertyName, out string PropertyName);
 
-        Type NodeType = Node.GetType();
+        Type NodeType = Type.FromGetType(Node);
 
-        return SafeType.CheckAndGetPropertyOf(NodeType, PropertyName, out _);
+        return NodeType.IsProperty(PropertyName, out _);
     }
 
     /// <summary>
@@ -434,7 +438,7 @@ public static partial class NodeTreeHelper
         Contract.RequireNotNull(nodeType, out Type NodeType);
         Contract.RequireNotNull(propertyName, out string PropertyName);
 
-        return SafeType.CheckAndGetPropertyOf(NodeType, PropertyName, out _);
+        return NodeType.IsProperty(PropertyName, out _);
     }
 
     /// <summary>
@@ -448,7 +452,7 @@ public static partial class NodeTreeHelper
         Contract.RequireNotNull(node, out Node Node);
         Contract.RequireNotNull(propertyName, out string PropertyName);
 
-        return IsValueProperty(Node, PropertyName, typeof(bool));
+        return IsValueProperty(Node, PropertyName, Type.FromTypeof<bool>());
     }
 
     /// <summary>
@@ -462,7 +466,7 @@ public static partial class NodeTreeHelper
         Contract.RequireNotNull(nodeType, out Type NodeType);
         Contract.RequireNotNull(propertyName, out string PropertyName);
 
-        return IsValueProperty(NodeType, PropertyName, typeof(bool));
+        return IsValueProperty(NodeType, PropertyName, Type.FromTypeof<bool>());
     }
 
     /// <summary>
@@ -504,7 +508,7 @@ public static partial class NodeTreeHelper
         Contract.RequireNotNull(node, out Node Node);
         Contract.RequireNotNull(propertyName, out string PropertyName);
 
-        return IsValueProperty(Node, PropertyName, typeof(string));
+        return IsValueProperty(Node, PropertyName, Type.FromTypeof<string>());
     }
 
     /// <summary>
@@ -518,7 +522,7 @@ public static partial class NodeTreeHelper
         Contract.RequireNotNull(nodeType, out Type NodeType);
         Contract.RequireNotNull(propertyName, out string PropertyName);
 
-        return IsValueProperty(NodeType, PropertyName, typeof(string));
+        return IsValueProperty(NodeType, PropertyName, Type.FromTypeof<string>());
     }
 
     /// <summary>
@@ -562,7 +566,7 @@ public static partial class NodeTreeHelper
         Contract.RequireNotNull(node, out Node Node);
         Contract.RequireNotNull(propertyName, out string PropertyName);
 
-        return IsValueProperty(Node, PropertyName, typeof(Guid));
+        return IsValueProperty(Node, PropertyName, Type.FromTypeof<Guid>());
     }
 
     /// <summary>
@@ -576,7 +580,7 @@ public static partial class NodeTreeHelper
         Contract.RequireNotNull(nodeType, out Type NodeType);
         Contract.RequireNotNull(propertyName, out string PropertyName);
 
-        return IsValueProperty(NodeType, PropertyName, typeof(Guid));
+        return IsValueProperty(NodeType, PropertyName, Type.FromTypeof<Guid>());
     }
 
     /// <summary>
@@ -619,7 +623,7 @@ public static partial class NodeTreeHelper
         Contract.RequireNotNull(node, out Node Node);
         Contract.RequireNotNull(propertyName, out string PropertyName);
 
-        Type NodeType = Node.GetType();
+        Type NodeType = Type.FromGetType(Node);
         return IsEnumProperty(NodeType, PropertyName);
     }
 
@@ -634,7 +638,7 @@ public static partial class NodeTreeHelper
         Contract.RequireNotNull(nodeType, out Type NodeType);
         Contract.RequireNotNull(propertyName, out string PropertyName);
 
-        if (!SafeType.CheckAndGetPropertyOf(NodeType, PropertyName, out PropertyInfo Property))
+        if (!NodeType.IsProperty(PropertyName, out PropertyInfo Property))
             return false;
 
         Type PropertyType = Property.PropertyType;
@@ -670,13 +674,13 @@ public static partial class NodeTreeHelper
         Contract.RequireNotNull(destinationNode, out Node DestinationNode);
         Contract.RequireNotNull(propertyName, out string PropertyName);
 
-        Type SourceNodeType = SourceNode.GetType();
-        Type DestinationNodeType = DestinationNode.GetType();
+        Type SourceNodeType = Type.FromGetType(SourceNode);
+        Type DestinationNodeType = Type.FromGetType(DestinationNode);
 
         if (SourceNodeType != DestinationNodeType)
             throw new ArgumentException($"{nameof(sourceNode)} and {nameof(destinationNode)} must be of the same type");
 
-        if (!SafeType.CheckAndGetPropertyOf(SourceNodeType, PropertyName, out PropertyInfo Property))
+        if (!SourceNodeType.IsProperty(PropertyName, out PropertyInfo Property))
             throw new ArgumentException($"{nameof(propertyName)} must be the name of a property of {SourceNodeType}");
 
         Type PropertyType = Property.PropertyType;
@@ -689,14 +693,14 @@ public static partial class NodeTreeHelper
 
     private static bool IsDiscretePropertyType(Type propertyType)
     {
-        return propertyType.IsEnum || propertyType == typeof(bool);
+        return propertyType.IsEnum || propertyType.IsTypeof<bool>();
     }
 
     private static void GetEnumMinMax(Type propertyType, out int min, out int max)
     {
         Debug.Assert(IsDiscretePropertyType(propertyType));
 
-        if (propertyType == typeof(bool))
+        if (propertyType.IsTypeof<bool>())
         {
             max = 1;
             min = 0;
@@ -722,13 +726,13 @@ public static partial class NodeTreeHelper
 
     private static bool IsValueProperty(Node node, string propertyName, Type type)
     {
-        Type NodeType = node.GetType();
+        Type NodeType = Type.FromGetType(node);
         return IsValueProperty(NodeType, propertyName, type);
     }
 
     private static bool IsValueProperty(Type nodeType, string propertyName, Type type)
     {
-        if (!SafeType.CheckAndGetPropertyOf(nodeType, propertyName, out PropertyInfo Property))
+        if (!nodeType.IsProperty(propertyName, out PropertyInfo Property))
             return false;
 
         Type PropertyType = Property.PropertyType;
@@ -740,35 +744,36 @@ public static partial class NodeTreeHelper
     }
 
     private static void SetValueProperty<T>(Node node, string propertyName, T value)
+        where T : notnull
     {
-        Type NodeType = node.GetType();
+        Type NodeType = Type.FromGetType(node);
 
-        if (!SafeType.CheckAndGetPropertyOf(NodeType, propertyName, out PropertyInfo Property))
+        if (!NodeType.IsProperty(propertyName, out PropertyInfo Property))
             throw new ArgumentException($"{nameof(propertyName)} must be the name of a property of {NodeType}");
 
         Type PropertyType = Property.PropertyType;
 
-        if (PropertyType != typeof(T))
-            throw new ArgumentException($"{nameof(propertyName)} must be the name of a property of type {typeof(T)}");
+        if (!PropertyType.IsTypeof<T>())
+            throw new ArgumentException($"{nameof(propertyName)} must be the name of a property of type {Type.FromTypeof<T>()}");
 
         Property.SetValue(node, value);
     }
 
     private static void CopyValueProperty<T>(Node sourceNode, Node destinationNode, string propertyName)
     {
-        Type SourceNodeType = sourceNode.GetType();
-        Type DestinationNodeType = destinationNode.GetType();
+        Type SourceNodeType = Type.FromGetType(sourceNode);
+        Type DestinationNodeType = Type.FromGetType(destinationNode);
 
         if (SourceNodeType != DestinationNodeType)
             throw new ArgumentException($"{nameof(sourceNode)} and {nameof(destinationNode)} must be of the same type");
 
-        if (!SafeType.CheckAndGetPropertyOf(SourceNodeType, propertyName, out PropertyInfo Property))
+        if (!SourceNodeType.IsProperty(propertyName, out PropertyInfo Property))
             throw new ArgumentException($"{nameof(propertyName)} must be the name of a property of {SourceNodeType}");
 
         Type PropertyType = Property.PropertyType;
 
-        if (PropertyType != typeof(T))
-            throw new ArgumentException($"{nameof(propertyName)} must be the name of a property of type {typeof(T)}");
+        if (!PropertyType.IsTypeof<T>())
+            throw new ArgumentException($"{nameof(propertyName)} must be the name of a property of type {Type.FromTypeof<T>()}");
 
         Property.SetValue(destinationNode, Property.GetValue(sourceNode));
     }

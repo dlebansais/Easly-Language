@@ -1,10 +1,11 @@
 ﻿namespace TestEaslyLanguage;
 
+using ArgumentException = System.ArgumentException;
 using BaseNode;
 using BaseNodeHelper;
 using Easly;
+using NotNullReflection;
 using NUnit.Framework;
-using System;
 
 [TestFixture]
 public partial class NodeTreeHelperOptionalCoverage
@@ -19,16 +20,16 @@ public partial class NodeTreeHelperOptionalCoverage
 
         Result = NodeTreeHelperOptional.IsOptionalChildNodeProperty(NewClass, nameof(Class.FromIdentifier), out ChildNodeType);
         Assert.True(Result);
-        Assert.AreEqual(ChildNodeType, typeof(Identifier));
+        Assert.AreEqual(ChildNodeType, Type.FromTypeof<Identifier>());
 
-        Result = NodeTreeHelperOptional.IsOptionalChildNodeProperty(typeof(Class), nameof(Class.FromIdentifier), out ChildNodeType);
+        Result = NodeTreeHelperOptional.IsOptionalChildNodeProperty(Type.FromTypeof<Class>(), nameof(Class.FromIdentifier), out ChildNodeType);
         Assert.True(Result);
-        Assert.AreEqual(ChildNodeType, typeof(Identifier));
+        Assert.AreEqual(ChildNodeType, Type.FromTypeof<Identifier>());
 
-        Result = NodeTreeHelperOptional.IsOptionalChildNodeProperty(typeof(Identifier), nameof(Class.FromIdentifier), out _);
+        Result = NodeTreeHelperOptional.IsOptionalChildNodeProperty(Type.FromTypeof<Identifier>(), nameof(Class.FromIdentifier), out _);
         Assert.False(Result);
 
-        Result = NodeTreeHelperOptional.IsOptionalChildNodeProperty(typeof(Class), nameof(Class.EntityName), out _);
+        Result = NodeTreeHelperOptional.IsOptionalChildNodeProperty(Type.FromTypeof<Class>(), nameof(Class.EntityName), out _);
         Assert.False(Result);
 
 #if !DEBUG
@@ -114,7 +115,7 @@ public partial class NodeTreeHelperOptionalCoverage
         Class NewClass = NodeHelper.CreateSimpleClass("a");
 
         Result = NodeTreeHelperOptional.OptionalItemType(NewClass, nameof(Class.FromIdentifier));
-        Assert.AreEqual(Result, typeof(Identifier));
+        Assert.AreEqual(Result, Type.FromTypeof<Identifier>());
 
         Assert.Throws<ArgumentException>(() => { NodeTreeHelperOptional.OptionalItemType(NewClass, nameof(Identifier.Text)); });
         Assert.Throws<ArgumentException>(() => { NodeTreeHelperOptional.OptionalItemType(NewClass, nameof(Class.EntityName)); });

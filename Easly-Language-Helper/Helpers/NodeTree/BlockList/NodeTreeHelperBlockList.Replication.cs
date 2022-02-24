@@ -1,10 +1,10 @@
 ﻿namespace BaseNodeHelper;
 
-using System;
 using System.Collections;
-using System.Reflection;
+using ArgumentOutOfRangeException = System.ArgumentOutOfRangeException;
 using BaseNode;
 using Contracts;
+using NotNullReflection;
 
 /// <summary>
 /// Provides methods to manipulate block lists of nodes.
@@ -156,8 +156,8 @@ public static partial class NodeTreeHelperBlockList
     {
         Contract.RequireNotNull(block, out IBlock Block);
 
-        Type BlockType = Block.GetType();
-        PropertyInfo ReplicationPropertyInfo = SafeType.GetProperty(BlockType, nameof(IBlock.Replication));
+        Type BlockType = Type.FromGetType(Block);
+        PropertyInfo ReplicationPropertyInfo = BlockType.GetProperty(nameof(IBlock.Replication));
 
         ReplicationPropertyInfo.SetValue(block, replication);
     }

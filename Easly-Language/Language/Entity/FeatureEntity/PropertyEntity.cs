@@ -1,7 +1,7 @@
 ﻿namespace Easly;
 
-using System.Reflection;
 using Contracts;
+using NotNullReflection;
 
 /// <summary>
 /// Represents an entity for properties.

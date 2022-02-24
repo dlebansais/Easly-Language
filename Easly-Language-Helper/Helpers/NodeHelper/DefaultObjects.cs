@@ -1,10 +1,14 @@
 ﻿namespace BaseNodeHelper;
 
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Guid = System.Guid;
+using ArgumentException = System.ArgumentException;
+using BindingFlags = System.Reflection.BindingFlags;
 using BaseNode;
 using Contracts;
+using NotNullReflection;
+using System.Globalization;
 
 /// <summary>
 /// Provides methods to manipulate nodes.
@@ -99,20 +103,20 @@ public static partial class NodeHelper
     {
         Contract.RequireNotNull(nodeType, out Type NodeType);
 
-        if (NodeType == typeof(Argument))
-            return typeof(PositionalArgument);
-        else if (NodeType == typeof(TypeArgument))
-            return typeof(PositionalTypeArgument);
-        else if (NodeType == typeof(Body))
-            return typeof(EffectiveBody);
-        else if (NodeType == typeof(Expression))
-            return typeof(QueryExpression);
-        else if (NodeType == typeof(Instruction))
-            return typeof(CommandInstruction);
-        else if (NodeType == typeof(Feature))
-            return typeof(AttributeFeature);
-        else if (NodeType == typeof(ObjectType))
-            return typeof(SimpleType);
+        if (NodeType.IsTypeof<Argument>())
+            return Type.FromTypeof<PositionalArgument>();
+        else if (NodeType.IsTypeof<TypeArgument>())
+            return Type.FromTypeof<PositionalTypeArgument>();
+        else if (NodeType.IsTypeof<Body>())
+            return Type.FromTypeof<EffectiveBody>();
+        else if (NodeType.IsTypeof<Expression>())
+            return Type.FromTypeof<QueryExpression>();
+        else if (NodeType.IsTypeof<Instruction>())
+            return Type.FromTypeof<CommandInstruction>();
+        else if (NodeType.IsTypeof<Feature>())
+            return Type.FromTypeof<AttributeFeature>();
+        else if (NodeType.IsTypeof<ObjectType>())
+            return Type.FromTypeof<SimpleType>();
         else
             return NodeType;
     }
@@ -129,8 +133,8 @@ public static partial class NodeHelper
         if (CreateDefaultNoCheck(NodeType, out Node Result))
             return Result;
 
-        string NodeTypeName = SafeType.AssemblyQualifiedName(NodeType);
-        Type ResultNodeType = SafeType.GetType(NodeTypeName);
+        string NodeTypeName = NodeType.AssemblyQualifiedName;
+        Type ResultNodeType = Type.GetType(NodeTypeName);
 
         Debug.Assert(!ResultNodeType.IsAbstract, $"A default type value is never abstract");
 
@@ -145,12 +149,12 @@ public static partial class NodeHelper
     /// <returns>True if <paramref name="type"/> is a node type; otherwise, false.</returns>
     public static bool IsNodeType(Type type)
     {
-        Type? CurrentType = type;
+        Type CurrentType = type;
 
-        while (CurrentType is not null && CurrentType != typeof(Node))
+        while (!CurrentType.IsTypeof<Node>() && !CurrentType.IsTypeof<object>())
             CurrentType = CurrentType.BaseType;
 
-        return CurrentType is not null;
+        return CurrentType.IsTypeof<Node>();
     }
 
     /// <summary>
@@ -166,9 +170,11 @@ public static partial class NodeHelper
         if (objectType.IsAbstract)
             throw new ArgumentException($"{nameof(objectType)} must not be an abstract node type");
 
-        string FullName = SafeType.FullName(objectType);
-
-        Node EmptyNode = SafeType.CreateInstance<Node>(objectType.Assembly, FullName);
+        string FullName = objectType.FullName;
+        ConstructorInfo[] Constructors = objectType.GetConstructors(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+        int ParameterCount = Constructors[Constructors.Length - 1].GetParameters().Length;
+        object[] Arguments = new object[ParameterCount];
+        Node EmptyNode = (Node)objectType.Assembly.CreateInstance(objectType.FullName, ignoreCase: false, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance, Assembly.DefaultBinder, Arguments, CultureInfo.InvariantCulture);
 
         IList<string> PropertyNames = NodeTreeHelper.EnumChildNodeProperties(EmptyNode);
 
@@ -264,7 +270,7 @@ public static partial class NodeHelper
     {
         Contract.RequireNotNull(node, out Node Node);
 
-        IList<string> PropertyNames = NodeTreeHelper.EnumChildNodeProperties(Node.GetType());
+        IList<string> PropertyNames = NodeTreeHelper.EnumChildNodeProperties(Type.FromGetType(Node));
 
         foreach (string PropertyName in PropertyNames)
             if (!IsEmptyNodePropertyName(Node, PropertyName))
@@ -403,22 +409,22 @@ public static partial class NodeHelper
     private static bool IsEmptyEnumProperty(Node node, string propertyName)
     {
         int Value = NodeTreeHelper.GetEnumValue(node, propertyName);
-        NodeTreeHelper.GetEnumRange(node.GetType(), propertyName, out int Min, out _);
+        NodeTreeHelper.GetEnumRange(Type.FromGetType(node), propertyName, out int Min, out _);
 
         return Value == Min;
     }
 
     private static bool CreateDefaultNoCheck(Type nodeType, out Node node)
     {
-        if (nodeType == typeof(Body) || nodeType == typeof(EffectiveBody))
+        if (nodeType.IsTypeof<Body>() || nodeType.IsTypeof<EffectiveBody>())
             node = CreateDefaultBody();
-        else if (nodeType == typeof(Expression) || nodeType == typeof(QueryExpression))
+        else if (nodeType.IsTypeof<Expression>() || nodeType.IsTypeof<QueryExpression>())
             node = CreateDefaultExpression();
-        else if (nodeType == typeof(Instruction) || nodeType == typeof(CommandInstruction))
+        else if (nodeType.IsTypeof<Instruction>() || nodeType.IsTypeof<CommandInstruction>())
             node = CreateDefaultInstruction();
-        else if (nodeType == typeof(Feature) || nodeType == typeof(AttributeFeature))
+        else if (nodeType.IsTypeof<Feature>() || nodeType.IsTypeof<AttributeFeature>())
             node = CreateDefaultFeature();
-        else if (nodeType == typeof(ObjectType) || nodeType == typeof(SimpleType))
+        else if (nodeType.IsTypeof<ObjectType>() || nodeType.IsTypeof<SimpleType>())
             node = CreateDefaultObjectType();
         else
             return CreateDefaultNoCheckArgument(nodeType, out node);
@@ -428,9 +434,9 @@ public static partial class NodeHelper
 
     private static bool CreateDefaultNoCheckArgument(Type nodeType, out Node node)
     {
-        if (nodeType == typeof(Argument) || nodeType == typeof(PositionalArgument))
+        if (nodeType.IsTypeof<Argument>() || nodeType.IsTypeof<PositionalArgument>())
             node = CreateDefaultArgument();
-        else if (nodeType == typeof(TypeArgument) || nodeType == typeof(PositionalTypeArgument))
+        else if (nodeType.IsTypeof<TypeArgument>() || nodeType.IsTypeof<PositionalTypeArgument>())
             node = CreateDefaultTypeArgument();
         else
             return CreateDefaultNoCheckSingle(nodeType, out node);
@@ -440,15 +446,15 @@ public static partial class NodeHelper
 
     private static bool CreateDefaultNoCheckSingle(Type nodeType, out Node node)
     {
-        if (nodeType == typeof(Name))
+        if (nodeType.IsTypeof<Name>())
             node = CreateEmptyName();
-        else if (nodeType == typeof(Identifier))
+        else if (nodeType.IsTypeof<Identifier>())
             node = CreateEmptyIdentifier();
-        else if (nodeType == typeof(QualifiedName))
+        else if (nodeType.IsTypeof<QualifiedName>())
             node = CreateEmptyQualifiedName();
-        else if (nodeType == typeof(Scope))
+        else if (nodeType.IsTypeof<Scope>())
             node = CreateEmptyScope();
-        else if (nodeType == typeof(Import))
+        else if (nodeType.IsTypeof<Import>())
             node = CreateSimpleImport(string.Empty, string.Empty, ImportType.Latest);
         else
         {

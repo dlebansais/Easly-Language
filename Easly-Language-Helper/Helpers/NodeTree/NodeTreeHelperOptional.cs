@@ -1,10 +1,11 @@
 ﻿namespace BaseNodeHelper;
-using System;
+
 using System.Diagnostics;
-using System.Reflection;
+using ArgumentException = System.ArgumentException;
 using BaseNode;
 using Contracts;
 using Easly;
+using NotNullReflection;
 
 /// <summary>
 /// Provides methods to manipulate optional nodes in a program tree.
@@ -23,7 +24,7 @@ public static class NodeTreeHelperOptional
         Contract.RequireNotNull(node, out Node Node);
         Contract.RequireNotNull(propertyName, out string PropertyName);
 
-        Type NodeType = Node.GetType();
+        Type NodeType = Type.FromGetType(Node);
 
         return IsOptionalChildNodePropertyInternal(NodeType, PropertyName, out childNodeType);
     }
@@ -176,13 +177,13 @@ public static class NodeTreeHelperOptional
         Debug.Assert(GenericArguments.Length == 1);
 
         Type ChildNodeType = GenericArguments[0];
-        Type NewChildNodeType = NewChildNode.GetType();
+        Type NewChildNodeType = Type.FromGetType(NewChildNode);
 
         if (!ChildNodeType.IsAssignableFrom(NewChildNodeType))
             throw new ArgumentException($"{nameof(newChildNode)} must conform to type {ChildNodeType}");
 
-        Type OptionalType = Optional.GetType();
-        PropertyInfo ItemProperty = SafeType.GetProperty(OptionalType, nameof(OptionalReference<Node>.Item));
+        Type OptionalType = Type.FromGetType(Optional);
+        PropertyInfo ItemProperty = OptionalType.GetProperty(nameof(OptionalReference<Node>.Item));
 
         ItemProperty.SetValue(Optional, NewChildNode);
         Optional.Assign();
@@ -236,7 +237,7 @@ public static class NodeTreeHelperOptional
 
     private static bool IsOptionalChildNodePropertyInternal(Type nodeType, string propertyName, out Type childNodeType)
     {
-        if (SafeType.CheckAndGetPropertyOf(nodeType, propertyName, out PropertyInfo Property))
+        if (nodeType.IsProperty(propertyName, out PropertyInfo Property))
         {
             Type PropertyType = Property.PropertyType;
 
@@ -259,9 +260,9 @@ public static class NodeTreeHelperOptional
 
     private static void ToOptionalChildProperty(Node node, string propertyName, out PropertyInfo property, out Type propertyType, out IOptionalReference optional)
     {
-        Type NodeType = node.GetType();
+        Type NodeType = Type.FromGetType(node);
 
-        if (!SafeType.CheckAndGetPropertyOf(NodeType, propertyName, out property))
+        if (!NodeType.IsProperty(propertyName, out property))
             throw new ArgumentException($"{nameof(propertyName)} must be the name of a property of {NodeType}");
 
         propertyType = property.PropertyType;
@@ -269,6 +270,6 @@ public static class NodeTreeHelperOptional
         if (!NodeTreeHelper.IsOptionalReferenceType(propertyType))
             throw new ArgumentException($"{nameof(propertyName)} must be the name of an optional node property of {NodeType}");
 
-        optional = SafeType.GetPropertyValue<IOptionalReference>(property, node);
+        optional = (IOptionalReference)property.GetValue(node);
     }
 }

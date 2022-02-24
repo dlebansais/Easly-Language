@@ -1,11 +1,11 @@
 ﻿namespace BaseNodeHelper;
 
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Reflection;
+using Guid = System.Guid;
 using BaseNode;
 using Contracts;
+using NotNullReflection;
 
 /// <summary>
 /// Provides methods to check a tree of nodes.
@@ -141,9 +141,9 @@ public static class NodeTreeDiagnostic
 
     private static bool IsValidEnumProperty(Node originalRoot, Node root, bool throwOnInvalid, string propertyName)
     {
-        Type RootType = root.GetType();
+        Type RootType = Type.FromGetType(root);
         NodeTreeHelper.GetEnumRange(RootType, propertyName, out int Min, out int Max);
-        PropertyInfo EnumPropertyInfo = SafeType.GetProperty(RootType, propertyName);
+        PropertyInfo EnumPropertyInfo = RootType.GetProperty(propertyName);
         int Value = (int)Contract.NullSupressed(EnumPropertyInfo.GetValue(root));
 
         if (Value < Min || Value > Max)

@@ -1,10 +1,10 @@
 ﻿namespace BaseNodeHelper;
 
-using System;
-using System.Diagnostics;
+using ArgumentException = System.ArgumentException;
 using BaseNode;
 using Contracts;
 using Easly;
+using NotNullReflection;
 
 /// <summary>
 /// Provides methods to manipulate nodes.
@@ -96,16 +96,16 @@ public static partial class NodeHelper
         Contract.RequireNotNull(ensureBlocks, out IBlockList<Assertion> EnsureBlocks);
         Contract.RequireNotNull(exceptionIdentifierBlocks, out IBlockList<Identifier> ExceptionIdentifierBlocks);
 
-        if (NodeType == typeof(DeferredBody))
+        if (NodeType.IsTypeof<DeferredBody>())
             return CreateInitializedDeferredBody(Documentation, RequireBlocks, EnsureBlocks, ExceptionIdentifierBlocks);
-        else if (NodeType == typeof(EffectiveBody))
+        else if (NodeType.IsTypeof<EffectiveBody>())
             return CreateInitializedEffectiveBody(Documentation, RequireBlocks, EnsureBlocks, ExceptionIdentifierBlocks, entityDeclarationBlocks, bodyInstructionBlocks, exceptionHandlerBlocks);
-        else if (NodeType == typeof(ExternBody))
+        else if (NodeType.IsTypeof<ExternBody>())
             return CreateInitializedExternBody(Documentation, RequireBlocks, EnsureBlocks, ExceptionIdentifierBlocks);
-        else if (NodeType == typeof(PrecursorBody))
+        else if (NodeType.IsTypeof<PrecursorBody>())
             return CreateInitializedPrecursorBody(Documentation, RequireBlocks, EnsureBlocks, ExceptionIdentifierBlocks, ancestorType);
         else
-            throw new ArgumentException($"{nameof(nodeType)} must inherit from {typeof(Body).FullName}");
+            throw new ArgumentException($"{nameof(nodeType)} must inherit from {Type.FromTypeof<Body>().FullName}");
     }
 
     private static DeferredBody CreateInitializedDeferredBody(Document documentation, IBlockList<Assertion> requireBlocks, IBlockList<Assertion> ensureBlocks, IBlockList<Identifier> exceptionIdentifierBlocks)

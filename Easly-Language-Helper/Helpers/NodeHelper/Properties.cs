@@ -1,8 +1,8 @@
 ﻿namespace BaseNodeHelper;
 
-using System;
 using System.Collections.Generic;
 using BaseNode;
+using NotNullReflection;
 
 /// <summary>
 /// Provides methods to manipulate nodes.
@@ -14,35 +14,35 @@ public static partial class NodeHelper
     /// </summary>
     public static IReadOnlyDictionary<Type, string[]> NeverEmptyCollectionTable { get; } = new Dictionary<Type, string[]>()
     {
-        { typeof(Attachment), new string[] { nameof(Attachment.AttachTypeBlocks) } },
-        { typeof(ClassReplicate), new string[] { nameof(ClassReplicate.PatternBlocks) } },
-        { typeof(Export), new string[] { nameof(Export.ClassIdentifierBlocks) } },
-        { typeof(GlobalReplicate), new string[] { nameof(GlobalReplicate.Patterns) } },
-        { typeof(QualifiedName), new string[] { nameof(QualifiedName.Path) } },
-        { typeof(QueryOverload), new string[] { nameof(QueryOverload.ResultBlocks) } },
-        { typeof(QueryOverloadType), new string[] { nameof(QueryOverloadType.ResultBlocks) } },
-        { typeof(AssignmentArgument), new string[] { nameof(AssignmentArgument.ParameterBlocks) } },
-        { typeof(With), new string[] { nameof(With.RangeBlocks) } },
-        { typeof(IndexQueryExpression), new string[] { nameof(IndexQueryExpression.ArgumentBlocks) } },
-        { typeof(PrecursorIndexExpression), new string[] { nameof(PrecursorIndexExpression.ArgumentBlocks) } },
-        { typeof(CreationFeature), new string[] { nameof(CreationFeature.OverloadBlocks) } },
-        { typeof(FunctionFeature), new string[] { nameof(FunctionFeature.OverloadBlocks) } },
-        { typeof(IndexerFeature), new string[] { nameof(IndexerFeature.IndexParameterBlocks) } },
-        { typeof(ProcedureFeature), new string[] { nameof(ProcedureFeature.OverloadBlocks) } },
-        { typeof(AsLongAsInstruction), new string[] { nameof(AsLongAsInstruction.ContinuationBlocks) } },
-        { typeof(AssignmentInstruction), new string[] { nameof(AssignmentInstruction.DestinationBlocks) } },
-        { typeof(AttachmentInstruction), new string[] { nameof(AttachmentInstruction.EntityNameBlocks), nameof(AttachmentInstruction.AttachmentBlocks) } },
-        { typeof(IfThenElseInstruction), new string[] { nameof(IfThenElseInstruction.ConditionalBlocks) } },
-        { typeof(InspectInstruction), new string[] { nameof(InspectInstruction.WithBlocks) } },
-        { typeof(OverLoopInstruction), new string[] { nameof(OverLoopInstruction.IndexerBlocks) } },
-        { typeof(IndexAssignmentInstruction), new string[] { nameof(IndexAssignmentInstruction.ArgumentBlocks) } },
-        { typeof(PrecursorIndexAssignmentInstruction), new string[] { nameof(PrecursorIndexAssignmentInstruction.ArgumentBlocks) } },
-        { typeof(AnchoredType), new string[] { nameof(AnchoredType.AnchoredName) } },
-        { typeof(FunctionType), new string[] { nameof(FunctionType.OverloadBlocks) } },
-        { typeof(GenericType), new string[] { nameof(GenericType.TypeArgumentBlocks) } },
-        { typeof(IndexerType), new string[] { nameof(IndexerType.IndexParameterBlocks) } },
-        { typeof(ProcedureType), new string[] { nameof(ProcedureType.OverloadBlocks) } },
-        { typeof(TupleType), new string[] { nameof(TupleType.EntityDeclarationBlocks) } },
+        { Type.FromTypeof<Attachment>(), new string[] { nameof(Attachment.AttachTypeBlocks) } },
+        { Type.FromTypeof<ClassReplicate>(), new string[] { nameof(ClassReplicate.PatternBlocks) } },
+        { Type.FromTypeof<Export>(), new string[] { nameof(Export.ClassIdentifierBlocks) } },
+        { Type.FromTypeof<GlobalReplicate>(), new string[] { nameof(GlobalReplicate.Patterns) } },
+        { Type.FromTypeof<QualifiedName>(), new string[] { nameof(QualifiedName.Path) } },
+        { Type.FromTypeof<QueryOverload>(), new string[] { nameof(QueryOverload.ResultBlocks) } },
+        { Type.FromTypeof<QueryOverloadType>(), new string[] { nameof(QueryOverloadType.ResultBlocks) } },
+        { Type.FromTypeof<AssignmentArgument>(), new string[] { nameof(AssignmentArgument.ParameterBlocks) } },
+        { Type.FromTypeof<With>(), new string[] { nameof(With.RangeBlocks) } },
+        { Type.FromTypeof<IndexQueryExpression>(), new string[] { nameof(IndexQueryExpression.ArgumentBlocks) } },
+        { Type.FromTypeof<PrecursorIndexExpression>(), new string[] { nameof(PrecursorIndexExpression.ArgumentBlocks) } },
+        { Type.FromTypeof<CreationFeature>(), new string[] { nameof(CreationFeature.OverloadBlocks) } },
+        { Type.FromTypeof<FunctionFeature>(), new string[] { nameof(FunctionFeature.OverloadBlocks) } },
+        { Type.FromTypeof<IndexerFeature>(), new string[] { nameof(IndexerFeature.IndexParameterBlocks) } },
+        { Type.FromTypeof<ProcedureFeature>(), new string[] { nameof(ProcedureFeature.OverloadBlocks) } },
+        { Type.FromTypeof<AsLongAsInstruction>(), new string[] { nameof(AsLongAsInstruction.ContinuationBlocks) } },
+        { Type.FromTypeof<AssignmentInstruction>(), new string[] { nameof(AssignmentInstruction.DestinationBlocks) } },
+        { Type.FromTypeof<AttachmentInstruction>(), new string[] { nameof(AttachmentInstruction.EntityNameBlocks), nameof(AttachmentInstruction.AttachmentBlocks) } },
+        { Type.FromTypeof<IfThenElseInstruction>(), new string[] { nameof(IfThenElseInstruction.ConditionalBlocks) } },
+        { Type.FromTypeof<InspectInstruction>(), new string[] { nameof(InspectInstruction.WithBlocks) } },
+        { Type.FromTypeof<OverLoopInstruction>(), new string[] { nameof(OverLoopInstruction.IndexerBlocks) } },
+        { Type.FromTypeof<IndexAssignmentInstruction>(), new string[] { nameof(IndexAssignmentInstruction.ArgumentBlocks) } },
+        { Type.FromTypeof<PrecursorIndexAssignmentInstruction>(), new string[] { nameof(PrecursorIndexAssignmentInstruction.ArgumentBlocks) } },
+        { Type.FromTypeof<AnchoredType>(), new string[] { nameof(AnchoredType.AnchoredName) } },
+        { Type.FromTypeof<FunctionType>(), new string[] { nameof(FunctionType.OverloadBlocks) } },
+        { Type.FromTypeof<GenericType>(), new string[] { nameof(GenericType.TypeArgumentBlocks) } },
+        { Type.FromTypeof<IndexerType>(), new string[] { nameof(IndexerType.IndexParameterBlocks) } },
+        { Type.FromTypeof<ProcedureType>(), new string[] { nameof(ProcedureType.OverloadBlocks) } },
+        { Type.FromTypeof<TupleType>(), new string[] { nameof(TupleType.EntityDeclarationBlocks) } },
     };
 
     /// <summary>
@@ -50,12 +50,12 @@ public static partial class NodeHelper
     /// </summary>
     public static IReadOnlyDictionary<Type, string[]> WithExpandCollectionTable { get; } = new Dictionary<Type, string[]>()
     {
-        { typeof(PrecursorExpression), new string[] { nameof(PrecursorExpression.ArgumentBlocks) } },
-        { typeof(QueryExpression), new string[] { nameof(QueryExpression.ArgumentBlocks) } },
-        { typeof(CommandInstruction), new string[] { nameof(CommandInstruction.ArgumentBlocks) } },
-        { typeof(CreateInstruction), new string[] { nameof(CreateInstruction.ArgumentBlocks) } },
-        { typeof(PrecursorInstruction), new string[] { nameof(PrecursorInstruction.ArgumentBlocks) } },
-        { typeof(ThrowInstruction), new string[] { nameof(ThrowInstruction.ArgumentBlocks) } },
-        { typeof(CommandOverload), new string[] { nameof(CommandOverload.ParameterBlocks) } },
+        { Type.FromTypeof<PrecursorExpression>(), new string[] { nameof(PrecursorExpression.ArgumentBlocks) } },
+        { Type.FromTypeof<QueryExpression>(), new string[] { nameof(QueryExpression.ArgumentBlocks) } },
+        { Type.FromTypeof<CommandInstruction>(), new string[] { nameof(CommandInstruction.ArgumentBlocks) } },
+        { Type.FromTypeof<CreateInstruction>(), new string[] { nameof(CreateInstruction.ArgumentBlocks) } },
+        { Type.FromTypeof<PrecursorInstruction>(), new string[] { nameof(PrecursorInstruction.ArgumentBlocks) } },
+        { Type.FromTypeof<ThrowInstruction>(), new string[] { nameof(ThrowInstruction.ArgumentBlocks) } },
+        { Type.FromTypeof<CommandOverload>(), new string[] { nameof(CommandOverload.ParameterBlocks) } },
     };
 }

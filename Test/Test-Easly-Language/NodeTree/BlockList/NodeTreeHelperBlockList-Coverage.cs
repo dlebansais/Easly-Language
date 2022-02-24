@@ -1,10 +1,12 @@
 ﻿namespace TestEaslyLanguage;
 
-using System;
 using System.Collections;
 using System.Collections.Generic;
+using ArgumentException = System.ArgumentException;
+using ArgumentOutOfRangeException = System.ArgumentOutOfRangeException;
 using BaseNode;
 using BaseNodeHelper;
+using NotNullReflection;
 using NUnit.Framework;
 
 [TestFixture]
@@ -26,11 +28,11 @@ public partial class NodeTreeHelperBlockListCoverage
 
         Result = NodeTreeHelperBlockList.IsBlockListProperty(SimpleExport, nameof(Export.ClassIdentifierBlocks), out ChildNodeType);
         Assert.True(Result);
-        Assert.AreEqual(ChildNodeType, typeof(Identifier));
+        Assert.AreEqual(ChildNodeType, Type.FromTypeof<Identifier>());
 
-        Result = NodeTreeHelperBlockList.IsBlockListProperty(typeof(Export), nameof(Export.ClassIdentifierBlocks), out ChildNodeType);
+        Result = NodeTreeHelperBlockList.IsBlockListProperty(Type.FromTypeof<Export>(), nameof(Export.ClassIdentifierBlocks), out ChildNodeType);
         Assert.True(Result);
-        Assert.AreEqual(ChildNodeType, typeof(Identifier));
+        Assert.AreEqual(ChildNodeType, Type.FromTypeof<Identifier>());
 
         Result = NodeTreeHelperBlockList.IsBlockListProperty(SimpleExport, nameof(Identifier.Text), out ChildNodeType);
         Assert.False(Result);
@@ -45,7 +47,7 @@ public partial class NodeTreeHelperBlockListCoverage
         Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperBlockList.IsBlockListProperty(NullExport, nameof(Export.ClassIdentifierBlocks), out _); });
         Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperBlockList.IsBlockListProperty(SimpleExport, NullString, out _); });
         Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperBlockList.IsBlockListProperty(NullType, nameof(Export.ClassIdentifierBlocks), out _); });
-        Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperBlockList.IsBlockListProperty(typeof(Export), NullString, out _); });
+        Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperBlockList.IsBlockListProperty(Type.FromTypeof<Export>(), NullString, out _); });
 #endif
     }
 
@@ -59,7 +61,7 @@ public partial class NodeTreeHelperBlockListCoverage
         IBlock Block = (IBlock)SimpleExport.ClassIdentifierBlocks.NodeBlockList[0];
 
         NodeTreeHelperBlockList.GetBlockItemType(Block, out ChildNodeType);
-        Assert.AreEqual(ChildNodeType, typeof(Identifier));
+        Assert.AreEqual(ChildNodeType, Type.FromTypeof<Identifier>());
 
 #if !DEBUG
         IBlock NullBlock = null!;
@@ -115,10 +117,10 @@ public partial class NodeTreeHelperBlockListCoverage
         Export SimpleExport = NodeHelper.CreateSimpleExport("a");
 
         Result = NodeTreeHelperBlockList.BlockListItemType(SimpleExport, nameof(Export.ClassIdentifierBlocks));
-        Assert.AreEqual(Result, typeof(Identifier));
+        Assert.AreEqual(Result, Type.FromTypeof<Identifier>());
 
-        Result = NodeTreeHelperBlockList.BlockListItemType(typeof(Export), nameof(Export.ClassIdentifierBlocks));
-        Assert.AreEqual(Result, typeof(Identifier));
+        Result = NodeTreeHelperBlockList.BlockListItemType(Type.FromTypeof<Export>(), nameof(Export.ClassIdentifierBlocks));
+        Assert.AreEqual(Result, Type.FromTypeof<Identifier>());
 
         Assert.Throws<ArgumentException>(() => { NodeTreeHelperBlockList.BlockListItemType(SimpleExport, nameof(Identifier.Text)); });
         Assert.Throws<ArgumentException>(() => { NodeTreeHelperBlockList.BlockListItemType(SimpleExport, nameof(Export.EntityName)); });
@@ -139,10 +141,10 @@ public partial class NodeTreeHelperBlockListCoverage
         Export SimpleExport = NodeHelper.CreateSimpleExport("a");
 
         Result = NodeTreeHelperBlockList.BlockListBlockType(SimpleExport, nameof(Export.ClassIdentifierBlocks));
-        Assert.AreEqual(Result, typeof(IBlock<Identifier>));
+        Assert.AreEqual(Result, Type.FromTypeof<IBlock<Identifier>>());
 
-        Result = NodeTreeHelperBlockList.BlockListBlockType(typeof(Export), nameof(Export.ClassIdentifierBlocks));
-        Assert.AreEqual(Result, typeof(IBlock<Identifier>));
+        Result = NodeTreeHelperBlockList.BlockListBlockType(Type.FromTypeof<Export>(), nameof(Export.ClassIdentifierBlocks));
+        Assert.AreEqual(Result, Type.FromTypeof<IBlock<Identifier>>());
 
         Assert.Throws<ArgumentException>(() => { NodeTreeHelperBlockList.BlockListBlockType(SimpleExport, nameof(Identifier.Text)); });
         Assert.Throws<ArgumentException>(() => { NodeTreeHelperBlockList.BlockListBlockType(SimpleExport, nameof(Export.EntityName)); });
@@ -379,18 +381,18 @@ public partial class NodeTreeHelperBlockListCoverage
         Identifier SimpleIdentifier = NodeHelper.CreateSimpleIdentifier("c");
 
         Result = NodeTreeHelperBlockList.CreateBlock(SimpleExport, nameof(Export.ClassIdentifierBlocks), ReplicationStatus.Normal, SimplePattern, SimpleIdentifier);
-        Assert.AreEqual(Result.GetType(), typeof(Block<Identifier>));
+        Assert.AreEqual(Type.FromGetType(Result), Type.FromTypeof<Block<Identifier>>());
 
         IBlockList ClassIdentifierBlocks = (IBlockList)SimpleExport.ClassIdentifierBlocks;
 
         Result = NodeTreeHelperBlockList.CreateBlock(ClassIdentifierBlocks, ReplicationStatus.Normal, SimplePattern, SimpleIdentifier);
-        Assert.AreEqual(Result.GetType(), typeof(Block<Identifier>));
+        Assert.AreEqual(Type.FromGetType(Result), Type.FromTypeof<Block<Identifier>>());
 
-        Result = NodeTreeHelperBlockList.CreateBlock(typeof(IBlockList<Identifier>), ReplicationStatus.Normal, SimplePattern, SimpleIdentifier);
-        Assert.AreEqual(Result.GetType(), typeof(Block<Identifier>));
+        Result = NodeTreeHelperBlockList.CreateBlock(Type.FromTypeof<IBlockList<Identifier>>(), ReplicationStatus.Normal, SimplePattern, SimpleIdentifier);
+        Assert.AreEqual(Type.FromGetType(Result), Type.FromTypeof<Block<Identifier>>());
 
         Assert.Throws<ArgumentException>(() => { NodeTreeHelperBlockList.CreateBlock(new TestBlockList(), ReplicationStatus.Normal, SimplePattern, SimpleIdentifier); });
-        Assert.Throws<ArgumentException>(() => { NodeTreeHelperBlockList.CreateBlock(typeof(TestBlockList), ReplicationStatus.Normal, SimplePattern, SimpleIdentifier); });
+        Assert.Throws<ArgumentException>(() => { NodeTreeHelperBlockList.CreateBlock(Type.FromTypeof<TestBlockList>(), ReplicationStatus.Normal, SimplePattern, SimpleIdentifier); });
 
 #if !DEBUG
         Export NullExport = null!;
@@ -407,8 +409,8 @@ public partial class NodeTreeHelperBlockListCoverage
         Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperBlockList.CreateBlock(ClassIdentifierBlocks, ReplicationStatus.Normal, NullPattern, SimpleIdentifier); });
         Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperBlockList.CreateBlock(ClassIdentifierBlocks, ReplicationStatus.Normal, SimplePattern, NullIdentifier); });
         Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperBlockList.CreateBlock(NullType, ReplicationStatus.Normal, SimplePattern, SimpleIdentifier); });
-        Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperBlockList.CreateBlock(typeof(IBlockList<Identifier>), ReplicationStatus.Normal, NullPattern, SimpleIdentifier); });
-        Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperBlockList.CreateBlock(typeof(IBlockList<Identifier>), ReplicationStatus.Normal, SimplePattern, NullIdentifier); });
+        Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperBlockList.CreateBlock(Type.FromTypeof<IBlockList<Identifier>>(), ReplicationStatus.Normal, NullPattern, SimpleIdentifier); });
+        Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperBlockList.CreateBlock(Type.FromTypeof<IBlockList<Identifier>>(), ReplicationStatus.Normal, SimplePattern, NullIdentifier); });
 #endif
     }
 

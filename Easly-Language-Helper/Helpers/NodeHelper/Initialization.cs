@@ -1,12 +1,11 @@
 ﻿namespace BaseNodeHelper;
 
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Reflection;
 using BaseNode;
 using Easly;
+using NotNullReflection;
 
 /// <summary>
 /// Provides methods to manipulate nodes.
@@ -21,26 +20,23 @@ public static partial class NodeHelper
 
     private static void InitializeChildNode(Node node, string propertyName, Node childNode)
     {
-        Type NodeType = node.GetType();
-        PropertyInfo ItemProperty = SafeType.GetProperty(NodeType, propertyName);
+        Type NodeType = Type.FromGetType(node);
+        PropertyInfo ItemProperty = NodeType.GetProperty(propertyName);
         ItemProperty.SetValue(node, childNode);
     }
 
     private static void InitializeUnassignedOptionalChildNode(Node node, string propertyName)
     {
-        Type NodeType = node.GetType();
-        PropertyInfo ItemProperty = SafeType.GetProperty(NodeType, propertyName);
+        Type NodeType = Type.FromGetType(node);
+        PropertyInfo ItemProperty = NodeType.GetProperty(propertyName);
 
         Type PropertyType = ItemProperty.PropertyType;
         Type[] Generics = PropertyType.GetGenericArguments();
         Debug.Assert(Generics.Length == 1);
 
-        Type ReferenceType = typeof(OptionalReference<>).MakeGenericType(Generics);
-        string FullName = SafeType.FullName(ReferenceType);
+        Type ReferenceType = Type.FromTypeof<OptionalReference<object>>().GetGenericTypeDefinition().MakeGenericType(Generics);
 
-        Assembly ReferenceAssembly = ReferenceType.Assembly;
-
-        IOptionalReference EmptyReference = SafeType.CreateInstance<IOptionalReference>(ReferenceAssembly, FullName);
+        IOptionalReference EmptyReference = CreateInstance<IOptionalReference>(ReferenceType);
 
         Type ItemType = Generics[0];
         Node ItemNode = CreateDefaultFromType(ItemType);
@@ -53,15 +49,12 @@ public static partial class NodeHelper
     private static void InitializeEmptyNodeList(Node node, string propertyName, Type childNodeType)
     {
         Type[] Generics = new Type[] { childNodeType };
-        Type ListType = typeof(List<>).MakeGenericType(Generics);
-        string FullName = SafeType.FullName(ListType);
+        Type ListType = Type.FromTypeof<List<Node>>().GetGenericTypeDefinition().MakeGenericType(Generics);
 
-        Assembly ListAssembly = ListType.Assembly;
+        IList EmptyList = CreateInstanceFromDefaultConstructor<IList>(ListType);
 
-        IList EmptyList = SafeType.CreateInstanceFromDefaultConstructor<IList>(ListAssembly, FullName);
-
-        Type NodeType = node.GetType();
-        PropertyInfo ReferenceProperty = SafeType.GetProperty(NodeType, propertyName);
+        Type NodeType = Type.FromGetType(node);
+        PropertyInfo ReferenceProperty = NodeType.GetProperty(propertyName);
 
         ReferenceProperty.SetValue(node, EmptyList);
     }
@@ -70,10 +63,10 @@ public static partial class NodeHelper
     {
         InitializeEmptyNodeList(node, propertyName, childNodeType);
 
-        Type NodeType = node.GetType();
-        PropertyInfo ItemProperty = SafeType.GetProperty(NodeType, propertyName);
+        Type NodeType = Type.FromGetType(node);
+        PropertyInfo ItemProperty = NodeType.GetProperty(propertyName);
 
-        IList NodeList = SafeType.GetPropertyValue<IList>(ItemProperty, node);
+        IList NodeList = (IList)ItemProperty.GetValue(node);
 
         NodeList.Add(firstNode);
     }
@@ -81,32 +74,27 @@ public static partial class NodeHelper
     private static void InitializeEmptyBlockList(Node node, string propertyName, Type childNodeType)
     {
         Type[] Generics = new Type[] { childNodeType };
-        Type BlockListType = typeof(BlockList<>).MakeGenericType(Generics);
-        string FullName = SafeType.FullName(BlockListType);
+        Type BlockListType = Type.FromTypeof<BlockList<Node>>().GetGenericTypeDefinition().MakeGenericType(Generics);
 
-        Assembly BlockListAssembly = BlockListType.Assembly;
-        IBlockList EmptyBlockList = SafeType.CreateInstance<IBlockList>(BlockListAssembly, FullName);
+        IBlockList EmptyBlockList = CreateInstance<IBlockList>(BlockListType);
 
         Document EmptyDocument = CreateEmptyDocument();
 
-        Type EmptyBlockListType = EmptyBlockList.GetType();
-        PropertyInfo DocumentationProperty = SafeType.GetProperty(EmptyBlockListType, nameof(Node.Documentation));
+        Type EmptyBlockListType = Type.FromGetType(EmptyBlockList);
+        PropertyInfo DocumentationProperty = EmptyBlockListType.GetProperty(nameof(Node.Documentation));
 
         DocumentationProperty.SetValue(EmptyBlockList, EmptyDocument);
 
-        Type ListOfBlockType = typeof(List<>).MakeGenericType(new Type[] { typeof(IBlock<>).MakeGenericType(Generics) });
+        Type ListOfBlockType = Type.FromTypeof<List<Node>>().GetGenericTypeDefinition().MakeGenericType(new Type[] { Type.FromTypeof<IBlock<Node>>().GetGenericTypeDefinition().MakeGenericType(Generics) });
 
-        FullName = SafeType.FullName(ListOfBlockType);
+        IList EmptyListOfBlock = CreateInstanceFromDefaultConstructor<IList>(ListOfBlockType);
 
-        BlockListAssembly = ListOfBlockType.Assembly;
-        IList EmptyListOfBlock = SafeType.CreateInstanceFromDefaultConstructor<IList>(BlockListAssembly, FullName);
-
-        PropertyInfo NodeBlockListProperty = SafeType.GetProperty(EmptyBlockListType, nameof(BlockList<Node>.NodeBlockList));
+        PropertyInfo NodeBlockListProperty = EmptyBlockListType.GetProperty(nameof(BlockList<Node>.NodeBlockList));
 
         NodeBlockListProperty.SetValue(EmptyBlockList, EmptyListOfBlock);
 
-        Type NodeType = node.GetType();
-        PropertyInfo ItemProperty = SafeType.GetProperty(NodeType, propertyName);
+        Type NodeType = Type.FromGetType(node);
+        PropertyInfo ItemProperty = NodeType.GetProperty(propertyName);
 
         ItemProperty.SetValue(node, EmptyBlockList);
     }
@@ -116,59 +104,53 @@ public static partial class NodeHelper
         InitializeEmptyBlockList(node, propertyName, childNodeType);
 
         Type[] Generics = new Type[] { childNodeType };
-        Type BlockType = typeof(Block<>).MakeGenericType(Generics);
+        Type BlockType = Type.FromTypeof<Block<Node>>().GetGenericTypeDefinition().MakeGenericType(Generics);
 
-        Assembly BlockTypeAssembly = BlockType.Assembly;
-        string BlockTypeFullName = SafeType.FullName(BlockType);
-
-        IBlock EmptyBlock = SafeType.CreateInstance<IBlock>(BlockTypeAssembly, BlockTypeFullName);
+        IBlock EmptyBlock = CreateInstance<IBlock>(BlockType);
 
         Document EmptyDocumentation = CreateEmptyDocument();
 
-        Type EmptyBlockType = EmptyBlock.GetType();
+        Type EmptyBlockType = Type.FromGetType(EmptyBlock);
 
-        PropertyInfo DocumentationProperty = SafeType.GetProperty(EmptyBlockType, nameof(Node.Documentation));
+        PropertyInfo DocumentationProperty = EmptyBlockType.GetProperty(nameof(Node.Documentation));
 
         DocumentationProperty.SetValue(EmptyBlock, EmptyDocumentation);
 
-        PropertyInfo ReplicationProperty = SafeType.GetProperty(EmptyBlockType, nameof(IBlock.Replication));
+        PropertyInfo ReplicationProperty = EmptyBlockType.GetProperty(nameof(IBlock.Replication));
 
         ReplicationProperty.SetValue(EmptyBlock, ReplicationStatus.Normal);
 
         Pattern ReplicationPattern = CreateEmptyPattern();
 
-        PropertyInfo ReplicationPatternProperty = SafeType.GetProperty(EmptyBlockType, nameof(IBlock.ReplicationPattern));
+        PropertyInfo ReplicationPatternProperty = EmptyBlockType.GetProperty(nameof(IBlock.ReplicationPattern));
 
         ReplicationPatternProperty.SetValue(EmptyBlock, ReplicationPattern);
 
         Identifier SourceIdentifier = CreateEmptyIdentifier();
 
-        PropertyInfo SourceIdentifierProperty = SafeType.GetProperty(EmptyBlockType, nameof(IBlock.SourceIdentifier));
+        PropertyInfo SourceIdentifierProperty = EmptyBlockType.GetProperty(nameof(IBlock.SourceIdentifier));
 
         SourceIdentifierProperty.SetValue(EmptyBlock, SourceIdentifier);
 
-        Type NodeListType = typeof(List<>).MakeGenericType(new Type[] { Generics[0] });
+        Type NodeListType = Type.FromTypeof<List<Node>>().GetGenericTypeDefinition().MakeGenericType(new Type[] { Generics[0] });
 
-        string NodeListFullName = SafeType.FullName(NodeListType);
+        IList NodeList = CreateInstanceFromDefaultConstructor<IList>(NodeListType);
 
-        Assembly NodeListAssembly = NodeListType.Assembly;
-        IList NodeList = SafeType.CreateInstanceFromDefaultConstructor<IList>(NodeListAssembly, NodeListFullName);
-
-        PropertyInfo NodeListProperty = SafeType.GetProperty(EmptyBlockType, nameof(Block<Node>.NodeList));
+        PropertyInfo NodeListProperty = EmptyBlockType.GetProperty(nameof(Block<Node>.NodeList));
 
         NodeListProperty.SetValue(EmptyBlock, NodeList);
 
         NodeList.Add(firstNode);
 
-        Type NodeType = node.GetType();
-        PropertyInfo ItemProperty = SafeType.GetProperty(NodeType, propertyName);
+        Type NodeType = Type.FromGetType(node);
+        PropertyInfo ItemProperty = NodeType.GetProperty(propertyName);
 
-        IBlockList BlockList = SafeType.GetPropertyValue<IBlockList>(ItemProperty, node);
+        IBlockList BlockList = (IBlockList)ItemProperty.GetValue(node);
 
-        Type BlockListType = BlockList.GetType();
-        PropertyInfo NodeBlockListProperty = SafeType.GetProperty(BlockListType, nameof(BlockList<Node>.NodeBlockList));
+        Type BlockListType = Type.FromGetType(BlockList);
+        PropertyInfo NodeBlockListProperty = BlockListType.GetProperty(nameof(BlockList<Node>.NodeBlockList));
 
-        IList NodeBlockList = SafeType.GetPropertyValue<IList>(NodeBlockListProperty, BlockList);
+        IList NodeBlockList = (IList)NodeBlockListProperty.GetValue(BlockList);
 
         NodeBlockList.Add(EmptyBlock);
     }

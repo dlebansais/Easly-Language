@@ -1,6 +1,6 @@
 ﻿namespace Easly;
 
-using System;
+using NotNullReflection;
 
 /// <summary>
 /// Represents internal info about type entities.

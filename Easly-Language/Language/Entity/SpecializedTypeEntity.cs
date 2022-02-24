@@ -1,6 +1,6 @@
 ﻿namespace Easly;
 
-using System;
+using NotNullReflection;
 
 /// <summary>
 /// Represents the entity of a particular type with generic parameter <typeparamref name="T"/>.
@@ -27,7 +27,7 @@ public class SpecializedTypeEntity<T> : TypeEntity
     {
         get
         {
-            Type t = typeof(T);
+            Type t = Type.FromTypeof<T>();
 
             if (!SpecializedTypeEntityInternal.SingletonSet.ContainsKey(t))
             {

@@ -1,9 +1,9 @@
 ﻿namespace BaseNodeHelper;
 
-using System;
-using System.Reflection;
+using ArgumentException = System.ArgumentException;
 using BaseNode;
 using Contracts;
+using NotNullReflection;
 
 /// <summary>
 /// Provides methods to manipulate child nodes in a program tree.
@@ -22,7 +22,7 @@ public static class NodeTreeHelperChild
         Contract.RequireNotNull(node, out Node Node);
         Contract.RequireNotNull(propertyName, out string PropertyName);
 
-        Type NodeType = Node.GetType();
+        Type NodeType = Type.FromGetType(Node);
 
         return IsChildNodePropertyInternal(NodeType, PropertyName, out childNodeType);
     }
@@ -55,9 +55,9 @@ public static class NodeTreeHelperChild
         Contract.RequireNotNull(propertyName, out string PropertyName);
         Contract.RequireNotNull(childNode, out Node ChildNode);
 
-        Type ParentNodeType = Node.GetType();
+        Type ParentNodeType = Type.FromGetType(Node);
 
-        if (SafeType.CheckAndGetPropertyOf(ParentNodeType, PropertyName, out PropertyInfo Property))
+        if (ParentNodeType.IsProperty(PropertyName, out PropertyInfo Property))
         {
             Type PropertyType = Property.PropertyType;
 
@@ -98,7 +98,7 @@ public static class NodeTreeHelperChild
 
         ToChildProperty(Node, PropertyName, out PropertyInfo Property, out _);
 
-        childNode = SafeType.GetPropertyValue<Node>(Property, Node);
+        childNode = (Node)Property.GetValue(Node);
     }
 
     /// <summary>
@@ -113,13 +113,13 @@ public static class NodeTreeHelperChild
         Contract.RequireNotNull(propertyName, out string PropertyName);
         Contract.RequireNotNull(newChildNode, out Node NewChildNode);
 
-        Type NodeType = Node.GetType();
+        Type NodeType = Type.FromGetType(Node);
 
-        if (!SafeType.CheckAndGetPropertyOf(NodeType, PropertyName, out PropertyInfo Property))
+        if (!NodeType.IsProperty(PropertyName, out PropertyInfo Property))
             throw new ArgumentException($"{nameof(propertyName)} must be the name of a property of {NodeType}");
 
         Type PropertyType = Property.PropertyType;
-        Type ChildNodeType = NewChildNode.GetType();
+        Type ChildNodeType = Type.FromGetType(NewChildNode);
 
         if (!PropertyType.IsAssignableFrom(ChildNodeType))
             throw new ArgumentException($"{nameof(newChildNode)} must conform to type {PropertyType}");
@@ -129,7 +129,7 @@ public static class NodeTreeHelperChild
 
     private static bool IsChildNodePropertyInternal(Type nodeType, string propertyName, out Type childNodeType)
     {
-        if (SafeType.CheckAndGetPropertyOf(nodeType, propertyName, out PropertyInfo Property))
+        if (nodeType.IsProperty(propertyName, out PropertyInfo Property))
         {
             Type PropertyType = Property.PropertyType;
 
@@ -146,9 +146,9 @@ public static class NodeTreeHelperChild
 
     private static void ToChildProperty(Node node, string propertyName, out PropertyInfo property, out Type propertyType)
     {
-        Type NodeType = node.GetType();
+        Type NodeType = Type.FromGetType(node);
 
-        if (!SafeType.CheckAndGetPropertyOf(NodeType, propertyName, out property))
+        if (!NodeType.IsProperty(propertyName, out property))
             throw new ArgumentException($"{nameof(propertyName)} must be the name of a property of {NodeType}");
 
         propertyType = property.PropertyType;

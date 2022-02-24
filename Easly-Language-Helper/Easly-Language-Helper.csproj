@@ -12,8 +12,8 @@
     <Product />
     <Description>Easly language AST description and helpers</Description>
     <Copyright>Copyright © 2019 David Le Bansais</Copyright>
-    <AssemblyVersion>1.0.5.47</AssemblyVersion>
-    <FileVersion>1.0.5.13</FileVersion>
+    <AssemblyVersion>1.0.5.52</AssemblyVersion>
+    <FileVersion>1.0.5.14</FileVersion>
     <RepositoryUrl>https://github.com/dlebansais/Easly-Language</RepositoryUrl>
     <NeutralLanguage>en-US</NeutralLanguage>
     <RootNamespace>BaseNodeHelper</RootNamespace>
@@ -42,6 +42,12 @@
     <PackageReference Include="Easly-Number" Version="1.2.7" Condition="'$(Configuration)|$(Platform)'!='Debug|x64'" />
     <PackageReference Include="PolySerializer-Debug" Version="1.2.11" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
     <PackageReference Include="PolySerializer" Version="1.2.11" Condition="'$(Configuration)|$(Platform)'!='Debug|x64'" />
+  </ItemGroup>
+	
+  <ItemGroup>
+    <Reference Include="NotNullReflection">
+      <HintPath>..\..\NotNullReflection\NotNullReflection\bin\x64\Debug\$(TargetFramework)\NotNullReflection.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup>

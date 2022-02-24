@@ -1,12 +1,13 @@
 ﻿namespace BaseNodeHelper;
 
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Reflection;
+using ArgumentException = System.ArgumentException;
+using ArgumentOutOfRangeException = System.ArgumentOutOfRangeException;
 using BaseNode;
 using Contracts;
+using NotNullReflection;
 
 /// <summary>
 /// Provides methods to manipulate block lists of nodes.
@@ -25,7 +26,7 @@ public static partial class NodeTreeHelperBlockList
         Contract.RequireNotNull(node, out Node Node);
         Contract.RequireNotNull(propertyName, out string PropertyName);
 
-        Type NodeType = Node.GetType();
+        Type NodeType = Type.FromGetType(Node);
 
         return IsBlockListPropertyInternal(NodeType, PropertyName, out childNodeType);
     }
@@ -54,9 +55,9 @@ public static partial class NodeTreeHelperBlockList
     {
         Contract.RequireNotNull(block, out IBlock Block);
 
-        Type BlockType = Block.GetType();
+        Type BlockType = Type.FromGetType(Block);
 
-        PropertyInfo NodeListProperty = SafeType.GetProperty(BlockType, nameof(IBlock.NodeList));
+        PropertyInfo NodeListProperty = BlockType.GetProperty(nameof(IBlock.NodeList));
         Type PropertyType = NodeListProperty.PropertyType;
 
         Debug.Assert(PropertyType.IsGenericType);
@@ -126,7 +127,7 @@ public static partial class NodeTreeHelperBlockList
         Contract.RequireNotNull(node, out Node Node);
         Contract.RequireNotNull(propertyName, out string PropertyName);
 
-        Type NodeType = Node.GetType();
+        Type NodeType = Type.FromGetType(Node);
 
         return BlockListItemTypeInternal(NodeType, PropertyName);
     }
@@ -156,7 +157,7 @@ public static partial class NodeTreeHelperBlockList
         Contract.RequireNotNull(node, out Node Node);
         Contract.RequireNotNull(propertyName, out string PropertyName);
 
-        Type NodeType = Node.GetType();
+        Type NodeType = Type.FromGetType(Node);
 
         return BlockListBlockTypeInternal(NodeType, PropertyName);
     }
@@ -331,9 +332,9 @@ public static partial class NodeTreeHelperBlockList
         Contract.RequireNotNull(propertyName, out string PropertyName);
         Contract.RequireNotNull(blockList, out IBlockList BlockList);
 
-        Type NodeType = Node.GetType();
+        Type NodeType = Type.FromGetType(Node);
 
-        if (!SafeType.CheckAndGetPropertyOf(NodeType, PropertyName, out PropertyInfo Property))
+        if (!NodeType.IsProperty(PropertyName, out PropertyInfo Property))
             throw new ArgumentException($"{nameof(propertyName)} must be the name of a property of {NodeType}");
 
         Type PropertyType = Property.PropertyType;
@@ -341,7 +342,7 @@ public static partial class NodeTreeHelperBlockList
         if (!NodeTreeHelper.IsBlockListInterfaceType(PropertyType))
             throw new ArgumentException($"{nameof(propertyName)} must be the name of a block list property of {NodeType}");
 
-        if (!PropertyType.IsAssignableFrom(BlockList.GetType()))
+        if (!PropertyType.IsAssignableFrom(Type.FromGetType(BlockList)))
             throw new ArgumentException($"Property {nameof(blockList)} must conform to {PropertyType}");
 
         if (BlockList.NodeBlockList.Count == 0 && NodeHelper.IsCollectionNeverEmpty(Node, PropertyName))
@@ -388,7 +389,7 @@ public static partial class NodeTreeHelperBlockList
 
     private static bool IsBlockListPropertyInternal(Type nodeType, string propertyName, out Type childNodeType)
     {
-        if (SafeType.CheckAndGetPropertyOf(nodeType, propertyName, out PropertyInfo Property))
+        if (nodeType.IsProperty(propertyName, out PropertyInfo Property))
         {
             Type PropertyType = Property.PropertyType;
 
@@ -411,9 +412,9 @@ public static partial class NodeTreeHelperBlockList
 
     private static void GetBlockListInternal(Node node, string propertyName, out PropertyInfo property, out Type propertyType, out IBlockList blockList)
     {
-        Type NodeType = node.GetType();
+        Type NodeType = Type.FromGetType(node);
 
-        if (!SafeType.CheckAndGetPropertyOf(NodeType, propertyName, out property))
+        if (!NodeType.IsProperty(propertyName, out property))
             throw new ArgumentException($"{nameof(propertyName)} must be the name of a property of {NodeType}");
 
         propertyType = property.PropertyType;
@@ -421,12 +422,12 @@ public static partial class NodeTreeHelperBlockList
         if (!NodeTreeHelper.IsBlockListInterfaceType(propertyType))
             throw new ArgumentException($"{nameof(propertyName)} must be the name of a block list property of {NodeType}");
 
-        blockList = SafeType.GetPropertyValue<IBlockList>(property, node);
+        blockList = (IBlockList)property.GetValue(node);
     }
 
     private static Type BlockListItemTypeInternal(Type nodeType, string propertyName)
     {
-        if (!SafeType.CheckAndGetPropertyOf(nodeType, propertyName, out PropertyInfo Property))
+        if (!nodeType.IsProperty(propertyName, out PropertyInfo Property))
             throw new ArgumentException($"{nameof(propertyName)} must be the name of a property of {nodeType}");
 
         Type PropertyType = Property.PropertyType;
@@ -446,7 +447,7 @@ public static partial class NodeTreeHelperBlockList
 
     private static Type BlockListBlockTypeInternal(Type nodeType, string propertyName)
     {
-        if (!SafeType.CheckAndGetPropertyOf(nodeType, propertyName, out PropertyInfo Property))
+        if (!nodeType.IsProperty(propertyName, out PropertyInfo Property))
             throw new ArgumentException($"{nameof(propertyName)} must be the name of a property of {nodeType}");
 
         Type PropertyType = Property.PropertyType;
@@ -454,7 +455,7 @@ public static partial class NodeTreeHelperBlockList
         if (!NodeTreeHelper.IsBlockListInterfaceType(PropertyType))
             throw new ArgumentException($"{nameof(propertyName)} must be the name of a block list property of {nodeType}");
 
-        PropertyInfo NodeListProperty = SafeType.GetProperty(PropertyType, nameof(BlockList<Node>.NodeBlockList));
+        PropertyInfo NodeListProperty = PropertyType.GetProperty(nameof(BlockList<Node>.NodeBlockList));
 
         Type NodeListType = NodeListProperty.PropertyType;
         Debug.Assert(NodeListType.IsGenericType);

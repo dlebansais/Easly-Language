@@ -1,10 +1,12 @@
 ﻿namespace TestEaslyLanguage;
 
+using System.Collections.Generic;
+using ArgumentException = System.ArgumentException;
+using ArgumentOutOfRangeException = System.ArgumentOutOfRangeException;
 using BaseNode;
 using BaseNodeHelper;
+using NotNullReflection;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
 
 [TestFixture]
 public partial class NodeTreeHelperListCoverage
@@ -19,11 +21,11 @@ public partial class NodeTreeHelperListCoverage
 
         Result = NodeTreeHelperList.IsNodeListProperty(SimpleGlobalReplicate, nameof(GlobalReplicate.Patterns), out ChildNodeType);
         Assert.True(Result);
-        Assert.AreEqual(ChildNodeType, typeof(Pattern));
+        Assert.AreEqual(ChildNodeType, Type.FromTypeof<Pattern>());
 
-        Result = NodeTreeHelperList.IsNodeListProperty(typeof(GlobalReplicate), nameof(GlobalReplicate.Patterns), out ChildNodeType);
+        Result = NodeTreeHelperList.IsNodeListProperty(Type.FromTypeof<GlobalReplicate>(), nameof(GlobalReplicate.Patterns), out ChildNodeType);
         Assert.True(Result);
-        Assert.AreEqual(ChildNodeType, typeof(Pattern));
+        Assert.AreEqual(ChildNodeType, Type.FromTypeof<Pattern>());
 
         Result = NodeTreeHelperList.IsNodeListProperty(SimpleGlobalReplicate, nameof(Identifier.Text), out ChildNodeType);
         Assert.False(Result);
@@ -38,7 +40,7 @@ public partial class NodeTreeHelperListCoverage
         Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperList.IsNodeListProperty(NullGlobalReplicate, nameof(GlobalReplicate.Patterns), out _); });
         Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperList.IsNodeListProperty(SimpleGlobalReplicate, NullString, out _); });
         Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperList.IsNodeListProperty(NullType, nameof(GlobalReplicate.Patterns), out _); });
-        Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperList.IsNodeListProperty(typeof(GlobalReplicate), NullString, out _); });
+        Assert.Throws<ArgumentNullException>(() => { NodeTreeHelperList.IsNodeListProperty(Type.FromTypeof<GlobalReplicate>(), NullString, out _); });
 #endif
     }
 
@@ -82,7 +84,7 @@ public partial class NodeTreeHelperListCoverage
         GlobalReplicate SimpleGlobalReplicate = NodeHelper.CreateSimpleGlobalReplicate("a");
 
         Result = NodeTreeHelperList.ListItemType(SimpleGlobalReplicate, nameof(GlobalReplicate.Patterns));
-        Assert.AreEqual(Result, typeof(Pattern));
+        Assert.AreEqual(Result, Type.FromTypeof<Pattern>());
 
         Assert.Throws<ArgumentException>(() => { NodeTreeHelperList.ListItemType(SimpleGlobalReplicate, nameof(Identifier.Text)); });
         Assert.Throws<ArgumentException>(() => { NodeTreeHelperList.ListItemType(SimpleGlobalReplicate, nameof(GlobalReplicate.ReplicateName)); });

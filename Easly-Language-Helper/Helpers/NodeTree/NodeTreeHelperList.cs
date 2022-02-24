@@ -1,12 +1,13 @@
 ﻿namespace BaseNodeHelper;
 
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Reflection;
+using ArgumentException = System.ArgumentException;
+using ArgumentOutOfRangeException = System.ArgumentOutOfRangeException;
 using BaseNode;
 using Contracts;
+using NotNullReflection;
 
 /// <summary>
 /// Provides methods to manipulate lists of nodes in a program tree.
@@ -25,17 +26,9 @@ public static class NodeTreeHelperList
         Contract.RequireNotNull(node, out Node Node);
         Contract.RequireNotNull(propertyName, out string PropertyName);
 
-        Type NodeType = Node.GetType();
+        Type NodeType = Type.FromGetType(Node);
 
-        if (!IsNodeListPropertyInternal(NodeType, PropertyName, out childNodeType))
-            return false;
-
-        PropertyInfo Property = SafeType.GetProperty(NodeType, PropertyName);
-
-        object? Item = Property.GetValue(Node);
-        Debug.Assert(Item is null || Item is IList);
-
-        return true;
+        return IsNodeListPropertyInternal(NodeType, PropertyName, out childNodeType);
     }
 
     /// <summary>
@@ -170,7 +163,7 @@ public static class NodeTreeHelperList
 
         GetCollection(Node, PropertyName, out PropertyInfo Property, out Type PropertyType, out _);
 
-        if (!PropertyType.IsAssignableFrom(ChildNodeList.GetType()))
+        if (!PropertyType.IsAssignableFrom(Type.FromGetType(ChildNodeList)))
             throw new ArgumentException($"{nameof(childNodeList)} must conform to type {PropertyType}");
 
         if (NodeHelper.IsCollectionNeverEmpty(Node, PropertyName) && childNodeList.Count == 0)
@@ -253,7 +246,7 @@ public static class NodeTreeHelperList
         Debug.Assert(GenericArguments.Length == 1);
 
         Type GenericType = GenericArguments[0];
-        Type ChildNodeType = ChildNode.GetType();
+        Type ChildNodeType = Type.FromGetType(ChildNode);
 
         if (!GenericType.IsAssignableFrom(ChildNodeType))
             throw new ArgumentException($"{nameof(childNode)} must conform to type {GenericType}");
@@ -297,7 +290,7 @@ public static class NodeTreeHelperList
 
     private static bool IsNodeListPropertyInternal(Type nodeType, string propertyName, out Type childNodeType)
     {
-        if (SafeType.CheckAndGetPropertyOf(nodeType, propertyName, out PropertyInfo Property))
+        if (nodeType.IsProperty(propertyName, out PropertyInfo Property))
         {
             Type PropertyType = Property.PropertyType;
 
@@ -319,9 +312,9 @@ public static class NodeTreeHelperList
 
     private static void GetCollection(Node node, string propertyName, out PropertyInfo property, out Type propertyType, out IList collection)
     {
-        Type NodeType = node.GetType();
+        Type NodeType = Type.FromGetType(node);
 
-        if (!SafeType.CheckAndGetPropertyOf(NodeType, propertyName, out property))
+        if (!NodeType.IsProperty(propertyName, out property))
             throw new ArgumentException($"{nameof(propertyName)} must be the name of a property of {NodeType}");
 
         propertyType = property.PropertyType;
@@ -329,6 +322,6 @@ public static class NodeTreeHelperList
         if (!NodeTreeHelper.IsNodeListType(propertyType))
             throw new ArgumentException($"{nameof(propertyName)} must be the name of a node list property of {NodeType}");
 
-        collection = SafeType.GetPropertyValue<IList>(property, node);
+        collection = (IList)property.GetValue(node);
     }
 }

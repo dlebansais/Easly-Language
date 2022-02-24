@@ -1,6 +1,6 @@
 ﻿namespace Easly;
 
-using System.Reflection;
+using NotNullReflection;
 
 /// <summary>
 /// Represents an entity for features.

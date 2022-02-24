@@ -1,11 +1,15 @@
 ﻿namespace TestEaslyLanguage;
 
+using System.Collections.Generic;
+using ArgumentException = System.ArgumentException;
+using ArgumentOutOfRangeException = System.ArgumentOutOfRangeException;
+using IDisposable = System.IDisposable;
+using Guid = System.Guid;
 using BaseNode;
 using BaseNodeHelper;
 using Easly;
+using NotNullReflection;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
 
 [TestFixture]
 public partial class NodeTreeHelperCoverage
@@ -28,7 +32,7 @@ public partial class NodeTreeHelperCoverage
         ChildNodePropertyList = NodeTreeHelper.EnumChildNodeProperties(DefaultExpression);
         Assert.True(ChildNodePropertyList.Contains(nameof(Expression.Documentation)));
 
-        ChildNodePropertyList = NodeTreeHelper.EnumChildNodeProperties(typeof(QueryExpression));
+        ChildNodePropertyList = NodeTreeHelper.EnumChildNodeProperties(Type.FromTypeof<QueryExpression>());
         Assert.True(ChildNodePropertyList.Contains(nameof(Expression.Documentation)));
 
         PrivateNode NewPrivateNode = new();
@@ -36,7 +40,7 @@ public partial class NodeTreeHelperCoverage
         ChildNodePropertyList = NodeTreeHelper.EnumChildNodeProperties(NewPrivateNode);
         Assert.True(ChildNodePropertyList.Contains(nameof(Expression.Documentation)));
 
-        Assert.Throws<ArgumentException>(() => { NodeTreeHelper.EnumChildNodeProperties(typeof(string)); });
+        Assert.Throws<ArgumentException>(() => { NodeTreeHelper.EnumChildNodeProperties(Type.FromTypeof<string>()); });
 
 #if !DEBUG
         Expression NullExpression = null!;
@@ -49,19 +53,19 @@ public partial class NodeTreeHelperCoverage
     {
         bool Result;
 
-        Result = NodeTreeHelper.IsBlockListType(typeof(BlockList<Identifier>));
+        Result = NodeTreeHelper.IsBlockListType(Type.FromTypeof<BlockList<Identifier>>());
         Assert.True(Result);
 
-        Result = NodeTreeHelper.IsBlockListType(typeof(IBlockList<Identifier>));
+        Result = NodeTreeHelper.IsBlockListType(Type.FromTypeof<IBlockList<Identifier>>());
         Assert.False(Result);
 
-        Result = NodeTreeHelper.IsBlockListType(typeof(string));
+        Result = NodeTreeHelper.IsBlockListType(Type.FromTypeof<string>());
         Assert.False(Result);
 
-        Result = NodeTreeHelper.IsBlockListType(typeof(IDisposable));
+        Result = NodeTreeHelper.IsBlockListType(Type.FromTypeof<IDisposable>());
         Assert.False(Result);
 
-        Result = NodeTreeHelper.IsBlockListType(typeof(IEnumerable<int>));
+        Result = NodeTreeHelper.IsBlockListType(Type.FromTypeof<IEnumerable<int>>());
         Assert.False(Result);
 
 #if !DEBUG
@@ -75,19 +79,19 @@ public partial class NodeTreeHelperCoverage
     {
         bool Result;
 
-        Result = NodeTreeHelper.IsBlockListInterfaceType(typeof(IBlockList<Identifier>));
+        Result = NodeTreeHelper.IsBlockListInterfaceType(Type.FromTypeof<IBlockList<Identifier>>());
         Assert.True(Result);
 
-        Result = NodeTreeHelper.IsBlockListInterfaceType(typeof(BlockList<Identifier>));
+        Result = NodeTreeHelper.IsBlockListInterfaceType(Type.FromTypeof<BlockList<Identifier>>());
         Assert.False(Result);
 
-        Result = NodeTreeHelper.IsBlockListInterfaceType(typeof(string));
+        Result = NodeTreeHelper.IsBlockListInterfaceType(Type.FromTypeof<string>());
         Assert.False(Result);
 
-        Result = NodeTreeHelper.IsBlockListInterfaceType(typeof(IDisposable));
+        Result = NodeTreeHelper.IsBlockListInterfaceType(Type.FromTypeof<IDisposable>());
         Assert.False(Result);
 
-        Result = NodeTreeHelper.IsBlockListInterfaceType(typeof(IEnumerable<int>));
+        Result = NodeTreeHelper.IsBlockListInterfaceType(Type.FromTypeof<IEnumerable<int>>());
         Assert.False(Result);
 
 #if !DEBUG
@@ -101,19 +105,19 @@ public partial class NodeTreeHelperCoverage
     {
         bool Result;
 
-        Result = NodeTreeHelper.IsBlockType(typeof(Block<Identifier>));
+        Result = NodeTreeHelper.IsBlockType(Type.FromTypeof<Block<Identifier>>());
         Assert.True(Result);
 
-        Result = NodeTreeHelper.IsBlockType(typeof(IBlock<Identifier>));
+        Result = NodeTreeHelper.IsBlockType(Type.FromTypeof<IBlock<Identifier>>());
         Assert.False(Result);
 
-        Result = NodeTreeHelper.IsBlockType(typeof(string));
+        Result = NodeTreeHelper.IsBlockType(Type.FromTypeof<string>());
         Assert.False(Result);
 
-        Result = NodeTreeHelper.IsBlockType(typeof(IDisposable));
+        Result = NodeTreeHelper.IsBlockType(Type.FromTypeof<IDisposable>());
         Assert.False(Result);
 
-        Result = NodeTreeHelper.IsBlockType(typeof(IEnumerable<int>));
+        Result = NodeTreeHelper.IsBlockType(Type.FromTypeof<IEnumerable<int>>());
         Assert.False(Result);
 
 #if !DEBUG
@@ -127,19 +131,19 @@ public partial class NodeTreeHelperCoverage
     {
         bool Result;
 
-        Result = NodeTreeHelper.IsBlockInterfaceType(typeof(IBlock<Identifier>));
+        Result = NodeTreeHelper.IsBlockInterfaceType(Type.FromTypeof<IBlock<Identifier>>());
         Assert.True(Result);
 
-        Result = NodeTreeHelper.IsBlockInterfaceType(typeof(Block<Identifier>));
+        Result = NodeTreeHelper.IsBlockInterfaceType(Type.FromTypeof<Block<Identifier>>());
         Assert.False(Result);
 
-        Result = NodeTreeHelper.IsBlockInterfaceType(typeof(string));
+        Result = NodeTreeHelper.IsBlockInterfaceType(Type.FromTypeof<string>());
         Assert.False(Result);
 
-        Result = NodeTreeHelper.IsBlockInterfaceType(typeof(IDisposable));
+        Result = NodeTreeHelper.IsBlockInterfaceType(Type.FromTypeof<IDisposable>());
         Assert.False(Result);
 
-        Result = NodeTreeHelper.IsBlockInterfaceType(typeof(IEnumerable<int>));
+        Result = NodeTreeHelper.IsBlockInterfaceType(Type.FromTypeof<IEnumerable<int>>());
         Assert.False(Result);
 
 #if !DEBUG
@@ -153,25 +157,25 @@ public partial class NodeTreeHelperCoverage
     {
         bool Result;
 
-        Result = NodeTreeHelper.IsSomeBlockType(typeof(Block<Identifier>));
+        Result = NodeTreeHelper.IsSomeBlockType(Type.FromTypeof<Block<Identifier>>());
         Assert.True(Result);
 
-        Result = NodeTreeHelper.IsSomeBlockType(typeof(IBlock<Identifier>));
+        Result = NodeTreeHelper.IsSomeBlockType(Type.FromTypeof<IBlock<Identifier>>());
         Assert.True(Result);
 
-        Result = NodeTreeHelper.IsSomeBlockType(typeof(BlockList<Identifier>));
+        Result = NodeTreeHelper.IsSomeBlockType(Type.FromTypeof<BlockList<Identifier>>());
         Assert.True(Result);
 
-        Result = NodeTreeHelper.IsSomeBlockType(typeof(IBlockList<Identifier>));
+        Result = NodeTreeHelper.IsSomeBlockType(Type.FromTypeof<IBlockList<Identifier>>());
         Assert.True(Result);
 
-        Result = NodeTreeHelper.IsSomeBlockType(typeof(string));
+        Result = NodeTreeHelper.IsSomeBlockType(Type.FromTypeof<string>());
         Assert.False(Result);
 
-        Result = NodeTreeHelper.IsSomeBlockType(typeof(IDisposable));
+        Result = NodeTreeHelper.IsSomeBlockType(Type.FromTypeof<IDisposable>());
         Assert.False(Result);
 
-        Result = NodeTreeHelper.IsSomeBlockType(typeof(IEnumerable<int>));
+        Result = NodeTreeHelper.IsSomeBlockType(Type.FromTypeof<IEnumerable<int>>());
         Assert.False(Result);
 
 #if !DEBUG
@@ -453,18 +457,18 @@ public partial class NodeTreeHelperCoverage
     [Test]
     public static void TestGetEnumRange()
     {
-        NodeTreeHelper.GetEnumRange(typeof(AnchoredType), nameof(AnchoredType.AnchorKind), out int Min, out int Max);
+        NodeTreeHelper.GetEnumRange(Type.FromTypeof<AnchoredType>(), nameof(AnchoredType.AnchorKind), out int Min, out int Max);
         Assert.AreEqual(Min, (int)AnchorKinds.Declaration);
         Assert.AreEqual(Max, (int)AnchorKinds.Creation);
 
-        Assert.Throws<ArgumentException>(() => { NodeTreeHelper.GetEnumRange(typeof(Inheritance), nameof(Inheritance.DiscontinueBlocks), out _, out _); });
-        Assert.Throws<ArgumentException>(() => { NodeTreeHelper.GetEnumRange(typeof(Inheritance), nameof(QueryExpression.Query), out _, out _); });
+        Assert.Throws<ArgumentException>(() => { NodeTreeHelper.GetEnumRange(Type.FromTypeof<Inheritance>(), nameof(Inheritance.DiscontinueBlocks), out _, out _); });
+        Assert.Throws<ArgumentException>(() => { NodeTreeHelper.GetEnumRange(Type.FromTypeof<Inheritance>(), nameof(QueryExpression.Query), out _, out _); });
 
 #if !DEBUG
         Type NullType = null!;
         string NullString = null!;
         Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.GetEnumRange(NullType, nameof(AnchoredType.AnchorKind), out _, out _); });
-        Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.GetEnumRange(typeof(AnchoredType), NullString, out _, out _); });
+        Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.GetEnumRange(Type.FromTypeof<AnchoredType>(), NullString, out _, out _); });
 #endif
     }
 
@@ -665,7 +669,7 @@ public partial class NodeTreeHelperCoverage
         Result = NodeTreeHelper.IsProperty(NewInheritance, nameof(QueryExpression.Query));
         Assert.False(Result);
 
-        Result = NodeTreeHelper.IsProperty(typeof(Inheritance), nameof(Inheritance.ForgetIndexer));
+        Result = NodeTreeHelper.IsProperty(Type.FromTypeof<Inheritance>(), nameof(Inheritance.ForgetIndexer));
         Assert.True(Result);
 
 #if !DEBUG
@@ -675,7 +679,7 @@ public partial class NodeTreeHelperCoverage
         Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.IsProperty(NullInheritance, nameof(Inheritance.ForgetIndexer)); });
         Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.IsProperty(NewInheritance, NullString); });
         Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.IsProperty(NullInheritanceType, nameof(Inheritance.ForgetIndexer)); });
-        Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.IsProperty(typeof(Inheritance), NullString); });
+        Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.IsProperty(Type.FromTypeof<Inheritance>(), NullString); });
 #endif
     }
 
@@ -695,7 +699,7 @@ public partial class NodeTreeHelperCoverage
         Result = NodeTreeHelper.IsBooleanProperty(NewInheritance, nameof(QueryExpression.Query));
         Assert.False(Result);
 
-        Result = NodeTreeHelper.IsBooleanProperty(typeof(Inheritance), nameof(Inheritance.ForgetIndexer));
+        Result = NodeTreeHelper.IsBooleanProperty(Type.FromTypeof<Inheritance>(), nameof(Inheritance.ForgetIndexer));
         Assert.True(Result);
 
 #if !DEBUG
@@ -705,7 +709,7 @@ public partial class NodeTreeHelperCoverage
         Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.IsBooleanProperty(NullInheritance, nameof(Inheritance.ForgetIndexer)); });
         Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.IsBooleanProperty(NewInheritance, NullString); });
         Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.IsBooleanProperty(NullInheritanceType, nameof(Inheritance.ForgetIndexer)); });
-        Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.IsBooleanProperty(typeof(Inheritance), NullString); });
+        Assert.Throws<ArgumentNullException>(() => { NodeTreeHelper.IsBooleanProperty(Type.FromTypeof<Inheritance>(), NullString); });
 #endif
     }
 
@@ -770,7 +774,7 @@ public partial class NodeTreeHelperCoverage
         Result = NodeTreeHelper.IsStringProperty(SimpleIdentifier, nameof(QueryExpression.Query));
         Assert.False(Result);
 
-        Result = NodeTreeHelper.IsStringProperty(typeof(Identifier), nameof(Identifier.Text));
+        Result = NodeTreeHelper.IsStringProperty(Type.FromTypeof<Identifier>(), nameof(Identifier.Text));
         Assert.True(Result);
 
         NodeTreeHelper.SetStringProperty(SimpleIdentifier, nameof(Identifier.Text), string.Empty);
@@ -819,7 +823,7 @@ public partial class NodeTreeHelperCoverage
         Result = NodeTreeHelper.IsGuidProperty(NewClass, nameof(QueryExpression.Query));
         Assert.False(Result);
 
-        Result = NodeTreeHelper.IsGuidProperty(typeof(Class), nameof(Class.ClassGuid));
+        Result = NodeTreeHelper.IsGuidProperty(Type.FromTypeof<Class>(), nameof(Class.ClassGuid));
         Assert.True(Result);
 
 #if !DEBUG
@@ -866,7 +870,7 @@ public partial class NodeTreeHelperCoverage
         Result = NodeTreeHelper.IsEnumProperty(SimpleAnchoredType, nameof(QueryExpression.Query));
         Assert.False(Result);
 
-        Result = NodeTreeHelper.IsEnumProperty(typeof(AnchoredType), nameof(AnchoredType.AnchorKind));
+        Result = NodeTreeHelper.IsEnumProperty(Type.FromTypeof<AnchoredType>(), nameof(AnchoredType.AnchorKind));
         Assert.True(Result);
 
 #if !DEBUG

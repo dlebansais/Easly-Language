@@ -1,11 +1,10 @@
 ﻿namespace Easly;
 
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
-using System.Reflection;
 using Contracts;
+using NotNullReflection;
 
 /// <summary>
 /// Represents the entity of a type.
@@ -22,8 +21,8 @@ public abstract class TypeEntity : Entity
         Contract.RequireNotNull(typeInfo, out Type TypeInfo);
 
         this.TypeInfo = TypeInfo;
-        Name = typeInfo.Name;
-        FullName = Contract.NullSupressed(typeInfo.FullName);
+        Name = TypeInfo.Name;
+        FullName = Contract.NullSupressed(TypeInfo.FullName);
 
         SealableDictionary<string, MethodInfo> FlattenedMethodList = new();
         RecursiveGetMethods(TypeInfo, FlattenedMethodList);
@@ -33,7 +32,7 @@ public abstract class TypeEntity : Entity
         Functions = new SealableDictionary<string, FunctionEntity>();
 
         foreach (KeyValuePair<string, MethodInfo> Item in FlattenedMethodList)
-            if (Item.Value.ReturnType == typeof(void))
+            if (Item.Value.ReturnType.IsTypeofVoid())
             {
                 ProcedureEntity FeatureEntity = new(Item.Value);
                 Features.Add(FeatureEntity);
@@ -68,7 +67,7 @@ public abstract class TypeEntity : Entity
         Parents = new List<TypeEntity>();
         Ancestors = new List<TypeEntity>();
 
-        if (TypeInfo.BaseType is not null && TypeInfo.BaseType != typeof(object))
+        if (!TypeInfo.IsTypeof<object>() && !TypeInfo.BaseType.IsTypeof<object>())
         {
             TypeEntity ParentEntity = BuiltTypeEntity(TypeInfo.BaseType);
 
@@ -139,10 +138,10 @@ public abstract class TypeEntity : Entity
         if (!SpecializedTypeEntityInternal.SingletonSet.ContainsKey(t))
         {
             Type[] GenericArguments = new Type[] { t };
-            Type BoundType = typeof(SpecializedTypeEntity<>).MakeGenericType(GenericArguments);
+            Type BoundType = Type.FromTypeof<SpecializedTypeEntity<object>>().GetGenericTypeDefinition().MakeGenericType(GenericArguments);
 
             PropertyInfo BoundTypePropertyInfo = Contract.NullSupressed(BoundType.GetProperty(nameof(SpecializedTypeEntity<object>.Singleton)));
-            object BoundTypePropertyValue = Contract.NullSupressed(BoundTypePropertyInfo.GetValue(null));
+            object BoundTypePropertyValue = Contract.NullSupressed(BoundTypePropertyInfo.GetValue(Type.Void));
 
             Result = (TypeEntity)BoundTypePropertyValue;
         }
@@ -207,11 +206,14 @@ public abstract class TypeEntity : Entity
     #region Implementation
     private static void RecursiveGetMethods(Type typeInfo, SealableDictionary<string, MethodInfo> result)
     {
+        if (typeInfo.IsTypeof<object>())
+            return;
+
         foreach (MethodInfo Item in typeInfo.GetMethods())
             if (!result.ContainsKey(Item.Name))
                 result.Add(Item.Name, Item);
 
-        if (typeInfo.BaseType is not null)
+        if (!typeInfo.IsInterface)
             RecursiveGetMethods(typeInfo.BaseType, result);
 
         foreach (Type Item in typeInfo.GetInterfaces())
@@ -220,11 +222,14 @@ public abstract class TypeEntity : Entity
 
     private static void RecursiveGetProperties(Type typeInfo, SealableDictionary<string, PropertyInfo> result)
     {
+        if (typeInfo.IsTypeof<object>())
+            return;
+
         foreach (PropertyInfo Item in typeInfo.GetProperties())
             if (!result.ContainsKey(Item.Name))
                 result.Add(Item.Name, Item);
 
-        if (typeInfo.BaseType is not null)
+        if (!typeInfo.IsInterface)
             RecursiveGetProperties(typeInfo.BaseType, result);
 
         foreach (Type Item in typeInfo.GetInterfaces())

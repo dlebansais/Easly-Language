@@ -1,12 +1,12 @@
 ﻿namespace BaseNodeHelper;
 
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Reflection;
+using ArgumentException = System.ArgumentException;
 using BaseNode;
 using Contracts;
+using NotNullReflection;
 
 /// <summary>
 /// Provides methods to manipulate block lists of nodes.
@@ -48,7 +48,7 @@ public static partial class NodeTreeHelperBlockList
         Contract.RequireNotNull(replicationPattern, out Pattern ReplicationPattern);
         Contract.RequireNotNull(sourceIdentifier, out Identifier SourceIdentifier);
 
-        Type BlockListType = BlockList.GetType();
+        Type BlockListType = Type.FromGetType(BlockList);
 
         if (!NodeTreeHelper.IsSomeBlockType(BlockListType))
             throw new ArgumentException($"{nameof(blockList)} must be a {typeof(BlockList<>)} type");
@@ -83,36 +83,32 @@ public static partial class NodeTreeHelperBlockList
 
         Type[] TypeArguments = propertyType.GetGenericArguments();
 
-        Type BlockType = typeof(Block<>).MakeGenericType(TypeArguments);
-        string BlockTypeFullName = SafeType.FullName(BlockType);
-
-        IBlock NewBlock = SafeType.CreateInstance<IBlock>(BlockType.Assembly, BlockTypeFullName);
+        Type BlockType = Type.FromTypeof<Block<Node>>().GetGenericTypeDefinition().MakeGenericType(TypeArguments);
+        IBlock NewBlock = NodeHelper.CreateInstance<IBlock>(BlockType);
 
         Document EmptyComment = NodeHelper.CreateEmptyDocument();
 
-        PropertyInfo DocumentationPropertyInfo = SafeType.GetProperty(BlockType, nameof(Node.Documentation));
+        PropertyInfo DocumentationPropertyInfo = BlockType.GetProperty(nameof(Node.Documentation));
 
         DocumentationPropertyInfo.SetValue(NewBlock, EmptyComment);
 
-        Type NodeListType = typeof(List<>).MakeGenericType(new Type[] { TypeArguments[0] });
+        Type NodeListType = Type.FromTypeof<List<Node>>().GetGenericTypeDefinition().MakeGenericType(new Type[] { TypeArguments[0] });
 
-        string FullName = SafeType.FullName(NodeListType);
+        IList NewNodeList = NodeHelper.CreateInstanceFromDefaultConstructor<IList>(NodeListType);
 
-        IList NewNodeList = SafeType.CreateInstanceFromDefaultConstructor<IList>(NodeListType.Assembly, FullName);
-
-        PropertyInfo ReplicationPropertyInfo = SafeType.GetProperty(BlockType, nameof(IBlock.Replication));
+        PropertyInfo ReplicationPropertyInfo = BlockType.GetProperty(nameof(IBlock.Replication));
 
         ReplicationPropertyInfo.SetValue(NewBlock, replication);
 
-        PropertyInfo NodeListPropertyInfo = SafeType.GetProperty(BlockType, nameof(IBlock.NodeList));
+        PropertyInfo NodeListPropertyInfo = BlockType.GetProperty(nameof(IBlock.NodeList));
 
         NodeListPropertyInfo.SetValue(NewBlock, NewNodeList);
 
-        PropertyInfo ReplicationPatternPropertyInfo = SafeType.GetProperty(BlockType, nameof(IBlock.ReplicationPattern));
+        PropertyInfo ReplicationPatternPropertyInfo = BlockType.GetProperty(nameof(IBlock.ReplicationPattern));
 
         ReplicationPatternPropertyInfo.SetValue(NewBlock, replicationPattern);
 
-        PropertyInfo SourceIdentifierPropertyInfo = SafeType.GetProperty(BlockType, nameof(IBlock.SourceIdentifier));
+        PropertyInfo SourceIdentifierPropertyInfo = BlockType.GetProperty(nameof(IBlock.SourceIdentifier));
 
         SourceIdentifierPropertyInfo.SetValue(NewBlock, sourceIdentifier);
 

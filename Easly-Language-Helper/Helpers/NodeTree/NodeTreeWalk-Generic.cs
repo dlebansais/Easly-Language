@@ -1,11 +1,10 @@
 ﻿namespace BaseNodeHelper;
 
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Reflection;
 using BaseNode;
+using NotNullReflection;
 
 /// <summary>
 /// Provides methods to walk through a tree of nodes.
@@ -135,9 +134,9 @@ internal static class NodeTreeWalk<TContext>
 
         string ListPropertyName = nodePropertyName.Replace(key, value);
 
-        Type NodeType = node.GetType();
-        PropertyInfo Property = SafeType.GetProperty(NodeType, ListPropertyName);
-        IList NodeList = SafeType.GetPropertyValue<IList>(Property, node);
+        Type NodeType = Type.FromGetType(node);
+        PropertyInfo Property = NodeType.GetProperty(ListPropertyName);
+        IList NodeList = (IList)Property.GetValue(node);
 
         for (int Index = 0; Index < NodeList.Count; Index++)
         {

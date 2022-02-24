@@ -1,12 +1,11 @@
 ﻿namespace BaseNodeHelper;
 
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Reflection;
 using BaseNode;
 using Contracts;
+using NotNullReflection;
 
 /// <summary>
 /// Provides methods to manipulate nodes.
@@ -26,7 +25,7 @@ public static partial class NodeHelper
         IList<string> PropertyNames = NodeTreeHelper.EnumChildNodeProperties(Root);
 
         // Careful, the resulting "empty" node can contain items for lists that are not allowed to be empty.
-        Node ClonedRoot = CreateEmptyNode(Root.GetType());
+        Node ClonedRoot = CreateEmptyNode(Type.FromGetType(Root));
 
         foreach (string PropertyName in PropertyNames)
         {
@@ -115,13 +114,13 @@ public static partial class NodeHelper
     {
         Contract.RequireNotNull(rootBlockList, out IList<IBlock> RootBlockList);
 
-        Type BlockListType = RootBlockList.GetType();
+        Type BlockListType = Type.FromGetType(RootBlockList);
         List<IBlock> ClonedNodeBlockList = new();
 
         for (int BlockIndex = 0; BlockIndex < RootBlockList.Count; BlockIndex++)
         {
             IBlock Block = SafeType.ItemAt<IBlock>(RootBlockList, BlockIndex);
-            Type ItemType = Block.GetType();
+            Type ItemType = Type.FromGetType(Block);
 
             Pattern ClonedPattern = (Pattern)DeepCloneNode(Block.ReplicationPattern, cloneCommentGuid);
             Identifier ClonedSource = (Identifier)DeepCloneNode(Block.SourceIdentifier, cloneCommentGuid);
@@ -144,23 +143,17 @@ public static partial class NodeHelper
 
     private static IBlockList DeepCloneBlockListInternal(IBlockList rootBlockList, bool cloneCommentGuid)
     {
-        Type BlockListType = rootBlockList.GetType();
+        Type BlockListType = Type.FromGetType(rootBlockList);
         Type[] GenericArguments = BlockListType.GetGenericArguments();
-        BlockListType = typeof(BlockList<>).MakeGenericType(GenericArguments);
+        BlockListType = Type.FromTypeof<BlockList<Node>>().GetGenericTypeDefinition().MakeGenericType(GenericArguments);
 
-        Assembly BlockListAssembly = BlockListType.Assembly;
-        string BlockListFullName = SafeType.FullName(BlockListType);
+        IBlockList ClonedBlockList = CreateInstance<IBlockList>(BlockListType);
 
-        IBlockList ClonedBlockList = SafeType.CreateInstance<IBlockList>(BlockListAssembly, BlockListFullName);
+        Type NodeListType = Type.FromGetType(rootBlockList.NodeBlockList);
 
-        Type NodeListType = rootBlockList.NodeBlockList.GetType();
+        IList ClonedNodeBlockList = CreateInstanceFromDefaultConstructor<IList>(NodeListType);
 
-        Assembly NodeListAssembly = NodeListType.Assembly;
-        string NodeListFullName = SafeType.FullName(NodeListType);
-
-        IList ClonedNodeBlockList = SafeType.CreateInstanceFromDefaultConstructor<IList>(NodeListAssembly, NodeListFullName);
-
-        PropertyInfo NodeBlockListProperty = SafeType.GetProperty(BlockListType, nameof(IBlockList.NodeBlockList));
+        PropertyInfo NodeBlockListProperty = BlockListType.GetProperty(nameof(IBlockList.NodeBlockList));
 
         NodeBlockListProperty.SetValue(ClonedBlockList, ClonedNodeBlockList);
         NodeTreeHelper.CopyDocumentation(rootBlockList, ClonedBlockList, cloneCommentGuid);
