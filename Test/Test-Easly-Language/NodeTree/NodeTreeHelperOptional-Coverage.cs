@@ -1,6 +1,7 @@
 ﻿namespace TestEaslyLanguage;
 
 using ArgumentException = System.ArgumentException;
+using ArgumentNullException = System.ArgumentNullException;
 using BaseNode;
 using BaseNodeHelper;
 using Easly;

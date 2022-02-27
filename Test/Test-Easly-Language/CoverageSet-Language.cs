@@ -12,6 +12,7 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using InvalidOperationException = System.InvalidOperationException;
 using TypeInitializationException = System.TypeInitializationException;
+using ArgumentNullException = System.ArgumentNullException;
 
 [TestFixture]
 public partial class CoverageSet

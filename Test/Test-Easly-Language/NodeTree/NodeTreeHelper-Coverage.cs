@@ -3,6 +3,7 @@
 using System.Collections.Generic;
 using ArgumentException = System.ArgumentException;
 using ArgumentOutOfRangeException = System.ArgumentOutOfRangeException;
+using ArgumentNullException = System.ArgumentNullException;
 using IDisposable = System.IDisposable;
 using Guid = System.Guid;
 using BaseNode;

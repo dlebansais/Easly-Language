@@ -2,6 +2,7 @@
 
 using System.Collections.Generic;
 using ArgumentException = System.ArgumentException;
+using ArgumentNullException = System.ArgumentNullException;
 using BaseNode;
 using Range = BaseNode.Range;
 using BaseNodeHelper;
