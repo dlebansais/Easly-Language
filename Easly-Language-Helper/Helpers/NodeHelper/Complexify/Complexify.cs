@@ -30,7 +30,7 @@ public static partial class NodeHelper
         {
             int OldCount = complexifiedNodeList.Count;
 
-            foreach (Node Node in SafeType.Items<Node>(ComplexifiedList))
+            foreach (Node Node in SafeList.Items<Node>(ComplexifiedList))
                 complexifiedNodeList.Add(Node);
 
             int NewCount = complexifiedNodeList.Count;

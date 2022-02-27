@@ -99,7 +99,7 @@ public static partial class NodeTreeHelperBlockList
 
         List<NodeTreeBlock> Result = new();
 
-        foreach (IBlock Block in SafeType.Items<IBlock>(NodeBlockList))
+        foreach (IBlock Block in SafeList.Items<IBlock>(NodeBlockList))
         {
             Pattern ReplicationPattern = Block.ReplicationPattern;
             Identifier SourceIdentifier = Block.SourceIdentifier;
@@ -107,7 +107,7 @@ public static partial class NodeTreeHelperBlockList
             Debug.Assert(NodeList.Count > 0);
 
             List<Node> ResultNodeList = new();
-            foreach (Node ChildNode in SafeType.Items<Node>(NodeList))
+            foreach (Node ChildNode in SafeList.Items<Node>(NodeList))
                 ResultNodeList.Add(ChildNode);
 
             Result.Add(new NodeTreeBlock(ReplicationPattern, SourceIdentifier, ResultNodeList));
@@ -214,7 +214,7 @@ public static partial class NodeTreeHelperBlockList
         if (blockIndex < 0 || blockIndex >= NodeBlockList.Count)
             throw new ArgumentOutOfRangeException(nameof(blockIndex));
 
-        IBlock Block = SafeType.ItemAt<IBlock>(NodeBlockList, blockIndex);
+        IBlock Block = SafeList.ItemAt<IBlock>(NodeBlockList, blockIndex);
         IList NodeList = Block.NodeList;
 
         index = NodeList.Count;
@@ -241,7 +241,7 @@ public static partial class NodeTreeHelperBlockList
         if (blockIndex < 0 || blockIndex >= NodeBlockList.Count)
             throw new ArgumentOutOfRangeException(nameof(blockIndex));
 
-        IBlock Block = SafeType.ItemAt<IBlock>(NodeBlockList, blockIndex);
+        IBlock Block = SafeList.ItemAt<IBlock>(NodeBlockList, blockIndex);
 
         return IsChildNodeInternal(Block, index, ChildNode);
     }
@@ -279,7 +279,7 @@ public static partial class NodeTreeHelperBlockList
         if (blockIndex < 0 || blockIndex >= NodeBlockList.Count)
             throw new ArgumentOutOfRangeException(nameof(blockIndex));
 
-        childBlock = SafeType.ItemAt<IBlock>(NodeBlockList, blockIndex);
+        childBlock = SafeList.ItemAt<IBlock>(NodeBlockList, blockIndex);
     }
 
     /// <summary>
@@ -302,7 +302,7 @@ public static partial class NodeTreeHelperBlockList
         if (blockIndex < 0 || blockIndex >= NodeBlockList.Count)
             throw new ArgumentOutOfRangeException(nameof(blockIndex));
 
-        IBlock Block = SafeType.ItemAt<IBlock>(NodeBlockList, blockIndex);
+        IBlock Block = SafeList.ItemAt<IBlock>(NodeBlockList, blockIndex);
 
         childNode = GetChildNodeInternal(Block, index);
     }
@@ -379,7 +379,7 @@ public static partial class NodeTreeHelperBlockList
         if (NodeBlockList.Count == 0)
             return false;
 
-        IBlock Block = SafeType.ItemAt<IBlock>(NodeBlockList, 0);
+        IBlock Block = SafeList.ItemAt<IBlock>(NodeBlockList, 0);
 
         IList NodeList = Block.NodeList;
         Debug.Assert(NodeList.Count > 0);
@@ -476,7 +476,7 @@ public static partial class NodeTreeHelperBlockList
         if (index < 0 || index >= NodeList.Count)
             throw new ArgumentOutOfRangeException(nameof(index));
 
-        Node NodeItem = SafeType.ItemAt<Node>(NodeList, index);
+        Node NodeItem = SafeList.ItemAt<Node>(NodeList, index);
 
         return NodeItem == childNode;
     }
@@ -490,7 +490,7 @@ public static partial class NodeTreeHelperBlockList
         if (index < 0 || index >= NodeList.Count)
             throw new ArgumentOutOfRangeException(nameof(index));
 
-        Node NodeItem = SafeType.ItemAt<Node>(NodeList, index);
+        Node NodeItem = SafeList.ItemAt<Node>(NodeList, index);
 
         return NodeItem;
     }

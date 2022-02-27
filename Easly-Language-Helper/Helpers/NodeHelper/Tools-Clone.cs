@@ -119,7 +119,7 @@ public static partial class NodeHelper
 
         for (int BlockIndex = 0; BlockIndex < RootBlockList.Count; BlockIndex++)
         {
-            IBlock Block = SafeType.ItemAt<IBlock>(RootBlockList, BlockIndex);
+            IBlock Block = SafeList.ItemAt<IBlock>(RootBlockList, BlockIndex);
             Type ItemType = Type.FromGetType(Block);
 
             Pattern ClonedPattern = (Pattern)DeepCloneNode(Block.ReplicationPattern, cloneCommentGuid);
@@ -129,7 +129,7 @@ public static partial class NodeHelper
 
             for (int Index = 0; Index < Block.NodeList.Count; Index++)
             {
-                Node ChildNode = SafeType.ItemAt<Node>(Block.NodeList, Index);
+                Node ChildNode = SafeList.ItemAt<Node>(Block.NodeList, Index);
                 Node ClonedChildNode = DeepCloneNode(ChildNode, cloneCommentGuid);
 
                 NodeTreeHelperBlockList.InsertIntoBlock(ClonedBlock, Index, ClonedChildNode);
@@ -160,7 +160,7 @@ public static partial class NodeHelper
 
         for (int BlockIndex = 0; BlockIndex < rootBlockList.NodeBlockList.Count; BlockIndex++)
         {
-            IBlock Block = SafeType.ItemAt<IBlock>(rootBlockList.NodeBlockList, BlockIndex);
+            IBlock Block = SafeList.ItemAt<IBlock>(rootBlockList.NodeBlockList, BlockIndex);
 
             Pattern ClonedPattern = (Pattern)DeepCloneNode(Block.ReplicationPattern, cloneCommentGuid);
             Identifier ClonedSource = (Identifier)DeepCloneNode(Block.SourceIdentifier, cloneCommentGuid);
@@ -169,7 +169,7 @@ public static partial class NodeHelper
 
             for (int Index = 0; Index < Block.NodeList.Count; Index++)
             {
-                Node ChildNode = SafeType.ItemAt<Node>(Block.NodeList, Index);
+                Node ChildNode = SafeList.ItemAt<Node>(Block.NodeList, Index);
                 Node ClonedChildNode = DeepCloneNode(ChildNode, cloneCommentGuid);
 
                 NodeTreeHelperBlockList.InsertIntoBlock(ClonedBlock, Index, ClonedChildNode);

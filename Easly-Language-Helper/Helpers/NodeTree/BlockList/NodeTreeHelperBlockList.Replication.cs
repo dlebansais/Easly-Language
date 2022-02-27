@@ -31,7 +31,7 @@ public static partial class NodeTreeHelperBlockList
         if (blockIndex < 0 || blockIndex >= NodeBlockList.Count)
             throw new ArgumentOutOfRangeException(nameof(blockIndex));
 
-        IBlock Block = SafeType.ItemAt<IBlock>(NodeBlockList, blockIndex);
+        IBlock Block = SafeList.ItemAt<IBlock>(NodeBlockList, blockIndex);
 
         return IsPatternNodeInternal(Block, ReplicationPattern);
     }
@@ -99,7 +99,7 @@ public static partial class NodeTreeHelperBlockList
         if (blockIndex < 0 || blockIndex >= NodeBlockList.Count)
             throw new ArgumentOutOfRangeException(nameof(blockIndex));
 
-        IBlock Block = SafeType.ItemAt<IBlock>(NodeBlockList, blockIndex);
+        IBlock Block = SafeList.ItemAt<IBlock>(NodeBlockList, blockIndex);
 
         return IsSourceNodeInternal(Block, SourceIdentifier);
     }

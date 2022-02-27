@@ -68,7 +68,7 @@ public static class NodeTreeHelperList
         Debug.Assert(index >= 0);
         Debug.Assert(index < Collection.Count);
 
-        Node NodeItem = SafeType.ItemAt<Node>(Collection, index);
+        Node NodeItem = SafeList.ItemAt<Node>(Collection, index);
 
         return NodeItem == ChildNode;
     }
@@ -112,7 +112,7 @@ public static class NodeTreeHelperList
         GetCollection(Node, PropertyName, out _, out _, out IList Collection);
 
         List<Node> NodeList = new();
-        foreach (Node Item in SafeType.Items<Node>(Collection))
+        foreach (Node Item in SafeList.Items<Node>(Collection))
             NodeList.Add(Item);
 
         childNodeList = NodeList.AsReadOnly();
@@ -282,7 +282,7 @@ public static class NodeTreeHelperList
         Debug.Assert(index < Collection.Count);
         Debug.Assert(index + direction < Collection.Count);
 
-        Node ChildNode = SafeType.ItemAt<Node>(Collection, index);
+        Node ChildNode = SafeList.ItemAt<Node>(Collection, index);
 
         Collection.RemoveAt(index);
         Collection.Insert(index + direction, ChildNode);

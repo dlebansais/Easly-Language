@@ -119,14 +119,14 @@ public static class NodeTreeDiagnostic
 
         for (int BlockIndex = 0; BlockIndex < BlockList.NodeBlockList.Count; BlockIndex++)
         {
-            IBlock Block = SafeType.ItemAt<IBlock>(BlockList.NodeBlockList, BlockIndex);
+            IBlock Block = SafeList.ItemAt<IBlock>(BlockList.NodeBlockList, BlockIndex);
 
             if (!IsValidBlock(guidList, Block, originalRoot, root, throwOnInvalid))
                 return false;
 
             for (int Index = 0; Index < Block.NodeList.Count; Index++)
             {
-                Node ChildNode = SafeType.ItemAt<Node>(Block.NodeList, Index);
+                Node ChildNode = SafeList.ItemAt<Node>(Block.NodeList, Index);
 
                 if (!IsValid(guidList, originalRoot, ChildNode, throwOnInvalid))
                     return false;

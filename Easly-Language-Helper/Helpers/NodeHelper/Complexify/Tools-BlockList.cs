@@ -142,14 +142,14 @@ public static partial class NodeHelper
 
                 if (GetComplexifiedAssignmentArgument(AssignmentArgument, out IList<Argument> ComplexifiedAssignmentArgumentList))
                 {
-                    AssignmentArgument ComplexifiedAssignmentArgument = (AssignmentArgument)SafeType.ItemAt<Argument>(ComplexifiedAssignmentArgumentList, 0);
+                    AssignmentArgument ComplexifiedAssignmentArgument = (AssignmentArgument)SafeList.ItemAt<Argument>(ComplexifiedAssignmentArgumentList, 0);
 
                     newAssignmentArgumentBlocks = (IBlockList<AssignmentArgument>)DeepCloneBlockListInternal((IBlockList)argumentBlocks, cloneCommentGuid: false);
 
                     Block = newAssignmentArgumentBlocks.NodeBlockList[BlockIndex];
                     IList<AssignmentArgument> NodeList = Block.NodeList;
 
-                    SafeType.SetAt<AssignmentArgument>(NodeList, NodeIndex, ComplexifiedAssignmentArgument);
+                    SafeList.SetAt<AssignmentArgument>(NodeList, NodeIndex, ComplexifiedAssignmentArgument);
                     return true;
                 }
             }

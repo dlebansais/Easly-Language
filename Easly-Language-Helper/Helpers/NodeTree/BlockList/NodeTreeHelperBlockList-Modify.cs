@@ -203,7 +203,7 @@ public static partial class NodeTreeHelperBlockList
         if (blockIndex < 0 || blockIndex >= NodeBlockList.Count)
             throw new ArgumentOutOfRangeException(nameof(blockIndex));
 
-        IBlock CurrentBlock = SafeType.ItemAt<IBlock>(NodeBlockList, blockIndex);
+        IBlock CurrentBlock = SafeList.ItemAt<IBlock>(NodeBlockList, blockIndex);
 
         IList CurrentNodeList = CurrentBlock.NodeList;
 
@@ -222,7 +222,7 @@ public static partial class NodeTreeHelperBlockList
 
         for (int i = 0; i < index; i++)
         {
-            Node ChildNode = SafeType.ItemAt<Node>(CurrentNodeList, 0);
+            Node ChildNode = SafeList.ItemAt<Node>(CurrentNodeList, 0);
             CurrentNodeList.RemoveAt(0);
             NewNodeList.Insert(i, ChildNode);
         }
@@ -250,18 +250,18 @@ public static partial class NodeTreeHelperBlockList
         if (blockIndex <= 0 || blockIndex >= NodeBlockList.Count)
             throw new ArgumentOutOfRangeException(nameof(blockIndex));
 
-        IBlock BlockFromList = SafeType.ItemAt<IBlock>(NodeBlockList, blockIndex - 1);
+        IBlock BlockFromList = SafeList.ItemAt<IBlock>(NodeBlockList, blockIndex - 1);
 
         mergedBlock = BlockFromList;
 
-        IBlock CurrentBlock = SafeType.ItemAt<IBlock>(NodeBlockList, blockIndex);
+        IBlock CurrentBlock = SafeList.ItemAt<IBlock>(NodeBlockList, blockIndex);
 
         IList MergedNodeList = mergedBlock.NodeList;
         IList CurrentNodeList = CurrentBlock.NodeList;
 
         for (int i = 0; MergedNodeList.Count > 0; i++)
         {
-            Node ChildNode = SafeType.ItemAt<Node>(MergedNodeList, 0);
+            Node ChildNode = SafeList.ItemAt<Node>(MergedNodeList, 0);
             CurrentNodeList.Insert(i, ChildNode);
             MergedNodeList.RemoveAt(0);
         }
@@ -286,7 +286,7 @@ public static partial class NodeTreeHelperBlockList
         if (index + direction < 0 || index + direction >= NodeList.Count)
             throw new ArgumentOutOfRangeException(nameof(direction));
 
-        Node ChildNode = SafeType.ItemAt<Node>(NodeList, index);
+        Node ChildNode = SafeList.ItemAt<Node>(NodeList, index);
 
         NodeList.RemoveAt(index);
         NodeList.Insert(index + direction, ChildNode);
@@ -313,7 +313,7 @@ public static partial class NodeTreeHelperBlockList
         if (blockIndex + direction < 0 || blockIndex + direction >= NodeBlockList.Count)
             throw new ArgumentOutOfRangeException(nameof(direction));
 
-        IBlock MovedBlock = SafeType.ItemAt<IBlock>(NodeBlockList, blockIndex);
+        IBlock MovedBlock = SafeList.ItemAt<IBlock>(NodeBlockList, blockIndex);
 
         NodeBlockList.RemoveAt(blockIndex);
         NodeBlockList.Insert(blockIndex + direction, MovedBlock);
@@ -328,7 +328,7 @@ public static partial class NodeTreeHelperBlockList
         if (blockIndex < 0 || blockIndex >= NodeBlockList.Count)
             throw new ArgumentOutOfRangeException(nameof(blockIndex));
 
-        IBlock Block = SafeType.ItemAt<IBlock>(NodeBlockList, blockIndex);
+        IBlock Block = SafeList.ItemAt<IBlock>(NodeBlockList, blockIndex);
         nodeList = Block.NodeList;
 
         if (index < 0 || (!isUpperIndexValid && index >= nodeList.Count) || (isUpperIndexValid && index > nodeList.Count))

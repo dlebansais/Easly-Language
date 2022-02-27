@@ -140,7 +140,7 @@ internal static class NodeTreeWalk<TContext>
 
         for (int Index = 0; Index < NodeList.Count; Index++)
         {
-            Node ChildNode = SafeType.ItemAt<Node>(NodeList, Index);
+            Node ChildNode = SafeList.ItemAt<Node>(NodeList, Index);
 
             if (!Walk(ChildNode, node, nodePropertyName, callbacks, data))
                 return false;
@@ -153,14 +153,14 @@ internal static class NodeTreeWalk<TContext>
     {
         for (int BlockIndex = 0; BlockIndex < blockList.NodeBlockList.Count; BlockIndex++)
         {
-            IBlock Block = SafeType.ItemAt<IBlock>(blockList.NodeBlockList, BlockIndex);
+            IBlock Block = SafeList.ItemAt<IBlock>(blockList.NodeBlockList, BlockIndex);
 
             if (!callbacks.HandlerBlock(node, nodePropertyName, blockList, Block, callbacks, data))
                 return false;
 
             for (int Index = 0; Index < Block.NodeList.Count; Index++)
             {
-                Node ChildNode = SafeType.ItemAt<Node>(Block.NodeList, Index);
+                Node ChildNode = SafeList.ItemAt<Node>(Block.NodeList, Index);
 
                 if (!Walk(ChildNode, node, nodePropertyName, callbacks, data))
                     return false;
