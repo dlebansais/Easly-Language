@@ -1,17 +1,17 @@
 ﻿namespace TestEaslyLanguage;
 
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
-using TypeInitializationException = System.TypeInitializationException;
-using InvalidOperationException = System.InvalidOperationException;
 using BaseNode;
 using BaseNodeHelper;
 using Easly;
 using NotNullReflection;
 using NUnit.Framework;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
+using InvalidOperationException = System.InvalidOperationException;
+using TypeInitializationException = System.TypeInitializationException;
 
 [TestFixture]
 public partial class CoverageSet

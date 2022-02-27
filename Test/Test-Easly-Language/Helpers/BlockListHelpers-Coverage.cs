@@ -2,10 +2,9 @@
 
 using BaseNode;
 using BaseNodeHelper;
-using Easly;
 using NUnit.Framework;
-using System;
 using System.Collections.Generic;
+using ArgumentException = System.ArgumentException;
 
 [TestFixture]
 public partial class BlockListHelpersCoverage
