@@ -19,12 +19,6 @@
     <PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
   </ItemGroup>
-	
-  <ItemGroup>
-    <Reference Include="NotNullReflection">
-      <HintPath>..\..\..\NotNullReflection\NotNullReflection\bin\x64\Debug\$(TargetFramework)\NotNullReflection.dll</HintPath>
-    </Reference>
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\Easly-Language-Helper\Easly-Language-Helper.csproj" />
