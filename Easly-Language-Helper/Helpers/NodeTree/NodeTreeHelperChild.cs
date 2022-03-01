@@ -1,9 +1,9 @@
 ﻿namespace BaseNodeHelper;
 
-using ArgumentException = System.ArgumentException;
 using BaseNode;
 using Contracts;
 using NotNullReflection;
+using ArgumentException = System.ArgumentException;
 
 /// <summary>
 /// Provides methods to manipulate child nodes in a program tree.

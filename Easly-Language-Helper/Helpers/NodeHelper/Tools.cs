@@ -2,11 +2,11 @@
 
 using System.Collections.Generic;
 using System.Diagnostics;
-using Array = System.Array;
-using BindingFlags = System.Reflection.BindingFlags;
 using BaseNode;
 using Contracts;
 using NotNullReflection;
+using Array = System.Array;
+using BindingFlags = System.Reflection.BindingFlags;
 
 /// <summary>
 /// Provides methods to manipulate nodes.

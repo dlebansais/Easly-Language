@@ -2,13 +2,13 @@
 
 using System.Collections.Generic;
 using System.Diagnostics;
-using Guid = System.Guid;
-using ArgumentException = System.ArgumentException;
-using BindingFlags = System.Reflection.BindingFlags;
+using System.Globalization;
 using BaseNode;
 using Contracts;
 using NotNullReflection;
-using System.Globalization;
+using ArgumentException = System.ArgumentException;
+using BindingFlags = System.Reflection.BindingFlags;
+using Guid = System.Guid;
 
 /// <summary>
 /// Provides methods to manipulate nodes.

@@ -1,8 +1,8 @@
 ﻿namespace Easly;
 
 using System.Diagnostics;
-using NotNullReflection;
 using Contracts;
+using NotNullReflection;
 
 /// <summary>
 /// The base class for entities.

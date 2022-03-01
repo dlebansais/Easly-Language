@@ -2,10 +2,10 @@
 
 using System.Collections.Generic;
 using System.Diagnostics;
-using StringComparison = System.StringComparison;
 using BaseNode;
 using Contracts;
 using NotNullReflection;
+using StringComparison = System.StringComparison;
 
 /// <summary>
 /// Provides methods to manipulate nodes.

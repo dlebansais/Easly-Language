@@ -3,9 +3,9 @@
 using System;
 using System.Collections.Generic;
 using BaseNode;
-using Range = BaseNode.Range;
 using Contracts;
 using Easly;
+using Range = BaseNode.Range;
 
 /// <summary>
 /// Provides methods to manipulate nodes.

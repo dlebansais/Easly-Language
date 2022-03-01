@@ -1,11 +1,11 @@
 ﻿namespace BaseNodeHelper;
 
 using System.Diagnostics;
-using ArgumentException = System.ArgumentException;
 using BaseNode;
 using Contracts;
 using Easly;
 using NotNullReflection;
+using ArgumentException = System.ArgumentException;
 
 /// <summary>
 /// Provides methods to manipulate optional nodes in a program tree.

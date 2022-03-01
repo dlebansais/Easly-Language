@@ -1,7 +1,7 @@
 ﻿namespace BaseNodeHelper;
 
-using Contracts;
 using System.Collections.Generic;
+using Contracts;
 
 /// <summary>
 /// Helper class for null-aware operations with types.

@@ -3,11 +3,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-using ArgumentException = System.ArgumentException;
-using ArgumentOutOfRangeException = System.ArgumentOutOfRangeException;
 using BaseNode;
 using Contracts;
 using NotNullReflection;
+using ArgumentException = System.ArgumentException;
+using ArgumentOutOfRangeException = System.ArgumentOutOfRangeException;
 
 /// <summary>
 /// Provides methods to manipulate lists of nodes in a program tree.

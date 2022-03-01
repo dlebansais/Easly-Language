@@ -1,10 +1,10 @@
 ﻿namespace BaseNodeHelper;
 
-using ArgumentException = System.ArgumentException;
 using BaseNode;
 using Contracts;
 using Easly;
 using NotNullReflection;
+using ArgumentException = System.ArgumentException;
 
 /// <summary>
 /// Provides methods to manipulate nodes.

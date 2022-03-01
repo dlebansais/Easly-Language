@@ -1,10 +1,10 @@
 ﻿namespace BaseNodeHelper;
 
 using System.Collections;
-using ArgumentOutOfRangeException = System.ArgumentOutOfRangeException;
 using BaseNode;
 using Contracts;
 using NotNullReflection;
+using ArgumentOutOfRangeException = System.ArgumentOutOfRangeException;
 
 /// <summary>
 /// Provides methods to manipulate block lists of nodes.

@@ -3,10 +3,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-using ArgumentException = System.ArgumentException;
 using BaseNode;
 using Contracts;
 using NotNullReflection;
+using ArgumentException = System.ArgumentException;
 
 /// <summary>
 /// Provides methods to manipulate block lists of nodes.

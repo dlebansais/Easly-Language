@@ -2,12 +2,12 @@
 
 using System.Collections.Generic;
 using System.Diagnostics;
-using ArgumentException = System.ArgumentException;
-using StringComparison = System.StringComparison;
 using BaseNode;
 using Contracts;
 using Easly;
 using NotNullReflection;
+using ArgumentException = System.ArgumentException;
+using StringComparison = System.StringComparison;
 
 /// <summary>
 /// Provides methods to manipulate a tree of nodes.

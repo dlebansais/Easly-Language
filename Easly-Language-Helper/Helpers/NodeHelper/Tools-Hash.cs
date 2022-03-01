@@ -2,10 +2,10 @@
 
 using System.Collections.Generic;
 using System.Diagnostics;
-using Guid = System.Guid;
 using BaseNode;
 using Contracts;
 using NotNullReflection;
+using Guid = System.Guid;
 
 /// <summary>
 /// Provides methods to manipulate nodes.
